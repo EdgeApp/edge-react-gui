@@ -9,7 +9,7 @@ import { lstrings } from '../locales/strings'
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { FioDomain, FioObtRecord } from '../types/types'
-import { addToFioAddressCache, getFioExpiredCheckFromDisklet, getFioObtData, refreshConnectedWalletsForFioAddress } from '../util/FioAddressUtils'
+import { addToFioAddressCache, getFioObtData, refreshConnectedWalletsForFioAddress } from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
 
 const MAX_OBT_DATA_CHECKS = 15
@@ -95,14 +95,6 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
     } catch (err: any) {
       console.warn(err)
     }
-  }
-}
-
-export function expiredFioNamesCheckDates(): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const lastChecks = await getFioExpiredCheckFromDisklet(state.core.disklet)
-    dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: lastChecks })
   }
 }
 

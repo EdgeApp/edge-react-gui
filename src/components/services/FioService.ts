@@ -6,7 +6,13 @@ import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain } from '../../types/types'
-import { getExpiredSoonFioDomains, needToCheckExpired, refreshFioNames, setFioExpiredCheckToDisklet } from '../../util/FioAddressUtils'
+import {
+  getExpiredSoonFioDomains,
+  getFioExpiredCheckFromDisklet,
+  needToCheckExpired,
+  refreshFioNames,
+  setFioExpiredCheckToDisklet
+} from '../../util/FioAddressUtils'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { showDevError } from './AirshipInstance'
 
@@ -20,7 +26,7 @@ export const FioService = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  const expiredLastChecks = useSelector(state => state.ui.fio.expiredLastChecks)
+  const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
   const expireReminderShown = useSelector(state => state.ui.fio.expireReminderShown)
   const expiredChecking = useSelector(state => state.ui.fio.expiredChecking)
   const walletsCheckedForExpired = useSelector(state => state.ui.fio.walletsCheckedForExpired)
@@ -45,8 +51,11 @@ export const FioService = (props: Props) => {
 
     const namesToCheck: FioDomain[] = []
     const { fioDomains, fioWalletsById } = await refreshFioNames(walletsToCheck)
+    if (expiredLastChecks.current == null) {
+      expiredLastChecks.current = await getFioExpiredCheckFromDisklet(disklet)
+    }
     for (const fioDomain of fioDomains) {
-      if (needToCheckExpired(expiredLastChecks, fioDomain.name)) {
+      if (needToCheckExpired(expiredLastChecks.current, fioDomain.name)) {
         namesToCheck.push(fioDomain)
       }
     }
@@ -60,11 +69,10 @@ export const FioService = (props: Props) => {
         const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
         await showFioExpiredModal(navigation, fioWallet, first)
 
-        expiredLastChecks[first.name] = new Date()
-        dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
+        expiredLastChecks.current[first.name] = new Date()
         // @ts-expect-error
         dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
-        await setFioExpiredCheckToDisklet(expiredLastChecks, disklet)
+        await setFioExpiredCheckToDisklet(expiredLastChecks.current, disklet)
       }
 
       for (const walletId in fioWalletsById) {

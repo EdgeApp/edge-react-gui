@@ -26,7 +26,6 @@ import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
-import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
@@ -232,7 +231,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       })
 
       await dispatch(refreshAccountReferral())
-      await dispatch(expiredFioNamesCheckDates())
 
       refreshTouchId(account).catch(() => {
         // We have always failed silently here
