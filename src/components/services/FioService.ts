@@ -28,7 +28,7 @@ export const FioService = (props: Props) => {
 
   const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
   const expireReminderShown = React.useRef(false)
-  const expiredChecking = useSelector(state => state.ui.fio.expiredChecking)
+  const expiredChecking = React.useRef(false)
   const walletsCheckedForExpired = useSelector(state => state.ui.fio.walletsCheckedForExpired)
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
   const disklet = useSelector(state => state.core.disklet)
@@ -40,7 +40,8 @@ export const FioService = (props: Props) => {
       return
     }
 
-    if (expiredChecking) return
+    if (expiredChecking.current) return
+    expiredChecking.current = true
 
     const walletsToCheck: EdgeCurrencyWallet[] = []
     for (const fioWallet of fioWallets) {
@@ -61,8 +62,6 @@ export const FioService = (props: Props) => {
     }
 
     if (namesToCheck.length !== 0) {
-      dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-
       const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
       if (expired.length > 0) {
         const first: FioDomain = expired[0]
@@ -79,7 +78,7 @@ export const FioService = (props: Props) => {
       }
       dispatch({ type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: walletsCheckedForExpired })
 
-      dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
+      expiredChecking.current = false
     }
   })
 
