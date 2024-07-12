@@ -921,7 +921,7 @@ export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioN
       lastCheck.setMonth(new Date().getMonth() - 1)
     }
     const now = new Date()
-    return now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()
+    return now.getDate() !== lastCheck.getDate() || now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()
   } catch (e: any) {
     //
   }

@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { showFioExpiredModal } from '../../actions/FioActions'
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -103,17 +104,22 @@ export const FioService = (props: Props) => {
   })
 
   // Check for expired FIO domains
-  React.useEffect(() => {
-    const task = makePeriodicTask(refreshNamesToCheckExpired, EXPIRE_CHECK_TIMEOUT, {
-      onError(e: unknown) {
-        console.error('refreshNamesToCheckExpired error:', e)
-        showDevError(e)
-      }
-    })
-    task.start()
+  useAsyncEffect(
+    async () => {
+      await account.waitForAllWallets()
+      const task = makePeriodicTask(refreshNamesToCheckExpired, EXPIRE_CHECK_TIMEOUT, {
+        onError(e: unknown) {
+          console.error('refreshNamesToCheckExpired error:', e)
+          showDevError(e)
+        }
+      })
+      task.start()
 
-    return () => task.stop()
-  }, [refreshNamesToCheckExpired])
+      return () => task.stop()
+    },
+    [refreshNamesToCheckExpired],
+    'FioService:checkExpired'
+  )
 
   return null
 }
