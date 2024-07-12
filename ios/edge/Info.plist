@@ -75,6 +75,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
 	<key>NSAppTransportSecurity</key>
