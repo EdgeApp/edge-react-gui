@@ -27,14 +27,14 @@ export const FioService = (props: Props) => {
   const dispatch = useDispatch()
 
   const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
-  const expireReminderShown = useSelector(state => state.ui.fio.expireReminderShown)
+  const expireReminderShown = React.useRef(false)
   const expiredChecking = useSelector(state => state.ui.fio.expiredChecking)
   const walletsCheckedForExpired = useSelector(state => state.ui.fio.walletsCheckedForExpired)
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
   const disklet = useSelector(state => state.core.disklet)
 
   const refreshNamesToCheckExpired = useHandler(async () => {
-    if (expireReminderShown) return
+    if (expireReminderShown.current) return
 
     if (fioWallets.length === 0) {
       return
@@ -68,10 +68,9 @@ export const FioService = (props: Props) => {
         const first: FioDomain = expired[0]
         const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
         await showFioExpiredModal(navigation, fioWallet, first)
+        expireReminderShown.current = true
 
         expiredLastChecks.current[first.name] = new Date()
-        // @ts-expect-error
-        dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
         await setFioExpiredCheckToDisklet(expiredLastChecks.current, disklet)
       }
 

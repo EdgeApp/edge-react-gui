@@ -29,7 +29,6 @@ type NoDataActionName =
   | 'PASSWORD_USED'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
   | { type: NoDataActionName }
