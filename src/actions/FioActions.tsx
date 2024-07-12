@@ -9,14 +9,7 @@ import { lstrings } from '../locales/strings'
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { FioDomain, FioObtRecord } from '../types/types'
-import {
-  addToFioAddressCache,
-  getExpiredSoonFioDomains,
-  getFioExpiredCheckFromDisklet,
-  getFioObtData,
-  refreshConnectedWalletsForFioAddress,
-  setFioExpiredCheckToDisklet
-} from '../util/FioAddressUtils'
+import { addToFioAddressCache, getFioExpiredCheckFromDisklet, getFioObtData, refreshConnectedWalletsForFioAddress } from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
 
 const MAX_OBT_DATA_CHECKS = 15
@@ -113,41 +106,7 @@ export function expiredFioNamesCheckDates(): ThunkAction<Promise<void>> {
   }
 }
 
-export function checkExpiredFioDomains(
-  navigation: NavigationBase,
-  fioDomains: FioDomain[],
-  fioWalletsById: { [key: string]: EdgeCurrencyWallet }
-): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    if (!account) return
-
-    const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
-    if (expired.length > 0) {
-      const first: FioDomain = expired[0]
-      const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
-      await showFioExpiredModal(navigation, fioWallet, first)
-
-      const expiredLastChecks = { ...state.ui.fio.expiredLastChecks }
-      expiredLastChecks[first.name] = new Date()
-      dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
-      // @ts-expect-error
-      dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
-      await setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
-    }
-
-    const walletsCheckedForExpired = { ...state.ui.fio.walletsCheckedForExpired }
-    for (const walletId in fioWalletsById) {
-      walletsCheckedForExpired[walletId] = true
-    }
-    dispatch({ type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: walletsCheckedForExpired })
-
-    dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
-  }
-}
-
-const showFioExpiredModal = async (navigation: NavigationBase, fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
+export const showFioExpiredModal = async (navigation: NavigationBase, fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
   const answer = await Airship.show<boolean>(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {

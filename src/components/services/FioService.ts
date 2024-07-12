@@ -1,12 +1,12 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { checkExpiredFioDomains } from '../../actions/FioActions'
+import { showFioExpiredModal } from '../../actions/FioActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain } from '../../types/types'
-import { needToCheckExpired, refreshFioNames } from '../../util/FioAddressUtils'
+import { getExpiredSoonFioDomains, needToCheckExpired, refreshFioNames, setFioExpiredCheckToDisklet } from '../../util/FioAddressUtils'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { showDevError } from './AirshipInstance'
 
@@ -25,6 +25,7 @@ export const FioService = (props: Props) => {
   const expiredChecking = useSelector(state => state.ui.fio.expiredChecking)
   const walletsCheckedForExpired = useSelector(state => state.ui.fio.walletsCheckedForExpired)
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+  const disklet = useSelector(state => state.core.disklet)
 
   const refreshNamesToCheckExpired = useHandler(async () => {
     if (expireReminderShown) return
@@ -52,7 +53,26 @@ export const FioService = (props: Props) => {
 
     if (namesToCheck.length !== 0) {
       dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-      await dispatch(checkExpiredFioDomains(navigation, namesToCheck, fioWalletsById))
+
+      const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
+      if (expired.length > 0) {
+        const first: FioDomain = expired[0]
+        const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
+        await showFioExpiredModal(navigation, fioWallet, first)
+
+        expiredLastChecks[first.name] = new Date()
+        dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
+        // @ts-expect-error
+        dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
+        await setFioExpiredCheckToDisklet(expiredLastChecks, disklet)
+      }
+
+      for (const walletId in fioWalletsById) {
+        walletsCheckedForExpired[walletId] = true
+      }
+      dispatch({ type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: walletsCheckedForExpired })
+
+      dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
     }
   })
 
