@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
 import { ButtonsModal } from './ButtonsModal'
@@ -89,16 +90,23 @@ export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModal
 
   const handleDeletePress = useHandler(async () => {
     // Warn the user that this is permanent:
-    Alert.alert(lstrings.alert_dropdown_warning, lstrings.backup_delete_confirm_message, [
-      { text: 'Cancel', onPress: () => {} },
-      {
-        text: lstrings.delete_account_title,
-        onPress: async () => {
-          if (forgetLoginId != null) await context.forgetAccount(forgetLoginId)
-          return true
-        }
-      }
-    ])
+    Airship.show<'cancel' | 'delete' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.alert_dropdown_warning}
+        message={lstrings.backup_delete_confirm_message}
+        buttons={{
+          cancel: { label: lstrings.string_cancel },
+          delete: {
+            label: lstrings.delete_account_title,
+            onPress: async () => {
+              if (forgetLoginId != null) await context.forgetAccount(forgetLoginId)
+              return true
+            }
+          }
+        }}
+      />
+    )).catch(() => {})
     return true
   })
 

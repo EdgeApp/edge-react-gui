@@ -13,7 +13,7 @@ import {
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
+import { ActivityIndicator, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -859,13 +859,16 @@ const SendComponent = (props: Props) => {
         })
       }
       if (!dismissAlert) {
-        Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
-          {
-            onPress() {},
-            style: 'default',
-            text: lstrings.string_ok
-          }
-        ])
+        Airship.show<'ok' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.transaction_success}
+            message={lstrings.transaction_success_message}
+            buttons={{
+              ok: { label: lstrings.string_ok }
+            }}
+          />
+        )).catch(() => {})
       }
     } catch (e: any) {
       resetSlider()
@@ -900,13 +903,16 @@ const SendComponent = (props: Props) => {
         message = lstrings.transaction_failure_504_message
       }
 
-      Alert.alert(lstrings.transaction_failure, message, [
-        {
-          onPress() {},
-          style: 'default',
-          text: lstrings.string_ok
-        }
-      ])
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.transaction_failure}
+          message={message}
+          buttons={{
+            ok: { label: lstrings.string_ok }
+          }}
+        />
+      )).catch(() => {})
     }
   })
 

@@ -1,6 +1,6 @@
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Image, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_PLUGIN_ID, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
@@ -17,6 +17,7 @@ import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -197,11 +198,16 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 showError(lstrings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
-              Alert.alert(
-                `${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`,
-                sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label),
-                [{ text: lstrings.string_ok_cap }]
-              )
+              Airship.show<'ok' | undefined>(bridge => (
+                <ButtonsModal
+                  bridge={bridge}
+                  title={`${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`}
+                  message={sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label)}
+                  buttons={{
+                    ok: { label: lstrings.string_ok_cap }
+                  }}
+                />
+              )).catch(() => {})
 
               onLogEvent('Fio_Handle_Register', {
                 conversionValues: {

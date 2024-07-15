@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: 0x Gasless Swap exchange plugin
+- changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 
 ## 4.9.0
 

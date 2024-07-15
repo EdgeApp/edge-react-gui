@@ -2,7 +2,6 @@ import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, 
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Alert } from 'react-native'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { asSortOption, SortOption } from '../components/modals/WalletListSortModal'
@@ -36,7 +35,14 @@ export function checkEnabledExchanges(): ThunkAction<void> {
     }
 
     if (!isAnyExchangeEnabled) {
-      Alert.alert(lstrings.no_exchanges_available, lstrings.check_exchange_settings)
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          buttons={{ ok: { label: lstrings.string_ok_cap } }}
+          title={lstrings.no_exchanges_available}
+          message={lstrings.check_exchange_settings}
+        />
+      )).catch(() => {})
     }
   }
 }

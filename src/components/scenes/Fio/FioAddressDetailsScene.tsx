@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
@@ -9,7 +9,8 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConnectWallets } from '../../FioAddress/ConnectWallets'
-import { showError } from '../../services/AirshipInstance'
+import { ButtonsModal } from '../../modals/ButtonsModal'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
@@ -41,9 +42,16 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { route } = this.props
     const { fioAddressName } = route.params
     if (!fioAddressName) {
-      Alert.alert(lstrings.fio_address_details_screen_alert_title, lstrings.fio_address_details_screen_alert_message, [
-        { text: lstrings.fio_address_details_screen_alert_button }
-      ])
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.fio_address_details_screen_alert_title}
+          message={lstrings.fio_address_details_screen_alert_message}
+          buttons={{
+            ok: { label: lstrings.fio_address_details_screen_alert_button }
+          }}
+        />
+      )).catch(() => {})
     }
     this.findFioWallet().catch(err => showError(err))
   }

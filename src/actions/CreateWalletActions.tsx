@@ -1,7 +1,6 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCreateCurrencyWallet, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeResult, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -136,7 +135,13 @@ export function createAccountTransaction(
           if (error) {
             console.log(error)
             setTimeout(() => {
-              Alert.alert(lstrings.create_wallet_account_error_sending_transaction)
+              Airship.show<'ok' | undefined>(bridge => (
+                <ButtonsModal
+                  bridge={bridge}
+                  message={lstrings.create_wallet_account_error_sending_transaction}
+                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
+                />
+              )).catch(() => {})
             }, 750)
           } else if (edgeTransaction) {
             dispatch(
@@ -152,7 +157,14 @@ export function createAccountTransaction(
             paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
             navigation.navigate('walletsTab', { screen: 'walletList' })
             setTimeout(() => {
-              Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
+              Airship.show<'ok' | undefined>(bridge => (
+                <ButtonsModal
+                  bridge={bridge}
+                  title={lstrings.create_wallet_account_payment_sent_title}
+                  message={lstrings.create_wallet_account_payment_sent_message}
+                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
+                />
+              )).catch(() => {})
             }, 750)
           }
         },
