@@ -4,6 +4,7 @@
 
 - added: 0x Gasless Swap exchange plugin
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
+- changed: Show common chain icon as primary for L2 chains
 
 ## 4.9.0
 
