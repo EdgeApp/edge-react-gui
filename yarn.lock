@@ -6741,10 +6741,10 @@ big.js@^5.2.2:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
 
-biggystring@^4.0.0, biggystring@^4.1.3, biggystring@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-4.2.1.tgz#b27512b13fb206034dfdbabcfac0a600dd95d506"
-  integrity sha512-SxIfuDb1zx4SIsT0flz1yvpQCOJVqN3UtaC1T+TdjqMiGDFoY8HyIpr3KmXLSK7q7oQ2749NQcin3AFXtdragQ==
+biggystring@^4.0.0, biggystring@^4.1.3, biggystring@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-4.2.2.tgz#6c69b8b753a6508d5d4d8a0dfdddb5a6274865da"
+  integrity sha512-2MkWPwh5eQmWPmDqCjcYXTOsv3v+HkiC2G2o5ImYwq8rJD39GqIkEtpUO034tI18jQXGSdB9/92xqGA+MCS6dw==
   dependencies:
     bn.js "^4.11.7"
 
