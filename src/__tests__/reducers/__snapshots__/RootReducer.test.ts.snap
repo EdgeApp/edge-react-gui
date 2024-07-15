@@ -76,10 +76,6 @@ exports[`initialState 1`] = `
     },
     "fio": {
       "connectedWalletsByFioAddress": {},
-      "expireReminderShown": false,
-      "expiredChecking": false,
-      "expiredLastChecks": {},
-      "walletsCheckedForExpired": {},
     },
     "fioAddress": {
       "fioAddresses": [],

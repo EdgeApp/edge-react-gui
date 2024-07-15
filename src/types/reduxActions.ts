@@ -29,7 +29,6 @@ type NoDataActionName =
   | 'PASSWORD_USED'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
   | { type: NoDataActionName }
@@ -99,9 +98,6 @@ export type Action =
   | { type: 'FIO/SET_FIO_ADDRESSES'; data: { fioAddresses: FioAddress[] } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS'; data: { fioAddress: string; ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_FIO_DOMAINS'; data: { fioDomains: FioDomain[] } }
-  | { type: 'FIO/SET_LAST_EXPIRED_CHECKS'; data: { [fioName: string]: Date } }
-  | { type: 'FIO/CHECKING_EXPIRED'; data: boolean }
-  | { type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED'; data: { [walletId: string]: boolean } }
   /*
    Self-Contained Package Actions:
 

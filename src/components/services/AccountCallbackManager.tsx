@@ -4,11 +4,10 @@ import * as React from 'react'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
-import { checkFioObtData } from '../../actions/FioActions'
+import { checkFioObtData, refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
-import { updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
@@ -160,7 +159,7 @@ export function AccountCallbackManager(props: Props) {
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
         datelog('Updating wallet list')
-        await dispatch(updateWalletsRequest())
+        await dispatch(refreshConnectedWallets)
         await snooze(1000)
       }
     },
