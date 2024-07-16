@@ -228,7 +228,7 @@ const asQuoteResponse = asObject({
   destCurrency: asString,
   sourceNetwork: asString,
   destNetwork: asString,
-  sourceAmount: asNumber,
+  sourceAmount: asString,
   destAmount: asString // Assuming dest amount can be a string representation of a number
 })
 
