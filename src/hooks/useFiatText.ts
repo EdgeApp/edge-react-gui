@@ -80,8 +80,12 @@ export const formatFiatString = (props: {
 }): string => {
   const { fiatAmount, minPrecision = 2, maxPrecision = 6, autoPrecision = true, noGrouping = false } = props
 
+  // Assume any spaces means this is some truncated '1.23 Bn' or '3.45 M' string
+  const [fiatAmountCleanedMag, magnitudeCode] = fiatAmount.split(' ')
+  const magnitudeCodeStr = magnitudeCode == null ? '' : ` ${magnitudeCode}`
+
   // Use US locale delimiters for determining precision
-  const fiatAmtCleanedDelim = fiatAmount.replace(',', '.')
+  const fiatAmtCleanedDelim = fiatAmountCleanedMag.replace(',', '.')
   let precision = minPrecision
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
@@ -96,7 +100,7 @@ export const formatFiatString = (props: {
   }
 
   // Convert back to a localized fiat amount string with specified precision and grouping
-  return displayFiatAmount(fiatAmtCleanedDelim, precision, noGrouping)
+  return `${displayFiatAmount(fiatAmtCleanedDelim, precision, noGrouping)}${magnitudeCodeStr}`
 }
 
 /**

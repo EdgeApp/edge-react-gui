@@ -16,11 +16,13 @@ import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { COINGECKO_SUPPORTED_FIATS } from './CoinRankingScene'
 
 type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
 
 export interface CoinRankingDetailsParams {
   coinRankingData: CoinRankingData
+  fiatCurrencyCode: string
 }
 
 interface Props extends EdgeSceneProps<'coinRankingDetails'> {}
@@ -77,24 +79,24 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route, navigation } = props
-  const { coinRankingData } = route.params
+  const { coinRankingData, fiatCurrencyCode } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
 
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-
   // In case the user changes their default fiat while viewing this scene, we
   // want to go back since the parent scene handles fetching data.
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+  const supportedFiat = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
   const isFocused = useIsFocused()
-  const initFiat = React.useState<string>(defaultFiat)[0]
+  const initFiat = React.useState<string>(fiatCurrencyCode)[0]
   React.useEffect(() => {
-    if (isFocused && initFiat !== defaultFiat) {
+    if (isFocused && initFiat !== supportedFiat) {
       // Take this stale scene off the stack
       navigation.pop()
       // Force a refresh & refetch
       navigation.navigate('coinRanking', {})
     }
-  }, [defaultFiat, initFiat, isFocused, navigation])
+  }, [supportedFiat, initFiat, isFocused, navigation])
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -114,6 +116,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   const parseCoinRankingData = (dataKey: string, data: CoinRankingDataValueType): string => {
+    // Start with either a plain number string, truncated large number string,
+    // or some other alphanumeric string
     const baseString = formatData(data)
     let extendedString
 
@@ -128,20 +132,20 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'priceChange24h':
       case 'high24h':
       case 'low24h':
-        // Sometimes the data comes back as something like "1.2 M"
-        // In this case, just show the value as-is without our own special formatting.
-        return `${baseString.split(' ').length > 1 ? baseString : formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+      case 'volume24h':
+      case 'marketCap':
+        return `${formatFiatString({ fiatAmount: baseString })} ${supportedFiat}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
         extendedString = coinRankingData.marketCapChangePercent24h != null ? ` (${toPercentString(coinRankingData.marketCapChangePercent24h / 100)})` : ''
         break
       case 'allTimeHigh': {
-        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${supportedFiat}`
         return coinRankingData.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
       }
       case 'allTimeLow': {
-        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${supportedFiat}`
         return coinRankingData.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
       }
       default:
@@ -149,7 +153,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         return baseString
     }
 
-    return `${baseString} ${extendedString}`
+    return `${baseString}${extendedString}`
   }
 
   const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): JSX.Element => {
@@ -189,7 +193,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <FastImage style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
         </EdgeAnim>
-        <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} />
+        <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} fiatCurrencyCode={initFiat} />
         <View style={styles.columns}>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>

@@ -578,9 +578,9 @@ export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: nu
 export const formatLargeNumberString = (num: number): string => {
   const absNum = Math.abs(num)
   if (absNum >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + ' Bn'
+    return (num / 1000000000).toFixed(2) + ' Bn'
   } else if (absNum >= 1000000) {
-    return (num / 1000000).toFixed(1) + ' M'
+    return (num / 1000000).toFixed(2) + ' M'
   } else {
     return num.toString()
   }
