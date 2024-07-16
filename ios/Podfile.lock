@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.7.0):
     - React-Core
-  - edge-login-ui-rn (3.16.1):
+  - edge-login-ui-rn (3.16.2):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
