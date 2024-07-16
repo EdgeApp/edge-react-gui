@@ -4,7 +4,7 @@
 
 - added: 0x Gasless Swap exchange plugin
 - added: Add Solana on Banxa and Moonpay
-- added: Add Mt Pelerin support for buy and sell with reverse quotes
+- added: Add Mt Pelerin support for buy and sell with reverse (dest amount) quotes
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
