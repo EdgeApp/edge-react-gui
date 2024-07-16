@@ -87,7 +87,7 @@
     "async-lock": "^1.1.2",
     "base-x": "^4.0.0",
     "big-integer": "^1.6.51",
-    "biggystring": "^4.2.2",
+    "biggystring": "^4.2.3",
     "cleaner-config": "^0.1.9",
     "cleaners": "^0.3.16",
     "core-js": "^2.5.2",
