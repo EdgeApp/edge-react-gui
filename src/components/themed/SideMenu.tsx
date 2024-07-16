@@ -33,7 +33,6 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
-import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
@@ -42,7 +41,7 @@ import { DividerLine } from './DividerLine'
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenuComponent(props: DrawerContentComponentProps) {
+export function SideMenu(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
   const navigation: NavigationBase = props.navigation as any
   const isDrawerOpen = useDrawerStatus() === 'open'
@@ -484,14 +483,3 @@ const OuterView = styled(View)<{ insets: { top: number; bottom: number } }>(() =
   paddingTop: props.insets.top,
   paddingBottom: props.insets.bottom
 }))
-
-export function SideMenu(props: DrawerContentComponentProps) {
-  const { navigation } = props
-
-  const { loggedIn } = useSelector(state => state.core.account)
-  React.useEffect(() => {
-    if (!loggedIn) navigation.navigate('login')
-  }, [loggedIn, navigation])
-
-  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
-}
