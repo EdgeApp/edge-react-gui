@@ -24,6 +24,7 @@ exports[`initialState 1`] = `
       "activeWalletIds": [],
       "currencyConfig": {},
       "currencyWallets": {},
+      "rootLoginId": "",
       "watch": [Function],
     },
     "context": {},
