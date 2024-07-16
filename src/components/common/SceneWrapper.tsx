@@ -396,10 +396,17 @@ function FloatingNavFixer(props: { navigation: NavigationBase }) {
         // Prevent default behavior of leaving the screen
         e.preventDefault()
 
-        const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', () => {
+        // Retry once the keyboard drops or if we time out:
+        let handled = false
+        function retryNavigation() {
+          if (handled) return
+          handled = true
           navigation.dispatch(e.data.action)
           keyboardDidHideListener.remove()
-        })
+          clearTimeout(timerId)
+        }
+        const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', retryNavigation)
+        const timerId = setTimeout(retryNavigation, 1000)
 
         Keyboard.dismiss()
       }
