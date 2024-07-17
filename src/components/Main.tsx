@@ -519,27 +519,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen name="fioStakingChange" component={FioStakingChangeScene} />
       <Stack.Screen name="fioStakingOverview" component={FioStakingOverviewScene} />
-      <Stack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
       <Stack.Screen name="loanClose" component={LoanCloseScene} />
       <Stack.Screen name="loanCreate" component={LoanCreateScene} />
       <Stack.Screen name="loanCreateConfirmation" component={LoanCreateConfirmationScene} />
@@ -718,15 +697,7 @@ const EdgeWalletsTabScreen = () => {
 const EdgeBuyTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
       <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
       <Stack.Screen
         name="pluginViewBuy"
         component={GuiPluginViewScene}
@@ -736,6 +707,37 @@ const EdgeBuyTabScreen = () => {
           headerLeft: () => <PluginBackButton />
         }}
       />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
     </Stack.Navigator>
   )
 }
@@ -743,11 +745,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
-      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
-      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
@@ -757,6 +755,37 @@ const EdgeSellTabScreen = () => {
           headerLeft: () => <PluginBackButton />
         }}
       />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
     </Stack.Navigator>
   )
 }
