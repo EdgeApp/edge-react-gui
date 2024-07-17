@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: 0x Gasless Swap exchange plugin
+- added: Add Solana on Banxa and Moonpay
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value

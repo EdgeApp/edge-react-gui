@@ -276,6 +276,7 @@ const CURRENCY_PLUGINID_MAP = {
   MATIC: 'polygon',
   QTUM: 'qtum',
   RVN: 'ravencoin',
+  SOL: 'solana',
   XLM: 'stellar',
   XRP: 'ripple',
   XTZ: 'tezos'
