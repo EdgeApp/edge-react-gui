@@ -6,8 +6,8 @@ import { sprintf } from 'sprintf-js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
@@ -50,7 +50,7 @@ export const ExplorerCard = (props: Props) => {
       <ButtonBox onPress={handlePress} paddingRem={1}>
         {addressExplorer === '' ? null : (
           <View style={styles.container}>
-            <CryptoIconUi4 walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+            <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
             <EdgeText style={styles.explorerButtonText}>{lstrings.transaction_details_advance_details_show_explorer}</EdgeText>
           </View>
         )}

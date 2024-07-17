@@ -16,9 +16,9 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { CustomAsset } from '../data/row/CustomAssetRow'
-import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { CustomAsset } from '../rows/CustomAssetRow'
+import { PaymentMethodRow } from '../rows/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -27,8 +27,8 @@ import { ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
+import { EdgeModal } from './EdgeModal'
 
 export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
 export type WalletListResult =
@@ -207,7 +207,7 @@ export function WalletListModal(props: Props) {
   // #endregion Renderers
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.header}>
@@ -242,7 +242,7 @@ export function WalletListModal(props: Props) {
         onPress={handleWalletListPress}
         navigation={navigation}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

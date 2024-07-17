@@ -23,10 +23,10 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 export interface ChangeAddressResult {
   fioAddress?: string
@@ -266,7 +266,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
-    <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
+    <EdgeRow rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
       {!recipientAddress && (
         <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
           <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
@@ -295,7 +295,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
         </EdgeAnim>
       )}
-    </RowUi4>
+    </EdgeRow>
   )
 })
 

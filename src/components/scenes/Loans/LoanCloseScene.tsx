@@ -25,16 +25,16 @@ import { translateError } from '../../../util/translateError'
 import { zeroString } from '../../../util/utils'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Space } from '../../layout/Space'
+import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface LoanCloseParams {
   loanAccountId: string
@@ -150,18 +150,18 @@ export const LoanCloseSceneComponent = (props: Props) => {
         <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <RowUi4 title={lstrings.loan_remaining_principal}>
+          <EdgeRow title={lstrings.loan_remaining_principal}>
             {debts.map(debt => (
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
-          </RowUi4>
+          </EdgeRow>
         ) : null}
         {collaterals.length > 0 ? (
-          <RowUi4 title={lstrings.loan_collateral_amount}>
+          <EdgeRow title={lstrings.loan_collateral_amount}>
             {collaterals.map(collateral => (
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
-          </RowUi4>
+          </EdgeRow>
         ) : null}
         {aggregateErrorMessage.length > 0 ? (
           <Alert

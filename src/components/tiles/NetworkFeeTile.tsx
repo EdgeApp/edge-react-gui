@@ -8,7 +8,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
-import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeRow } from '../rows/EdgeRow'
 
 interface Props {
   wallet: EdgeCurrencyWallet
@@ -65,5 +65,5 @@ export const NetworkFeeTile = (props: Props) => {
   const title = lstrings.loan_estimate_fee
   const body = `${feeCryptoAmount} (${feeFiatAmount})`
 
-  return <RowUi4 title={title} body={body} />
+  return <EdgeRow title={title} body={body} />
 }

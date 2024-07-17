@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
-<ModalUi4
+<EdgeModal
   bridge={
     {
       "on": [Function],
@@ -373,5 +373,5 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       }
     }
   />
-</ModalUi4>
+</EdgeModal>
 `;

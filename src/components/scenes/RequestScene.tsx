@@ -23,6 +23,9 @@ import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelper
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeCard } from '../cards/EdgeCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim, fadeInDown50, fadeInDown75, fadeInUp25, fadeInUp50, fadeInUp80 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -42,9 +45,6 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
-import { AccentColors } from '../ui4/DotsBackground'
 
 export interface RequestParams {
   tokenId: EdgeTokenId
@@ -299,7 +299,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeText numberOfLines={0} style={styles.backupText}>
             {lstrings.backup_for_transfer_message}
           </EdgeText>
-          <ButtonsViewUi4 parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+          <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
         </View>
       </SceneWrapper>
     )
@@ -380,7 +380,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <EdgeAnim enter={fadeInUp25}>
-            <CardUi4 marginRem={0}>
+            <EdgeCard marginRem={0}>
               <ExchangedFlipInput2
                 forceField="crypto"
                 headerCallback={this.handleOpenWalletListModal}
@@ -393,7 +393,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
                 tokenId={tokenId}
                 wallet={wallet}
               />
-            </CardUi4>
+            </EdgeCard>
           </EdgeAnim>
 
           {this.state.addresses.length === 1 ? (

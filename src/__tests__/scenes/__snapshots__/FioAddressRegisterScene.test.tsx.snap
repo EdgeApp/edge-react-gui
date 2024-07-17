@@ -112,10 +112,10 @@ exports[`FioAddressRegister should render with loading props 1`] = `
     <View
       onLayout={[Function]}
     >
-      <CardUi4
+      <EdgeCard
         sections={true}
       >
-        <RowUi4
+        <EdgeRow
           onPress={[Function]}
           rightButtonType="editable"
           title="Choose a FIO Crypto Handle"
@@ -137,14 +137,14 @@ exports[`FioAddressRegister should render with loading props 1`] = `
               Your Crypto Handle name here
             </EdgeText>
           </View>
-        </RowUi4>
-        <RowUi4
+        </EdgeRow>
+        <EdgeRow
           body="Loading…"
           onPress={[Function]}
           rightButtonType="touchable"
           title="Choose FIO Domain for Your Crypto Handle"
         />
-      </CardUi4>
+      </EdgeCard>
     </View>
     <View
       style={

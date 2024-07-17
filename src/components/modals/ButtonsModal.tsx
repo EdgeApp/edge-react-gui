@@ -3,11 +3,11 @@ import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
-import { ModalButtons } from '../common/ModalButtons'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 export interface ButtonInfo {
   label: string
@@ -85,7 +85,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   })
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
+    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
       <View style={[styles.textStyle, containerStyle]}>
         {message != null ? <Paragraph>{message}</Paragraph> : null}
         {children}
@@ -95,7 +95,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
           tertiary={buttonInfo.length > 2 ? buttonInfo[2] : undefined}
         />
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

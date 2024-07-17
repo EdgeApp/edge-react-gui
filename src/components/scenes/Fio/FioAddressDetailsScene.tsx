@@ -7,6 +7,8 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConnectWallets } from '../../FioAddress/ConnectWallets'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -16,8 +18,6 @@ import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
@@ -95,9 +95,9 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     }
 
     return (
-      <CardUi4 paddingRem={0.25}>
+      <EdgeCard paddingRem={0.25}>
         <SettingsTappableRow action="setting" label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings} />
-      </CardUi4>
+      </EdgeCard>
     )
   }
 

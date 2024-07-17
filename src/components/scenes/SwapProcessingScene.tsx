@@ -20,13 +20,13 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {
@@ -126,7 +126,7 @@ export function SwapProcessingScene(props: Props) {
         </View>
         {!isLongWait ? null : (
           <EdgeAnim style={styles.button} enter={{ type: 'fadeInDown', distance: 90 }}>
-            <ButtonsViewUi4
+            <ButtonsView
               absolute
               primary={{
                 label: lstrings.string_cancel_cap,

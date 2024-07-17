@@ -17,8 +17,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../../util/FioAddressUtils'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { AlertCardUi4 } from '../cards/AlertCard'
+import { CryptoIcon } from '../icons/CryptoIcon'
 
 interface FioConnectWalletsProps {
   disabled: boolean
@@ -134,7 +134,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet != null ? <CryptoIconUi4 pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
+              {wallet != null ? <CryptoIcon pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>

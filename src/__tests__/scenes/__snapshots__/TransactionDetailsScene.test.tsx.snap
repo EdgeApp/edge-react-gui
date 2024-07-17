@@ -239,6 +239,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
+                  "flexShrink": 1,
                 },
                 {
                   "marginBottom": 11,
@@ -471,6 +472,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -565,6 +567,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -749,6 +752,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -888,6 +892,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -982,6 +987,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1120,6 +1126,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1280,6 +1287,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1492,6 +1500,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1696,6 +1705,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1856,6 +1866,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2627,6 +2638,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
+                  "flexShrink": 1,
                 },
                 {
                   "marginBottom": 11,
@@ -2859,6 +2871,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2953,6 +2966,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3137,6 +3151,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3276,6 +3291,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3370,6 +3386,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3508,6 +3525,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3668,6 +3686,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3880,6 +3899,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -4084,6 +4104,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -4244,6 +4265,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,

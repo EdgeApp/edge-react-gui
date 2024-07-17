@@ -23,17 +23,17 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
-import { CurrencyRow } from '../../data/row/CurrencyRow'
-import { PaymentMethodRow } from '../../data/row/PaymentMethodRow'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
+import { CurrencyRow } from '../../rows/CurrencyRow'
+import { EdgeRow } from '../../rows/EdgeRow'
+import { PaymentMethodRow } from '../../rows/PaymentMethodRow'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { FormScene } from '../FormScene'
 
 export interface LoanCreateConfirmationParams {
@@ -242,26 +242,26 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       sliderDisabled={actionProgram == null || isFeesExceedCollateral}
       onSliderComplete={handleSliderComplete}
     >
-      <RowUi4 title={lstrings.loan_amount_borrow}>
+      <EdgeRow title={lstrings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
         </EdgeText>
-      </RowUi4>
-      <RowUi4 title={lstrings.loan_collateral_amount}>
+      </EdgeRow>
+      <EdgeRow title={lstrings.loan_collateral_amount}>
         <CryptoFiatAmountRow nativeAmount={nativeSrcAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={[0.25, 0, 0, 0]} />
-      </RowUi4>
+      </EdgeRow>
 
-      <RowUi4 title={lstrings.loan_collateral_source}>
+      <EdgeRow title={lstrings.loan_collateral_source}>
         <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} marginRem={0} />
-      </RowUi4>
+      </EdgeRow>
 
-      <RowUi4 title={lstrings.loan_debt_destination}>
+      <EdgeRow title={lstrings.loan_debt_destination}>
         {paymentMethod != null ? (
           <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={0} />
         ) : (
           <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
         )}
-      </RowUi4>
+      </EdgeRow>
       {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmount} />
       {isFeesExceedCollateral ? <ErrorTile message={lstrings.loan_amount_fees_exceeds_collateral} /> : null}

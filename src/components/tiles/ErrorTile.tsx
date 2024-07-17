@@ -1,9 +1,9 @@
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   message: string
@@ -16,11 +16,11 @@ export const ErrorTile = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <RowUi4 title={lstrings.send_scene_error_title}>
+    <EdgeRow title={lstrings.send_scene_error_title}>
       <EdgeText style={styles.errorMessage} numberOfLines={numberOfLines}>
         {message}
       </EdgeText>
-    </RowUi4>
+    </EdgeRow>
   )
 }
 

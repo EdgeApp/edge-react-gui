@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { AdvancedDetailsCard } from '../../components/ui4/AdvancedDetailsCard'
+import { AdvancedDetailsCard } from '../../components/cards/AdvancedDetailsCard'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('AdvancedDetailsCard', () => {

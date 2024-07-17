@@ -29,7 +29,7 @@ import { NumericInput } from './NumericInput'
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
 
-export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' | 'none' // Defaults to 'done'
 
 export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
@@ -290,9 +290,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
               autoComplete={autoComplete}
-              blurOnSubmit={blurOnSubmit}
+              blurOnSubmit={multiline ? false : blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={hidePassword}
+              numberOfLines={multiline ? 20 : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>

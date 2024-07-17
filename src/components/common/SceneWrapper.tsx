@@ -16,7 +16,7 @@ import { OverrideDots } from '../../types/Theme'
 import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
+import { AccentColors, DotsBackground } from './DotsBackground'
 
 export interface InsetStyle {
   paddingTop: number

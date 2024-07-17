@@ -9,6 +9,7 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
         "alignSelf": "stretch",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
+        "flexShrink": 1,
       },
       {
         "marginBottom": 11,
@@ -100,6 +101,7 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -186,6 +188,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -251,6 +254,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -317,6 +321,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -449,6 +454,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -581,6 +587,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -713,6 +720,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -845,6 +853,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -990,6 +999,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1070,6 +1080,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1151,6 +1162,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1298,6 +1310,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1445,6 +1458,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1594,6 +1608,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1745,6 +1760,7 @@ exports[`RowUi4 should render a basic row 1`] = `
         "alignSelf": "stretch",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
+        "flexShrink": 1,
       },
       {
         "marginBottom": 11,
@@ -1865,6 +1881,7 @@ exports[`RowUi4 should render a row in a card 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -1950,6 +1967,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -2096,6 +2114,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -2242,6 +2261,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -2390,6 +2410,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "alignSelf": "stretch",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
+          "flexShrink": 1,
         },
         {
           "marginBottom": 11,
@@ -2540,6 +2561,7 @@ exports[`RowUi4 triggers onPress/onLongPress event when clicked 1`] = `
         "alignSelf": "stretch",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
+        "flexShrink": 1,
       },
       {
         "marginBottom": 11,

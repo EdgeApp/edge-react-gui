@@ -7,10 +7,10 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'assetSettings'> {}
 
@@ -61,7 +61,7 @@ export function AssetSettingsScene(props: Props) {
 
         return (
           <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-            <CryptoIconUi4 marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
+            <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
           </SettingsTappableRow>
         )
       })}

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -23,7 +24,6 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface CreateWalletEditNameParams {
   createWalletList: WalletCreateItem[]
@@ -219,9 +219,9 @@ const CreateWalletEditNameComponent = (props: Props) => {
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         {isSplit ? (
-          <ButtonsViewUi4 primary={{ label: lstrings.fragment_wallets_split_wallet, onPress: handleSplit }} />
+          <ButtonsView primary={{ label: lstrings.fragment_wallets_split_wallet, onPress: handleSplit }} />
         ) : (
-          <ButtonsViewUi4
+          <ButtonsView
             primary={{ label: lstrings.title_create_wallets, onPress: handleCreate }}
             secondary={{ label: lstrings.create_wallet_imports_title, onPress: handleImport }}
           />

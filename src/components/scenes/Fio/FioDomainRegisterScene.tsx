@@ -8,18 +8,18 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface LocalState {
   selectedWallet: EdgeCurrencyWallet | null
@@ -224,7 +224,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     const { selectedWallet } = this.state
     if (fioWallets && fioWallets.length > 1) {
       return (
-        <RowUi4
+        <EdgeRow
           rightButtonType="touchable"
           title={lstrings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
@@ -263,14 +263,14 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             {lstrings.fio_domain_reg_descr}
           </EdgeText>
 
-          <CardUi4>
-            <RowUi4 rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
+          <EdgeCard>
+            <EdgeRow rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${lstrings.loading})` : ''}</EdgeText>
               </View>
-            </RowUi4>
-          </CardUi4>
+            </EdgeRow>
+          </EdgeCard>
 
           <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={fadeIn} exit={fadeOut}>
             <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />

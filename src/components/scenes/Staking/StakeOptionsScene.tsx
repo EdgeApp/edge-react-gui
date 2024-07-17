@@ -14,14 +14,14 @@ import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
+import { AccentColors } from '../../common/DotsBackground'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { CryptoIcon } from '../../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
-import { AccentColors } from '../../ui4/DotsBackground'
 
 interface Props extends EdgeSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
@@ -102,7 +102,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
+        <CryptoIcon marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>

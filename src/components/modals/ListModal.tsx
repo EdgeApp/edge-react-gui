@@ -9,7 +9,7 @@ import { useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -71,7 +71,7 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
+    <EdgeModal title={title} bridge={bridge} onCancel={handleCancel}>
       {message == null ? null : <Paragraph>{message}</Paragraph>}
       {!textInput ? null : (
         <ModalFilledTextInput
@@ -102,6 +102,6 @@ export function ListModal<T>({
         onViewableItemsChanged={onViewableItemsChanged}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

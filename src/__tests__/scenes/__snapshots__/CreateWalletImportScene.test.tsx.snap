@@ -534,6 +534,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             autoComplete="off"
             autoCorrect={false}
             autoFocus={false}
+            blurOnSubmit={false}
             disableAnimation={
               {
                 "value": 0,
@@ -547,6 +548,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             }
             keyboardType="email-address"
             multiline={true}
+            numberOfLines={20}
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}

@@ -18,10 +18,10 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
+import { DotsBackground } from '../common/DotsBackground'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { showError } from '../services/AirshipInstance'
-import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
 export interface LoginParams {

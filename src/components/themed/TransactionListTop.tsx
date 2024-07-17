@@ -32,16 +32,16 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
+import { IconButton } from '../buttons/IconButton'
+import { EdgeCard } from '../cards/EdgeCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
+import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
-import { IconButton } from '../ui4/IconButton'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { SelectableRow } from './SelectableRow'
@@ -234,7 +234,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const sceneCurrencyCode = tokenId == null ? wallet.currencyInfo.currencyCode : wallet.currencyConfig.allTokens[tokenId].currencyCode
 
     await Airship.show(bridge => (
-      <ModalUi4
+      <EdgeModal
         bridge={bridge}
         title={sprintf(lstrings.trade_s, sceneCurrencyCode)}
         onCancel={() => {
@@ -273,7 +273,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </View>
           }
         />
-      </ModalUi4>
+      </EdgeModal>
     ))
   }
 
@@ -443,7 +443,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} walletId={wallet.id} />
+            <CryptoIcon marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
@@ -640,10 +640,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         {searching ? null : (
           <>
-            <CardUi4 paddingRem={1}>
+            <EdgeCard paddingRem={1}>
               {this.renderBalanceBox()}
               {isStakingAvailable && this.renderStakedBalance()}
-            </CardUi4>
+            </EdgeCard>
             {this.renderButtons()}
           </>
         )}
