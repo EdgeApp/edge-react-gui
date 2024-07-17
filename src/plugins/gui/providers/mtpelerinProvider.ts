@@ -264,41 +264,39 @@ type GetQuoteParams = (GetSourceQuoteParams | GetDestQuoteParams) & {
 
 type WidgetParams = (WidgetBuyParams | WidgetSellParams) & {
   _ctkn: string
-  lang?: string // 2 characters language code ('fr'|'en')
-  primary?: string // Primary color (hexadecimal encoded)
-  addr: string // Wallet address
-  code: string // Random 4 digit code from 1000-9999
-  hash: string // Hash of signature
-  net: string // Default network
-  type: 'webview' // Integration type ('web'|'popup'|'webview')
+  lang?: string /** 2 characters language code ('fr'|'en') */
+  primary?: string /** Primary color (hexadecimal encoded) */
+  addr: string /** Wallet address */
+  code: string /** Random 4 digit code from 1000-9999 */
+  hash: string /** Hash of signature */
+  net: string /** Default network */
+  type: 'webview' /** Integration type ('web'|'popup'|'webview') */
 }
 
 interface WidgetBuySourceParams {
-  bsa: string // Default buy tab source amount
+  bsa: string /** Default buy tab source amount */
 }
 
 interface WidgetBuyDestParams {
-  bda: string // Default buy tab destination amount
+  bda: string /** Default buy tab destination amount */
 }
 
 type WidgetBuyParams = (WidgetBuySourceParams | WidgetBuyDestParams) & {
-  tab: 'buy' // Tab displayed by default ('buy'|'sell)
-  bsc: string // Default buy tab source currency
-  bdc: string // Default buy tab destination currency
+  tab: 'buy' /** Tab displayed by default ('buy'|'sell) */
+  bsc: string /** Default buy tab source currency */
+  bdc: string /** Default buy tab destination currency */
 }
 
 interface WidgetSellSourceParams {
-  ssa: string // Default sell tab source amount
+  ssa: string /** Default sell tab source amount */
 }
-
 interface WidgetSellDestParams {
-  sda: string // Default sell tab source amount
+  sda: string /** Default sell tab source amount */
 }
-
 type WidgetSellParams = (WidgetSellSourceParams | WidgetSellDestParams) & {
-  tab: 'sell' // Tab displayed by default ('buy'|'sell)
-  ssc: string // Default sell tab source currency
-  sdc: string // Default sell tab destination currency
+  tab: 'sell' /** Tab displayed by default ('buy'|'sell) */
+  ssc: string /** Default sell tab source currency */
+  sdc: string /** Default sell tab destination currency */
 }
 
 export const mtpelerinProvider: FiatProviderFactory = {
