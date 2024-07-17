@@ -435,7 +435,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return warningMessage == null ? null : (
-      <Alert marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
+      <Alert key="warning" marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
     )
   }
 
