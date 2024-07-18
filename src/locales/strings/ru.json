@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "Кошелек пуст",
   "buy_crypto_modal_message": "Ваш кошелёк %s пуст. Хотите купить %s или обменять что то для получения %s?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Не в этот раз",
   "buy_crypto_modal_buy_action": "Купить %s",
   "buy_crypto_modal_exchange": "Обмен",
