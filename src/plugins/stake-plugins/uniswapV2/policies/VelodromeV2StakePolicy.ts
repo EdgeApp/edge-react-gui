@@ -259,23 +259,16 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
 
               // Existing liquidity that may be unstaked due to a previous failed attempt to stake, or some other reason
               const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
-
-              // Already have enough LP-tokens to cover needed amount
-              if (gte(lpTokenBalance, expectedLiquidityAmount)) {
-                return { liquidity: expectedLiquidityAmount }
-              }
-
               // Figure out how much LP-tokens we need to add
-              const liquidityDiffAmount = sub(expectedLiquidityAmount, lpTokenBalance)
-              const assetAmountsFromLpDifference = await lpTokenToAssetPairAmounts(policyInfo, liquidityDiffAmount)
-              const tokenAAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenAAllocation)].nativeAmount
-              const tokenBAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenBAllocation)].nativeAmount
+              const assetAmountsFromExpectedLiquidity = await lpTokenToAssetPairAmounts(policyInfo, expectedLiquidityAmount)
+              const tokenAAmountFromExpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenAAllocation)].nativeAmount
+              const tokenBAmountFromexpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenBAllocation)].nativeAmount
 
               // Prepare the contract parameters
-              const amountTokenADesired = tokenAAmountFromLpDifference
-              const amountTokenAMin = round(mul(tokenAAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
-              const amountTokenBDesired = tokenBAmountFromLpDifference
-              const amountTokenBMin = round(mul(tokenBAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
+              const amountTokenADesired = tokenAAmountFromExpectedLiquidity
+              const amountTokenAMin = round(mul(tokenAAmountFromExpectedLiquidity, SLIPPAGE_FACTOR.toString()))
+              const amountTokenBDesired = tokenBAmountFromexpectedLiquidity
+              const amountTokenBMin = round(mul(tokenBAmountFromexpectedLiquidity, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
