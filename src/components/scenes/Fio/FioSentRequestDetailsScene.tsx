@@ -5,7 +5,6 @@ import { View } from 'react-native'
 import { FIAT_CODES_SYMBOLS } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioRequestStatus, GuiExchangeRates } from '../../../types/types'
@@ -100,11 +99,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
   state => {
-    const wallet = getSelectedCurrencyWallet(state)
+    const { defaultFiat, defaultIsoFiat } = state.ui.settings
     return {
       exchangeRates: state.exchangeRates,
-      fiatSymbol: FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode.replace('iso:', '')],
-      isoFiatCurrencyCode: wallet.fiatCurrencyCode
+      fiatSymbol: FIAT_CODES_SYMBOLS[defaultFiat],
+      isoFiatCurrencyCode: defaultIsoFiat
     }
   },
   dispatch => ({})

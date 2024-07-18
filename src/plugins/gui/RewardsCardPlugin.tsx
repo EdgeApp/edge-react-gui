@@ -7,7 +7,7 @@ import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { logActivity } from '../../util/logger'
-import { runWithTimeout, snooze } from '../../util/utils'
+import { removeIsoPrefix, runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -145,7 +145,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     let providerQuote: FiatProviderQuote | undefined
     let counter = 0
     const fiatCurrencyCode = HARD_CODED_FIAT_CURRENCY_CODE // wallet.fiatCurrencyCode
-    const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+    const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
     showUi.enterAmount({
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
       label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),

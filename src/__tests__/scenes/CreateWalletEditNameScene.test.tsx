@@ -2,11 +2,11 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { CreateWalletSelectFiatScene } from '../../components/scenes/CreateWalletSelectFiatScene'
+import { CreateWalletEditNameScene } from '../../components/scenes/CreateWalletEditNameScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
-describe('CreateWalletSelectFiatComponent', () => {
+describe('CreateWalletEditNameComponent', () => {
   const mockState: FakeState = {
     ui: {
       settings: {
@@ -53,8 +53,8 @@ describe('CreateWalletSelectFiatComponent', () => {
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <CreateWalletSelectFiatScene
-          {...fakeSceneProps('createWalletSelectFiat', {
+        <CreateWalletEditNameScene
+          {...fakeSceneProps('createWalletEditName', {
             createWalletList: [
               {
                 type: 'create',

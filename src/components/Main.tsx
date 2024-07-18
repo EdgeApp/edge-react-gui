@@ -1,12 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { logoutRequest } from '../actions/LoginActions'
 import { checkEnabledExchanges, showReEnableOtpModal } from '../actions/SettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
@@ -22,13 +21,11 @@ import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
-import { defaultAccount } from '../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { AppParamList, NavigationBase } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
-import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeHeader } from './navigation/EdgeHeader'
@@ -49,10 +46,10 @@ import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene as CreateWalletAccountSelectSceneComponent } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene as CreateWalletAccountSetupSceneComponent } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene as CreateWalletCompletionSceneComponent } from './scenes/CreateWalletCompletionScene'
+import { CreateWalletEditNameScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletEditNameScene'
 import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneComponent } from './scenes/CreateWalletImportOptionsScene'
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
-import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
@@ -282,14 +279,7 @@ export const Main = () => {
       {experimentConfig == null ? (
         <LoadingSplashScreen />
       ) : (
-        <NavigationContainer
-          // This lets us dive into nested navigators using just a route name.
-          // We need to port to using the new syntax,
-          // so do `navigate('stackName', { screen: 'nestedSceneName' }`
-          // instead of `navigate('nestedSceneName')`:
-          navigationInChildEnabled
-          theme={reactNavigationTheme}
-        >
+        <NavigationContainer theme={reactNavigationTheme}>
           <Stack.Navigator
             initialRouteName={initialRouteName}
             screenOptions={{
@@ -298,12 +288,7 @@ export const Main = () => {
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
             <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
-            <Stack.Screen
-              name="login"
-              component={LoginScene}
-              initialParams={{ experimentConfig }}
-              options={{ animation: hasInitialScenesLoaded ? 'slide_from_left' : 'none' }}
-            />
+            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
           </Stack.Navigator>
         </NavigationContainer>
       )}
@@ -312,35 +297,6 @@ export const Main = () => {
 }
 
 const EdgeApp = () => {
-  const backPressedOnce = React.useRef(false)
-  const account = useSelector(state => state.core.account)
-  const dispatch = useDispatch()
-  const navigation = useNavigation<NavigationBase>()
-
-  useBackEvent(() => {
-    // Allow back if logged out or this is the second back press
-    if (account === defaultAccount || backPressedOnce.current) {
-      dispatch(logoutRequest(navigation)).catch(err => showError(err))
-      return true
-    }
-    backPressedOnce.current = true
-
-    // Temporarily disable showing toast since we are getting the back event
-    // on almost every login. This is a temporary fix until we can figure it out
-    // For now just log the event
-    console.warn('Warning: Back button pressed to exit app. Toast supressed.')
-    // Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
-    //   .then(() => {
-    //     backPressedOnce.current = false
-    //   })
-    //   .catch(err => showError(err))
-    // // Timeout the back press after 3 seconds so the state isn't "sticky"
-    // setTimeout(() => {
-    //   backPressedOnce.current = false
-    // }, 3000)
-    return false
-  })
-
   return (
     <Drawer.Navigator
       drawerContent={props => SideMenu(props)}
@@ -449,7 +405,7 @@ const EdgeAppStack = () => {
           headerLeft: () => null
         }}
       />
-      <Stack.Screen name="createWalletSelectFiat" component={CreateWalletSelectFiatScene} />
+      <Stack.Screen name="createWalletEditName" component={CreateWalletSelectFiatScene} />
       <Stack.Screen
         name="currencyNotificationSettings"
         component={CurrencyNotificationScene}
@@ -573,27 +529,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen name="fioStakingChange" component={FioStakingChangeScene} />
       <Stack.Screen name="fioStakingOverview" component={FioStakingOverviewScene} />
-      <Stack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
       <Stack.Screen name="loanClose" component={LoanCloseScene} />
       <Stack.Screen name="loanCreate" component={LoanCreateScene} />
       <Stack.Screen name="loanCreateConfirmation" component={LoanCreateConfirmationScene} />
@@ -777,15 +712,7 @@ const EdgeWalletsTabScreen = () => {
 const EdgeBuyTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
       <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
       <Stack.Screen
         name="pluginViewBuy"
         component={GuiPluginViewScene}
@@ -795,6 +722,37 @@ const EdgeBuyTabScreen = () => {
           headerLeft: () => <PluginBackButton />
         }}
       />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
     </Stack.Navigator>
   )
 }
@@ -802,11 +760,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
-      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
-      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
@@ -816,6 +770,37 @@ const EdgeSellTabScreen = () => {
           headerLeft: () => <PluginBackButton />
         }}
       />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
     </Stack.Navigator>
   )
 }

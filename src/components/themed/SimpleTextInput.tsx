@@ -190,7 +190,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} marginRemProps={marginRemProps}>
           <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
-          <TouchableOpacity accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
+          <TouchableOpacity hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
             <SideContainer size={backIconSize}>
               <ChevronBackAnimated color={iconColor} size={backIconSize} />
             </SideContainer>
@@ -227,7 +227,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
             />
           </InnerContainer>
 
-          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer size={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>

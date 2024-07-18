@@ -9,13 +9,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
-import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -48,22 +47,20 @@ export function TransactionListRow(props: Props) {
   const styles = getStyles(theme)
 
   const { navigation, wallet, transaction } = props
-
   const { metadata = {}, currencyCode, tokenId } = transaction
-  const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
-
-  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
-  const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
 
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const account = useSelector(state => state.core.account)
+
   const displayDenomination = useDisplayDenom(wallet.currencyConfig, tokenId)
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
-  const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
+  const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
   const denominationSymbol = displayDenomination.symbol
+  const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const rateKey = `${currencyCode}_${fiatCurrencyCode}`
+  const rateKey = `${currencyCode}_${defaultIsoFiat}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
@@ -87,10 +84,10 @@ export function TransactionListRow(props: Props) {
 
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
-  const historicalRate = useHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, isoDate)
+  const historicalRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
   const amountFiat = (defaultAmountFiat ?? 0) > 0 ? defaultAmountFiat ?? 0 : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
-  const fiatSymbol = getSymbolFromCurrency(nonIsoFiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 
@@ -171,6 +168,7 @@ export function TransactionListRow(props: Props) {
   const handleLongPress = useHandler(() => {
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
+      failOnCancel: false,
       url
     }
     Share.open(shareOptions).catch(e => showError(e))

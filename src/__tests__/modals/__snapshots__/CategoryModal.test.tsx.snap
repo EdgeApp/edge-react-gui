@@ -785,7 +785,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         removeClippedSubviews={false}
         renderItem={[Function]}
         renderScrollComponent={[Function]}
-        scrollEventThrottle={0.0001}
+        scrollEventThrottle={50}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -2173,7 +2173,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         removeClippedSubviews={false}
         renderItem={[Function]}
         renderScrollComponent={[Function]}
-        scrollEventThrottle={0.0001}
+        scrollEventThrottle={50}
         scrollIndicatorInsets={
           {
             "right": 1,

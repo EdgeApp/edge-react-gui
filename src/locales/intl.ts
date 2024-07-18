@@ -1,4 +1,4 @@
-import { gt, mul, toFixed } from 'biggystring'
+import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
@@ -74,7 +74,7 @@ export function formatNumberInput(input: string, options?: IntlNumberFormatOptio
 export function formatNumber(number: number | string, options: IntlNumberFormatOptionsType = {}): string {
   let i
   let intPart
-  let stringify = String(number)
+  let stringify = toBns(number)
   const { toFixed: toFixedVal } = options
   const { minDecimals = toFixedVal ?? 0, maxDecimals = toFixedVal ?? 99 } = options
 

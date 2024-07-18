@@ -743,7 +743,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         ]
                       }
                     >
-                      $ 0.23
+                      € 0.23
                     </Text>
                   </View>
                   <View
@@ -1435,6 +1435,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -2311,7 +2316,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         ]
                       }
                     >
-                      $ 0.23
+                      € 0.23
                     </Text>
                   </View>
                   <View
@@ -3191,6 +3196,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -3885,7 +3895,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                   <View
@@ -4233,7 +4243,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         ]
                       }
                     >
-                      $ 2.28
+                      € 2.26
                     </Text>
                   </View>
                   <View
@@ -4925,6 +4935,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -5619,7 +5634,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                   <View
@@ -5805,7 +5820,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         ]
                       }
                     >
-                      $ 2.28
+                      € 2.26
                     </Text>
                   </View>
                   <View
@@ -6358,6 +6373,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -7052,7 +7072,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                   <View
@@ -7767,6 +7787,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -8461,7 +8486,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                   <View
@@ -9014,6 +9039,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -9708,7 +9738,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                   <View
@@ -10014,7 +10044,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         ]
                       }
                     >
-                      $ 2.28
+                      € 2.26
                     </Text>
                   </View>
                   <View
@@ -10567,6 +10597,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -11285,7 +11320,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                 </View>
@@ -11567,7 +11602,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         ]
                       }
                     >
-                      $ 2.28
+                      € 2.26
                     </Text>
                   </View>
                 </View>
@@ -12054,6 +12089,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -12772,7 +12812,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         ]
                       }
                     >
-                      Amount: 0.00001234 BTC ($ 0.23)
+                      Amount: 0.00001234 BTC (€ 0.23)
                     </Text>
                   </View>
                 </View>
@@ -13012,7 +13052,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         ]
                       }
                     >
-                      $ 2.28
+                      € 2.26
                     </Text>
                   </View>
                 </View>
@@ -13499,6 +13539,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
@@ -14584,7 +14629,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
@@ -14930,6 +14975,11 @@ exports[`SendScene2 Render SendScene 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,

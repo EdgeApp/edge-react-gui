@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react'
-import { LayoutChangeEvent, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native'
 import Animated, { Easing, EasingFunction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 const ANIMATION_DURATION_DEFAULT = 1000
@@ -11,6 +10,7 @@ const NUMBERS = Array(10)
   .map((_, i) => i)
 
 export interface AnimatedNumberProps {
+  digitHeight: number
   numberString: string
   animationDuration?: number
   textStyle?: TextStyle
@@ -19,41 +19,27 @@ export interface AnimatedNumberProps {
 }
 
 export const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
-  const { numberString, textStyle, animationDuration = ANIMATION_DURATION_DEFAULT, easing = Easing.inOut(Easing.quad), style } = props
+  const { digitHeight, numberString, textStyle, animationDuration = ANIMATION_DURATION_DEFAULT, easing = Easing.inOut(Easing.quad), style } = props
   const animateToNumbersArr: string[] = Array.from(numberString, String)
-  const [digitHeight, setDigitHeight] = React.useState(0)
-
-  const handleDigitLayout = useHandler((event: LayoutChangeEvent) => {
-    setDigitHeight(event.nativeEvent.layout.height)
-  })
 
   const numberStyle: StyleProp<ViewStyle> = useMemo(() => [style, { flexDirection: 'row' }], [style])
-  const zeroStyle: StyleProp<ViewStyle> = useMemo(() => [textStyle, { position: 'absolute', top: -999999 }], [textStyle])
 
   return (
-    <>
-      {digitHeight !== 0 ? (
-        <View style={numberStyle}>
-          {animateToNumbersArr.map((n, index) => {
-            return (
-              <AnimatedDigit
-                animationDuration={animationDuration}
-                key={index}
-                index={index}
-                easing={easing}
-                textStyle={textStyle}
-                digit={n}
-                numberHeight={digitHeight}
-              />
-            )
-          })}
-        </View>
-      ) : (
-        <Text style={zeroStyle} onLayout={handleDigitLayout}>
-          0
-        </Text>
-      )}
-    </>
+    <View style={numberStyle}>
+      {animateToNumbersArr.map((n, index) => {
+        return (
+          <AnimatedDigit
+            animationDuration={animationDuration}
+            key={index}
+            index={index}
+            easing={easing}
+            textStyle={textStyle}
+            digit={n}
+            numberHeight={digitHeight}
+          />
+        )
+      })}
+    </View>
   )
 }
 

@@ -9,6 +9,7 @@ import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { getOsVersion, zeroString } from '../../util/utils'
@@ -45,18 +46,6 @@ export const PromoCardsUi4 = (props: Props) => {
     return unSyncedWallets.length === 0
   })
 
-  /**
-   * promoIds used to filter the promo cards will be checked against both the
-   * actual promotion installerIds *and* the accountReferral installerId, if it
-   * exists.
-   * accountReferral usage directly seems to cause excessive re-renders. Memoize
-   * what we need.
-   **/
-  const promoIds = React.useMemo(() => {
-    const accountReferralId = accountReferral.installerId == null ? [] : [accountReferral.installerId]
-    return [...accountReferral.promotions.map(promotion => promotion.installerId), ...accountReferralId]
-  }, [accountReferral])
-
   // Set account funded status
   React.useEffect(() => {
     if (!walletsSynced) return
@@ -65,13 +54,30 @@ export const PromoCardsUi4 = (props: Props) => {
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
-    if (countryCode == null) return
     const cards = infoServerData.rollup?.promoCards2 ?? []
 
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
-    setFilteredCards(filterPromoCards(cards, countryCode, accountFunded, promoIds))
-  }, [accountFunded, countryCode, promoIds])
+    const currentDate = new Date()
+    const buildNumber = getBuildNumber()
+    const osType = Platform.OS.toLowerCase()
+    const version = getVersion()
+    const osVersion = getOsVersion()
+
+    setFilteredCards(
+      filterPromoCards({
+        cards,
+        countryCode,
+        accountFunded,
+        accountReferral,
+        buildNumber,
+        osType,
+        osVersion,
+        version,
+        currentDate
+      })
+    )
+  }, [accountFunded, accountReferral, countryCode])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
@@ -97,15 +103,28 @@ export const PromoCardsUi4 = (props: Props) => {
  * Finds the promo cards that are relevant to our application version &
  * other factors.
  */
-function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunded?: boolean, accountPromoIds?: string[]): FilteredPromoCard[] {
-  const buildNumber = getBuildNumber()
-  const currentDate = new Date()
-  const osType = Platform.OS.toLowerCase()
-  const version = getVersion()
-  const osVersion = getOsVersion()
-  countryCode = countryCode.toLowerCase()
+export function filterPromoCards(params: {
+  cards: PromoCard2[]
+  countryCode?: string
+  buildNumber: string
+  osType: string
+  version: string
+  osVersion: string
+  currentDate: Date
+  accountFunded?: boolean
+  accountReferral?: Partial<AccountReferral>
+}): FilteredPromoCard[] {
+  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, accountReferral } = params
+
+  let accountPromoIds: string[] | undefined
+  if (accountReferral != null) {
+    const accountReferralId = accountReferral?.installerId == null ? [] : [accountReferral.installerId]
+    const promotions = accountReferral.promotions ?? []
+    accountPromoIds = [...promotions.map(promotion => promotion.installerId), ...accountReferralId]
+  }
 
   // Find relevant cards:
+  const ccLowerCase = countryCode?.toLowerCase()
   const filteredCards: FilteredPromoCard[] = []
   for (const card of cards) {
     const {
@@ -124,11 +143,12 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
       osTypes = [],
       osVersions = [],
       startIsoDate,
+      pluginPromotions,
       promoId
     } = card
 
-    const startDate = asDate(startIsoDate)
-    const endDate = asDate(endIsoDate)
+    const startDate = asDate(startIsoDate ?? '1970-01-01')
+    const endDate = asDate(endIsoDate ?? '1970-01-01')
 
     // Validate balance status. If the card specifies 'noBalance' and
     // accountFunded balances are not ready yet (undefined), omit until balances
@@ -149,9 +169,12 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
     if (maxBuildNum != null && maxBuildNum < buildNumber) continue
 
     // Validate country
-    const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
-    const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
-    if (!isCountryInclude || isCountryExclude) continue
+    if (excludeCountryCodes.length > 0 || countryCodes.length > 0) {
+      if (ccLowerCase == null) continue
+      const isCountryInclude = countryCodes.length === 0 || countryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      if (!isCountryInclude || isCountryExclude) continue
+    }
 
     // Validate OS type
     if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) continue
@@ -163,9 +186,8 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
     if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
     if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
 
-    // Validate promoId (temporarily disabled)
-    // if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
-    if (promoId != null) continue
+    // Validate promoId
+    if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
@@ -176,6 +198,7 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
       ctaButton,
       dismissable,
       localeMessages,
+      pluginPromotions,
       messageId
     })
   }

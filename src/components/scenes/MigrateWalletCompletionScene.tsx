@@ -41,6 +41,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const sortedMigrateWalletListBundles = React.useMemo(() => {
@@ -105,8 +106,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
         const oldWallet = currencyWallets[oldWalletId]
         const {
-          currencyInfo: { walletType },
-          fiatCurrencyCode
+          currencyInfo: { walletType }
         } = oldWallet
         const oldWalletName = getWalletName(oldWallet)
         const newWalletName = `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`
@@ -122,7 +122,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           if (newWallet == null) {
             newWallet = await account.createCurrencyWallet(walletType, {
               name: newWalletName,
-              fiatCurrencyCode,
+              fiatCurrencyCode: defaultIsoFiat,
               migratedFromWalletId: oldWalletId
             })
             createdNewWallet = true

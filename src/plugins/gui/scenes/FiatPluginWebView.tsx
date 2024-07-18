@@ -41,7 +41,7 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   })
 
   return (
-    <SceneWrapper hasTabs>
+    <SceneWrapper hasTabs avoidKeyboard>
       <WebView
         allowUniversalAccessFromFileURLs
         geolocationEnabled

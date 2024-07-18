@@ -16,9 +16,14 @@ interface Props {
   message: string
   title: string
   type: 'warning' | 'info'
+  /** If true, no close button is present, and the notification will remain
+   * visible if the body is tapped. Default false. */
+  persistent?: boolean
   iconUri?: string
 
   onPress: () => void | Promise<void>
+
+  /** If provided, adds a close button to the right. */
   onClose?: () => void | Promise<void>
 }
 
@@ -26,7 +31,7 @@ const NotificationCardComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { title, type, message, onClose, onPress } = props
+  const { title, type, message, persistent = false, onClose, onPress } = props
   const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
 
   const opacity = useSharedValue(1)
@@ -44,7 +49,7 @@ const NotificationCardComponent = (props: Props) => {
 
   const handlePress = useHandler(async () => {
     await onPress()
-    setVisible(false)
+    if (!persistent) setVisible(false)
   })
 
   const handleClose = useHandler(async () => {

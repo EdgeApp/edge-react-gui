@@ -24,6 +24,7 @@ describe('AccelerateTxModalComponent', () => {
     const actual = renderer.render(
       <AccelerateTxModalComponent
         bridge={fakeAirshipBridge}
+        isoFiatCurrencyCode="iso:USD"
         replacedTx={{
           blockHeight: 0,
           currencyCode: 'BTC',

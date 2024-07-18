@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { FIAT_PRECISION, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { FIAT_PRECISION, getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatNumberInput } from '../../locales/intl'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
@@ -30,6 +30,7 @@ function WalletListSortableRowComponent(props: Props) {
   const dispatch = useDispatch()
 
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const exchangeDenomination = wallet == null ? null : getExchangeDenom(wallet.currencyConfig, null)
 
@@ -44,7 +45,7 @@ function WalletListSortableRowComponent(props: Props) {
   }
 
   const { currencyCode } = wallet.currencyInfo
-  const walletFiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
   const displayDenomination = dispatch((_, getState) => selectDisplayDenom(getState(), wallet.currencyConfig, null))
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
@@ -55,16 +56,16 @@ function WalletListSortableRowComponent(props: Props) {
   const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
   const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
   const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-  const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
+  const fiatBalance = calculateFiatBalance(wallet, defaultIsoFiat, exchangeDenomination, exchangeRates)
   const fiatBalanceFormat = fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
-  const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
+  const fiatBalanceSymbol = showBalance && fiatSymbol ? fiatSymbol : ''
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
   return (
     <EdgeTouchableOpacity style={styles.container} onLongPress={onDrag}>
       <View style={styles.rowContainer}>
         <View style={styles.iconContainer}>
-          <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
+          <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
           <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />

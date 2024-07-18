@@ -70,6 +70,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const defaultDenomination = getExchangeDenom(currencyConfig, tokenId)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   interface StakingDisplay {
     native: string
@@ -98,7 +99,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
       const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
+      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
       const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
       stakingBalances[stakedType] = {

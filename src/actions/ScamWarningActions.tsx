@@ -78,8 +78,10 @@ type ScamWarningInfo = ReturnType<typeof asScamWarningInfo>
  *
  * These scam warnings will only show once the first time they perform a
  * dangerous action.
+ *
+ * Returns true if a modal was shown
  **/
-export const showScamWarningModal = async (scamWarningInfoKey: keyof ScamWarningInfo) => {
+export const showScamWarningModal = async (scamWarningInfoKey: keyof ScamWarningInfo): Promise<boolean> => {
   // const scamWarningInfo = await getScamWarningInfo()
   // // Ignore if we've already triggered a particular warning
   // if (scamWarningInfo[scamWarningInfoKey]) {
@@ -91,4 +93,6 @@ export const showScamWarningModal = async (scamWarningInfoKey: keyof ScamWarning
   //     return <ScamWarningModal bridge={bridge} />
   //   })
   // }
+
+  return false
 }

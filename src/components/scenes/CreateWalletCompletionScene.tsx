@@ -26,7 +26,6 @@ import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 export interface CreateWalletCompletionParams {
   createWalletList: WalletCreateItem[]
   walletNames: { [key: string]: string }
-  fiatCode: string
   importText?: string
   keyOptions?: Map<string, { [opt: string]: string | undefined }>
 }
@@ -35,13 +34,14 @@ interface Props extends EdgeSceneProps<'createWalletCompletion'> {}
 
 const CreateWalletCompletionComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList, walletNames, fiatCode, keyOptions = new Map(), importText } = route.params
+  const { createWalletList, walletNames, keyOptions = new Map(), importText } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const [done, setDone] = React.useState(false)
   const [wallets, setWallets] = React.useState<EdgeCurrencyWallet[]>([])
@@ -73,18 +73,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
   // Create the wallets and enable the tokens
   useAsyncEffect(
     async () => {
-      // Create tokens on existing wallets:
-      let tokenPromise: Promise<void> | undefined
-      if (tokenKey != null) {
-        tokenPromise = dispatch(enableTokensAcrossWallets(newTokenItems)).then(
-          () => setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'complete' })),
-          error => {
-            showError(error)
-            setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'error' }))
-          }
-        )
-      }
-
       // Create new wallets in parallel:
       const walletResults = await createWallets(
         account,
@@ -93,7 +81,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
             enabledTokenIds: newTokenItems
               .filter(tokenItem => tokenItem.createWalletIds[0] === PLACEHOLDER_WALLET_ID && tokenItem.pluginId === item.pluginId)
               .map(tokenItem => tokenItem.tokenId),
-            fiatCurrencyCode: `iso:${fiatCode}`,
+            fiatCurrencyCode: defaultIsoFiat,
             importText,
             keyOptions: { ...item.keyOptions, ...keyOptions.get(item.pluginId) },
             name: walletNames[item.key],
@@ -115,8 +103,15 @@ const CreateWalletCompletionComponent = (props: Props) => {
         }
       }
 
-      if (tokenPromise != null) {
-        await tokenPromise
+      // Create tokens on existing wallets:
+      if (tokenKey != null) {
+        await dispatch(enableTokensAcrossWallets(newTokenItems)).then(
+          () => setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'complete' })),
+          error => {
+            showError(error)
+            setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'error' }))
+          }
+        )
       }
 
       // Save the created wallets

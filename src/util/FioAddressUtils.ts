@@ -613,21 +613,23 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
   return ''
 }
 
-export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain: string): Promise<void> => {
+export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain: string): Promise<string | true> => {
   let isDomainPublic = false
   try {
     isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
   } catch (e: any) {
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
-      throw new Error(lstrings.fio_get_reg_info_domain_err_msg)
+      return lstrings.fio_get_reg_info_domain_err_msg
     }
 
-    throw new Error(lstrings.fio_connect_wallets_err)
+    return lstrings.fio_connect_wallets_err
   }
 
   if (!isDomainPublic) {
-    throw new Error(lstrings.fio_address_register_domain_is_not_public)
+    return lstrings.fio_address_register_domain_is_not_public
   }
+
+  return true
 }
 
 /**

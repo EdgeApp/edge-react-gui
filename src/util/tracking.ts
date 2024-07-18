@@ -49,6 +49,7 @@ export type TrackingEventName =
   | 'Start_App'
   | 'Start_App_No_Accounts'
   | 'Start_App_With_Accounts'
+  | 'Survey_Discover'
   | 'purchase'
   | 'Visa_Card_Launch'
   | 'Earn_Spend_Launch' // No longer used
@@ -102,6 +103,7 @@ export interface TrackingValues extends LoginTrackingValues {
   createdWalletCurrencyCode?: string
   numSelectedWallets?: number // Number of wallets to be created
   numAccounts?: number // Number of full accounts saved on the device
+  surveyResponse?: string // User's answer to a survey
 
   // Conversion values
   conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues
@@ -214,7 +216,6 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         // Notifications
         const notificationPermission = await checkNotifications()
         params.notificationStatus = notificationPermission.status
-
         consify({ logEvent: { event, params } })
 
         Promise.all([logToPosthog(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))

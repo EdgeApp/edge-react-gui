@@ -59,7 +59,7 @@ interface Section {
 
 export const SwapConfirmationScene = (props: Props) => {
   const { route, navigation } = props
-  const { selectedQuote: initialSelectedQuote, quotes, onApprove } = route.params
+  const { quotes, onApprove } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -72,7 +72,7 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const isFocused = useIsFocused()
 
-  const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
+  const [selectedQuote, setSelectedQuote] = useState(pickBestQuote(quotes))
   const [calledApprove, setCalledApprove] = useState(false)
 
   const { request } = selectedQuote
@@ -348,6 +348,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> => {
   return async (_dispatch, getState) => {
     const state = getState()
+    const { defaultFiat, defaultIsoFiat } = state.ui.settings
 
     // Currency conversion tools:
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
@@ -364,7 +365,7 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     // Format from fiat:
     const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
     const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
-    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
+    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, defaultIsoFiat, fromBalanceInCryptoDisplay))
     const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
     // Format crypto fee:
@@ -375,9 +376,9 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
 
     // Format fiat fee:
     const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
-    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
+    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, defaultIsoFiat, feeDenominatedAmount))
     const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
-    const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
+    const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`
     const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
 
     // Format to amount:
@@ -388,7 +389,7 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     // Format to fiat:
     const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
     const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
-    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
+    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, defaultIsoFiat, toBalanceInCryptoDisplay))
     const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
     const swapInfo: GuiSwapInfo = {
@@ -401,4 +402,48 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     }
     return swapInfo
   }
+}
+
+const getBetterQuoteRate = (quoteA: EdgeSwapQuote, quoteB: EdgeSwapQuote): EdgeSwapQuote => {
+  const aRate = div(quoteA.toNativeAmount, quoteA.fromNativeAmount, DECIMAL_PRECISION)
+  const bRate = div(quoteB.toNativeAmount, quoteB.fromNativeAmount, DECIMAL_PRECISION)
+  return gte(aRate, bRate) ? quoteA : quoteB
+}
+
+export const pickBestQuote = (quotes: EdgeSwapQuote[]): EdgeSwapQuote => {
+  const best = quotes.reduce((bestQuote, quote) => {
+    const { swapInfo, isEstimate } = quote
+    const { isDex = false } = swapInfo
+    const { isEstimate: isBestQuoteEstimate } = bestQuote
+    const isBestQuoteDex = bestQuote.swapInfo.isDex === true
+
+    // If the quote isDex and has a better rate, pick the quote
+    if (isDex) {
+      return getBetterQuoteRate(quote, bestQuote)
+    }
+
+    // If best quote isDex and new quote is fixed. Pick the better rate
+    if (isBestQuoteDex) {
+      if (!isEstimate) {
+        return getBetterQuoteRate(quote, bestQuote)
+      }
+      return bestQuote
+    }
+
+    // Neither quotes are isDex. If both quotes are estimates or fixed,
+    // pick the better rate
+    if ((!isEstimate && !isBestQuoteEstimate) || (isEstimate && isBestQuoteEstimate)) {
+      return getBetterQuoteRate(quote, bestQuote)
+    }
+
+    // Pick the fixed quote
+    if (!isEstimate) {
+      return quote
+    } else {
+      // This has to be a fixed quote
+      return bestQuote
+    }
+  })
+
+  return best
 }

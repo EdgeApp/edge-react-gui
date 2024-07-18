@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toPercentString } from '../../locales/intl'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -16,6 +16,7 @@ import { debugLog, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { DECIMAL_PRECISION } from '../../util/utils'
+import { COINGECKO_SUPPORTED_FIATS } from '../scenes/CoinRankingScene'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { CardUi4 } from './CardUi4'
@@ -50,15 +51,15 @@ interface CoinRowProps {
   coinRow: CoinRankingData
   index: number
   navigation: NavigationBase
+  fiatCurrencyCode: string
 }
 
 const CoinRow = (props: CoinRowProps) => {
-  const { coinRow, index, navigation } = props
+  const { coinRow, index, navigation, fiatCurrencyCode } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
   const key = `${index}-${currencyCode}`
@@ -89,7 +90,7 @@ const CoinRow = (props: CoinRowProps) => {
     <RowUi4
       key={key}
       icon={<FastImage style={styles.icon} source={imageSrc} />}
-      onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
+      onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow, fiatCurrencyCode })}
       rightButtonType="none"
     >
       <View style={styles.rowBody}>
@@ -108,7 +109,9 @@ const CoinRow = (props: CoinRowProps) => {
  */
 export const MarketsCardUi4 = (props: Props) => {
   const { numRows } = props
-  const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+  const supportedFiatSetting = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+
   const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
 
   /**
@@ -118,7 +121,7 @@ export const MarketsCardUi4 = (props: Props) => {
     const task = makePeriodicTask(
       async () => {
         const fetchedData = []
-        const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${1}&length=${numRows - 1}`
+        const url = `v2/coinrank?fiatCode=iso:${supportedFiatSetting}&start=${1}&length=${numRows - 1}`
         const response = await fetchRates(url)
         if (!response.ok) {
           const text = await response.text()
@@ -146,12 +149,12 @@ export const MarketsCardUi4 = (props: Props) => {
 
     // Cleanup logic:
     return () => task.stop()
-  }, [defaultIsoFiat, numRows])
+  }, [supportedFiatSetting, numRows])
 
   return (
     <CardUi4 sections>
       {coinRankingDatas.map((coinRow, index) => (
-        <CoinRow key={coinRow.assetId} coinRow={coinRow} index={index} {...props} />
+        <CoinRow key={coinRow.assetId} coinRow={coinRow} fiatCurrencyCode={supportedFiatSetting} index={index} {...props} />
       ))}
     </CardUi4>
   )

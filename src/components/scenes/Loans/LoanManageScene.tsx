@@ -31,7 +31,7 @@ import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
-import { zeroString } from '../../../util/utils'
+import { removeIsoPrefix, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
@@ -124,12 +124,13 @@ export const LoanManageSceneComponent = (props: Props) => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const executionContext = useExecutionContext()
 
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
-  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
+  const { currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const manageActionData = MANAGE_ACTION_DATA_MAP[loanManageType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
@@ -152,7 +153,7 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
 
   // #endregion Constants
 

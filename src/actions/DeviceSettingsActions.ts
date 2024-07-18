@@ -47,6 +47,18 @@ export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
   return await writeDeviceSettings(updatedSettings)
 }
 
+export const writeForceLightAccountCreate = async (forceLightAccountCreate: boolean) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings: DeviceSettings = { ...deviceSettings, forceLightAccountCreate }
+  return await writeDeviceSettings(updatedSettings)
+}
+
 /**
  * Track the state of whether particular one-time notifications associated with
  * the device were interacted with or dismissed.
@@ -54,6 +66,13 @@ export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
 export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: DeviceNotifDismissInfo) => {
   const updatedSettings: DeviceSettings = { ...deviceSettings, deviceNotifDismissInfo }
   return await writeDeviceSettings(updatedSettings)
+}
+
+/**
+ * Track the state of whether the "How did you Discover Edge" modal was shown.
+ **/
+export const writeIsSurveyDiscoverShown = async (isSurveyDiscoverShown: boolean) => {
+  return await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
 }
 
 const readDeviceSettings = async (): Promise<DeviceSettings> => {

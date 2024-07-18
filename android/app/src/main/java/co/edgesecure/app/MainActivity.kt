@@ -3,9 +3,9 @@ package co.edgesecure.app
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.zoontek.rnbootsplash.RNBootSplash
@@ -16,24 +16,34 @@ class MainActivity : ReactActivity() {
      * Returns the name of the main component registered from JavaScript. This is used to schedule
      * rendering of the component.
      */
-    override fun getMainComponentName(): String = "edge"
+    override fun getMainComponentName(): String? {
+        return "edge"
+    }
 
     /**
-     * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-     * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
+     * Returns the instance of the [ReactActivityDelegate]. Here we use a util class [ ] which
+     * allows you to easily enable Fabric and Concurrent React (aka React 18) with two boolean
+     * flags.
      */
-    override fun createReactActivityDelegate(): ReactActivityDelegate =
-        ReactActivityDelegateWrapper(
+    override fun createReactActivityDelegate(): ReactActivityDelegate {
+        return ReactActivityDelegateWrapper(
             this,
             BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
-            DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+            DefaultReactActivityDelegate(
+                this,
+                mainComponentName!!,
+                // If you opted-in for the New Architecture, we enable the Fabric Renderer.
+                fabricEnabled, // fabricEnabled
+                // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React
+                // 18).
+                concurrentReactEnabled // concurrentRootEnabled
+            )
         )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Keep the splash screen around until we are ready to hide it:
         RNBootSplash.init(this)
-
-        // Do not pass the saved state, as required by react-native-screens:
         super.onCreate(null)
 
         // Hide app contents in the background:

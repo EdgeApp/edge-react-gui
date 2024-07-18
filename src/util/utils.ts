@@ -1,14 +1,5 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import {
-  EdgeCurrencyConfig,
-  EdgeCurrencyInfo,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgePluginMap,
-  EdgeToken,
-  EdgeTokenMap,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeDenomination, EdgePluginMap, EdgeToken, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
@@ -20,14 +11,13 @@ import {
   FEE_COLOR_THRESHOLD,
   FIAT_CODES_SYMBOLS,
   FIAT_PRECISION,
-  getSymbolFromCurrency,
+  getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -187,7 +177,7 @@ export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
       multiplier: '0'
     }
   }
-  const symbol = getSymbolFromCurrency(currencyCode)
+  const symbol = getFiatSymbol(currencyCode)
   const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,
@@ -244,6 +234,7 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
   const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
+  if (isNaN(exchangeRateOrderOfMagnitude)) return 0
 
   // Get the exchange rate in tenth of pennies
   const exchangeRateString = mul(exchangeRateOrderOfMagnitude.toString(), mul(params.secondaryExchangeMultiplier, '10'))
@@ -282,7 +273,7 @@ export async function snooze(ms: number): Promise<void> {
 }
 
 let prevTotal = '0'
-export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
+export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): string => {
   const log: string[] = ['', '']
   let total = '0'
   const { exchangeRates } = state
@@ -323,10 +314,10 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   if (total !== prevTotal) {
     // Use for troubleshooting incorrect balance issues. Disable for now as it's pretty noisy
-    // console.log(log.join('\n'))
+    // console.warn(log.join('\n'))
   }
   prevTotal = total
-  return Number(total)
+  return total
 }
 
 export const getYesterdayDateRoundDownHour = () => {
@@ -412,14 +403,14 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-  const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
@@ -433,7 +424,6 @@ export const convertTransactionFeeToDisplayFee = (
     const cryptoFeeExchangeDenomAmount = feeNativeAmount ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount) : ''
     const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
     const cryptoAmount = mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-    const { currencyCode } = wallet.currencyInfo
     const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
@@ -588,9 +578,9 @@ export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: nu
 export const formatLargeNumberString = (num: number): string => {
   const absNum = Math.abs(num)
   if (absNum >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + ' Bn'
+    return (num / 1000000000).toFixed(2) + ' Bn'
   } else if (absNum >= 1000000) {
-    return (num / 1000000).toFixed(1) + ' M'
+    return (num / 1000000).toFixed(2) + ' M'
   } else {
     return num.toString()
   }
@@ -648,4 +638,8 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
 export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
   return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
+}
+
+export const removeIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.replace('iso:', '')
 }

@@ -187,7 +187,7 @@ export const LoanDashboardScene = (props: Props) => {
           </Space>
         ) : (
           <EdgeTouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <Ionicon name="add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.loan_new_loan}</EdgeText>
           </EdgeTouchableOpacity>
         )}

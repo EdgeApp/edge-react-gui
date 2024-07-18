@@ -50,7 +50,7 @@ import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../mod
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
@@ -248,7 +248,6 @@ const SendComponent = (props: Props) => {
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
-        wallet={coreWallet}
         currencyCode={currencyCode}
         exchangeDenomination={cryptoExchangeDenomination}
         displayDenomination={cryptoDisplayDenomination}
@@ -366,7 +365,6 @@ const SendComponent = (props: Props) => {
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
-          wallet={coreWallet}
           currencyCode={currencyCode}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}
@@ -482,7 +480,14 @@ const SendComponent = (props: Props) => {
         feeDisplayDenomination = cryptoDisplayDenomination
         feeExchangeDenomination = cryptoExchangeDenomination
       }
-      const transactionFee = convertTransactionFeeToDisplayFee(coreWallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeExchangeDenomination)
+      const transactionFee = convertTransactionFeeToDisplayFee(
+        coreWallet.currencyInfo.currencyCode,
+        defaultIsoFiat,
+        exchangeRates,
+        edgeTransaction,
+        feeDisplayDenomination,
+        feeExchangeDenomination
+      )
 
       const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
       const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
@@ -745,7 +750,7 @@ const SendComponent = (props: Props) => {
       if (!isAuthorized) {
         resetSlider()
         setPinValue('')
-        showError(new Error(lstrings.incorrect_pin))
+        showToast(lstrings.incorrect_pin)
         return
       }
     }

@@ -103,7 +103,9 @@ export const GettingStartedScene = (props: Props) => {
     })
 
   const visitNewAccountScene = (): void =>
-    navigation.navigate('login', {
+    // Android needs replace instead of navigate or the loginUiInitialRoute
+    // doesn't work...
+    navigation.replace('login', {
       loginUiInitialRoute: lightAccounts ? 'new-light-account' : 'new-account',
       experimentConfig
     })

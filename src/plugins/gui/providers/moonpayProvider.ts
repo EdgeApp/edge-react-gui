@@ -3,6 +3,7 @@ import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, a
 import URL from 'url-parse'
 
 import { StringMap } from '../../../types/types'
+import { removeIsoPrefix } from '../../../util/utils'
 import { asFiatPaymentType, FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -230,7 +231,7 @@ export const moonpayProvider: FiatProviderFactory = {
         const maxCrypto = Math.max(cryptoCurrencyObj.maxAmount ?? 0, cryptoCurrencyObj.maxBuyAmount ?? 0)
         const minCrypto = Math.min(cryptoCurrencyObj.minAmount ?? Infinity, cryptoCurrencyObj.minBuyAmount ?? Infinity)
         const exchangeAmount = parseFloat(params.exchangeAmount)
-        const displayFiatCurrencyCode = params.fiatCurrencyCode.replace('iso:', '')
+        const displayFiatCurrencyCode = removeIsoPrefix(params.fiatCurrencyCode)
         if (params.amountType === 'fiat') {
           if (exchangeAmount > maxFiat)
             throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxFiat, displayCurrencyCode: displayFiatCurrencyCode })
@@ -244,7 +245,7 @@ export const moonpayProvider: FiatProviderFactory = {
           amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
         }
 
-        const fiatCode = params.fiatCurrencyCode.replace('iso:', '').toLowerCase()
+        const fiatCode = removeIsoPrefix(params.fiatCurrencyCode).toLowerCase()
         const paymentMethod = useIAch ? 'ach_bank_transfer' : 'credit_debit_card'
         const url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
         const response = await fetch(url).catch(e => {

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
+import { useBackButtonToast } from '../../hooks/useBackButtonToast'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
@@ -10,6 +11,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
+import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
@@ -17,7 +19,6 @@ import { SearchFooter } from '../themed/SearchFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
-import { WiredProgressBar } from '../themed/WiredProgressBar'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 interface Props extends EdgeSceneProps<'walletList'> {}
@@ -36,6 +37,8 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
+
+  useBackButtonToast()
 
   //
   // Handlers
@@ -134,7 +137,7 @@ export function WalletListScene(props: Props) {
     <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasTabs hasNotifications renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
-          <WiredProgressBar />
+          <AccountSyncBar />
           <View style={[styles.listStack, undoInsetStyle]}>
             <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
               <WalletListSwipeable

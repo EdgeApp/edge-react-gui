@@ -1,11 +1,17 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     ext {
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 28 // Edge modified from 23
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 28 // Edge modified from 21
         compileSdkVersion = 34
         targetSdkVersion = 34
+
+        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "26.1.10909125"
-        kotlinVersion = "1.9.22"
+
+        // Edge addition:
+        kotlinVersion = "1.8.22"
     }
     repositories {
         google()
@@ -17,14 +23,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:7.4.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
 
         // Edge additions:
         classpath 'com.google.gms:google-services:4.3.14'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         classpath "gradle.plugin.tech.formatter-kt:plugin:0.7.9"
     }
 }
-
-apply plugin: "com.facebook.react.rootproject"

@@ -1,7 +1,6 @@
 import { abs, lt } from 'biggystring'
-import { asArray, asMaybe } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
-import { asAssetStatus, AssetStatus } from 'edge-info-server'
+import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
@@ -13,6 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
+import { getLocaleOrDefaultString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
@@ -20,7 +20,7 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { fetchInfo } from '../../util/network'
+import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
@@ -59,13 +59,12 @@ function TransactionListComponent(props: Props) {
   const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
-  const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const iconColor = useIconColor({ pluginId, tokenId })
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
+  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${state.ui.settings.defaultIsoFiat}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null
@@ -139,23 +138,24 @@ function TransactionListComponent(props: Props) {
   }, [enabledTokenIds, navigation, tokenId])
 
   // Check for AssetStatuses from info server (known sync issues, etc):
-  React.useEffect(() => {
-    fetchInfo(`v1/assetStatusCards/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
-      .then(async res => {
-        const raw = await res.json()
-        const allAssetStatuses = asMaybe(asArray(asAssetStatus))(raw)
-        if (allAssetStatuses == null) return
-        const version = getVersion()
+  const assetStatuses = React.useMemo<AssetStatus[]>(() => {
+    const pluginTokenId = `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+    const allAssetStatuses = (infoServerData.rollup?.assetStatusCards ?? {})[pluginTokenId] ?? []
+    const version = getVersion()
+    return allAssetStatuses.filter(assetStatus => {
+      const { appId, appVersions, localeStatusBody, localeStatusTitle, statusStartIsoDate, statusEndIsoDate } = assetStatus
+      const curDate = new Date().toISOString()
 
-        // Filter for assetStatuses relevant to this instance of the app
-        setAssetStatuses(
-          allAssetStatuses.filter(assetStatus => {
-            const { appId, appVersions } = assetStatus
-            return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
-          })
-        )
-      })
-      .catch(e => console.log(String(e)))
+      const title = getLocaleOrDefaultString(localeStatusTitle)
+      const message = getLocaleOrDefaultString(localeStatusBody)
+
+      if (title == null || message == null) return false
+      if (appId != null && appId !== config.appId) return false
+      if (appVersions != null && !appVersions.includes(version)) return false
+      if (statusEndIsoDate != null && statusEndIsoDate < curDate) return false
+      if (statusStartIsoDate != null && statusStartIsoDate > curDate) return false
+      return true
+    })
   }, [pluginId, tokenId])
 
   //

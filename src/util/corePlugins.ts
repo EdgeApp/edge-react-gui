@@ -29,6 +29,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   goerli: ENV.GOERLI_INIT,
   hedera: true,
   kovan: ENV.KOVAN_INIT,
+  mumbai: ENV.MUMBAI_INIT,
   liberland: true,
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,
@@ -85,10 +86,11 @@ export const swapPlugins = {
   swapuz: ENV.SWAPUZ_INIT,
 
   // Defi Swaps
-  tombSwap: ENV.TOMB_SWAP_INIT,
+  rango: ENV.RANGO_INIT,
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
   thorchainda: ENV.THORCHAIN_INIT,
+  tombSwap: ENV.TOMB_SWAP_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
 

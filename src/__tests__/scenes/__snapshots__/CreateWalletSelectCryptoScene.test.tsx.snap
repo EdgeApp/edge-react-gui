@@ -424,6 +424,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
+          hitSlop={17}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -548,6 +549,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
+          hitSlop={17}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -691,7 +693,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={0.0001}
+      scrollEventThrottle={50}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -804,6 +806,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1003,6 +1010,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/1985365e9f78359a9b6ad760e32412f4a445e862.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1032,6 +1044,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1231,6 +1248,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/221657776846890989a759ba2973e427dff5c9bb.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1260,6 +1282,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1459,6 +1486,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1488,6 +1520,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1687,6 +1724,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/6b175474e89094c44da98b954eedeac495271d0f.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1716,6 +1758,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,

@@ -7,7 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { hexToDecimal } from '../../../util/utils'
+import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -371,7 +371,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
         // Query for a quote
         let getQuoteParams: GetQuoteParams
-        const fiatCode = fiatCurrencyCode.replace('iso:', '')
+        const fiatCode = removeIsoPrefix(fiatCurrencyCode)
 
         if (direction === 'buy') {
           if (amountType === 'fiat') {

@@ -16,7 +16,7 @@ import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showDevError, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showDevError, showError, showToast } from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
@@ -108,7 +108,7 @@ export const ScanModal = (props: Props) => {
         const asset = result.assets != null ? result.assets[0] : undefined
 
         if (asset == null) {
-          showWarning(lstrings.scan_camera_missing_qrcode)
+          showToast(lstrings.scan_camera_missing_qrcode)
           return
         }
 
@@ -117,7 +117,7 @@ export const ScanModal = (props: Props) => {
         })
           .then(response => {
             if (response.values.length === 0) {
-              showWarning(lstrings.scan_camera_missing_qrcode)
+              showToast(lstrings.scan_camera_missing_qrcode)
               return
             }
 

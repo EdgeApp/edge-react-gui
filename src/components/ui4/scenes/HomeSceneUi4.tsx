@@ -1,4 +1,3 @@
-import { asBlogPosts, BlogPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -8,17 +7,18 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { getCountryCodeByIp } from '../../../actions/AccountReferralActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useBackButtonToast } from '../../../hooks/useBackButtonToast'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
 import { config } from '../../../theme/appConfig'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
-import { fetchInfo } from '../../../util/network'
+import { infoServerData } from '../../../util/network'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { AccountSyncBar } from '../../progress-indicators/AccountSyncBar'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
 import { BlogCards } from '../BlogCards'
 import { HomeCardUi4 } from '../HomeCardUi4'
@@ -42,8 +42,9 @@ export const HomeSceneUi4 = (props: Props) => {
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
-  const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([])
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useBackButtonToast()
 
   //
   // Handlers
@@ -76,15 +77,7 @@ export const HomeSceneUi4 = (props: Props) => {
     'countryCode'
   )
 
-  // Check for BlogPosts from info server:
-  React.useEffect(() => {
-    fetchInfo(`v1/blogPosts/${config.appId ?? 'edge'}`)
-      .then(async res => {
-        const infoData = await res.json()
-        setBlogPosts(asBlogPosts(infoData))
-      })
-      .catch(e => console.log(String(e)))
-  }, [])
+  const blogPosts = infoServerData.rollup?.blogPosts
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -96,7 +89,7 @@ export const HomeSceneUi4 = (props: Props) => {
     <SceneWrapper hasNotifications hasTabs>
       {({ insetStyle, undoInsetStyle }) => (
         <>
-          <WiredProgressBar />
+          <AccountSyncBar />
           <Animated.ScrollView
             onScroll={handleScroll}
             style={undoInsetStyle}

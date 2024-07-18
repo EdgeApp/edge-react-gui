@@ -79,9 +79,9 @@ export function RadioIcon(props: { value: boolean }) {
   const theme = useTheme()
 
   const icon = value ? (
-    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
+    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="radio-button-on" />
   ) : (
-    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
+    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="radio-button-off" />
   )
 
   return icon

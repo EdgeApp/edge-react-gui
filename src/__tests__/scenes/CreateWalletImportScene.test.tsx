@@ -45,8 +45,7 @@ describe('CreateWalletImportScene', () => {
                 walletType: 'wallet:bitcoin-bip49'
               }
             ],
-            walletNames: { 'create-wallet:bitcoin-bip49-bitcoin': 'My Bitcoin' },
-            fiatCode: 'USD'
+            walletNames: { 'create-wallet:bitcoin-bip49-bitcoin': 'My Bitcoin' }
           })}
         />
       </FakeProviders>

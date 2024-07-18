@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/react-native'
+import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
@@ -28,6 +28,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
+import { SurveyModal } from '../modals/SurveyModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
@@ -127,105 +128,17 @@ export function DevTestScene(props: Props) {
   return (
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
-        <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
-        <ModalFilledTextInput
-          iconComponent={SearchIconAnimated}
-          value={filledTextInputValue6}
-          onChangeText={setFilledTextInputValue6}
-          autoFocus={false}
-          placeholder="Test big text"
-          textsizeRem={1.5}
-          maxLength={100}
-        />
-        <ModalFilledTextInput
-          numeric
-          value={filledTextInputValue7}
-          onChangeText={setFilledTextInputValue7}
-          autoFocus={false}
-          placeholder="Test big number"
-          textsizeRem={1.5}
-          maxLength={100}
-        />
-        <ModalFilledTextInput
-          value={filledTextInputValue}
-          onChangeText={setFilledTextInputValue}
-          autoFocus={false}
-          placeholder="Test FilledTextInput"
-          maxLength={100}
-        />
-        <ModalFilledTextInput
-          prefix="PRE"
-          value={filledTextInputValue2}
-          onChangeText={setFilledTextInputValue2}
-          autoFocus={false}
-          placeholder="Test FilledTextInput"
-          maxLength={100}
-        />
-        <ModalFilledTextInput
-          numeric
-          value={filledTextInputValue3}
-          onChangeText={setFilledTextInputValue3}
-          autoFocus={false}
-          placeholder="Test FilledTextInput num"
-        />
-        <ModalFilledTextInput
-          numeric
-          prefix="$"
-          suffix="BTC"
-          value={filledTextInputValue4}
-          onChangeText={setFilledTextInputValue4}
-          autoFocus={false}
-          placeholder="Test FilledTextInput num"
-          error="Error"
-          maxLength={100}
-        />
-        <ModalFilledTextInput
-          prefix="USD"
-          suffix="BTC"
-          value={filledTextInputValue5}
-          onChangeText={setFilledTextInputValue5}
-          autoFocus={false}
-          placeholder="Test FilledTextInput"
-          error="Error"
-          maxLength={100}
-        />
-        <>
-          <ModalFilledTextInput
-            value={filledTextInputValue8}
-            onChangeText={setFilledTextInputValue8}
-            autoFocus={false}
-            placeholder="Test FilledTextInput Custom Error"
-            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
-          />
-          <EdgeText>Ensure errors above don't push me down</EdgeText>
-        </>
-        {selectedWallet == null ? null : (
-          <CardUi4>
-            <ExchangedFlipInput2
-              ref={exchangedFlipInputRef}
-              wallet={selectedWallet.wallet}
-              headerText={headerText}
-              editable={editable}
-              headerCallback={headerCallback}
-              returnKeyType={returnKeyType}
-              forceField={defaultField ? 'crypto' : 'fiat'}
-              keyboardVisible={keyboardVisible}
-              tokenId={tokenId}
-              startNativeAmount={balance}
-              onAmountChanged={onAmountChanged}
-            />
-          </CardUi4>
-        )}
-
-        <>
-          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
-          <ButtonUi4 label="Set Crypto Amt" onPress={onPress0} />
-          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
-          <ButtonUi4 label="Set Fiat Amt" onPress={onPress1} />
-        </>
-
         <>
           <SectionHeaderUi4 leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
+          <ButtonUi4
+            label="SurveyModal"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show(bridge => {
+                return <SurveyModal bridge={bridge} />
+              })
+            }}
+          />
           <ButtonUi4 label="TextInputModal (multiline)" marginRem={0.25} onPress={handleMultilineTextInputModal} />
           <ButtonUi4 label="TextInputModal (single line)" marginRem={0.25} onPress={handleTextInputModal} />
           <ButtonUi4 label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
@@ -341,6 +254,103 @@ export function DevTestScene(props: Props) {
             }}
           />
         </>
+        <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
+        <ModalFilledTextInput
+          iconComponent={SearchIconAnimated}
+          value={filledTextInputValue6}
+          onChangeText={setFilledTextInputValue6}
+          autoFocus={false}
+          placeholder="Test big text"
+          textsizeRem={1.5}
+          maxLength={100}
+        />
+        <ModalFilledTextInput
+          numeric
+          value={filledTextInputValue7}
+          onChangeText={setFilledTextInputValue7}
+          autoFocus={false}
+          placeholder="Test big number"
+          textsizeRem={1.5}
+          maxLength={100}
+        />
+        <ModalFilledTextInput
+          value={filledTextInputValue}
+          onChangeText={setFilledTextInputValue}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          maxLength={100}
+        />
+        <ModalFilledTextInput
+          prefix="PRE"
+          value={filledTextInputValue2}
+          onChangeText={setFilledTextInputValue2}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          maxLength={100}
+        />
+        <ModalFilledTextInput
+          numeric
+          value={filledTextInputValue3}
+          onChangeText={setFilledTextInputValue3}
+          autoFocus={false}
+          placeholder="Test FilledTextInput num"
+        />
+        <ModalFilledTextInput
+          numeric
+          prefix="$"
+          suffix="BTC"
+          value={filledTextInputValue4}
+          onChangeText={setFilledTextInputValue4}
+          autoFocus={false}
+          placeholder="Test FilledTextInput num"
+          error="Error"
+          maxLength={100}
+        />
+        <ModalFilledTextInput
+          prefix="USD"
+          suffix="BTC"
+          value={filledTextInputValue5}
+          onChangeText={setFilledTextInputValue5}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          error="Error"
+          maxLength={100}
+        />
+        <>
+          <ModalFilledTextInput
+            value={filledTextInputValue8}
+            onChangeText={setFilledTextInputValue8}
+            autoFocus={false}
+            placeholder="Test FilledTextInput Custom Error"
+            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+          />
+          <EdgeText>Ensure errors above don't push me down</EdgeText>
+        </>
+        {selectedWallet == null ? null : (
+          <CardUi4>
+            <ExchangedFlipInput2
+              ref={exchangedFlipInputRef}
+              wallet={selectedWallet.wallet}
+              headerText={headerText}
+              editable={editable}
+              headerCallback={headerCallback}
+              returnKeyType={returnKeyType}
+              forceField={defaultField ? 'crypto' : 'fiat'}
+              keyboardVisible={keyboardVisible}
+              tokenId={tokenId}
+              startNativeAmount={balance}
+              onAmountChanged={onAmountChanged}
+            />
+          </CardUi4>
+        )}
+
+        <>
+          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+          <ButtonUi4 label="Set Crypto Amt" onPress={onPress0} />
+          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+          <ButtonUi4 label="Set Fiat Amt" onPress={onPress1} />
+        </>
+
         <>
           <SectionHeaderUi4 leftTitle="Buttons" />
           <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
@@ -411,6 +421,11 @@ export function DevTestScene(props: Props) {
           <ButtonUi4
             marginRem={0.5}
             onPress={() => {
+              addBreadcrumb({
+                type: 'DEV_ERROR',
+                message: 'Test Breadcrumb before error',
+                timestamp: new Date().getTime() / 1000
+              })
               captureException(new Error('First error'))
             }}
             label="Crash"

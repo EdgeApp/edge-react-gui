@@ -40,6 +40,7 @@ export function AccountCallbackManager(props: Props) {
   const { account, navigation } = props
   const dispatch = useDispatch()
   const [dirty, setDirty] = React.useState<DirtyList>(notDirty)
+  const numWallets = React.useRef(0)
 
   // Helper for marking wallets dirty:
   function setRatesDirty() {
@@ -52,12 +53,19 @@ export function AccountCallbackManager(props: Props) {
   // Subscribe to the account:
   React.useEffect(() => {
     const cleanups = [
-      account.watch('currencyWallets', () =>
+      account.watch('currencyWallets', () => {
+        let ratesDirty: true | undefined
+        const numW = Object.keys(account.currencyWallets).length
+        if (numWallets.current !== numW) {
+          numWallets.current = numW
+          ratesDirty = true
+        }
         setDirty(dirty => ({
           ...dirty,
-          walletList: true
+          walletList: true,
+          rates: ratesDirty ?? dirty.rates
         }))
-      ),
+      }),
 
       account.watch('loggedIn', () => {
         if (!account.loggedIn) {
@@ -133,8 +141,7 @@ export function AccountCallbackManager(props: Props) {
         dispatch({ type: 'CORE/NEW_TOKENS', data: { walletId: wallet.id, enablingTokenIds } })
       }),
 
-      // These ones defer their work until later:
-      wallet.watch('balanceMap', () => setRatesDirty()),
+      // This one defers their work until later:
       wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 

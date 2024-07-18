@@ -1,0 +1,51 @@
+diff --git a/node_modules/expo-file-system/ios/EXFileSystem/EXFileSystem.m b/node_modules/expo-file-system/ios/EXFileSystem/EXFileSystem.m
+index a114c11..a1925f4 100644
+--- a/node_modules/expo-file-system/ios/EXFileSystem/EXFileSystem.m
++++ b/node_modules/expo-file-system/ios/EXFileSystem/EXFileSystem.m
+@@ -969,24 +969,6 @@ - (void)sendEventWithName:(NSString *)eventName body:(id)body
+   }
+ }
+ 
+-- (NSDictionary<NSURLResourceKey, id> *)documentFileResourcesForKeys:(NSArray<NSURLResourceKey> *)keys
+-                                                               error:(out NSError * __autoreleasing *)error
+-{
+-  if (!keys.count) {
+-    return @{};
+-  }
+-
+-  NSURL *documentDirectoryUrl = [NSURL fileURLWithPath:_documentDirectory];
+-  NSDictionary *results = [documentDirectoryUrl resourceValuesForKeys:keys
+-                                                                error:error];
+-
+-  if (!results) {
+-    return @{};
+-  }
+-
+-  return results;
+-}
+-
+ #pragma mark - Public utils
+ 
+ - (EXFileSystemPermissionFlags)permissionsForURI:(NSURL *)uri
+@@ -1048,19 +1030,13 @@ + (NSString *)generatePathInDirectory:(NSString *)directory withExtension:(NSStr
+ // '<ARCType> *__autoreleasing*' problem solution: https://stackoverflow.com/a/8862061/4337317
+ - (NSNumber *)totalDiskCapacityWithError:(out NSError * __autoreleasing *)error
+ {
+-  NSDictionary *results = [self documentFileResourcesForKeys:@[NSURLVolumeTotalCapacityKey]
+-                                                       error:error];
+-
+-  return results[NSURLVolumeTotalCapacityKey];
++  return @0;
+ }
+ 
+ // '<ARCType> *__autoreleasing*' problem solution: https://stackoverflow.com/a/8862061/4337317
+ - (NSNumber *)freeDiskStorageWithError:(out NSError * __autoreleasing *)error
+ {
+-  NSDictionary *results = [self documentFileResourcesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey]
+-                                                       error:error];
+-
+-  return results[NSURLVolumeAvailableCapacityForImportantUsageKey];
++  return @0;
+ }
+ 
+ @end

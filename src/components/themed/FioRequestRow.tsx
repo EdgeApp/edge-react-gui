@@ -5,15 +5,15 @@ import { StyleSheet, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
-import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddressUtils'
+import { removeIsoPrefix } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
@@ -197,17 +197,9 @@ const emptyDenomination = { name: '', multiplier: '0' }
 export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
+    const { defaultIsoFiat } = state.ui.settings
     let displayDenomination = emptyDenomination
     let exchangeDenomination = emptyDenomination
-    const wallet = getSelectedCurrencyWallet(state)
-    if (!wallet) {
-      return {
-        exchangeDenomination,
-        displayDenomination,
-        fiatSymbol: '',
-        fiatAmount: ''
-      }
-    }
     let tokenCode = fioRequest.content.token_code.toUpperCase()
     try {
       const { account } = state.core
@@ -227,11 +219,10 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
-    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode.replace('iso:', ''))
-    const isoFiatCurrencyCode = wallet.fiatCurrencyCode
+    const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
     const exchangeRates = state.exchangeRates
 
-    const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
+    const rateKey = `${tokenCode}_${defaultIsoFiat}`
     const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
     const fiatAmount = formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
 

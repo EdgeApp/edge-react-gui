@@ -4,14 +4,12 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
 import { toPercentString } from '../../../locales/intl'
-import { getDefaultFiat } from '../../../selectors/SettingsSelectors'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
 import { useState } from '../../../types/reactHooks'
-import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { triggerHaptic } from '../../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../../util/logger'
@@ -21,11 +19,12 @@ import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
 interface Props {
-  navigation: NavigationProp<'coinRanking'>
-  index: number
-  percentChangeTimeFrame: PercentChangeTimeFrame
   assetSubText: AssetSubText
   coinRanking: CoinRanking
+  index: number
+  fiatCurrencyCode: string
+  navigation: NavigationProp<'coinRanking'>
+  percentChangeTimeFrame: PercentChangeTimeFrame
 }
 
 const MIN_REFRESH_INTERVAL = 30000
@@ -34,11 +33,10 @@ const REFRESH_INTERVAL_RANGE = 10000
 type Timeout = ReturnType<typeof setTimeout>
 
 const CoinRankRowComponent = (props: Props) => {
-  const { navigation, index, percentChangeTimeFrame, assetSubText, coinRanking } = props
+  const { navigation, index, percentChangeTimeFrame, assetSubText, coinRanking, fiatCurrencyCode } = props
   const { coinRankingDatas } = coinRanking
 
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   const mounted = React.useRef<boolean>(true)
   const timeoutHandler = React.useRef<Timeout | undefined>()
@@ -49,7 +47,7 @@ const CoinRankRowComponent = (props: Props) => {
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    navigation.navigate('coinRankingDetails', { coinRankingData: coinRankingDatas[index] })
+    navigation.navigate('coinRankingDetails', { coinRankingData: coinRankingDatas[index], fiatCurrencyCode })
   })
 
   React.useEffect(() => {
@@ -135,7 +133,7 @@ const CoinRankRowComponent = (props: Props) => {
 
   const decimalChangeRaw = div(String(percentChangeRaw), '100', DECIMAL_PRECISION)
   const percentChangeString = toPercentString(decimalChangeRaw, { intlOpts: { noGrouping: true } })
-  const negative = lt(percentChangeString, '0')
+  const negative = lt(decimalChangeRaw, '0')
 
   // Calculate price string
   numDecimals = getNumDecimals(price)

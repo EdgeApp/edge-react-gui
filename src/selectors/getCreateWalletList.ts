@@ -3,7 +3,7 @@ import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { EdgeAsset, WalletListItem } from '../types/types'
 import { checkAssetFilter, hasAsset, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
-import { assetOverrides } from '../util/serverState'
+import { infoServerData } from '../util/network'
 import { normalizeForSearch } from '../util/utils'
 
 export interface WalletCreateItem {
@@ -56,10 +56,12 @@ interface CreateWalletListOpts {
   filterActivation?: boolean
   allowedAssets?: EdgeAsset[]
   excludeAssets?: EdgeAsset[]
+  /** Don't return "(no Segwit)" create items */
+  disableLegacy?: boolean
 }
 
 export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
-  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets } = opts
+  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets, disableLegacy = false } = opts
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
@@ -73,7 +75,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && requiresActivation(pluginId)) continue
 
-    if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
+    if (!disableLegacy && ['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
       newWallets.push({
         type: 'create',
         key: `create-${walletType}-bip49-${pluginId}`,
@@ -159,6 +161,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     })
   }
   const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
+  const assetOverrides = infoServerData.rollup?.assetOverrides ?? { disable: {} }
   return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 

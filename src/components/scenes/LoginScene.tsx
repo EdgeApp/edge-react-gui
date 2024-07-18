@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { BlurView } from 'rn-id-blurview'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
@@ -160,6 +161,7 @@ export function LoginSceneComponent(props: Props) {
         context={context}
         experimentConfig={experimentConfig}
         fastLogin
+        forceLightAccountCreate={getDeviceSettings().forceLightAccountCreate}
         initialLoginId={nextLoginId ?? undefined}
         initialRoute={loginUiInitialRoute}
         parentButton={parentButton}

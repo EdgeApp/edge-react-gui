@@ -1,17 +1,16 @@
 import { div, mul } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
-import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
-import { connect } from '../../../types/reactRedux'
+import { getExchangeDenom, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../../selectors/WalletSelectors'
+import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
-import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -20,35 +19,46 @@ import {
   fioSignAndBroadcast,
   getRemainingBundles
 } from '../../../util/FioAddressUtils'
-import { DECIMAL_PRECISION } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
+import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
+export interface FioRequestConfirmationParams {
+  amounts: ExchangedFlipInputAmounts
+  fioAddressTo: string
+  tokenId: EdgeTokenId
+  walletId: string
+}
+
 interface StateProps {
   exchangeSecondaryToPrimaryRatio: string
-  edgeWallet: EdgeCurrencyWallet
   chainCode: string
-  primaryCurrencyInfo: GuiCurrencyInfo
+  displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
   fioWallets: EdgeCurrencyWallet[]
   account: EdgeAccount
   isConnected: boolean
   fioPlugin?: EdgeCurrencyConfig
-  walletId: string
   currencyCode: string
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
   }
+  defaultIsoFiat: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioRequestConfirmation'> {}
+interface OwnProps extends EdgeSceneProps<'fioRequestConfirmation'> {
+  wallet: EdgeCurrencyWallet
+}
 
 type Props = StateProps & ThemeProps & OwnProps
 
@@ -91,7 +101,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
-              if (defaultFioAddressFrom == null && connectedWalletsByFioAddress[fioAddress]?.[`${chainCode}:${currencyCode}`] === this.props.walletId) {
+              if (defaultFioAddressFrom == null && connectedWalletsByFioAddress[fioAddress]?.[`${chainCode}:${currencyCode}`] === this.props.wallet.id) {
                 defaultFioAddressFrom = fioAddress
               }
             }
@@ -113,15 +123,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
-    const { account, chainCode, currencyCode, edgeWallet, fioPlugin, isConnected, navigation, primaryCurrencyInfo, route } = this.props
-    const { amounts } = route.params
+    const { account, chainCode, exchangeDenomination, fioPlugin, isConnected, navigation, route, wallet } = this.props
+    const { amounts, tokenId } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
-    const { publicAddress } = await edgeWallet.getReceiveAddress({ tokenId: null })
+    const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const val = div(amounts.nativeAmount, exchangeDenomination.multiplier, DECIMAL_PRECISION)
       try {
         if (!isConnected) {
           showError(lstrings.fio_network_alert_text)
@@ -180,7 +190,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           console.log(e)
         }
 
-        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(edgeWallet.currencyInfo.pluginId, chainCode, primaryCurrencyInfo.exchangeCurrencyCode)
+        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(wallet.currencyInfo.pluginId, chainCode, exchangeDenomination.name)
 
         // send fio request
         const edgeTx = await fioMakeSpend(fioWallet, 'requestFunds', {
@@ -197,8 +207,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(lstrings.fio_request_ok_body)
         await addToFioAddressCache(account, [this.state.fioAddressTo])
-        const tokenId = getWalletTokenId(edgeWallet, currencyCode)
-        navigation.navigate('request', { tokenId, walletId: edgeWallet.id })
+        navigation.navigate('request', { tokenId, walletId: wallet.id })
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
@@ -224,10 +233,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressFromModal = async () => {
-    const { fioPlugin, walletId, currencyCode } = this.props
+    const { currencyCode, fioPlugin, wallet } = this.props
     const { walletAddresses } = this.state
     const fioAddressFrom = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
+      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
     ))
     if (fioAddressFrom == null) return
     if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
@@ -245,11 +254,11 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressToModal = async () => {
-    const { fioPlugin, walletId, currencyCode } = this.props
+    const { fioPlugin, wallet, currencyCode } = this.props
 
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} isFioOnly />
+      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} isFioOnly />
     ))
     if (fioAddressTo == null) {
       this.showError()
@@ -282,16 +291,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { edgeWallet, exchangeSecondaryToPrimaryRatio, primaryCurrencyInfo, route, theme } = this.props
+    const { defaultIsoFiat, displayDenomination, exchangeDenomination, exchangeSecondaryToPrimaryRatio, route, theme } = this.props
     const { amounts } = route.params
 
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
 
-    if (!primaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
-      exchangeAmount = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      cryptoAmount = div(amounts.nativeAmount, displayDenomination.multiplier, DECIMAL_PRECISION)
+      exchangeAmount = div(amounts.nativeAmount, exchangeDenomination.multiplier, DECIMAL_PRECISION)
     } catch (e: any) {
       return null
     }
@@ -299,8 +307,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const styles = getStyles(theme)
 
     const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
-    const cryptoName = primaryCurrencyInfo.displayDenomination.name
-    const fiatName = edgeWallet.fiatCurrencyCode.replace('iso:', '')
+    const cryptoName = displayDenomination.name
+    const fiatName = removeIsoPrefix(defaultIsoFiat)
 
     return (
       <SceneWrapper scroll>
@@ -337,58 +345,39 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
-  state => {
-    const selectedWallet: EdgeCurrencyWallet = getSelectedCurrencyWallet(state)
-    const { account } = state.core
-    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const { isConnected } = state.network
+export const FioRequestConfirmationScene = withWallet((ownProps: OwnProps) => {
+  const { route, navigation, wallet } = ownProps
+  const { tokenId } = route.params
+  const currencyCode = getCurrencyCode(wallet, tokenId)
+  const theme = useTheme()
 
-    if (!currencyCode) {
-      return {
-        exchangeSecondaryToPrimaryRatio: '0',
-        chainCode: '',
-        primaryCurrencyInfo: emptyCurrencyInfo,
-        edgeWallet: selectedWallet,
-        fioWallets,
-        account,
-        isConnected,
-        walletId: '',
-        currencyCode: '',
-        fioPlugin: account.currencyConfig.fio,
-        connectedWalletsByFioAddress: {}
-      }
-    }
+  const account = useSelector(state => state.core.account)
+  const connectedWalletsByFioAddress = useSelector(state => state.ui.fio.connectedWalletsByFioAddress)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const displayDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
+  const exchangeSecondaryToPrimaryRatio = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+  const isConnected = useSelector(state => state.network.isConnected)
 
-    const primaryDisplayDenomination = selectDisplayDenomByCurrencyCode(state, selectedWallet.currencyConfig, currencyCode)
-    const primaryExchangeDenomination = getExchangeDenomByCurrencyCode(selectedWallet.currencyConfig, currencyCode)
-    const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
+  const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
 
-    const primaryCurrencyInfo: GuiCurrencyInfo = {
-      walletId: state.ui.wallets.selectedWalletId,
-      tokenId: getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, currencyCode),
-      displayCurrencyCode: currencyCode,
-      displayDenomination: primaryDisplayDenomination,
-      exchangeCurrencyCode: primaryExchangeCurrencyCode,
-      exchangeDenomination: primaryExchangeDenomination
-    }
-    const isoFiatCurrencyCode: string = selectedWallet.fiatCurrencyCode
-    const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-
-    return {
-      exchangeSecondaryToPrimaryRatio,
-      edgeWallet: selectedWallet,
-      chainCode: selectedWallet.currencyInfo.currencyCode,
-      primaryCurrencyInfo,
-      fioWallets,
-      account,
-      isConnected,
-      walletId: state.ui.wallets.selectedWalletId,
-      currencyCode: state.ui.wallets.selectedCurrencyCode,
-      fioPlugin: account.currencyConfig.fio,
-      connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress
-    }
-  },
-  dispatch => ({})
-)(withTheme(FioRequestConfirmationConnected))
+  return (
+    <FioRequestConfirmationConnected
+      account={account}
+      chainCode={wallet.currencyInfo.currencyCode}
+      connectedWalletsByFioAddress={connectedWalletsByFioAddress}
+      currencyCode={currencyCode}
+      defaultIsoFiat={defaultIsoFiat}
+      displayDenomination={displayDenomination}
+      exchangeDenomination={exchangeDenomination}
+      exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+      fioPlugin={account.currencyConfig.fio}
+      fioWallets={fioWallets}
+      isConnected={isConnected}
+      navigation={navigation}
+      route={route}
+      theme={theme}
+      wallet={wallet}
+    />
+  )
+})

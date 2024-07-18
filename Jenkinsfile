@@ -66,7 +66,7 @@ pipeline {
 
   tools {
     jdk '17'
-    nodejs '18'
+    nodejs '22'
   }
   options {
     timestamps()

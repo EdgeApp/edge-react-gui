@@ -67,7 +67,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const [searchTerm, setSearchTerm] = React.useState('')
 
   const allowedAssets = splitPluginIds.length > 0 ? splitPluginIds.map(pluginId => ({ pluginId, tokenId: null })) : undefined
-  const createList = getCreateWalletList(account, { allowedAssets })
+  const createList = getCreateWalletList(account, { allowedAssets, disableLegacy: splitPluginIds.length > 0 })
 
   const createWalletList = React.useMemo(() => {
     const preselectedList: WalletCreateItem[] = []
@@ -216,7 +216,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       await newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
-      navigation.push('createWalletSelectFiat', { createWalletList: newList, splitSourceWalletId })
+      navigation.push('createWalletEditName', { createWalletList: newList, splitSourceWalletId })
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))

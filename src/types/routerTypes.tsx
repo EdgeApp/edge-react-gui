@@ -8,10 +8,10 @@ import type { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import type { CreateWalletAccountSelectParams } from '../components/scenes/CreateWalletAccountSelectScene'
 import type { CreateWalletAccountSetupParams } from '../components/scenes/CreateWalletAccountSetupScene'
 import type { CreateWalletCompletionParams } from '../components/scenes/CreateWalletCompletionScene'
+import type { CreateWalletEditNameParams } from '../components/scenes/CreateWalletEditNameScene'
 import type { CreateWalletImportOptionsParams } from '../components/scenes/CreateWalletImportOptionsScene'
 import type { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import type { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
-import type { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
 import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
@@ -23,6 +23,7 @@ import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHa
 import { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
 import { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
 import { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
+import { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -53,7 +54,6 @@ import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScen
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
-import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput2'
 import type { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
@@ -105,7 +105,7 @@ export interface RouteParamList {
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
-  createWalletSelectFiat: CreateWalletSelectFiatParams
+  createWalletEditName: CreateWalletEditNameParams
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: {}
@@ -130,10 +130,7 @@ export interface RouteParamList {
   fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams
   fioDomainSettings: FioDomainSettingsParams
   fioNameConfirm: FioNameConfirmParams
-  fioRequestConfirmation: {
-    amounts: ExchangedFlipInputAmounts
-    fioAddressTo: string
-  }
+  fioRequestConfirmation: FioRequestConfirmationParams
   fioRequestList: {}
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
