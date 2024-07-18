@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "Carteira Vazia",
   "buy_crypto_modal_message": "A sua carteira %s está vazia. Gostaria de comprar %s ou trocar outra criptomoeda por %s?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s é necessário para enviar esta transação. Gostaria de comprar %2$s ou trocar outra criptomoeda por %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Agora não",
   "buy_crypto_modal_buy_action": "Comprar %s",
   "buy_crypto_modal_exchange": "Exchange",
