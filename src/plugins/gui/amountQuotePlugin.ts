@@ -435,7 +435,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
 
           // Find best quote factoring in pluginPriorities
-          bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
+          bestQuote = getBestQuote(direction, goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
             return { stateManagerUpdate: { statusText: { content: noQuoteText, textType: 'error' } } }
           }
@@ -557,13 +557,18 @@ export const createPriorityArray = (providerPriority: ProviderPriorityMap): Prio
   return priorityArray
 }
 
-export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | undefined => {
+export const getBestQuote = (direction: 'buy' | 'sell', quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | undefined => {
   let bestQuote
   let bestQuoteRatio = '0'
   for (const p of priorityArray) {
     for (const quote of quotes) {
       if (!p[quote.providerId]) continue
-      const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
+      let quoteRatio: string
+      if (direction === 'buy') {
+        quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
+      } else {
+        quoteRatio = div(quote.fiatAmount, quote.cryptoAmount, 16)
+      }
 
       if (gt(quoteRatio, bestQuoteRatio)) {
         bestQuoteRatio = quoteRatio

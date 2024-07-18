@@ -1,5 +1,5 @@
 import { div } from 'biggystring'
-import { asNumber, asObject, asString, asUnknown, asValue } from 'cleaners'
+import { asNumber, asObject, asOptional, asString, asUnknown, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTxActionFiat } from 'edge-core-js'
 import { toUtf8Bytes } from 'ethers/lib/utils'
 
@@ -20,6 +20,8 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { FiatPluginOpenWebViewParams } from '../scenes/FiatPluginWebView'
+
+const GWEI = '1000000000'
 
 const providerId = 'mtpelerin'
 const storeId = 'com.mtpelerin'
@@ -56,10 +58,7 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   zksync: 'zksync_mainnet'
 }
 
-const BUY_ONLY_PLUGIN_IDS: { [pluginId: string]: boolean } = {
-  // Have to disable bitcoin as we can't sell via widget right now
-  bitcoin: true
-}
+const BUY_ONLY_PLUGIN_IDS: { [pluginId: string]: boolean } = {}
 
 const PLUGIN_EVM_MAP: { [pluginId: string]: boolean } = {
   arbitrum: true,
@@ -102,7 +101,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
 const allAllowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   buy: {
     providerId,
-    requiredAmountType: 'fiat',
     crypto: {},
     fiat: {
       CHF: true,
@@ -121,7 +119,6 @@ const allAllowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   },
   sell: {
     providerId,
-    requiredAmountType: 'crypto',
     crypto: {},
     fiat: {
       CHF: true,
@@ -228,18 +225,19 @@ const asQuoteResponse = asObject({
   destCurrency: asString,
   sourceNetwork: asString,
   destNetwork: asString,
-  sourceAmount: asNumber,
+  sourceAmount: asString,
   destAmount: asString // Assuming dest amount can be a string representation of a number
 })
 
 const asSendTransactionParams = asObject({
-  chainId: asNumber,
+  chainId: asOptional(asNumber),
   to: asString,
-  nonce: asString,
-  gasPrice: asString,
-  gasLimit: asString,
-  value: asString,
-  from: asString
+  nonce: asOptional(asString),
+  gasPrice: asOptional(asString),
+  gasLimit: asOptional(asString),
+  amount: asOptional(asString),
+  value: asOptional(asString),
+  from: asOptional(asString)
 })
 
 // Define the expected structure of the entire object
@@ -247,9 +245,17 @@ const asMessage = asObject({
   request: asValue('getAddresses', 'sendTransaction', 'signPersonalMessage'),
   params: asUnknown
 })
-interface GetQuoteParams {
-  sourceCurrency: string
+
+interface GetSourceQuoteParams {
   sourceAmount: number
+}
+
+interface GetDestQuoteParams {
+  destAmount: number
+}
+
+type GetQuoteParams = (GetSourceQuoteParams | GetDestQuoteParams) & {
+  sourceCurrency: string
   sourceNetwork: string
   destCurrency: string
   destNetwork: string
@@ -258,27 +264,39 @@ interface GetQuoteParams {
 
 type WidgetParams = (WidgetBuyParams | WidgetSellParams) & {
   _ctkn: string
-  lang?: string // 2 characters language code ('fr'|'en')
-  primary?: string // Primary color (hexadecimal encoded)
-  addr: string // Wallet address
-  code: string // Random 4 digit code from 1000-9999
-  hash: string // Hash of signature
-  net: string // Default network
-  type: 'webview' // Integration type ('web'|'popup'|'webview')
+  lang?: string /** 2 characters language code ('fr'|'en') */
+  primary?: string /** Primary color (hexadecimal encoded) */
+  addr: string /** Wallet address */
+  code: string /** Random 4 digit code from 1000-9999 */
+  hash: string /** Hash of signature */
+  net: string /** Default network */
+  type: 'webview' /** Integration type ('web'|'popup'|'webview') */
 }
 
-interface WidgetBuyParams {
-  tab: 'buy' // Tab displayed by default ('buy'|'sell)
-  bsc: string // Default buy tab source currency
-  bdc: string // Default buy tab destination currency
-  bsa: string // Default buy tab source amount
+interface WidgetBuySourceParams {
+  bsa: string /** Default buy tab source amount */
 }
 
-interface WidgetSellParams {
-  tab: 'sell' // Tab displayed by default ('buy'|'sell)
-  ssc: string // Default sell tab source currency
-  sdc: string // Default sell tab destination currency
-  ssa: string // Default sell tab source amount
+interface WidgetBuyDestParams {
+  bda: string /** Default buy tab destination amount */
+}
+
+type WidgetBuyParams = (WidgetBuySourceParams | WidgetBuyDestParams) & {
+  tab: 'buy' /** Tab displayed by default ('buy'|'sell) */
+  bsc: string /** Default buy tab source currency */
+  bdc: string /** Default buy tab destination currency */
+}
+
+interface WidgetSellSourceParams {
+  ssa: string /** Default sell tab source amount */
+}
+interface WidgetSellDestParams {
+  sda: string /** Default sell tab source amount */
+}
+type WidgetSellParams = (WidgetSellSourceParams | WidgetSellDestParams) & {
+  tab: 'sell' /** Tab displayed by default ('buy'|'sell) */
+  ssc: string /** Default sell tab source currency */
+  sdc: string /** Default sell tab destination currency */
 }
 
 export const mtpelerinProvider: FiatProviderFactory = {
@@ -350,13 +368,6 @@ export const mtpelerinProvider: FiatProviderFactory = {
         const { amountType, direction, regionCode, exchangeAmount, fiatCurrencyCode, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
         if (BUY_ONLY_PLUGIN_IDS[pluginId] && direction === 'sell') throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
 
-        if (direction === 'buy' && amountType !== 'fiat') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
-        if (direction === 'sell' && amountType !== 'crypto') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
-
         const allowedCurrencyCodes = allAllowedCurrencyCodes[direction]
 
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
@@ -384,7 +395,14 @@ export const mtpelerinProvider: FiatProviderFactory = {
               isCardPayment: false
             }
           } else {
-            throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+            getQuoteParams = {
+              sourceCurrency: fiatCode,
+              sourceNetwork: 'fiat',
+              destAmount: Number(exchangeAmount),
+              destCurrency: symbol,
+              destNetwork: network,
+              isCardPayment: false
+            }
           }
         } else {
           if (amountType === 'crypto') {
@@ -397,7 +415,14 @@ export const mtpelerinProvider: FiatProviderFactory = {
               isCardPayment: false
             }
           } else {
-            throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+            getQuoteParams = {
+              sourceCurrency: symbol,
+              sourceNetwork: network,
+              destAmount: Number(exchangeAmount),
+              destCurrency: fiatCode,
+              destNetwork: 'fiat',
+              isCardPayment: false
+            }
           }
         }
 
@@ -415,16 +440,16 @@ export const mtpelerinProvider: FiatProviderFactory = {
         const result = await response.json()
         const quote = asQuoteResponse(result)
 
-        const { destAmount } = quote
+        const { destAmount, sourceAmount } = quote
 
         let fiatAmount: string
         let cryptoAmount: string
         if (direction === 'buy') {
+          fiatAmount = sourceAmount
           cryptoAmount = destAmount
-          fiatAmount = exchangeAmount
         } else {
-          cryptoAmount = exchangeAmount
           fiatAmount = destAmount
+          cryptoAmount = sourceAmount
         }
 
         const paymentQuote: FiatProviderQuote = {
@@ -487,17 +512,21 @@ export const mtpelerinProvider: FiatProviderFactory = {
                   }
                   case 'sendTransaction': {
                     const send = async (): Promise<void> => {
-                      const { gasLimit: hexGasLimit, gasPrice: hexGasPrice, to, value } = asSendTransactionParams(message.params)
+                      const { gasLimit: hexGasLimit, gasPrice: hexGasPrice, to, amount, value: valueHex } = asSendTransactionParams(message.params)
 
-                      const gasLimit = hexToDecimal(hexGasLimit)
-                      const gasPrice = div(hexToDecimal(hexGasPrice), '1000000000')
+                      let nativeAmount: string
+                      if (amount != null) {
+                        nativeAmount = amount
+                      } else if (valueHex != null) {
+                        nativeAmount = hexToDecimal(valueHex)
+                      } else {
+                        throw new Error('MtPelerin: Missing amount or value')
+                      }
 
                       // XXX don't have an orderId or orderUri
                       const orderId = 'mtpelerin_no_orderid'
                       const orderUri = 'https://mtpelerin.com'
 
-                      // Convert hex to decimal
-                      const nativeAmount = hexToDecimal(value)
                       const exchangeAmount = await coreWallet.nativeToDenomination(nativeAmount, params.displayCurrencyCode)
 
                       const assetAction: EdgeAssetAction = {
@@ -535,11 +564,22 @@ export const mtpelerinProvider: FiatProviderFactory = {
                             nativeAmount,
                             publicAddress: to
                           }
-                        ],
-                        networkFeeOption: 'custom',
-                        customNetworkFee: {
-                          gasLimit,
-                          gasPrice
+                        ]
+                      }
+
+                      let gasLimit: string | undefined
+                      let gasPrice: string | undefined
+
+                      if (hexGasLimit != null && hexGasPrice != null) {
+                        gasLimit = hexToDecimal(hexGasLimit)
+                        gasPrice = div(hexToDecimal(hexGasPrice), GWEI)
+                        spendInfo.networkFeeOption = 'custom'
+                        spendInfo.customNetworkFee = {
+                          networkFeeOption: 'custom',
+                          customNetworkFee: {
+                            gasLimit,
+                            gasPrice
+                          }
                         }
                       }
 
@@ -615,31 +655,50 @@ export const mtpelerinProvider: FiatProviderFactory = {
             }
 
             let widgetParams: WidgetParams
+            const commonParams = {
+              _ctkn: apiKey,
+              addr: publicAddress,
+              code,
+              hash,
+              net: network,
+              type: 'webview' as 'webview'
+            }
+
             if (direction === 'buy') {
-              widgetParams = {
-                _ctkn: apiKey,
-                addr: publicAddress,
-                code,
-                hash,
-                tab: direction,
-                net: network,
-                type: 'webview',
-                bsc: fiatCode,
-                bdc: symbol,
-                bsa: exchangeAmount
+              if (amountType === 'fiat') {
+                widgetParams = {
+                  ...commonParams,
+                  tab: 'buy',
+                  bsc: fiatCode,
+                  bdc: symbol,
+                  bsa: exchangeAmount
+                }
+              } else {
+                widgetParams = {
+                  ...commonParams,
+                  tab: 'buy',
+                  bsc: fiatCode,
+                  bdc: symbol,
+                  bda: exchangeAmount
+                }
               }
             } else {
-              widgetParams = {
-                _ctkn: apiKey,
-                addr: publicAddress,
-                code,
-                hash,
-                tab: direction,
-                net: network,
-                type: 'webview',
-                ssc: symbol,
-                sdc: fiatCode,
-                ssa: exchangeAmount
+              if (amountType === 'fiat') {
+                widgetParams = {
+                  ...commonParams,
+                  tab: 'sell',
+                  ssc: symbol,
+                  sdc: fiatCode,
+                  sda: exchangeAmount
+                }
+              } else {
+                widgetParams = {
+                  ...commonParams,
+                  tab: 'sell',
+                  ssc: symbol,
+                  sdc: fiatCode,
+                  ssa: exchangeAmount
+                }
               }
             }
             const url = `${urls.widget[MODE]}/?${encodeQuery(widgetParams)}` + (MODE === 'test' ? '&env=development' : '')

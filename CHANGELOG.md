@@ -4,6 +4,7 @@
 
 - added: 0x Gasless Swap exchange plugin
 - added: Add Solana on Banxa and Moonpay
+- added: Add Mt Pelerin support for buy and sell with reverse (dest amount) quotes
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
@@ -13,6 +14,7 @@
 - changed: EdgeRow shrinks content by default
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
+- fixed: Incorrect best quote picking for sell plugins
 
 ## 4.9.0
 
