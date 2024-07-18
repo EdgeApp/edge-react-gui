@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "월릿이 비어있음",
   "buy_crypto_modal_message": "고객님의 %s 월릿은 현재 비어있는 상태입니다. %s 를 구매하시거나 다른 가상화폐를 %s 로 교환하시겠습니까?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "현재 불가한 동작입니다.",
   "buy_crypto_modal_buy_action": "%s 구매",
   "buy_crypto_modal_exchange": "거래",
