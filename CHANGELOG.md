@@ -7,6 +7,7 @@
 - added: Add Solana on Banxa and Moonpay
 - added: Add Mt Pelerin support for buy and sell with reverse (dest amount) quotes
 - changed: InsufficientFeesModal shows the network name for ETH fees not on Ethereum (e.g. Optimism)
+- changed: Save last used Home/Assets scene and use as default. Remove settings option
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
