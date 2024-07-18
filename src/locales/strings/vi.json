@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "Ví trống",
   "buy_crypto_modal_message": "Ví %s của bạn trống. Bạn có muốn mua %s hay chuyển đổi crypto khác vào ví?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Không phải lúc này",
   "buy_crypto_modal_buy_action": "Mua %s",
   "buy_crypto_modal_exchange": "Chuyển đổi",
