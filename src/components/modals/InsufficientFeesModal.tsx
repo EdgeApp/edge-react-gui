@@ -34,7 +34,7 @@ export function InsufficientFeesModal(props: Props) {
   // Get the display amount:
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const { multiplier, name } = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const { multiplier, name: denomName } = useDisplayDenom(wallet.currencyConfig, tokenId)
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   const handleCancel = useHandler(() => bridge.resolve())
@@ -48,9 +48,16 @@ export function InsufficientFeesModal(props: Props) {
     bridge.resolve()
   })
 
+  // Give extra information about the network name like Base or Arbitrum where
+  // the mainnet token is ETH but the network is not Ethereum.
+  const message =
+    currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
+      ? sprintf(lstrings.buy_parent_crypto_modal_message_3s, amountString, denomName, wallet.currencyInfo.displayName)
+      : sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, denomName)
+
   return (
     <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
-      <Paragraph>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</Paragraph>
+      <Paragraph>{message}</Paragraph>
       <ButtonsView
         primary={{ label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode), onPress: handleBuy }}
         secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
