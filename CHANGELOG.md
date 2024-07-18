@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 4.9.1
+
+- changed: Velodrome staking plugin will ignore LP token balance and use entered amounts for `addLiquidity` methods
+- changed: Velodrome staking plugin will skip `deposit` method on disabled contracts
+- fixed: Incorrect `startNativeAmount` passed to flip input modal for staking policies with multiple stake assets
+- fixed: Possible to get stuck on account creation flow with specific navigation steps
+
 ## 4.9.0
 
 - added: Support for Universal and App Links

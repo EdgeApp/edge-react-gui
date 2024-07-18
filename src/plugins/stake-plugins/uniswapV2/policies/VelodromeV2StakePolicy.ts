@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
+import VELODROME_V2_VOTER from '../../../abi/VELODROME_V2_VOTER.json'
 import { cacheTxMetadata } from '../../metadataCache'
 import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
@@ -348,49 +349,56 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
 
         /*
         Staking for LP tokens:
-          1. Approve Pool Contract on LP-Contract:
-          2. Stake LP token
+          1. Check if LP staking is still being rewarded
+          2. Approve Pool Contract on LP-Contract:
+          3. Stake LP token
         */
 
-        // 1. Approve Pool Contract on LP-Contract:
-        txs.build(
-          (gasLimit =>
-            async function approveStakingPool({ signer, liquidity }) {
-              const spenderAddress = stakingContract.address
-              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
-              if (allowanceResult.gte(liquidity)) return
+        const voterAddress = await stakingContract.connect(signer).voter()
+        const voterContract = new ethers.Contract(voterAddress, VELODROME_V2_VOTER, signer)
+        const isAlive = await voterContract.connect(signer).isAlive(voterAddress)
 
-              const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
-              cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${metadataLpName} rewards contract`
-              })
-            })(gasLimitAcc('100000'))
-        )
+        if (isAlive) {
+          // 1. Approve Pool Contract on LP-Contract:
+          txs.build(
+            (gasLimit =>
+              async function approveStakingPool({ signer, liquidity }) {
+                const spenderAddress = stakingContract.address
+                const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+                if (allowanceResult.gte(liquidity)) return
 
-        // 2. Stake LP token
-        txs.build(
-          (gasLimit =>
-            async function stakeLiquidity({ signer, liquidity }) {
-              const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+                const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+                cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${metadataLpName} rewards contract`
+                })
+              })(gasLimitAcc('100000'))
+          )
 
-              // Amounts need to be calculated here
-              cacheTxMetadata(result.hash, parentCurrencyCode, {
-                name: metadataName,
-                category: 'Expense:Fee',
-                notes: `Stake into ${metadataLpName} rewards contract`
-              })
-            })(gasLimitAcc('240000'))
-        )
+          // 2. Stake LP token
+          txs.build(
+            (gasLimit =>
+              async function stakeLiquidity({ signer, liquidity }) {
+                const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+
+                // Amounts need to be calculated here
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fee',
+                  notes: `Stake into ${metadataLpName} rewards contract`
+                })
+              })(gasLimitAcc('240000'))
+          )
+        }
       }
 
       //
