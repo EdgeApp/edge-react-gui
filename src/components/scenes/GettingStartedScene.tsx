@@ -97,7 +97,7 @@ export const GettingStartedScene = (props: Props) => {
 
   // Route helpers
   const visitPasswordScene = (): void =>
-    navigation.navigate('login', {
+    navigation.replace('login', {
       loginUiInitialRoute: lightAccounts ? 'login-password-light' : 'login-password',
       experimentConfig
     })
@@ -142,7 +142,7 @@ export const GettingStartedScene = (props: Props) => {
   })
 
   const handlePressSkip = useHandler(() => {
-    navigation.navigate('login', { experimentConfig })
+    navigation.replace('login', { experimentConfig })
   })
 
   // Redirect to login or new account screen if the user swipes past the last
