@@ -17,6 +17,10 @@
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
 
+## 4.9.1
+
+- fixed: Possible to get stuck on account creation flow with specific navigation steps
+
 ## 4.9.0
 
 - added: Support for Universal and App Links
