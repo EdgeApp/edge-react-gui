@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "Portefeuille Vide",
   "buy_crypto_modal_message": "Votre portefeuille %s est vide. Voulez-vous échanger un autre crypto dans %s?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Pas cette fois",
   "buy_crypto_modal_buy_action": "Acheter %s",
   "buy_crypto_modal_exchange": "Echange",
