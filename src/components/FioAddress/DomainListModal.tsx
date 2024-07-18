@@ -6,14 +6,14 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { EdgeModal } from '../modals/EdgeModal'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
@@ -215,9 +215,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const DomainListModal = connect<StateProps, {}, OwnProps>(
-  state => ({
-    userDomains: state.ui.fioAddress.fioDomains
-  }),
-  dispatch => ({})
-)(withTheme(DomainListModalComponent))
+export function DomainListModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const userDomains = useSelector(state => state.ui.fioAddress.fioDomains)
+
+  return <DomainListModalComponent {...props} theme={theme} userDomains={userDomains} />
+}
