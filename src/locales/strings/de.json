@@ -730,6 +730,7 @@
   "buy_crypto_modal_title": "Wallet ist leer ",
   "buy_crypto_modal_message": "Deine %s -Wallet ist leer. Möchtest du %s kaufen oder andere Krypto in %s tauschen?",
   "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
+  "buy_parent_crypto_modal_message_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Momentan nicht",
   "buy_crypto_modal_buy_action": "%s Kaufen ",
   "buy_crypto_modal_exchange": "Tauschen",
