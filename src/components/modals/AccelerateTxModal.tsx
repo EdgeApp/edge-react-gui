@@ -6,12 +6,12 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
 import { EdgeModal } from './EdgeModal'
@@ -169,14 +169,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    exchangeRates: state.exchangeRates,
-    isoFiatCurrencyCode: state.ui.settings.defaultIsoFiat,
-    feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
-  }),
-  dispatch => ({})
-)(withTheme(AccelerateTxModalComponent))
+export function AccelerateTxModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const feeDisplayDenomination = useSelector(state => selectDisplayDenom(state, props.wallet.currencyConfig, null))
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+
+  return (
+    <AccelerateTxModalComponent
+      {...props}
+      exchangeRates={exchangeRates}
+      feeDisplayDenomination={feeDisplayDenomination}
+      isoFiatCurrencyCode={isoFiatCurrencyCode}
+      theme={theme}
+    />
+  )
+}
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
   // Transaction amounts are negative for send transactions
