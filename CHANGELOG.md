@@ -13,9 +13,12 @@
 - changed: SendScene "Fee:" renamed to "Network Fee:"
 - changed: Style of "Already have an account? Sign in" tappable text
 - changed: EdgeRow shrinks content by default
+- changed: Velodrome staking plugin will ignore LP token balance and use entered amounts for `addLiquidity` methods
+- changed: Velodrome staking plugin will skip `deposit` method on disabled contracts
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
+- fixed: Incorrect `startNativeAmount` passed to flip input modal for staking policies with multiple stake assets
 
 ## 4.9.1
 
