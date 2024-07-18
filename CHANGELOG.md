@@ -9,6 +9,10 @@
 - fixed: Incorrect `startNativeAmount` passed to flip input modal for staking policies with multiple stake assets
 - fixed: Possible to get stuck on account creation flow with specific navigation steps
 
+## 4.9.1
+
+- fixed: Possible to get stuck on account creation flow with specific navigation steps
+
 ## 4.9.0
 
 - added: Support for Universal and App Links

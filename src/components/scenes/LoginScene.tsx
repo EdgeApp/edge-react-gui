@@ -126,7 +126,7 @@ export function LoginSceneComponent(props: Props) {
 
   const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
     ? () => {
-        navigation.navigate('gettingStarted', { experimentConfig })
+        navigation.replace('gettingStarted', { experimentConfig })
       }
     : undefined
 
