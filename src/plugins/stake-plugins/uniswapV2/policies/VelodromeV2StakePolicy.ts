@@ -224,15 +224,15 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
             const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
             if (isNativeToken) return
 
-            const tokenAContract = eco.makeContract(allocation.currencyCode)
+            const tokenContract = eco.makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
-                  const allowanceResult = await tokenAContract.allowance(signer.address, spenderAddress)
+                  const allowanceResult = await tokenContract.allowance(signer.address, spenderAddress)
                   if (allowanceResult.gte(allocation.nativeAmount)) return
 
-                  const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
+                  const result = await tokenContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
                     gasLimit,
                     gasPrice,
                     nonce: nextNonce()
