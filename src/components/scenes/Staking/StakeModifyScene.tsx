@@ -218,6 +218,8 @@ const StakeModifySceneComponent = (props: Props) => {
     // multi-asset staking is fully implemented and working in plugin
     // Also disable if the policy explicity disables it.
     const hideMaxButton = existingStaked.length > 1 || (disableMaxStake ?? false)
+    const changeQuoteAllocation = changeQuoteAllocations.find(allocation => allocation.currencyCode === currencyCode)
+    const changeQuoteAllocationNativeAmount = changeQuoteAllocation?.nativeAmount ?? '0'
 
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal2
@@ -225,7 +227,7 @@ const StakeModifySceneComponent = (props: Props) => {
         wallet={wallet}
         tokenId={tokenId}
         feeTokenId={null}
-        startNativeAmount={eq(changeQuoteRequest.nativeAmount, '0') ? undefined : changeQuoteRequest.nativeAmount}
+        startNativeAmount={eq(changeQuoteAllocationNativeAmount, '0') ? undefined : changeQuoteAllocationNativeAmount}
         onAmountsChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, getWalletName(wallet))}
@@ -435,7 +437,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return warningMessage == null ? null : (
-      <Alert marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
+      <Alert key="warning" marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
     )
   }
 

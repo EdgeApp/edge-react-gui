@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
+import VELODROME_V2_VOTER from '../../../abi/VELODROME_V2_VOTER.json'
 import { cacheTxMetadata } from '../../metadataCache'
 import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
@@ -224,15 +225,15 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
             const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
             if (isNativeToken) return
 
-            const tokenAContract = eco.makeContract(allocation.currencyCode)
+            const tokenContract = eco.makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
-                  const allowanceResult = await tokenAContract.allowance(signer.address, spenderAddress)
+                  const allowanceResult = await tokenContract.allowance(signer.address, spenderAddress)
                   if (allowanceResult.gte(allocation.nativeAmount)) return
 
-                  const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
+                  const result = await tokenContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
                     gasLimit,
                     gasPrice,
                     nonce: nextNonce()
@@ -259,23 +260,16 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
 
               // Existing liquidity that may be unstaked due to a previous failed attempt to stake, or some other reason
               const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
-
-              // Already have enough LP-tokens to cover needed amount
-              if (gte(lpTokenBalance, expectedLiquidityAmount)) {
-                return { liquidity: expectedLiquidityAmount }
-              }
-
               // Figure out how much LP-tokens we need to add
-              const liquidityDiffAmount = sub(expectedLiquidityAmount, lpTokenBalance)
-              const assetAmountsFromLpDifference = await lpTokenToAssetPairAmounts(policyInfo, liquidityDiffAmount)
-              const tokenAAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenAAllocation)].nativeAmount
-              const tokenBAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenBAllocation)].nativeAmount
+              const assetAmountsFromExpectedLiquidity = await lpTokenToAssetPairAmounts(policyInfo, expectedLiquidityAmount)
+              const tokenAAmountFromExpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenAAllocation)].nativeAmount
+              const tokenBAmountFromexpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenBAllocation)].nativeAmount
 
               // Prepare the contract parameters
-              const amountTokenADesired = tokenAAmountFromLpDifference
-              const amountTokenAMin = round(mul(tokenAAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
-              const amountTokenBDesired = tokenBAmountFromLpDifference
-              const amountTokenBMin = round(mul(tokenBAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
+              const amountTokenADesired = tokenAAmountFromExpectedLiquidity
+              const amountTokenAMin = round(mul(tokenAAmountFromExpectedLiquidity, SLIPPAGE_FACTOR.toString()))
+              const amountTokenBDesired = tokenBAmountFromexpectedLiquidity
+              const amountTokenBMin = round(mul(tokenBAmountFromexpectedLiquidity, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
@@ -355,49 +349,56 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
 
         /*
         Staking for LP tokens:
-          1. Approve Pool Contract on LP-Contract:
-          2. Stake LP token
+          1. Check if LP staking is still being rewarded
+          2. Approve Pool Contract on LP-Contract:
+          3. Stake LP token
         */
 
-        // 1. Approve Pool Contract on LP-Contract:
-        txs.build(
-          (gasLimit =>
-            async function approveStakingPool({ signer, liquidity }) {
-              const spenderAddress = stakingContract.address
-              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
-              if (allowanceResult.gte(liquidity)) return
+        const voterAddress = await stakingContract.connect(signer).voter()
+        const voterContract = new ethers.Contract(voterAddress, VELODROME_V2_VOTER, signer)
+        const isAlive = await voterContract.connect(signer).isAlive(voterAddress)
 
-              const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
-              cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${metadataLpName} rewards contract`
-              })
-            })(gasLimitAcc('100000'))
-        )
+        if (isAlive) {
+          // 1. Approve Pool Contract on LP-Contract:
+          txs.build(
+            (gasLimit =>
+              async function approveStakingPool({ signer, liquidity }) {
+                const spenderAddress = stakingContract.address
+                const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+                if (allowanceResult.gte(liquidity)) return
 
-        // 2. Stake LP token
-        txs.build(
-          (gasLimit =>
-            async function stakeLiquidity({ signer, liquidity }) {
-              const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+                const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+                cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${metadataLpName} rewards contract`
+                })
+              })(gasLimitAcc('100000'))
+          )
 
-              // Amounts need to be calculated here
-              cacheTxMetadata(result.hash, parentCurrencyCode, {
-                name: metadataName,
-                category: 'Expense:Fee',
-                notes: `Stake into ${metadataLpName} rewards contract`
-              })
-            })(gasLimitAcc('240000'))
-        )
+          // 2. Stake LP token
+          txs.build(
+            (gasLimit =>
+              async function stakeLiquidity({ signer, liquidity }) {
+                const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+
+                // Amounts need to be calculated here
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fee',
+                  notes: `Stake into ${metadataLpName} rewards contract`
+                })
+              })(gasLimitAcc('240000'))
+          )
+        }
       }
 
       //
