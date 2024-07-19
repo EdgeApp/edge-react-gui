@@ -16,6 +16,7 @@
 - changed: SendScene "Fee:" renamed to "Network Fee:"
 - changed: Style of "Already have an account? Sign in" tappable text
 - changed: EdgeRow shrinks content by default
+- changed: Improved fetch logic for Markets scene
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
