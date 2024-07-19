@@ -38,6 +38,12 @@ export const CurrencyView = (props: Props) => {
   const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
   const { currencyCode } = tokenFromId == null ? currencyInfo : tokenFromId
 
+  const networkLabel = (
+    <View style={styles.networkContainer}>
+      <EdgeText>{wallet.currencyInfo.displayName}</EdgeText>
+    </View>
+  )
+
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
   const compromised = useSelector(state => {
@@ -72,9 +78,12 @@ export const CurrencyView = (props: Props) => {
   const rows = [
     {
       left: (
-        <EdgeText style={styles.titleText} numberOfLines={1}>
-          {displayCurrencyCode}
-        </EdgeText>
+        <View style={styles.rowContainer}>
+          <EdgeText style={styles.titleText} numberOfLines={1}>
+            {displayCurrencyCode}
+          </EdgeText>
+          {networkLabel}
+        </View>
       ),
       right: (
         <EdgeText style={styles.titleText} numberOfLines={1}>
@@ -141,5 +150,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleText: {
     fontFamily: theme.fontFaceMedium
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  networkContainer: {
+    flexDirection: 'row',
+    borderRadius: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
+    marginLeft: theme.rem(0.5),
+    backgroundColor: theme.cardBaseColor
   }
 }))
