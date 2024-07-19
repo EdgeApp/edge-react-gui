@@ -54,6 +54,8 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
 
 export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const rootNavigation = getRootNavigation(navigation)
+
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
@@ -83,16 +85,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       // during account creation
       await readLocalAccountSettings(account)
 
-      // HACK: Android needs this for some reason for proper logout
-      navigation.pop()
-
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        navigation.push('edgeTabs', {
-          screen: 'homeTab',
-          params: {
-            screen: 'home'
-          }
-        })
+        navigation.replace('edgeTabs', { screen: 'homeTab', params: { screen: 'home' } })
         const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
@@ -109,7 +103,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         dispatch(logEvent('Signup_Complete'))
       }
 
-      navigation.replace('edgeApp', {
+      rootNavigation.replace('edgeApp', {
         screen: 'edgeAppStack',
         params: {
           screen: 'createWalletSelectCryptoNewAccount',
@@ -119,7 +113,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
-      navigation.push('edgeApp', {})
+      rootNavigation.replace('edgeApp', {})
       referralPromise.catch(() => console.log(`Failed to load account referral info`))
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
@@ -265,6 +259,14 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
   }
 }
 
+export function getRootNavigation(navigation: NavigationBase): NavigationBase {
+  while (true) {
+    const parent: NavigationBase = navigation.getParent()
+    if (parent == null) return navigation
+    navigation = parent
+  }
+}
+
 export function logoutRequest(navigation: NavigationBase, nextLoginId?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
@@ -273,7 +275,8 @@ export function logoutRequest(navigation: NavigationBase, nextLoginId?: string):
     Airship.clear()
     dispatch({ type: 'LOGOUT', data: { nextLoginId } })
     if (typeof account.logout === 'function') await account.logout()
-    navigation.navigate('login', { experimentConfig: await getExperimentConfig() })
+    const rootNavigation = getRootNavigation(navigation)
+    rootNavigation.replace('login', { experimentConfig: await getExperimentConfig() })
   }
 }
 
