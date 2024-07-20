@@ -18,9 +18,9 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
-import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { showError } from '../services/AirshipInstance'
+import { DeepLinkingManager } from '../services/DeepLinkingManager'
 import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
@@ -37,7 +37,7 @@ interface Props extends EdgeSceneProps<'login'> {}
 
 let firstRun = true
 
-export function LoginSceneComponent(props: Props) {
+export function LoginScene(props: Props) {
   const { navigation, route } = props
   const { loginUiInitialRoute = 'login', experimentConfig } = route.params
   const dispatch = useDispatch()
@@ -126,7 +126,7 @@ export function LoginSceneComponent(props: Props) {
 
   const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
     ? () => {
-        navigation.navigate('gettingStarted', { experimentConfig })
+        navigation.replace('gettingStarted', { experimentConfig })
       }
     : undefined
 
@@ -173,6 +173,8 @@ export function LoginSceneComponent(props: Props) {
         onLogin={handleLogin}
         onPerfEvent={handlePerfEvent}
       />
+      {/* Needed to handle recovery deep links: */}
+      <DeepLinkingManager navigation={navigation} />
     </View>
   )
 }
@@ -187,5 +189,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: StatusBar.currentHeight
   }
 }))
-
-export const LoginScene = withServices(LoginSceneComponent)

@@ -16,7 +16,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
-import { logoutRequest } from '../../actions/LoginActions'
+import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -34,6 +34,7 @@ import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
+import { Services } from '../services/Services'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
@@ -279,6 +280,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const footerTopColor = theme.modal + '00' // Add full transparency to the modal color
   const footerBottomColor = theme.modal
+  const rootNavigation = getRootNavigation(navigation)
 
   return (
     <OuterView insets={insets}>
@@ -349,6 +351,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
         {/* === Footer End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
+      <Services navigation={rootNavigation} />
     </OuterView>
   )
 }

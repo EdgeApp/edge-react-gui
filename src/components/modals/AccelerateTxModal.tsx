@@ -172,7 +172,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
     exchangeRates: state.exchangeRates,
-    isoFiatCurrencyCode: state.ui.settings.defaultFiat,
+    isoFiatCurrencyCode: state.ui.settings.defaultIsoFiat,
     feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
   }),
   dispatch => ({})
