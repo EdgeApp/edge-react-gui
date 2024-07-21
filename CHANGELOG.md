@@ -17,6 +17,10 @@
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
 
+## 4.9.2
+
+- fixed: Set avoidNativeFee on Rango to fix bridge failures
+
 ## 4.9.1
 
 - changed: Velodrome staking plugin will ignore LP token balance and use entered amounts for `addLiquidity` methods
