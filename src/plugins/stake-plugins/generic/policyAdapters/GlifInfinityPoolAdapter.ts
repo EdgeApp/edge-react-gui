@@ -1,12 +1,13 @@
 import '@ethersproject/shims'
 
 import { gt } from 'biggystring'
-import { asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
+import { infoServerData } from '../../../../util/network'
 import { GlifInfinityPool__factory, GlifPoolToken__factory, GlifSimpleRamp__factory } from '../../../contracts'
 import { ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { StakePolicyAdapter } from './types'
@@ -16,7 +17,6 @@ export interface GlifInfinityPoolAdapterConfig {
   rpcProviderUrls: string[]
   poolContractAddress: string
   simpleRampContractAddress: string
-  yieldInfoEndpoint: string
 }
 
 export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<GlifInfinityPoolAdapterConfig>): StakePolicyAdapter => {
@@ -32,7 +32,7 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
   const metadataPoolAssetName = `${stakeAsset.currencyCode}`
 
   const { adapterConfig, stakePolicyId } = policyConfig
-  const { rpcProviderUrls, yieldInfoEndpoint } = adapterConfig
+  const { rpcProviderUrls } = adapterConfig
   const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
 
   // Declare contracts:
@@ -259,23 +259,11 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
       }
     },
     async fetchYieldInfo() {
-      const fetchResponse = await fetch(yieldInfoEndpoint)
-        .then(async res => {
-          if (!res.ok) {
-            throw new Error(`Fetch APY invalid response: ${await res.text()}`)
-          }
-          return res
-        })
-        .catch(err => {
-          throw new Error(`Fetch APY failed: ${String(err)}`)
-        })
-      const fetchResponseJson = await fetchResponse.json()
-      const response = asObject({
-        apy: asString
-      })(fetchResponseJson)
+      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const apy = infoServerResponse.policies[stakePolicyId] ?? 0
 
       return {
-        apy: parseFloat(response.apy),
+        apy,
         yieldType: 'variable'
       }
     }
