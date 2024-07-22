@@ -1,6 +1,6 @@
 import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
-import DraggableFlatList, { DragEndParams, RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'
 import Animated from 'react-native-reanimated'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -28,10 +28,10 @@ export function WalletListSortable(props: Props) {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const [walletOrder, setWalletOrder] = React.useState(account.activeWalletIds)
-  const handleDragEnd = useHandler((params: DragEndParams<string>) => setWalletOrder(params.data))
+  const handleDragEnd = useHandler(params => setWalletOrder(params.data))
 
-  const keyExtractor = useHandler((walletId: string) => walletId)
-  const renderItem = useHandler((params: RenderItemParams<string>) => (
+  const keyExtractor = useHandler((item, _index) => String(item))
+  const renderItem = useHandler(params => (
     <ScaleDecorator activeScale={0.9}>
       <WalletListSortableRow wallet={currencyWallets[params.item]} onDrag={params.drag} />
     </ScaleDecorator>
@@ -50,11 +50,8 @@ export function WalletListSortable(props: Props) {
   return (
     <AnimatedDraggableFlatList
       data={walletOrder}
-      // @ts-expect-error
       keyExtractor={keyExtractor}
-      // @ts-expect-error
       renderItem={renderItem}
-      // @ts-expect-error
       onDragEnd={handleDragEnd}
       onScroll={handleScroll}
       contentContainerStyle={insetStyle}
