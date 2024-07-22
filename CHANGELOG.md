@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Network names to wallet list cards
 - added: 0x Gasless Swap exchange plugin
 - added: Add Solana on Banxa and Moonpay
 - added: Add Mt Pelerin support for buy and sell with reverse (dest amount) quotes
