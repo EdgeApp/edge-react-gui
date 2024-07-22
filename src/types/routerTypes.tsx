@@ -65,14 +65,37 @@ import type { FioRequest } from './types'
  * Defines the acceptable route parameters for each scene key.
  */
 export interface RouteParamList {
-  // Top-level router:
-  login: LoginParams
-  edgeApp: {}
-  edgeAppStack: {}
-  edgeTabs: {}
-  gettingStarted: GettingStartedParams
+  // -------------------------------------------------------------------------
+  // Tab router
+  // -------------------------------------------------------------------------
 
-  // Tabs
+  // `homeTab`:
+  home: {}
+
+  // `walletsTab`:
+  walletList: {}
+  transactionList: TransactionListParams
+  transactionDetails: TransactionDetailsParams
+
+  // `buyTab` / `sellTab`:
+  pluginListBuy: GuiPluginListParams
+  pluginListSell: GuiPluginListParams
+  pluginViewBuy: PluginViewParams
+  pluginViewSell: PluginViewParams
+  guiPluginAddressForm: FiatPluginAddressFormParams
+  guiPluginEnterAmount: FiatPluginEnterAmountParams
+  guiPluginInfoDisplay: FiatPluginSepaTransferParams
+  guiPluginSepaForm: FiatPluginSepaFormParams
+  guiPluginWebView: FiatPluginOpenWebViewParams
+  rewardsCardDashboard: RewardsCardDashboardParams
+  rewardsCardWelcome: RewardsCardWelcomeParams
+
+  // `swapTab`:
+  swapCreate: SwapCreateParams
+  swapConfirmation: SwapConfirmationParams
+  swapProcessing: SwapProcessingParams
+
+  // `edgeTabs`:
   homeTab: {}
   walletsTab: {}
   buyTab: {}
@@ -81,16 +104,12 @@ export interface RouteParamList {
   extraTab: undefined
   devTab: undefined
 
-  // Gui Plugins
-  guiPluginEnterAmount: FiatPluginEnterAmountParams
-  guiPluginAddressForm: FiatPluginAddressFormParams
-  guiPluginInfoDisplay: FiatPluginSepaTransferParams
-  guiPluginSepaForm: FiatPluginSepaFormParams
-  guiPluginWebView: FiatPluginOpenWebViewParams
-  rewardsCardDashboard: RewardsCardDashboardParams
-  rewardsCardWelcome: RewardsCardWelcomeParams
+  // -------------------------------------------------------------------------
+  // Main `edgeAppStack`
+  // The tabs live inside this stack, as well as most app scenes.
+  // -------------------------------------------------------------------------
 
-  // Logged-in scenes:
+  edgeTabs: {} // Tab navigator
   assetSettings: {}
   changeMiningFee2: ChangeMiningFeeParams
   changePassword: {}
@@ -144,7 +163,6 @@ export interface RouteParamList {
     tokenId: EdgeTokenId
     walletId: string
   }
-  home: {}
   loanDashboard: {}
   loanDetails: LoanDetailsParams
   loanCreate: LoanCreateParams
@@ -161,10 +179,6 @@ export interface RouteParamList {
   otpSetup: {}
   passwordRecovery: {}
   upgradeUsername: {}
-  pluginListBuy: GuiPluginListParams
-  pluginListSell: GuiPluginListParams
-  pluginViewBuy: PluginViewParams
-  pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
   promotionSettings: {}
   request: RequestParams
@@ -176,20 +190,27 @@ export interface RouteParamList {
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
-  swapCreate: SwapCreateParams
-  swapConfirmation: SwapConfirmationParams
-  swapProcessing: SwapProcessingParams
   swapSettings: {}
   swapSuccess: {}
   testScene: {}
-  transactionDetails: TransactionDetailsParams
-  transactionList: TransactionListParams
+  // transactionDetails is copied here
   transactionsExport: TransactionsExportParams
-  walletList: {}
   webView: WebViewSceneParams
   wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams
   wcConnect: WcConnectParams
+
+  // -------------------------------------------------------------------------
+  // Root router
+  // -------------------------------------------------------------------------
+
+  // `edgeApp`:
+  edgeAppStack: {}
+
+  // Root routes:
+  edgeApp: {} // A drawer router that contains the main `edgeAppStack`
+  gettingStarted: GettingStartedParams
+  login: LoginParams
 }
 
 export type RouteSceneKey = keyof RouteParamList
