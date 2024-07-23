@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -33,6 +34,9 @@ const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_m
 // devices with a notch.
 const MAYBE_BOTTOM_PADDING = Platform.OS === 'ios' && !Platform.isPad && DeviceInfo.hasNotch() ? 0 : scale(16) * 0.75
 
+// Delay writing out defaultScreen settings when switching tabs to prevent clogging up the
+// bridge and CPU while a scene transition is occurring
+const SAVE_DEFAULT_SCREEN_DELAY = 3000
 export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
 export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
 
@@ -193,8 +197,14 @@ const Tab = ({
   const handleOnPress = useHandler(() => {
     switch (route.name) {
       case 'homeTab':
+        setTimeout(() => {
+          writeDefaultScreen('home').catch(e => console.error('Failed to write defaultScreen setting: home'))
+        }, SAVE_DEFAULT_SCREEN_DELAY)
         return navigation.navigate('homeTab', currentName === 'homeTab' ? { screen: 'home' } : {})
       case 'walletsTab':
+        setTimeout(() => {
+          writeDefaultScreen('assets').catch(e => console.error('Failed to write defaultScreen setting: assets'))
+        }, SAVE_DEFAULT_SCREEN_DELAY)
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
         return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})

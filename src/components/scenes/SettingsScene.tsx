@@ -7,7 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDefaultScreen, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
 import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -29,7 +29,6 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { DefaultScreen } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
 import { removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -72,7 +71,6 @@ export const SettingsScene = (props: Props) => {
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(theme === config.darkTheme)
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
-  const [defaultScreen, setDefaultScreen] = useState<DefaultScreen>(getDeviceSettings().defaultScreen)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
   const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
   const [touchIdText, setTouchIdText] = React.useState(lstrings.settings_button_use_touchID)
@@ -88,7 +86,6 @@ export const SettingsScene = (props: Props) => {
     days: lstrings.settings_days
   }
   const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
-  const defaultScreenRightText = defaultScreen === 'home' ? lstrings.settings_default_screen_home : lstrings.settings_default_screen_assets
 
   const handleUpgrade = useHandler(() => {
     showBackupModal({ navigation })
@@ -137,12 +134,6 @@ export const SettingsScene = (props: Props) => {
 
   const handleDefaultFiat = useHandler(() => {
     navigation.navigate('defaultFiatSetting', {})
-  })
-
-  const handleSetDefaultScreen = useHandler(async () => {
-    const newDefaultScreen = defaultScreen === 'home' ? 'assets' : 'home'
-    setDefaultScreen(newDefaultScreen)
-    await writeDefaultScreen(newDefaultScreen)
   })
 
   const handleShowRestoreWalletsModal = useHandler(async () => {
@@ -342,7 +333,6 @@ export const SettingsScene = (props: Props) => {
             <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
             <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
             <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
-            <SettingsLabelRow right={defaultScreenRightText} label={lstrings.settings_default_screen_title} onPress={handleSetDefaultScreen} />
 
             {isLightAccount ? null : (
               <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={pinLoginEnabled} onPress={handleTogglePinLoginEnabled} />
