@@ -10,22 +10,22 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderGetTokenId,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { validateRegion } from './common'
+import { addExactRegion, validateExactRegion } from './common'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
 const pluginDisplayName = 'Moonpay'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
-const allowedCountryCodes: { [code: string]: boolean } = {}
+const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = { buy: {}, sell: {} }
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true, iach: true }
 
 const asMoonpayCurrency = asObject({
@@ -56,11 +56,23 @@ const asMoonpayQuote = asObject({
   totalAmount: asNumber
 })
 
+const asState = asObject({
+  code: asString,
+  // "name": "Alabama",
+  isBuyAllowed: asBoolean,
+  // "isNftAllowed": true,
+  isSellAllowed: asBoolean,
+  // "isBalanceLedgerWithdrawAllowed": true,
+  isAllowed: asBoolean
+  // "isFiatBalanceAllowed": false
+})
+
 const asMoonpayCountry = asObject({
   alpha2: asString,
   isAllowed: asBoolean,
   isBuyAllowed: asBoolean,
-  isSellAllowed: asBoolean
+  isSellAllowed: asBoolean,
+  states: asOptional(asArray(asState))
 })
 
 const asApiKeys = asString
@@ -115,19 +127,6 @@ const TOKEN_MAP: StringMap = {
   zrx: 'ethereum'
 }
 
-const SUPPORTED_REGIONS: Record<FiatDirection, FiatProviderSupportedRegions> = {
-  buy: {
-    US: {
-      notStateProvinces: ['TX']
-    }
-  },
-  sell: {
-    US: {
-      notStateProvinces: ['NY', 'TX']
-    }
-  }
-}
-
 export const moonpayProvider: FiatProviderFactory = {
   providerId,
   storeId,
@@ -140,7 +139,6 @@ export const moonpayProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS[direction])
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
@@ -186,25 +184,46 @@ export const moonpayProvider: FiatProviderFactory = {
         }
 
         const response2 = await fetch(`https://api.moonpay.com/v3/countries?apiKey=${apiKey}`).catch(e => undefined)
-        if (response2 == null || !response2.ok) return allowedCurrencyCodes
+        if (response2 == null || !response2.ok) throw new Error('Moonpay failed to fetch countries')
 
         const result2 = await response2.json()
         const countries = asMoonpayCountries(result2)
         for (const country of countries) {
-          if (country.isAllowed && country.isBuyAllowed) {
-            allowedCountryCodes[country.alpha2] = true
+          if (country.isAllowed) {
+            if (country.states == null) {
+              if (country.isBuyAllowed) {
+                allowedCountryCodes.buy[country.alpha2] = true
+              } else if (country.isSellAllowed) {
+                allowedCountryCodes.sell[country.alpha2] = true
+              }
+            } else {
+              const countryCode = country.alpha2
+              // Validate state support
+              for (const state of country.states) {
+                if (state.isAllowed) {
+                  const stateProvinceCode = state.code
+
+                  if (state.isBuyAllowed) {
+                    addExactRegion(allowedCountryCodes.buy, countryCode, stateProvinceCode)
+                  }
+                  if (state.isSellAllowed) {
+                    addExactRegion(allowedCountryCodes.sell, countryCode, stateProvinceCode)
+                  }
+                }
+              }
+            }
           }
         }
+        validateExactRegion(providerId, regionCode, allowedCountryCodes[direction])
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, paymentTypes, displayCurrencyCode } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS[direction])
+        validateExactRegion(providerId, regionCode, allowedCountryCodes[direction])
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
 
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         let foundPaymentType = false

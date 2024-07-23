@@ -67,6 +67,21 @@ export interface FiatProviderSupportedRegions {
   }
 }
 
+/**
+ * Map of supported countryCodes
+ * All supported countries must be in the map. A value of undefined, null, or false
+ * means the country is not supported. True or an object means it
+ * is supported. An object means support is conditional on the stateProvince.
+ */
+export interface FiatProviderExactRegions {
+  [countryCode: string]:
+    | boolean
+    | {
+        forStateProvinces?: string[]
+        notStateProvinces?: string[]
+      }
+}
+
 // Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
   providerId: string

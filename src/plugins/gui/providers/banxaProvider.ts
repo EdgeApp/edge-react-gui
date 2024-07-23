@@ -17,15 +17,15 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderGetTokenId,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS, validateRegion } from './common'
+import { addExactRegion, NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS, validateExactRegion } from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
@@ -36,6 +36,7 @@ let testnet = false
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
+const allowedCountryCodes: FiatProviderExactRegions = {}
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     applepay: true,
@@ -237,6 +238,28 @@ const asBanxaPaymentMethods = asObject({
   })
 })
 
+const asBanxaCountry = asObject({
+  country_code: asString
+  // country_name: asString
+})
+
+const asBanxaCountries = asObject({
+  data: asObject({
+    countries: asArray(asBanxaCountry)
+  })
+})
+
+const asBanxaState = asObject({
+  state_code: asString
+  // state_name: asString
+})
+
+const asBanxaStates = asObject({
+  data: asObject({
+    states: asArray(asBanxaState)
+  })
+})
+
 interface BanxaPaymentIdLimit {
   id: number
   type: FiatPaymentType
@@ -284,62 +307,6 @@ const CURRENCY_PLUGINID_MAP = {
 
 const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 
-const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
-  US: {
-    forStateProvinces: [
-      'AL', // Alabama
-      'AK', // Alaska
-      'AZ', // Arizona
-      'AR', // Arkansas
-      'CA', // California
-      'CO', // Colorado
-      'CT', // Connecticut
-      'DE', // Delaware
-      'DC', // District of Columbia
-      'FL', // Florida
-      'GA', // Georgia
-      'ID', // Idaho
-      'IL', // Illinois
-      'IN', // Indiana
-      'IA', // Iowa
-      'KS', // Kansas
-      'KY', // Kentucky
-      'MD', // Maryland
-      'MA', // Massachusetts
-      'MI', // Michigan
-      'MN', // Minnesota
-      'MS', // Mississippi
-      'MO', // Missouri
-      'MT', // Montana
-      'NE', // Nebraska
-      'NH', // New Hampshire
-      'NJ', // New Jersey
-      'NM', // New Mexico
-      'NC', // North Carolina
-      'ND', // North Dakota
-      'OH', // Ohio
-      'OK', // Oklahoma
-      'OR', // Oregon
-      'PA', // Pennsylvania
-      'PR', // Puerto Rico
-      'RI', // Rhode Island
-      'SC', // South Carolina
-      'SD', // South Dakota
-      'TN', // Tennessee
-      'TX', // Texas
-      'UT', // Utah
-      'VT', // Vermont
-      'VA', // Virginia
-      'WA', // Washington
-      'WV', // West Virginia
-      'WI', // Wisconsin
-      'WY', // Wyoming
-      'NV', // Nevada
-      'ME' // Maine
-    ]
-  }
-}
-
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
@@ -375,8 +342,6 @@ export const banxaProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
-
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -398,6 +363,22 @@ export const banxaProvider: FiatProviderFactory = {
         }
 
         const promises = [
+          banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries', apiKey }).then(response => {
+            const countries = asBanxaCountries(response)
+            for (const { country_code: countryCode } of countries.data.countries) {
+              if (countryCode !== 'US') {
+                addExactRegion(allowedCountryCodes, countryCode)
+              }
+            }
+          }),
+
+          banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries/us/states', apiKey }).then(response => {
+            const states = asBanxaStates(response)
+            for (const { state_code: stateCode } of states.data.states) {
+              addExactRegion(allowedCountryCodes, 'US', stateCode)
+            }
+          }),
+
           banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/${direction}`, apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)
             for (const coin of cryptoCurrencies.data.coins) {
@@ -426,11 +407,12 @@ export const banxaProvider: FiatProviderFactory = {
         ]
 
         await Promise.all(promises)
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
         return allowedCurrencyCodes[direction]
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction, tokenId } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
 
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
