@@ -13,7 +13,7 @@ import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { performanceMarkersFromLoginUiPerfEvents } from '../../perf'
+// import { performanceMarkersFromLoginUiPerfEvents } from '../.. '
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -144,7 +144,7 @@ export function LoginScene(props: Props) {
   })
 
   const handlePerfEvent = useHandler(event => {
-    performanceMarkersFromLoginUiPerfEvents(event)
+    // performanceMarkersFromLoginUiPerfEvents(event)
   })
 
   return loggedIn ? (

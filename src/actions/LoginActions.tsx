@@ -3,7 +3,7 @@ import { getSupportedBiometryType, hasSecurityAlerts, isTouchEnabled, refreshTou
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
-import performance from 'react-native-performance'
+// import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
 import { readSyncedSettings } from '../actions/SettingsActions'
@@ -111,12 +111,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         }
       })
 
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
+      // performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
       rootNavigation.replace('edgeApp', {})
       referralPromise.catch(() => console.log(`Failed to load account referral info`))
 
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
+      // performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     }
 
     // Show a notice for deprecated electrum server settings

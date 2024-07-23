@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 import './src/app'
-import './src/perf'
 
+// import './src/perf'
 import { AppRegistry } from 'react-native'
 import Animated from 'react-native-reanimated'
 
