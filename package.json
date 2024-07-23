@@ -135,7 +135,7 @@
     "react-native-image-picker": "^7.1.2",
     "react-native-in-app-review": "^4.3.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-keyboard-controller": "1.10.2",
+    "react-native-keyboard-controller": "^1.12.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-localize": "^3.1.0",
     "react-native-mail": "^6.1.1",
