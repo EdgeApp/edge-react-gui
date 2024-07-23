@@ -106,7 +106,7 @@
     "edge-info-server": "^2.4.0",
     "edge-login-ui-rn": "^3.16.3",
     "ethers": "^5.7.2",
-    "expo": "^51.0.8",
+    "expo": "^51.0.22",
     "jsrsasign": "^11.1.0",
     "paraswap": "^5.2.0",
     "posthog-js": "^1.88.1",

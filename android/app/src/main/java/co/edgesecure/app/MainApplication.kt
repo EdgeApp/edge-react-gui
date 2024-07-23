@@ -43,8 +43,9 @@ class MainApplication : Application(), ReactApplication {
             }
         )
 
+    // Expo change:
     override val reactHost: ReactHost
-        get() = getDefaultReactHost(applicationContext, reactNativeHost)
+        get() = ReactNativeHostWrapper.createReactHost(applicationContext, reactNativeHost)
 
     override fun onCreate() {
         super.onCreate()

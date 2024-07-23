@@ -27,17 +27,17 @@ PODS:
     - React-Core
   - EXConstants (16.0.1):
     - ExpoModulesCore
-  - Expo (51.0.8):
+  - Expo (51.0.22):
     - ExpoModulesCore
-  - ExpoAsset (10.0.6):
+  - ExpoAsset (10.0.10):
     - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
     - ExpoModulesCore
-  - ExpoFont (12.0.5):
+  - ExpoFont (12.0.9):
     - ExpoModulesCore
   - ExpoKeepAwake (13.0.2):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.11):
+  - ExpoModulesCore (1.12.19):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1137,8 +1137,27 @@ PODS:
     - Yoga
   - react-native-in-app-review (4.3.3):
     - React-Core
-  - react-native-keyboard-controller (1.10.2):
+  - react-native-keyboard-controller (1.12.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-mail (6.1.1):
     - React-Core
   - react-native-mymonero-core (0.3.1):
@@ -2104,12 +2123,12 @@ SPEC CHECKSUMS:
   edge-exchange-plugins: b944104e75649e200b3f35054c5f919ea448bf45
   edge-login-ui-rn: b639bf64f0aa7f49f0d7441ac1d92efb1ba2e375
   EXConstants: 9a008dbf262550884e6280dea95b81b51f65ea6f
-  Expo: c99f14ca53381d5399b88684c88e20ff7928d3c7
-  ExpoAsset: 9b7433ecc5f1b608ccbb823492e062bde944abd2
+  Expo: 8b7948e45627e848c2d7b6be7cf5851a505aef19
+  ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
-  ExpoFont: 690b76008be824e47907f200cb0764870108dfd1
+  ExpoFont: e7f2275c10ca8573c991e007329ad6bf98086485
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
-  ExpoModulesCore: 8ccf937127626db22bd3a175c9691d1b4fd86345
+  ExpoModulesCore: 0095fc6f64a1c1e2b939da5752f081adcb8fd8d3
   FBLazyVector: 898d14d17bf19e2435cafd9ea2a1033efe445709
   Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
   FirebaseCore: a2b95ae4ce7c83ceecfbbbe3b6f1cddc7415a808
@@ -2159,7 +2178,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
   react-native-image-picker: 8b791a2bec6da84ca7d8cbcad30da159d6dd6da4
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
-  react-native-keyboard-controller: 9c708acff806450ce2a0f3c2aceace1fdc87070f
+  react-native-keyboard-controller: e61e622ee750537c4a2335d2bf37e969277ed2c0
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
