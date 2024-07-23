@@ -1,23 +1,29 @@
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
+
+const { createSentryMetroSerializer } = require('@sentry/react-native/dist/js/tools/sentryMetroSerializer')
+
+const defaultConfig = getDefaultConfig(__dirname)
+const { assetExts, sourceExts } = defaultConfig.resolver
+
 /**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
  *
- * @format
+ * @type {import('metro-config').MetroConfig}
  */
+const config = {
+  transformer: {
+    babelTransformerPath: require.resolve('react-native-svg-transformer')
+  },
 
-const { getDefaultConfig } = require('metro-config')
+  resolver: {
+    assetExts: assetExts.filter(ext => ext !== 'svg'),
+    sourceExts: [...sourceExts, 'svg']
+  },
 
-module.exports = (async () => {
-  const {
-    resolver: { sourceExts, assetExts }
-  } = await getDefaultConfig()
-  return {
-    transformer: {
-      babelTransformerPath: require.resolve('react-native-svg-transformer')
-    },
-    resolver: {
-      assetExts: assetExts.filter(ext => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg']
-    }
+  serializer: {
+    customSerializer: createSentryMetroSerializer()
   }
-})()
+}
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config)
