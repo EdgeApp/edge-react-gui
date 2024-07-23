@@ -101,6 +101,11 @@
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
+  return [self bundleURL];
+}
+
+- (NSURL *)bundleURL
+{
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
@@ -108,30 +113,15 @@
 #endif
 }
 
-/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
-///
-/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
-/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
-/// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
-- (BOOL)concurrentRootEnabled
-{
-  return true;
-}
-
 // react-native-bootsplash integration:
-- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
-                          moduleName:(NSString *)moduleName
-                           initProps:(NSDictionary *)initProps {
-  UIView *rootView = [super createRootViewWithBridge:bridge
-                                          moduleName:moduleName
-                                           initProps:initProps];
-
+- (void)customizeRootView:(RCTRootView *)rootView {
   [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
-
-  return rootView;
 }
 
-// Edge background-fetch logic:
+/**
+ * Background-fetch logic.
+ * Edge addition.
+ */
 - (void)application:(UIApplication *)application
   performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
@@ -193,7 +183,7 @@
   if (launchScreen == nil) return;
   UIView *launchView = launchScreen.view;
   if (launchView == nil) return;
-  
+
   launchView.frame = self.window.bounds;
   [self.window addSubview:launchView];
   [self.window makeKeyAndVisible];

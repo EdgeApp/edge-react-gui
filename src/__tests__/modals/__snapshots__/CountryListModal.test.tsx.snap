@@ -1911,7 +1911,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -2026,11 +2026,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -2194,11 +2189,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/afghanistan.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -2362,11 +2352,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/aland-islands.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -2530,11 +2515,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/albania.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -2698,11 +2678,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/algeria.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -2866,11 +2841,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/american-samoa.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -3034,11 +3004,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/andorra.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -3202,11 +3167,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/angola.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -3370,11 +3330,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/anguilla.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -3538,11 +3493,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/antigua-and-barbuda.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
