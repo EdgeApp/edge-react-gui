@@ -16263,10 +16263,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.4.13:
-  version "0.4.13"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.13.tgz#1554f9abe16d4a33169a513a2c97150b23df6fa8"
-  integrity sha512-MZFZloehJvtN9lOVpH7kv6eWo2wyUPOklklW96eP4nZn33Hh081tEYQy7m6KdKedmqRC4MSbPI8y+HldMUirxg==
+react-native-piratechain@^0.4.15:
+  version "0.4.15"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.15.tgz#ea42c906c7da12b29b5a53ba1deb8955d3282dfb"
+  integrity sha512-3ihsr/D5lEiuINniJTjf25sWLYBgTtd1APgvr+9GqxeAbZDvyeYXaFcZKApeL+yQTo9y4jwUmuQTuxHHoYsT5w==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16373,10 +16373,10 @@ react-native-webview@^13.8.4:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.4.tgz#62407118560378061bfa19d31fe716eb311bfbd7"
-  integrity sha512-RkL8K1Q9uBmvefhbeTnVGyO8tzpq1ajPDBGR2LB56LAtvOVCgZz9o//E1gEcmKngURxDXsC2q0XNnx7BKTsqwA==
+react-native-zcash@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.5.tgz#0dfae01ebdd319cebda970e4cdf30520fb99bd05"
+  integrity sha512-UP86SH5abfzSGy8tlsnOO6+ANQLWX6+mDh7fK6ixSVe1180x+qfJCly/eaSt+Xzldu4emQJaSdCk6EDImDjI9w==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"
