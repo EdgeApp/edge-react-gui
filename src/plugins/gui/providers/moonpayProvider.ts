@@ -101,6 +101,7 @@ const CURRENCY_PLUGINID_MAP: StringMap = {
   matic: 'polygon',
   qtum: 'qtum',
   rvn: 'ravencoin',
+  sol: 'solana',
   xlm: 'stellar',
   xrp: 'ripple',
   xtz: 'tezos'

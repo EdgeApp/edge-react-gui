@@ -15,8 +15,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
+import { EdgeModal } from './EdgeModal'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -68,7 +68,7 @@ export const FundAccountModal = (props: Props) => {
   const iconProps = React.useMemo(() => ({ size: theme.rem(1.25), color: theme.iconTappable }), [theme])
 
   return (
-    <ModalUi4 bridge={bridge} title={lstrings.fund_account_modal_title} onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} title={lstrings.fund_account_modal_title} onCancel={handleCancel}>
       <SelectableRow
         marginRem={0.5}
         minimumFontScale={0.5}
@@ -95,7 +95,7 @@ export const FundAccountModal = (props: Props) => {
           </View>
         }
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

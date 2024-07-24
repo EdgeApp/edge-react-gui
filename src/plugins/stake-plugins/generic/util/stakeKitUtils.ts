@@ -6,8 +6,7 @@ import type {
   SubmitHashRequestDto,
   TransactionDto,
   YieldBalanceDto,
-  YieldBalanceRequestDto,
-  YieldDto
+  YieldBalanceRequestDto
 } from '@stakekit/api-hooks'
 import { asMaybe, asObject, asValue } from 'cleaners'
 import { InsufficientFundsError } from 'edge-core-js'
@@ -17,12 +16,6 @@ import { ENV } from '../../../../env'
 const baseUrl = 'https://api.stakek.it'
 const headers = { 'Content-Type': 'application/json', 'X-API-KEY': ENV.STAKEKIT_API_KEY ?? '' }
 
-const fetchGet = async <Res>(path: string): Promise<Res> => {
-  const response = await fetch(baseUrl + path, {
-    headers
-  })
-  return await response.json()
-}
 const fetchPatch = async <Body, Res>(path: string, body: Body): Promise<Res> => {
   const response = await fetch(baseUrl + path, {
     method: 'PATCH',
@@ -67,9 +60,6 @@ export const transactionSubmitHash = async (transactionId: string, submitHashReq
 }
 export const yieldGetSingleYieldBalances = async (integrationId: string, yieldBalanceRequestDto: YieldBalanceRequestDto): Promise<YieldBalanceDto[]> => {
   return await fetchPost<YieldBalanceRequestDto, YieldBalanceDto[]>(`/v1/yields/${integrationId}/balances`, yieldBalanceRequestDto)
-}
-export const yieldYieldOpportunity = async (integrationId: string): Promise<YieldDto> => {
-  return await fetchGet<YieldDto>(`/v1/yields/${integrationId}`)
 }
 
 const checkInsufficientFunds = (res: unknown): void => {

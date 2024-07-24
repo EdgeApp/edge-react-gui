@@ -12,17 +12,10 @@ describe('PasswordReminderModal', () => {
     const renderer = createRenderer()
 
     const fakeAccount: any = {}
+    const fakeDispatch: any = () => {}
 
     const actual = renderer.render(
-      <PasswordReminderModalComponent
-        navigation={fakeNavigation}
-        bridge={fakeAirshipBridge}
-        account={fakeAccount}
-        onSuccess={() => undefined}
-        onPostpone={() => undefined}
-        onRequestChangePassword={() => undefined}
-        theme={getTheme()}
-      />
+      <PasswordReminderModalComponent navigation={fakeNavigation} bridge={fakeAirshipBridge} account={fakeAccount} dispatch={fakeDispatch} theme={getTheme()} />
     )
 
     expect(actual).toMatchSnapshot()

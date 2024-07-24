@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { StyledButtonContainer } from '../../buttons/ButtonsView'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -23,7 +24,6 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
-import { StyledButtonContainer } from '../../ui4/ButtonsViewUi4'
 
 interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet

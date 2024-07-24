@@ -6,6 +6,7 @@ import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
+import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -17,6 +18,9 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeButton } from '../buttons/EdgeButton'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -29,9 +33,6 @@ import { ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/Exch
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SwapInput } from '../themed/SwapInput'
 import { ButtonBox } from '../themed/ThemedButtons'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 export interface SwapCreateParams {
   // The following props are used to populate the flip inputs
@@ -106,6 +107,16 @@ export const SwapCreateScene = (props: Props) => {
     zeroString(state.nativeAmount) ||
     // Don't show next button if the amount exceeds the balance:
     checkAmountExceedsBalance()
+
+  //
+  // Effects
+  //
+
+  React.useEffect(() => {
+    return navigation.addListener('focus', () => {
+      dispatch(checkEnabledExchanges())
+    })
+  }, [dispatch, navigation])
 
   //
   // Callbacks
@@ -344,7 +355,7 @@ export const SwapCreateScene = (props: Props) => {
     <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
       <EdgeAnim enter={fadeInUp60}>
         {fromWallet == null ? (
-          <ButtonUi4 type="secondary" onPress={handleFromSelectWallet} marginRem={[1, 0]} label={lstrings.select_src_wallet} />
+          <EdgeButton type="secondary" onPress={handleFromSelectWallet} marginRem={[1, 0]} label={lstrings.select_src_wallet} />
         ) : (
           <SwapInput
             ref={fromInputRef}
@@ -377,7 +388,7 @@ export const SwapCreateScene = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown30}>
         {toWallet == null ? (
-          <ButtonUi4 type="secondary" onPress={handleToSelectWallet} marginRem={[1, 0]} label={lstrings.select_recv_wallet} />
+          <EdgeButton type="secondary" onPress={handleToSelectWallet} marginRem={[1, 0]} label={lstrings.select_recv_wallet} />
         ) : (
           <SwapInput
             ref={toInputRef}
@@ -396,7 +407,7 @@ export const SwapCreateScene = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
       <EdgeAnim enter={fadeInDown90}>
-        {isNextHidden ? null : <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />}
+        {isNextHidden ? null : <ButtonsView primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />}
       </EdgeAnim>
     </SceneWrapper>
   )

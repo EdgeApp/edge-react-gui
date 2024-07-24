@@ -1,6 +1,6 @@
 import { asNumber, asObject } from 'cleaners'
 
-import { AccentColors } from '../components/ui4/DotsBackground'
+import { AccentColors } from '../components/common/DotsBackground'
 
 export type ImageProp = { uri: string } | number
 

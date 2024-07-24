@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { useState } from '../../types/reactHooks'
-import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeRow } from '../rows/EdgeRow'
 
 interface Props {
   maximumHeight?: 'small' | 'medium' | 'large'
@@ -38,5 +38,5 @@ export const CountdownTile = (props: Props) => {
   let time = date.toISOString().slice(11, 19)
   if (time.startsWith('00:')) time = time.slice(3)
 
-  return <RowUi4 title={title} body={time} maximumHeight={maximumHeight} />
+  return <EdgeRow title={title} body={time} maximumHeight={maximumHeight} />
 }

@@ -21,6 +21,7 @@ const asEvmApiKeys = asObject({
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
   infuraProjectId: asOptional(asString, ''),
+  nowNodesApiKey: asOptional(asString, ''),
   poktPortalApiKey: asOptional(asString, ''),
   quiknodeApiKey: asOptional(asString, '')
 }).withRest
@@ -116,6 +117,7 @@ export const asEnvConfig = asObject({
 
   // Core plugin options:
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
+  AMOY_INIT: asCorePluginInit(asEvmApiKeys),
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
   BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
@@ -201,6 +203,7 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  HOLESKY_INIT: asCorePluginInit(asEvmApiKeys),
   LIFI_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
@@ -213,8 +216,6 @@ export const asEnvConfig = asObject({
       nowNodeApiKey: asOptional(asString, '')
     })
   ),
-  KOVAN_INIT: asCorePluginInit(asEvmApiKeys),
-  GOERLI_INIT: asCorePluginInit(asEvmApiKeys),
   LETSEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -230,7 +231,6 @@ export const asEnvConfig = asObject({
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
 
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
-  MUMBAI_INIT: asCorePluginInit(asEvmApiKeys),
   RANGO_INIT: asCorePluginInit(
     asObject({
       appId: asOptional(asString, 'edge'),
@@ -239,6 +239,7 @@ export const asEnvConfig = asObject({
       referrerFee: asOptional(asString, '0.75')
     }).withRest
   ),
+  SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
       affiliateId: asOptional(asString, '')
@@ -287,6 +288,11 @@ export const asEnvConfig = asObject({
   ZCOIN_INIT: asCorePluginInit(
     asObject({
       nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
+  '0XGASLESS_INIT': asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
     })
   ),
   ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),

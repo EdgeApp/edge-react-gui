@@ -7,10 +7,10 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'notificationSettings'> {}
 
@@ -71,7 +71,7 @@ export const NotificationScene = (props: Props) => {
 
         return (
           <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
-            <CryptoIconUi4 pluginId={pluginId} tokenId={null} />
+            <CryptoIcon pluginId={pluginId} tokenId={null} />
           </SettingsTappableRow>
         )
       })}

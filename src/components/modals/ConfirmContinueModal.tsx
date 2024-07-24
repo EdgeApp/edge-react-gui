@@ -11,7 +11,7 @@ import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -49,7 +49,7 @@ export function ConfirmContinueModal(props: Props) {
   }
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       warning={warning}
       title={
@@ -75,7 +75,7 @@ export function ConfirmContinueModal(props: Props) {
       <Fade visible={isAgreed}>
         <MainButton label={lstrings.confirm_finish} marginRem={1} type="primary" onPress={handleAgreed} />
       </Fade>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

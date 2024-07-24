@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Keyboard, View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -16,7 +16,7 @@ import { FlatListItem, GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { showDevError } from '../services/AirshipInstance'
+import { showDevError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -115,7 +115,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
     const { navigation } = this.props
     if (!this.isValidFiat(selectedFiat)) {
-      Alert.alert(lstrings.fragment_create_wallet_select_valid)
+      showToast(lstrings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()

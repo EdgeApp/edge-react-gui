@@ -11,7 +11,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface TermsUri {
   termsUri?: string
@@ -60,7 +60,7 @@ function SwapVerifyTermsModal(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
@@ -90,7 +90,7 @@ function SwapVerifyTermsModal(props: Props) {
           </Text>
         )}
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

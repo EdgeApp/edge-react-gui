@@ -285,6 +285,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -488,6 +489,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -655,6 +657,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -836,6 +839,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -1019,6 +1023,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -1064,7 +1069,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -1858,6 +1863,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2061,6 +2067,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -2228,6 +2235,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -2409,6 +2417,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -2592,6 +2601,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -2637,7 +2647,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -2752,6 +2762,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -2846,6 +2857,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -3619,6 +3631,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3827,6 +3840,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -3988,6 +4002,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -4155,6 +4170,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -4336,6 +4352,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -4519,6 +4536,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -4564,7 +4582,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -5358,6 +5376,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -5566,6 +5585,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -5732,6 +5752,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -5957,6 +5978,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -6002,7 +6024,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -6796,6 +6818,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -7004,6 +7027,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -7165,6 +7189,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -7371,6 +7396,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -7416,7 +7442,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -8210,6 +8236,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -8418,6 +8445,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -8623,6 +8651,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -8668,7 +8697,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -9462,6 +9491,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -9670,6 +9700,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -9857,6 +9888,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                     "marginBottom": 11,
                     "marginLeft": 11,
                     "marginRight": 11,
@@ -9956,6 +9988,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -10181,6 +10214,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -10226,7 +10260,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -11020,6 +11054,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -11254,6 +11289,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                       "marginBottom": 11,
                       "marginLeft": 11,
                       "marginRight": 11,
@@ -11347,6 +11383,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -11514,6 +11551,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -11673,6 +11711,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -11718,7 +11757,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -12512,6 +12551,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -12746,6 +12786,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                       "marginBottom": 11,
                       "marginLeft": 11,
                       "marginRight": 11,
@@ -12865,6 +12906,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                     "marginBottom": 11,
                     "marginLeft": 11,
                     "marginRight": 11,
@@ -12964,6 +13006,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "alignSelf": "stretch",
                         "backgroundColor": "rgba(255, 255, 255, 0)",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                       },
                       {
                         "marginBottom": 11,
@@ -13123,6 +13166,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "alignSelf": "stretch",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                     },
                     {
                       "marginBottom": 11,
@@ -13168,7 +13212,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       ]
                     }
                   >
-                    Fee:
+                    Network Fee:
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -13962,6 +14006,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -14191,6 +14236,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                     "marginBottom": 11,
                     "marginLeft": 11,
                     "marginRight": 11,

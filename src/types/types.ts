@@ -292,8 +292,7 @@ export interface AppConfig {
   configName: string
   darkTheme: Theme
   defaultWallets: EdgeAsset[]
-  forceCloseUrlIos: string
-  forceCloseUrlAndroid: string
+  forceCloseUrl: string
   ip2faSite: string
   knowledgeBase: string
   lightTheme: Theme

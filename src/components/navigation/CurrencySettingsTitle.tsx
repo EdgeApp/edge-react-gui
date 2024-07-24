@@ -3,9 +3,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { RouteProp } from '../../types/routerTypes'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export function CurrencySettingsTitle() {
   const route = useRoute<RouteProp<'currencySettings' | 'currencyNotificationSettings'>>()
@@ -15,7 +15,7 @@ export function CurrencySettingsTitle() {
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>
-      <CryptoIconUi4 marginRem={iconPadding} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
+      <CryptoIcon marginRem={iconPadding} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )

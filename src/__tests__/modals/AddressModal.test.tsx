@@ -11,6 +11,7 @@ describe('AddressModalComponent', () => {
   it('should render with loaded props', () => {
     const renderer = createRenderer()
 
+    const fakeDispatch: any = () => {}
     const fakeAccount: any = {
       disklet: makeMemoryDisklet()
     }
@@ -39,7 +40,7 @@ describe('AddressModalComponent', () => {
         ]}
         userFioAddressesLoading
         coreWallet={fakeWallet}
-        refreshAllFioAddresses={async () => {}}
+        dispatch={fakeDispatch}
         theme={getTheme()}
       />
     )

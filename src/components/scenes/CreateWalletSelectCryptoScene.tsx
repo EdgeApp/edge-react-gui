@@ -20,8 +20,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
+import { EdgeButton } from '../buttons/EdgeButton'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { SceneButtons } from '../common/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ListModal } from '../modals/ListModal'
@@ -33,7 +34,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
-import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
@@ -263,7 +263,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           enter={{ type: 'fadeIn', duration: selectedItems.size === 0 ? 0 : 300 }}
           exit={{ type: 'fadeOut', duration: 300 }}
         >
-          <ButtonUi4 type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
+          <EdgeButton type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
         </EdgeAnim>
       )
     }

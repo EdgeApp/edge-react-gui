@@ -1,15 +1,15 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { ModalButtons } from '../common/ModalButtons'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { FilledTextInputReturnKeyType, ModalFilledTextInput } from '../themed/FilledTextInput'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -39,7 +39,7 @@ interface Props {
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
   multiline?: boolean
   maxLength?: number
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  returnKeyType?: FilledTextInputReturnKeyType
   secureTextEntry?: boolean
 }
 
@@ -90,7 +90,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
+    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
       <StyledInnerView fullHeight={multiline}>
         {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
         {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
@@ -101,20 +101,21 @@ export function TextInputModal(props: Props) {
           autoCorrect={autoCorrect}
           keyboardType={keyboardType}
           placeholder={inputLabel}
-          returnKeyType={returnKeyType}
+          returnKeyType={multiline ? (Platform.OS === 'ios' ? undefined : 'none') : returnKeyType}
           secureTextEntry={secureTextEntry}
           multiline={multiline}
           // Our props:
           error={errorMessage}
           onChangeText={handleChangeText}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={multiline ? undefined : handleSubmit}
           textsizeRem={textSizeRem}
           value={text}
           maxLength={maxLength}
+          blurOnSubmit={multiline ? false : undefined}
         />
         <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
       </StyledInnerView>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

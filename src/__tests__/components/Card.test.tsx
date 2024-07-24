@@ -4,9 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import TestRenderer from 'react-test-renderer'
 
+import { EdgeCard } from '../../components/cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../../components/common/EdgeTouchableOpacity'
 import { EdgeText } from '../../components/themed/EdgeText'
-import { CardUi4 } from '../../components/ui4/CardUi4'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 const testColors = ['#4c669f', '#3b5998', '#192f6a']
@@ -21,9 +21,9 @@ describe('Card', () => {
     }
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4 gradientBackground={gradientProps}>
+        <EdgeCard gradientBackground={gradientProps}>
           <EdgeText>Gradient Background</EdgeText>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -33,9 +33,9 @@ describe('Card', () => {
     const nodeBackground = <View style={{ height: 100, width: 100, backgroundColor: testColors[0] }} />
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4 nodeBackground={nodeBackground}>
+        <EdgeCard nodeBackground={nodeBackground}>
           <EdgeText>Node Background</EdgeText>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -44,9 +44,9 @@ describe('Card', () => {
   it('should render with icon URI', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4 icon={testIconUri}>
+        <EdgeCard icon={testIconUri}>
           <EdgeText>Icon</EdgeText>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -55,10 +55,10 @@ describe('Card', () => {
   it('should render sections correctly with multiple children', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4 sections>
+        <EdgeCard sections>
           <EdgeText>Section 1</EdgeText>
           <EdgeText>Section 2</EdgeText>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -70,9 +70,9 @@ describe('Card', () => {
 
     const testRenderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4 onPress={mockOnPress} onLongPress={mockOnLongPress}>
+        <EdgeCard onPress={mockOnPress} onLongPress={mockOnLongPress}>
           <EdgeText>Press Me</EdgeText>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
 
@@ -89,9 +89,9 @@ describe('Card', () => {
     const testRenderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <CardUi4>
+          <EdgeCard>
             <EdgeText>Child Content</EdgeText>
-          </CardUi4>
+          </EdgeCard>
         </View>
       </FakeProviders>
     )
@@ -101,11 +101,11 @@ describe('Card', () => {
   it('should allow child elements to expand within the card', () => {
     const testRenderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4>
+        <EdgeCard>
           <View style={{ flex: 1, backgroundColor: testColors[0] }}>
             <EdgeText>Expanding Child</EdgeText>
           </View>
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(testRenderer.toJSON()).toMatchSnapshot()
@@ -115,11 +115,11 @@ describe('Card', () => {
     const testRenderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <CardUi4 fill>
+          <EdgeCard fill>
             <View style={{ flex: 1, backgroundColor: testColors[0] }}>
               <EdgeText>Expanding Child in Expanding Card</EdgeText>
             </View>
-          </CardUi4>
+          </EdgeCard>
         </View>
       </FakeProviders>
     )

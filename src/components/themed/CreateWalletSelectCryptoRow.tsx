@@ -6,9 +6,9 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -50,7 +50,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   return (
     <EdgeTouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
-      <CryptoIconUi4 marginRem={0.5} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIcon marginRem={0.5} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>

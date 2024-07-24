@@ -17,7 +17,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
@@ -61,7 +61,7 @@ export const HelpModal = (props: Props) => {
   const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
@@ -109,7 +109,7 @@ export const HelpModal = (props: Props) => {
         <EdgeText style={styles.version}>{versionText}</EdgeText>
         <EdgeText style={styles.version}>{buildText}</EdgeText>
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

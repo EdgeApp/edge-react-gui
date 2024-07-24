@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   poweredByText: string
@@ -21,7 +21,7 @@ export const PoweredByCard = (props: Props) => {
 
   return (
     <View style={styles.cardContainer}>
-      <CardUi4 paddingRem={0.5} onPress={onPress}>
+      <EdgeCard paddingRem={0.5} onPress={onPress}>
         <View style={styles.poweredByContainer}>
           <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
           <View style={styles.poweredByContainerColumn}>
@@ -35,7 +35,7 @@ export const PoweredByCard = (props: Props) => {
           </View>
           <FontAwesome5 name="chevron-right" color={theme.iconTappable} size={theme.rem(1)} />
         </View>
-      </CardUi4>
+      </EdgeCard>
     </View>
   )
 }

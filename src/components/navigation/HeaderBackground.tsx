@@ -4,11 +4,11 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
+import { BlurBackground } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { BlurBackground } from '../ui4/BlurBackground'
 
 export const HeaderBackground = (props: any) => {
   const theme = useTheme()

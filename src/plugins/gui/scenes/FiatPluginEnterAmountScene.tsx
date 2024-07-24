@@ -2,16 +2,16 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Text, TextStyle, View } from 'react-native'
 
+import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp30, fadeInUp60, fadeInUp90 } from '../../../components/common/EdgeAnim'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { SectionView } from '../../../components/layout/SectionView'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../../components/ui4/ButtonsViewUi4'
-import { SectionView } from '../../../components/ui4/SectionView'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -210,7 +210,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
               </EdgeAnim>
               {onMax != null ? (
                 <View style={styles.maxButton}>
-                  <ButtonsViewUi4
+                  <ButtonsView
                     tertiary={{
                       label: lstrings.string_max_cap,
                       onPress: handleMax
@@ -261,7 +261,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
               </EdgeAnim>
               {onMax != null ? (
                 <View style={styles.maxButton}>
-                  <ButtonsViewUi4
+                  <ButtonsView
                     tertiary={{
                       label: lstrings.string_max_cap,
                       onPress: handleMax
