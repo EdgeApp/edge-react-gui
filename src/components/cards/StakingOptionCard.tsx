@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
@@ -28,7 +27,7 @@ export function StakingOptionCard({
     const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        {swapProviderIcon ? <Image style={styles.swapProviderIcon} resizeMode="contain" source={{ uri: swapProviderIcon }} /> : null}
         <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )

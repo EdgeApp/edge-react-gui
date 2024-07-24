@@ -1,7 +1,6 @@
 import { BlogPost } from 'edge-info-server'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
@@ -40,7 +39,7 @@ export const BlogCard = (props: Props) => {
       onPress={handlePress}
       nodeBackground={
         <View style={styles.nodeBackground}>
-          <FastImage source={imageSrc} style={styles.bannerImage} />
+          <Image source={imageSrc} style={styles.bannerImage} />
         </View>
       }
     >

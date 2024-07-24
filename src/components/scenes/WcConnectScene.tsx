@@ -1,8 +1,7 @@
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -104,7 +103,7 @@ export const WcConnectScene = withWallet((props: Props) => {
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <View style={styles.listRow}>
-          <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
+          <Image resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>

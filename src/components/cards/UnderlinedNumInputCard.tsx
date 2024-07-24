@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
@@ -68,7 +67,7 @@ const UnderlinedNumInputCardComponent = (props: {
               </View>
               <View style={[styles.bar, { width: baseTextLayout.width - exponentTextWidth }]} />
             </View>
-            <FastImage style={styles.icon} source={{ uri: iconUri }} />
+            <Image style={styles.icon} source={{ uri: iconUri }} />
           </View>
         </EdgeCard>
       </EdgeTouchableOpacity>

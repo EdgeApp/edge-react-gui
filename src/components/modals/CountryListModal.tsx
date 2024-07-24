@@ -1,6 +1,6 @@
 import * as React from 'react'
+import { Image } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 import { getCountry } from 'react-native-localize'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -27,7 +27,7 @@ export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props)
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
     const source = { uri: `${FLAG_LOGO_URL}/${logoName}.png` }
 
-    return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
+    return <SelectableRow icon={<Image source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
   }
 
   const rowDataFilter = (searchText: string, country: CountryData) => {

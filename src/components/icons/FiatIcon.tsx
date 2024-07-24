@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -53,7 +52,7 @@ export const FiatIconComponent = (props: Props) => {
 
   return (
     <View style={viewStyle}>
-      <FastImage style={StyleSheet.absoluteFill} source={source} />
+      <Image style={StyleSheet.absoluteFill} source={source} />
       <Text numberOfLines={1} adjustsFontSizeToFit style={textStyle}>
         {fiatSymbol}
       </Text>

@@ -1,7 +1,6 @@
 import { toFixed } from 'biggystring'
 import * as React from 'react'
-import { View, ViewStyle } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
@@ -44,7 +43,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, st
     const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        {swapProviderIcon ? <Image style={styles.swapProviderIcon} resizeMode="contain" source={{ uri: swapProviderIcon }} /> : null}
         <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )

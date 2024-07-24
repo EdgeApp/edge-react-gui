@@ -1,7 +1,6 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import backupHero from '../../assets/images/backup-hero.png'
@@ -26,7 +25,7 @@ const BackupModalContent = (props: { title: string; body: string; bodyCont?: str
 
   return (
     <View style={styles.container}>
-      <FastImage style={styles.image} source={backupHero} />
+      <Image style={styles.image} source={backupHero} />
       <Paragraph center>
         <HeaderText>{title}</HeaderText>
       </Paragraph>

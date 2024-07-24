@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { ViewToken } from 'react-native'
+import { Image, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -38,7 +37,7 @@ export const StateProvinceListModal = ({ countryCode, stateProvinces: rawStatePr
   const renderRow = React.useCallback(
     ({ name, 'alpha-2': alpha }: StateProvinceData) => {
       const source = { uri: `${FLAG_LOGO_URL}/stateprovinces/${countryCode.toLowerCase()}/${alpha.toLowerCase()}.png` }
-      return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
+      return <SelectableRow icon={<Image source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
     },
     [bridge, countryCode, styles.image]
   )

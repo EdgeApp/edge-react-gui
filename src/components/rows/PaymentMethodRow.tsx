@@ -1,5 +1,5 @@
 import * as React from 'react'
-import FastImage from 'react-native-fast-image'
+import { Image } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -68,7 +68,7 @@ const PaymentMethodRowComponent = (props: Props) => {
 
   const renderPluginDisplay = () => (
     <>
-      <FastImage source={{ uri: partnerIconUri }} style={styles.partnerIconImage} />
+      <Image source={{ uri: partnerIconUri }} style={styles.partnerIconImage} />
       <EdgeText style={styles.pluginText}>{guiPlugin.displayName}</EdgeText>
     </>
   )

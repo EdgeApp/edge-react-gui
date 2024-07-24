@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, Text, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { lstrings } from '../../locales/strings'
@@ -23,7 +22,7 @@ export const PoweredByCard = (props: Props) => {
     <View style={styles.cardContainer}>
       <EdgeCard paddingRem={0.5} onPress={onPress}>
         <View style={styles.poweredByContainer}>
-          <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
+          <Image style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
           <View style={styles.poweredByContainerColumn}>
             <View style={styles.poweredByContainerRow}>
               <Text style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</Text>

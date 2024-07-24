@@ -507,36 +507,22 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      defaultSource={null}
-                      resizeMode="cover"
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
+                  <Image
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
                       }
-                    />
-                  </View>
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
                 </View>
               </View>
               <View
@@ -1085,36 +1071,22 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      defaultSource={null}
-                      resizeMode="cover"
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
+                  <Image
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                       }
-                    />
-                  </View>
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
                 </View>
               </View>
               <View
@@ -1346,34 +1318,21 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "aspectRatio": 1,
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
-                  }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="contain"
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                <Image
+                  resizeMode="contain"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
                     }
-                  />
-                </View>
+                  }
+                  style={
+                    {
+                      "aspectRatio": 1,
+                      "height": 45,
+                      "width": 45,
+                    }
+                  }
+                />
                 <View
                   style={
                     {
@@ -1872,34 +1831,20 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {

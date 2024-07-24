@@ -1,8 +1,7 @@
 import { abs } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -332,7 +331,7 @@ const TransactionDetailsComponent = (props: Props) => {
             rightButtonType="editable"
             icon={
               thumbnailPath ? (
-                <FastImage style={styles.tileThumbnail} source={iconSource} />
+                <Image style={styles.tileThumbnail} source={iconSource} />
               ) : (
                 <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
               )

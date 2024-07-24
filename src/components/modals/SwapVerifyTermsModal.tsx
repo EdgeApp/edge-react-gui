@@ -1,8 +1,7 @@
 import { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
-import { Linking, Text, View } from 'react-native'
+import { Image, Linking, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
@@ -64,7 +63,7 @@ function SwapVerifyTermsModal(props: Props) {
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
-          <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
+          <Image style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
           <ModalTitle>{displayName}</ModalTitle>
         </View>
       }

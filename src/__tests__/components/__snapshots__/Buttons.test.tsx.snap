@@ -4452,30 +4452,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -4591,30 +4574,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -4733,30 +4699,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -4873,30 +4822,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -5013,30 +4945,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -5156,30 +5071,13 @@ exports[`Buttons should render with child icons 1`] = `
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            undefined,
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -5308,30 +5206,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -5472,30 +5353,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -5639,30 +5503,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -5804,30 +5651,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -5969,30 +5799,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -6137,30 +5950,13 @@ exports[`Buttons should render with child icons 1`] = `
           }
         }
       >
-        <View
-          style={
-            [
-              {
-                "overflow": "hidden",
-              },
-              undefined,
-            ]
-          }
-        >
-          <FastImageView
-            defaultSource={null}
-            resizeMode="cover"
-            style={
-              {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+        <Image
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
             }
-          />
-        </View>
+          }
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}

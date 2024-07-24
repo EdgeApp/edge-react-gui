@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
@@ -107,7 +106,7 @@ export const HomeScene = (props: Props) => {
                     gradientBackground={theme.buyCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        <Image source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleBuyPress}
@@ -118,7 +117,7 @@ export const HomeScene = (props: Props) => {
                     gradientBackground={theme.sellCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        <Image source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleSellPress}
@@ -131,7 +130,7 @@ export const HomeScene = (props: Props) => {
                     gradientBackground={theme.fioCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        <Image source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleFioPress}
@@ -142,7 +141,7 @@ export const HomeScene = (props: Props) => {
                     gradientBackground={theme.swapCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        <Image source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleSwapPress}

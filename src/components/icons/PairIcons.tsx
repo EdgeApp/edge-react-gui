@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -9,7 +8,7 @@ export function PairIcons({ icons }: { icons: string[] }) {
   return (
     <View style={styles.container}>
       {icons.map((icon, index) => (
-        <FastImage style={[styles.icon, index > 0 ? styles.consecutiveIcon : undefined]} source={{ uri: icon }} key={icon} />
+        <Image style={[styles.icon, index > 0 ? styles.consecutiveIcon : undefined]} source={{ uri: icon }} key={icon} />
       ))}
     </View>
   )

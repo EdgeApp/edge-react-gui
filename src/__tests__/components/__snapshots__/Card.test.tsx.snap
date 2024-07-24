@@ -554,34 +554,20 @@ exports[`Card should render with icon URI 1`] = `
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            {
-              "height": 34,
-              "resizeMode": "contain",
-              "width": 34,
-            },
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
-        />
-      </View>
+        }
+        style={
+          {
+            "height": 34,
+            "resizeMode": "contain",
+            "width": 34,
+          }
+        }
+      />
     </View>
     <Text
       adjustsFontSizeToFit={true}

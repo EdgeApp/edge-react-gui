@@ -4,7 +4,6 @@ import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
@@ -374,7 +373,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
-    const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+    const icon = !hasCountryData ? undefined : <Image source={imageSrc} style={iconStyle} />
 
     const titleAsset =
       forcedWalletResult == null || forcedWalletResult.type !== 'wallet'

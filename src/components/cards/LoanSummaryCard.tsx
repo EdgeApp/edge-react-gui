@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -62,7 +61,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
             <View style={styles.cardContainer}>
               {isDevMode ? <EdgeText>{`${currencyWallet.name}`}</EdgeText> : null}
               <View style={styles.row}>
-                <FastImage style={styles.icon} source={{ uri: iconUri }} />
+                <Image style={styles.icon} source={{ uri: iconUri }} />
                 <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
                 <EdgeText>{fiatCurrencyCode}</EdgeText>
               </View>

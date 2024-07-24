@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
@@ -44,7 +43,7 @@ export const WcDisconnectScene = (props: Props) => {
       <View style={styles.container}>
         <EdgeCard paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
-            <FastImage style={styles.currencyLogo} source={{ uri: wcConnectionInfo.icon }} />
+            <Image style={styles.currencyLogo} source={{ uri: wcConnectionInfo.icon }} />
             <View style={styles.info}>
               <EdgeText style={styles.infoTitle}>{wcConnectionInfo.dAppName}</EdgeText>
               <EdgeText style={styles.infoBody}>{wcConnectionInfo.dAppUrl}</EdgeText>

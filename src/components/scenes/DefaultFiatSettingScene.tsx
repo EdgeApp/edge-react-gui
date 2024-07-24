@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Keyboard, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, Keyboard, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 
@@ -66,7 +65,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
     return (
       <SelectableRow
-        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         subTitle={subTitle}
         title={data.item.value}
         onPress={() => this.onSelectFiat(data.item)}

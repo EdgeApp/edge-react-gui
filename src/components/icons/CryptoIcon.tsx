@@ -1,7 +1,6 @@
 import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, StyleSheet, View } from 'react-native'
 import { ShadowedView } from 'react-native-fast-shadow'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
@@ -118,8 +117,8 @@ export const CryptoIcon = (props: Props) => {
         />
       )}
       <ShadowedView style={shadowStyle}>
-        {primaryCurrencyIcon != null ? <FastImage style={StyleSheet.absoluteFill} source={primaryCurrencyIcon} /> : null}
-        {hideSecondary ? null : secondaryCurrencyIcon != null ? <FastImage style={styles.parentIcon} source={secondaryCurrencyIcon} /> : null}
+        {primaryCurrencyIcon != null ? <Image style={StyleSheet.absoluteFill} source={primaryCurrencyIcon} /> : null}
+        {hideSecondary ? null : secondaryCurrencyIcon != null ? <Image style={styles.parentIcon} source={secondaryCurrencyIcon} /> : null}
       </ShadowedView>
     </View>
   )
