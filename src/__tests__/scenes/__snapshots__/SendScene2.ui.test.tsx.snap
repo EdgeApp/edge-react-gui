@@ -1439,6 +1439,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -3202,6 +3203,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -4942,6 +4944,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -6379,6 +6382,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -7792,6 +7796,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -9042,6 +9047,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -10600,6 +10606,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -12092,6 +12099,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -13542,6 +13550,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
@@ -14975,6 +14984,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {

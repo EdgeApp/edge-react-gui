@@ -16559,10 +16559,10 @@ react-native-email-link@^1.14.5:
   resolved "https://registry.yarnpkg.com/react-native-email-link/-/react-native-email-link-1.14.5.tgz#05e13002bd850ebaf98477b4cfbfdfa972a57608"
   integrity sha512-TNi9OeGcJlw6FXl1dWAKEBGJEgKPBfsiB3v8GaHqqCtzmWnKE+8y1Wfhaaloh37OJb2vqp1cwDpW5m6PiTXazA==
 
-react-native-fast-image@^8.5.11:
-  version "8.5.11"
-  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
-  integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
+react-native-fast-image@^8.6.3:
+  version "8.6.3"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz#6edc3f9190092a909d636d93eecbcc54a8822255"
+  integrity sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg==
 
 react-native-fast-shadow@^0.1.0:
   version "0.1.0"

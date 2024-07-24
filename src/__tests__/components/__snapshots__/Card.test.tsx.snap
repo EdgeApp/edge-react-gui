@@ -569,6 +569,7 @@ exports[`Card should render with icon URI 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
