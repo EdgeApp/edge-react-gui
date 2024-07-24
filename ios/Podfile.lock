@@ -1489,27 +1489,6 @@ PODS:
     - ZIPFoundation (= 0.9.11)
   - rn-id-blurview (1.2.1):
     - React
-  - RNBootSplash (4.7.4):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - RNCAsyncStorage (1.19.4):
     - DoubleConversion
     - glog
@@ -2056,7 +2035,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
   - rn-id-blurview (from `../node_modules/rn-id-blurview`)
-  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
@@ -2298,8 +2276,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-file-access"
   rn-id-blurview:
     :path: "../node_modules/rn-id-blurview"
-  RNBootSplash:
-    :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -2456,7 +2432,6 @@ SPEC CHECKSUMS:
   ReactCommon: eb4c4a9c43fcc0d93f922d0fdada24638429e515
   ReactNativeFileAccess: 751f602d94efe9c1c52b5e3549964bfab938ed3f
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
-  RNBootSplash: 4e2bc4e3712b3074482eb99f44d14efcd6bb218d
   RNCAsyncStorage: 09b1b7d76c7ba68a1143150560d637091a0065f9
   RNCClipboard: 5570b0e34c5a662b08c16f9ef9961fecdcfd7fb9
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758

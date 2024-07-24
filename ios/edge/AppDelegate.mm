@@ -7,7 +7,7 @@
 // Edge additions:
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
-#import "RNBootSplash.h"
+//#import "RNBootSplash.h"
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
@@ -115,7 +115,7 @@
 
 // react-native-bootsplash integration:
 - (void)customizeRootView:(RCTRootView *)rootView {
-  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
+//  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
 }
 
 /**
