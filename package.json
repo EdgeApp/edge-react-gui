@@ -45,7 +45,7 @@
     "maestro:ios": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,ios maestro",
     "maestro:android": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,android maestro",
     "precommit": "npm run localize && npm run typechain:precommit && lint-staged && tsc && npm test",
-    "prepare.ios": "(cd ios; pod repo update; pod install)",
+    "prepare.ios": "(cd ios; pod repo update; RCT_NEW_ARCH_ENABLED=1 pod install)",
     "prepare": "husky install && ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
     "start.plugins": "webpack serve",
