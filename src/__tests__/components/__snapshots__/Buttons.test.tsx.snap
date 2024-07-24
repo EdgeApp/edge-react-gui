@@ -4463,6 +4463,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -4601,6 +4602,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -4742,6 +4744,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -4881,6 +4884,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -5020,6 +5024,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -5162,6 +5167,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           style={
             {
@@ -5313,6 +5319,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {
@@ -5476,6 +5483,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {
@@ -5642,6 +5650,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {
@@ -5806,6 +5815,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {
@@ -5970,6 +5980,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {
@@ -6137,6 +6148,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             style={
               {

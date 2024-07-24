@@ -218,6 +218,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               }
             >
               <FastImageView
+                defaultSource={null}
                 resizeMode="cover"
                 style={
                   {
@@ -883,6 +884,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="contain"
           style={
             {
@@ -1183,6 +1185,7 @@ exports[`TransactionListTop should render 1`] = `
               }
             >
               <FastImageView
+                defaultSource={null}
                 resizeMode="cover"
                 style={
                   {

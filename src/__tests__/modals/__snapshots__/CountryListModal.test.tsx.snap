@@ -2025,6 +2025,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -2188,6 +2189,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -2351,6 +2353,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -2514,6 +2517,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -2677,6 +2681,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -2840,6 +2845,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -3003,6 +3009,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -3166,6 +3173,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -3329,6 +3337,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {
@@ -3492,6 +3501,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     style={
                       {

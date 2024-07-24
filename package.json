@@ -124,7 +124,7 @@
     "react-native-device-info": "^10.11.0",
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-email-link": "^1.14.5",
-    "react-native-fast-image": "^8.5.11",
+    "react-native-fast-image": "^8.6.3",
     "react-native-fast-shadow": "^0.1.0",
     "react-native-file-access": "^3.0.5",
     "react-native-fs": "^2.19.0",

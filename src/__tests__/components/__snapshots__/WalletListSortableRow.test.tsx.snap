@@ -136,6 +136,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             }
           >
             <FastImageView
+              defaultSource={null}
               resizeMode="cover"
               style={
                 {
