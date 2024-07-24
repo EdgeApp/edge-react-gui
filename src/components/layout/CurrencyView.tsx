@@ -38,11 +38,14 @@ export const CurrencyView = (props: Props) => {
   const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
   const { currencyCode } = tokenFromId == null ? currencyInfo : tokenFromId
 
-  const networkLabel = (
-    <View style={styles.networkContainer}>
-      <EdgeText>{wallet.currencyInfo.displayName}</EdgeText>
-    </View>
-  )
+  // Show the network label if it's a token or an ETH mainnet currency code on
+  // non-ethereum networks (i.e. Optimism)
+  const networkLabel =
+    tokenFromId == null && (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? null : (
+      <View style={styles.networkContainer}>
+        <EdgeText>{wallet.currencyInfo.displayName}</EdgeText>
+      </View>
+    )
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
