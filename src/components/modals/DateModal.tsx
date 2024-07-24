@@ -1,4 +1,4 @@
-import DateTimePicker from '@react-native-community/datetimepicker'
+// import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
 import { Appearance, Platform, Text, TextStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -68,7 +68,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         <EdgeTouchableOpacity onPress={this.handleDone}>
           <Text style={textStyle}>{lstrings.string_done_cap}</Text>
         </EdgeTouchableOpacity>
-        <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} />
+        {/* <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} /> */}
       </AirshipModal>
     )
   }
@@ -90,16 +90,17 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
 export function DateModalAndroid(props: Props) {
   const { bridge, initialValue } = props
 
-  return (
-    <DateTimePicker
-      mode="date"
-      onChange={(event, date?: Date) => {
-        bridge.resolve(date != null ? date : initialValue)
-        bridge.remove()
-      }}
-      value={initialValue}
-    />
-  )
+  // return (
+  //   <DateTimePicker
+  //     mode="date"
+  //     onChange={(event, date?: Date) => {
+  //       bridge.resolve(date != null ? date : initialValue)
+  //       bridge.remove()
+  //     }}
+  //     value={initialValue}
+  //   />
+  // )
+  return null
 }
 
 export const DateModal = Platform.OS === 'android' ? DateModalAndroid : withTheme(DateModalIos)
