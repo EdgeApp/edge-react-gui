@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.10.0
+
 - added: Network names to wallet list cards
 - added: 0x Gasless Swap exchange plugin
 - added: Add Solana on Banxa and Moonpay
@@ -21,11 +23,11 @@
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
 
-## 4.9.2
+## 4.9.2 (2024-07-22)
 
 - fixed: Set avoidNativeFee on Rango to fix bridge failures
 
-## 4.9.1
+## 4.9.1 (2024-07-21)
 
 - changed: Velodrome staking plugin will ignore LP token balance and use entered amounts for `addLiquidity` methods
 - changed: Velodrome staking plugin will skip `deposit` method on disabled contracts
