@@ -9,14 +9,15 @@ import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { Dispatch } from '../../types/reduxTypes'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { showDevError, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
 
@@ -40,7 +41,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => Promise<void>
+  dispatch: Dispatch
 }
 
 interface State {
@@ -86,9 +87,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   getFioAddresses = async () => {
-    const { useUserFioAddressesOnly, refreshAllFioAddresses, account } = this.props
+    const { account, dispatch, useUserFioAddressesOnly } = this.props
     if (useUserFioAddressesOnly) {
-      await refreshAllFioAddresses()
+      await dispatch(refreshAllFioAddresses())
     } else {
       this.setState({ fioAddresses: await getFioAddressCache(account) })
       this.filterFioAddresses('')
@@ -368,17 +369,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => ({
-    account: state.core.account,
-    coreWallet: state.core.account.currencyWallets[ownProps.walletId],
-    userFioAddresses: state.ui.fioAddress.fioAddresses,
-    userFioAddressesLoading: state.ui.fioAddress.fioAddressesLoading,
-    fioPlugin: state.core.account.currencyConfig.fio
-  }),
-  dispatch => ({
-    async refreshAllFioAddresses() {
-      await dispatch(refreshAllFioAddresses())
-    }
-  })
-)(withTheme(AddressModalComponent))
+export function AddressModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+  const dispatch = useDispatch()
+
+  const account = useSelector(state => state.core.account)
+  const coreWallet = useSelector(state => state.core.account.currencyWallets[props.walletId])
+  const fioPlugin = useSelector(state => state.core.account.currencyConfig.fio)
+  const userFioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const userFioAddressesLoading = useSelector(state => state.ui.fioAddress.fioAddressesLoading)
+
+  return (
+    <AddressModalComponent
+      {...props}
+      account={account}
+      coreWallet={coreWallet}
+      dispatch={dispatch}
+      fioPlugin={fioPlugin}
+      theme={theme}
+      userFioAddresses={userFioAddresses}
+      userFioAddressesLoading={userFioAddressesLoading}
+    />
+  )
+}

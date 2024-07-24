@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
 import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
@@ -13,7 +13,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Slider } from '../themed/Slider'
@@ -272,11 +272,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    denominationMultiplier: selectDisplayDenom(state, ownProps.fioWallet.currencyConfig, null).multiplier,
-    currencyWallets: state.core.account.currencyWallets,
-    fioWallets: state.ui.wallets.fioWallets
-  }),
-  dispatch => ({})
-)(withTheme(FioActionSubmitComponent))
+export function FioActionSubmit(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const denominationMultiplier = useSelector(state => selectDisplayDenom(state, props.fioWallet.currencyConfig, null).multiplier)
+  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+
+  return (
+    <FioActionSubmitComponent
+      {...props}
+      currencyWallets={currencyWallets}
+      denominationMultiplier={denominationMultiplier}
+      fioWallets={fioWallets}
+      theme={theme}
+    />
+  )
+}
