@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -40,7 +39,7 @@ export const FioCreateHandleModal = (props: Props) => {
   return (
     <EdgeModal bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
-        <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} resizeMode={FastImage.resizeMode.contain} />
+        <Image source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} resizeMode="contain" />
         <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
           {parseMarkedText(lstrings.fio_free_web3_handle_title_m)}
         </GetFioHandleTitle>

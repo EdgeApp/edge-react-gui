@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, StyleSheet, View } from 'react-native'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -94,9 +93,7 @@ export const EdgeCard = (props: Props) => {
   )
 
   const maybeIcon =
-    icon == null ? null : (
-      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={imageSrc} style={styles.iconBuiltin} /> : icon}</View>
-    )
+    icon == null ? null : <View style={styles.iconContainer}>{typeof icon === 'string' ? <Image source={imageSrc} style={styles.iconBuiltin} /> : icon}</View>
 
   const content = sections ? <SectionView>{children}</SectionView> : children
 

@@ -147,7 +147,7 @@ export function Services(props: Props) {
       {account == null ? null : <FioService account={account} navigation={navigation} />}
       <PermissionsManager />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
-      <NetworkActivity />
+      {/* <NetworkActivity /> */}
       <PasswordReminderService />
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />

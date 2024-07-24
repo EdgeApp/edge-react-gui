@@ -1,6 +1,6 @@
 import { EdgeSwapQuote } from 'edge-core-js'
 import React from 'react'
-import FastImage from 'react-native-fast-image'
+import { Image } from 'react-native'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { lstrings } from '../../locales/strings'
@@ -30,7 +30,7 @@ export const SwapProviderRow = (props: Props) => {
 
   return (
     <IconDataRow
-      icon={<FastImage style={styles.providerIcon} source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} resizeMode="contain" />}
+      icon={<Image style={styles.providerIcon} source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} resizeMode="contain" />}
       leftText={quote.swapInfo.displayName}
       leftSubtext={quote.swapInfo.isDex ? lstrings.quote_dex_provider : lstrings.quote_centralized_provider}
       rightText={costOrReceiveAmount}

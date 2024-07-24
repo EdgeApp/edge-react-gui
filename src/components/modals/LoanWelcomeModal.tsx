@@ -1,6 +1,6 @@
 import * as React from 'react'
+import { Image } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
@@ -24,7 +24,7 @@ export const LoanWelcomeModal = (props: { bridge: AirshipBridge<'ok' | undefined
   return (
     <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.legacy_address_modal_continue } }}>
       <Space aroundRem={1}>
-        <FastImage style={styles.icon} source={{ uri: iconUri }} />
+        <Image style={styles.icon} source={{ uri: iconUri }} />
         <EdgeText numberOfLines={20}>{sprintf(lstrings.loan_welcome_6s, config.appName, lstrings.loan_aave_fragment, 'BTC', 'USDC', '10', '120')}</EdgeText>
       </Space>
     </ButtonsModal>

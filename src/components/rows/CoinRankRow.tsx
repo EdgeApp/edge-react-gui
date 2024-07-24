@@ -1,7 +1,6 @@
 import { div, lt, round } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -148,7 +147,7 @@ const CoinRankRowComponent = (props: Props) => {
         </EdgeText>
       </View>
       <View style={styles.iconRowDataContainer}>
-        <FastImage style={styles.icon} source={imageUrlObject} />
+        <Image style={styles.icon} source={imageUrlObject} />
         <View style={styles.leftColumn}>
           <EdgeText style={styles.currencyCode}>{currencyCode.toUpperCase()}</EdgeText>
           <EdgeText style={styles.assetSubText}>{assetSubTextString}</EdgeText>

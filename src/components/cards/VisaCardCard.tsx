@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import FastImage from 'react-native-fast-image'
+import { Image } from 'react-native'
 
 import { executePluginAction } from '../../actions/PluginActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -54,7 +54,7 @@ export const VisaCardCard = (props: Props) => {
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
         <EdgeCard paddingRem={0}>
           <EdgeTouchableOpacity onPress={handlePress} style={styles.container}>
-            <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
+            <Image resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>
               {lstrings.rewards_card_call_to_action}
             </EdgeText>

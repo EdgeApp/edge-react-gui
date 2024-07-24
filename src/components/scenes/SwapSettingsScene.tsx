@@ -1,7 +1,6 @@
 import { EdgePluginMap, EdgeSwapConfig, EdgeSwapPluginType } from 'edge-core-js/types'
 import * as React from 'react'
-import { ScrollView } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, ScrollView } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -212,7 +211,7 @@ export class SwapSettings extends React.Component<Props, State> {
     const { theme } = this.props
     const logoSource = getSwapPluginIconUri(pluginId, theme)
     const styles = getStyles(theme)
-    return <FastImage resizeMode="contain" style={styles.swapIcon} source={{ uri: logoSource }} />
+    return <Image resizeMode="contain" style={styles.swapIcon} source={{ uri: logoSource }} />
   }
 
   renderPreferredArea() {

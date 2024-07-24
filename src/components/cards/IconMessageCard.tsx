@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { lstrings } from '../../locales/strings'
@@ -31,7 +30,7 @@ export function IconMessageCard(props: Props) {
     <ButtonBox marginRem={0.5} onPress={onPress}>
       <EdgeCard>
         <View style={styles.cardContainer}>
-          {typeof iconOrUri === 'string' && imageSrc != null ? <FastImage resizeMode="contain" source={imageSrc} style={styles.icon} /> : iconOrUri}
+          {typeof iconOrUri === 'string' && imageSrc != null ? <Image resizeMode="contain" source={imageSrc} style={styles.icon} /> : iconOrUri}
           <View style={styles.textContainer}>
             {title == null ? null : (
               <EdgeText testID={testIds.title} numberOfLines={0} style={styles.title}>

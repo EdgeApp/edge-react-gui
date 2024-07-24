@@ -1,7 +1,6 @@
 import { div, lt } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -89,7 +88,7 @@ const CoinRow = (props: CoinRowProps) => {
   return (
     <EdgeRow
       key={key}
-      icon={<FastImage style={styles.icon} source={imageSrc} />}
+      icon={<Image style={styles.icon} source={imageSrc} />}
       onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow, fiatCurrencyCode })}
       rightButtonType="none"
     >

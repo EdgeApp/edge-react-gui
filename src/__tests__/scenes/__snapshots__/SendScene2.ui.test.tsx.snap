@@ -1424,34 +1424,20 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -3188,34 +3174,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -4929,34 +4901,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -6367,34 +6325,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -7781,34 +7725,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -9032,34 +8962,20 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -10591,34 +10507,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -12084,34 +11986,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -13535,34 +13423,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {
@@ -14969,34 +14843,20 @@ exports[`SendScene2 Render SendScene 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/notifications/icon-lock.png",
               }
-            />
-          </View>
+            }
+            style={
+              {
+                "height": 56,
+                "marginRight": 6,
+                "width": 56,
+              }
+            }
+          />
           <View
             style={
               {

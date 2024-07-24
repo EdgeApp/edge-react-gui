@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -78,7 +77,7 @@ const NotificationCardComponent = (props: Props) => {
         <Icon source={{ uri: iconUri }} />
         <TextView>
           <TitleText type={type}>{title}</TitleText>
-          {/* Android font scaling is too aggressive. 
+          {/* Android font scaling is too aggressive.
               Android prioritizes font shrinking much more before trying to add
               newlines, while iOS prioritizes newlines before shrinking text.
               We already use smaller text here so we shouldn't shrink it
@@ -120,7 +119,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const Icon = styled(FastImage)(theme => ({
+const Icon = styled(Image)(theme => ({
   height: theme.rem(2.5),
   width: theme.rem(2.5),
   marginRight: theme.rem(0.25)

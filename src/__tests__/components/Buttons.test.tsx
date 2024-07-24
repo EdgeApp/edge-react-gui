@@ -1,8 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, TouchableOpacity, View } from 'react-native'
 import TestRenderer from 'react-test-renderer'
 
 import { ButtonsView } from '../../components/buttons/ButtonsView'
@@ -42,7 +41,7 @@ describe('Buttons', () => {
   })
 
   it('should render with child icons', () => {
-    const icon = <FastImage source={{ uri: testIconUri }} />
+    const icon = <Image source={{ uri: testIconUri }} />
 
     const renderer = TestRenderer.create(
       <FakeProviders>

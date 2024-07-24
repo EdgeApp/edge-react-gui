@@ -1,8 +1,7 @@
 import { asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { TextInput, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
@@ -198,7 +197,7 @@ export const FioCreateHandleScene = (props: Props) => {
   return (
     <SceneWrapper>
       <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
+        <Image source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
           <FilledTextInput

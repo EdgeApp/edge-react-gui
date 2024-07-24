@@ -1,7 +1,6 @@
 import { useIsFocused } from '@react-navigation/native'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
@@ -190,7 +189,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     <SceneWrapper hasTabs hasNotifications scroll>
       <View style={styles.container}>
         <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
-          <FastImage style={styles.icon} source={imageUrlObject} />
+          <Image style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
         </EdgeAnim>
         <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} fiatCurrencyCode={initFiat} />

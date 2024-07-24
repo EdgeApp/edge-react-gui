@@ -2,8 +2,7 @@ import { ProposalTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, ScrollView, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
@@ -141,7 +140,7 @@ export const WcConnectionsScene = (props: Props) => {
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <EdgeTouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
-              <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
+              <Image resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
                 <EdgeText style={styles.infoMidTitle}>{dAppConnection.dAppUrl}</EdgeText>

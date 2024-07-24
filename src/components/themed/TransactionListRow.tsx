@@ -1,8 +1,7 @@
 import { abs, div, eq, gt, log10 } from 'biggystring'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { StyleProp, View, ViewStyle } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, StyleProp, View, ViewStyle } from 'react-native'
 import { ShadowedView } from 'react-native-fast-shadow'
 import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -135,7 +134,7 @@ export function TransactionListRow(props: Props) {
   const icon =
     thumbnailPath != null ? (
       <ShadowedView style={styles.contactContainer}>
-        <FastImage style={styles.contactImage} source={iconSource} />
+        <Image style={styles.contactImage} source={iconSource} />
         {arrowIcon}
       </ShadowedView>
     ) : (

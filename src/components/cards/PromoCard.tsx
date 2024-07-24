@@ -1,7 +1,6 @@
 import { PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
-import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { Image, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
@@ -63,7 +62,7 @@ export function PromoCardUi4(props: Props) {
       onClose={dismissable ? onClose : undefined}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
-          <FastImage source={imageSrc} style={styles.backgroundImage} resizeMode="stretch" />
+          <Image source={imageSrc} style={styles.backgroundImage} resizeMode="stretch" />
         </LinearGradient>
       }
     >

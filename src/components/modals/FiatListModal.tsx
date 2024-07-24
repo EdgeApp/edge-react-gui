@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { View, ViewToken } from 'react-native'
+import { Image, View, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -51,7 +50,7 @@ export const FiatListModal = (props: Props) => {
       <SelectableRow
         icon={
           fiatCountry?.logoUrl != null ? (
-            <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.image} accessibilityHint={item.value} />
+            <Image source={{ uri: fiatCountry.logoUrl }} style={styles.image} accessibilityHint={item.value} />
           ) : (
             <View style={styles.image} />
           )
