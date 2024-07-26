@@ -29,7 +29,7 @@ import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
-import { EdgeAnim, fadeInDown50 } from '../common/EdgeAnim'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -217,22 +217,20 @@ export const GettingStartedScene = (props: Props) => {
                 )
               })}
             </Sections>
-            <EdgeAnim enter={fadeInDown50}>
-              <ButtonsView
-                layout="column"
-                primary={{
-                  label: lstrings.account_get_started,
-                  onPress: handlePressSignUp
-                }}
-              />
-              <TertiaryTouchable onPress={handlePressSignIn}>
-                <TertiaryText>
-                  {/* eslint-disable-next-line react-native/no-raw-text */}
-                  {`${lstrings.getting_started_already_have_an_account} `}
-                  <TappableText>{lstrings.getting_started_sign_in}</TappableText>
-                </TertiaryText>
-              </TertiaryTouchable>
-            </EdgeAnim>
+            <ButtonsView
+              layout="column"
+              primary={{
+                label: lstrings.account_get_started,
+                onPress: handlePressSignUp
+              }}
+            />
+            <TertiaryTouchable onPress={handlePressSignIn}>
+              <TertiaryText>
+                {/* eslint-disable-next-line react-native/no-raw-text */}
+                {`${lstrings.getting_started_already_have_an_account} `}
+                <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+              </TertiaryText>
+            </TertiaryTouchable>
           </SectionCoverAnimated>
         </Container>
       </SwipeOffsetDetector>
@@ -406,7 +404,7 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   return [
     {
       alignItems: 'stretch',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       paddingVertical: theme.rem(1),
       paddingBottom: insets.bottom + theme.rem(1),
       marginBottom: -insets.bottom
