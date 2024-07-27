@@ -1,8 +1,11 @@
-import { EdgeCurrencyWallet, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
-import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
+import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { FundAccountModal } from '../components/modals/FundAccountModal'
 import { pickWallet } from '../components/modals/WalletListModal'
-import { showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
+import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
 import { executePlugin } from '../plugins/gui/fiatPlugin'
@@ -14,7 +17,6 @@ import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
-import { DEEPLINK_MODAL_FNS } from './DeepLinkingModalActions'
 import { logoutRequest } from './LoginActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
@@ -74,20 +76,24 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
 
 /**
  * Launches a link if it app is able to do so.
+ * @returns true if the link is handled,
+ * or false if the app is in the wrong state to handle this link.
  */
-export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
-  const { account, disklet } = state.core
+async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
+  const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
-  const { activeWalletIds, currencyWallets } = account
-  const deviceId = base58ToUuid(state.core.context.clientId)
+  const { activeWalletIds, currencyWallets, currencyWalletErrors } = account
+  const deviceId = base58ToUuid(context.clientId)
 
   // Wait for all wallets to load before handling deep links
-  const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
+  const allWalletsLoaded = activeWalletIds.every(walletId => currencyWallets[walletId] != null || currencyWalletErrors[walletId] != null)
 
   switch (link.type) {
     case 'edgeLogin':
       if (!state.ui.settings.settingsLoaded) return false
-      navigation.push('edgeLogin', { lobbyId: link.lobbyId })
+      navigation.push('edgeLogin', {
+        lobbyId: link.lobbyId
+      })
       return true
 
     case 'passwordRecovery':
@@ -154,64 +160,91 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return true
     }
 
-    case 'promotion': {
+    case 'promotion':
       if (!state.ui.settings.settingsLoaded) return false
       if (!state.account.accountReferralLoaded) return false
-      const { installerId = '' } = link
-      await dispatch(activatePromotion(installerId))
+      await dispatch(activatePromotion(link.installerId ?? ''))
       return true
-    }
 
-    case 'requestAddress': {
+    case 'requestAddress':
       if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
-    }
 
-    case 'swap': {
+    case 'swap':
       if (!state.ui.settings.settingsLoaded) return false
       navigation.navigate('swapTab', { screen: 'swapCreate' })
       return true
-    }
 
     case 'azteco': {
       if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
-      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin', tokenId: null }], navigation, showCreateWallet: true })
-      if (result?.type !== 'wallet') {
-        // pickWallet returning undefined means user has no matching wallet.
-        // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
-        // the option to create one.
-        return true
-      }
-      const { walletId } = result
+      const result = await pickWallet({
+        account,
+        assets: [{ pluginId: 'bitcoin', tokenId: null }],
+        navigation,
+        showCreateWallet: true
+      })
+      if (result?.type !== 'wallet') return true
+      const wallet = currencyWallets[result.walletId]
+      if (wallet == null) return true
 
-      // User backed out of choosing a wallet
-      if (walletId == null) return true
-      const edgeWallet = currencyWallets[walletId]
-      await launchAzteco(navigation, edgeWallet, link.uri)
+      if (checkAndShowLightBackupModal(account, navigation)) return true
+
+      const address = await wallet.getReceiveAddress({ tokenId: null })
+      const response = await fetch(`${link.uri}${address.publicAddress}`)
+      if (response.ok) {
+        showToast(lstrings.azteco_success)
+      } else if (response.status === 400) {
+        showError(lstrings.azteco_invalid_code)
+      } else {
+        showError(lstrings.azteco_service_unavailable)
+      }
+      navigation.navigate('homeTab', { screen: 'home' })
       return true
     }
 
-    case 'walletConnect': {
+    case 'walletConnect':
       if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
-      const { uri } = link
-      navigation.push('wcConnections', { uri })
+      navigation.push('wcConnections', {
+        uri: link.uri
+      })
       return true
-    }
 
-    case 'paymentProto': {
+    case 'paymentProto':
       if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
       return true
-    }
 
     case 'price-change': {
       if (!state.ui.settings.settingsLoaded) return false
-      await dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
+      const { pluginId, body } = link
+      const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+
+      const result = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.price_change_notification}
+          message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+          buttons={{
+            buy: { label: lstrings.title_buy, type: 'secondary' },
+            sell: { label: lstrings.title_sell },
+            exchange: { label: lstrings.buy_crypto_modal_exchange }
+          }}
+        />
+      ))
+
+      if (result === 'buy') {
+        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+      } else if (result === 'sell') {
+        navigation.navigate('sellTab', { screen: 'pluginListSell' })
+      } else if (result === 'exchange') {
+        navigation.navigate('swapTab', { screen: 'swapCreate' })
+      }
+
       return true
     }
 
@@ -257,41 +290,39 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         assets.push(createWalletAsset)
       }
 
-      const walletListResult = await pickWallet({ account, assets, navigation, showCreateWallet: true })
-      if (walletListResult == null) {
-        return true
-      }
+      const result = await pickWallet({
+        account,
+        assets,
+        navigation,
+        showCreateWallet: true
+      })
+      if (result?.type !== 'wallet') return true
+      const wallet = currencyWallets[result.walletId]
+      if (wallet == null) return true
 
-      // User backed out of choosing a wallet
-      if (walletListResult.type !== 'wallet') return true
-
-      const pickedWallet = account.currencyWallets[walletListResult.walletId]
-      if (pickedWallet == null) return true
-
-      // Reparse the uri with the final chosen wallet just in case this was a URI for a wallet
-      // we didn't have
-      const finalParsedUri = await pickedWallet.parseUri(link.uri)
-      await dispatch(handleWalletUris(navigation, pickedWallet, finalParsedUri))
+      // Re-parse the uri with the final chosen wallet
+      // just in case this was a URI for a wallet we didn't have:
+      const finalParsedUri = await wallet.parseUri(link.uri)
+      await dispatch(handleWalletUris(navigation, wallet, finalParsedUri))
       return true
     }
 
     case 'scene': {
-      const { sceneName, query } = link
       try {
-        // @ts-expect-error
-        navigation.navigate(sceneName, query)
+        navigation.navigate(link.sceneName as any, link.query as any)
       } catch (e) {
-        showError(`Deeplink failed. Unable to navigate to: '${sceneName}' with query '${query}'`)
+        showError(`Deep link failed. Unable to navigate to: '${link.sceneName}'`)
       }
       return true
     }
 
     case 'modal': {
-      const { modalName } = link
-      try {
-        await DEEPLINK_MODAL_FNS[modalName](navigation)
-      } catch (e) {
-        showError(`Deeplink failed. Unable to open modal: '${modalName}'`)
+      switch (link.modalName) {
+        case 'fundAccount':
+          await Airship.show(bridge => <FundAccountModal bridge={bridge} navigation={navigation} />)
+          break
+        default:
+          showError(`Unknown modal: '${link.modalName}'`)
       }
       return true
     }
@@ -299,20 +330,5 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     case 'noop': {
       return true
     }
-  }
-
-  async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
-    if (checkAndShowLightBackupModal(account, navigation)) return
-
-    const address = await edgeWallet.getReceiveAddress({ tokenId: null })
-    const response = await fetch(`${uri}${address.publicAddress}`)
-    if (response.ok) {
-      showToast(lstrings.azteco_success)
-    } else if (response.status === 400) {
-      showError(lstrings.azteco_invalid_code)
-    } else {
-      showError(lstrings.azteco_service_unavailable)
-    }
-    navigation.navigate('homeTab', { screen: 'home' })
   }
 }
