@@ -10,7 +10,7 @@ import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { removeIsoPrefix } from '../../../util/utils'
-import { SendErrorNoTransaction } from '../fiatPlugin'
+import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -674,6 +674,9 @@ export const paybisProvider: FiatProviderFactory = {
                       await openWebView()
                       if (e.message === SendErrorNoTransaction) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                      } else if (e.message === SendErrorBackPressed) {
+                        await showUi.showToast(lstrings.fiat_plugin_sell_cancelled)
+                        await showUi.exitScene()
                       } else {
                         await showUi.showError(e)
                       }
