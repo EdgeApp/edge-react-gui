@@ -24,6 +24,7 @@
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
+- fixed: Buying non-BTC assets with Bity
 
 ## 4.9.2 (2024-07-22)
 
