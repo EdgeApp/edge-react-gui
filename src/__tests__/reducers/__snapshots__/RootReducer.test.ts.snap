@@ -46,7 +46,6 @@ exports[`initialState 1`] = `
   "network": {
     "isConnected": true,
   },
-  "nextLoginId": null,
   "notificationSettings": {
     "ignoreMarketing": false,
     "ignorePriceChanges": false,
