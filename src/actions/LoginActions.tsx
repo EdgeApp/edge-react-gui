@@ -267,16 +267,27 @@ export function getRootNavigation(navigation: NavigationBase): NavigationBase {
   }
 }
 
-export function logoutRequest(navigation: NavigationBase, nextLoginId?: string): ThunkAction<Promise<void>> {
+export function logoutRequest(
+  navigation: NavigationBase,
+  opts: {
+    nextLoginId?: string
+    passwordRecoveryKey?: string
+  } = {}
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const { nextLoginId, passwordRecoveryKey } = opts
     const state = getState()
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
-    dispatch({ type: 'LOGOUT', data: { nextLoginId } })
+    dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)
-    rootNavigation.replace('login', { experimentConfig: await getExperimentConfig() })
+    rootNavigation.replace('login', {
+      experimentConfig: await getExperimentConfig(),
+      nextLoginId,
+      passwordRecoveryKey
+    })
   }
 }
 

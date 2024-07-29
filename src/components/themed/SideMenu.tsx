@@ -109,7 +109,11 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
-    dispatch(logoutRequest(navigation, userInfo.loginId)).catch(err => showError(err))
+    dispatch(
+      logoutRequest(navigation, {
+        nextLoginId: userInfo.loginId
+      })
+    ).catch(err => showError(err))
   }
 
   const handleBorrow = () => {

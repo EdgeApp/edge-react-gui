@@ -6,7 +6,7 @@ import { BlurView } from 'rn-id-blurview'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
-import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
+import { initializeAccount } from '../../actions/LoginActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import { ExperimentConfig } from '../../experimentConfig'
@@ -25,6 +25,8 @@ import { DeepLinkingManager } from '../services/DeepLinkingManager'
 import { LoadingScene } from './LoadingScene'
 
 export interface LoginParams {
+  passwordRecoveryKey?: string
+  nextLoginId?: string
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
   loginUiInitialRoute?: InitialRouteName
 }
@@ -39,7 +41,7 @@ let firstRun = true
 
 export function LoginScene(props: Props) {
   const { navigation, route } = props
-  const { loginUiInitialRoute = 'login', experimentConfig } = route.params
+  const { experimentConfig, loginUiInitialRoute = 'login', nextLoginId, passwordRecoveryKey } = route.params
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,12 +52,7 @@ export function LoginScene(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
-  const pendingDeepLink = useSelector(state => state.pendingDeepLink)
-  const nextLoginId = useSelector(state => state.nextLoginId)
   const loggedIn = useWatch(account, 'loggedIn')
-
-  const [counter, setCounter] = React.useState<number>(0)
-  const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
 
   // ---------------------------------------------------------------------
   // Effects
@@ -94,21 +91,6 @@ export function LoginScene(props: Props) {
     }
   }, [account, context, dispatch, navigation])
 
-  React.useEffect(() => {
-    if (pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
-      // Log out if necessary:
-      if (account.loggedIn) {
-        dispatch(logoutRequest(navigation)).catch(err => showError(err))
-      }
-
-      // Pass the link to our component:
-      const { passwordRecoveryKey } = pendingDeepLink
-      setPasswordRecoveryKey(passwordRecoveryKey)
-      setCounter(counter => counter + 1)
-      dispatch({ type: 'DEEP_LINK_HANDLED' })
-    }
-  }, [account, dispatch, navigation, pendingDeepLink])
-
   // ---------------------------------------------------------------------
   // Handlers
   // ---------------------------------------------------------------------
@@ -131,7 +113,6 @@ export function LoginScene(props: Props) {
     : undefined
 
   const handleLogin = useHandler(async (account: EdgeAccount) => {
-    setPasswordRecoveryKey(undefined)
     await dispatch(initializeAccount(navigation, account))
   })
 
@@ -153,7 +134,6 @@ export function LoginScene(props: Props) {
     <View style={styles.container} testID="edge: login-scene">
       <DotsBackground />
       <LoginScreen
-        key={String(counter)}
         accountOptions={accountOptions}
         appConfig={config}
         appId={config.appId}
@@ -162,7 +142,7 @@ export function LoginScene(props: Props) {
         experimentConfig={experimentConfig}
         fastLogin
         forceLightAccountCreate={getDeviceSettings().forceLightAccountCreate}
-        initialLoginId={nextLoginId ?? undefined}
+        initialLoginId={nextLoginId}
         initialRoute={loginUiInitialRoute}
         parentButton={parentButton}
         primaryLogo={theme.primaryLogo}
