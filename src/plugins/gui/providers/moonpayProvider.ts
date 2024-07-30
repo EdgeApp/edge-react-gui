@@ -18,7 +18,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, validateExactRegion } from './common'
+import { addExactRegion, isDailyCheckDue, validateExactRegion } from './common'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
@@ -126,6 +126,7 @@ const TOKEN_MAP: StringMap = {
   tusd: 'ethereum',
   zrx: 'ethereum'
 }
+let lastChecked = 0
 
 export const moonpayProvider: FiatProviderFactory = {
   providerId,
@@ -146,73 +147,76 @@ export const moonpayProvider: FiatProviderFactory = {
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
-        if (response == null || !response.ok) return allowedCurrencyCodes
+        if (isDailyCheckDue(lastChecked)) {
+          const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
+          if (response == null || !response.ok) return allowedCurrencyCodes
 
-        const result = await response.json()
-        let moonpayCurrencies: MoonpayCurrency[] = []
-        try {
-          moonpayCurrencies = asMoonpayCurrencies(result)
-        } catch (error: any) {
-          console.log(error.message)
-          console.log(JSON.stringify(error, null, 2))
-          return allowedCurrencyCodes
-        }
-        for (const currency of moonpayCurrencies) {
-          if (currency.type === 'crypto') {
-            if (regionCode.countryCode === 'US' && currency.isSupportedInUS !== true) {
-              continue
-            }
-            if (currency.name.includes('(ERC-20)')) {
-              addToAllowedCurrencies(getTokenId, 'ethereum', currency, currency.code)
-            } else {
-              if (currency.isSuspended) continue
-              if (CURRENCY_CODE_TRANSLATE[currency.code] != null) {
-                const currencyCode = CURRENCY_CODE_TRANSLATE[currency.code]
-                addToAllowedCurrencies(getTokenId, CURRENCY_PLUGINID_MAP[currencyCode], currency, currencyCode)
-                currency.code = CURRENCY_CODE_TRANSLATE[currency.code]
-              } else if (TOKEN_MAP[currency.code] != null) {
-                addToAllowedCurrencies(getTokenId, TOKEN_MAP[currency.code], currency, currency.code)
-              }
-              if (CURRENCY_PLUGINID_MAP[currency.code] != null) {
-                addToAllowedCurrencies(getTokenId, CURRENCY_PLUGINID_MAP[currency.code], currency, currency.code)
-              }
-            }
-          } else {
-            allowedCurrencyCodes.fiat['iso:' + currency.code.toUpperCase()] = currency
+          const result = await response.json()
+          let moonpayCurrencies: MoonpayCurrency[] = []
+          try {
+            moonpayCurrencies = asMoonpayCurrencies(result)
+          } catch (error: any) {
+            console.log(error.message)
+            console.log(JSON.stringify(error, null, 2))
+            return allowedCurrencyCodes
           }
-        }
-
-        const response2 = await fetch(`https://api.moonpay.com/v3/countries?apiKey=${apiKey}`).catch(e => undefined)
-        if (response2 == null || !response2.ok) throw new Error('Moonpay failed to fetch countries')
-
-        const result2 = await response2.json()
-        const countries = asMoonpayCountries(result2)
-        for (const country of countries) {
-          if (country.isAllowed) {
-            if (country.states == null) {
-              if (country.isBuyAllowed) {
-                allowedCountryCodes.buy[country.alpha2] = true
-              } else if (country.isSellAllowed) {
-                allowedCountryCodes.sell[country.alpha2] = true
+          for (const currency of moonpayCurrencies) {
+            if (currency.type === 'crypto') {
+              if (regionCode.countryCode === 'US' && currency.isSupportedInUS !== true) {
+                continue
+              }
+              if (currency.name.includes('(ERC-20)')) {
+                addToAllowedCurrencies(getTokenId, 'ethereum', currency, currency.code)
+              } else {
+                if (currency.isSuspended) continue
+                if (CURRENCY_CODE_TRANSLATE[currency.code] != null) {
+                  const currencyCode = CURRENCY_CODE_TRANSLATE[currency.code]
+                  addToAllowedCurrencies(getTokenId, CURRENCY_PLUGINID_MAP[currencyCode], currency, currencyCode)
+                  currency.code = CURRENCY_CODE_TRANSLATE[currency.code]
+                } else if (TOKEN_MAP[currency.code] != null) {
+                  addToAllowedCurrencies(getTokenId, TOKEN_MAP[currency.code], currency, currency.code)
+                }
+                if (CURRENCY_PLUGINID_MAP[currency.code] != null) {
+                  addToAllowedCurrencies(getTokenId, CURRENCY_PLUGINID_MAP[currency.code], currency, currency.code)
+                }
               }
             } else {
-              const countryCode = country.alpha2
-              // Validate state support
-              for (const state of country.states) {
-                if (state.isAllowed) {
-                  const stateProvinceCode = state.code
+              allowedCurrencyCodes.fiat['iso:' + currency.code.toUpperCase()] = currency
+            }
+          }
 
-                  if (state.isBuyAllowed) {
-                    addExactRegion(allowedCountryCodes.buy, countryCode, stateProvinceCode)
-                  }
-                  if (state.isSellAllowed) {
-                    addExactRegion(allowedCountryCodes.sell, countryCode, stateProvinceCode)
+          const response2 = await fetch(`https://api.moonpay.com/v3/countries?apiKey=${apiKey}`).catch(e => undefined)
+          if (response2 == null || !response2.ok) throw new Error('Moonpay failed to fetch countries')
+
+          const result2 = await response2.json()
+          const countries = asMoonpayCountries(result2)
+          for (const country of countries) {
+            if (country.isAllowed) {
+              if (country.states == null) {
+                if (country.isBuyAllowed) {
+                  allowedCountryCodes.buy[country.alpha2] = true
+                } else if (country.isSellAllowed) {
+                  allowedCountryCodes.sell[country.alpha2] = true
+                }
+              } else {
+                const countryCode = country.alpha2
+                // Validate state support
+                for (const state of country.states) {
+                  if (state.isAllowed) {
+                    const stateProvinceCode = state.code
+
+                    if (state.isBuyAllowed) {
+                      addExactRegion(allowedCountryCodes.buy, countryCode, stateProvinceCode)
+                    }
+                    if (state.isSellAllowed) {
+                      addExactRegion(allowedCountryCodes.sell, countryCode, stateProvinceCode)
+                    }
                   }
                 }
               }
             }
           }
+          lastChecked = Date.now()
         }
         validateExactRegion(providerId, regionCode, allowedCountryCodes[direction])
         return allowedCurrencyCodes

@@ -33,6 +33,14 @@ export const validateRegion = (providerId: string, regionCode: FiatPluginRegionC
   }
 }
 
+/**
+ * Validates if the provided region code is supported by the given provider.
+ *
+ * @param providerId - The unique identifier of the provider.
+ * @param regionCode - The region code to validate, containing the country and state/province codes.
+ * @param supportedRegions - The object containing the supported regions for the provider.
+ * @throws {FiatProviderError} - If the region is not supported, with an error type of 'regionRestricted'.
+ */
 export const validateExactRegion = (providerId: string, regionCode: FiatPluginRegionCode, supportedRegions: FiatProviderExactRegions): void => {
   const { countryCode, stateProvinceCode } = regionCode
   const countryInfo = supportedRegions[countryCode]
@@ -56,6 +64,14 @@ export const validateExactRegion = (providerId: string, regionCode: FiatPluginRe
   }
 }
 
+/**
+ * Adds an exact region to the list of allowed country codes for a Fiat provider.
+ *
+ * @param allowedCountryCodes - The object containing the allowed country codes and state/province codes.
+ * @param countryCode - The country code to add.
+ * @param stateProvinceCode - The optional state/province code to add.
+ * @returns void
+ */
 export const addExactRegion = (allowedCountryCodes: FiatProviderExactRegions, countryCode: string, stateProvinceCode?: string): void => {
   if (stateProvinceCode == null) {
     allowedCountryCodes[countryCode] = true
@@ -77,3 +93,16 @@ export const addExactRegion = (allowedCountryCodes: FiatProviderExactRegions, co
 export const asStandardApiKeys = asObject({
   apiKey: asString
 })
+
+const DAILY_INTERVAL_MS = 1000 * 60 * 60 * 24 // 1 day
+/**
+ * Checks if a daily check is due based on the last check time.
+ *
+ * @param lastCheck - The timestamp of the last check, in milliseconds since the Unix epoch.
+ * @returns `true` if the daily check interval has elapsed since the last check, `false` otherwise.
+ */
+export const isDailyCheckDue = (lastCheck: number): boolean => {
+  const now = Date.now()
+  const last = new Date(lastCheck).getTime()
+  return now - last > DAILY_INTERVAL_MS
+}

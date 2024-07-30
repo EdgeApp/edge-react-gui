@@ -16,7 +16,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, validateExactRegion } from './common'
+import { addExactRegion, isDailyCheckDue, validateExactRegion } from './common'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
@@ -165,6 +165,7 @@ const asSimplexQuote = asEither(asSimplexQuoteSuccess, asSimplexQuoteError)
 const asSimplexFiatCurrencies = asArray(asSimplexFiatCurrency)
 const asSimplexCountries = asArray(asString)
 const asInfoJwtSignResponse = asObject({ token: asString })
+let lastChecked = 0
 
 export const simplexProvider: FiatProviderFactory = {
   providerId,
@@ -207,25 +208,28 @@ export const simplexProvider: FiatProviderFactory = {
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
-        if (response == null || !response.ok) return allowedCurrencyCodes
-        const result = await response.json()
+        if (isDailyCheckDue(lastChecked)) {
+          const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
+          if (response == null || !response.ok) return allowedCurrencyCodes
+          const result = await response.json()
 
-        const fiatCurrencies = asSimplexFiatCurrencies(result)
-        for (const fc of fiatCurrencies) {
-          allowedCurrencyCodes.fiat['iso:' + fc.ticker_symbol] = fc
-        }
+          const fiatCurrencies = asSimplexFiatCurrencies(result)
+          for (const fc of fiatCurrencies) {
+            allowedCurrencyCodes.fiat['iso:' + fc.ticker_symbol] = fc
+          }
 
-        const response2 = await fetch(`https://api.simplexcc.com/v2/supported_countries?public_key=${publicKey}&payment_methods=credit_card`).catch(
-          e => undefined
-        )
-        if (response2 == null || !response.ok) throw new Error('Simplex failed to fetch supported countries')
-        const result2 = await response2.json()
-        const countries = asSimplexCountries(result2)
+          const response2 = await fetch(`https://api.simplexcc.com/v2/supported_countries?public_key=${publicKey}&payment_methods=credit_card`).catch(
+            e => undefined
+          )
+          if (response2 == null || !response.ok) throw new Error('Simplex failed to fetch supported countries')
+          const result2 = await response2.json()
+          const countries = asSimplexCountries(result2)
 
-        for (const country of countries) {
-          const [countryCode, stateProvinceCode] = country.split('-')
-          addExactRegion(allowedCountryCodes, countryCode, stateProvinceCode)
+          for (const country of countries) {
+            const [countryCode, stateProvinceCode] = country.split('-')
+            addExactRegion(allowedCountryCodes, countryCode, stateProvinceCode)
+          }
+          lastChecked = Date.now()
         }
         validateExactRegion(providerId, regionCode, allowedCountryCodes)
 

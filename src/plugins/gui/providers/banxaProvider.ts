@@ -25,7 +25,15 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS, validateExactRegion } from './common'
+import {
+  addExactRegion,
+  isDailyCheckDue,
+  NOT_SUCCESS_TOAST_HIDE_MS,
+  RETURN_URL_CANCEL,
+  RETURN_URL_FAIL,
+  RETURN_URL_SUCCESS,
+  validateExactRegion
+} from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
@@ -314,6 +322,7 @@ const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   sell: { providerId, fiat: {}, crypto: {} }
 }
 const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
+let lastChecked = 0
 
 export const banxaProvider: FiatProviderFactory = {
   providerId,
@@ -346,12 +355,7 @@ export const banxaProvider: FiatProviderFactory = {
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const fiats = allowedCurrencyCodes[direction].fiat
-        const cryptos = allowedCurrencyCodes[direction].fiat
         const paymentsMap = banxaPaymentsMap[direction]
-        if (Object.keys(fiats).length > 0 && Object.keys(cryptos).length > 0 && Object.keys(paymentsMap).length > 0) {
-          return allowedCurrencyCodes[direction]
-        }
 
         // XXX Hack. Banxa doesn't return any payment methods for sell unless the source asset is
         // specified. BTC is most supported so we add that for the query of sell payment methods
@@ -362,51 +366,75 @@ export const banxaProvider: FiatProviderFactory = {
           paymentMethodsPath = 'api/payment-methods?source=BTC'
         }
 
-        const promises = [
-          banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries', apiKey }).then(response => {
-            const countries = asBanxaCountries(response)
-            for (const { country_code: countryCode } of countries.data.countries) {
-              if (countryCode !== 'US') {
-                addExactRegion(allowedCountryCodes, countryCode)
-              }
-            }
-          }),
-
-          banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries/us/states', apiKey }).then(response => {
-            const states = asBanxaStates(response)
-            for (const { state_code: stateCode } of states.data.states) {
-              addExactRegion(allowedCountryCodes, 'US', stateCode)
-            }
-          }),
-
-          banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/${direction}`, apiKey }).then(response => {
-            const cryptoCurrencies = asBanxaCryptoCoins(response)
-            for (const coin of cryptoCurrencies.data.coins) {
-              for (const chain of coin.blockchains) {
-                // @ts-expect-error
-                const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
-                if (currencyPluginId != null) {
-                  const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
-                  addToAllowedCurrencies(getTokenId, currencyPluginId, direction, edgeCurrencyCode, coin)
+        if (isDailyCheckDue(lastChecked)) {
+          const promises = [
+            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries', apiKey }).then(response => {
+              const countries = asBanxaCountries(response)
+              for (const { country_code: countryCode } of countries.data.countries) {
+                if (countryCode !== 'US') {
+                  addExactRegion(allowedCountryCodes, countryCode)
                 }
               }
-            }
-          }),
+            }),
 
-          banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/${direction}`, apiKey }).then(response => {
-            const fiatCurrencies = asBanxaFiats(response)
-            for (const fiat of fiatCurrencies.data.fiats) {
-              allowedCurrencyCodes[direction].fiat['iso:' + fiat.fiat_code] = true
-            }
-          }),
+            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries/us/states', apiKey }).then(response => {
+              const states = asBanxaStates(response)
+              for (const { state_code: stateCode } of states.data.states) {
+                addExactRegion(allowedCountryCodes, 'US', stateCode)
+              }
+            }),
 
-          banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
-            const banxaPayments = asBanxaPaymentMethods(response)
-            buildPaymentsMap(banxaPayments, paymentsMap)
-          })
-        ]
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/sell`, apiKey }).then(response => {
+              const cryptoCurrencies = asBanxaCryptoCoins(response)
+              for (const coin of cryptoCurrencies.data.coins) {
+                for (const chain of coin.blockchains) {
+                  // @ts-expect-error
+                  const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+                  if (currencyPluginId != null) {
+                    const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                    addToAllowedCurrencies(getTokenId, currencyPluginId, 'sell', edgeCurrencyCode, coin)
+                  }
+                }
+              }
+            }),
 
-        await Promise.all(promises)
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/sell`, apiKey }).then(response => {
+              const fiatCurrencies = asBanxaFiats(response)
+              for (const fiat of fiatCurrencies.data.fiats) {
+                allowedCurrencyCodes.sell.fiat['iso:' + fiat.fiat_code] = true
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/buy`, apiKey }).then(response => {
+              const cryptoCurrencies = asBanxaCryptoCoins(response)
+              for (const coin of cryptoCurrencies.data.coins) {
+                for (const chain of coin.blockchains) {
+                  // @ts-expect-error
+                  const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+                  if (currencyPluginId != null) {
+                    const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                    addToAllowedCurrencies(getTokenId, currencyPluginId, 'buy', edgeCurrencyCode, coin)
+                  }
+                }
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/buy`, apiKey }).then(response => {
+              const fiatCurrencies = asBanxaFiats(response)
+              for (const fiat of fiatCurrencies.data.fiats) {
+                allowedCurrencyCodes.buy.fiat['iso:' + fiat.fiat_code] = true
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
+              const banxaPayments = asBanxaPaymentMethods(response)
+              buildPaymentsMap(banxaPayments, paymentsMap)
+            })
+          ]
+          await Promise.all(promises)
+          lastChecked = Date.now()
+        }
+
         validateExactRegion(providerId, regionCode, allowedCountryCodes)
         return allowedCurrencyCodes[direction]
       },
