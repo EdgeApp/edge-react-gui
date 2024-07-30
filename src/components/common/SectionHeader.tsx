@@ -1,7 +1,7 @@
 import * as React from 'react'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { SplitRowsView } from '../layout/SplitRowsView'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeTouchableOpacity } from './EdgeTouchableOpacity'
@@ -9,9 +9,6 @@ import { EdgeTouchableOpacity } from './EdgeTouchableOpacity'
 interface Props {
   leftTitle: string
   rightNode?: string | React.ReactNode
-
-  /** @deprecated Only to be used during the UI4 transition */
-  marginRem?: number[] | number
 
   onRightPress?: () => void
 }
@@ -24,28 +21,43 @@ interface Props {
  * be rendered as green tappable text, else it's up to the caller to decide.
  **/
 export const SectionHeader = (props: Props) => {
-  const { leftTitle, rightNode, marginRem = [0.5, 1, 0, 1], onRightPress } = props
+  const { leftTitle, rightNode, onRightPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <SplitRowsView marginRem={marginRem}>
-      {{
-        left: <EdgeText>{leftTitle}</EdgeText>,
-        right:
-          typeof rightNode === 'string' && onRightPress != null ? (
-            <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
-              <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
-            </EdgeTouchableOpacity>
-          ) : (
-            rightNode
-          )
-      }}
-    </SplitRowsView>
+    <View style={styles.row}>
+      <View style={styles.leftColumn}>
+        <EdgeText>{leftTitle}</EdgeText>
+      </View>
+      <View style={styles.rightColumn}>
+        <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
+          <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
+        </EdgeTouchableOpacity>
+      </View>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  leftColumn: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  },
+  rightColumn: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    flexGrow: 1,
+    flexShrink: 1
+  },
+  row: {
+    marginTop: theme.rem(0.5),
+    marginHorizontal: theme.rem(1),
+    marginBottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
   rightTappableContainer: {
     flexGrow: 1,
     flexShrink: 1,
