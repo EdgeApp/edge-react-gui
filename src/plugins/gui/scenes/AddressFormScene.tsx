@@ -57,8 +57,8 @@ const asKmootValidProperties = asObject({
 export const AddressFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route } = props
-  const { countryCode, headerTitle, /* headerIconUri, */ onSubmit } = route.params
+  const { route, navigation } = props
+  const { countryCode, headerTitle, /* headerIconUri, */ onSubmit, onClose } = route.params
   const disklet = useSelector(state => state.core.disklet)
   const dropdownBorderColor = React.useMemo(() => [theme.iconDeactivated, theme.iconTappable], [theme])
 
@@ -234,6 +234,13 @@ export const AddressFormScene = React.memo((props: Props) => {
     // number of results while dropdown is open
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
+
+  // Unmount cleanup
+  React.useEffect(() => {
+    return navigation.addListener('beforeRemove', () => {
+      if (onClose != null) onClose()
+    })
+  }, [navigation, onClose])
 
   // Initialize scene with any saved form data from disklet
   useAsyncEffect(

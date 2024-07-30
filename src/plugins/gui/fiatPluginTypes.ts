@@ -48,12 +48,14 @@ export interface FiatPluginAddressFormParams {
   headerTitle: string
   headerIconUri?: string
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
+  onClose: () => void
 }
 
 export interface FiatPluginSepaFormParams {
   headerTitle: string
   headerIconUri?: string
   onSubmit: (sepaInfo: SepaInfo) => Promise<void>
+  onClose: () => void
 }
 
 export interface FiatPluginSepaTransferInfo {
@@ -140,7 +142,7 @@ export interface FiatPluginUi {
   showError: (error: unknown) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
-  addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
+  addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress | undefined>
   requestPermission: (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean) => Promise<boolean>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
@@ -148,7 +150,7 @@ export interface FiatPluginUi {
   saveTxMetadata: (params: SaveTxMetadataParams) => Promise<void>
   send: (params: SendScene2Params) => Promise<EdgeTransaction>
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
-  sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
+  sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo | undefined>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   setClipboard: (value: string) => Promise<void>
   showToast: (message: string, autoHideMs?: number) => Promise<void>

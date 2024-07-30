@@ -23,8 +23,8 @@ export const SepaFormScene = React.memo((props: Props) => {
   const styles = getStyles(theme)
 
   // TODO: headerIconUri
-  const { route } = props
-  const { headerTitle, onSubmit } = route.params
+  const { route, navigation } = props
+  const { headerTitle, onSubmit, onClose } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
   const [name, setName] = React.useState('')
@@ -61,6 +61,13 @@ export const SepaFormScene = React.memo((props: Props) => {
     [],
     'SepaFormScene'
   )
+
+  // Unmount cleanup
+  React.useEffect(() => {
+    return navigation.addListener('beforeRemove', () => {
+      if (onClose != null) onClose()
+    })
+  }, [navigation, onClose])
 
   const scrollContent = (
     <>
