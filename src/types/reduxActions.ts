@@ -22,13 +22,14 @@ type NoDataActionName =
   | 'DEVELOPER_MODE_ON'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
+  | 'LOGOUT'
   | 'OTP_ERROR_SHOWN'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
+  | 'SPAM_FILTER_ON'
 
 export type Action =
   | { type: NoDataActionName }
@@ -54,7 +55,6 @@ export type Action =
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
-  | { type: 'LOGOUT'; data: { nextLoginId?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN'; data: { messageId: string; source: TweakSource } }
   | { type: 'PERMISSIONS/UPDATE'; data: Partial<PermissionsState> }
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }

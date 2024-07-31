@@ -24,9 +24,6 @@ export interface RootState {
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
 
-  // Next username to auto-fill at the login screen, or blank if none:
-  readonly nextLoginId: string | null
-
   // Deep link waiting to be fulfilled:
   readonly pendingDeepLink: DeepLink | null
 
@@ -70,16 +67,6 @@ export const rootReducer = combineReducers<RootState, Action>({
     switch (action.type) {
       case 'IS_NOTIFICATION_VIEW_ACTIVE':
         return action.data.isNotificationViewActive
-      default:
-        return state
-    }
-  },
-
-  nextLoginId(state: string | null = null, action: Action): string | null {
-    switch (action.type) {
-      case 'LOGOUT': {
-        return action.data.nextLoginId ?? null
-      }
       default:
         return state
     }

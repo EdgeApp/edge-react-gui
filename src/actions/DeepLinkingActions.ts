@@ -15,6 +15,7 @@ import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { DEEPLINK_MODAL_FNS } from './DeepLinkingModalActions'
+import { logoutRequest } from './LoginActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 
@@ -83,19 +84,22 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
   // Wait for all wallets to load before handling deep links
   const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
 
-  // We can't handle any links without being logged into the app:
-  if (!state.ui.settings.settingsLoaded) return false
-
   switch (link.type) {
     case 'edgeLogin':
+      if (!state.ui.settings.settingsLoaded) return false
       navigation.push('edgeLogin', { lobbyId: link.lobbyId })
       return true
 
-    // The login scene always handles this one:
     case 'passwordRecovery':
-      return false
+      await dispatch(
+        logoutRequest(navigation, {
+          passwordRecoveryKey: link.passwordRecoveryKey
+        })
+      )
+      return true
 
     case 'plugin': {
+      if (!state.ui.settings.settingsLoaded) return false
       const { pluginId, path, query } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.pluginId == null || plugin?.pluginId === 'custom') {
@@ -118,6 +122,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'fiatPlugin': {
+      if (!state.ui.settings.settingsLoaded) return false
       const { direction = 'buy', paymentType = 'credit', pluginId, providerId } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.nativePlugin == null) {
@@ -150,6 +155,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'promotion': {
+      if (!state.ui.settings.settingsLoaded) return false
       if (!state.account.accountReferralLoaded) return false
       const { installerId = '' } = link
       await dispatch(activatePromotion(installerId))
@@ -157,17 +163,20 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'requestAddress': {
+      if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
     }
 
     case 'swap': {
+      if (!state.ui.settings.settingsLoaded) return false
       navigation.navigate('swapTab', { screen: 'swapCreate' })
       return true
     }
 
     case 'azteco': {
+      if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin', tokenId: null }], navigation, showCreateWallet: true })
       if (result?.type !== 'wallet') {
@@ -186,6 +195,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'walletConnect': {
+      if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       const { uri } = link
       navigation.push('wcConnections', { uri })
@@ -193,17 +203,20 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'paymentProto': {
+      if (!state.ui.settings.settingsLoaded) return false
       if (!allWalletsLoaded) return false
       await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
       return true
     }
 
     case 'price-change': {
+      if (!state.ui.settings.settingsLoaded) return false
       await dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
       return true
     }
 
     case 'other': {
+      if (!state.ui.settings.settingsLoaded) return false
       const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
       const assets: EdgeAsset[] = []
 
