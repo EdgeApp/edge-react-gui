@@ -13,7 +13,6 @@ import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
   nativeAmount?: string
@@ -37,15 +36,6 @@ export const CurrencyView = (props: Props) => {
   const { allTokens } = currencyConfig
   const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
   const { currencyCode } = tokenFromId == null ? currencyInfo : tokenFromId
-
-  // Show the network label if it's a token or an ETH mainnet currency code on
-  // non-ethereum networks (i.e. Optimism)
-  const networkLabel =
-    tokenFromId == null && (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? null : (
-      <View style={styles.networkContainer}>
-        <EdgeText>{wallet.currencyInfo.displayName}</EdgeText>
-      </View>
-    )
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
@@ -78,55 +68,46 @@ export const CurrencyView = (props: Props) => {
     displayCurrencyCode = tokenFromId.displayName
   }
 
-  const rows = [
-    {
-      left: (
+  // Show the network label if it's a token or an ETH mainnet currency code on
+  // non-ethereum networks (i.e. Optimism)
+  const firstRow =
+    tokenFromId == null && (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? (
+      <View style={styles.rowContainer}>
+        <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
+        <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
+      </View>
+    ) : (
+      <View style={styles.rowContainer}>
+        <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
         <View style={styles.rowContainer}>
-          <EdgeText style={styles.titleText} numberOfLines={1}>
-            {displayCurrencyCode}
-          </EdgeText>
-          {networkLabel}
+          <View style={styles.networkContainer}>
+            <EdgeText style={styles.networkLabelText}>{wallet.currencyInfo.displayName}</EdgeText>
+          </View>
+          <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
         </View>
-      ),
-      right: (
-        <EdgeText style={styles.titleText} numberOfLines={1}>
-          {cryptoText}
-        </EdgeText>
-      )
-    },
-    {
-      left: (
-        <EdgeText style={styles.primaryText} numberOfLines={1}>
-          {fiatRateText}
-        </EdgeText>
-      ),
-      right: (
-        <EdgeText style={styles.secondaryText} numberOfLines={1}>
-          {fiatBalanceText}
-        </EdgeText>
-      )
-    },
-    {
-      left: tickerText,
-      right: (
-        <EdgeText style={styles.secondaryText} numberOfLines={1}>
-          {name}
-        </EdgeText>
-      )
-    }
-  ]
+      </View>
+    )
+
   return (
-    <View style={styles.container}>
+    <View style={styles.outerContainer}>
       <View style={styles.iconContainer}>{icon}</View>
-      <View style={styles.innerContainer}>
-        <SplitRowsView>{rows}</SplitRowsView>
+      <View style={styles.textContentContainer}>
+        {firstRow}
+        <View style={styles.rowContainer}>
+          <EdgeText style={styles.primaryText}>{fiatRateText}</EdgeText>
+          <EdgeText style={styles.secondaryText}>{fiatBalanceText}</EdgeText>
+        </View>
+        <View style={styles.rowContainer}>
+          {tickerText}
+          <EdgeText style={styles.secondaryText}>{name}</EdgeText>
+        </View>
       </View>
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
+  outerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: theme.rem(0.5),
@@ -137,32 +118,53 @@ const getStyles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     marginRight: theme.rem(1)
   },
-  innerContainer: {
+  textContentContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     flexGrow: 1,
     flexShrink: 1
   },
-  primaryText: {
-    fontSize: theme.rem(0.75),
-    marginRight: theme.rem(0.25)
-  },
-  secondaryText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  titleText: {
-    fontFamily: theme.fontFaceMedium
-  },
   rowContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexGrow: 1,
+    flexShrink: 1
   },
   networkContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     borderRadius: theme.rem(1),
     paddingHorizontal: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.25),
+    height: theme.rem(1),
+    backgroundColor: theme.cardBaseColor,
+    flexShrink: 10
+  },
+
+  networkLabelText: {
+    fontSize: theme.rem(0.75),
+    flexShrink: 1
+  },
+  primaryText: {
+    fontSize: theme.rem(0.75),
+    marginRight: theme.rem(0.25),
+    flexGrow: 1
+  },
+  secondaryText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
     marginLeft: theme.rem(0.5),
-    backgroundColor: theme.cardBaseColor
+    flexShrink: 1
+  },
+  titleLeftText: {
+    fontFamily: theme.fontFaceMedium,
+    flexShrink: 1,
+    marginRight: theme.rem(0.25)
+  },
+  titleRightText: {
+    fontFamily: theme.fontFaceMedium,
+    flexShrink: 1,
+    marginLeft: theme.rem(0.25)
   }
 }))
