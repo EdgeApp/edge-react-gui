@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Query supported countries and US states for fiat plugins
+
 ## 4.10.0
 
 - added: Network names to wallet list cards
