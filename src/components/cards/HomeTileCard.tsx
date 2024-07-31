@@ -18,7 +18,7 @@ interface Props {
 /**
  * Tappable card that shows a corner chevron, background, and title
  */
-export const HomeCardUi4 = (props: Props) => {
+export const HomeTileCard = (props: Props) => {
   const { title, footer, gradientBackground, nodeBackground, onPress } = props
 
   const theme = useTheme()

@@ -30,7 +30,7 @@ interface Props {
   onClose: () => Promise<void>
 }
 
-export function PromoCardUi4(props: Props) {
+export function PromoCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()

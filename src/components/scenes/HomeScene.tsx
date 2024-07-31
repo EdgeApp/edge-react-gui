@@ -14,12 +14,12 @@ import { config } from '../../theme/appConfig'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
-import { BalanceCardUi4 } from '../cards/BalanceCard'
+import { BalanceCard } from '../cards/BalanceCard'
 import { BlogCards } from '../cards/BlogCards'
-import { HomeCardUi4 } from '../cards/HomeCard'
-import { MarketsCardUi4 } from '../cards/MarketsCard'
-import { PromoCardsUi4 } from '../cards/PromoCards'
-import { SupportCardUi4 } from '../cards/SupportCard'
+import { HomeTileCard } from '../cards/HomeTileCard'
+import { MarketsCard } from '../cards/MarketsCard'
+import { PromoCards } from '../cards/PromoCards'
+import { SupportCard } from '../cards/SupportCard'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -96,12 +96,12 @@ export const HomeScene = (props: Props) => {
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={fadeInUp140}>
-                  <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
+                  <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
-                <PromoCardsUi4 countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
+                <PromoCards countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.buy_crypto}
                     footer={lstrings.buy_crypto_footer}
                     gradientBackground={theme.buyCardGradient}
@@ -112,7 +112,7 @@ export const HomeScene = (props: Props) => {
                     }
                     onPress={handleBuyPress}
                   />
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.sell_crypto}
                     footer={lstrings.sell_crypto_footer}
                     gradientBackground={theme.sellCardGradient}
@@ -125,7 +125,7 @@ export const HomeScene = (props: Props) => {
                   />
                 </EdgeAnim>
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.fio_web3}
                     footer={lstrings.fio_web3_footer}
                     gradientBackground={theme.fioCardGradient}
@@ -136,7 +136,7 @@ export const HomeScene = (props: Props) => {
                     }
                     onPress={handleFioPress}
                   />
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.swap_crypto}
                     footer={lstrings.swap_crypto_footer}
                     gradientBackground={theme.swapCardGradient}
@@ -152,7 +152,7 @@ export const HomeScene = (props: Props) => {
               <>
                 <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
                 <EdgeAnim enter={fadeInUp30}>
-                  <MarketsCardUi4 navigation={navigation} numRows={5} />
+                  <MarketsCard navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
               {blogPosts == null || blogPosts.length === 0 ? null : (
@@ -161,12 +161,7 @@ export const HomeScene = (props: Props) => {
                   <BlogCards countryCode={countryCode} />
                 </>
               )}
-              <SupportCardUi4
-                title={lstrings.title_support}
-                body={lstrings.body_support}
-                buttonText={lstrings.button_support}
-                url={config.supportContactSite}
-              />
+              <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
             </SectionView>
           </Animated.ScrollView>
         </>

@@ -15,7 +15,7 @@ interface Props {
   url: string
 }
 
-export function SupportCardUi4(props: Props) {
+export function SupportCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 

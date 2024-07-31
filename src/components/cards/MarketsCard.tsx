@@ -107,7 +107,7 @@ const CoinRow = (props: CoinRowProps) => {
 /**
  * Card that displays market summary info for top coins
  */
-export const MarketsCardUi4 = (props: Props) => {
+export const MarketsCard = (props: Props) => {
   const { numRows } = props
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const supportedFiatSetting = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'

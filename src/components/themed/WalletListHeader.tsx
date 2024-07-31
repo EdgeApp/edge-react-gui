@@ -5,7 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
-import { BalanceCardUi4 } from '../cards/BalanceCard'
+import { BalanceCard } from '../cards/BalanceCard'
 import { EdgeAnim, fadeInUp40, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionHeader } from '../common/SectionHeader'
@@ -40,7 +40,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
       <>
         {searching ? null : (
           <EdgeAnim enter={fadeInUp60}>
-            <BalanceCardUi4 navigation={navigation} />
+            <BalanceCard navigation={navigation} />
           </EdgeAnim>
         )}
         {sorting || searching ? null : (
