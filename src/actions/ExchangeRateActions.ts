@@ -8,6 +8,8 @@ import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils'
 
 const RATES_SERVER_MAX_QUERY_SIZE = 100
 const HOUR_MS = 1000 * 60 * 60
+const FIVE_MINUTES = 5 * 60 * 1000
+const exchangeRateCache = new Map<string, { expiration: number; rate: string }>()
 
 const asRatesResponse = asObject({
   data: asArray(
@@ -85,7 +87,17 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
             const now = Date.now()
 
             const key = now - newDate > HOUR_MS ? `${currencyPair}_${date}` : currencyPair
-            serverRates[key] = exchangeRate ?? '0'
+            const cachedRate = exchangeRateCache.get(key) ?? { expiration: 0, rate: '0' }
+            if (exchangeRate != null) {
+              serverRates[key] = exchangeRate
+              cachedRate.rate = exchangeRate
+              cachedRate.expiration = now + FIVE_MINUTES
+            } else if (now < cachedRate.expiration) {
+              serverRates[key] = cachedRate.rate
+            } else {
+              serverRates[key] = '0'
+            }
+            exchangeRateCache.set(key, cachedRate)
 
             const codes = key.split('_')
             const reverseExchangeRateKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
