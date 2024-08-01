@@ -177,14 +177,15 @@ export const executePlugin = async (params: {
       navigation.navigate('rewardsCardWelcome', params)
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
-      const { headerTitle, headerIconUri, onSubmit } = params
+      const { headerTitle, headerIconUri, doneLabel, onDone } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
-          onSubmit: async (sepaInfo: SepaInfo) => {
-            if (onSubmit != null) await onSubmit(sepaInfo)
+          doneLabel,
+          onDone: async (sepaInfo: SepaInfo) => {
+            if (onDone != null) await onDone(sepaInfo)
             resolve(sepaInfo)
           },
           onClose: () => {

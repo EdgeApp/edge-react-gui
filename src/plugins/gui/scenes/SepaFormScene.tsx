@@ -24,7 +24,7 @@ export const SepaFormScene = React.memo((props: Props) => {
 
   // TODO: headerIconUri
   const { route, navigation } = props
-  const { headerTitle, onSubmit, onClose } = route.params
+  const { headerTitle, doneLabel, onDone, onClose } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
   const [name, setName] = React.useState('')
@@ -45,7 +45,7 @@ export const SepaFormScene = React.memo((props: Props) => {
     // Save user input to disk
     await setDiskletForm(disklet, SEPA_FORM_DISKLET_NAME, { name, iban, swift })
 
-    await onSubmit({ name, iban, swift })
+    await onDone({ name, iban, swift })
   })
 
   // Initialize scene with any saved forms from disklet
@@ -76,7 +76,7 @@ export const SepaFormScene = React.memo((props: Props) => {
       <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
       <SceneButtons
         primary={{
-          label: lstrings.string_next_capitalized,
+          label: doneLabel,
           disabled: !name.trim() || !iban.trim() || !swift.trim(),
           onPress: handleSubmit
         }}

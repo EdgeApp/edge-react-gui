@@ -526,7 +526,8 @@ export const bityProvider: FiatProviderFactory = {
 
             await showUi.sepaForm({
               headerTitle: lstrings.sepa_form_title,
-              onSubmit: async (sepaInfo: SepaInfo) => {
+              doneLabel: isBuy ? lstrings.submit : lstrings.string_next_capitalized,
+              onDone: async (sepaInfo: SepaInfo) => {
                 let approveQuoteRes: BityApproveQuoteResponse | null = null
                 try {
                   if (isBuy) {

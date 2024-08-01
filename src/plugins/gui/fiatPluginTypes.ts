@@ -53,8 +53,9 @@ export interface FiatPluginAddressFormParams {
 
 export interface FiatPluginSepaFormParams {
   headerTitle: string
+  doneLabel: string
   headerIconUri?: string
-  onSubmit: (sepaInfo: SepaInfo) => Promise<void>
+  onDone: (sepaInfo: SepaInfo) => Promise<void>
   onClose: () => void
 }
 
