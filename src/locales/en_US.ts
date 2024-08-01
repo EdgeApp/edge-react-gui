@@ -1532,6 +1532,9 @@ const strings = {
   backup_for_transfer_message:
     'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
+  guest_account: 'Guest Account',
+  tap_to_create_username_password: 'Tap to create a username and password',
+
   // Backup Message Variants
   backup_title: 'Back Up Your Account',
   backup_message: 'Create a username and password to continue.',

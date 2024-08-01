@@ -42,7 +42,6 @@ const NotificationViewComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
-  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
   const wallets = useWatch(account, 'currencyWallets')
   const otpKey = useWatch(account, 'otpKey')
@@ -147,8 +146,8 @@ const NotificationViewComponent = (props: Props) => {
       <EdgeAnim visible={isBackupWarningNotifShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
-          title={lstrings.backup_title}
-          message={fioAddresses.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_info_message}
+          title={lstrings.guest_account}
+          message={lstrings.tap_to_create_username_password}
           persistent
           onPress={handleBackupPress}
         />
