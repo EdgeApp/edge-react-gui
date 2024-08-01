@@ -53,7 +53,7 @@ const NotificationViewComponent = (props: Props) => {
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
   const accountNotifDismissInfo = getLocalAccountSettings().accountNotifDismissInfo
 
-  const isBackupWarningNotifShown = account.id != null && account.username == null
+  const isLightAccount = account.id != null && account.username == null
 
   const handleBackupPress = useHandler(async () => {
     await showBackupModal({ navigation: navigationDebounced })
@@ -143,7 +143,7 @@ const NotificationViewComponent = (props: Props) => {
       footerOpenRatio={footerOpenRatio}
       onLayout={handleLayout}
     >
-      <EdgeAnim visible={isBackupWarningNotifShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={isLightAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
           title={lstrings.guest_account}
@@ -166,7 +166,11 @@ const NotificationViewComponent = (props: Props) => {
           onPress={handlePasswordReminderPress}
         />
       </EdgeAnim>
-      <EdgeAnim visible={otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!isLightAccount && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}

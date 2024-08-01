@@ -23,6 +23,7 @@
 - changed: EdgeRow shrinks content by default
 - changed: Improved fetch logic for Markets scene
 - changed: Light account backup notification message changed to "Guest Account - Tap to create username and password"
+- fixed: Light accounts erroneously showing IP validation warning
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
