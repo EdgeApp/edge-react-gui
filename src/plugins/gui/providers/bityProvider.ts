@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
@@ -292,7 +293,7 @@ const approveBityQuote = async (
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
-    const signedMessage = await wallet.signMessage(body, { otherParams: { publicAddress } })
+    const signedMessage = await wallet.signBytes(utf8.parse(body), { otherParams: { publicAddress } })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
       method: 'POST',
