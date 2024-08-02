@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Query supported countries and US states for fiat plugins
+- added: Kado buy via wire transfer
 
 ## 4.10.0
 
