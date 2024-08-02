@@ -38,7 +38,8 @@ export const asFiatPaymentType = asValue(
   'pse',
   'sepa',
   'spei',
-  'turkishbank'
+  'turkishbank',
+  'wire'
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 

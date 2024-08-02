@@ -171,7 +171,8 @@ exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
     "deepPath": "",
     "deepQuery": {},
     "description": "Fee: ~2%
-Settlement: ~5 minutes",
+Settlement: ~5 minutes
+Limit $1000",
     "paymentType": "iach",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": [
@@ -207,6 +208,21 @@ Settlement: 10 - 30 minutes",
     ],
     "pluginId": "creditcard",
     "title": "Credit and Debit Card",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~2%
+Settlement: ~5 minutes
+Limit $10000",
+    "paymentType": "wire",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "wire",
+    ],
+    "pluginId": "wire",
+    "title": "Bank Wire Transfer",
   },
   {
     "cryptoCodes": [

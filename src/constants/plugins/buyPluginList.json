@@ -260,13 +260,24 @@
     "paymentType": "iach",
     "paymentTypes": ["iach"],
     "title": "Instant ACH Bank Transfer",
-    "description": "Fee: ~2%\nSettlement: ~5 minutes",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $1000",
     "forCountries": ["US"],
     "notStateProvinces": { "US": ["FL", "NY", "TX"] },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
-
+  {
+    "id": "wire",
+    "pluginId": "wire",
+    "paymentType": "wire",
+    "paymentTypes": ["wire"],
+    "title": "Bank Wire Transfer",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $10000",
+    "forCountries": ["US"],
+    "notStateProvinces": { "US": ["FL", "NY", "TX"] },
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
   {
     "id": "sepa",
     "pluginId": "sepa",
@@ -488,6 +499,10 @@
   {
     "id": "libertyx",
     "sortIndex": 50
+  },
+  {
+    "id": "wire",
+    "sortIndex": 40
   },
   "----- iOS specifics -----",
   {
