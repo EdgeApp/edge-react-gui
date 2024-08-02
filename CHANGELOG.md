@@ -7,6 +7,8 @@
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
 - changed: Cache exchange rates for five minutes to account for server or connection instability
+- changed: Query supported countries and US states for fiat plugins
+- fixed: Disable max spend for zkSync
 
 ## 4.10.0
 
