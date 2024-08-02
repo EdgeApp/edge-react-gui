@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.7.4):
     - React-Core
-  - edge-login-ui-rn (3.17.0):
+  - edge-login-ui-rn (3.17.1):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -1078,12 +1078,12 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   edge-core-js: 8f15b245c17282a128b53f46180b26feb97981c9
   edge-currency-accountbased: 53d4cb6aa690cd0d893f29443d3a85a42bd334e6
   edge-currency-plugins: cc13fe0d8ed0385a3a9edca832dc2260b756c24b
   edge-exchange-plugins: 2f16751c591f400577ce085f23018de39950bace
-  edge-login-ui-rn: 0fd937229515723368bd0075f1c01e063dd9b819
+  edge-login-ui-rn: e45ef3a1f5a0f17bc3a0e0c232a1d4467475fb73
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1100,7 +1100,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
   FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
