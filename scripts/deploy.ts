@@ -88,10 +88,11 @@ main()
 
 function main() {
   if (argv.length < 4) {
-    mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch]')
+    mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch] [test build]')
     mylog('  project options: edge')
-    mylog('  platform options: ios, android, ios-maestro')
+    mylog('  platform options: ios, android')
     mylog('  branch options: master, develop')
+    mylog('  test build options (optional): maestro')
   }
 
   const buildObj: BuildObj = {} as any
@@ -115,9 +116,9 @@ function main() {
 
 function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = _rootProjectDir
+  buildObj.maestroBuild = argv[5] === 'maestro'
   buildObj.repoBranch = argv[4] // master or develop
-  buildObj.platformType = argv[3] === 'ios-maestro' ? 'ios' : argv[3] // ios or android
-  buildObj.maestroBuild = argv[3] === 'ios-maestro'
+  buildObj.platformType = argv[3]
   buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}temp`

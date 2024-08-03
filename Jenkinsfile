@@ -55,7 +55,7 @@ def buildMaestro(String stageName) {
       if (stageName == 'ios' && params.IOS_BUILD_MAESTRO) {
         echo "Running on ${env.NODE_NAME}"
         sh 'npm run prepare.ios'
-        sh "node -r sucrase/register ./scripts/deploy.ts edge ios-maestro ${BRANCH_NAME}"
+        sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME} maestro"
       }
     }
   }
