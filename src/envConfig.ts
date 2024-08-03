@@ -330,6 +330,7 @@ export const asEnvConfig = asObject({
   DEBUG_THEME: asOptional(asBoolean, false),
   MUTE_CONSOLE_OUTPUT: asOptional(asArray(asValue('log', 'info', 'warn', 'error', 'debug', 'trace', 'group', 'groupCollapsed', 'groupEnd')), []),
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
+  ENABLE_MAESTRO_BUILD: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
