@@ -90,7 +90,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     <Container shiftY={shiftY} pointerEvents="box-none">
       <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
         <BlurBackground />
-        <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
+        <BackgroundLinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
       </Background>
       {renderFooter()}
       <Tabs openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight}>
@@ -149,6 +149,10 @@ const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; op
       ]
     }
 )
+
+const BackgroundLinearGradient = styled(LinearGradient)({
+  flex: 1
+})
 
 const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
   return [
