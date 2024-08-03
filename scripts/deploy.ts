@@ -55,7 +55,7 @@ interface BuildObj extends BuildConfigFile {
   guiDir: string
   guiPlatformDir: string
   platformType: string // 'android' | 'ios'
-  simBuild: boolean
+  maestroBuild: boolean
   repoBranch: string // 'develop' | 'master' | 'test'
   tmpDir: string
   buildArchivesDir: string
@@ -90,7 +90,7 @@ function main() {
   if (argv.length < 4) {
     mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch]')
     mylog('  project options: edge')
-    mylog('  platform options: ios, android, ios-sim')
+    mylog('  platform options: ios, android, ios-maestro')
     mylog('  branch options: master, develop')
   }
 
@@ -102,8 +102,8 @@ function main() {
 
   // buildCommonPre()
   if (buildObj.platformType === 'ios') {
-    if (buildObj.simBuild) {
-      buildIosSim(buildObj)
+    if (buildObj.maestroBuild) {
+      buildIosMaestro(buildObj)
     } else {
       buildIos(buildObj)
     }
@@ -116,8 +116,8 @@ function main() {
 function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = _rootProjectDir
   buildObj.repoBranch = argv[4] // master or develop
-  buildObj.platformType = argv[3] === 'ios-sim' ? 'ios' : argv[3] // ios or android
-  buildObj.simBuild = argv[3] === 'ios-sim'
+  buildObj.platformType = argv[3] === 'ios-maestro' ? 'ios' : argv[3] // ios or android
+  buildObj.maestroBuild = argv[3] === 'ios-maestro'
   buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}temp`
@@ -292,7 +292,7 @@ function buildIos(buildObj: BuildObj) {
   buildObj.testRepoUrl = undefined
 }
 
-function buildIosSim(buildObj: BuildObj) {
+function buildIosMaestro(buildObj: BuildObj) {
   const { buildNum, guiDir, guiHash, guiPlatformDir, productName, productNameClean, repoBranch, tmpDir, xcodeScheme, xcodeWorkspace } = buildObj
 
   chdir(guiDir)
@@ -381,11 +381,11 @@ function buildAndroid(buildObj: BuildObj) {
 }
 
 function buildCommonPost(buildObj: BuildObj) {
-  const { simBuild } = buildObj
+  const { maestroBuild } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
-  if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !simBuild) {
+  if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !maestroBuild) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
     const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
@@ -408,7 +408,7 @@ function buildCommonPost(buildObj: BuildObj) {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !simBuild) {
+  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !maestroBuild) {
     mylog('\n\nUploading to App Center')
     mylog('***********************\n')
 
