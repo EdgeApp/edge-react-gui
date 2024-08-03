@@ -162,6 +162,10 @@ export interface FiatPluginUi {
   waitForAnimationFrame: () => Promise<void>
 }
 
+export interface FiatPluginUtils {
+  getHistoricalRate: (codePair: string, date: string) => Promise<number>
+}
+
 export interface FiatPluginFactoryArgs {
   // TODO:
   // io: {
@@ -173,6 +177,7 @@ export interface FiatPluginFactoryArgs {
   longPress?: boolean
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi
+  pluginUtils: FiatPluginUtils
 }
 
 export interface FiatPluginRegionCode {

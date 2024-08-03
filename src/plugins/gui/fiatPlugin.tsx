@@ -20,6 +20,7 @@ import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPlugin
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationBase } from '../../types/routerTypes'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { datelog } from '../../util/utils'
@@ -33,6 +34,7 @@ import {
   FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
+  FiatPluginUtils,
   FiatPluginWalletPickerResult,
   SaveTxActionParams,
   SaveTxMetadataParams
@@ -260,6 +262,10 @@ export const executePlugin = async (params: {
     }
   }
 
+  const pluginUtils: FiatPluginUtils = {
+    getHistoricalRate
+  }
+
   if (guiPlugin.nativePlugin == null) {
     throw new Error('executePlugin: missing nativePlugin')
   }
@@ -274,6 +280,7 @@ export const executePlugin = async (params: {
     disablePlugins: filteredDisablePlugins,
     longPress,
     guiPlugin,
+    pluginUtils,
     showUi
   })
   if (plugin == null) {
