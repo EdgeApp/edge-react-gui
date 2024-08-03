@@ -307,6 +307,7 @@ export interface AppConfig {
   termsOfServiceSite: string
   website: string
   disableSwaps?: boolean
+  disableSurveyModal?: boolean
   extraTab?: {
     webviewUrl: string
     tabType: 'edgeProvider' | 'webview'
