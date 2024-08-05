@@ -50,6 +50,15 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
     return denominationSettings
   })
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', ev => {
+      if (sweepPrivateKeyList.length === 1) {
+        memoryWallet.close().catch(() => {})
+      }
+    })
+    return unsubscribe
+  }, [memoryWallet, navigation, sweepPrivateKeyList.length])
+
   const mounted = React.useRef<boolean>(true)
 
   const [transactionState, setTransactionState] = React.useState<Map<string, EdgeTransaction | Error>>(new Map())
