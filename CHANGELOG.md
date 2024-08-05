@@ -27,6 +27,7 @@
 - fixed: Buying non-BTC assets with Bity
 - fixed: Misc styling fixes on SepaFormScene and AddressFormScene
 - fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
+- fixed: Promo cards not visible until scroll for new accounts
 
 ## 4.9.2 (2024-07-22)
 
