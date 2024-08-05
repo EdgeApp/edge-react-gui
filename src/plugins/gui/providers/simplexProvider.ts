@@ -306,6 +306,8 @@ export const simplexProvider: FiatProviderFactory = {
             if (lt(params.exchangeAmount, minLimit)) {
               throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit), displayCurrencyCode: fiatCode })
             }
+          } else if (quote.type === 'quote_error' && quote.error.includes('fees for this transaction exceed')) {
+            throw new FiatProviderError({ providerId, errorType: 'underLimit' })
           }
           throw new Error('Simplex unknown error')
         }

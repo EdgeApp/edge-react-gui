@@ -5,6 +5,7 @@
 - added: Kado buy via wire transfer
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
+- fixed: Return underLimit error for Simplex for very small quotes
 
 ## 4.10.0
 
