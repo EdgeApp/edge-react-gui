@@ -131,6 +131,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       const tokenItems = [...sweepPrivateKeyList]
       const mainnetItem = tokenItems.splice(sweepPrivateKeyList.length - 1, 1)[0]
       const publicAddress = (await receivingWallet.getReceiveAddress({ tokenId: null })).publicAddress
+      let enableSlider = false
 
       const getMax = async (asset: SweepPrivateKeyItem, numPendingTxs: number) => {
         const fakeEdgeTransaction: EdgeTransaction = {
@@ -173,6 +174,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           if (lt(memoryWallet.balanceMap.get(null) ?? '0', feeTotal)) {
             throw new InsufficientFundsError({ tokenId: null, networkFee: feeTotal })
           }
+          enableSlider = true
         } catch (e) {
           const insufficientFundsError = asMaybeInsufficientFundsError(e)
           if (insufficientFundsError != null) {
@@ -186,7 +188,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       await Promise.all(tokenItems.map(async (item, index) => await getMax(item, index)))
       await getMax(mainnetItem, tokenItems.length)
 
-      if (mounted.current) {
+      if (enableSlider && mounted.current) {
         setSliderDisabled(false)
       }
 
