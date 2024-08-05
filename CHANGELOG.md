@@ -5,9 +5,6 @@
 - added: Kado buy via wire transfer
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
-- changed: Query supported countries and US states for fiat plugins
-- fixed: Misc styling fixes on SepaFormScene and AddressFormScene
-- fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
 
 ## 4.10.0
 
@@ -32,6 +29,8 @@
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
 - fixed: Buying non-BTC assets with Bity
+- fixed: Misc styling fixes on SepaFormScene and AddressFormScene
+- fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
 
 ## 4.9.2 (2024-07-22)
 
