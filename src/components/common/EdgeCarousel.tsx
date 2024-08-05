@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { ListRenderItem, View } from 'react-native'
+import { InteractionManager, ListRenderItem, View } from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -24,13 +25,28 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const carouselRef = React.useRef(null)
+  const carouselRef = React.useRef<Carousel<any>>(null)
 
   const [activeIndex, setActiveIndex] = useState(0)
 
   const renderItem = useHandler<ListRenderItem<T>>(info => (
     <View style={[styles.childContainer, { width: width * 0.9, height }]}>{props.renderItem(info)}</View>
   ))
+
+  /**
+   * Carousel's FlatList bug workaround
+   */
+  useAsyncEffect(
+    async () => {
+      if (carouselRef.current != null) {
+        await InteractionManager.runAfterInteractions(() => {
+          carouselRef.current?.triggerRenderingHack()
+        })
+      }
+    },
+    [],
+    'triggerRenderingHack'
+  )
 
   return (
     <View style={styles.carouselContainer}>
