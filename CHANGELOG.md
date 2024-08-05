@@ -24,6 +24,9 @@
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
+- fixed: Buying non-BTC assets with Bity
+- fixed: Misc styling fixes on SepaFormScene and AddressFormScene
+- fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
 
 ## 4.9.2 (2024-07-22)
 

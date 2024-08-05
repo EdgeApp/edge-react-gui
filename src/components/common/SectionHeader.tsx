@@ -14,8 +14,7 @@ interface Props {
 }
 
 /**
- * A view representing rows of data split on the left and right edges of the
- * line.
+ * A section header with a left and optional right side.
  *
  * If the right side is a string and onRightPress handler is provided, it will
  * be rendered as green tappable text, else it's up to the caller to decide.
@@ -25,16 +24,21 @@ export const SectionHeader = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const right =
+    typeof rightNode === 'string' ? (
+      <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
+        <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
+      </EdgeTouchableOpacity>
+    ) : (
+      rightNode
+    )
+
   return (
     <View style={styles.row}>
       <View style={styles.leftColumn}>
         <EdgeText>{leftTitle}</EdgeText>
       </View>
-      <View style={styles.rightColumn}>
-        <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
-          <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
-        </EdgeTouchableOpacity>
-      </View>
+      <View style={styles.rightColumn}>{right}</View>
     </View>
   )
 }
