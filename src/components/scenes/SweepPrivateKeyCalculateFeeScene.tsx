@@ -200,6 +200,8 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
     'SweepPrivateKeyCalculateFeeComponent'
   )
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const extraData = React.useMemo(() => [], [transactionState, exchangeRates])
   const keyExtractor = useHandler((item: SweepPrivateKeyItem) => item.key)
 
   return (
@@ -212,7 +214,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
         <FlatList
           automaticallyAdjustContentInsets={false}
           data={sweepPrivateKeyList}
-          extraData={transactionState}
+          extraData={extraData}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
