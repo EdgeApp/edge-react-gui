@@ -1,3 +1,4 @@
+import { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -31,6 +32,29 @@ interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
+/**
+ * Filters a list of ContentPosts based on the provided country code.
+ *
+ * @param contentPosts - An array of `ContentPost` objects representing the
+ * content posts to filter.
+ * @param countryCode - An optional string representing the country code to filter by. If `null`, an empty array is returned.
+ * @returns An array of `ContentPost` objects that match the provided country code.
+ */
+export const filterContentPosts = (contentPosts: ContentPost[], countryCode?: string) => {
+  return contentPosts.filter((contentPost: ContentPost) => {
+    const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } = contentPost
+
+    const isCountryInclude =
+      includeCountryCodes.length === 0 ||
+      (countryCode != null && includeCountryCodes.some(includeCountryCode => includeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+    const isCountryExclude =
+      excludeCountryCodes.length > 0 &&
+      (countryCode == null || excludeCountryCodes.some(excludeCountryCode => excludeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+
+    return isCountryInclude && !isCountryExclude
+  })
+}
+
 export const HomeScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
@@ -42,6 +66,8 @@ export const HomeScene = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+  const [blogPosts, setBlogPosts] = React.useState<ContentPost[]>([])
+  const [videoPosts, setVideoPosts] = React.useState<ContentPost[]>([])
 
   //
   // Handlers
@@ -74,7 +100,19 @@ export const HomeScene = (props: Props) => {
     'countryCode'
   )
 
-  const blogPosts = infoServerData.rollup?.blogPosts
+  // Check for content posts from info server:
+  React.useEffect(() => {
+    // Merge legacy non-geographic-specific blog posts with geo-specific ones:
+    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
+      countryCodes: [],
+      excludeCountryCodes: [],
+      ...legacyBlogPost
+    }))
+    setBlogPosts([...nonGeoPosts, ...(filterContentPosts(infoServerData.rollup?.blogPostsGeo as ContentPost[], countryCode) ?? [])])
+
+    // Get video posts
+    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts ?? [], countryCode))
+  }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -149,16 +187,22 @@ export const HomeScene = (props: Props) => {
                   />
                 </EdgeAnim>
               </>
+              {blogPosts == null || blogPosts.length === 0 ? null : (
+                <>
+                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
+                  <ContentPostCarousel contentPosts={blogPosts} />
+                </>
+              )}
               <>
                 <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCard navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
-              {blogPosts == null || blogPosts.length === 0 ? null : (
+              {videoPosts == null || videoPosts.length === 0 ? null : (
                 <>
-                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
-                  <ContentPostCarousel countryCode={countryCode} />
+                  <SectionHeader leftTitle={lstrings.edgeucation_videos} />
+                  <ContentPostCarousel contentPosts={videoPosts} />
                 </>
               )}
               <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
