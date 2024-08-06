@@ -4,12 +4,12 @@ import { ListRenderItem } from 'react-native'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
-import { infoServerData } from '../../util/network'
 import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
 import { ContentPostCard } from './ContentPostCard'
 
 export interface Props {
+  contentPosts: ContentPost[]
   countryCode?: string
 }
 
@@ -40,27 +40,13 @@ export const filterContentPosts = (contentPosts: ContentPost[], countryCode?: st
  * Renders a carousel of ContentPosts using the info server data.
  */
 export const ContentPostCarousel = (props: Props) => {
-  const { countryCode } = props
+  const { contentPosts, countryCode } = props
   const { width } = useSafeAreaFrame()
   const theme = useTheme()
 
-  const [contentPosts, setContentPosts] = React.useState<ContentPost[]>([])
+  const filteredContentPosts = filterContentPosts(contentPosts, countryCode)
 
   const renderContentPost: ListRenderItem<ContentPost> = useHandler(({ item }) => <ContentPostCard contentPost={item} />)
 
-  // Check for BlogCards from info server:
-  React.useEffect(() => {
-    const filteredBlogPostsGeo = filterContentPosts(infoServerData.rollup?.blogPostsGeo ?? [], countryCode)
-
-    // Legacy non-geographic-specific blog posts:
-    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
-      countryCodes: [],
-      excludeCountryCodes: [],
-      ...legacyBlogPost
-    }))
-
-    setContentPosts([...nonGeoPosts, ...filteredBlogPostsGeo])
-  }, [countryCode])
-
-  return <EdgeCarousel data={contentPosts} renderItem={renderContentPost} height={theme.rem(13)} width={width} />
+  return <EdgeCarousel data={filteredContentPosts} renderItem={renderContentPost} height={theme.rem(13)} width={width} />
 }

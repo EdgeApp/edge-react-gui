@@ -1,3 +1,4 @@
+import { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -42,6 +43,8 @@ export const HomeScene = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+  const [blogPosts, setBlogPosts] = React.useState<ContentPost[]>([])
+  const [videoPosts, setVideoPosts] = React.useState<ContentPost[]>([])
 
   //
   // Handlers
@@ -74,7 +77,19 @@ export const HomeScene = (props: Props) => {
     'countryCode'
   )
 
-  const blogPosts = infoServerData.rollup?.blogPosts
+  // Check for content posts from info server:
+  React.useEffect(() => {
+    // Merge legacy non-geographic-specific blog posts with geo-specific ones:
+    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
+      countryCodes: [],
+      excludeCountryCodes: [],
+      ...legacyBlogPost
+    }))
+    setBlogPosts([...nonGeoPosts, ...(infoServerData.rollup?.blogPostsGeo ?? [])])
+
+    // Get video posts
+    setVideoPosts(infoServerData.rollup?.videoPosts ?? [])
+  }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -149,16 +164,22 @@ export const HomeScene = (props: Props) => {
                   />
                 </EdgeAnim>
               </>
+              {blogPosts == null || blogPosts.length === 0 ? null : (
+                <>
+                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
+                  <ContentPostCarousel contentPosts={blogPosts} countryCode={countryCode} />
+                </>
+              )}
               <>
                 <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCard navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
-              {blogPosts == null || blogPosts.length === 0 ? null : (
+              {videoPosts == null || videoPosts.length === 0 ? null : (
                 <>
-                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
-                  <ContentPostCarousel countryCode={countryCode} />
+                  <SectionHeader leftTitle={lstrings.edgeucation_videos} />
+                  <ContentPostCarousel contentPosts={videoPosts} countryCode={countryCode} />
                 </>
               )}
               <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
