@@ -581,7 +581,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   "value": 1,
                 }
               }
-              secureTextEntry={false}
               selectionColor="#FFFFFF"
               style={
                 [

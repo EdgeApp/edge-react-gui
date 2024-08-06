@@ -67,7 +67,8 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
-  secureTextEntry?: boolean // Defaults to 'false'
+
+  secureTextEntry?: boolean
   testID?: string
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
@@ -292,7 +293,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoComplete={autoComplete}
               blurOnSubmit={multiline ? false : blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
-              secureTextEntry={hidePassword}
+              secureTextEntry={secureTextEntry === true ? hidePassword : undefined}
               numberOfLines={multiline ? 20 : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
