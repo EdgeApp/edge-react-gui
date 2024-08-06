@@ -1600,6 +1600,8 @@ const strings = {
   fio_web3_footer: 'Manage your handles and domains',
   title_home: 'Home',
   title_learn: 'Learn',
+  edgeucation_articles: 'Edge-ucation Articles',
+  edgeucation_videos: 'Edge-ucation Videos',
   view_assets: 'View Assets',
   title_support: 'Need Support?',
   body_support: 'Contact our team of experts to troubleshoot your crypto needs',
