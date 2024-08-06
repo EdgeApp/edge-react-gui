@@ -6,6 +6,7 @@
 - added: Allow for Maestro specific iOS and Android builds
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
+- changed: Cache exchange rates for five minutes to account for server or connection instability
 
 ## 4.10.0
 
