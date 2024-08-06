@@ -324,7 +324,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   "value": 1,
                 }
               }
-              secureTextEntry={false}
               selectionColor="#FFFFFF"
               style={
                 [
@@ -886,7 +885,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   "value": 1,
                 }
               }
-              secureTextEntry={false}
               selectionColor="#FFFFFF"
               style={
                 [

@@ -133,7 +133,6 @@ exports[`FilledTextInput should render with some props 1`] = `
               "value": 1,
             }
           }
-          secureTextEntry={false}
           selectionColor="#FFFFFF"
           testID="string.textInput"
           textAlignVertical="top"
