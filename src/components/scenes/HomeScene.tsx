@@ -15,7 +15,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
 import { BalanceCard } from '../cards/BalanceCard'
-import { BlogCards } from '../cards/BlogCards'
+import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
 import { MarketsCard } from '../cards/MarketsCard'
 import { PromoCards } from '../cards/PromoCards'
@@ -157,8 +157,8 @@ export const HomeScene = (props: Props) => {
               </>
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
-                  <SectionHeader leftTitle={lstrings.title_learn} />
-                  <BlogCards countryCode={countryCode} />
+                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
+                  <ContentPostCarousel countryCode={countryCode} />
                 </>
               )}
               <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
