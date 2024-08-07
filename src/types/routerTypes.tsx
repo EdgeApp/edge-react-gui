@@ -16,14 +16,14 @@ import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNo
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
 import type { EditTokenParams } from '../components/scenes/EditTokenScene'
-import { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
-import { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
-import { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
+import type { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
+import type { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
+import type { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
 import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
-import { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
-import { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
-import { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
-import { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
+import type { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
+import type { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
+import type { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
+import type { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -45,8 +45,12 @@ import type { StakeModifyParams } from '../components/scenes/Staking/StakeModify
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
-import { SwapCreateParams } from '../components/scenes/SwapCreateScene'
+import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
+import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
+import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
+import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
+import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
@@ -65,14 +69,37 @@ import type { FioRequest } from './types'
  * Defines the acceptable route parameters for each scene key.
  */
 export interface RouteParamList {
-  // Top-level router:
-  login: LoginParams
-  edgeApp: {}
-  edgeAppStack: {}
-  edgeTabs: {}
-  gettingStarted: GettingStartedParams
+  // -------------------------------------------------------------------------
+  // Tab router
+  // -------------------------------------------------------------------------
 
-  // Tabs
+  // `homeTab`:
+  home: {}
+
+  // `walletsTab`:
+  walletList: {}
+  transactionList: TransactionListParams
+  transactionDetails: TransactionDetailsParams
+
+  // `buyTab` / `sellTab`:
+  pluginListBuy: GuiPluginListParams
+  pluginListSell: GuiPluginListParams
+  pluginViewBuy: PluginViewParams
+  pluginViewSell: PluginViewParams
+  guiPluginAddressForm: FiatPluginAddressFormParams
+  guiPluginEnterAmount: FiatPluginEnterAmountParams
+  guiPluginInfoDisplay: FiatPluginSepaTransferParams
+  guiPluginSepaForm: FiatPluginSepaFormParams
+  guiPluginWebView: FiatPluginOpenWebViewParams
+  rewardsCardDashboard: RewardsCardDashboardParams
+  rewardsCardWelcome: RewardsCardWelcomeParams
+
+  // `swapTab`:
+  swapCreate: SwapCreateParams
+  swapConfirmation: SwapConfirmationParams
+  swapProcessing: SwapProcessingParams
+
+  // `edgeTabs`:
   homeTab: {}
   walletsTab: {}
   buyTab: {}
@@ -81,16 +108,12 @@ export interface RouteParamList {
   extraTab: undefined
   devTab: undefined
 
-  // Gui Plugins
-  guiPluginEnterAmount: FiatPluginEnterAmountParams
-  guiPluginAddressForm: FiatPluginAddressFormParams
-  guiPluginInfoDisplay: FiatPluginSepaTransferParams
-  guiPluginSepaForm: FiatPluginSepaFormParams
-  guiPluginWebView: FiatPluginOpenWebViewParams
-  rewardsCardDashboard: RewardsCardDashboardParams
-  rewardsCardWelcome: RewardsCardWelcomeParams
+  // -------------------------------------------------------------------------
+  // Main `edgeAppStack`
+  // The tabs live inside this stack, as well as most app scenes.
+  // -------------------------------------------------------------------------
 
-  // Logged-in scenes:
+  edgeTabs: {} // Tab navigator
   assetSettings: {}
   changeMiningFee2: ChangeMiningFeeParams
   changePassword: {}
@@ -144,7 +167,6 @@ export interface RouteParamList {
     tokenId: EdgeTokenId
     walletId: string
   }
-  home: {}
   loanDashboard: {}
   loanDetails: LoanDetailsParams
   loanCreate: LoanCreateParams
@@ -161,10 +183,6 @@ export interface RouteParamList {
   otpSetup: {}
   passwordRecovery: {}
   upgradeUsername: {}
-  pluginListBuy: GuiPluginListParams
-  pluginListSell: GuiPluginListParams
-  pluginViewBuy: PluginViewParams
-  pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
   promotionSettings: {}
   request: RequestParams
@@ -176,20 +194,31 @@ export interface RouteParamList {
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
-  swapCreate: SwapCreateParams
-  swapConfirmation: SwapConfirmationParams
-  swapProcessing: SwapProcessingParams
   swapSettings: {}
   swapSuccess: {}
+  sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
+  sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
+  sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
+  sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
   testScene: {}
-  transactionDetails: TransactionDetailsParams
-  transactionList: TransactionListParams
+  // transactionDetails is copied here
   transactionsExport: TransactionsExportParams
-  walletList: {}
   webView: WebViewSceneParams
   wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams
   wcConnect: WcConnectParams
+
+  // -------------------------------------------------------------------------
+  // Root router
+  // -------------------------------------------------------------------------
+
+  // `edgeApp`:
+  edgeAppStack: {}
+
+  // Root routes:
+  edgeApp: {} // A drawer router that contains the main `edgeAppStack`
+  gettingStarted: GettingStartedParams
+  login: LoginParams
 }
 
 export type RouteSceneKey = keyof RouteParamList

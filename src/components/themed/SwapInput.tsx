@@ -9,8 +9,8 @@ import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, removeIsoPrefix } from '../../util/utils'
 import { styled } from '../hoc/styled'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
 
@@ -205,7 +205,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         <CardHeading>{heading}</CardHeading>
         <Space row>
           <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
-            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
+            <CryptoIcon marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
             <WalletPlaceHolderText>{walletPlaceholderText}</WalletPlaceHolderText>
           </WalletPlaceHolder>
         </Space>

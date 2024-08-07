@@ -29,7 +29,7 @@ import { NumericInput } from './NumericInput'
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
 
-export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' | 'none' // Defaults to 'done'
 
 export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
@@ -67,7 +67,8 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
-  secureTextEntry?: boolean // Defaults to 'false'
+
+  secureTextEntry?: boolean
   testID?: string
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
@@ -290,9 +291,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
               autoComplete={autoComplete}
-              blurOnSubmit={blurOnSubmit}
+              blurOnSubmit={multiline ? false : blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
-              secureTextEntry={hidePassword}
+              secureTextEntry={secureTextEntry === true ? hidePassword : undefined}
+              numberOfLines={multiline ? 20 : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>

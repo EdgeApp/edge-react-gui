@@ -48,7 +48,13 @@ export const RewardsCardDashboardScene = (props: Props) => {
   })
   const handleQuestionPress = useHandler(() => {
     Airship.show<string | number | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={lstrings.rewards_card_loading} message={lstrings.rewards_card_purchase_disclaimer} closeArrow buttons={{}} />
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.rewards_card_loading}
+        message={lstrings.rewards_card_purchase_disclaimer}
+        closeArrow
+        buttons={{ ok: { label: lstrings.string_ok_cap } }}
+      />
     )).catch(error => showError(error))
   })
 

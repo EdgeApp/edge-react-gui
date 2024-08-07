@@ -4,9 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
 import { useSceneFooterState } from '../../state/SceneFooterState'
+import { BlurBackground } from '../common/BlurBackground'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
-import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
   // This component requires a key prop so that way the onLayoutHeight prop

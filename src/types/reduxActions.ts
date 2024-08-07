@@ -22,14 +22,14 @@ type NoDataActionName =
   | 'DEVELOPER_MODE_ON'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
+  | 'LOGOUT'
   | 'OTP_ERROR_SHOWN'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'FIO/EXPIRED_REMINDER_SHOWN'
+  | 'SPAM_FILTER_ON'
 
 export type Action =
   | { type: NoDataActionName }
@@ -55,7 +55,6 @@ export type Action =
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
-  | { type: 'LOGOUT'; data: { nextLoginId?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN'; data: { messageId: string; source: TweakSource } }
   | { type: 'PERMISSIONS/UPDATE'; data: Partial<PermissionsState> }
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
@@ -99,9 +98,6 @@ export type Action =
   | { type: 'FIO/SET_FIO_ADDRESSES'; data: { fioAddresses: FioAddress[] } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS'; data: { fioAddress: string; ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_FIO_DOMAINS'; data: { fioDomains: FioDomain[] } }
-  | { type: 'FIO/SET_LAST_EXPIRED_CHECKS'; data: { [fioName: string]: Date } }
-  | { type: 'FIO/CHECKING_EXPIRED'; data: boolean }
-  | { type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED'; data: { [walletId: string]: boolean } }
   /*
    Self-Contained Package Actions:
 

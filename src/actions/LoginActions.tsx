@@ -26,7 +26,6 @@ import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
-import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
@@ -226,7 +225,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       })
 
       await dispatch(refreshAccountReferral())
-      await dispatch(expiredFioNamesCheckDates(navigation))
 
       refreshTouchId(account).catch(() => {
         // We have always failed silently here
@@ -269,16 +267,27 @@ export function getRootNavigation(navigation: NavigationBase): NavigationBase {
   }
 }
 
-export function logoutRequest(navigation: NavigationBase, nextLoginId?: string): ThunkAction<Promise<void>> {
+export function logoutRequest(
+  navigation: NavigationBase,
+  opts: {
+    nextLoginId?: string
+    passwordRecoveryKey?: string
+  } = {}
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const { nextLoginId, passwordRecoveryKey } = opts
     const state = getState()
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
-    dispatch({ type: 'LOGOUT', data: { nextLoginId } })
+    dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)
-    rootNavigation.replace('login', { experimentConfig: await getExperimentConfig() })
+    rootNavigation.replace('login', {
+      experimentConfig: await getExperimentConfig(),
+      nextLoginId,
+      passwordRecoveryKey
+    })
   }
 }
 

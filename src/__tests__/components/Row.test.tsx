@@ -4,9 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import TestRenderer from 'react-test-renderer'
 
+import { EdgeCard } from '../../components/cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../../components/common/EdgeTouchableOpacity'
-import { CardUi4 } from '../../components/ui4/CardUi4'
-import { RowUi4 } from '../../components/ui4/RowUi4'
+import { EdgeRow } from '../../components/rows/EdgeRow'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 const testIconUri = 'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
@@ -16,7 +16,7 @@ describe('RowUi4', () => {
   it('should render a basic row', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <RowUi4 title="title" body="body" />
+        <EdgeRow title="title" body="body" />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -25,10 +25,10 @@ describe('RowUi4', () => {
   it('should render a row with a right button', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <RowUi4 title="Row (editable)" body="body" rightButtonType="editable" />
-        <RowUi4 title="Row (questionable)" body="body" rightButtonType="questionable" />
-        <RowUi4 title="Row (touchable)" body="body" rightButtonType="touchable" />
-        <RowUi4 title="Row (delete)" body="body" rightButtonType="delete" />
+        <EdgeRow title="Row (editable)" body="body" rightButtonType="editable" />
+        <EdgeRow title="Row (questionable)" body="body" rightButtonType="questionable" />
+        <EdgeRow title="Row (touchable)" body="body" rightButtonType="touchable" />
+        <EdgeRow title="Row (delete)" body="body" rightButtonType="delete" />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -37,9 +37,9 @@ describe('RowUi4', () => {
   it('should render a row in a card', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4>
-          <RowUi4 title="title" body="body" />
-        </CardUi4>
+        <EdgeCard>
+          <EdgeRow title="title" body="body" />
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -51,7 +51,7 @@ describe('RowUi4', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <RowUi4 title="Clickable Row" body="This row is clickable" onPress={mockOnPress} onLongPress={mockOnLongPress} rightButtonType="touchable" />
+        <EdgeRow title="Clickable Row" body="This row is clickable" onPress={mockOnPress} onLongPress={mockOnLongPress} rightButtonType="touchable" />
       </FakeProviders>
     )
 
@@ -67,7 +67,7 @@ describe('RowUi4', () => {
   it('renders correctly with an icon', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <RowUi4 title="Row with Icon" body="This row has an icon" icon={testIconUri} />
+        <EdgeRow title="Row with Icon" body="This row has an icon" icon={testIconUri} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -77,7 +77,7 @@ describe('RowUi4', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <RowUi4 title="Row with Icon" body="This row has an icon" icon={testIconUri} />
+          <EdgeRow title="Row with Icon" body="This row has an icon" icon={testIconUri} />
         </View>
       </FakeProviders>
     )
@@ -88,12 +88,12 @@ describe('RowUi4', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <RowUi4 title="title" body="body" />
-          <RowUi4 title="Row with Icon" body="This row has an icon" icon={testIconUri} />
-          <RowUi4 title="Row with Icon (editable)" body="This row has an icon" icon={testIconUri} rightButtonType="editable" />
-          <RowUi4 title="Row with Icon (questionable)" body="This row has an icon" icon={testIconUri} rightButtonType="questionable" />
-          <RowUi4 title="Row with Icon (touchable)" body="This row has an icon" icon={testIconUri} rightButtonType="touchable" />
-          <RowUi4 title="Row with Icon (delete)" body="This row has an icon" icon={testIconUri} rightButtonType="delete" />
+          <EdgeRow title="title" body="body" />
+          <EdgeRow title="Row with Icon" body="This row has an icon" icon={testIconUri} />
+          <EdgeRow title="Row with Icon (editable)" body="This row has an icon" icon={testIconUri} rightButtonType="editable" />
+          <EdgeRow title="Row with Icon (questionable)" body="This row has an icon" icon={testIconUri} rightButtonType="questionable" />
+          <EdgeRow title="Row with Icon (touchable)" body="This row has an icon" icon={testIconUri} rightButtonType="touchable" />
+          <EdgeRow title="Row with Icon (delete)" body="This row has an icon" icon={testIconUri} rightButtonType="delete" />
         </View>
       </FakeProviders>
     )
@@ -103,27 +103,27 @@ describe('RowUi4', () => {
   it('renders correctly with flex: 1 children', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <RowUi4 title="Flex Children">
+        <EdgeRow title="Flex Children">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Icon w/ Flex Children" icon={testIconUri}>
+        </EdgeRow>
+        <EdgeRow title="Icon w/ Flex Children" icon={testIconUri}>
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Copy w/ Flex Children" icon={testIconUri} rightButtonType="copy">
+        </EdgeRow>
+        <EdgeRow title="Copy w/ Flex Children" icon={testIconUri} rightButtonType="copy">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Delete w/ Flex Children" icon={testIconUri} rightButtonType="delete">
+        </EdgeRow>
+        <EdgeRow title="Delete w/ Flex Children" icon={testIconUri} rightButtonType="delete">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Questionable w/ Flex Children" icon={testIconUri} rightButtonType="questionable">
+        </EdgeRow>
+        <EdgeRow title="Questionable w/ Flex Children" icon={testIconUri} rightButtonType="questionable">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Editable w/ Flex Children" icon={testIconUri} rightButtonType="editable">
+        </EdgeRow>
+        <EdgeRow title="Editable w/ Flex Children" icon={testIconUri} rightButtonType="editable">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
-        <RowUi4 title="Touchable w/ Flex Children" icon={testIconUri} rightButtonType="touchable">
+        </EdgeRow>
+        <EdgeRow title="Touchable w/ Flex Children" icon={testIconUri} rightButtonType="touchable">
           <View style={{ flex: 1, backgroundColor: testColor }} />
-        </RowUi4>
+        </EdgeRow>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()

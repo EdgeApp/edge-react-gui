@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SelectableRow should render with loading props 1`] = `
-<CardUi4
+<EdgeCard
   onPress={[Function]}
 >
   <View
@@ -38,5 +38,5 @@ exports[`SelectableRow should render with loading props 1`] = `
       </EdgeText>
     </View>
   </View>
-</CardUi4>
+</EdgeCard>
 `;

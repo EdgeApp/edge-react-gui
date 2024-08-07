@@ -18,6 +18,18 @@ type Props = StateProps & DispatchProps
 
 const merchantPartners = [
   {
+    givenName: '0x Gasless Swap',
+    hasThumbnail: true,
+    thumbnailPath: '0xgasless.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Bitrefill',
     hasThumbnail: true,
     thumbnailPath: 'bitrefill.png',

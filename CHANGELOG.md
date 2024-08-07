@@ -2,32 +2,44 @@
 
 ## Unreleased
 
+## 4.10.0
+
+- added: Network names to wallet list cards
 - added: 0x Gasless Swap exchange plugin
 - added: Add Solana on Banxa and Moonpay
 - added: Add Mt Pelerin support for buy and sell with reverse (dest amount) quotes
 - changed: InsufficientFeesModal shows the network name for ETH fees not on Ethereum (e.g. Optimism)
+- changed: Save last used Home/Assets scene and use as default. Remove settings option
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
+- change: Update generic stake plugins to use info server rollup for APY values
 - changed: Ui4 components renamed and reorganized
 - changed: SendScene "Fee:" renamed to "Network Fee:"
 - changed: Style of "Already have an account? Sign in" tappable text
 - changed: EdgeRow shrinks content by default
+- changed: Improved fetch logic for Markets scene
+- changed: Light account backup notification message changed to "Guest Account - Tap to create username and password"
+- fixed: Light accounts erroneously showing IP validation warning
 - fixed: Android keyboard enter key to support newlines in multiline text inputs
 - fixed: Broken link in "Help Closing App"
 - fixed: Incorrect best quote picking for sell plugins
+- fixed: Buying non-BTC assets with Bity
+- fixed: Misc styling fixes on SepaFormScene and AddressFormScene
+- fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
+- fixed: Broken Android paste into `TextInputModal` in "ScanQR" -> "Enter" 
+- fixed: Promo cards not visible until scroll for new accounts
 
-## 4.9.2
+## 4.9.2 (2024-07-22)
 
 - fixed: Set avoidNativeFee on Rango to fix bridge failures
 
-## 4.9.1
+## 4.9.1 (2024-07-21)
 
 - changed: Velodrome staking plugin will ignore LP token balance and use entered amounts for `addLiquidity` methods
 - changed: Velodrome staking plugin will skip `deposit` method on disabled contracts
 - fixed: Possible to get stuck on account creation flow with specific navigation steps
 - fixed: Incorrect `startNativeAmount` passed to flip input modal for staking policies with multiple stake assets
-- fixed: Possible to get stuck on account creation flow with specific navigation steps
 
 ## 4.9.0 (2024-07-18)
 

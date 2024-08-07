@@ -16,7 +16,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 export const IONIA_SUPPORTED_FIATS = ['USD']
 
@@ -52,14 +52,14 @@ export const VisaCardCard = (props: Props) => {
   return (
     <>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
-        <CardUi4 paddingRem={0}>
+        <EdgeCard paddingRem={0}>
           <EdgeTouchableOpacity onPress={handlePress} style={styles.container}>
             <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>
               {lstrings.rewards_card_call_to_action}
             </EdgeText>
           </EdgeTouchableOpacity>
-        </CardUi4>
+        </EdgeCard>
       )}
     </>
   )

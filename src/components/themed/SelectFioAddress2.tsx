@@ -12,10 +12,10 @@ import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } f
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -210,7 +210,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     const { loading } = this.state
 
     return (
-      <RowUi4
+      <EdgeRow
         rightButtonType={fioRequest ? 'none' : 'touchable'}
         loading={loading && !selected}
         title={lstrings.select_fio_address_address_from}
@@ -230,14 +230,14 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 
     if (memoError) {
       return (
-        <RowUi4 rightButtonType="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
+        <EdgeRow rightButtonType="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
           <EdgeText style={{ color: theme.dangerText }}>{memoError}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     }
 
     return (
-      <RowUi4
+      <EdgeRow
         rightButtonType="touchable"
         title={lstrings.select_fio_address_address_memo}
         body={memo || lstrings.fio_sender_memo_placeholder}

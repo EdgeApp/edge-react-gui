@@ -1,4 +1,3 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -21,7 +20,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -33,7 +32,6 @@ import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
 
 interface Props extends EdgeSceneProps<'loanDashboard'> {}
 
@@ -128,14 +126,13 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
-        if (info != null) return info // Already found
-        return getCurrencyInfos(account).find(currencyInfo => pluginId === currencyInfo.pluginId)
-      }, undefined)
-      if (filteredCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      const [createPluginId] = SUPPORTED_WALLET_PLUGIN_IDS.filter(pluginId => account.currencyConfig[pluginId] != null)
+      if (createPluginId == null) {
+        throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      }
       newLoanWallet = await createWallet(account, {
         name: `AAVE Loan Account`,
-        walletType: filteredCurrencyInfo.walletType
+        walletType: account.currencyConfig[createPluginId].currencyInfo.walletType
       })
     }
 
@@ -177,9 +174,9 @@ export const LoanDashboardScene = (props: Props) => {
     return (
       <>
         {isNewLoanLoading ? (
-          <CardUi4 marginRem={[0, 0.5, 0, 0.5, 0]}>
+          <EdgeCard marginRem={[0, 0.5, 0, 0.5, 0]}>
             <FillLoader />
-          </CardUi4>
+          </EdgeCard>
         ) : null}
         {isLoansLoading ? (
           <Space aroundRem={1}>

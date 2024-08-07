@@ -6,17 +6,17 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { EdgeModal } from '../modals/EdgeModal'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
   label: string
@@ -124,7 +124,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     if (createNew) {
       return (
         <View style={styles.registerDomainRow}>
-          <ButtonsViewUi4
+          <ButtonsView
             tertiary={{
               label: lstrings.fio_address_list_domain_register,
               onPress: this.registerNewDomain
@@ -155,7 +155,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
+      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
         <SimpleTextInput
           aroundRem={0.5}
           autoCorrect={false}
@@ -176,7 +176,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           contentContainerStyle={styles.scrollPadding}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }
@@ -215,9 +215,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const DomainListModal = connect<StateProps, {}, OwnProps>(
-  state => ({
-    userDomains: state.ui.fioAddress.fioDomains
-  }),
-  dispatch => ({})
-)(withTheme(DomainListModalComponent))
+export function DomainListModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const userDomains = useSelector(state => state.ui.fioAddress.fioDomains)
+
+  return <DomainListModalComponent {...props} theme={theme} userDomains={userDomains} />
+}

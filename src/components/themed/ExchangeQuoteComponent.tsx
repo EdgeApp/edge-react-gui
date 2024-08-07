@@ -9,11 +9,12 @@ import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
-import { CurrencyRow } from '../data/row/CurrencyRow'
+import { EdgeCard } from '../cards/EdgeCard'
+import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -35,14 +36,11 @@ export const ExchangeQuote = (props: Props) => {
 
   // Fees are assumed to be denominated in the native currency
   const feeNativeAmount = networkFee.nativeAmount
-  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: null, withSymbol: false })
-  const {
-    currencyCode: parentCurrencyCode,
-    denomination: parentDenomination,
-    isoFiatCurrencyCode
-  } = useTokenDisplayData({
+  const feeTokenId = getWalletTokenId(fromWallet, networkFee.currencyCode)
+  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: feeTokenId, withSymbol: false })
+  const { denomination: feeDenomination, isoFiatCurrencyCode } = useTokenDisplayData({
     wallet: fromWallet,
-    tokenId: null
+    tokenId: feeTokenId
   })
 
   const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({
@@ -52,8 +50,8 @@ export const ExchangeQuote = (props: Props) => {
 
   const feeFiatText = useFiatText({
     autoPrecision: true,
-    cryptoCurrencyCode: parentCurrencyCode,
-    cryptoExchangeMultiplier: parentDenomination.multiplier,
+    cryptoCurrencyCode: networkFee.currencyCode,
+    cryptoExchangeMultiplier: feeDenomination.multiplier,
     isoFiatCurrencyCode,
     nativeCryptoAmount: feeNativeAmount,
     hideFiatSymbol: true,
@@ -61,8 +59,8 @@ export const ExchangeQuote = (props: Props) => {
   })
 
   const feeFiatAmount = useSelector(state => {
-    const cryptoAmount = div(feeNativeAmount, parentDenomination.multiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, parentCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const cryptoAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, networkFee.currencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
   const fromFiatAmount = useSelector(state => {
@@ -106,7 +104,7 @@ export const ExchangeQuote = (props: Props) => {
   }
 
   return (
-    <CardUi4>
+    <EdgeCard>
       <CurrencyRow
         wallet={isFrom ? fromWallet : toWallet}
         tokenId={isFrom ? fromTokenId : toTokenId}
@@ -115,7 +113,7 @@ export const ExchangeQuote = (props: Props) => {
         hideBalance={false}
       />
       {renderBottom()}
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

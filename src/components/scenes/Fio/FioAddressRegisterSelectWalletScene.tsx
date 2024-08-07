@@ -1,6 +1,6 @@
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Image, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_PLUGIN_ID, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
@@ -15,15 +15,16 @@ import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeButton } from '../../buttons/EdgeButton'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { ButtonUi4 } from '../../ui4/ButtonUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioAddressRegisterSelectWalletParams {
@@ -197,11 +198,16 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 showError(lstrings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
-              Alert.alert(
-                `${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`,
-                sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label),
-                [{ text: lstrings.string_ok_cap }]
-              )
+              Airship.show<'ok' | undefined>(bridge => (
+                <ButtonsModal
+                  bridge={bridge}
+                  title={`${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`}
+                  message={sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label)}
+                  buttons={{
+                    ok: { label: lstrings.string_ok_cap }
+                  }}
+                />
+              )).catch(() => {})
 
               onLogEvent('Fio_Handle_Register', {
                 conversionValues: {
@@ -231,14 +237,14 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
     return (
       <>
-        <CardUi4 sections marginRem={[0.5, 0.5, 2, 0.5]}>
-          <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+        <EdgeCard sections marginRem={[0.5, 0.5, 2, 0.5]}>
+          <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
           {!selectedDomain.walletId && (
-            <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+            <EdgeRow rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
           )}
-          <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
-        </CardUi4>
-        <ButtonUi4 disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
+          <EdgeRow title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
+        </EdgeCard>
+        <EdgeButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>
     )
   }

@@ -160,6 +160,7 @@ interface SpecialCurrencyInfo {
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
+  chainIcon?: boolean
 }
 
 /*
@@ -181,6 +182,15 @@ export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo =>
 export const SPECIAL_CURRENCY_INFO: {
   [pluginId: string]: SpecialCurrencyInfo
 } = {
+  amoy: {
+    allowZeroTx: true,
+    chainCode: 'ETH',
+    displayBuyCrypto: false,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_amoy_wallet_name,
+    isImportKeySupported: true,
+    isPaymentProtocolSupported: false
+  },
   bitcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     hasSegwit: true,
@@ -281,19 +291,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false
   },
-  mumbai: {
-    allowZeroTx: true,
-    chainCode: 'MUMBAI',
-    displayBuyCrypto: false,
-    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    initWalletName: lstrings.string_first_mumbai_wallet_name,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
-    walletConnectV2ChainId: {
-      namespace: 'eip155',
-      reference: '80001'
-    }
-  },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
     chainCode: 'ADA',
@@ -361,6 +358,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42161'
@@ -373,6 +371,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
@@ -416,27 +415,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isPaymentProtocolSupported: false,
     isStakingSupported: true
   },
-  kovan: {
-    initWalletName: lstrings.string_first_ethereum_wallet_name,
-    chainCode: 'ETH',
-    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true,
-    displayBuyCrypto: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
-    walletConnectV2ChainId: {
-      namespace: 'eip155',
-      reference: '42'
-    }
-  },
-  goerli: {
-    initWalletName: lstrings.string_first_ethereum_wallet_name,
-    chainCode: 'ETH',
-    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: false
-  },
   ethereumclassic: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
@@ -468,6 +446,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
     isStakingSupported: true,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
@@ -490,6 +469,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '324'
@@ -849,6 +829,32 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'algorand',
       reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73k'
+    }
+  },
+  holesky: {
+    initWalletName: lstrings.string_first_holesky_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '170000'
+    }
+  },
+  sepolia: {
+    initWalletName: lstrings.string_first_sepolia_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '11155111'
     }
   }
 }

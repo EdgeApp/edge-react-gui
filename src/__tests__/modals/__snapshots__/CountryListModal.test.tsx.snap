@@ -364,7 +364,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 "value": 1,
               }
             }
-            secureTextEntry={false}
             selectionColor="#FFFFFF"
             style={
               [

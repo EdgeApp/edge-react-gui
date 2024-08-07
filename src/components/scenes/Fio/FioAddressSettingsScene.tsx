@@ -9,17 +9,17 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { ButtonsView } from '../../buttons/ButtonsView'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioAddressSettingsParams {
@@ -178,10 +178,10 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
-            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-            {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
-          </CardUi4>
+          <EdgeCard sections>
+            <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {bundledTxs != null ? <EdgeRow title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+          </EdgeCard>
           {showAddBundledTxs && (
             <FioActionSubmit
               onSubmit={this.onAddBundledTxsSubmit}
@@ -205,7 +205,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
             />
           )}
           {!showAddBundledTxs && !showTransfer && (
-            <ButtonsViewUi4
+            <ButtonsView
               secondary={{
                 label: lstrings.title_fio_add_bundled_txs,
                 onPress: this.onAddBundledTxsPress

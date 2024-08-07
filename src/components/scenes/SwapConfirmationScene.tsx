@@ -25,14 +25,16 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { EdgeModal } from '../modals/EdgeModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
+import { SwapProviderRow } from '../rows/SwapProviderRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
@@ -41,8 +43,6 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
@@ -198,10 +198,9 @@ export const SwapConfirmationScene = (props: Props) => {
         })
       )
     } catch (error: any) {
-      console.log(error)
       dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
       setTimeout(() => {
-        showError(`${lstrings.exchange_failed}. ${error.message}`)
+        showError(error)
       }, 1)
     }
     setPending(false)
@@ -236,7 +235,7 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const handlePoweredByTap = useHandler(async () => {
     await Airship.show(bridge => (
-      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve()}>
+      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve()}>
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
@@ -248,7 +247,7 @@ export const SwapConfirmationScene = (props: Props) => {
           renderSectionHeader={renderSectionHeader}
           sections={sectionList}
         />
-      </ModalUi4>
+      </EdgeModal>
     ))
   })
 

@@ -24,6 +24,12 @@ import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor, removeIsoPrefix } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
+import { EdgeCard } from '../cards/EdgeCard'
+import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
+import { SwapDetailsCard } from '../cards/SwapDetailsCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -31,17 +37,11 @@ import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
+import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
-import { AccentColors } from '../ui4/DotsBackground'
-import { FiatExchangeDetailsCard } from '../ui4/FiatExchangeDetailsCard'
-import { RowUi4 } from '../ui4/RowUi4'
-import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
-import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -327,8 +327,8 @@ const TransactionDetailsComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-        <CardUi4>
-          <RowUi4
+        <EdgeCard>
+          <EdgeRow
             rightButtonType="editable"
             icon={
               thumbnailPath ? (
@@ -341,20 +341,20 @@ const TransactionDetailsComponent = (props: Props) => {
             onPress={openPersonInput}
           >
             <EdgeText>{personName}</EdgeText>
-          </RowUi4>
-        </CardUi4>
+          </EdgeRow>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-        <CardUi4 sections>
+        <EdgeCard sections>
           <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-          <RowUi4 rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)} onPress={handleEdit}>
+          <EdgeRow rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)} onPress={handleEdit}>
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{originalFiatText}</EdgeText>
             </View>
-          </RowUi4>
-          <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
+          </EdgeRow>
+          <EdgeRow rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{currentFiatText}</EdgeText>
@@ -362,29 +362,29 @@ const TransactionDetailsComponent = (props: Props) => {
                 <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
               )}
             </View>
-          </RowUi4>
-          <RowUi4 title={lstrings.fio_date_label} body={dateString} />
-          {walletName != null ? <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} /> : null}
+          </EdgeRow>
+          <EdgeRow title={lstrings.fio_date_label} body={dateString} />
+          {walletName != null ? <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} /> : null}
 
           {acceleratedTx == null ? null : (
-            <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
+            <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
           )}
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-        <CardUi4 sections>
-          <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
-          <RowUi4
+        <EdgeCard sections>
+          <EdgeRow rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
+          <EdgeRow
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
             body={localMetadata.notes == null || localMetadata.notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : localMetadata.notes}
             onPress={openNotesInput}
           />
           {transaction.memos?.map((memo, i) =>
-            memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
+            memo.hidden === true ? null : <EdgeRow body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
           )}
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
@@ -398,19 +398,19 @@ const TransactionDetailsComponent = (props: Props) => {
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
-        <CardUi4 sections>
-          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+        <EdgeCard sections>
+          <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
           {recipientsAddresses === '' ? null : (
-            <RowUi4 maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+            <EdgeRow maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
           )}
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
-        <ButtonsViewUi4
+        <ButtonsView
           layout="column"
           primary={{
             onPress: navigation.pop,

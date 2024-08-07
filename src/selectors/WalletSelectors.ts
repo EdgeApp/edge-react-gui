@@ -58,24 +58,3 @@ export const calculateFiatBalance = (
   const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return fiatValue
 }
-
-export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-
-  if (fioWallets && fioWallets.length) {
-    for (const wallet of fioWallets) {
-      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
-      if (fioAddresses.length > 0) {
-        for (const address of fioAddresses) {
-          if (address.toLowerCase() === fioAddress.toLowerCase()) {
-            return wallet
-          }
-        }
-      }
-    }
-
-    return null
-  } else {
-    return null
-  }
-}

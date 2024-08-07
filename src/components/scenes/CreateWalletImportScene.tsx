@@ -11,15 +11,15 @@ import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { SceneButtons } from '../common/SceneButtons'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { EdgeMargins } from '../layout/EdgeMargins'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
-import { MarginsUi4 } from '../ui4/MarginsUi4'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
@@ -146,7 +146,7 @@ const CreateWalletImportComponent = (props: Props) => {
         <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
       </View>
       {/* HACK: SceneWrapper's padding prop doesn't work for non-function children */}
-      <MarginsUi4>
+      <EdgeMargins>
         <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
         <FilledTextInput
           aroundRem={0.5}
@@ -163,7 +163,7 @@ const CreateWalletImportComponent = (props: Props) => {
           ref={textInputRef}
         />
         <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
-      </MarginsUi4>
+      </EdgeMargins>
     </SceneWrapper>
   )
 }

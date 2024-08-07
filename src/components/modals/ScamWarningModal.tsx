@@ -7,9 +7,9 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { Airship } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
 import { ConfirmContinueModal } from './ConfirmContinueModal'
+import { EdgeModal } from './EdgeModal'
 
 /**
  * Warn the user about potential scams from sending, viewing private keys,
@@ -34,7 +34,7 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
 
   const handleNoPress = useHandler(async () => {
     await Airship.show(bridge2 => (
-      <ModalUi4
+      <EdgeModal
         bridge={bridge2}
         title={lstrings.warning_scam_title}
         onCancel={() => {
@@ -43,7 +43,7 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
         }}
       >
         <Paragraph>{sprintf(lstrings.warning_scam_message_no_1s, config.supportEmail)}</Paragraph>
-      </ModalUi4>
+      </EdgeModal>
     ))
 
     return await Promise.resolve(true)

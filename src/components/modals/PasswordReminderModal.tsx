@@ -3,14 +3,15 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
-import { ModalButtons } from '../common/ModalButtons'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { showError, showToast } from '../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { ThemeProps, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
@@ -22,9 +23,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  onSuccess: () => void
-  onPostpone: () => void
-  onRequestChangePassword: () => void
+  dispatch: Dispatch
 }
 
 interface State {
@@ -43,7 +42,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
   handleCancel = () => {
     if (!this.state.checkingPassword) {
-      this.props.onPostpone()
+      this.props.dispatch({ type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED' })
       this.props.bridge.resolve()
     }
   }
@@ -51,7 +50,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   handleRequestChangePassword = () => {
     if (!this.state.checkingPassword) {
       this.props.bridge.resolve()
-      this.props.onRequestChangePassword()
+      this.props.dispatch({ type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD' })
       setTimeout(() => this.props.navigation.navigate('changePassword', {}), 10)
     }
   }
@@ -62,7 +61,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
     const isValidPassword = await account.checkPassword(password).catch(err => showError(err))
     if (isValidPassword) {
-      this.props.onSuccess()
+      this.props.dispatch({ type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS' })
       this.setState({ checkingPassword: false })
       showToast(lstrings.password_reminder_great_job)
       setTimeout(() => bridge.resolve(), 10)
@@ -78,7 +77,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
+      <EdgeModal bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
         <Paragraph>{lstrings.password_reminder_modal_body}</Paragraph>
         <ModalFilledTextInput
           autoFocus={false}
@@ -93,30 +92,16 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
         />
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }
 
-export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    account: state.core.account
-  }),
-  dispatch => ({
-    onSuccess() {
-      dispatch({
-        type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
-      })
-    },
-    onRequestChangePassword() {
-      dispatch({
-        type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
-      })
-    },
-    onPostpone() {
-      dispatch({
-        type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
-      })
-    }
-  })
-)(withTheme(PasswordReminderModalComponent))
+export function PasswordReminderModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+  const dispatch = useDispatch()
+
+  const account = useSelector(state => state.core.account)
+
+  return <PasswordReminderModalComponent {...props} account={account} dispatch={dispatch} theme={theme} />
+}

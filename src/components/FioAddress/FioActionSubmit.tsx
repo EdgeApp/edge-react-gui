@@ -5,18 +5,18 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
 import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Slider } from '../themed/Slider'
-import { CardUi4 } from '../ui4/CardUi4'
-import { RowUi4 } from '../ui4/RowUi4'
 
 type ActionResult =
   | {
@@ -191,17 +191,17 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? lstrings.fio_address_confirm_screen_fio_label : ''}`
     return (
-      <CardUi4 sections>
-        <RowUi4
+      <EdgeCard sections>
+        <EdgeRow
           title={lstrings.fio_action_fee_label}
           body={displayFee ? `${displayFee} ${lstrings.fio_address_confirm_screen_fio_label}` : lstrings.fio_address_confirm_screen_free_label}
         />
         {displayFee ? (
-          <RowUi4 title={lstrings.fio_address_confirm_screen_balance_label}>
+          <EdgeRow title={lstrings.fio_address_confirm_screen_balance_label}>
             <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
         ) : null}
-      </CardUi4>
+      </EdgeCard>
     )
   }
 
@@ -215,14 +215,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {showPaymentWalletPicker && fioWallets.length > 1 ? (
-          <CardUi4>
-            <RowUi4
+          <EdgeCard>
+            <EdgeRow
               rightButtonType="editable"
               title={lstrings.select_wallet}
               onPress={this.handleWalletPress}
               body={paymentWallet ? getWalletName(paymentWallet) : ''}
             />
-          </CardUi4>
+          </EdgeCard>
         ) : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
@@ -272,11 +272,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    denominationMultiplier: selectDisplayDenom(state, ownProps.fioWallet.currencyConfig, null).multiplier,
-    currencyWallets: state.core.account.currencyWallets,
-    fioWallets: state.ui.wallets.fioWallets
-  }),
-  dispatch => ({})
-)(withTheme(FioActionSubmitComponent))
+export function FioActionSubmit(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const denominationMultiplier = useSelector(state => selectDisplayDenom(state, props.fioWallet.currencyConfig, null).multiplier)
+  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+
+  return (
+    <FioActionSubmitComponent
+      {...props}
+      currencyWallets={currencyWallets}
+      denominationMultiplier={denominationMultiplier}
+      fioWallets={fioWallets}
+      theme={theme}
+    />
+  )
+}

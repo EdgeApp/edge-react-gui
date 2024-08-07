@@ -23,6 +23,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -33,7 +34,6 @@ import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
-import { AccentColors } from '../ui4/DotsBackground'
 
 export interface TransactionListParams {
   walletId: string

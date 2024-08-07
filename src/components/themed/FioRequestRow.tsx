@@ -14,11 +14,11 @@ import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddressUtils'
 import { removeIsoPrefix } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
@@ -116,7 +116,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         rightThreshold={theme.rem(7.5)}
         onRightSwipe={this.onSwipe}
       >
-        <CardUi4 onPress={this.onPress} icon={<FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />}>
+        <EdgeCard onPress={this.onPress} icon={<FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />}>
           <View style={styles.requestRight}>
             <View style={styles.requestDetailsRow}>
               <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
@@ -130,7 +130,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
             </View>
             <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
           </View>
-        </CardUi4>
+        </EdgeCard>
       </SwipeableRow>
     )
   }

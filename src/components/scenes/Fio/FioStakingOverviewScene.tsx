@@ -18,13 +18,13 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
+import { ButtonsView } from '../../buttons/ButtonsView'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
 
@@ -103,9 +103,9 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     locks.map(item => {
       const amount = `${item.amount} ${currencyCode}`
       return (
-        <RowUi4 key={item.id} title={item.title}>
+        <EdgeRow key={item.id} title={item.title}>
           <EdgeText>{amount}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     })
 
@@ -121,19 +121,19 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
         <View style={styles.container}>
           <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
 
-          <CardUi4>
-            <RowUi4 title="Currently Staked">
+          <EdgeCard>
+            <EdgeRow title="Currently Staked">
               <EdgeText>
                 {staked}
                 <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
               </EdgeText>
-            </RowUi4>
-          </CardUi4>
-          <CardUi4 sections>{renderItems()}</CardUi4>
+            </EdgeRow>
+          </EdgeCard>
+          <EdgeCard sections>{renderItems()}</EdgeCard>
         </View>
       </SceneWrapper>
 
-      <ButtonsViewUi4
+      <ButtonsView
         parentType="scene"
         primary={{ label: lstrings.staking_stake_funds_button, onPress: handlePressStake }}
         tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}

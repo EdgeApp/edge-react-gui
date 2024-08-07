@@ -4,6 +4,7 @@ import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
   // edge-currency-accountbased:
+  amoy: ENV.AMOY_INIT,
   arbitrum: ENV.ARBITRUM_INIT,
   algorand: true,
   avalanche: ENV.AVALANCHE_INIT,
@@ -26,10 +27,8 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   filecoinfevm: true,
   filecoinfevmcalibration: true,
   fio: ENV.FIO_INIT,
-  goerli: ENV.GOERLI_INIT,
   hedera: true,
-  kovan: ENV.KOVAN_INIT,
-  mumbai: ENV.MUMBAI_INIT,
+  holesky: ENV.HOLESKY_INIT,
   liberland: true,
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,
@@ -40,6 +39,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   pulsechain: ENV.PULSECHAIN_INIT,
   ripple: true,
   rsk: true,
+  sepolia: ENV.SEPOLIA_INIT,
   solana: ENV.SOLANA_INIT,
   stellar: true,
   telos: true,
@@ -93,6 +93,7 @@ export const swapPlugins = {
   tombSwap: ENV.TOMB_SWAP_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
+  '0xgasless': ENV['0XGASLESS_INIT'],
 
   cosmosibc: true,
   transfer: true

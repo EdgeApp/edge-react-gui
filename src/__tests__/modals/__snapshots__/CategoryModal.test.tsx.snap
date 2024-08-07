@@ -621,7 +621,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": 1,
               }
             }
-            secureTextEntry={false}
             selectionColor="#FFFFFF"
             style={
               [
@@ -2009,7 +2008,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "value": 1,
               }
             }
-            secureTextEntry={false}
             selectionColor="#FFFFFF"
             style={
               [

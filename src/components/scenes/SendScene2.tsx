@@ -13,7 +13,7 @@ import {
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
+import { ActivityIndicator, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -42,6 +42,9 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXI
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
+import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -50,6 +53,7 @@ import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../mod
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -61,10 +65,6 @@ import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
-import { CardUi4 } from '../ui4/CardUi4'
-import { AccentColors } from '../ui4/DotsBackground'
-import { RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Check contentPadding
 
@@ -419,7 +419,7 @@ const SendComponent = (props: Props) => {
     const name = coreWallet == null ? '' : getWalletName(coreWallet)
 
     return (
-      <RowUi4
+      <EdgeRow
         rightButtonType={lockTilesMap.wallet ? 'none' : 'editable'}
         title={lstrings.send_scene_send_from_wallet}
         onPress={lockTilesMap.wallet ? undefined : handleWalletPress}
@@ -443,7 +443,7 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <RowUi4 rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
+      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
     } else {
       return null
     }
@@ -494,9 +494,9 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <RowUi4
+        <EdgeRow
           rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'}
-          title={`${lstrings.string_fee}:`}
+          title={`${lstrings.wc_smartcontract_network_fee}:`}
           onPress={noChangeMiningFee ? undefined : handleFeesChange}
         >
           {processingAmountChanged ? (
@@ -522,7 +522,7 @@ const SendComponent = (props: Props) => {
               {feeSyntax}
             </EdgeText>
           )}
-        </RowUi4>
+        </EdgeRow>
       )
     }
 
@@ -533,9 +533,9 @@ const SendComponent = (props: Props) => {
     const notes = edgeTransaction?.metadata?.notes
     if (notes != null) {
       return (
-        <RowUi4 title={lstrings.send_scene_metadata_name_title}>
+        <EdgeRow title={lstrings.send_scene_metadata_name_title}>
           <EdgeText>{notes}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     }
   }
@@ -629,9 +629,9 @@ const SendComponent = (props: Props) => {
       }
 
       return (
-        <RowUi4 rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
+        <EdgeRow rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
           <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     }
 
@@ -651,7 +651,7 @@ const SendComponent = (props: Props) => {
 
   const renderInfoTiles = () => {
     if (!infoTiles || !infoTiles.length) return null
-    return infoTiles.map(({ label, value }) => <RowUi4 key={label} title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => <EdgeRow key={label} title={label} body={value} />)
   }
 
   const renderAuthentication = () => {
@@ -660,7 +660,7 @@ const SendComponent = (props: Props) => {
 
     const pinLength = pinValue?.length ?? 0
     return (
-      <RowUi4 rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
+      <EdgeRow rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
@@ -676,7 +676,7 @@ const SendComponent = (props: Props) => {
           value={pinValue}
           secureTextEntry
         />
-      </RowUi4>
+      </EdgeRow>
     )
   }
 
@@ -859,13 +859,16 @@ const SendComponent = (props: Props) => {
         })
       }
       if (!dismissAlert) {
-        Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
-          {
-            onPress() {},
-            style: 'default',
-            text: lstrings.string_ok
-          }
-        ])
+        Airship.show<'ok' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.transaction_success}
+            message={lstrings.transaction_success_message}
+            buttons={{
+              ok: { label: lstrings.string_ok }
+            }}
+          />
+        )).catch(() => {})
       }
     } catch (e: any) {
       resetSlider()
@@ -900,13 +903,16 @@ const SendComponent = (props: Props) => {
         message = lstrings.transaction_failure_504_message
       }
 
-      Alert.alert(lstrings.transaction_failure, message, [
-        {
-          onPress() {},
-          style: 'default',
-          text: lstrings.string_ok
-        }
-      ])
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.transaction_failure}
+          message={message}
+          buttons={{
+            ok: { label: lstrings.string_ok }
+          }}
+        />
+      )).catch(() => {})
     }
   })
 
@@ -1064,25 +1070,25 @@ const SendComponent = (props: Props) => {
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <CardUi4>{renderSelectedWallet()}</CardUi4>
+              <EdgeCard>{renderSelectedWallet()}</EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-              <CardUi4 sections>
+              <EdgeCard sections>
                 {renderAddressAmountPairs()}
                 {renderAddAddress()}
                 {renderTimeout()}
                 {renderError()}
-              </CardUi4>
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <CardUi4 sections>
+              <EdgeCard sections>
                 {renderFees()}
                 {renderMetadataNotes()}
                 {renderSelectFioAddress()}
                 {renderUniqueIdentifier()}
                 {renderInfoTiles()}
                 {renderAuthentication()}
-              </CardUi4>
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>{renderScamWarning()}</EdgeAnim>
           </StyledKeyboardAwareScrollView>

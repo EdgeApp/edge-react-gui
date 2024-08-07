@@ -546,7 +546,8 @@ export const bityProvider: FiatProviderFactory = {
                           homeAddress,
                           clientId
                         )
-                      }
+                      },
+                      onClose: () => {}
                     })
                   }
                 } catch (e) {
@@ -568,7 +569,8 @@ export const bityProvider: FiatProviderFactory = {
                 }
 
                 showUi.exitScene()
-              }
+              },
+              onClose: () => {}
             })
           },
           closeQuote: async (): Promise<void> => {}

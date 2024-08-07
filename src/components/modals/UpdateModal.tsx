@@ -10,7 +10,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -32,7 +32,7 @@ export function UpdateModal(props: Props) {
   const message = sprintf(lstrings.update_fresh_new_version, config.appName)
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
@@ -45,7 +45,7 @@ export function UpdateModal(props: Props) {
       <Paragraph>{message}</Paragraph>
       <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={lstrings.update_later} marginRem={[0.5, 0, 1]} type="secondary" onPress={onSkip} />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

@@ -42,7 +42,6 @@ const NotificationViewComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
-  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
   const wallets = useWatch(account, 'currencyWallets')
   const otpKey = useWatch(account, 'otpKey')
@@ -54,7 +53,7 @@ const NotificationViewComponent = (props: Props) => {
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
   const accountNotifDismissInfo = getLocalAccountSettings().accountNotifDismissInfo
 
-  const isBackupWarningNotifShown = account.id != null && account.username == null
+  const isLightAccount = account.id != null && account.username == null
 
   const handleBackupPress = useHandler(async () => {
     await showBackupModal({ navigation: navigationDebounced })
@@ -144,11 +143,11 @@ const NotificationViewComponent = (props: Props) => {
       footerOpenRatio={footerOpenRatio}
       onLayout={handleLayout}
     >
-      <EdgeAnim visible={isBackupWarningNotifShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={isLightAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
-          title={lstrings.backup_title}
-          message={fioAddresses.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_info_message}
+          title={lstrings.guest_account}
+          message={lstrings.tap_to_create_username_password}
           persistent
           onPress={handleBackupPress}
         />
@@ -167,7 +166,11 @@ const NotificationViewComponent = (props: Props) => {
           onPress={handlePasswordReminderPress}
         />
       </EdgeAnim>
-      <EdgeAnim visible={otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!isLightAccount && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}

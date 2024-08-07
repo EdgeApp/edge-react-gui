@@ -7,12 +7,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDefaultScreen, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
 import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
+  showReEnableOtpModal,
   showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
@@ -28,11 +29,13 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { DefaultScreen } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
 import { removeIsoPrefix } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
+import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -42,9 +45,6 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
-import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'settingsOverview'> {}
 
@@ -71,7 +71,6 @@ export const SettingsScene = (props: Props) => {
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(theme === config.darkTheme)
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
-  const [defaultScreen, setDefaultScreen] = useState<DefaultScreen>(getDeviceSettings().defaultScreen)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
   const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
   const [touchIdText, setTouchIdText] = React.useState(lstrings.settings_button_use_touchID)
@@ -87,7 +86,6 @@ export const SettingsScene = (props: Props) => {
     days: lstrings.settings_days
   }
   const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
-  const defaultScreenRightText = defaultScreen === 'home' ? lstrings.settings_default_screen_home : lstrings.settings_default_screen_assets
 
   const handleUpgrade = useHandler(() => {
     showBackupModal({ navigation })
@@ -138,12 +136,6 @@ export const SettingsScene = (props: Props) => {
     navigation.navigate('defaultFiatSetting', {})
   })
 
-  const handleSetDefaultScreen = useHandler(async () => {
-    const newDefaultScreen = defaultScreen === 'home' ? 'assets' : 'home'
-    setDefaultScreen(newDefaultScreen)
-    await writeDefaultScreen(newDefaultScreen)
-  })
-
   const handleShowRestoreWalletsModal = useHandler(async () => {
     await dispatch(showRestoreWalletsModal(navigation))
   })
@@ -160,10 +152,6 @@ export const SettingsScene = (props: Props) => {
 
   const handleToggleSpamFilter = useHandler(() => {
     dispatch(setSpamFilterOn(!spamFilterOn))
-  })
-
-  const handleLogoutRequest = useHandler(async () => {
-    await dispatch(logoutRequest(navigation))
   })
 
   const handleChangePassword = useHandler((): void => {
@@ -213,7 +201,7 @@ export const SettingsScene = (props: Props) => {
         onSubmit={async text => {
           if (text !== username) return lstrings.delete_account_verification_error
           await account.deleteRemoteAccount()
-          await handleLogoutRequest()
+          await dispatch(logoutRequest(navigation))
           await context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
           return true
@@ -302,6 +290,15 @@ export const SettingsScene = (props: Props) => {
     }
   }, [context, supportsTouchId])
 
+  // Show a modal if we have a pending OTP resent when we enter the scene:
+  React.useEffect(() => {
+    return navigation.addListener('focus', () => {
+      if (account.otpResetDate != null) {
+        showReEnableOtpModal(account).catch(error => showError(error))
+      }
+    })
+  }, [account, navigation])
+
   return (
     <SceneWrapper scroll>
       <SectionView extendRight marginRem={0.5}>
@@ -311,11 +308,11 @@ export const SettingsScene = (props: Props) => {
             label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
           />
           {isLightAccount ? (
-            <CardUi4>
+            <EdgeCard>
               <SettingsTappableRow label={lstrings.backup_account} onPress={handleUpgrade} />
-            </CardUi4>
+            </EdgeCard>
           ) : (
-            <CardUi4 sections>
+            <EdgeCard sections>
               <SettingsTappableRow
                 action={isLocked ? 'lock' : 'unlock'}
                 label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
@@ -326,17 +323,16 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
               <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
-            </CardUi4>
+            </EdgeCard>
           )}
         </>
         <>
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
-          <CardUi4 sections>
+          <EdgeCard sections>
             {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
             <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
             <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
             <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
-            <SettingsLabelRow right={defaultScreenRightText} label={lstrings.settings_default_screen_title} onPress={handleSetDefaultScreen} />
 
             {isLightAccount ? null : (
               <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={pinLoginEnabled} onPress={handleTogglePinLoginEnabled} />
@@ -368,10 +364,10 @@ export const SettingsScene = (props: Props) => {
               value={defaultLogLevel === 'info'}
               onPress={handleToggleVerboseLogging}
             />
-          </CardUi4>
+          </EdgeCard>
         </>
         {ENV.ALLOW_DEVELOPER_MODE && (
-          <CardUi4 sections>
+          <EdgeCard sections>
             <SettingsSwitchRow key="developerMode" label={lstrings.settings_developer_mode} value={developerModeOn} onPress={handleToggleDeveloperMode} />
 
             {developerModeOn && [
@@ -383,10 +379,10 @@ export const SettingsScene = (props: Props) => {
                 onPress={handleToggleForceLightAccountCreate}
               />
             ]}
-          </CardUi4>
+          </EdgeCard>
         )}
       </SectionView>
-      <ButtonsViewUi4
+      <ButtonsView
         layout="column"
         primary={{
           onPress: handleSendLogs,

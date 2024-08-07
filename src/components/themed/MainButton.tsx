@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { ButtonUi4 } from '../ui4/ButtonUi4'
+import { EdgeButton } from '../buttons/EdgeButton'
 
 export type MainButtonType = 'primary' | 'secondary' | 'escape'
 
@@ -41,7 +41,7 @@ export function MainButton(props: Props) {
   const { children, disabled = false, label, marginRem, onPress, type = 'primary', layout, spinner = false } = props
 
   return (
-    <ButtonUi4
+    <EdgeButton
       disabled={disabled}
       label={label}
       marginRem={marginRem}
@@ -51,6 +51,6 @@ export function MainButton(props: Props) {
       layout={layout}
     >
       {children}
-    </ButtonUi4>
+    </EdgeButton>
   )
 }

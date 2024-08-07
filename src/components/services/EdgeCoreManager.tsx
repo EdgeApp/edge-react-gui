@@ -6,7 +6,6 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
 import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
 import * as React from 'react'
-import { Alert } from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 
@@ -14,11 +13,13 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
+import { lstrings } from '../../locales/strings'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { isMaestro } from '../../util/maestro'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { showError } from './AirshipInstance'
+import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
 const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
@@ -118,7 +119,9 @@ export function EdgeCoreManager(props: Props) {
   const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
-    Alert.alert('Edge core failed to load', String(error))
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} title="Edge core failed to load" message={String(error)} />
+    )).catch(() => {})
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {

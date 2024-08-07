@@ -150,6 +150,9 @@ export const executePlugin = async (params: {
           onSubmit: async (homeAddress: HomeAddress) => {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
+          },
+          onClose: async () => {
+            resolve(undefined)
           }
         })
       })
@@ -181,6 +184,9 @@ export const executePlugin = async (params: {
           onSubmit: async (sepaInfo: SepaInfo) => {
             if (onSubmit != null) await onSubmit(sepaInfo)
             resolve(sepaInfo)
+          },
+          onClose: () => {
+            resolve(undefined)
           }
         })
       })

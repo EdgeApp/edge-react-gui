@@ -7,9 +7,9 @@ import { useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertCurrencyFromExchangeRates, DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   title: string
@@ -53,18 +53,23 @@ export const EditableAmountTile = (props: Props) => {
   if (compressed) {
     return (
       <EdgeAnim key={key} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-        <RowUi4 rightButtonType={lockInputs ? 'none' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+        <EdgeRow
+          rightButtonType={lockInputs ? 'none' : 'delete'}
+          title={title}
+          body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`}
+          onPress={onPress}
+        />
       </EdgeAnim>
     )
   } else {
     return (
       <EdgeAnim key={key} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-        <RowUi4 rightButtonType={lockInputs ? 'none' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
+        <EdgeRow rightButtonType={lockInputs ? 'none' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
           <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
             {cryptoAmountSyntax}
           </EdgeText>
           {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-        </RowUi4>
+        </EdgeRow>
       </EdgeAnim>
     )
   }
