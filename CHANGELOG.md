@@ -14,6 +14,7 @@
 - changed: Query supported countries and US states for fiat plugins
 - fixed: Disable max spend for zkSync
 - fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
+- fixed: If handling a deep link requires a signed-in account, correctly save it for later.
 
 ## 4.10.0 (2024-08-07)
 

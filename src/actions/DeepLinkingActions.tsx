@@ -39,38 +39,7 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
 export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    dispatch({ type: 'DEEP_LINK_HANDLED' })
-
-    const handled = await handleLink(navigation, dispatch, state, link)
-    // If we couldn't handle the link, save it for later:
-    if (!handled) {
-      dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
-    }
-  }
-}
-
-/**
- * The deep linking manager calls this as the wallet list changes.
- * Maybe we were in the wrong state before, but now we are able
- * to launch the link.
- */
-export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { pendingDeepLink } = state
-    if (pendingDeepLink == null) return
-    // Clear the link as we try to handle
-    dispatch({ type: 'DEEP_LINK_HANDLED' })
-
-    const handled = handleLink(navigation, dispatch, state, pendingDeepLink).catch(err => {
-      console.warn(err)
-      return false
-    })
-
-    // If we didn't handled the link, put it back
-    if (!handled) {
-      dispatch({ type: 'DEEP_LINK_RECEIVED', data: pendingDeepLink })
-    }
+    await handleLink(navigation, dispatch, state, link)
   }
 }
 
@@ -79,22 +48,18 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
  * @returns true if the link is handled,
  * or false if the app is in the wrong state to handle this link.
  */
-async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
+async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<void> {
   const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
-  const { activeWalletIds, currencyWallets, currencyWalletErrors } = account
+  const { currencyWallets } = account
   const deviceId = base58ToUuid(context.clientId)
-
-  // Wait for all wallets to load before handling deep links
-  const allWalletsLoaded = activeWalletIds.every(walletId => currencyWallets[walletId] != null || currencyWalletErrors[walletId] != null)
 
   switch (link.type) {
     case 'edgeLogin':
-      if (!state.ui.settings.settingsLoaded) return false
       navigation.push('edgeLogin', {
         lobbyId: link.lobbyId
       })
-      return true
+      break
 
     case 'passwordRecovery':
       await dispatch(
@@ -102,21 +67,20 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
           passwordRecoveryKey: link.passwordRecoveryKey
         })
       )
-      return true
+      break
 
     case 'plugin': {
-      if (!state.ui.settings.settingsLoaded) return false
       const { pluginId, path, query } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.pluginId == null || plugin?.pluginId === 'custom') {
         showError(`No plugin named "${pluginId}" exists`)
-        return true
+        break
       }
 
       // Check the disabled status:
       if (state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true || state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true) {
         showError(`Plugin "${pluginId}" is disabled`)
-        return true
+        break
       }
 
       navigation.push('pluginView', {
@@ -124,23 +88,22 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         deepPath: path,
         deepQuery: query
       })
-      return true
+      break
     }
 
     case 'fiatPlugin': {
-      if (!state.ui.settings.settingsLoaded) return false
       const { direction = 'buy', paymentType = 'credit', pluginId, providerId } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.nativePlugin == null) {
         showError(new Error(`No fiat plugin named "${pluginId}" exists`))
-        return true
+        break
       }
 
       // Check the disabled status:
       const disableProviders = state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
       if (disableProviders === true) {
         showError(`Plugin "${pluginId}" is disabled`)
-        return true
+        break
       }
 
       await executePlugin({
@@ -157,40 +120,33 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         navigation,
         onLogEvent: (event, values) => dispatch(logEvent(event, values))
       })
-      return true
+      break
     }
 
     case 'promotion':
-      if (!state.ui.settings.settingsLoaded) return false
-      if (!state.account.accountReferralLoaded) return false
       await dispatch(activatePromotion(link.installerId ?? ''))
-      return true
+      break
 
     case 'requestAddress':
-      if (!state.ui.settings.settingsLoaded) return false
-      if (!allWalletsLoaded) return false
       await doRequestAddress(navigation, state.core.account, dispatch, link)
-      return true
+      break
 
     case 'swap':
-      if (!state.ui.settings.settingsLoaded) return false
       navigation.navigate('swapTab', { screen: 'swapCreate' })
-      return true
+      break
 
     case 'azteco': {
-      if (!state.ui.settings.settingsLoaded) return false
-      if (!allWalletsLoaded) return false
       const result = await pickWallet({
         account,
         assets: [{ pluginId: 'bitcoin', tokenId: null }],
         navigation,
         showCreateWallet: true
       })
-      if (result?.type !== 'wallet') return true
+      if (result?.type !== 'wallet') break
       const wallet = currencyWallets[result.walletId]
-      if (wallet == null) return true
+      if (wallet == null) break
 
-      if (checkAndShowLightBackupModal(account, navigation)) return true
+      if (checkAndShowLightBackupModal(account, navigation)) break
 
       const address = await wallet.getReceiveAddress({ tokenId: null })
       const response = await fetch(`${link.uri}${address.publicAddress}`)
@@ -202,25 +158,20 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         showError(lstrings.azteco_service_unavailable)
       }
       navigation.navigate('homeTab', { screen: 'home' })
-      return true
+      break
     }
 
     case 'walletConnect':
-      if (!state.ui.settings.settingsLoaded) return false
-      if (!allWalletsLoaded) return false
       navigation.push('wcConnections', {
         uri: link.uri
       })
-      return true
+      break
 
     case 'paymentProto':
-      if (!state.ui.settings.settingsLoaded) return false
-      if (!allWalletsLoaded) return false
       await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
-      return true
+      break
 
     case 'price-change': {
-      if (!state.ui.settings.settingsLoaded) return false
       const { pluginId, body } = link
       const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
@@ -245,11 +196,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         navigation.navigate('swapTab', { screen: 'swapCreate' })
       }
 
-      return true
+      break
     }
 
     case 'other': {
-      if (!state.ui.settings.settingsLoaded) return false
       const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
       const assets: EdgeAsset[] = []
 
@@ -274,16 +224,14 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       const createWalletAsset = CREATE_WALLET_ASSETS[linkCurrency]
 
       if (matchingWalletIdsAndUris.length === 0 && createWalletAsset == null) {
-        if (!allWalletsLoaded) return false
-
         showToast(lstrings.alert_deep_link_no_wallet_for_uri)
-        return true
+        break
       }
 
       if (matchingWalletIdsAndUris.length === 1) {
         const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
         await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
-        return true
+        break
       }
 
       if (createWalletAsset != null) {
@@ -296,15 +244,15 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         navigation,
         showCreateWallet: true
       })
-      if (result?.type !== 'wallet') return true
+      if (result?.type !== 'wallet') break
       const wallet = currencyWallets[result.walletId]
-      if (wallet == null) return true
+      if (wallet == null) break
 
       // Re-parse the uri with the final chosen wallet
       // just in case this was a URI for a wallet we didn't have:
       const finalParsedUri = await wallet.parseUri(link.uri)
       await dispatch(handleWalletUris(navigation, wallet, finalParsedUri))
-      return true
+      break
     }
 
     case 'scene': {
@@ -313,7 +261,7 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       } catch (e) {
         showError(`Deep link failed. Unable to navigate to: '${link.sceneName}'`)
       }
-      return true
+      break
     }
 
     case 'modal': {
@@ -324,11 +272,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         default:
           showError(`Unknown modal: '${link.modalName}'`)
       }
-      return true
+      break
     }
 
-    case 'noop': {
-      return true
-    }
+    default:
+      break
   }
 }
