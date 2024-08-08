@@ -5,12 +5,12 @@ import * as React from 'react'
 import { Linking } from 'react-native'
 
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions'
-import { pushMessagePayloadToEdgeUri } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { parsePushMessage } from '../../util/PushMessageParser'
 import { showError } from './AirshipInstance'
 
 interface Props {
@@ -61,12 +61,10 @@ export function DeepLinkingManager(props: Props) {
 
   const handlePushMessage = async (message: FirebaseMessagingTypes.RemoteMessage) => {
     try {
-      const url = pushMessagePayloadToEdgeUri(message)
-      if (url == null) {
-        // Unhandled push message ie. security alerts
-        return
+      const link = parsePushMessage(message)
+      if (link != null) {
+        await dispatch(launchDeepLink(navigation, link))
       }
-      await handleUrl(url)
     } catch (error) {
       showError(error)
     }
