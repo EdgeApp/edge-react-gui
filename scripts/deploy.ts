@@ -34,6 +34,9 @@ interface BuildConfigFile {
   bundleId: string
 
   // Upload options:
+  zealotUrl?: string
+  zealotApiToken?: string
+  zealotChannelKey?: string
   appCenterApiToken: string
   appCenterAppName: string
   appCenterDistroGroup: string
@@ -392,7 +395,7 @@ function buildAndroid(buildObj: BuildObj) {
 }
 
 function buildCommonPost(buildObj: BuildObj) {
-  const { maestroBuild } = buildObj
+  const { maestroBuild, zealotApiToken, zealotChannelKey, zealotUrl } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -429,6 +432,14 @@ function buildCommonPost(buildObj: BuildObj) {
       } -g ${buildObj.appCenterDistroGroup} -r ${JSON.stringify(notes)}`
     )
     mylog('\n*** Upload to App Center Complete ***')
+  }
+
+  if (zealotApiToken != null && zealotUrl != null && zealotChannelKey != null && !maestroBuild) {
+    mylog(`\n\nUploading to Zealot: ${zealotUrl}`)
+    mylog('***********************************************************************\n')
+
+    call(`curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${zealotChannelKey}" -F "file=@${buildObj.ipaFile}"`)
+    mylog('\n*** Upload to Zealot Complete ***')
   }
 
   if (buildObj.rsyncLocation != null) {
