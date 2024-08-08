@@ -556,8 +556,8 @@ export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<F
   let obtDataRecords: FioObtRecord[] = []
   for (const fioWallet of fioWallets) {
     try {
-      const { obt_data_records: lastRecords } = await fioWallet.otherMethods.getObtData()
-      obtDataRecords = [...obtDataRecords, ...lastRecords]
+      const lastRecords = await fioWallet.otherMethods.getObtData()
+      obtDataRecords = [...obtDataRecords, ...(lastRecords ?? [])]
     } catch (e: any) {
       //
     }
