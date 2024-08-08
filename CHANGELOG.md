@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.11.0
+
 - added: Kado buy via wire transfer
 - added: Allow for Maestro specific iOS and Android builds
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
@@ -10,7 +12,7 @@
 - changed: Query supported countries and US states for fiat plugins
 - fixed: Disable max spend for zkSync
 
-## 4.10.0
+## 4.10.0 (2024-08-07)
 
 - added: Network names to wallet list cards
 - added: 0x Gasless Swap exchange plugin
