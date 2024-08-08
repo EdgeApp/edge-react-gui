@@ -3,6 +3,9 @@
 ## Unreleased
 
 - added: App distribution via Zealot
+- added: Add disableSurveyModal option
+- changed: Disable Home scene swap and FIO cards if configured
+- changed: Allow some chains to be disabled in env.json
 - fixed: FIO OBT data not showing in received transaction memos
 
 ## 4.11.0
