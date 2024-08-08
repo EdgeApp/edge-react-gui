@@ -51,7 +51,6 @@ exports[`initialState 1`] = `
     "ignorePriceChanges": false,
     "plugins": {},
   },
-  "pendingDeepLink": null,
   "permissions": {
     "camera": "denied",
     "contacts": "denied",

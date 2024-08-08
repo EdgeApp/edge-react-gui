@@ -20,6 +20,7 @@
 - fixed: Disable max spend for zkSync
 - fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
+- fixed: If handling a deep link requires a signed-in account, correctly save it for later.
 - fixed: Return underLimit error for Simplex for very small quotes
 
 ## 4.10.0 (2024-08-07)
