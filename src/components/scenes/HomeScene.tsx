@@ -6,6 +6,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -81,6 +82,8 @@ export const HomeScene = (props: Props) => {
   const fioIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }), [theme])
   const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }), [theme])
   const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
+  const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
+  const hideSwap = config.disableSwaps === true
 
   return (
     <SceneWrapper hasNotifications hasTabs>
@@ -124,30 +127,36 @@ export const HomeScene = (props: Props) => {
                     onPress={handleSellPress}
                   />
                 </EdgeAnim>
-                <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
-                  <HomeCardUi4
-                    title={lstrings.fio_web3}
-                    footer={lstrings.fio_web3_footer}
-                    gradientBackground={theme.fioCardGradient}
-                    nodeBackground={
-                      <View style={styles.backroundImageContainer}>
-                        <FastImage source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
-                      </View>
-                    }
-                    onPress={handleFioPress}
-                  />
-                  <HomeCardUi4
-                    title={lstrings.swap_crypto}
-                    footer={lstrings.swap_crypto_footer}
-                    gradientBackground={theme.swapCardGradient}
-                    nodeBackground={
-                      <View style={styles.backroundImageContainer}>
-                        <FastImage source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
-                      </View>
-                    }
-                    onPress={handleSwapPress}
-                  />
-                </EdgeAnim>
+                {!hideFio || !hideSwap ? (
+                  <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
+                    {hideFio ? null : (
+                      <HomeCardUi4
+                        title={lstrings.fio_web3}
+                        footer={lstrings.fio_web3_footer}
+                        gradientBackground={theme.fioCardGradient}
+                        nodeBackground={
+                          <View style={styles.backroundImageContainer}>
+                            <FastImage source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                          </View>
+                        }
+                        onPress={handleFioPress}
+                      />
+                    )}
+                    {hideSwap ? null : (
+                      <HomeCardUi4
+                        title={lstrings.swap_crypto}
+                        footer={lstrings.swap_crypto_footer}
+                        gradientBackground={theme.swapCardGradient}
+                        nodeBackground={
+                          <View style={styles.backroundImageContainer}>
+                            <FastImage source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                          </View>
+                        }
+                        onPress={handleSwapPress}
+                      />
+                    )}
+                  </EdgeAnim>
+                ) : null}
               </>
               <>
                 <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
