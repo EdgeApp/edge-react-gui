@@ -18,6 +18,7 @@
 - changed: Cache exchange rates for five minutes to account for server or connection instability
 - changed: Query supported countries and US states for fiat plugins
 - fixed: Disable max spend for zkSync
+- fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
 - fixed: Return underLimit error for Simplex for very small quotes
 
