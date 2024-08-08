@@ -61,7 +61,7 @@ const MAX_QUOTE_VALUE = '10000000000'
 const NO_PROVIDER_TOAST_DURATION_MS = 10000
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const { account, guiPlugin, longPress = false, showUi } = params
+  const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
   const { pluginId } = guiPlugin
   const isLightAccount = account.username == null
 
@@ -379,6 +379,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              pluginUtils,
               tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,
@@ -394,6 +395,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              pluginUtils,
               tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,

@@ -1,7 +1,7 @@
 import { asObject, asString } from 'cleaners'
 
 import { FiatPluginRegionCode } from '../fiatPluginTypes'
-import { FiatProviderError, FiatProviderSupportedRegions } from '../fiatProviderTypes'
+import { FiatProviderError, FiatProviderExactRegions, FiatProviderSupportedRegions } from '../fiatProviderTypes'
 
 export const RETURN_URL_SUCCESS = 'https://edge.app/redirect/success/'
 export const RETURN_URL_FAIL = 'https://edge.app/redirect/fail/'
@@ -33,6 +33,76 @@ export const validateRegion = (providerId: string, regionCode: FiatPluginRegionC
   }
 }
 
+/**
+ * Validates if the provided region code is supported by the given provider.
+ *
+ * @param providerId - The unique identifier of the provider.
+ * @param regionCode - The region code to validate, containing the country and state/province codes.
+ * @param supportedRegions - The object containing the supported regions for the provider.
+ * @throws {FiatProviderError} - If the region is not supported, with an error type of 'regionRestricted'.
+ */
+export const validateExactRegion = (providerId: string, regionCode: FiatPluginRegionCode, supportedRegions: FiatProviderExactRegions): void => {
+  const { countryCode, stateProvinceCode } = regionCode
+  const countryInfo = supportedRegions[countryCode]
+  if (countryInfo == null || countryInfo === false) {
+    throw new FiatProviderError({ providerId, errorType: 'regionRestricted' })
+  }
+
+  if (countryInfo === true) {
+    return
+  }
+
+  const { forStateProvinces, notStateProvinces } = countryInfo
+
+  if (stateProvinceCode != null) {
+    if (notStateProvinces?.includes(stateProvinceCode) === true) {
+      throw new FiatProviderError({ providerId, errorType: 'regionRestricted' })
+    }
+    if (forStateProvinces?.includes(stateProvinceCode) === false) {
+      throw new FiatProviderError({ providerId, errorType: 'regionRestricted' })
+    }
+  }
+}
+
+/**
+ * Adds an exact region to the list of allowed country codes for a Fiat provider.
+ *
+ * @param allowedCountryCodes - The object containing the allowed country codes and state/province codes.
+ * @param countryCode - The country code to add.
+ * @param stateProvinceCode - The optional state/province code to add.
+ * @returns void
+ */
+export const addExactRegion = (allowedCountryCodes: FiatProviderExactRegions, countryCode: string, stateProvinceCode?: string): void => {
+  if (stateProvinceCode == null) {
+    allowedCountryCodes[countryCode] = true
+  } else {
+    const oldCountry = allowedCountryCodes[countryCode]
+    let newCountry: FiatProviderExactRegions['cc'] = {}
+    if (typeof oldCountry === 'object') newCountry = { ...oldCountry }
+    if (newCountry.forStateProvinces == null) {
+      newCountry.forStateProvinces = [stateProvinceCode]
+    } else {
+      if (!newCountry.forStateProvinces.includes(stateProvinceCode)) {
+        newCountry.forStateProvinces.push(stateProvinceCode)
+      }
+    }
+    allowedCountryCodes[countryCode] = newCountry
+  }
+}
+
 export const asStandardApiKeys = asObject({
   apiKey: asString
 })
+
+const DAILY_INTERVAL_MS = 1000 * 60 * 60 * 24 // 1 day
+/**
+ * Checks if a daily check is due based on the last check time.
+ *
+ * @param lastCheck - The timestamp of the last check, in milliseconds since the Unix epoch.
+ * @returns `true` if the daily check interval has elapsed since the last check, `false` otherwise.
+ */
+export const isDailyCheckDue = (lastCheck: number): boolean => {
+  const now = Date.now()
+  const last = new Date(lastCheck).getTime()
+  return now - last > DAILY_INTERVAL_MS
+}

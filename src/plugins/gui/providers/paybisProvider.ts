@@ -1,5 +1,5 @@
-import { eq, round } from 'biggystring'
-import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
+import { eq, lte, mul, round } from 'biggystring'
+import { asArray, asBoolean, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
@@ -207,6 +207,10 @@ const asPublicRequestResponse = asObject({
   oneTimeToken: asOptional(asString)
 })
 
+const asUserStatus = asObject({
+  hasTransactions: asBoolean
+})
+
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 type PaybisSellPairs = ReturnType<typeof asPaybisSellPairs>
@@ -334,6 +338,8 @@ export const paybisProvider: FiatProviderFactory = {
       await store.setItem('partnerUserId', partnerUserId)
     }
 
+    let userIdHasTransactions: boolean | undefined
+
     const out: FiatProvider = {
       providerId,
       partnerIcon,
@@ -362,6 +368,14 @@ export const paybisProvider: FiatProviderFactory = {
           await initializeSellPairs({ url, apiKey })
         }
 
+        try {
+          const response = await paybisFetch({ method: 'GET', url, path: `v2/public/user/${partnerUserId}/status`, apiKey })
+          const { hasTransactions } = asUserStatus(response)
+          userIdHasTransactions = hasTransactions
+        } catch (e) {
+          console.log(`Paybis: Error getting user status: ${e}`)
+        }
+
         const out = allowedCurrencyCodes[direction][paymentType]
         if (out == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         return out
@@ -373,7 +387,8 @@ export const paybisProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginId: currencyPluginId,
-          promoCode,
+          promoCode: maybePromoCode,
+          pluginUtils,
           fiatCurrencyCode,
           displayCurrencyCode,
           direction,
@@ -431,6 +446,28 @@ export const paybisProvider: FiatProviderFactory = {
           paymentMethod: direction === 'buy' ? paymentMethod : undefined,
           payoutMethod: direction === 'sell' ? paymentMethod : undefined
         }
+
+        let promoCode: string | undefined
+        if (maybePromoCode != null) {
+          let amountUsd: string
+          const convertFromCc = amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
+          if (convertFromCc === 'iso:USD') {
+            amountUsd = exchangeAmount
+          } else {
+            const isoNow = new Date().toISOString()
+            const ratePair = `${convertFromCc}_iso:USD`
+            const rate = await pluginUtils.getHistoricalRate(ratePair, isoNow)
+            amountUsd = mul(exchangeAmount, String(rate))
+          }
+          // Only use the promo code if the user is requesting $1000 USD or less
+          if (lte(amountUsd, '1000')) {
+            // Only use the promoCode if this is the user's first purchase
+            if (userIdHasTransactions === false) {
+              promoCode = maybePromoCode
+            }
+          }
+        }
+
         const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams, promoCode })
         const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
 
