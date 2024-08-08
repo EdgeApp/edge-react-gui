@@ -116,7 +116,9 @@ export const asEnvConfig = asObject({
 
   // Core plugin options:
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
+  ALGORAND_INIT: asOptional(asBoolean, true),
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
+  AXELAR_INIT: asOptional(asBoolean, true),
   BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   BITCOIN_INIT: asCorePluginInit(
@@ -154,6 +156,7 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   COREUM_INIT: asCorePluginInit(asBoolean),
+  COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
     asObject({
       nowNodeApiKey: asOptional(asString, '')
@@ -186,6 +189,7 @@ export const asEnvConfig = asObject({
       freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
+  FILECOINFEVM_INIT: asOptional(asBoolean, true),
   FILECOIN_INIT: asCorePluginInit(
     asObject({
       glifApiKey: asOptional(asString, '')
@@ -201,6 +205,8 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  HEDERA_INIT: asOptional(asBoolean, true),
+  LIBERLAND_INIT: asOptional(asBoolean, true),
   LIFI_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
@@ -228,7 +234,7 @@ export const asEnvConfig = asObject({
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asBoolean),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
-
+  POLKADOT_INIT: asOptional(asBoolean, true),
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
   MUMBAI_INIT: asCorePluginInit(asEvmApiKeys),
   RANGO_INIT: asCorePluginInit(
