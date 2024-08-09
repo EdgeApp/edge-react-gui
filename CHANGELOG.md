@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: App distribution via Zealot
+- fixed: FIO OBT data not showing in received transaction memos
 
 ## 4.11.0
 
