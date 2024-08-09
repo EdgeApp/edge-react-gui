@@ -16,7 +16,7 @@ import { getOsVersion, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
-import { FilteredPromoCard, PromoCardUi4 } from './PromoCard'
+import { FilteredPromoCard, PromoCard } from './PromoCard'
 
 interface Props {
   navigation: NavigationBase
@@ -24,7 +24,7 @@ interface Props {
   countryCode?: string
 }
 
-export const PromoCardsUi4 = (props: Props) => {
+export const PromoCards = (props: Props) => {
   const { countryCode, navigation, screenWidth } = props
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -88,7 +88,7 @@ export const PromoCardsUi4 = (props: Props) => {
     const handleClose = async (): Promise<void> => {
       await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
     }
-    return <PromoCardUi4 navigation={navigation} promoInfo={item} onClose={handleClose} />
+    return <PromoCard navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
 
   if (activeCards == null || activeCards.length === 0) return null

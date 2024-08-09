@@ -1,3 +1,4 @@
+import { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -14,12 +15,12 @@ import { config } from '../../theme/appConfig'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
-import { BalanceCardUi4 } from '../cards/BalanceCard'
-import { BlogCards } from '../cards/BlogCards'
-import { HomeCardUi4 } from '../cards/HomeCard'
-import { MarketsCardUi4 } from '../cards/MarketsCard'
-import { PromoCardsUi4 } from '../cards/PromoCards'
-import { SupportCardUi4 } from '../cards/SupportCard'
+import { BalanceCard } from '../cards/BalanceCard'
+import { ContentPostCarousel } from '../cards/ContentPostCarousel'
+import { HomeTileCard } from '../cards/HomeTileCard'
+import { MarketsCard } from '../cards/MarketsCard'
+import { PromoCards } from '../cards/PromoCards'
+import { SupportCard } from '../cards/SupportCard'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -30,6 +31,29 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
+
+/**
+ * Filters a list of ContentPosts based on the provided country code.
+ *
+ * @param contentPosts - An array of `ContentPost` objects representing the
+ * content posts to filter.
+ * @param countryCode - An optional string representing the country code to filter by. If `null`, an empty array is returned.
+ * @returns An array of `ContentPost` objects that match the provided country code.
+ */
+export const filterContentPosts = (contentPosts: ContentPost[], countryCode?: string) => {
+  return contentPosts.filter((contentPost: ContentPost) => {
+    const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } = contentPost
+
+    const isCountryInclude =
+      includeCountryCodes.length === 0 ||
+      (countryCode != null && includeCountryCodes.some(includeCountryCode => includeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+    const isCountryExclude =
+      excludeCountryCodes.length > 0 &&
+      (countryCode == null || excludeCountryCodes.some(excludeCountryCode => excludeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+
+    return isCountryInclude && !isCountryExclude
+  })
+}
 
 export const HomeScene = (props: Props) => {
   const { navigation } = props
@@ -42,6 +66,8 @@ export const HomeScene = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+  const [blogPosts, setBlogPosts] = React.useState<ContentPost[]>([])
+  const [videoPosts, setVideoPosts] = React.useState<ContentPost[]>([])
 
   //
   // Handlers
@@ -74,7 +100,19 @@ export const HomeScene = (props: Props) => {
     'countryCode'
   )
 
-  const blogPosts = infoServerData.rollup?.blogPosts
+  // Check for content posts from info server:
+  React.useEffect(() => {
+    // Merge legacy non-geographic-specific blog posts with geo-specific ones:
+    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
+      countryCodes: [],
+      excludeCountryCodes: [],
+      ...legacyBlogPost
+    }))
+    setBlogPosts([...nonGeoPosts, ...(filterContentPosts(infoServerData.rollup?.blogPostsGeo as ContentPost[], countryCode) ?? [])])
+
+    // Get video posts
+    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts ?? [], countryCode))
+  }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -96,12 +134,12 @@ export const HomeScene = (props: Props) => {
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={fadeInUp140}>
-                  <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
+                  <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
-                <PromoCardsUi4 countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
+                <PromoCards countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.buy_crypto}
                     footer={lstrings.buy_crypto_footer}
                     gradientBackground={theme.buyCardGradient}
@@ -112,7 +150,7 @@ export const HomeScene = (props: Props) => {
                     }
                     onPress={handleBuyPress}
                   />
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.sell_crypto}
                     footer={lstrings.sell_crypto_footer}
                     gradientBackground={theme.sellCardGradient}
@@ -125,7 +163,7 @@ export const HomeScene = (props: Props) => {
                   />
                 </EdgeAnim>
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.fio_web3}
                     footer={lstrings.fio_web3_footer}
                     gradientBackground={theme.fioCardGradient}
@@ -136,7 +174,7 @@ export const HomeScene = (props: Props) => {
                     }
                     onPress={handleFioPress}
                   />
-                  <HomeCardUi4
+                  <HomeTileCard
                     title={lstrings.swap_crypto}
                     footer={lstrings.swap_crypto_footer}
                     gradientBackground={theme.swapCardGradient}
@@ -149,24 +187,25 @@ export const HomeScene = (props: Props) => {
                   />
                 </EdgeAnim>
               </>
+              {blogPosts == null || blogPosts.length === 0 ? null : (
+                <>
+                  <SectionHeader leftTitle={lstrings.edgeucation_articles} />
+                  <ContentPostCarousel contentPosts={blogPosts} />
+                </>
+              )}
               <>
                 <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
                 <EdgeAnim enter={fadeInUp30}>
-                  <MarketsCardUi4 navigation={navigation} numRows={5} />
+                  <MarketsCard navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
-              {blogPosts == null || blogPosts.length === 0 ? null : (
+              {videoPosts == null || videoPosts.length === 0 ? null : (
                 <>
-                  <SectionHeader leftTitle={lstrings.title_learn} />
-                  <BlogCards countryCode={countryCode} />
+                  <SectionHeader leftTitle={lstrings.edgeucation_videos} />
+                  <ContentPostCarousel contentPosts={videoPosts} />
                 </>
               )}
-              <SupportCardUi4
-                title={lstrings.title_support}
-                body={lstrings.body_support}
-                buttonText={lstrings.button_support}
-                url={config.supportContactSite}
-              />
+              <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
             </SectionView>
           </Animated.ScrollView>
         </>

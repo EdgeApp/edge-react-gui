@@ -32,7 +32,7 @@ interface Props {
 /**
  * Card that displays balance, deposit/send buttons, and a link to view assets
  */
-export const BalanceCardUi4 = (props: Props) => {
+export const BalanceCard = (props: Props) => {
   const { navigation, onViewAssetsPress } = props
 
   const dispatch = useDispatch()
