@@ -18,7 +18,12 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
   const fioWallets: EdgeCurrencyWallet[] = getState().ui.wallets.fioWallets
   const currencyWallets = getState().core.account.currencyWallets
   for (const walletId of Object.keys(currencyWallets)) {
-    wallets.push(currencyWallets[walletId])
+    const wallet = currencyWallets[walletId]
+    wallets.push(wallet)
+
+    // const transactions = await wallet.getTransactions({ tokenId: null })
+    // const receivedTxs = transactions.filter(tx => !tx.isSend)
+    // await dispatch(checkFioObtData(wallet, receivedTxs))
   }
   const connectedWalletsByFioAddress = {}
   for (const fioWallet of fioWallets) {
@@ -40,7 +45,13 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
   }
 }
 
-export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTransaction[]): ThunkAction<Promise<unknown>> {
+/**
+ * Cross references tx IDs with FIO OBT records, and updates the memos on the
+ * txs if there's a match with a FIO OBT record.
+ */
+export function updateTxsWithFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTransaction[]): ThunkAction<Promise<unknown>> {
+  console.debug('🚀 - checkFioObtData - checkFioObtData:')
+
   return async (dispatch, getState) => {
     const state = getState()
     let account: EdgeAccount
@@ -60,6 +71,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
       const fioPlugin = account.currencyConfig.fio
 
       const obtDataRecords = await getFioObtData(fioWallets)
+      console.debug('🚀 checkFioObtData:', JSON.stringify(obtDataRecords, null, 2))
 
       for (const transaction of transactions) {
         const { tokenId } = transaction

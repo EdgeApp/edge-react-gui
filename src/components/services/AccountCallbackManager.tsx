@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
-import { checkFioObtData, refreshConnectedWallets } from '../../actions/FioActions'
+import { updateTxsWithFioObtData, refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
@@ -106,7 +106,7 @@ export function AccountCallbackManager(props: Props) {
 
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
-        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => console.warn(err))
+        if (receivedTxs.length > 0) dispatch(updateTxsWithFioObtData(wallet, receivedTxs)).catch(err => console.warn(err))
 
         // Show the dropdown for the first transaction:
         const [firstReceive] = receivedTxs
@@ -132,7 +132,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('transactionsChanged', transactions => {
-        console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
+        console.debug(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
       }),
 
       wallet.on('enabledDetectedTokens', enablingTokenIds => {
@@ -158,7 +158,7 @@ export function AccountCallbackManager(props: Props) {
       // Update wallets:
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
-        datelog('Updating wallet list')
+        console.debug('Updating wallet list')
         await dispatch(refreshConnectedWallets)
         await snooze(1000)
       }

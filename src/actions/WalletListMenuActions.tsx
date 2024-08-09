@@ -16,6 +16,7 @@ import { ThunkAction } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { getFioObtData } from '../util/FioAddressUtils'
 import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
@@ -285,22 +286,26 @@ export function walletListMenuAction(
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const walletName = getWalletName(wallet)
 
-        await Airship.show<string | undefined>(bridge => (
-          <TextInputModal
-            autoCorrect={false}
-            bridge={bridge}
-            initialValue={walletName}
-            inputLabel={lstrings.fragment_wallets_rename_wallet}
-            returnKeyType="go"
-            title={lstrings.fragment_wallets_rename_wallet}
-            onSubmit={async name => {
-              await wallet.renameWallet(name)
-              return true
-            }}
-          />
-        ))
+        const test = await getFioObtData([wallet])
+        JSON.stringify(test, null, 2)
+
+        // const walletName = getWalletName(wallet)
+
+        // await Airship.show<string | undefined>(bridge => (
+        //   <TextInputModal
+        //     autoCorrect={false}
+        //     bridge={bridge}
+        //     initialValue={walletName}
+        //     inputLabel={lstrings.fragment_wallets_rename_wallet}
+        //     returnKeyType="go"
+        //     title={lstrings.fragment_wallets_rename_wallet}
+        //     onSubmit={async name => {
+        //       await wallet.renameWallet(name)
+        //       return true
+        //     }}
+        //   />
+        // ))
       }
     }
 
