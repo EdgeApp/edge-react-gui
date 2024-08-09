@@ -32,6 +32,29 @@ interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
+/**
+ * Filters a list of ContentPosts based on the provided country code.
+ *
+ * @param contentPosts - An array of `ContentPost` objects representing the
+ * content posts to filter.
+ * @param countryCode - An optional string representing the country code to filter by. If `null`, an empty array is returned.
+ * @returns An array of `ContentPost` objects that match the provided country code.
+ */
+export const filterContentPosts = (contentPosts: ContentPost[], countryCode?: string) => {
+  return contentPosts.filter((contentPost: ContentPost) => {
+    const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } = contentPost
+
+    const isCountryInclude =
+      includeCountryCodes.length === 0 ||
+      (countryCode != null && includeCountryCodes.some(includeCountryCode => includeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+    const isCountryExclude =
+      excludeCountryCodes.length > 0 &&
+      (countryCode == null || excludeCountryCodes.some(excludeCountryCode => excludeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+
+    return isCountryInclude && !isCountryExclude
+  })
+}
+
 export const HomeScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
@@ -85,10 +108,10 @@ export const HomeScene = (props: Props) => {
       excludeCountryCodes: [],
       ...legacyBlogPost
     }))
-    setBlogPosts([...nonGeoPosts, ...(infoServerData.rollup?.blogPostsGeo ?? [])])
+    setBlogPosts([...nonGeoPosts, ...(filterContentPosts(infoServerData.rollup?.blogPostsGeo as ContentPost[], countryCode) ?? [])])
 
     // Get video posts
-    setVideoPosts(infoServerData.rollup?.videoPosts ?? [])
+    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts ?? [], countryCode))
   }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
@@ -167,7 +190,7 @@ export const HomeScene = (props: Props) => {
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
                   <SectionHeader leftTitle={lstrings.edgeucation_articles} />
-                  <ContentPostCarousel contentPosts={blogPosts} countryCode={countryCode} />
+                  <ContentPostCarousel contentPosts={blogPosts} />
                 </>
               )}
               <>
@@ -179,7 +202,7 @@ export const HomeScene = (props: Props) => {
               {videoPosts == null || videoPosts.length === 0 ? null : (
                 <>
                   <SectionHeader leftTitle={lstrings.edgeucation_videos} />
-                  <ContentPostCarousel contentPosts={videoPosts} countryCode={countryCode} />
+                  <ContentPostCarousel contentPosts={videoPosts} />
                 </>
               )}
               <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />

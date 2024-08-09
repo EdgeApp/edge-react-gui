@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import { asBlogPostsGeo, BlogPostGeo } from 'edge-info-server'
 
-import { filterContentPosts } from '../../../components/cards/ContentPostCarousel'
+import { filterContentPosts } from '../../../components/scenes/HomeScene'
 
 describe('filterBlogCards', () => {
   const dummyData: BlogPostGeo = {
