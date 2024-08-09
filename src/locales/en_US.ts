@@ -1599,7 +1599,6 @@ const strings = {
   fio_web3: 'Web3 Handle',
   fio_web3_footer: 'Manage your handles and domains',
   title_home: 'Home',
-  title_learn: 'Learn',
   edgeucation_articles: 'Edge-ucation Articles',
   edgeucation_videos: 'Edge-ucation Videos',
   view_assets: 'View Assets',
