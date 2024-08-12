@@ -1,4 +1,3 @@
-import { abs, lt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
@@ -71,8 +70,6 @@ function TransactionListComponent(props: Props) {
 
   // Watchers:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
-  const transactionList = useTransactionList(wallet, tokenId, isSearching ? searchText : undefined)
-  const { transactions, atEnd, requestMore: handleScrollEnd } = transactionList
 
   // ---------------------------------------------------------------------------
   // Derived values
@@ -84,6 +81,16 @@ function TransactionListComponent(props: Props) {
     }
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
+  // Transaction list state machine:
+  const {
+    transactions,
+    atEnd,
+    requestMore: handleScrollEnd
+  } = useTransactionList(wallet, tokenId, {
+    searchString: isSearching ? searchText : undefined,
+    spamThreshold
+  })
+
   const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Assemble the data for the section list:
@@ -93,11 +100,6 @@ function TransactionListComponent(props: Props) {
     let lastSection = ''
     const out: ListItem[] = []
     for (const tx of transactions) {
-      // Skip spam transactions:
-      if (!tx.isSend && spamThreshold != null && lt(abs(tx.nativeAmount), spamThreshold)) {
-        continue
-      }
-
       // Create a new section header if we need one:
       const { date } = unixToLocaleDateTime(tx.date)
       if (date !== lastSection) {
@@ -113,7 +115,7 @@ function TransactionListComponent(props: Props) {
     if (!atEnd) out.push(null)
 
     return out
-  }, [atEnd, isTransactionListUnsupported, spamThreshold, transactions])
+  }, [atEnd, isTransactionListUnsupported, transactions])
 
   // TODO: Comment out sticky header indices until we figure out how to
   // give the headers a background only when they're sticking.
