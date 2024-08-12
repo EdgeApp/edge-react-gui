@@ -5,6 +5,20 @@ import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
 
+/**
+ * Defines a new partial type from a union type.
+ *
+ * The `Include` type takes two generic parameters `T` and `U`. It returns a type that includes only those types from `T` that are also assignable to `U`.
+ *
+ * @example
+ * type A = string | number | boolean;
+ * type B = Include<A, number | boolean>; // Result is: number | boolean
+ *
+ * @typeparam T - The original union type.
+ * @typeparam U - The subset type to include.
+ */
+export type Include<T, U> = T extends U ? T : never
+
 /** @deprecated Only to be used for payloads that still allow undefined for
  *  tokenId such as notification server
  */
