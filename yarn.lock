@@ -2202,9 +2202,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6":
+"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6"
+  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -9126,10 +9126,10 @@ edge-core-js@^2.12.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.18.0:
-  version "4.18.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.18.0.tgz#d8e7eb3bc060d736519d9d3ff42075c83f233d82"
-  integrity sha512-7Fx8ird9MuuV3mn9f3vc57uhemnqliK8/KhB9rUeScV7wcr3JCas/qqLnbWSz5FbBEzQvn8kNcCBfMSJYK9zPA==
+edge-currency-accountbased@^4.19.0:
+  version "4.19.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.19.0.tgz#e327c78ad35a1bb0d9e7304bcce21ba2845ec4ee"
+  integrity sha512-Q2t3xOVA0xRAsaKgvGx3X7bQPXH1KFcPVDWjmxazdV55cQiOYezWCw7Tr9+5GeibJa/UTtwvut1yb42kdOVG6w==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -9137,7 +9137,7 @@ edge-currency-accountbased@^4.18.0:
     "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
     "@ethereumjs/common" "^4.0.0"
     "@ethereumjs/tx" "^5.0.0"
-    "@fioprotocol/fiosdk" "https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6"
+    "@fioprotocol/fiosdk" "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
     "@greymass/eosio" "^0.6.8"
     "@greymass/eosio-resources" "^0.7.0"
     "@hashgraph/sdk" "^2.44.0"
