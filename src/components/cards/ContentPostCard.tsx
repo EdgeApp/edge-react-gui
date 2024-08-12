@@ -1,4 +1,4 @@
-import { BlogPost } from 'edge-info-server'
+import { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -11,7 +11,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
-  blogPost: BlogPost
+  contentPost: ContentPost
 }
 
 const IMAGE_HEIGHT_RATIO = '65%'
@@ -19,8 +19,8 @@ const IMAGE_HEIGHT_RATIO = '65%'
 /**
  * Blog post card with a top image and text below.
  */
-export const BlogCard = (props: Props) => {
-  const { localeTitle, localeBody, localeBlogUrl, lightImageUrl, darkImageUrl } = props.blogPost
+export const ContentPostCard = (props: Props) => {
+  const { localeTitle, localeBody, localeBlogUrl, lightImageUrl, darkImageUrl } = props.contentPost
 
   const theme = useTheme()
   const styles = getStyles(theme)
