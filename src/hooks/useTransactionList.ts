@@ -20,8 +20,6 @@ interface Output {
  * until `atEnd` becomes true.
  */
 export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString: string = ''): Output {
-  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
-
   const requestMore = React.useRef(() => {})
 
   // The effect maintains internal mutable state,
@@ -61,7 +59,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     const cleanupNew = wallet.on('newTransactions', txs => {
       let relevant = false
       for (const tx of txs) {
-        if (tx.currencyCode === currencyCode) {
+        if (tx.tokenId === tokenId) {
           relevant = true
         }
       }
@@ -73,7 +71,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     const cleanupChanged = wallet.on('transactionsChanged', txs => {
       let relevant = false
       for (const tx of txs) {
-        if (tx.currencyCode === currencyCode) {
+        if (tx.tokenId === tokenId) {
           relevant = true
           changedTxs.set(tx.txid, tx)
         }
@@ -147,7 +145,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
       cleanupChanged()
       cleanupStream()
     }
-  }, [currencyCode, searchString, tokenId, wallet])
+  }, [searchString, tokenId, wallet])
 
   return {
     ...output,
