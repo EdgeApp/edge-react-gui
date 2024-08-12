@@ -24,6 +24,7 @@ import type { FioDomainRegisterSelectWalletParams } from '../components/scenes/F
 import type { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
 import type { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
 import type { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
+import { FioStakingChangeParams } from '../components/scenes/Fio/FioStakingChangeScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -158,11 +159,7 @@ export interface RouteParamList {
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
   }
-  fioStakingChange: {
-    change: 'add' | 'remove'
-    tokenId: EdgeTokenId
-    walletId: string
-  }
+  fioStakingChange: FioStakingChangeParams
   fioStakingOverview: {
     tokenId: EdgeTokenId
     walletId: string

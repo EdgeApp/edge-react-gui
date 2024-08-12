@@ -155,7 +155,6 @@ interface SpecialCurrencyInfo {
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
-  stakeActions?: { [stakeActionKey: string]: string }
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
@@ -562,10 +561,6 @@ export const SPECIAL_CURRENCY_INFO: {
     noChangeMiningFee: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    stakeActions: {
-      add: 'stakeFioTokens',
-      remove: 'unStakeFioTokens'
-    },
     stakeMaxApy: 450
   },
   dash: {
