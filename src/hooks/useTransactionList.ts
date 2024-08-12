@@ -10,6 +10,11 @@ interface Output {
   requestMore: () => void
 }
 
+interface TransactionListOptions {
+  searchString?: string
+  spamThreshold?: string
+}
+
 /**
  * Streams transactions from a wallet.
  *
@@ -19,7 +24,9 @@ interface Output {
  * so call the `requestMore` method to request more transactions,
  * until `atEnd` becomes true.
  */
-export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString: string = ''): Output {
+export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, opts: TransactionListOptions = {}): Output {
+  const { searchString = '', spamThreshold = '0' } = opts
+
   const requestMore = React.useRef(() => {})
 
   // The effect maintains internal mutable state,
@@ -98,6 +105,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
         batchSize: 30,
         firstBatchSize: 10,
         searchString,
+        spamThreshold,
         tokenId
       })
 
@@ -145,7 +153,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
       cleanupChanged()
       cleanupStream()
     }
-  }, [searchString, tokenId, wallet])
+  }, [searchString, spamThreshold, tokenId, wallet])
 
   return {
     ...output,
