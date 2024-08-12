@@ -1,5 +1,5 @@
 import { add, eq, gt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeAssetActionType, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -15,6 +15,7 @@ import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { Include } from '../../../types/types'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
@@ -37,6 +38,12 @@ interface Props extends EdgeSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
 }
 
+export interface FioStakingChangeParams {
+  assetActionType: Include<EdgeAssetActionType, 'stake' | 'unstake'>
+  tokenId: EdgeTokenId
+  walletId: string
+}
+
 type PartialAmounts = Pick<ExchangedFlipInputAmounts, 'nativeAmount' | 'exchangeAmount'>
 
 export const FioStakingChangeScene = withWallet((props: Props) => {
@@ -44,7 +51,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const {
     wallet: currencyWallet,
     route: {
-      params: { change, tokenId, walletId }
+      params: { assetActionType, tokenId, walletId }
     },
     navigation
   } = props
@@ -116,8 +123,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }
 
   const onMaxSet = async () => {
-    switch (change) {
-      case 'add': {
+    switch (assetActionType) {
+      case 'stake': {
         await currencyWallet
           .getMaxSpendable({
             tokenId,
@@ -136,7 +143,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           })
         break
       }
-      case 'remove': {
+      case 'unstake': {
         const nativeAmt = stakingBalances.staked.native
         currencyWallet
           .nativeToDenomination(nativeAmt, 'FIO')
@@ -159,11 +166,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const signedTx = await currencyWallet.signTx(tx)
       const broadcastedTx = await currencyWallet.broadcastTx(signedTx)
       await currencyWallet.saveTx(broadcastedTx)
-      const messages = {
-        add: lstrings.staking_success,
-        remove: lstrings.staking_unstake_success
-      }
-      showToast(messages[change])
+
+      showToast(assetActionType === 'stake' ? lstrings.staking_success : lstrings.staking_unstake_success)
       navigation.goBack()
     } catch (e: any) {
       setError(e.message)
@@ -253,7 +257,6 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       return
     }
 
-    const { [change]: actionName } = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? { [change]: '' }
     currencyWallet
       .makeSpend({
         tokenId: null,
@@ -265,11 +268,23 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         ],
         otherParams: {
           action: {
-            name: actionName,
+            name: assetActionType === 'stake' ? 'stakeFioTokens' : 'unStakeFioTokens',
             params: {
               fioAddress: selectedFioAddress
             }
           }
+        },
+        assetAction: { assetActionType },
+        savedAction: {
+          actionType: 'stake',
+          pluginId: 'fio',
+          stakeAssets: [
+            {
+              pluginId,
+              tokenId: null,
+              nativeAmount
+            }
+          ]
         }
       })
       .then(tx => {
@@ -350,10 +365,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   return (
     <SceneWrapper scroll>
       {(() => {
-        switch (change) {
-          case 'add':
+        switch (assetActionType) {
+          case 'stake':
             return renderAdd()
-          case 'remove':
+          case 'unstake':
             return renderRemove()
           default:
             return null
