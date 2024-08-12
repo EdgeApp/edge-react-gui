@@ -1,9 +1,10 @@
 import { add, gt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
-import { AssetId, ChangeQuote, PositionAllocation, StakePosition } from '../../types'
+import { KilnLiquid20A__factory } from '../../../contracts'
+import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
@@ -29,12 +30,46 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
   const kiln = makeKilnApi(baseUrl, apiKey)
 
   const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
+  const integrationContract = KilnLiquid20A__factory.connect(contractAddress, provider)
+
+  async function prepareChangeQuote(walletSigner: EdgeWalletSigner, tx: ethers.PopulatedTransaction, allocations: QuoteAllocation[]): Promise<ChangeQuote> {
+    if (tx.gasLimit == null) {
+      const estimatedGasLimit = await walletSigner.estimateGas(tx)
+      tx.gasLimit = estimatedGasLimit.mul(2)
+    }
+    const gasLimit = tx.gasLimit
+    const maxFeePerGas = BigNumber.from(tx.maxFeePerGas ?? tx.gasPrice ?? 0)
+    const networkFee = gasLimit.mul(maxFeePerGas)
+
+    allocations.push({
+      allocationType: 'networkFee',
+      pluginId: policyConfig.parentPluginId,
+      currencyCode: policyConfig.parentCurrencyCode,
+      nativeAmount: networkFee.toString()
+    })
+
+    const approve = async () => {
+      await walletSigner.sendTransaction(tx)
+    }
+
+    return {
+      allocations,
+      approve
+    }
+  }
 
   async function workflowUtils(wallet: EdgeCurrencyWallet) {
     const walletSigner = new EdgeWalletSigner(wallet, provider)
     const walletAddress = await walletSigner.getAddress()
 
-    return { walletAddress }
+    let txCount: number = await walletSigner.getTransactionCount('pending')
+    const nextNonce = (): number => txCount++
+
+    const feeData = await provider.getFeeData()
+    const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
+    const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
+
+    return { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletAddress, walletSigner }
   }
 
   const instance: StakePolicyAdapter = {
@@ -45,7 +80,20 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
     },
 
     async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, requestNativeAmount: string): Promise<ChangeQuote> {
-      throw new Error('fetchStakeQuote not implemented')
+      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } = await workflowUtils(wallet)
+
+      const tx = await integrationContract.populateTransaction.stake({ value: requestNativeAmount, maxFeePerGas, maxPriorityFeePerGas, nonce: nextNonce() })
+
+      const allocations: QuoteAllocation[] = [
+        {
+          allocationType: 'stake',
+          pluginId: requestAssetId.pluginId,
+          currencyCode: requestAssetId.currencyCode,
+          nativeAmount: requestNativeAmount
+        }
+      ]
+
+      return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
     async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, requestNativeAmount: string): Promise<ChangeQuote> {

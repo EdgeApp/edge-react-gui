@@ -5,6 +5,7 @@ export type { GlifInfinityPool } from "./GlifInfinityPool";
 export type { GlifPoolToken } from "./GlifPoolToken";
 export type { GlifRouter } from "./GlifRouter";
 export type { GlifSimpleRamp } from "./GlifSimpleRamp";
+export type { KilnLiquid20A } from "./KilnLiquid20A";
 export type { OptimismFeeOracle } from "./OptimismFeeOracle";
 export type { TarotBorrowable } from "./TarotBorrowable";
 export type { TarotCollateral } from "./TarotCollateral";
@@ -19,6 +20,7 @@ export { GlifInfinityPool__factory } from "./factories/GlifInfinityPool__factory
 export { GlifPoolToken__factory } from "./factories/GlifPoolToken__factory";
 export { GlifRouter__factory } from "./factories/GlifRouter__factory";
 export { GlifSimpleRamp__factory } from "./factories/GlifSimpleRamp__factory";
+export { KilnLiquid20A__factory } from "./factories/KilnLiquid20A__factory";
 export { OptimismFeeOracle__factory } from "./factories/OptimismFeeOracle__factory";
 export { TarotBorrowable__factory } from "./factories/TarotBorrowable__factory";
 export { TarotCollateral__factory } from "./factories/TarotCollateral__factory";
