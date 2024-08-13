@@ -125,12 +125,6 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       }
     }
 
-    case 'price-change': {
-      const { body, pluginId } = parseQuery(url.query)
-      if (body == null || pluginId == null) throw new SyntaxError('Missing body or pluginId')
-      return { type: 'price-change', body, pluginId }
-    }
-
     case 'promotion': {
       const [installerId] = pathParts
       return { type: 'promotion', installerId }

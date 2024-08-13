@@ -3,7 +3,6 @@ import { combineReducers } from 'redux'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
 import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
-import { DeepLink } from '../types/DeepLinkTypes'
 import { Action } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
 import { GuiContact, GuiExchangeRates, WalletListItem } from '../types/types'
@@ -23,9 +22,6 @@ export interface RootState {
   // Flag to signal scrolling components to add extra padding at the bottom to
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
-
-  // Deep link waiting to be fulfilled:
-  readonly pendingDeepLink: DeepLink | null
 
   // Notification settings for price change/marketing/etc
   readonly notificationSettings: NotificationSettings
@@ -67,17 +63,6 @@ export const rootReducer = combineReducers<RootState, Action>({
     switch (action.type) {
       case 'IS_NOTIFICATION_VIEW_ACTIVE':
         return action.data.isNotificationViewActive
-      default:
-        return state
-    }
-  },
-
-  pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
-    switch (action.type) {
-      case 'DEEP_LINK_RECEIVED':
-        return action.data
-      case 'DEEP_LINK_HANDLED':
-        return null
       default:
         return state
     }
