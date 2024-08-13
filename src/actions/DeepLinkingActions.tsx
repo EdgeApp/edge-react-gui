@@ -9,6 +9,7 @@ import { Airship, showError, showToast, showToastSpinner } from '../components/s
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
 import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
+import { config } from '../theme/appConfig'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -179,19 +180,33 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     case 'price-change': {
       const { pluginId, body } = link
       const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
-
-      const result = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={lstrings.price_change_notification}
-          message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
-          buttons={{
-            buy: { label: lstrings.title_buy, type: 'secondary' },
-            sell: { label: lstrings.title_sell },
-            exchange: { label: lstrings.buy_crypto_modal_exchange }
-          }}
-        />
-      ))
+      let result
+      if (config.disableSwaps === true) {
+        result = await Airship.show<'buy' | 'sell' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.price_change_notification}
+            message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+            buttons={{
+              buy: { label: lstrings.title_buy, type: 'secondary' },
+              sell: { label: lstrings.title_sell }
+            }}
+          />
+        ))
+      } else {
+        result = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.price_change_notification}
+            message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+            buttons={{
+              buy: { label: lstrings.title_buy, type: 'secondary' },
+              sell: { label: lstrings.title_sell },
+              exchange: { label: lstrings.buy_crypto_modal_exchange }
+            }}
+          />
+        ))
+      }
 
       if (result === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
