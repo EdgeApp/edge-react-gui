@@ -278,7 +278,28 @@ export interface ActionDisplayInfo {
 }
 
 export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
-  const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
+  const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId, txid } = tx
+
+  // if (tx.currencyCode === 'FIO') {
+  //   console.debug(
+  //     '🚀 - getTxActionDisplayInfo - { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId, txid }:',
+  //     JSON.stringify(
+  //       {
+  //         txid,
+  //         assetAction,
+  //         chainAction,
+  //         chainAssetAction,
+  //         metadata,
+  //         savedAction,
+  //         swapData,
+  //         tokenId,
+  //       },
+  //       null,
+  //       2
+  //     )
+  //   )
+  // }
+
   const { currencyConfig, currencyInfo } = wallet
 
   const { displayName } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId] ?? { displayName: '' }

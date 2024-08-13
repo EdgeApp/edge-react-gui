@@ -39,6 +39,8 @@ export const FioService = (props: Props) => {
   const disklet = useSelector(state => state.core.disklet)
 
   React.useEffect(() => {
+    console.debug('🚀 - FioService')
+
     const fioWalletsTemp: EdgeCurrencyWallet[] = []
     for (const walletId of Object.keys(currencyWallets)) {
       if (currencyWallets[walletId].type === FIO_WALLET_TYPE) {

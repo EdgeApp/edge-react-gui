@@ -99,6 +99,7 @@ function TransactionListComponent(props: Props) {
 
     let lastSection = ''
     const out: ListItem[] = []
+    console.debug('transactions', JSON.stringify(transactions, null, 2))
     for (const tx of transactions) {
       // Create a new section header if we need one:
       const { date } = unixToLocaleDateTime(tx.date)
