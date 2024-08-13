@@ -11,9 +11,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
@@ -44,6 +46,7 @@ const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
   walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
+  buyTabAlt: lstrings.loan_fragment_deposit,
   sellTab: lstrings.title_sell,
   swapTab: lstrings.title_exchange,
   extraTab: lstrings[extraTabString],
@@ -187,6 +190,17 @@ const Tab = ({
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  // Set countryCode once
+  useAsyncEffect(
+    async () => {
+      const countryCode = await getCountryCodeByIp().catch(() => '')
+      setCountryCode(countryCode)
+    },
+    [],
+    'countryCode'
+  )
 
   const icon: { readonly [key: string]: JSX.Element } = {
     homeTab: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
@@ -227,7 +241,7 @@ const Tab = ({
     <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
       {icon[route.name]}
       <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={footerOpenRatio}>
-        {title[route.name]}
+        {route.name === 'buyTab' && countryCode === 'GB' ? title.buyTabAlt : title[route.name]}
       </Label>
     </TabContainer>
   )
