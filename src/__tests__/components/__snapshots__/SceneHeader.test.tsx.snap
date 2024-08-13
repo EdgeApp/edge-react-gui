@@ -34,12 +34,12 @@ exports[`SceneHeader should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
             },
             null,
@@ -54,8 +54,8 @@ exports[`SceneHeader should render with loading props 1`] = `
   <BVLinearGradient
     colors={
       [
-        452984831,
-        452984831,
+        4293030438,
+        4293030438,
       ]
     }
     endPoint={

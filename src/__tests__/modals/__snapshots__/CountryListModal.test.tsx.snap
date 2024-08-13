@@ -43,7 +43,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -125,13 +125,13 @@ exports[`CountryListModal should render with a country list 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginHorizontal": 11,
             },
@@ -317,7 +317,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               style={
                 [
                   {
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -371,7 +371,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                   "color": "hsla(0, 0%, 100%, 0.20)",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -2060,7 +2060,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2079,12 +2079,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -2228,7 +2228,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2247,12 +2247,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -2396,7 +2396,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2415,12 +2415,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -2564,7 +2564,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2583,12 +2583,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -2732,7 +2732,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2751,12 +2751,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -2900,7 +2900,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2919,12 +2919,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -3068,7 +3068,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3087,12 +3087,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -3236,7 +3236,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3255,12 +3255,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -3404,7 +3404,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3423,12 +3423,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
@@ -3572,7 +3572,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3591,12 +3591,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                       },
