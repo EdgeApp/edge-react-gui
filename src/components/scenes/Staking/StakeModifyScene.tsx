@@ -325,7 +325,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return (
-      <EdgeCard>
+      <EdgeCard key={`${allocationType}${pluginId}${currencyCode}`}>
         <EditableAmountTile
           title={title}
           key={allocationType + pluginId + currencyCode}
