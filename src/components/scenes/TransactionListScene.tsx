@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
-import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
 
@@ -187,17 +187,6 @@ function TransactionListComponent(props: Props) {
   // Renderers
   //
 
-  const refreshControl = React.useMemo(() => {
-    return (
-      <RefreshControl
-        refreshing={false}
-        tintColor={theme.searchListRefreshControlIndicator}
-        // useHandler isn't needed, since we're already in useMemo:
-        onRefresh={() => setIsSearching(true)}
-      />
-    )
-  }, [theme])
-
   const topArea = React.useMemo(() => {
     return (
       <>
@@ -320,7 +309,6 @@ function TransactionListComponent(props: Props) {
             ListEmptyComponent={emptyComponent}
             ListHeaderComponent={topArea}
             onEndReachedThreshold={0.5}
-            refreshControl={refreshControl}
             renderItem={renderItem}
             // TODO: Comment out sticky header indices until we figure out how to
             // give the headers a background only when they're sticking.
