@@ -3,9 +3,10 @@ import { sprintf } from 'sprintf-js'
 
 import { PriceChangePayload } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { ThunkAction } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showDevError } from '../services/AirshipInstance'
 import { ButtonsModal } from './ButtonsModal'
 
 export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, data: PriceChangePayload): ThunkAction<Promise<void>> {
@@ -15,25 +16,44 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     const { account } = state.core
     const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
-    const threeButtonModal = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.price_change_notification}
-        message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
-        buttons={{
-          buy: { label: lstrings.title_buy, type: 'secondary' },
-          sell: { label: lstrings.title_sell },
-          exchange: { label: lstrings.buy_crypto_modal_exchange }
-        }}
-      />
-    ))
+    let threeButtonModal
+    if (config.disableSwaps === true) {
+      threeButtonModal = await Airship.show<'buy' | 'sell' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.price_change_notification}
+          message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+          buttons={{
+            buy: { label: lstrings.title_buy, type: 'secondary' },
+            sell: { label: lstrings.title_sell }
+          }}
+        />
+      ))
+    } else {
+      threeButtonModal = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.price_change_notification}
+          message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+          buttons={{
+            buy: { label: lstrings.title_buy, type: 'secondary' },
+            sell: { label: lstrings.title_sell },
+            exchange: { label: lstrings.buy_crypto_modal_exchange }
+          }}
+        />
+      ))
+    }
 
     if (threeButtonModal === 'buy') {
       navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     } else if (threeButtonModal === 'sell') {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     } else if (threeButtonModal === 'exchange') {
-      navigation.navigate('swapTab', { screen: 'swapCreate' })
+      if (config.disableSwaps === true) {
+        showDevError(new Error('Exchange button should not be visible'))
+      } else {
+        navigation.navigate('swapTab', { screen: 'swapCreate' })
+      }
     }
   }
 }

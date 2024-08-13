@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { roundedFee } from '../../util/utils'
@@ -48,12 +49,23 @@ export function InsufficientFeesModal(props: Props) {
     bridge.resolve()
   })
 
+  let secondary
+  let paragraph: string
+
+  // If the swap button is disabled, hide it
+  if (config.disableSwaps === true) {
+    secondary = undefined
+    paragraph = sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_2s, amountString, name)
+  } else {
+    secondary = { label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }
+    paragraph = sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)
+  }
   return (
     <ModalUi4 bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
-      <Paragraph>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</Paragraph>
+      <Paragraph>{paragraph}</Paragraph>
       <ButtonsViewUi4
         primary={{ label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode), onPress: handleBuy }}
-        secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
+        secondary={secondary}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />
     </ModalUi4>
