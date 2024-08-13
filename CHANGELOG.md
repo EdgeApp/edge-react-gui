@@ -19,6 +19,7 @@
 - changed: Query supported countries and US states for fiat plugins
 - fixed: Disable max spend for zkSync
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
+- fixed: Return underLimit error for Simplex for very small quotes
 
 ## 4.10.0 (2024-08-07)
 
