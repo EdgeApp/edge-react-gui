@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
@@ -52,17 +53,28 @@ export function InsufficientFeesModal(props: Props) {
 
   // Give extra information about the network name like Base or Arbitrum where
   // the mainnet token is ETH but the network is not Ethereum.
-  const message =
-    currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
-      ? sprintf(lstrings.buy_parent_crypto_modal_message_3s, amountString, denomName, wallet.currencyInfo.displayName)
-      : sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, denomName)
+  let message: string
+  let secondary
+  if (config.disableSwaps === true) {
+    secondary = undefined
+    message =
+      currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
+        ? sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_3s, amountString, denomName, wallet.currencyInfo.displayName)
+        : sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_2s, amountString, denomName)
+  } else {
+    secondary = { label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }
+    message =
+      currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
+        ? sprintf(lstrings.buy_parent_crypto_modal_message_3s, amountString, denomName, wallet.currencyInfo.displayName)
+        : sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, denomName)
+  }
 
   return (
     <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <Paragraph>{message}</Paragraph>
       <ButtonsView
         primary={{ label: getUkCompliantString(countryCode, 'buy_1s_quote', currencyCode), onPress: handleBuy }}
-        secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
+        secondary={secondary}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />
     </EdgeModal>
