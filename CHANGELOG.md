@@ -6,6 +6,7 @@
 - added: Add disableSurveyModal option
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
+- changed: "Buy" tab shows "Deposit" for UK users
 - fixed: FIO OBT data not showing in received transaction memos
 
 ## 4.11.0
