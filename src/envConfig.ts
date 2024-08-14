@@ -126,12 +126,12 @@ export const asEnvConfig = asObject({
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   BITCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   BITCOINCASH_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   CARDANO_INIT: asCorePluginInit(
@@ -163,17 +163,17 @@ export const asEnvConfig = asObject({
   COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   DIGIBYTE_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   DOGE_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
@@ -202,7 +202,7 @@ export const asEnvConfig = asObject({
   ),
   GROESTLCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   GODEX_INIT: asCorePluginInit(
@@ -222,7 +222,7 @@ export const asEnvConfig = asObject({
   ),
   LITECOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   LETSEXCHANGE_INIT: asCorePluginInit(
@@ -297,7 +297,7 @@ export const asEnvConfig = asObject({
   ),
   ZCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   '0XGASLESS_INIT': asCorePluginInit(
