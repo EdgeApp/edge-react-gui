@@ -342,7 +342,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
       await launchPaymentProto(this._navigation, account, result.paymentProtocolURL, {
-        currencyCode,
+        tokenId,
         wallet: this._selectedWallet,
         metadata
       }).catch(error => showError(error))

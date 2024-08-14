@@ -470,7 +470,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
                   uri: paymentProtocolUrl,
                   params: {
                     wallet: wallet,
-                    currencyCode: quoteParams.displayCurrencyCode,
+                    tokenId: quoteParams.tokenId,
                     onBack: () => {
                       reject(
                         new Error(
