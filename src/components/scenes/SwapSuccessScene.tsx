@@ -7,12 +7,12 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
+import { SceneButtons } from '../buttons/SceneButtons'
+import { EdgeAnim, fadeIn } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
-import { MainButton } from '../themed/MainButton'
 
 interface Props extends EdgeSceneProps<'swapSuccess'> {}
 
@@ -70,9 +70,9 @@ export const SwapSuccessScene = (props: Props) => {
         <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
           {lstrings.exchange_congratulations_msg_info}
         </EdgeText>
-        <Fade visible={showButton}>
-          <MainButton label={lstrings.string_done_cap} type="secondary" onPress={done} />
-        </Fade>
+        <EdgeAnim style={styles.animOverlay} visible={showButton} enter={fadeIn}>
+          <SceneButtons absolute primary={{ label: lstrings.string_done_cap, onPress: done }} />
+        </EdgeAnim>
         {renderConfetti()}
       </View>
     </SceneWrapper>
@@ -80,8 +80,14 @@ export const SwapSuccessScene = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  animOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
+  },
   container: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
