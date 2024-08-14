@@ -27,7 +27,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError, showToast, showWarning } from '../services/AirshipInstance'
+import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
@@ -153,13 +153,13 @@ export const SwapCreateScene = (props: Props) => {
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, swapRequest.fromWallet.id, fromTokenId)
       if (disableSrc) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, fromCurrencyCode))
+        showToast(sprintf(lstrings.swap_token_no_enabled_exchanges_2s, fromCurrencyCode, swapRequest.fromWallet.currencyInfo.displayName))
         return
       }
 
       const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, swapRequest.toWallet.id, toTokenId)
       if (disableDest) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, toCurrencyCode))
+        showToast(sprintf(lstrings.swap_token_no_enabled_exchanges_2s, toCurrencyCode, swapRequest.toWallet.currencyInfo.displayName))
         return
       }
     }
