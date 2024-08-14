@@ -13,13 +13,12 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeMargins } from '../layout/EdgeMargins'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
-import { SceneHeader } from '../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
@@ -136,17 +135,15 @@ const CreateWalletImportComponent = (props: Props) => {
   // Hack to disable autocomplete since RN sometimes enables it even when not specified
   // https://www.reddit.com/r/reactnative/comments/rt1who/cant_turn_off_autocomplete_in_textinput_android/
 
-  const keyboardType = Platform.OS === 'ios' ? 'email-address' : 'visible-password'
-  const secureTextEntry = Platform.OS === 'ios' ? undefined : true
+  const keyboardType = Platform.OS === 'ios' ? 'email-address' : undefined
 
   return (
-    <SceneWrapper avoidKeyboard>
-      <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
-      <View style={styles.icon}>
-        <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
-      </View>
-      {/* HACK: SceneWrapper's padding prop doesn't work for non-function children */}
-      <EdgeMargins>
+    <SceneWrapper>
+      <View style={styles.container}>
+        <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
+        <View style={styles.icon}>
+          <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+        </View>
         <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
         <FilledTextInput
           aroundRem={0.5}
@@ -159,16 +156,20 @@ const CreateWalletImportComponent = (props: Props) => {
           autoComplete="off"
           onChangeText={setImportText}
           onSubmitEditing={handleNext}
-          secureTextEntry={secureTextEntry}
+          returnKeyType="none"
           ref={textInputRef}
         />
         <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
-      </EdgeMargins>
+      </View>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexShrink: 1,
+    margin: theme.rem(0.5)
+  },
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',
