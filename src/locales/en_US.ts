@@ -435,6 +435,7 @@ const strings = {
   swap_options_header_centralized: 'Centralized\nMay require personal info',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
   swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion always prefers:',
+  swap_token_no_enabled_exchanges_2s: 'No enabled exchanges support %1$s (on %2$s) at this time',
   settings_button_clear_logs: 'Clear Logs',
   settings_button_send_logs: 'Send Logs to Edge',
   settings_button_export_logs: 'Export Logs',
