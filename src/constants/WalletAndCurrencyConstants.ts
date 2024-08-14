@@ -152,7 +152,6 @@ interface SpecialCurrencyInfo {
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
-  isPaymentProtocolSupported?: boolean
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
@@ -188,8 +187,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_amoy_wallet_name,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: false
+    isImportKeySupported: true
   },
   bitcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -199,8 +197,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    isStakingSupported: true
   },
   bitcointestnet: {
     hasSegwit: true,
@@ -208,8 +205,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   bitcoincash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -218,24 +214,21 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    isStakingSupported: true
   },
   bitcoinsv: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
     keysOnlyMode: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   digibyte: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_digibyte_wallet_name,
     chainCode: 'DGB',
     displayBuyCrypto: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   litecoin: {
     hasSegwit: true,
@@ -245,8 +238,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    isStakingSupported: true
   },
   rsk: {
     initWalletName: lstrings.string_first_rsk_wallet_name,
@@ -345,7 +337,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '1'
@@ -357,7 +348,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -370,7 +360,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -384,7 +373,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isPaymentProtocolSupported: false,
     noMaxSpend: true
   },
   filecoinfevm: {
@@ -393,8 +381,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: false,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: false
+    isStakingSupported: true
   },
   filecoinfevmcalibration: {
     initWalletName: lstrings.string_first_filecoin_fevm_calibratio_wallet_name,
@@ -402,8 +389,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: false,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: false
+    isStakingSupported: true
   },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
@@ -412,7 +398,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     isStakingSupported: true
   },
   ethereumclassic: {
@@ -431,7 +416,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -444,7 +428,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     isStakingSupported: true,
     chainIcon: true,
     walletConnectV2ChainId: {
@@ -469,7 +452,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_zksync_wallet_name,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     noMaxSpend: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -591,15 +573,13 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_dash_wallet_name,
     chainCode: 'DASH',
     displayIoniaRewards: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   ravencoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   dogecoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -607,59 +587,51 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'DOGE',
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    isStakingSupported: true
   },
   zcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   smartcash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true,
     keysOnlyMode: true
   },
   vertcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   bitcoingold: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
     isImportKeySupported: true,
-    isSplittingDisabled: true,
-    isPaymentProtocolSupported: true
+    isSplittingDisabled: true
   },
   feathercoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   groestlcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   qtum: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   eboost: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -802,7 +774,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '369'
@@ -839,7 +810,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '170000'
@@ -852,7 +822,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '11155111'
