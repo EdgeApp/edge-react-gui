@@ -1,6 +1,7 @@
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
@@ -141,25 +142,28 @@ const CreateWalletImportComponent = (props: Props) => {
     <SceneWrapper>
       <View style={styles.container}>
         <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
-        <View style={styles.icon}>
-          <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
-        </View>
-        <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
-        <FilledTextInput
-          aroundRem={0.5}
-          keyboardType={keyboardType}
-          value={importText}
-          multiline
-          placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoComplete="off"
-          onChangeText={setImportText}
-          onSubmitEditing={handleNext}
-          returnKeyType="none"
-          ref={textInputRef}
-        />
-        <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
+        <KeyboardAwareScrollView>
+          <View style={styles.icon}>
+            <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+          </View>
+          <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
+          <FilledTextInput
+            aroundRem={0.5}
+            keyboardType={keyboardType}
+            value={importText}
+            multiline
+            numberOfLines={10}
+            placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="off"
+            onChangeText={setImportText}
+            onSubmitEditing={handleNext}
+            returnKeyType="none"
+            ref={textInputRef}
+          />
+          <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
+        </KeyboardAwareScrollView>
       </View>
     </SceneWrapper>
   )
