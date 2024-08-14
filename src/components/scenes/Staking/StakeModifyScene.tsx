@@ -70,7 +70,19 @@ const StakeModifySceneComponent = (props: Props) => {
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
-  const changeQuoteAllocations = changeQuote?.allocations ?? []
+  const changeQuoteAllocations =
+    changeQuote?.allocations ??
+    stakePolicy.stakeAssets.reduce((quoteAllocations: QuoteAllocation[], asset) => {
+      if (modification === 'stake' || modification === 'unstake') {
+        quoteAllocations.push({
+          allocationType: modification,
+          pluginId: asset.pluginId,
+          currencyCode: asset.currencyCode,
+          nativeAmount: '0'
+        })
+      }
+      return quoteAllocations
+    }, [])
   const { quoteInfo } = changeQuote ?? {}
 
   // Request that the user will modify, triggering a ChangeQuote recalculation
@@ -294,18 +306,14 @@ const StakeModifySceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string; currencyCode: string }) => {
-    const { pluginId, currencyCode } = asset
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
-    const quoteAllocation: QuoteAllocation | undefined =
-      changeQuote != null
-        ? changeQuote.allocations.find(
-            allocation => allocationType === allocation.allocationType && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
-          )
-        : allocationType === 'unstake' && mustMaxUnstake
-        ? { allocationType, pluginId: asset.pluginId, currencyCode: asset.currencyCode, nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0' }
-        : undefined
+  const renderEditableQuoteAmountRow = (quoteAllocation: QuoteAllocation) => {
+    const { currencyCode, pluginId, allocationType } = quoteAllocation
+    quoteAllocation =
+      allocationType === 'unstake' && mustMaxUnstake
+        ? { allocationType, pluginId, currencyCode, nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0' }
+        : quoteAllocation
 
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     const quoteCurrencyCode = currencyCode
     const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], quoteCurrencyCode)
 
@@ -319,10 +327,6 @@ const StakeModifySceneComponent = (props: Props) => {
         : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
-    const { nativeAmount: earnedAmount = '0', locktime } = existingAllocations.earned[0] ?? {}
-    if (isClaim && locktime != null && Date.now() < new Date(locktime).valueOf()) {
-      return null
-    }
 
     return (
       <EdgeCard key={`${allocationType}${pluginId}${currencyCode}`}>
@@ -330,7 +334,7 @@ const StakeModifySceneComponent = (props: Props) => {
           title={title}
           key={allocationType + pluginId + currencyCode}
           exchangeRates={guiExchangeRates}
-          nativeAmount={isClaim ? earnedAmount : nativeAmount}
+          nativeAmount={nativeAmount}
           currencyCode={quoteCurrencyCode}
           exchangeDenomination={quoteDenom}
           displayDenomination={quoteDenom}
@@ -443,24 +447,16 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderChangeQuoteAmountTiles = (modification: ChangeQuoteRequest['action']) => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'networkFee')
+    const stakeUnstakeAllocations = changeQuoteAllocations.filter(alloc => alloc.allocationType === 'stake' || alloc.allocationType === 'unstake')
+    const claimAllocations = changeQuoteAllocations.filter(alloc => alloc.allocationType === 'claim')
 
     return (
       <View style={styles.amountTilesContainer}>
         <EdgeCard icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
           <EdgeRow title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
         </EdgeCard>
-        {
-          // Render stake/unstake amount tiles
-          modification === 'stake' || modification === 'unstake'
-            ? stakePolicy.stakeAssets.map(asset => renderEditableQuoteAmountRow(modification, asset))
-            : null
-        }
-        {
-          // Render claim amount tile
-          stakePolicy.hideClaimAction || (modification !== 'claim' && modification !== 'unstake')
-            ? null
-            : stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset))
-        }
+        {stakeUnstakeAllocations.map(renderEditableQuoteAmountRow)}
+        {claimAllocations.map(renderEditableQuoteAmountRow)}
         {
           // Render stake/unstake fee tiles
           stakePolicy.stakeAssets.map(asset => renderStakeFeeAmountRow(modification, asset))
