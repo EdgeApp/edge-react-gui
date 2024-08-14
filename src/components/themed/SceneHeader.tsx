@@ -57,4 +57,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
+/** @deprecated - Use SceneHeaderUi4 instead */
 export const SceneHeader = React.memo(SceneHeaderComponent)
