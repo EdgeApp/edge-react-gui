@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { launchPaymentProto } from '../../../actions/PaymentProtoActions'
 import { FIO_PLUGIN_ID, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
@@ -27,7 +28,6 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { SendScene2Params } from '../SendScene2'
 
 export interface FioDomainRegisterSelectWalletParams {
   walletId: string
@@ -56,6 +56,7 @@ interface LocalState {
   supportedAssets: EdgeAsset[]
   paymentInfo: PaymentInfo
   activationCost: number
+  bitpayUrl: string
   feeValue: number
   paymentWallet?: {
     id: string
@@ -70,6 +71,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   state: LocalState = {
     loading: false,
     activationCost: 800,
+    bitpayUrl: '',
     feeValue: 0,
     supportedAssets: [],
     paymentInfo: {}
@@ -86,8 +88,13 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
     if (fioPlugin != null) {
       try {
-        const { activationCost, feeValue, supportedAssets, paymentInfo } = await getDomainRegInfo(fioPlugin, fioDomain, wallet, fioDisplayDenomination)
-        this.setState({ activationCost, feeValue, supportedAssets, paymentInfo })
+        const { activationCost, bitpayUrl, feeValue, supportedAssets, paymentInfo } = await getDomainRegInfo(
+          fioPlugin,
+          fioDomain,
+          wallet,
+          fioDisplayDenomination
+        )
+        this.setState({ activationCost, bitpayUrl, feeValue, supportedAssets, paymentInfo })
       } catch (e: any) {
         this.setState({ errorMessage: e.message })
       }
@@ -121,10 +128,10 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
   }
 
-  onNextPress = (): void => {
+  onNextPress = async (): Promise<void> => {
     const { account, isConnected, navigation, route, wallet: selectedWallet, onLogEvent } = this.props
     const { fioDomain } = route.params
-    const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
+    const { bitpayUrl, feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
     if (!paymentWallet || !paymentWallet.id) return
 
@@ -147,7 +154,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         const paymentCurrencyCode = getCurrencyCode(wallet, tokenId)
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const { amount: exchangeAmount, address: paymentAddress } = allPaymentInfo[pluginId][tokenId ?? '']
+        const { amount: exchangeAmount } = allPaymentInfo[pluginId][tokenId ?? '']
 
         const cryptoAmount = new CryptoAmount({
           exchangeAmount,
@@ -155,36 +162,14 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           currencyConfig: wallet.currencyConfig
         })
 
-        const { nativeAmount } = cryptoAmount
-
-        const sendParams: SendScene2Params = {
-          walletId,
-          tokenId,
-          dismissAlert: true,
-          lockTilesMap: {
-            address: true,
-            amount: true,
-            wallet: true
+        await launchPaymentProto(this.props.navigation, this.props.account, bitpayUrl, {
+          wallet: wallet,
+          metadata: {
+            name: lstrings.fio_address_register_metadata_name,
+            notes: `${lstrings.title_register_fio_domain}\n${fioDomain}`
           },
-          spendInfo: {
-            tokenId,
-            spendTargets: [
-              {
-                nativeAmount,
-                publicAddress: paymentAddress
-              }
-            ],
-            metadata: {
-              name: lstrings.fio_address_register_metadata_name,
-              notes: `${lstrings.title_register_fio_domain}\n${fioDomain}`
-            }
-          },
-          onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-            if (error) {
-              setTimeout(() => {
-                showError(lstrings.create_wallet_account_error_sending_transaction)
-              }, 750)
-            } else if (edgeTransaction) {
+          onDone: (edgeTransaction?: EdgeTransaction) => {
+            if (edgeTransaction != null) {
               Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
@@ -202,8 +187,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
               navigation.navigate('homeTab', { screen: 'home' })
             }
           }
-        }
-        navigation.navigate('send2', sendParams)
+        })
       }
     } else {
       showError(lstrings.fio_network_alert_text)

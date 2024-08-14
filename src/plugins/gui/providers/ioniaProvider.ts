@@ -478,7 +478,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
                         )
                       )
                     },
-                    onDone: resolve
+                    onDone: () => resolve()
                   }
                 })
                 .catch(err => {

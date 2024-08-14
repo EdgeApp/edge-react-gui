@@ -31,7 +31,7 @@ export interface LaunchPaymentProtoParams {
   navigateReplace?: boolean
 
   onBack?: () => void
-  onDone?: () => void
+  onDone?: (edgeTransaction?: EdgeTransaction) => void
 }
 
 // Maps payment protocol chain ids to Edge currency pluginIds
@@ -53,7 +53,7 @@ const CHAIN_MAP: StringMap = {
 
 // https://developer.bitpay.com/reference/retrieve-the-supported-currencies
 // https://anypayx.com/coins
-const PAYMENT_PROTOCOL_MAP: MapObject<EdgeAsset> = {
+export const PAYMENT_PROTOCOL_MAP: MapObject<EdgeAsset> = {
   ETH_arb: { pluginId: 'arbitrum', tokenId: null },
   USDC_arb: { pluginId: 'arbitrum', tokenId: 'af88d065e77c8cc2239327c5edb3a432268e5831' },
   USDTe_arb: { pluginId: 'arbitrum', tokenId: 'fd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9' },
@@ -261,7 +261,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     onBack,
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`)
-      if (onDone != null) onDone()
+      if (onDone != null) onDone(edgeTransaction)
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
       const unsignedHex = edgeTransaction.otherParams?.unsignedTx
