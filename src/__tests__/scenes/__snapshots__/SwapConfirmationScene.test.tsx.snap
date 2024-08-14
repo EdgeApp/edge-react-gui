@@ -1402,21 +1402,45 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
                       style={
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        }
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#3dd9f4",
+                            "fontSize": 17,
+                          },
+                          null,
+                        ]
                       }
                     >
                       Powered by 
                     </Text>
                     <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
                       style={
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        }
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#3dd9f4",
+                            "fontSize": 17,
+                          },
+                          null,
+                        ]
                       }
                     />
                   </View>
@@ -1428,11 +1452,23 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
                       style={
-                        {
-                          "color": "#888888",
-                          "fontSize": 17,
-                        }
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#888888",
+                            "fontSize": 17,
+                          },
+                          null,
+                        ]
                       }
                     >
                       Tap to Change Provider
