@@ -452,7 +452,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </EdgeText>
           </EdgeTouchableOpacity>
           <EdgeTouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsTouchContainer}>
-            <Entypo accessibilityHint={lstrings.wallet_settings_label} color={theme.icon} name="dots-three-vertical" size={theme.rem(1)} />
+            <View
+            //
+            // style={{ backgroundColor: '#ac66665e' }}
+            //
+            >
+              <Entypo accessibilityHint={lstrings.wallet_settings_label} color={theme.icon} name="dots-three-vertical" size={theme.rem(1)} />
+            </View>
           </EdgeTouchableOpacity>
         </View>
         <EdgeTouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
@@ -644,8 +650,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         {searching ? null : (
           <>
             <EdgeCard paddingRem={1}>
-              {this.renderBalanceBox()}
-              {isStakingAvailable && this.renderStakedBalance()}
+              <View
+              // style={{
+              //   borderColor: '#ffffff30',
+              //   borderWidth: 0.5
+              // }}
+              >
+                {this.renderBalanceBox()}
+                {isStakingAvailable && this.renderStakedBalance()}
+              </View>
             </EdgeCard>
             {this.renderButtons()}
           </>
@@ -670,6 +683,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: theme.rem(0.5)
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
@@ -708,6 +723,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   settingsTouchContainer: {
     alignSelf: 'center',
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5,
 
     // Extra tappability:
     margin: -theme.rem(0.75),
@@ -717,7 +734,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingRight: theme.rem(0.5),
 
     // Whitespace adjustments:
-    marginRight: -theme.rem(0.75)
+    marginRight: -theme.rem(0.8),
+    marginTop: -theme.rem(1.75)
   },
   // Send/Receive/Earn/Trade Buttons
   buttonsContainer: {
