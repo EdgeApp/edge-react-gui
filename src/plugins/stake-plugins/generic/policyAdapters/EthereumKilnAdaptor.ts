@@ -1,4 +1,4 @@
-import { add, gt, lt } from 'biggystring'
+import { add, eq, gt, lt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
@@ -161,17 +161,16 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const balance = wallet.balanceMap.get(null) ?? '0'
-      let canUnstake = false
       let canClaim = false
       const allocations: PositionAllocation[] = []
 
       const allPositions = await kiln.getStakes(walletAddress)
       const position = allPositions.find(position => position.integration_address === contractAddress)
 
-      const nativeStakedAmount = position?.balance ?? '0'
-      if (gt(nativeStakedAmount, '0')) {
-        canUnstake = true
-      }
+      // After fully unstaking, users are left with a single wei of the liquidity token. We should ignore this.
+      const positionBalance = position?.balance ?? '0'
+      const nativeStakedAmount = eq(positionBalance, '1') ? '0' : positionBalance
+
       allocations.push({
         allocationType: 'staked',
         pluginId,
@@ -218,7 +217,7 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
       return {
         allocations,
         canStake: gt(balance, '0'),
-        canUnstake,
+        canUnstake: gt(nativeStakedAmount, '1'),
         canUnstakeAndClaim: false,
         canClaim
       }
