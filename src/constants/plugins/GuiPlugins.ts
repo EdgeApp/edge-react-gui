@@ -254,8 +254,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'coinhub',
     storeId: 'coinhub',
     baseUri: 'https://coinhubbitcoinwallet.app',
-    displayName: 'Coinhub ATMs',
-    permissions: ['location']
+    displayName: 'Coinhub ATMs'
   },
   custom: {
     pluginId: 'custom',
