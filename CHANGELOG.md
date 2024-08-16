@@ -6,8 +6,9 @@
 
 ## 4.11.0
 
-- added: Kado buy via wire transfer
 - added: Allow for Maestro specific iOS and Android builds
+- added: Handle KYC error responses from Bity
+- added: Kado buy via wire transfer
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
 - changed: Cache exchange rates for five minutes to account for server or connection instability
