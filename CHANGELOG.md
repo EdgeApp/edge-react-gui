@@ -4,6 +4,7 @@
 
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
+- added: Handle KYC error responses from Bity
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
