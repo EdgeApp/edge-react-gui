@@ -1131,6 +1131,7 @@ const strings = {
   error_boundary_message2: "If the problem persists, tap below to contact us, and we'll do our best to fix the problem.",
   error_boundary_help_button: 'Help Closing App',
   error_unexpected_title: 'Unexpected Error',
+  error_kyc_required_s: 'KYC required: %s',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',

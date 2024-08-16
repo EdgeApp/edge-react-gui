@@ -4,6 +4,7 @@
 
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
+- added: Handle KYC error responses from Bity
 - changed: Enable Bitpay payments for FIO names and domains
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
