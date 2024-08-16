@@ -4,6 +4,7 @@
 
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
+- changed: Enable Bitpay payments for FIO names and domains
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.

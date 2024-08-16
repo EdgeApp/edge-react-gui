@@ -131,7 +131,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
         await launchPaymentProto(navigation, account, parsedUri.paymentProtocolUrl, {
-          currencyCode,
+          tokenId,
           navigateReplace: true,
           wallet: coreWallet
         }).catch(error => showError(error))
@@ -154,7 +154,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
           await launchPaymentProto(navigation, account, parsedLink.uri, {
-            currencyCode,
+            tokenId,
             navigateReplace: true,
             wallet: coreWallet
           }).catch(error => showError(error))
