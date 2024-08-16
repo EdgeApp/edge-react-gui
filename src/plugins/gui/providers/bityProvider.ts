@@ -558,6 +558,7 @@ export const bityProvider: FiatProviderFactory = {
                   // their personal info depending on what was wrong with the
                   // order, i.e. invalid bank or address info.
                   console.error('Bity order error: ', e)
+                  await showUi.showError(lstrings.error_unexpected_title)
                 }
 
                 if (approveQuoteRes == null) {
