@@ -12,6 +12,7 @@
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
 - changed: Cache exchange rates for five minutes to account for server or connection instability
 - changed: Query supported countries and US states for fiat plugins
+- changed: Enable Bitpay payments for FIO names and domains
 - fixed: Disable max spend for zkSync
 - fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
 - fixed: If handling a deep link requires a signed-in account, correctly save it for later.
