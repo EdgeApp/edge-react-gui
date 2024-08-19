@@ -56,10 +56,12 @@ export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
 }
 
 /**
- * Returns a formatted locked until timestamp, if it exists.
+ * Returns a formatted locked until timestamp, if it exists and is a future date.
  */
 export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => {
-  return allocation.locktime != null ? ` (${sprintf(lstrings.stake_lock_message, formatTimeDate(allocation.locktime))})` : ''
+  return allocation.locktime != null && new Date(allocation.locktime) > new Date()
+    ? ` (${sprintf(lstrings.stake_lock_message, formatTimeDate(allocation.locktime))})`
+    : ''
 }
 
 /**
