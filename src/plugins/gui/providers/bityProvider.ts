@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
@@ -84,7 +85,8 @@ const asBityCurrency = asObject({
 })
 const asBityCurrencyResponse = asObject({ currencies: asArray(asBityCurrency) })
 
-const asBityErrorResponse = asObject({ errors: asArray(asObject({ code: asString, message: asString })) })
+const asBityError = asObject({ code: asString, message: asString })
+const asBityErrorResponse = asObject({ errors: asArray(asBityError) })
 
 // const asCurrencyAmount = asObject({
 //   amount: asString,
@@ -219,6 +221,14 @@ const asBityApproveQuoteResponse = asEither(asBityBuyApproveQuoteResponse, asBit
 
 type BityApproveQuoteResponse = ReturnType<typeof asBityApproveQuoteResponse>
 
+class BityError extends Error {
+  code: string
+  constructor(message: string, code: string) {
+    super(message)
+    this.code = code
+  }
+}
+
 const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
   const request = {
     method: 'POST',
@@ -242,7 +252,7 @@ const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
       // is a required FiatProviderQuoteError param.
       throw new Error('Bity: Unable to fetch quote: ' + (await result.text()))
     }
-    if (bityErrorRes.errors.some((bityError: { code: string; message: string }) => bityError.code === 'amount_too_large')) {
+    if (bityErrorRes.errors.some(bityError => bityError.code === 'amount_too_large')) {
       throw new FiatProviderError({ providerId, errorType: 'overLimit' })
     }
   }
@@ -271,7 +281,7 @@ const approveBityQuote = async (
 
   if (orderRes.status !== 201) {
     const errorData = await orderRes.json()
-    throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
+    throw new BityError(errorData.errors[0].message, errorData.errors[0].code)
   }
   // "location": "https://...bity.com/v2/orders/[orderid]"
   const locationHeader = orderRes.headers.get('Location')
@@ -292,7 +302,9 @@ const approveBityQuote = async (
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
-    const signedMessage = await wallet.signMessage(body, { otherParams: { publicAddress } })
+    const signedMessage = isUtxoWallet(wallet)
+      ? await wallet.signMessage(body, { otherParams: { publicAddress } })
+      : await wallet.signBytes(utf8.parse(body), { otherParams: { publicAddress } })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
       method: 'POST',
@@ -525,7 +537,8 @@ export const bityProvider: FiatProviderFactory = {
 
             await showUi.sepaForm({
               headerTitle: lstrings.sepa_form_title,
-              onSubmit: async (sepaInfo: SepaInfo) => {
+              doneLabel: isBuy ? lstrings.submit : lstrings.string_next_capitalized,
+              onDone: async (sepaInfo: SepaInfo) => {
                 let approveQuoteRes: BityApproveQuoteResponse | null = null
                 try {
                   if (isBuy) {
@@ -556,6 +569,13 @@ export const bityProvider: FiatProviderFactory = {
                   // their personal info depending on what was wrong with the
                   // order, i.e. invalid bank or address info.
                   console.error('Bity order error: ', e)
+
+                  const bityError = asMaybe(asBityError)(e)
+                  if (bityError?.code === 'exceeds_quota') {
+                    await showUi.showError(sprintf(lstrings.error_kyc_required_s, bityError.message))
+                    return
+                  }
+                  await showUi.showError(lstrings.error_unexpected_title)
                 }
 
                 if (approveQuoteRes == null) {
@@ -764,4 +784,30 @@ const executeBuyOrderFetch = async (
     },
     clientId
   )
+}
+
+function isUtxoWallet(wallet: EdgeCurrencyWallet) {
+  return [
+    'wallet:badcoin',
+    'wallet:bitcoin',
+    'wallet:bitcoincash',
+    'wallet:bitcoincashtestnet',
+    'wallet:bitcoingold',
+    'wallet:bitcoingoldtestnet',
+    'wallet:bitcoinsv',
+    'wallet:bitcointestnet',
+    'wallet:dash',
+    'wallet:digibyte',
+    'wallet:dogecoin',
+    'wallet:eboost',
+    'wallet:feathercoin',
+    'wallet:groestlcoin',
+    'wallet:litecoin',
+    'wallet:qtum',
+    'wallet:ravencoin',
+    'wallet:smartcash',
+    'wallet:ufo',
+    'wallet:vertcoin',
+    'wallet:zcoin'
+  ].includes(wallet.currencyInfo.walletType)
 }

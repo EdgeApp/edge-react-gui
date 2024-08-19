@@ -38,7 +38,8 @@ export const asFiatPaymentType = asValue(
   'pse',
   'sepa',
   'spei',
-  'turkishbank'
+  'turkishbank',
+  'wire'
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
@@ -52,8 +53,9 @@ export interface FiatPluginAddressFormParams {
 
 export interface FiatPluginSepaFormParams {
   headerTitle: string
+  doneLabel: string
   headerIconUri?: string
-  onSubmit: (sepaInfo: SepaInfo) => Promise<void>
+  onDone: (sepaInfo: SepaInfo) => Promise<void>
   onClose: () => void
 }
 
@@ -163,6 +165,10 @@ export interface FiatPluginUi {
   waitForAnimationFrame: () => Promise<void>
 }
 
+export interface FiatPluginUtils {
+  getHistoricalRate: (codePair: string, date: string) => Promise<number>
+}
+
 export interface FiatPluginFactoryArgs {
   // TODO:
   // io: {
@@ -174,6 +180,7 @@ export interface FiatPluginFactoryArgs {
   longPress?: boolean
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi
+  pluginUtils: FiatPluginUtils
 }
 
 export interface FiatPluginRegionCode {

@@ -9,14 +9,14 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { validateRegion } from './common'
+import { addExactRegion, isDailyCheckDue, validateExactRegion } from './common'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
@@ -125,14 +125,8 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
-  US: {
-    notStateProvinces: ['HI', 'NY', 'LA']
-  }
-}
-
 const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
-const allowedCountryCodes: { [code: string]: boolean } = {}
+const allowedCountryCodes: FiatProviderExactRegions = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
 
 const asSimplexApiKeys = asObject({
@@ -171,6 +165,7 @@ const asSimplexQuote = asEither(asSimplexQuoteSuccess, asSimplexQuoteError)
 const asSimplexFiatCurrencies = asArray(asSimplexFiatCurrency)
 const asSimplexCountries = asArray(asString)
 const asInfoJwtSignResponse = asObject({ token: asString })
+let lastChecked = 0
 
 export const simplexProvider: FiatProviderFactory = {
   providerId,
@@ -205,7 +200,6 @@ export const simplexProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, regionCode, paymentTypes }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
@@ -214,32 +208,36 @@ export const simplexProvider: FiatProviderFactory = {
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
-        if (response == null || !response.ok) return allowedCurrencyCodes
-        const result = await response.json()
+        if (isDailyCheckDue(lastChecked)) {
+          const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
+          if (response == null || !response.ok) return allowedCurrencyCodes
+          const result = await response.json()
 
-        const fiatCurrencies = asSimplexFiatCurrencies(result)
-        for (const fc of fiatCurrencies) {
-          allowedCurrencyCodes.fiat['iso:' + fc.ticker_symbol] = fc
+          const fiatCurrencies = asSimplexFiatCurrencies(result)
+          for (const fc of fiatCurrencies) {
+            allowedCurrencyCodes.fiat['iso:' + fc.ticker_symbol] = fc
+          }
+
+          const response2 = await fetch(`https://api.simplexcc.com/v2/supported_countries?public_key=${publicKey}&payment_methods=credit_card`).catch(
+            e => undefined
+          )
+          if (response2 == null || !response.ok) throw new Error('Simplex failed to fetch supported countries')
+          const result2 = await response2.json()
+          const countries = asSimplexCountries(result2)
+
+          for (const country of countries) {
+            const [countryCode, stateProvinceCode] = country.split('-')
+            addExactRegion(allowedCountryCodes, countryCode, stateProvinceCode)
+          }
+          lastChecked = Date.now()
         }
-
-        const response2 = await fetch(`https://api.simplexcc.com/v2/supported_countries?public_key=${publicKey}&payment_methods=credit_card`).catch(
-          e => undefined
-        )
-        if (response2 == null || !response.ok) return allowedCurrencyCodes
-        const result2 = await response2.json()
-        const countries = asSimplexCountries(result2)
-
-        for (const country of countries) {
-          const [countryCode] = country.split('-')
-          allowedCountryCodes[countryCode.toUpperCase()] = true
-        }
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
 
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }

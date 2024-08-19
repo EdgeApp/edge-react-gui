@@ -2,7 +2,24 @@
 
 ## Unreleased
 
-## 4.10.0
+- added: App distribution via Zealot
+
+## 4.11.0
+
+- added: Allow for Maestro specific iOS and Android builds
+- added: Handle KYC error responses from Bity
+- added: Kado buy via wire transfer
+- changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
+- changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
+- changed: Cache exchange rates for five minutes to account for server or connection instability
+- changed: Query supported countries and US states for fiat plugins
+- changed: Enable Bitpay payments for FIO names and domains
+- fixed: Disable max spend for zkSync
+- fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
+- fixed: Fix broken Bity message signing
+- fixed: If handling a deep link requires a signed-in account, correctly save it for later.
+
+## 4.10.0 (2024-08-07)
 
 - added: Network names to wallet list cards
 - added: 0x Gasless Swap exchange plugin
@@ -13,7 +30,7 @@
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
-- change: Update generic stake plugins to use info server rollup for APY values
+- changed: Update generic stake plugins to use info server rollup for APY values
 - changed: Ui4 components renamed and reorganized
 - changed: SendScene "Fee:" renamed to "Network Fee:"
 - changed: Style of "Already have an account? Sign in" tappable text
@@ -27,7 +44,7 @@
 - fixed: Buying non-BTC assets with Bity
 - fixed: Misc styling fixes on SepaFormScene and AddressFormScene
 - fixed: Pressing back during native fiat buy/sell flows results in stuck button spinners
-- fixed: Broken Android paste into `TextInputModal` in "ScanQR" -> "Enter" 
+- fixed: Broken Android paste into `TextInputModal` in "ScanQR" -> "Enter"
 - fixed: Promo cards not visible until scroll for new accounts
 
 ## 4.9.2 (2024-07-22)

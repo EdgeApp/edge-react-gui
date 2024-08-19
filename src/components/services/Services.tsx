@@ -23,7 +23,6 @@ import { ActionQueueService } from './ActionQueueService'
 import { Airship } from './AirshipInstance'
 import { AutoLogout } from './AutoLogout'
 import { ContactsLoader } from './ContactsLoader'
-import { DeepLinkingManager } from './DeepLinkingManager'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager'
 import { FioService } from './FioService'
 import { LoanManagerService } from './LoanManagerService'
@@ -140,7 +139,6 @@ export function Services(props: Props) {
       {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
       <AutoLogout />
       <ContactsLoader />
-      <DeepLinkingManager navigation={navigation} />
       {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />

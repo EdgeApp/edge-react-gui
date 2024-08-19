@@ -49,13 +49,17 @@ def buildProduction(String stageName) {
   }
 }
 
-def buildSim(String stageName) {
-  stage("Build Sim ${stageName}") {
+def buildMaestro(String stageName) {
+  stage("Build Maestro ${stageName}") {
     if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'testMaestro']) {
-      if (stageName == 'ios' && params.IOS_BUILD_SIM) {
+      if (stageName == 'ios' && params.IOS_BUILD_MAESTRO) {
         echo "Running on ${env.NODE_NAME}"
         sh 'npm run prepare.ios'
-        sh "node -r sucrase/register ./scripts/deploy.ts edge ios-sim ${BRANCH_NAME}"
+        sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME} maestro"
+      }
+      if (stageName == 'android' && params.ANDROID_BUILD_MAESTRO) {
+        echo "Running on ${env.NODE_NAME}"
+        sh "node -r sucrase/register ./scripts/deploy.ts edge android ${BRANCH_NAME} maestro"
       }
     }
   }
@@ -80,8 +84,9 @@ pipeline {
   }
   parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
+    booleanParam(name: 'ANDROID_BUILD_MAESTRO', defaultValue: true, description: 'Build an Android Maestro version')
     booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
-    booleanParam(name: 'IOS_BUILD_SIM', defaultValue: true, description: 'Build an iOS simulator version')
+    booleanParam(name: 'IOS_BUILD_MAESTRO', defaultValue: true, description: 'Build an iOS simulator Maestro version')
     booleanParam(name: 'VERBOSE', defaultValue: false, description: 'Complete build log output')
   }
   environment {
@@ -126,13 +131,13 @@ pipeline {
             }
           }
         }
-        stage('IOS Simulator Build') {
+        stage('IOS Maestro Build') {
           agent { label 'ios-build-sim' }
           steps {
             script {
-              preBuildStages('IOS Simulator', global.versionFile)
-              preTest('IOS Simulator')
-              buildSim('ios')
+              preBuildStages('IOS Maestro', global.versionFile)
+              preTest('IOS Maestro')
+              buildMaestro('ios')
             }
           }
         }
@@ -143,6 +148,16 @@ pipeline {
               preBuildStages('Android', global.versionFile)
               preTest('Android')
               buildProduction('android')
+            }
+          }
+        }
+        stage('Android Maestro Build') {
+          agent { label 'android-build' }
+          steps {
+            script {
+              preBuildStages('Android', global.versionFile)
+              preTest('Android')
+              buildMaestro('android')
             }
           }
         }

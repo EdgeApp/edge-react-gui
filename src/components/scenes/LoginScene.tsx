@@ -21,7 +21,6 @@ import { logEvent } from '../../util/tracking'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
 import { showError } from '../services/AirshipInstance'
-import { DeepLinkingManager } from '../services/DeepLinkingManager'
 import { LoadingScene } from './LoadingScene'
 
 export interface LoginParams {
@@ -153,8 +152,6 @@ export function LoginScene(props: Props) {
         onLogin={handleLogin}
         onPerfEvent={handlePerfEvent}
       />
-      {/* Needed to handle recovery deep links: */}
-      <DeepLinkingManager navigation={navigation} />
     </View>
   )
 }

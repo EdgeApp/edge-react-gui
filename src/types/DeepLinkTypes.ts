@@ -33,7 +33,6 @@
  */
 import { asValue } from 'cleaners'
 
-import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
 import { FiatDirection, FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { AppParamList } from './routerTypes'
 
@@ -76,6 +75,13 @@ export interface PromotionLink {
   type: 'promotion'
   installerId?: string
 }
+
+export interface PriceChangeLink {
+  type: 'price-change'
+  pluginId: string
+  body: string // Human-readable message
+}
+
 export interface RequestAddressLink {
   type: 'requestAddress'
   assets: Array<{ nativeCode: string; tokenCode: string }>
@@ -122,7 +128,7 @@ export type DeepLink =
   | PasswordRecoveryLink
   | PaymentProtoLink
   | PluginLink
-  | PriceChangePayload
+  | PriceChangeLink
   | PromotionLink
   | RequestAddressLink
   | SwapLink

@@ -11,13 +11,11 @@ import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
 import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsReducer'
 import { TweakSource } from '../util/ReferralHelpers'
-import { DeepLink } from './DeepLinkTypes'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
 import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
@@ -50,7 +48,6 @@ export type Action =
       type: 'CORE/DISMISS_NEW_TOKENS'
       data: { walletId: string }
     }
-  | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }

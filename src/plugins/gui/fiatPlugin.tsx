@@ -20,6 +20,7 @@ import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPlugin
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationBase } from '../../types/routerTypes'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { datelog } from '../../util/utils'
@@ -33,6 +34,7 @@ import {
   FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
+  FiatPluginUtils,
   FiatPluginWalletPickerResult,
   SaveTxActionParams,
   SaveTxMetadataParams
@@ -175,14 +177,15 @@ export const executePlugin = async (params: {
       navigation.navigate('rewardsCardWelcome', params)
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
-      const { headerTitle, headerIconUri, onSubmit } = params
+      const { headerTitle, headerIconUri, doneLabel, onDone } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
-          onSubmit: async (sepaInfo: SepaInfo) => {
-            if (onSubmit != null) await onSubmit(sepaInfo)
+          doneLabel,
+          onDone: async (sepaInfo: SepaInfo) => {
+            if (onDone != null) await onDone(sepaInfo)
             resolve(sepaInfo)
           },
           onClose: () => {
@@ -266,6 +269,10 @@ export const executePlugin = async (params: {
     }
   }
 
+  const pluginUtils: FiatPluginUtils = {
+    getHistoricalRate
+  }
+
   if (guiPlugin.nativePlugin == null) {
     throw new Error('executePlugin: missing nativePlugin')
   }
@@ -280,6 +287,7 @@ export const executePlugin = async (params: {
     disablePlugins: filteredDisablePlugins,
     longPress,
     guiPlugin,
+    pluginUtils,
     showUi
   })
   if (plugin == null) {

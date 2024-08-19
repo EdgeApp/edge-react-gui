@@ -37,7 +37,7 @@ export interface UserRewardsCards {
 const PROVIDER_FACTORIES = [makeIoniaProvider]
 
 export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
-  const { showUi, account, guiPlugin } = params
+  const { showUi, account, guiPlugin, pluginUtils } = params
   const { pluginId } = guiPlugin
 
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
@@ -171,6 +171,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
+            pluginUtils,
             amountType: 'fiat',
             ...redundantQuoteParams
           }
@@ -183,6 +184,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
+            pluginUtils,
             amountType: 'crypto',
             ...redundantQuoteParams
           }

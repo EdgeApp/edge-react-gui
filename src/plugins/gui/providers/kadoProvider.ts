@@ -15,13 +15,13 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
-import { validateRegion } from './common'
+import { validateExactRegion } from './common'
 const providerId = 'kado'
 const storeId = 'money.kado'
 const partnerIcon = 'kado.png'
@@ -67,7 +67,7 @@ const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLU
   {}
 )
 
-const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+const SUPPORTED_REGIONS: FiatProviderExactRegions = {
   US: {
     notStateProvinces: ['FL', 'NY', 'TX']
   }
@@ -77,7 +77,8 @@ type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
-    iach: true
+    iach: true,
+    wire: true
   },
   sell: {
     ach: true
@@ -392,7 +393,7 @@ const asOrderInfo = asObject({
 
 interface GetQuoteParams {
   transactionType: 'buy' | 'sell'
-  fiatMethod: 'ach' | 'card'
+  fiatMethod: 'ach' | 'card' | 'wire'
   amount: number
   blockchain: string
   currency: string
@@ -437,7 +438,7 @@ export const kadoProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -499,7 +500,7 @@ export const kadoProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
 
         const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
@@ -520,9 +521,21 @@ export const kadoProvider: FiatProviderFactory = {
         const blockchain = PLUGIN_TO_CHAIN_ID_MAP[pluginId]
 
         // Query for a quote
+        let fiatMethodList: string
+        let fiatMethod: GetQuoteParams['fiatMethod']
+        if (paymentTypes[0] === 'wire') {
+          fiatMethod = 'wire'
+          fiatMethodList = 'wire'
+        } else if (paymentTypes[0] === 'ach' || paymentTypes[0] === 'iach') {
+          fiatMethod = 'ach'
+          fiatMethodList = 'ach,wire'
+        } else {
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        }
+
         const queryParams: GetQuoteParams = {
           transactionType: direction,
-          fiatMethod: 'ach',
+          fiatMethod,
           amount: Number(exchangeAmount),
           blockchain,
           currency: 'USD',
@@ -586,7 +599,7 @@ export const kadoProvider: FiatProviderFactory = {
             if (direction === 'buy') {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
-                fiatMethodList: 'ach,wire',
+                fiatMethodList,
                 isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
@@ -602,7 +615,7 @@ export const kadoProvider: FiatProviderFactory = {
             } else {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
-                fiatMethodList: 'ach,wire',
+                fiatMethodList,
                 isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,

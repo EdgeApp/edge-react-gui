@@ -20,7 +20,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { AppParamList } from '../types/routerTypes'
+import { AppParamList, EdgeSceneProps, NavigationBase } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -118,6 +118,7 @@ import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcCo
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
 import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
+import { DeepLinkingManager } from './services/DeepLinkingManager'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
@@ -779,6 +780,10 @@ export const Main = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
+  // The `DeepLinkingManager` needs the navigation prop,
+  // but it doesn't live in a scene, so steal the prop another way:
+  const [navigation, setNavigation] = React.useState<NavigationBase | undefined>()
+
   // TODO: Create a new provider instead to serve the experimentConfig globally
   const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig | undefined>(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)
 
@@ -837,9 +842,22 @@ export const Main = () => {
             }}
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
-            <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
-            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
+
+            <Stack.Screen name="gettingStarted" initialParams={{ experimentConfig }}>
+              {(props: EdgeSceneProps<'gettingStarted'>) => {
+                if (navigation == null) setTimeout(() => setNavigation(props.navigation), 0)
+                return <GettingStartedScene {...props} />
+              }}
+            </Stack.Screen>
+
+            <Stack.Screen name="login" initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }}>
+              {(props: EdgeSceneProps<'login'>) => {
+                if (navigation == null) setTimeout(() => setNavigation(props.navigation), 0)
+                return <LoginScene {...props} />
+              }}
+            </Stack.Screen>
           </Stack.Navigator>
+          {navigation == null ? null : <DeepLinkingManager navigation={navigation} />}
         </NavigationContainer>
       )}
     </>

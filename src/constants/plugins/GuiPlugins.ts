@@ -216,6 +216,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Bitrefill'
   },
+  wire: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:USD',
+    displayName: 'Bank Wire Transfer'
+  },
   xanpool: {
     pluginId: 'xanpool',
     storeId: 'xanpool',
