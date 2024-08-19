@@ -293,7 +293,9 @@ const approveBityQuote = async (
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
-    const signedMessage = await wallet.signBytes(utf8.parse(body), { otherParams: { publicAddress } })
+    const signedMessage = isUtxoWallet(wallet)
+      ? await wallet.signMessage(body, { otherParams: { publicAddress } })
+      : await wallet.signBytes(utf8.parse(body), { otherParams: { publicAddress } })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
       method: 'POST',
@@ -767,4 +769,30 @@ const executeBuyOrderFetch = async (
     },
     clientId
   )
+}
+
+function isUtxoWallet(wallet: EdgeCurrencyWallet) {
+  return [
+    'wallet:badcoin',
+    'wallet:bitcoin',
+    'wallet:bitcoincash',
+    'wallet:bitcoincashtestnet',
+    'wallet:bitcoingold',
+    'wallet:bitcoingoldtestnet',
+    'wallet:bitcoinsv',
+    'wallet:bitcointestnet',
+    'wallet:dash',
+    'wallet:digibyte',
+    'wallet:dogecoin',
+    'wallet:eboost',
+    'wallet:feathercoin',
+    'wallet:groestlcoin',
+    'wallet:litecoin',
+    'wallet:qtum',
+    'wallet:ravencoin',
+    'wallet:smartcash',
+    'wallet:ufo',
+    'wallet:vertcoin',
+    'wallet:zcoin'
+  ].includes(wallet.currencyInfo.walletType)
 }

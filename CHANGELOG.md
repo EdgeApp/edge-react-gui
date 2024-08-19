@@ -10,6 +10,7 @@
 - changed: Add more metadata to zealot upload
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
 - fixed: FIO OBT data not showing in received transaction memos
+- fixed: Fix broken Bity message signing
 - fixed: Return underLimit error for Simplex for very small quotes
 - removed: Removed pull-to-search feature from wallet list and transaction list scenes
 
