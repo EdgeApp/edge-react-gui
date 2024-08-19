@@ -1008,6 +1008,7 @@
   "error_boundary_message2": "Se il problema persiste, clicca qui sotto per contattarci e faremo del nostro meglio per risolvere il problema.",
   "error_boundary_help_button": "Aiuto Chiusura App",
   "error_unexpected_title": "Errore Imprevisto",
+  "error_kyc_required_s": "KYC required: %s",
   "export_transaction_date_range": "Intervallo Date",
   "export_transaction_export_type": "Tipo di esportazione",
   "export_transaction_this_month": "Questo mese",
