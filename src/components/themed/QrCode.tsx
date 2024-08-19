@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -6,19 +7,25 @@ import Svg, { Path } from 'react-native-svg'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
-  data?: string // Nothing will show if undefined
-  cellsPadding?: number // In QR cells
+  /** Nothing will show if undefined */
+  data?: string
   marginRem?: number[] | number
+  /** Display the asset icon in the center of the QR */
+  tokenId?: EdgeTokenId
+  /** Display the asset icon in the center of the QR */
+  wallet?: EdgeCurrencyWallet
   onPress?: () => void
 }
 
 export function QrCode(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { data, cellsPadding = 1, marginRem, onPress } = props
+  const { data, marginRem, wallet, tokenId = null, onPress } = props
+
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 2), theme.rem))
 
   // Scale the surface to match the container's size (minus padding):
@@ -28,8 +35,8 @@ export function QrCode(props: Props) {
   const handleLayout = (event: any) => {
     setContainerHeight(event.nativeEvent.layout.height)
   }
-
   // Generate an SVG path:
+  const cellsPadding = 1
   const code = qrcodeGenerator(0, 'H')
   code.addData(data ?? '')
   code.make()
@@ -46,6 +53,8 @@ export function QrCode(props: Props) {
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
   const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
+  const maybeCryptoIcon = wallet == null ? undefined : <CryptoIcon walletId={wallet.id} tokenId={tokenId} sizeRem={1.5} />
+
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, margin]} onLayout={handleLayout}>
@@ -57,6 +66,7 @@ export function QrCode(props: Props) {
             </Svg>
           )}
         </Animated.View>
+        {maybeCryptoIcon}
       </View>
     </EdgeTouchableWithoutFeedback>
   )

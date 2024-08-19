@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: `CryptoIcon` logo support to displayed request QR codes
+- added: Initial implementation of `SceneHeaderUi4`
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
 - added: dRPC api key option for EVM chains
@@ -10,6 +12,12 @@
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
 - changed: Add more metadata to zealot upload
+- changed: Token swap error demoted to red error dropdown to a toast
+- changed: 1 cent minimum requirement for high fee warning
+- fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
+- fixed: Unecessary eye icon in `CreateWalletImportScene` text input field
+- fixed: PoweredBy card displaying custom system fonts
+- fixed: Inconsistent button UI in `SwapSuccessScene`
 - fixed: Keyboard remaining visible when opening the side menu
 - fixed: Do not spin forever if the spam filter eliminates too many transactions.
 - fixed: FIO OBT data not showing in received transaction memos
