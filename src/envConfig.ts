@@ -18,6 +18,7 @@ const asEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
+  drpcApiKey: asOptional(asString, ''),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
   infuraProjectId: asOptional(asString, ''),
@@ -147,6 +148,7 @@ export const asEnvConfig = asObject({
       maestroApiKey: asOptional(asString)
     })
   ),
+  CELO_INIT: asCorePluginInit(asEvmApiKeys),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -191,7 +193,8 @@ export const asEnvConfig = asObject({
       freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
-  FILECOINFEVM_INIT: asOptional(asBoolean, true),
+  FILECOINFEVM_INIT: asCorePluginInit(asEvmApiKeys),
+  FILECOINFEVM_CALIBRATION_INIT: asCorePluginInit(asEvmApiKeys),
   FILECOIN_INIT: asCorePluginInit(
     asObject({
       glifApiKey: asOptional(asString, '')
@@ -245,6 +248,7 @@ export const asEnvConfig = asObject({
       referrerFee: asOptional(asString, '0.75')
     }).withRest
   ),
+  RSK_INIT: asCorePluginInit(asEvmApiKeys),
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
