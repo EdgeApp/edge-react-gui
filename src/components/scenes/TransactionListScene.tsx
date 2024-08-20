@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
-import { ListRenderItemInfo, View } from 'react-native'
+import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
 
@@ -187,6 +187,23 @@ function TransactionListComponent(props: Props) {
   // Renderers
   //
 
+  /**
+   * HACK: This `RefreshControl` doesn't actually do anything visually or
+   * functionally noticeable besides making Android scroll gestures actually
+   * work for the parent `Animated.FlatList`
+   */
+  const refreshControl = React.useMemo(() => {
+    return Platform.OS === 'ios' ? undefined : (
+      <RefreshControl
+        refreshing={false}
+        enabled={false}
+        style={{ opacity: 0 }}
+        // useHandler isn't needed, since we're already in useMemo:
+        onRefresh={() => {}}
+      />
+    )
+  }, [])
+
   const topArea = React.useMemo(() => {
     return (
       <>
@@ -316,6 +333,9 @@ function TransactionListComponent(props: Props) {
             onEndReached={handleScrollEnd}
             onScroll={handleScroll}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            // Android scroll gestures break without refreshControl given the
+            // combination of props we use on this Animated.FlatList.
+            refreshControl={refreshControl}
           />
         </View>
       )}
