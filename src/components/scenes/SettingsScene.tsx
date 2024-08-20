@@ -30,7 +30,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
-import { removeIsoPrefix } from '../../util/utils'
+import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -77,6 +77,7 @@ export const SettingsScene = (props: Props) => {
 
   const iconSize = theme.rem(1.25)
   const isLightAccount = username == null
+  const displayUsername = getDisplayUsername(account.rootLoginId, username)
 
   const autoLogout = secondsToDisplay(autoLogoutTimeInSeconds)
   const timeStrings = {
@@ -305,7 +306,7 @@ export const SettingsScene = (props: Props) => {
         <>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
+            label={`${lstrings.settings_account_title_cap}: ${displayUsername}`}
           />
           {isLightAccount ? (
             <EdgeCard>

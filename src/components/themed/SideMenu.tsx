@@ -28,6 +28,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
@@ -62,6 +63,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
   const watchedUsername = useWatch(account, 'username')
+  const displayUsername = getDisplayUsername(account.rootLoginId, watchedUsername)
 
   const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
@@ -91,7 +93,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
         <ButtonsModal
           bridge={bridge}
           title={lstrings.forget_account_title}
-          message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
+          message={sprintf(lstrings.forget_account_message_common, displayUsername)}
           buttons={{
             ok: {
               label: lstrings.string_forget,
@@ -296,7 +298,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
-            <TitleText style={styles.text}>{watchedUsername ?? lstrings.missing_username}</TitleText>
+            <TitleText style={styles.text}>{displayUsername}</TitleText>
           </View>
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>
@@ -319,7 +321,9 @@ export function SideMenu(props: DrawerContentComponentProps) {
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
                 <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
-                  <TitleText style={styles.text}>{userInfo.username ?? lstrings.missing_username}</TitleText>
+                  <TitleText style={styles.text}>
+                    {userInfo.username == null ? sprintf(lstrings.guest_account_id_1s, userInfo.loginId.slice(userInfo.loginId.length - 3)) : userInfo.username}
+                  </TitleText>
                 </EdgeTouchableOpacity>
                 <EdgeTouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(userInfo)}>
                   <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
