@@ -14,6 +14,7 @@
 - changed: Add more metadata to zealot upload
 - changed: Token swap error demoted to red error dropdown to a toast
 - changed: 1 cent minimum requirement for high fee warning
+- changed: Properly escape newlines in Zealot changelog
 - fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
 - fixed: Unecessary eye icon in `CreateWalletImportScene` text input field
 - fixed: PoweredBy card displaying custom system fonts

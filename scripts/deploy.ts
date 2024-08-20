@@ -438,7 +438,7 @@ function buildCommonPost(buildObj: BuildObj) {
     const branch = encodeURIComponent(buildObj.repoBranch)
     const gitCommit = encodeURIComponent(buildObj.guiHash)
     chdir(buildObj.guiDir)
-    const changes = rmNewline(cmd(`git diff HEAD^ HEAD CHANGELOG.md | grep '^+[^+]'`))
+    const changes = cmd(`git diff HEAD^ HEAD CHANGELOG.md | grep '^+[^+]'`)
     const changelog = encodeURIComponent(changes)
     mylog(`\n\nUploading to Zealot: ${zealotUrl}`)
     mylog('***********************************************************************\n')
