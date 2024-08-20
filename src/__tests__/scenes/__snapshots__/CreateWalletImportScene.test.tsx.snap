@@ -20,9 +20,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         "paddingTop": 64,
       },
       {
-        "maxHeight": 1334,
-      },
-      {
         "padding": 0,
       },
     ]
@@ -236,80 +233,100 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
   </BVLinearGradient>
   <View
     style={
-      [
-        {
-          "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
-        },
-        {
-          "marginTop": 22,
-        },
-        undefined,
-      ]
+      {
+        "flexShrink": 1,
+        "margin": 11,
+      }
     }
   >
     <View
       style={
         {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "center",
+          "marginHorizontal": 11,
+          "overflow": "visible",
+          "paddingBottom": 22,
         }
       }
     >
-      <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-            },
-            null,
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
         }
       >
-        Import Wallet
-      </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
+          }
+        >
+          Import Wallet
+        </Text>
+      </View>
+      <BVLinearGradient
+        colors={
+          [
+            452984831,
+            452984831,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0.5,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0.5,
+          }
+        }
+        style={
+          {
+            "alignSelf": "stretch",
+            "height": 1,
+            "marginRight": -22,
+            "marginTop": 22,
+          }
+        }
+      />
     </View>
-  </View>
-  <View
-    style={
-      {
-        "flexDirection": "row",
-        "justifyContent": "center",
-        "marginVertical": 45,
+    <View
+      style={
+        {
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "marginVertical": 45,
+        }
       }
-    }
-  >
-    <ImportKeySvg
-      accessibilityHint="Import Key"
-      color="#00f1a2"
-      height={36}
-      width={83}
-    />
-  </View>
-  <View
-    style={
-      [
-        {
-          "margin": 11,
-        },
-        {
-          "flexGrow": 1,
-        },
-      ]
-    }
-  >
+    >
+      <ImportKeySvg
+        accessibilityHint="Import Key"
+        color="#00f1a2"
+        height={36}
+        width={83}
+      />
+    </View>
     <Text
       adjustsFontSizeToFit={false}
       numberOfLines={0}
@@ -548,11 +565,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             }
             keyboardType="email-address"
             multiline={true}
-            numberOfLines={20}
+            numberOfLines={10}
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
             onSubmitEditing={[Function]}
+            returnKeyType="none"
             scale={
               {
                 "value": 1,

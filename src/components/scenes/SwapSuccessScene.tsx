@@ -1,32 +1,20 @@
-import { Disklet } from 'disklet'
 import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
+import { SceneButtons } from '../buttons/SceneButtons'
+import { EdgeAnim, fadeIn } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
-import { MainButton } from '../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'swapSuccess'> {}
-
-interface StateProps {
-  userId: string
-  disklet: Disklet
-}
-
-interface LocalState {
-  showButton: boolean
-  showConfetti: boolean
-}
-
-type Props = StateProps & OwnProps & ThemeProps
+interface Props extends EdgeSceneProps<'swapSuccess'> {}
 
 const confettiProps = {
   count: 250,
@@ -34,69 +22,72 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-export class SwapSuccessSceneComponent extends React.PureComponent<Props, LocalState> {
-  constructor() {
-    // @ts-expect-error
-    super()
-    this.state = { showButton: false, showConfetti: false }
-  }
+export const SwapSuccessScene = (props: Props) => {
+  const { navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  componentDidMount(): void {
-    this.showConfetti().catch(err => showError(err))
-  }
+  const [showButton, setShowButton] = React.useState(false)
+  const [showConfetti, setShowConfetti] = React.useState(false)
 
-  done = () => {
-    const { navigation } = this.props
-    this.setState({ showButton: false })
+  const userId = useSelector(state => state.core.account.id)
+  const disklet = useSelector(state => state.core.disklet)
+
+  const done = useHandler(() => {
+    setShowButton(false)
     navigation.navigate('swapTab', { screen: 'swapCreate' })
-  }
+  })
 
-  showConfetti = async () => {
-    const { userId, disklet } = this.props
-    const show: boolean = await needToShowConfetti(userId, disklet)
+  useAsyncEffect(
+    async () => {
+      const show: boolean = await needToShowConfetti(userId, disklet)
 
-    if (show) {
-      this.setState({ showConfetti: true })
-      setTimeout(() => {
-        this.setState({ showButton: true })
-      }, 4500)
-    } else {
-      this.setState({ showButton: true })
-    }
-  }
+      if (show) {
+        setShowConfetti(true)
+        setTimeout(() => {
+          setShowButton(true)
+        }, 4500)
+      } else {
+        setShowButton(true)
+      }
+    },
+    [],
+    'SwapSuccessScene'
+  )
 
-  renderConfetti() {
-    if (!this.state.showConfetti) return null
+  const renderConfetti = () => {
+    if (!showConfetti) return null
     return <ConfettiCannon {...confettiProps} />
   }
 
-  render() {
-    const { theme } = this.props
-    const { showButton } = this.state
-    const styles = getStyles(theme)
-    return (
-      <SceneWrapper hasNotifications>
-        <View style={styles.container}>
-          <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
-          <EdgeText style={styles.text} numberOfLines={2}>
-            {lstrings.exchange_congratulations_msg}
-          </EdgeText>
-          <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
-            {lstrings.exchange_congratulations_msg_info}
-          </EdgeText>
-          <Fade visible={showButton}>
-            <MainButton label={lstrings.string_done_cap} type="secondary" onPress={this.done} />
-          </Fade>
-          {this.renderConfetti()}
-        </View>
-      </SceneWrapper>
-    )
-  }
+  return (
+    <SceneWrapper hasNotifications>
+      <View style={styles.container}>
+        <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
+        <EdgeText style={styles.text} numberOfLines={2}>
+          {lstrings.exchange_congratulations_msg}
+        </EdgeText>
+        <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
+          {lstrings.exchange_congratulations_msg_info}
+        </EdgeText>
+        <EdgeAnim style={styles.animOverlay} visible={showButton} enter={fadeIn}>
+          <SceneButtons absolute primary={{ label: lstrings.string_done_cap, onPress: done }} />
+        </EdgeAnim>
+        {renderConfetti()}
+      </View>
+    </SceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  animOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
+  },
   container: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -118,11 +109,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     maxWidth: theme.rem(9.5)
   }
 }))
-
-export const SwapSuccessScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    userId: state.core.account.id,
-    disklet: state.core.disklet
-  }),
-  dispatch => ({})
-)(withTheme(SwapSuccessSceneComponent))
