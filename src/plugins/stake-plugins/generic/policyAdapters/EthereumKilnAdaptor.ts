@@ -1,4 +1,4 @@
-import { add, gt } from 'biggystring'
+import { add, gt, lt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
@@ -24,7 +24,7 @@ export interface EthereumPooledKilnAdapterConfig {
 
 export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>): StakePolicyAdapter => {
   const { stakePolicyId, adapterConfig } = policyConfig
-  const { apiKey, baseUrl, contractAddress, rpcProviderUrls } = adapterConfig
+  const { apiKey, baseUrl, contractAddress, exitQueueAddress, rpcProviderUrls } = adapterConfig
   if (apiKey == null) throw new Error(`Kiln apikey is required for ${stakePolicyId}`)
 
   const kiln = makeKilnApi(baseUrl, apiKey)
@@ -76,7 +76,41 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
     stakePolicyId,
 
     async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
-      throw new Error('fetchClaimQuote not implemented')
+      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner, walletAddress } = await workflowUtils(wallet)
+      const { currencyCode, pluginId } = wallet.currencyInfo
+
+      const allocations: QuoteAllocation[] = []
+
+      const operations = await kiln.getOperations(walletAddress)
+
+      let claimableTotal = '0'
+      const ticketIds: string[] = []
+      const caskIds: string[] = []
+      for (const operation of operations) {
+        if (operation.type === 'exit' && operation.ticket_status === 'fulfillable') {
+          claimableTotal = add(claimableTotal, operation.size)
+          ticketIds.push(operation.ticket_id)
+          // use lowest uint32 per ticket https://docs.kiln.fi/v1/kiln-products/on-chain/pooled-staking/how-to-integrate/staking-interactions/unstaking-and-withdrawals#claim-tickets-once-their-fulfillable
+          const lowestCaskId = operation.cask_ids.reduce((a, b) => (lt(a, b) ? a : b))
+          caskIds.push(lowestCaskId)
+        }
+      }
+
+      allocations.push({
+        allocationType: 'claim',
+        pluginId,
+        currencyCode,
+        nativeAmount: claimableTotal
+      })
+
+      const tx = await integrationContract.populateTransaction.multiClaim([exitQueueAddress], [ticketIds], [caskIds], {
+        gasLimit: '500000',
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nonce: nextNonce()
+      })
+
+      return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
     async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, requestNativeAmount: string): Promise<ChangeQuote> {
@@ -97,7 +131,25 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
     },
 
     async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, requestNativeAmount: string): Promise<ChangeQuote> {
-      throw new Error('fetchUnstakeQuote not implemented')
+      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } = await workflowUtils(wallet)
+
+      const tx = await integrationContract.populateTransaction.requestExit(requestNativeAmount, {
+        gasLimit: '500000',
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nonce: nextNonce()
+      })
+
+      const allocations: QuoteAllocation[] = [
+        {
+          allocationType: 'unstake',
+          pluginId: requestAssetId.pluginId,
+          currencyCode: requestAssetId.currencyCode,
+          nativeAmount: requestNativeAmount
+        }
+      ]
+
+      return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
     async fetchUnstakeExactQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
