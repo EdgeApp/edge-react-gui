@@ -2,13 +2,39 @@
 
 ## Unreleased
 
+## 4.12.0
+
+- added: `CryptoIcon` logo support to displayed request QR codes
+- added: Initial implementation of `SceneHeaderUi4`
 - added: App distribution via Zealot
-
-## 4.11.0
-
-- added: Allow for Maestro specific iOS and Android builds
+- added: Add disableSurveyModal option
+- added: Ethereum (Holesky) staking via Kiln
+- added: dRPC api key option for EVM chains
 - added: Handle KYC error responses from Bity
+- changed: Disable Home scene swap and FIO cards if configured
+- changed: Allow some chains to be disabled in env.json
+- changed: Use quoteAllocations to create amount rows in StakeModifyScene
+- changed: Add more metadata to zealot upload
+- changed: Token swap error demoted to red error dropdown to a toast
+- changed: 1 cent minimum requirement for high fee warning
+- changed: Properly escape newlines in Zealot changelog
+- fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
+- fixed: Unecessary eye icon in `CreateWalletImportScene` text input field
+- fixed: PoweredBy card displaying custom system fonts
+- fixed: Inconsistent button UI in `SwapSuccessScene`
+- fixed: Keyboard remaining visible when opening the side menu
+- fixed: Do not spin forever if the spam filter eliminates too many transactions.
+- fixed: FIO OBT data not showing in received transaction memos
+- fixed: Fix broken Bity message signing
+- fixed: Return underLimit error for Simplex for very small quotes
+- fixed: FIO stake/unstake transactions displaying as sent/received transactions
+- removed: Removed pull-to-search feature from wallet list and transaction list scenes
+
+## 4.11.0 (2024-08-19)
+
 - added: Kado buy via wire transfer
+- added: Allow for Maestro specific iOS and Android builds
+- added: Video blogs/posts on HomeScene
 - changed: Use partners API to determine US state support for Mooopay, Simplex, and Banxa
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
 - changed: Cache exchange rates for five minutes to account for server or connection instability
@@ -16,7 +42,6 @@
 - changed: Enable Bitpay payments for FIO names and domains
 - fixed: Disable max spend for zkSync
 - fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
-- fixed: Fix broken Bity message signing
 - fixed: If handling a deep link requires a signed-in account, correctly save it for later.
 
 ## 4.10.0 (2024-08-07)

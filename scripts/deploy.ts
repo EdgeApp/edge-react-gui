@@ -435,10 +435,17 @@ function buildCommonPost(buildObj: BuildObj) {
   }
 
   if (zealotApiToken != null && zealotUrl != null && zealotChannelKey != null && !maestroBuild) {
+    const branch = encodeURIComponent(buildObj.repoBranch)
+    const gitCommit = encodeURIComponent(buildObj.guiHash)
+    chdir(buildObj.guiDir)
+    const changes = cmd(`git diff HEAD^ HEAD CHANGELOG.md | { grep '^+[^+]' || true; }`)
+    const changelog = encodeURIComponent(changes)
     mylog(`\n\nUploading to Zealot: ${zealotUrl}`)
     mylog('***********************************************************************\n')
 
-    call(`curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${zealotChannelKey}" -F "file=@${buildObj.ipaFile}"`)
+    call(
+      `curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${zealotChannelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`
+    )
     mylog('\n*** Upload to Zealot Complete ***')
   }
 

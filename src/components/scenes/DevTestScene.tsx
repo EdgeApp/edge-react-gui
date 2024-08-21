@@ -41,6 +41,8 @@ import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
+import { SceneHeader } from '../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 
 interface Props extends EdgeSceneProps<'devTab'> {}
@@ -126,8 +128,10 @@ export function DevTestScene(props: Props) {
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
-    <SceneWrapper scroll hasTabs hasHeader={false}>
-      <SectionView marginRem={1}>
+    <SceneWrapper scroll hasTabs hasHeader={false} padding={theme.rem(0.5)}>
+      <SceneHeaderUi4 title="Scene Header" />
+      <SceneHeader title="Scene Header (Legacy)" underline />
+      <SectionView>
         <>
           <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
           <EdgeButton

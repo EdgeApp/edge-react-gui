@@ -10,6 +10,11 @@ interface Output {
   requestMore: () => void
 }
 
+interface TransactionListOptions {
+  searchString?: string
+  spamThreshold?: string
+}
+
 /**
  * Streams transactions from a wallet.
  *
@@ -19,8 +24,8 @@ interface Output {
  * so call the `requestMore` method to request more transactions,
  * until `atEnd` becomes true.
  */
-export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString: string = ''): Output {
-  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, opts: TransactionListOptions = {}): Output {
+  const { searchString = '', spamThreshold = '0' } = opts
 
   const requestMore = React.useRef(() => {})
 
@@ -61,7 +66,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     const cleanupNew = wallet.on('newTransactions', txs => {
       let relevant = false
       for (const tx of txs) {
-        if (tx.currencyCode === currencyCode) {
+        if (tx.tokenId === tokenId) {
           relevant = true
         }
       }
@@ -73,7 +78,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     const cleanupChanged = wallet.on('transactionsChanged', txs => {
       let relevant = false
       for (const tx of txs) {
-        if (tx.currencyCode === currencyCode) {
+        if (tx.tokenId === tokenId) {
           relevant = true
           changedTxs.set(tx.txid, tx)
         }
@@ -100,6 +105,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
         batchSize: 30,
         firstBatchSize: 10,
         searchString,
+        spamThreshold,
         tokenId
       })
 
@@ -147,7 +153,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
       cleanupChanged()
       cleanupStream()
     }
-  }, [currencyCode, searchString, tokenId, wallet])
+  }, [searchString, spamThreshold, tokenId, wallet])
 
   return {
     ...output,
