@@ -1,5 +1,6 @@
 import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePluginFactory, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
 import { CoreumNativeSkateKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
+import { EthereumPooledKilnAdapterConfig, makeKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
@@ -77,6 +78,9 @@ function isPolicyInfoForTarotPool(policyInfo: StakePolicyConfig<StakeAdapterConf
 function isPolicyInfoForCoreumStakeKit(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<CoreumNativeSkateKitAdapterConfig> {
   return policyInfo.adapterConfig.type === 'coreum-native-stake-kit'
 }
+function isPolicyInfoForEthereumKiln(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<EthereumPooledKilnAdapterConfig> {
+  return policyInfo.adapterConfig.type === 'ethereum-pooled-kiln'
+}
 
 const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): StakePolicyAdapter => {
   if (isPolicyInfoForGlifInfinityPool(policyInfo)) {
@@ -85,6 +89,8 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
     return makeTarotPoolAdapter(policyInfo)
   } else if (isPolicyInfoForCoreumStakeKit(policyInfo)) {
     return makeSkateKitAdapter(policyInfo)
+  } else if (isPolicyInfoForEthereumKiln(policyInfo)) {
+    return makeKilnAdapter(policyInfo)
   } else {
     throw new Error('Unknown policyInfo')
   }

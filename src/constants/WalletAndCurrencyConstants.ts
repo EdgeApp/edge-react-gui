@@ -805,6 +805,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: false,
     isImportKeySupported: true,
+    isStakingSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '170000'

@@ -6,6 +6,7 @@
 - added: Initial implementation of `SceneHeaderUi4`
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
+- added: Ethereum (Holesky) staking via Kiln
 - added: dRPC api key option for EVM chains
 - added: Handle KYC error responses from Bity
 - changed: Enable Bitpay payments for FIO names and domains
