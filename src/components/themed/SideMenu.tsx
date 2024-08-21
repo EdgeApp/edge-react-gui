@@ -74,6 +74,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = React.useState(false)
   const isMultiUsers = sortedUsers.length > 0
+  const isAccountRowShown = watchedUsername != null || isMultiUsers
+
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
@@ -293,21 +295,23 @@ export function SideMenu(props: DrawerContentComponentProps) {
   const topPanel = (
     <View style={styles.topPanel}>
       <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
-      <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
-        <View style={styles.rowIconContainer}>
-          <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
-        </View>
-        <View style={styles.rowBodyContainer}>
-          <TitleText style={styles.text}>{displayUsername}</TitleText>
-        </View>
-        {isMultiUsers ? (
+      {isAccountRowShown ? (
+        <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
-            <Animated.View style={aRotate}>
-              <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
-            </Animated.View>
+            <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
-        ) : null}
-      </Pressable>
+          <View style={styles.rowBodyContainer}>
+            <TitleText style={styles.text}>{displayUsername}</TitleText>
+          </View>
+          {isMultiUsers ? (
+            <View style={styles.rowIconContainer}>
+              <Animated.View style={aRotate}>
+                <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
+              </Animated.View>
+            </View>
+          ) : null}
+        </Pressable>
+      ) : null}
       <DividerLine marginRem={[0.25, -2, 2, 1]} />
     </View>
   )
