@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.12.0
+
 - added: `CryptoIcon` logo support to displayed request QR codes
 - added: Initial implementation of `SceneHeaderUi4`
 - added: App distribution via Zealot
@@ -29,7 +31,7 @@
 - fixed: FIO stake/unstake transactions displaying as sent/received transactions
 - removed: Removed pull-to-search feature from wallet list and transaction list scenes
 
-## 4.11.0
+## 4.11.0 (2024-08-19)
 
 - added: Kado buy via wire transfer
 - added: Allow for Maestro specific iOS and Android builds
