@@ -6,11 +6,13 @@
 - added: Initial implementation of `SceneHeaderUi4`
 - added: App distribution via Zealot
 - added: Add disableSurveyModal option
+- added: Ethereum (Holesky) staking via Kiln
 - added: dRPC api key option for EVM chains
 - added: Handle KYC error responses from Bity
 - changed: Enable Bitpay payments for FIO names and domains
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
+- changed: Use quoteAllocations to create amount rows in StakeModifyScene
 - changed: Add more metadata to zealot upload
 - changed: Token swap error demoted to red error dropdown to a toast
 - changed: 1 cent minimum requirement for high fee warning
