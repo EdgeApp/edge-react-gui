@@ -334,7 +334,7 @@
   "incorrect_pin": "PINが正しくありません",
   "invalid_spend_request": "無効な支払いリクエストです",
   "invalid_custom_fee": "最小カスタム手数料",
-  "missing_username": "<No username>",
+  "guest_account_id_1s": "Guest Account (%1$s)",
   "settings_detect_tokens": "Detect & Enable Tokens",
   "settings_enable_detected_tokens_toast": "Enabled detected tokens",
   "settings_no_detected_tokens_toast": "No balances found on disabled tokens",
