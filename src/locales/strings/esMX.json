@@ -334,7 +334,7 @@
   "incorrect_pin": "NIP incorrecto",
   "invalid_spend_request": "Solicitud de gasto inválida",
   "invalid_custom_fee": "Tarifa mínima es",
-  "missing_username": "<No username>",
+  "guest_account_id_1s": "Guest Account (%1$s)",
   "settings_detect_tokens": "Detectar y habilitar tokens",
   "settings_enable_detected_tokens_toast": "Tokens detectados habilitados",
   "settings_no_detected_tokens_toast": "No se encontraron saldos en tokens deshabilitados",
