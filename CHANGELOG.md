@@ -18,6 +18,8 @@
 - changed: Add more metadata to zealot upload
 - changed: Token swap error demoted to red error dropdown to a toast
 - changed: 1 cent minimum requirement for high fee warning
+- changed: "Guest Account (<3 characters of loginId>)" shown in `SideMenu` if more than 1 account and logged in to a light account
+- changed: No account name shown in `SideMenu` if only a single light account exists on the device
 - changed: Properly escape newlines in Zealot changelog
 - fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
 - fixed: Unecessary eye icon in `CreateWalletImportScene` text input field

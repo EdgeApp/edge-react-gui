@@ -401,7 +401,7 @@ const strings = {
   incorrect_pin: 'Incorrect PIN',
   invalid_spend_request: 'Invalid Spend Request',
   invalid_custom_fee: 'Minimum custom fee is',
-  missing_username: '<No username>',
+  guest_account_id_1s: 'Guest Account (%1$s)',
   settings_detect_tokens: 'Detect & Enable Tokens',
   settings_enable_detected_tokens_toast: 'Enabled detected tokens',
   settings_no_detected_tokens_toast: 'No balances found on disabled tokens',
