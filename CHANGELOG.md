@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - removed: 'fasterpayments' payment type
 
 ## 4.12.0

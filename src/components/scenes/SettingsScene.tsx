@@ -39,7 +39,7 @@ import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../services/AirshipInstance'
 import { changeTheme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
@@ -204,7 +204,7 @@ export const SettingsScene = (props: Props) => {
           await account.deleteRemoteAccount()
           await dispatch(logoutRequest(navigation))
           await context.forgetAccount(rootLoginId)
-          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
+          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showDevError(err))
           return true
         }}
       />

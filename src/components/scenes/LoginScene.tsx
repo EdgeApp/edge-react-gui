@@ -20,7 +20,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
-import { showError } from '../services/AirshipInstance'
+import { showDevError, showError } from '../services/AirshipInstance'
 import { LoadingScene } from './LoadingScene'
 
 export interface LoginParams {
@@ -98,7 +98,7 @@ export function LoginScene(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation).catch(err => showError(err))
+        showHelpModal(navigation).catch(err => showDevError(err))
       },
       text: lstrings.string_help
     }),
