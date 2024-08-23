@@ -87,7 +87,6 @@ export const GettingStartedScene = (props: Props) => {
   const { experimentConfig } = route.params
   const context = useSelector(state => state.core.context)
   const hasLocalUsers = context.localUsers.length > 0
-  const lightAccounts = experimentConfig.createAccountType === 'light' && !hasLocalUsers
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -98,7 +97,7 @@ export const GettingStartedScene = (props: Props) => {
   // Route helpers
   const visitPasswordScene = (): void =>
     navigation.replace('login', {
-      loginUiInitialRoute: lightAccounts ? 'login-password-light' : 'login-password',
+      loginUiInitialRoute: 'login-password',
       experimentConfig
     })
 
@@ -106,7 +105,8 @@ export const GettingStartedScene = (props: Props) => {
     // Android needs replace instead of navigate or the loginUiInitialRoute
     // doesn't work...
     navigation.replace('login', {
-      loginUiInitialRoute: lightAccounts ? 'new-light-account' : 'new-account',
+      // Only create light accounts if no other accounts exist
+      loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account',
       experimentConfig
     })
 
