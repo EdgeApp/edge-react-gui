@@ -334,7 +334,7 @@
   "incorrect_pin": "PIN non corretto",
   "invalid_spend_request": "Richiesta non valida",
   "invalid_custom_fee": "La commissione personalizzata minima è",
-  "guest_account_id_1s": "Guest Account (%1$s)",
+  "guest_account_id_1s": "Account Ospite (%1$s)",
   "settings_detect_tokens": "Rileva e abilita i token",
   "settings_enable_detected_tokens_toast": "I token rilevati sono stati abilitati",
   "settings_no_detected_tokens_toast": "Nessun saldo trovato sui token disabilitati",
