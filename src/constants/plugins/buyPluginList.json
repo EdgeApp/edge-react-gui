@@ -251,7 +251,7 @@
     "paymentTypes": ["fasterpayments"],
     "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
     "title": "Faster Payments",
-    "forCountries": ["GB"],
+    "forCountries": [],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },

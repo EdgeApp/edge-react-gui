@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- removed: 'fasterpayments' payment type
+
 ## 4.12.0
 
 - added: `CryptoIcon` logo support to displayed request QR codes
