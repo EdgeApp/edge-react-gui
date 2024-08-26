@@ -7,7 +7,7 @@ import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { FioDomain, FioObtRecord } from '../types/types'
+import { FioAddress, FioDomain, FioObtRecord } from '../types/types'
 import { addToFioAddressCache, getFioObtData, refreshConnectedWalletsForFioAddress } from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
 
@@ -23,14 +23,15 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
 
   for (const fioWallet of fioWallets) {
     if (!getState().core.account.id) break
-    const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
-    for (const fioAddress of fioAddresses) {
+    const fioAddresses: FioAddress[] = await fioWallet.otherMethods.fetchFioAddresses()
+    const fioAddressNames = fioAddresses.map(fioAddress => fioAddress.name)
+    for (const fioAddressName of fioAddressNames) {
       if (!getState().core.account.id) break
-      const ccWalletMap = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
+      const ccWalletMap = await refreshConnectedWalletsForFioAddress(fioAddressName, fioWallet, wallets)
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
-          fioAddress,
+          fioAddress: fioAddressName,
           ccWalletMap
         }
       })
