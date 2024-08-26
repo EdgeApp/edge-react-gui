@@ -20,20 +20,18 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
   for (const walletId of Object.keys(currencyWallets)) {
     wallets.push(currencyWallets[walletId])
   }
-  const connectedWalletsByFioAddress = {}
+
   for (const fioWallet of fioWallets) {
     if (!getState().core.account.id) break
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress of fioAddresses) {
       if (!getState().core.account.id) break
-      // @ts-expect-error
-      connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
+      const ccWalletMap = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
           fioAddress,
-          // @ts-expect-error
-          ccWalletMap: connectedWalletsByFioAddress[fioAddress]
+          ccWalletMap
         }
       })
     }
