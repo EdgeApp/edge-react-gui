@@ -33,7 +33,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputMod
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -150,7 +150,7 @@ const StakeModifySceneComponent = (props: Props) => {
                   setErrorMessage(errMessage)
                 })
                 .catch(err => {
-                  showError(err)
+                  showDevError(err)
                   setErrorMessage(errMessage)
                 })
             } else {
