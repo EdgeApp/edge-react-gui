@@ -1447,7 +1447,7 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again: 'Failed to send funds for sell transaction. Please try again.',
   fiat_plugin_cannot_continue_camera_permission: 'Cannot continue. Camera permission needed for ID verifications',
-  fiat_plugin_purchase_limit_error: 'Please back up your account to increase the purchase limit',
+  fiat_plugin_purchase_limit_error: 'Please create a full account to increase the purchase limit',
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
   fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %1$s',
@@ -1525,21 +1525,21 @@ const strings = {
   backup_account: 'Back Up Account',
   backup_delete_confirm_message:
     'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
-  backup_info_message: 'Create a username and password to securely encrypt and back up your account',
-  backup_dismiss_button: 'Continue Without a Backup',
+  backup_info_message: 'Create a username and password to create a full account and secure your funds. No personal information is required',
+  backup_dismiss_button: 'Continue with Guest Account',
   backup_warning_message: 'Without a backup, you risk losing your funds!',
   backup_web3_handle_warning_message: 'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
-    'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
+    'To buy, sell, and receive funds, please create a full account. Edge full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
   guest_account: 'Guest Account',
   tap_to_create_username_password: 'Tap to create a username and password',
 
   // Backup Message Variants
-  backup_title: 'Back Up Your Account',
+  backup_title: 'Create Full Account',
   backup_message: 'Create a username and password to continue.',
-  backup_message_subtext: 'Backing up your account ensures you can safely recover your funds in the event that you lose access to your device.',
+  backup_message_subtext: 'Creating a full account ensures you can safely recover your funds in the event that you lose access to your device.',
 
   no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 

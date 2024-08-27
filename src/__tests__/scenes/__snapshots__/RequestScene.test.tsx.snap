@@ -26,7 +26,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
         }
       }
     >
-      To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.
+      To buy, sell, and receive funds, please create a full account. Edge full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.
 
 Never share your username and password, and store your credentials securely!
     </EdgeText>
