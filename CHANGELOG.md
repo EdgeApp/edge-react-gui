@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
+- fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
 - removed: 'fasterpayments' payment type
 
 ## 4.12.0

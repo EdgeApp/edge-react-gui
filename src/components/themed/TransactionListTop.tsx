@@ -326,7 +326,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         // priority assets for swapping.
         const isPriorityAssetMatch =
           currencyWallet.currencyInfo.pluginId === priorityAsset.pluginId &&
-          currencyWallet.enabledTokenIds.some(enabledTokenId => enabledTokenId === priorityAsset.tokenId)
+          (priorityAsset.tokenId == null || currencyWallet.enabledTokenIds.some(enabledTokenId => enabledTokenId === priorityAsset.tokenId))
 
         // If the wallet or enabled tokens has a priority swap asset match,
         // calculate its USD value and add it to the ownedAssets array along
