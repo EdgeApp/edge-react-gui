@@ -1414,6 +1414,8 @@ const strings = {
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
   stake_earn_button_label: 'Earn',
   stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
+  stake_liquid_staking_warning_title: 'Liquid Staking Pool Notice',
+  stake_liquid_staking_warning_header: `This is a liquid-staking pool, meaning the entire wallet's balance is either staked/unstaked in the pool. Wallet funds will remain liquid (transferable), however all current and future funds will be exposed to the risks and rewards of the staking pool while staked.`,
 
   // Tron resource staking
   stake_resource_display_name: 'TRON Resources',

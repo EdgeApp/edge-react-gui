@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Cardano staking through Kiln staking pools
+- added: Support for `isLiquidStaking` field on staking policies
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - changed: Restrict Bity buy/sell to no-KYC asset
 - changed: Determine Moonpay asset support using chainCode/contractAddress

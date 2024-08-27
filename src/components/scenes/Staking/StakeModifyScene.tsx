@@ -26,6 +26,7 @@ import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUt
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
+import { WarningCard } from '../../cards/WarningCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -109,6 +110,12 @@ const StakeModifySceneComponent = (props: Props) => {
         ...changeQuoteRequest,
         currencyCode: stakePolicy.rewardAssets[0].currencyCode,
         nativeAmount: existingAllocations.earned[0].nativeAmount
+      })
+    } else if ((modification === 'stake' || modification === 'unstake') && stakePolicy.isLiquidStaking === true) {
+      setChangeQuoteRequest({
+        ...changeQuoteRequest,
+        currencyCode: stakePolicy.rewardAssets[0].currencyCode,
+        nativeAmount: '1' // Amounts for liquid staking are a noop
       })
     } else if (modification === 'unstake' && mustMaxUnstake) {
       setChangeQuoteRequest({
@@ -455,7 +462,8 @@ const StakeModifySceneComponent = (props: Props) => {
         <EdgeCard icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
           <EdgeRow title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
         </EdgeCard>
-        {stakeUnstakeAllocations.map(renderEditableQuoteAmountRow)}
+        {/* Editable rows are not show for liquid-staking policies */}
+        {stakePolicy.isLiquidStaking !== true ? stakeUnstakeAllocations.map(renderEditableQuoteAmountRow) : null}
         {claimAllocations.map(renderEditableQuoteAmountRow)}
         {
           // Render stake/unstake fee tiles
@@ -476,6 +484,10 @@ const StakeModifySceneComponent = (props: Props) => {
           stakePolicy.stakeAssets.map(asset => renderFutureUnstakeFeeAmountRow(modification, asset))
         }
         {quoteInfo?.breakEvenDays != null ? renderBreakEvenDays() : null}
+        {/* A warning card is show for liquid-staking policies, informing the user that staking is all-or-nothing. */}
+        {stakePolicy.isLiquidStaking === true && (modification === 'stake' || modification === 'unstake') ? (
+          <WarningCard title={lstrings.stake_liquid_staking_warning_title} header={sprintf(lstrings.stake_liquid_staking_warning_header, modification)} />
+        ) : null}
         {errorMessage === '' || sliderLocked ? null : <ErrorTile message={errorMessage} />}
       </View>
     )
