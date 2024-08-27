@@ -81,7 +81,7 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
 
       const allocations: QuoteAllocation[] = []
 
-      const operations = await kiln.getOperations(walletAddress)
+      const operations = await kiln.ethGetOnChainOperations(walletAddress)
 
       let claimableTotal = '0'
       const ticketIds: string[] = []
@@ -164,7 +164,7 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
       let canClaim = false
       const allocations: PositionAllocation[] = []
 
-      const allPositions = await kiln.getStakes(walletAddress)
+      const allPositions = await kiln.ethGetOnChainStakes(walletAddress)
       const position = allPositions.find(position => position.integration_address === contractAddress)
 
       // After fully unstaking, users are left with a single wei of the liquidity token. We should ignore this.
@@ -185,7 +185,7 @@ export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKi
         nativeAmount: position?.rewards ?? '0'
       })
 
-      const operations = await kiln.getOperations(walletAddress)
+      const operations = await kiln.ethGetOnChainOperations(walletAddress)
 
       let claimableTotal = '0'
       for (const operation of operations) {
