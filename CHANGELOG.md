@@ -26,6 +26,7 @@
 - changed: "Guest Account (<3 characters of loginId>)" shown in `SideMenu` if more than 1 account and logged in to a light account
 - changed: No account name shown in `SideMenu` if only a single light account exists on the device
 - changed: Properly escape newlines in Zealot changelog
+- fixed: `Carousel` cards not showing in iOS after new account creation until any scroll gesture performed, if there is only one `Carousel` card to display
 - fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
 - fixed: Unecessary eye icon in `CreateWalletImportScene` text input field
 - fixed: PoweredBy card displaying custom system fonts
