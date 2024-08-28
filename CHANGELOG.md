@@ -18,6 +18,7 @@
 - changed: Token swap error demoted to red error dropdown to a toast
 - changed: 1 cent minimum requirement for high fee warning
 - changed: Properly escape newlines in Zealot changelog
+- fixed: `Carousel` cards not showing in iOS after new account creation until any scroll gesture performed, if there is only one `Carousel` card to display
 - fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
 - fixed: Unecessary eye icon in `CreateWalletImportScene` text input field
 - fixed: PoweredBy card displaying custom system fonts
