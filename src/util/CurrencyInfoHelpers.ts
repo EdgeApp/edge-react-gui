@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeToken, EdgeTokenId, EdgeTokenMap, JsonObject } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -12,6 +12,60 @@ import { EdgeAsset } from '../types/types'
 export function isKeysOnlyPlugin(pluginId: string): boolean {
   const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
+}
+
+export type FindTokenParams =
+  | {
+      account: EdgeAccount
+      pluginId: string
+      networkLocation: JsonObject
+    }
+  | {
+      allTokens: EdgeTokenMap
+      networkLocation: JsonObject
+    }
+
+export const findTokenIdByNetworkLocation = (params: FindTokenParams): EdgeTokenId | undefined => {
+  const { networkLocation } = params
+  let allTokens: EdgeTokenMap
+  if ('allTokens' in params) {
+    allTokens = params.allTokens
+  } else {
+    allTokens = params.account.currencyConfig[params.pluginId]?.allTokens
+    if (allTokens == null) return
+  }
+
+  for (const tokenId in allTokens) {
+    const edgeToken = allTokens[tokenId]
+    if (edgeToken == null) return
+    let found = true
+    for (const key in networkLocation) {
+      const left = edgeToken?.networkLocation?.[key]
+      const right = networkLocation[key]
+      if (left === undefined) {
+        // If the key is not found then assume this key doesn't exist in any token
+        // and we can early return undefined
+        console.warn(`findTokenIdByNetworkLocation: key '${key}' not found`)
+        return
+      }
+      if (left === right) continue
+
+      // In the special case of EVM contract addresses which are valid in both lower and upper case,
+      // we need to compare them case-insensitively. We know the stored contract address is lower case
+      // so only lower case the parameter if it's a string.
+      if (typeof right === 'string') {
+        if (left === right.toLowerCase()) {
+          continue
+        }
+      }
+      found = false
+      break
+    }
+    if (found) {
+      return tokenId
+    }
+  }
+  // If we get here, return undefined as we found no match
 }
 
 export const getTokenId = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeTokenId | undefined => {
