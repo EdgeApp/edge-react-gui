@@ -4,6 +4,8 @@
 
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - changed: Restrict Bity buy/sell to no-KYC asset
+- changed: Determine Moonpay asset support using chainCode/contractAddress
+- changed: Allow reverse quotes for Kado
 - fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
 - removed: 'fasterpayments' payment type
 - fixed: "FIO Address does not exist" error after transferring a FIO name
