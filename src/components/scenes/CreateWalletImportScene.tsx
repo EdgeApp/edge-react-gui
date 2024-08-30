@@ -1,6 +1,7 @@
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
@@ -13,13 +14,12 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeMargins } from '../layout/EdgeMargins'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
-import { SceneHeader } from '../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
@@ -136,39 +136,44 @@ const CreateWalletImportComponent = (props: Props) => {
   // Hack to disable autocomplete since RN sometimes enables it even when not specified
   // https://www.reddit.com/r/reactnative/comments/rt1who/cant_turn_off_autocomplete_in_textinput_android/
 
-  const keyboardType = Platform.OS === 'ios' ? 'email-address' : 'visible-password'
-  const secureTextEntry = Platform.OS === 'ios' ? undefined : true
+  const keyboardType = Platform.OS === 'ios' ? 'email-address' : undefined
 
   return (
-    <SceneWrapper avoidKeyboard>
-      <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
-      <View style={styles.icon}>
-        <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+    <SceneWrapper>
+      <View style={styles.container}>
+        <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
+        <KeyboardAwareScrollView>
+          <View style={styles.icon}>
+            <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+          </View>
+          <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
+          <FilledTextInput
+            aroundRem={0.5}
+            keyboardType={keyboardType}
+            value={importText}
+            multiline
+            numberOfLines={10}
+            placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="off"
+            onChangeText={setImportText}
+            onSubmitEditing={handleNext}
+            returnKeyType="none"
+            ref={textInputRef}
+          />
+          <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
+        </KeyboardAwareScrollView>
       </View>
-      {/* HACK: SceneWrapper's padding prop doesn't work for non-function children */}
-      <EdgeMargins>
-        <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
-        <FilledTextInput
-          aroundRem={0.5}
-          keyboardType={keyboardType}
-          value={importText}
-          multiline
-          placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoComplete="off"
-          onChangeText={setImportText}
-          onSubmitEditing={handleNext}
-          secureTextEntry={secureTextEntry}
-          ref={textInputRef}
-        />
-        <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
-      </EdgeMargins>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexShrink: 1,
+    margin: theme.rem(0.5)
+  },
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',

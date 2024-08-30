@@ -57,15 +57,6 @@ export function WalletListScene(props: Props) {
       .catch(error => showError(error))
   })
 
-  const handleRefresh = useHandler(() => {
-    setIsSearching(true)
-  })
-
-  const handleReset = useHandler(() => {
-    setSearchText('')
-    setIsSearching(false)
-  })
-
   const handleStartSearching = useHandler(() => {
     setIsSearching(true)
   })
@@ -148,8 +139,6 @@ export function WalletListScene(props: Props) {
                 insetStyle={insetStyle}
                 searching={isSearching}
                 searchText={searchText}
-                onRefresh={handleRefresh}
-                onReset={handleReset}
               />
               <WalletListSortable insetStyle={insetStyle} key="sortList" />
             </CrossFade>

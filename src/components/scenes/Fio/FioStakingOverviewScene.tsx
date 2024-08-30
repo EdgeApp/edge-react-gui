@@ -93,10 +93,10 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.navigate('fioStakingChange', { change: 'add', tokenId, walletId })
+    navigation.navigate('fioStakingChange', { assetActionType: 'stake', tokenId, walletId })
   }
   const handlePressUnstake = () => {
-    navigation.navigate('fioStakingChange', { change: 'remove', tokenId, walletId })
+    navigation.navigate('fioStakingChange', { assetActionType: 'unstake', tokenId, walletId })
   }
 
   const renderItems = () =>

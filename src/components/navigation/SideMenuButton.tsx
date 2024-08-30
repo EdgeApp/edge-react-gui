@@ -1,5 +1,6 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
+import { Keyboard } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
@@ -12,6 +13,7 @@ export const SideMenuButton = () => {
   const theme = useTheme()
 
   const handlePress = useHandler(() => {
+    Keyboard.dismiss()
     triggerHaptic('impactLight')
     navigation.dispatch(DrawerActions.openDrawer())
   })

@@ -1,4 +1,4 @@
-import { gt, lt } from 'biggystring'
+import { add, gt, lt } from 'biggystring'
 import { asDate, asMaybe, asObject, asString } from 'cleaners'
 import { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
@@ -166,6 +166,7 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
         }
       ]
 
+      const allocations: QuoteAllocation[] = []
       let edgeTransaction: EdgeTransaction
       switch (action) {
         case 'stake': {
@@ -198,6 +199,25 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
           break
         }
         case 'unstake': {
+          let claimableAmount = '0'
+          for (const stakedAmountRaw of wallet.stakingStatus.stakedAmounts) {
+            const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
+            if (stakedAmount == null) continue
+
+            if (stakedAmount.otherParams.type === `${WITHDRAW_PREFIX}${resource}` && stakedAmount.unlockDate != null && stakedAmount.unlockDate < new Date()) {
+              claimableAmount = add(claimableAmount, stakedAmount.nativeAmount)
+            }
+          }
+
+          if (claimableAmount !== '0') {
+            allocations.push({
+              pluginId,
+              currencyCode,
+              allocationType: 'claim',
+              nativeAmount: claimableAmount
+            })
+          }
+
           const spendInfo: EdgeSpendInfo = {
             tokenId: null,
             spendTargets,
@@ -249,7 +269,7 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
         }
       }
 
-      const allocations: QuoteAllocation[] = [
+      allocations.push(
         {
           allocationType: action,
           pluginId,
@@ -262,7 +282,7 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
           currencyCode,
           nativeAmount: edgeTransaction.networkFee
         }
-      ]
+      )
 
       const approve = async () => {
         const signedTx = await wallet.signTx(edgeTransaction)

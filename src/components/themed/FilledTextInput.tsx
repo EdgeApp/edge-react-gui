@@ -44,11 +44,14 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   // Appearance:
   clearIcon?: boolean
   iconComponent?: AnimatedIconComponent | null
-  multiline?: boolean // Defaults to 'false'
+  /** Defaults to 'false' */
+  multiline?: boolean
   scale?: SharedValue<number>
   showSpinner?: boolean
-  prefix?: string // Text input is left-left justified with a persistent prefix
-  suffix?: string // Text input is right-right justified with a persistent suffix
+  /** Text input is left-left justified with a persistent prefix */
+  prefix?: string
+  /** Text input is right-right justified with a persistent suffix */
+  suffix?: string
   textsizeRem?: number
 
   // Callbacks:
@@ -58,27 +61,41 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   onFocus?: () => void
 
   // Other React Native TextInput properties:
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
+  /**  Defaults to 'sentences' */
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
   autoComplete?: TextInputProps['autoComplete']
-  autoCorrect?: boolean // Defaults to 'true'
-  blurOnSubmit?: boolean // Defaults to 'true'
+  /** Defaults to 'true' */
+  autoCorrect?: boolean
+  /** Defaults to 'true' */
+  blurOnSubmit?: boolean
   inputAccessoryViewID?: string
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'visible-password' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
-  returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
+  /** Defaults to 'done' */
+  returnKeyType?: FilledTextInputReturnKeyType
 
   secureTextEntry?: boolean
   testID?: string
-
-  // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
+  /** Unless 'autoFocus' is passed explicitly in the props, Search Bars
+   * 'autoFocus' and 'regular' text inputs don't. */
   autoFocus?: boolean // Defaults to 'true'
 
-  // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
-  blurOnClear?: boolean // Defaults to 'false'
+  /** Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls
+   * 'blur' when cleared and text inputs don't call 'blur' when cleared.
+   * Defaults to 'false' */
+  blurOnClear?: boolean
 
-  // Whether the text input is disabled. If 'true', the component will be grayed out.
-  disabled?: boolean // Defaults to 'false'
+  /** Whether the text input is disabled. If 'true', the component will be
+   * grayed out.
+   * Defaults to 'false' */
+  disabled?: boolean
+
+  /** Number of lines in multiline configuration. Useful for scrolling
+   * containers that won't cause this component to shrink.
+   * Defaults to 20.
+   */
+  numberOfLines?: number
 }
 
 export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof MarginRemStyle>
@@ -127,6 +144,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     showSpinner = false,
     prefix,
     suffix,
+    numberOfLines = 20,
 
     // Callbacks:
     onBlur,
@@ -294,7 +312,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               blurOnSubmit={multiline ? false : blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={secureTextEntry === true ? hidePassword : undefined}
-              numberOfLines={multiline ? 20 : undefined}
+              numberOfLines={multiline ? numberOfLines : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>

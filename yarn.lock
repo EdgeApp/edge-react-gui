@@ -2202,9 +2202,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -9101,10 +9101,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.11.0.tgz#b831e2acbfdd285e405af149647f0af71efadc2a"
-  integrity sha512-e1sYS92DT8z55VWKWYzMpq9+1h6GTWI42+MLijKVAU+/0cE+TaBjyoMc4g9+yI6zsY1CPYWQWannVulTMUvWgw==
+edge-core-js@^2.13.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.13.0.tgz#a57b9728f7ac267929a5d9466fdc2560b389c03c"
+  integrity sha512-mIP3T911cJuFtvIiF4ev0HgHa5ky4m3e9VDYOUqJ0fcPnkxoBHVYsYXEIlgzsssMIzISGadY4seZnozo16dXcw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -9126,10 +9126,10 @@ edge-core-js@^2.11.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.18.2:
-  version "4.18.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.18.2.tgz#5b48a7b12619ce596cf1fd4c4696646cec54fe5f"
-  integrity sha512-d/aDGp0JBOqTckOpD6J8WC5Ols/ooLMeHRcu0qcFuAUbOliYSkclAoyrGzYVnAp+0Yu27d7ObJjwBKygL5Hs+A==
+edge-currency-accountbased@^4.21.0:
+  version "4.21.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.21.0.tgz#591e8d3a7b71ab9518656e9a41c2943e57876167"
+  integrity sha512-jglDx5lw7BsC/gELERTGq1w2CsHHYCLh6RH2pgUWoxAX9OPqhbxOUdhQrvfP1fhrLz0FqlR/mm2f8Eh0PTJm4Q==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -9137,7 +9137,7 @@ edge-currency-accountbased@^4.18.2:
     "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
     "@ethereumjs/common" "^4.0.0"
     "@ethereumjs/tx" "^5.0.0"
-    "@fioprotocol/fiosdk" "https://github.com/peachbits/fiosdk_typescript.git#458cc706fe2601caeaf5dc726a72bcdc12f41fc6"
+    "@fioprotocol/fiosdk" "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
     "@greymass/eosio" "^0.6.8"
     "@greymass/eosio-resources" "^0.7.0"
     "@hashgraph/sdk" "^2.44.0"
@@ -9183,10 +9183,10 @@ edge-currency-monero@^1.3.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.2.1.tgz#df1a30b7e93389e3154529940ee83f55e68b0849"
-  integrity sha512-U3cEPKZmAvUNKznfcQKbINyJf/9lsMfLKR9zYECoPdwWXfBCbvWQn2/Wze3ufBjEZYpks/xquuMmhPfwhDSHsQ==
+edge-currency-plugins@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.3.1.tgz#ff29956970e8bafaf9970a42ad7f28cf31da39af"
+  integrity sha512-Sp1JWAUGnWQ7Cupc3ywfrjoCOAPBlsJVRehBiztH91WkTLAKOMssBIhnls4/aoIEygyAxq6HFSLIxs6M6nE/rg==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
@@ -9213,10 +9213,10 @@ edge-currency-plugins@^3.2.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.7.4:
-  version "2.7.4"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.7.4.tgz#744ad59bc2bb36ad3db85eba306c2f7ef4a4fcd3"
-  integrity sha512-6KpP1SZWo4lhb2HoJp1hyqU0QoEgadTYCb/tYL0yev+QmXSvAusQ0VoFQle48OCTH1hy7pWHvAlBm7uArN5Cyw==
+edge-exchange-plugins@^2.7.5:
+  version "2.7.5"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.7.5.tgz#adcc53233aff46bcb6dd6df54aa642e3b72b2933"
+  integrity sha512-nvo2rwA6KSs4dzWd3HblupxSDC2ST/tnyhoRqLO6+IKM3n7sE7b4/UW6taquW57yHqD9+yeL6UwkJwW9gUrGtQ==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     biggystring "^4.1.3"
@@ -10459,9 +10459,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -16264,10 +16264,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.4.16:
-  version "0.4.16"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.16.tgz#85f12347ab36a268d02bbf5e4eacbdeb4ecb3220"
-  integrity sha512-lK4PxXEAPd0a3AGBtp4Xg6+S7jQmNBlzYgKA9vQaLUHeVJ8DAafk9VdQeb7XbtK5qgEwD5t+Efus+oUCGZfLwQ==
+react-native-piratechain@^0.4.17:
+  version "0.4.17"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.17.tgz#868891f04e9e0fc0900414ad47b3bf3a92a53655"
+  integrity sha512-v5jB2vwS01/AU1rAe3MT1jc8D8q7q4Emk4vB6ZcXRAswXz6CkhcZZAQUzOCYWNyo9Hdaju0Srr7qht24jKM0Wg==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16374,10 +16374,10 @@ react-native-webview@^13.8.4:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.7.6:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.6.tgz#66e6306de7cfd6ab64608bab99074350dc32d5c5"
-  integrity sha512-vM623VWoqiujjwMoyqFAYP4b0LRQDYfyPkEHB6+SPjg27GrA3qH79A1JN4GCD7gySaBJBdjEjKcrQQ0TBaBKoQ==
+react-native-zcash@^0.7.7:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.7.tgz#3c139fd154e85104ef5fbca2da1cbcd01bb43f9a"
+  integrity sha512-q5RbMY62Dp/WQEikMp1GV8ZcSwsAKpJBuYnprjFzUFzMfS3R1IzJGHejLV5ACQBChEFdb7Tk1ney78Wv5Z1cmA==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"

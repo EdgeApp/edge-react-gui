@@ -57,13 +57,13 @@ interface OwnProps extends EdgeSceneProps<'request'> {
 
 interface StateProps {
   currencyCode: string
-  wallet: EdgeCurrencyWallet
+  displayDenomination: EdgeDenomination
   exchangeSecondaryToPrimaryRatio: string
   fioAddressesExist: boolean
   isConnected: boolean
   isLightAccount: boolean
   showBalance: boolean
-  displayDenomination: EdgeDenomination
+  wallet: EdgeCurrencyWallet
 }
 
 interface DispatchProps {
@@ -310,7 +310,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   }
 
   handlePressAddressItem = async (encodedUri?: string) => {
-    Airship.show(bridge => <QrModal bridge={bridge} data={encodedUri} />).catch(err => showError(err))
+    const { route, wallet } = this.props
+    const { tokenId } = route.params
+    Airship.show(bridge => <QrModal bridge={bridge} tokenId={tokenId} wallet={wallet} data={encodedUri} />).catch(err => showError(err))
   }
 
   toggleBalanceVisibility = () => {
@@ -401,7 +403,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
               <AddressQr
                 address={this.state.addresses[0].addressString}
                 wallet={wallet}
-                currencyCode={currencyCode}
+                tokenId={tokenId}
                 nativeAmount={this.state.amounts?.nativeAmount}
                 onPress={this.handlePressAddressItem}
               />
@@ -415,7 +417,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
                 <AddressQr
                   address={item.addressString}
                   wallet={wallet}
-                  currencyCode={currencyCode}
+                  tokenId={tokenId}
                   nativeAmount={this.state.amounts?.nativeAmount}
                   onPress={this.handlePressAddressItem}
                 />

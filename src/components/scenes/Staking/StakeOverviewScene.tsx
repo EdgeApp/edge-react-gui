@@ -126,7 +126,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : allocationType === 'earned' ? lstrings.stake_s_earned : lstrings.stake_s_unstaked
-    const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
+    const title = `${sprintf(titleBase, currencyCode)}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)

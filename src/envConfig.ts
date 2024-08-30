@@ -18,6 +18,7 @@ const asEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
+  drpcApiKey: asOptional(asString, ''),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
   infuraProjectId: asOptional(asString, ''),
@@ -114,21 +115,25 @@ export const asEnvConfig = asObject({
   ),
   AZTECO_API_KEY: asNullable(asString),
   STAKEKIT_API_KEY: asNullable(asString),
+  KILN_TESTNET_API_KEY: asNullable(asString),
+  KILN_MAINNET_API_KEY: asNullable(asString),
 
   // Core plugin options:
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
   AMOY_INIT: asCorePluginInit(asEvmApiKeys),
+  ALGORAND_INIT: asOptional(asBoolean, true),
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
+  AXELAR_INIT: asOptional(asBoolean, true),
   BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   BITCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   BITCOINCASH_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   CARDANO_INIT: asCorePluginInit(
@@ -145,6 +150,7 @@ export const asEnvConfig = asObject({
       maestroApiKey: asOptional(asString)
     })
   ),
+  CELO_INIT: asCorePluginInit(asEvmApiKeys),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -156,19 +162,20 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   COREUM_INIT: asCorePluginInit(asBoolean),
+  COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   DIGIBYTE_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   DOGE_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
@@ -188,6 +195,8 @@ export const asEnvConfig = asObject({
       freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
+  FILECOINFEVM_INIT: asCorePluginInit(asEvmApiKeys),
+  FILECOINFEVM_CALIBRATION_INIT: asCorePluginInit(asEvmApiKeys),
   FILECOIN_INIT: asCorePluginInit(
     asObject({
       glifApiKey: asOptional(asString, '')
@@ -195,7 +204,7 @@ export const asEnvConfig = asObject({
   ),
   GROESTLCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   GODEX_INIT: asCorePluginInit(
@@ -204,6 +213,8 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   HOLESKY_INIT: asCorePluginInit(asEvmApiKeys),
+  HEDERA_INIT: asOptional(asBoolean, true),
+  LIBERLAND_INIT: asOptional(asBoolean, true),
   LIFI_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
@@ -213,7 +224,7 @@ export const asEnvConfig = asObject({
   ),
   LITECOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   LETSEXCHANGE_INIT: asCorePluginInit(
@@ -229,7 +240,7 @@ export const asEnvConfig = asObject({
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asBoolean),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
-
+  POLKADOT_INIT: asOptional(asBoolean, true),
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
   RANGO_INIT: asCorePluginInit(
     asObject({
@@ -239,6 +250,7 @@ export const asEnvConfig = asObject({
       referrerFee: asOptional(asString, '0.75')
     }).withRest
   ),
+  RSK_INIT: asCorePluginInit(asEvmApiKeys),
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
@@ -287,7 +299,7 @@ export const asEnvConfig = asObject({
   ),
   ZCOIN_INIT: asCorePluginInit(
     asObject({
-      nowNodeApiKey: asOptional(asString, '')
+      nowNodesApiKey: asOptional(asString, '')
     })
   ),
   '0XGASLESS_INIT': asCorePluginInit(
