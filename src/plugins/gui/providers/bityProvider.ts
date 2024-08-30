@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+// import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
@@ -17,10 +18,9 @@ import {
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderGetTokenId,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-import { addTokenToArray } from '../util/providerUtils'
+import { ProviderSupportStore } from './ProviderSupportStore'
 
 const providerId = 'bity'
 const storeId = 'com.bity'
@@ -31,39 +31,38 @@ const supportEmail = 'support_edge@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
-const allowedCountryCodes: { readonly [code: string]: boolean } = {
-  AT: true,
-  BE: true,
-  BG: true,
-  CH: true,
-  CZ: true,
-  DK: true,
-  EE: true,
-  FI: true,
-  FR: true,
-  DE: true,
-  GR: true,
-  HU: true,
-  IE: true, // Ireland
-  IT: true,
-  LV: true,
-  LT: true,
-  LU: true,
-  NL: true,
-  PL: true,
-  PT: true,
-  RO: true,
-  SK: true,
-  SI: true,
-  ES: true,
-  SE: true,
-  HR: true,
-  LI: true,
-  NO: true,
-  SM: true,
-  GB: true
-}
+const supportedRegionCodes = [
+  'AT',
+  'BE',
+  'BG',
+  'CH',
+  'CZ',
+  'DK',
+  'EE',
+  'FI',
+  'FR',
+  'DE',
+  'GR',
+  'HU',
+  'IE', // Ireland
+  'IT',
+  'LV',
+  'LT',
+  'LU',
+  'NL',
+  'PL',
+  'PT',
+  'RO',
+  'SK',
+  'SI',
+  'ES',
+  'SE',
+  'HR',
+  'LI',
+  'NO',
+  'SM',
+  'GB'
+]
 
 const CURRENCY_PLUGINID_MAP: StringMap = {
   BTC: 'bitcoin',
@@ -342,6 +341,10 @@ export const bityProvider: FiatProviderFactory = {
     const { apiKeys, getTokenId } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
+    const supportedAssets = new ProviderSupportStore(providerId)
+
+    supportedRegionCodes.forEach(code => supportedAssets.addSupport(`region:${code}`))
+
     const out: FiatProvider = {
       providerId,
       partnerIcon,
@@ -353,7 +356,7 @@ export const bityProvider: FiatProviderFactory = {
         const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
         if (response == null || !response.ok) {
           console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
-          return allowedCurrencyCodes
+          return supportedAssets.getFiatProviderAssetMap(`payment:${supportedPaymentType}`)
         }
 
         const result = await response.json()
@@ -362,32 +365,36 @@ export const bityProvider: FiatProviderFactory = {
           bityCurrencies = asBityCurrencyResponse(result).currencies
         } catch (error: any) {
           console.error(error)
-          return allowedCurrencyCodes
+          return supportedAssets.getFiatProviderAssetMap(`payment:${supportedPaymentType}`)
         }
+
         for (const currency of bityCurrencies) {
-          let isAddCurrencySuccess = false
           if (currency.tags.length === 1 && currency.tags[0] === 'fiat') {
-            allowedCurrencyCodes.fiat['iso:' + currency.code.toUpperCase()] = currency
-            isAddCurrencySuccess = true
+            const fiatCurrencyCode = 'iso:' + currency.code.toUpperCase()
+
+            const path = supportedAssets.addSupport(`region:*`, `payment:${supportedPaymentType}`, `fiat:${fiatCurrencyCode}`)
+
+            supportedAssets.addOtherInfo(path, currency)
           } else if (currency.tags.includes('crypto')) {
             // Bity reports cryptos with a set of multiple tags such that there is
             // overlap, such as USDC being 'crypto', 'ethereum', 'erc20'.
-            if (currency.tags.includes('erc20') && currency.tags.includes('ethereum')) {
-              // ETH tokens
-              addToAllowedCurrencies(getTokenId, 'ethereum', currency, currency.code)
-              isAddCurrencySuccess = true
-            } else if (Object.keys(CURRENCY_PLUGINID_MAP).includes(currency.code)) {
-              // Mainnet currencies
-              addToAllowedCurrencies(getTokenId, CURRENCY_PLUGINID_MAP[currency.code], currency, currency.code)
-              isAddCurrencySuccess = true
-            }
-          }
+            const pluginId = currency.tags.includes('erc20') && currency.tags.includes('ethereum') ? 'ethereum' : CURRENCY_PLUGINID_MAP[currency.code]
+            if (pluginId == null) continue
 
-          // Unhandled combination not caught by cleaner. Skip to be safe.
-          if (!isAddCurrencySuccess) console.log('Unhandled Bity supported currency: ', currency)
+            const tokenId = getTokenId(pluginId, currency.code)
+            if (tokenId === undefined) continue
+
+            const path = supportedAssets.addSupport(`region:*`, `payment:${supportedPaymentType}`, `fiat:*`, `plugin:${pluginId}`, `crypto:${tokenId}`)
+            supportedAssets.addOtherInfo(path, currency)
+          } else {
+            // Unhandled combination not caught by cleaner. Skip to be safe.
+            console.log('Unhandled Bity supported currency: ', currency)
+          }
         }
 
-        return allowedCurrencyCodes
+        const assetMap = supportedAssets.getFiatProviderAssetMap(`region:*`, `payment:${supportedPaymentType}`)
+
+        return assetMap
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const {
@@ -402,12 +409,17 @@ export const bityProvider: FiatProviderFactory = {
           displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
-        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const bityCurrency = allowedCurrencyCodes.crypto[pluginId].find(t => t.tokenId === tokenId)
-        const cryptoCurrencyObj = asBityCurrency(bityCurrency?.otherInfo)
-        const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
+        if (!supportedAssets.isSupported(`region:${regionCode.countryCode}`))
+          throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!supportedAssets.isSupported(`region:${regionCode.countryCode}`, `payment:${supportedPaymentType}`))
+          throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+
+        const cryptoOtherInfo = supportedAssets.getOtherInfo(`region:*`, `payment:${supportedPaymentType}`, `fiat:*`, `plugin:${pluginId}`, `crypto:${tokenId}`)
+        const cryptoCurrencyObj = asBityCurrency(cryptoOtherInfo)
+
+        const fiatOtherInfo = supportedAssets.getOtherInfo(`region:*`, `payment:${supportedPaymentType}`, `fiat:${fiatCurrencyCode}`)
+        const fiatCurrencyObj = asBityCurrency(fiatOtherInfo)
 
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity: Could not query supported currencies')
         const cryptoCode = cryptoCurrencyObj.code
@@ -601,15 +613,6 @@ export const bityProvider: FiatProviderFactory = {
     }
     return out
   }
-}
-
-const addToAllowedCurrencies = (getTokenId: FiatProviderGetTokenId, pluginId: string, currency: BityCurrency, currencyCode: string) => {
-  if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = []
-  const tokenId = getTokenId(pluginId, currencyCode)
-  if (tokenId === undefined) return
-
-  const tokens = allowedCurrencyCodes.crypto[pluginId]
-  addTokenToArray({ tokenId, otherInfo: currency }, tokens)
 }
 
 /**
