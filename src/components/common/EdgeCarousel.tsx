@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { InteractionManager, ListRenderItem, View } from 'react-native'
+import { InteractionManager, ListRenderItem, Platform, View } from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -16,7 +16,6 @@ interface Props<T> {
 }
 
 const DOT_SIZE_REM = 0.5
-
 /**
  * A horizontal carousel with pagination dots
  */
@@ -28,17 +27,28 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   const carouselRef = React.useRef<Carousel<any>>(null)
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const [dataLocal, setDataLocal] = useState(data)
 
   const renderItem = useHandler<ListRenderItem<T>>(info => (
     <View style={[styles.childContainer, { width: width * 0.9, height }]}>{props.renderItem(info)}</View>
   ))
 
   /**
-   * Carousel's FlatList bug workaround
+   * Carousel's FlatList bug workaround. Fixes the issue where items are
+   * hidden until scroll actions are performed either in the carousel or on the
+   * scene itself.
    */
   useAsyncEffect(
     async () => {
-      if (carouselRef.current != null) {
+      // HACK: With 1 item, this is the only way to force a render in iOS
+      if (Platform.OS === 'ios' && data.length === 1) {
+        setDataLocal([])
+        setTimeout(() => {
+          setDataLocal(data)
+        }, 500)
+      }
+      // The built-in hack fn works for all other cases
+      else if (carouselRef.current != null) {
         await InteractionManager.runAfterInteractions(() => {
           carouselRef.current?.triggerRenderingHack()
         })
@@ -52,7 +62,7 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
     <View style={styles.carouselContainer}>
       <Carousel
         ref={carouselRef}
-        data={data}
+        data={dataLocal}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         sliderWidth={width}
@@ -72,7 +82,7 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
           marginTop: -theme.rem(1),
           marginBottom: -theme.rem(1)
         }}
-        dotsLength={data.length}
+        dotsLength={dataLocal.length}
         activeDotIndex={activeIndex}
         tappableDots={carouselRef.current != null}
         dotStyle={styles.dotStyle}
