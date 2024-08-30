@@ -395,7 +395,7 @@
     "paymentTypes": ["turkishbank"],
     "title": "Turkish Bank Transfer",
     "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
-    "forCountries": ["TR"],
+    "forCountries": [],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
