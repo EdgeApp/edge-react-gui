@@ -5,6 +5,7 @@
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
 - removed: 'fasterpayments' payment type
+- fixed: "FIO Address does not exist" error after transferring a FIO name
 
 ## 4.12.0
 
