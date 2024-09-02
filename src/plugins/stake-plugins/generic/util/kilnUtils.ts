@@ -1,4 +1,4 @@
-import { asArray, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asEither, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
 
 export interface KilnApi {
   getStakes: (address: string) => Promise<StakeStatus>
@@ -8,9 +8,12 @@ export interface KilnApi {
 export type StakeStatus = ReturnType<typeof asStakesResponse>
 
 export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
-  const fetchGet = async (baseUrl: string, path: string, apiKey: string): Promise<unknown> => {
-    const headers = { 'Content-Type': 'application/json', authorization: `Bearer ${apiKey}` }
-    const res = await fetch(baseUrl + path, { headers })
+  const fetchKiln = async (path: string, init?: RequestInit): Promise<unknown> => {
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${apiKey}`
+    }
+    const res = await fetch(baseUrl + path, { ...init, headers: { ...headers, ...init?.headers } })
     if (!res.ok) {
       const message = await res.text()
       throw new Error(`Kiln fetch error: ${message}`)
@@ -22,15 +25,17 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
   return {
     // https://docs.api.kiln.fi/reference/getethonchainv2stakes
     getStakes: async (address: string): Promise<StakeStatus> => {
-      const raw = await fetchGet(baseUrl, `/v1/eth/onchain/v2/stakes?wallets=${address}`, apiKey)
-      const clean = asBaseRes(asStakesResponse)(raw)
-      return clean.data
+      const raw = await fetchKiln(`/v1/eth/onchain/v2/stakes?wallets=${address}`)
+      const response = asKilnResponse(asStakesResponse)(raw)
+      if ('message' in response) throw new Error('Kiln error: ' + response.message)
+      return response.data
     },
     // https://docs.api.kiln.fi/reference/getethonchainv2operations
     getOperations: async (address: string): Promise<ExitOperation[]> => {
-      const raw = await fetchGet(baseUrl, `/v1/eth/onchain/v2/operations?wallets=${address}`, apiKey)
-      const clean = asBaseRes(asOperations)(raw)
-      const filteredOps = clean.data.filter((op): op is ExitOperation => op != null)
+      const raw = await fetchKiln(`/v1/eth/onchain/v2/operations?wallets=${address}`)
+      const response = asKilnResponse(asOperations)(raw)
+      if ('message' in response) throw new Error('Kiln error: ' + response.message)
+      const filteredOps = response.data.filter((op): op is ExitOperation => op != null)
       return filteredOps
     }
   }
@@ -40,10 +45,15 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
 // Cleaners
 //
 
-const asBaseRes = <T>(func: Cleaner<T>) =>
-  asObject({
-    data: func
-  })
+const asKilnResponse = <T>(asT: Cleaner<T>) =>
+  asEither(
+    asObject({
+      data: asT
+    }),
+    asObject({
+      message: asString
+    })
+  )
 
 const asStakesResponse = asArray(
   asObject({
