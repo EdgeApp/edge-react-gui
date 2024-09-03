@@ -83,6 +83,9 @@ export interface StakePolicy {
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
 
+  // Staking policy properties
+  isLiquidStaking?: boolean
+
   // The assets which must be staked
   stakeAssets: AssetId[]
 
