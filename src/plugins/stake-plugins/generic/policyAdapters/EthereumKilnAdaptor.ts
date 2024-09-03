@@ -22,10 +22,11 @@ export interface EthereumPooledKilnAdapterConfig {
   rpcProviderUrls: string[]
 }
 
-export const makeKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>): StakePolicyAdapter => {
+export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>): StakePolicyAdapter => {
   const { stakePolicyId, adapterConfig } = policyConfig
   const { apiKey, baseUrl, contractAddress, exitQueueAddress, rpcProviderUrls } = adapterConfig
-  if (apiKey == null) throw new Error(`Kiln apikey is required for ${stakePolicyId}`)
+
+  if (apiKey == null) throw new Error(`Kiln apiKey is required for ${stakePolicyId}`)
 
   const kiln = makeKilnApi(baseUrl, apiKey)
 
