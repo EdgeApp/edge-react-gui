@@ -73,7 +73,7 @@ export const SettingsScene = (props: Props) => {
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
   const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
-  const [touchIdText, setTouchIdText] = React.useState(lstrings.settings_button_use_touchID)
+  const [touchIdText, setTouchIdText] = React.useState<string>(lstrings.settings_button_use_touchID)
 
   const iconSize = theme.rem(1.25)
   const isLightAccount = username == null
