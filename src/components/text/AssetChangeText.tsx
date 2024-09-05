@@ -45,8 +45,9 @@ const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: str
   const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
   const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
 
-  // Avoid divide by zero if there's no exchange rate from yesterday
-  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : div(yesterdayDelta, yesterdayExchangeRate, DECIMAL_PRECISION)
+  // Use 0 as delta if either exchange rate is missing or 0
+  const yesterdayDeltaPct =
+    zeroString(yesterdayExchangeRate) || zeroString(assetToFiatRate) ? '0' : div(yesterdayDelta, yesterdayExchangeRate, DECIMAL_PRECISION)
 
   let percentString
   // Prepend a < sign if a nonzero delta rounds to zero
