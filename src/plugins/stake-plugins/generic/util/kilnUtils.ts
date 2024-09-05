@@ -153,7 +153,7 @@ export type AdaStake = ReturnType<typeof asAdaStake>
 const asAdaStake = asObject({
   // wallet_addresses: asArray(asString),
   stake_address: asString,
-  // pool_id: asString,
+  pool_id: asString,
   balance: asString,
   rewards: asString,
   // available_rewards: asString,

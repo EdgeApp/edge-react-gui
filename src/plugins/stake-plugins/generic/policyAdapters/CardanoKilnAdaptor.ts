@@ -145,12 +145,12 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       const stakeAddress: string = await wallet.otherMethods.getStakeAddress()
 
       const stakes = await kiln.adaGetStakes({
-        poolIds: [adapterConfig.poolId],
         stakeAddresses: [stakeAddress]
       })
-      const stake = stakes.find(stake => stake.stake_address === stakeAddress)
+      const hasActiveStake = stakes.some(stake => stake.state === 'active')
+      const stakeInPool = stakes.find(stake => stake.stake_address === stakeAddress && stake.pool_id === adapterConfig.poolId && stake.state === 'active')
 
-      const stakedAmount = stake?.state === 'active' ? stake.balance : '0'
+      const stakedAmount = stakeInPool?.balance ?? '0'
       allocations.push({
         allocationType: 'staked',
         pluginId,
@@ -158,7 +158,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         nativeAmount: stakedAmount
       })
 
-      const rewardsAmount = stake?.rewards ?? '0'
+      const rewardsAmount = stakeInPool?.rewards ?? '0'
       allocations.push({
         allocationType: 'earned',
         pluginId,
@@ -168,7 +168,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
 
       return {
         allocations,
-        canStake: eq(stakedAmount, '0'),
+        canStake: !hasActiveStake,
         canUnstake: gt(stakedAmount, '0'),
         canUnstakeAndClaim: false,
         canClaim: gt(rewardsAmount, '0')
