@@ -159,7 +159,7 @@ export function AccountCallbackManager(props: Props) {
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
         datelog('Updating wallet list')
-        await dispatch(refreshConnectedWallets)
+        await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
         await snooze(1000)
       }
     },
