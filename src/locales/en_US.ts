@@ -100,6 +100,7 @@ const strings = {
   error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
   error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
+  error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
