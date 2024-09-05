@@ -1,4 +1,17 @@
-import { asArray, asEither, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asJSON, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
+
+export class KilnError extends Error {
+  name: string
+  message: string
+  error: string
+
+  constructor(message: string, error: string) {
+    super(message)
+    this.name = 'HumanFriendlyError'
+    this.message = message
+    this.error = error
+  }
+}
 
 export interface KilnApi {
   adaGetStakes: (params: {
@@ -28,6 +41,8 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
     const res = await fetch(url, opts)
     if (!res.ok) {
       const message = await res.text()
+      const errorResponse = asMaybe(asKilnErrorResponse)(message)
+      if (errorResponse != null) throw new KilnError(errorResponse.message, errorResponse.error)
       throw new Error(`Kiln fetch error: ${message}`)
     }
     const json = await res.json()
@@ -62,7 +77,6 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       const raw = await fetchKiln(`/v1/ada/stakes?${query.toString()}`)
       const response = asKilnResponse(asArray(asAdaStake))(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       return response.data
     },
 
@@ -77,7 +91,6 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
         })
       })
       const response = asKilnResponse(asAdaStakeTransaction)(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       return response.data
     },
 
@@ -90,7 +103,6 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
         })
       })
       const response = asKilnResponse(asAdaUnstakeTransaction)(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       return response.data
     },
 
@@ -104,7 +116,6 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
         })
       })
       const response = asKilnResponse(asAdaUnstakeTransaction)(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       return response.data
     },
 
@@ -112,14 +123,12 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
     async ethGetOnChainStakes(address) {
       const raw = await fetchKiln(`/v1/eth/onchain/v2/stakes?wallets=${address}`)
       const response = asKilnResponse(asArray(asEthOnChainStake))(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       return response.data
     },
     // https://docs.api.kiln.fi/reference/getethonchainv2operations
     async ethGetOnChainOperations(address) {
       const raw = await fetchKiln(`/v1/eth/onchain/v2/operations?wallets=${address}`)
       const response = asKilnResponse(asArray(asMaybe(asExitOperation)))(raw)
-      if ('message' in response) throw new Error('Kiln error: ' + response.message)
       const filteredOps = response.data.filter((op): op is ExitOperation => op != null)
       return filteredOps
     }
@@ -135,15 +144,22 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
 export interface KilnResponse<T> {
   data: T
 }
+
 const asKilnResponse = <T>(asT: Cleaner<T>) =>
-  asEither(
-    asObject({
-      data: asT
-    }),
-    asObject({
-      message: asString
-    })
-  )
+  asObject({
+    data: asT
+  })
+
+export interface KilnErrorResponse {
+  error: string
+  message: string
+}
+const asKilnErrorResponse = asJSON(
+  asObject<KilnErrorResponse>({
+    error: asString,
+    message: asString
+  })
+)
 
 //
 // Ada
