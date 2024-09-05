@@ -60,7 +60,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
@@ -109,7 +110,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
@@ -144,7 +146,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
