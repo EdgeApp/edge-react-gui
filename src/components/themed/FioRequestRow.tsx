@@ -74,7 +74,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     let statusStyle = styles.requestPartialConfirmation
-    let label = lstrings.fragment_wallet_unconfirmed
+    let label: string = lstrings.fragment_wallet_unconfirmed
     if (status === 'sent_to_blockchain') {
       statusStyle = styles.requestDetailsReceivedTx
       label = lstrings.fragment_request_subtitle

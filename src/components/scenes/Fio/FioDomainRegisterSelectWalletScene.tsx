@@ -201,7 +201,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const styles = getStyles(theme)
     const detailsText = sprintf(lstrings.fio_domain_wallet_selection_text, config.appName, loading ? '-' : activationCost)
 
-    let paymentWalletBody = lstrings.choose_your_wallet
+    let paymentWalletBody: string = lstrings.choose_your_wallet
     if (paymentWallet != null && paymentWallet.id !== '') {
       const wallet = account.currencyWallets[paymentWallet.id]
       paymentWalletBody = `${getWalletName(wallet)} (${wallet.currencyInfo.currencyCode})`
