@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.14.0):
     - React-Core
-  - edge-currency-accountbased (4.23.0):
+  - edge-currency-accountbased (4.24.0):
     - React-Core
   - edge-currency-plugins (3.3.1):
     - React-Core
@@ -430,7 +430,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.7.7):
+  - react-native-zcash (0.8.0):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1080,7 +1080,7 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 9e7f9dc8b064c7be712e2988feb78db0ed5dbd77
-  edge-currency-accountbased: a42d5ce79da833b867f95a5cf54ca0f7fe26f7d0
+  edge-currency-accountbased: d811f4a22df0142f41951d8b5ddd7ccfd41191f9
   edge-currency-plugins: 009d185ef6f1fb7b0f764bf22715aaefe531ca82
   edge-exchange-plugins: 6ed47d7adb64b432e787a9036f46ce947d488ad6
   edge-login-ui-rn: 8c232b302a6a0ef68a17d59db568cb39068c2c8d
@@ -1140,7 +1140,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: 1ebe6915d4ec818b282a12bde139f139d869e7ed
+  react-native-zcash: e9be77ab00cc04fe3c19125e12817c00d9356bc8
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

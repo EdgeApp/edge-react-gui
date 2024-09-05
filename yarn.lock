@@ -9126,10 +9126,10 @@ edge-core-js@^2.14.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.23.0:
-  version "4.23.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.23.0.tgz#42ebab330423d1beb72fadd55263087d3b2733be"
-  integrity sha512-n0KrF4gDD3ZwJ1oV7CvuB1vzLgbIafa90L3zTXX2fDTdbUmVQJdQpkWIrVyf4oJZFmVkAsUzT8hAqBDSSVAi5w==
+edge-currency-accountbased@^4.24.0:
+  version "4.24.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.24.0.tgz#22a86b562da80915ccb73d7704d4803ae122ab33"
+  integrity sha512-eAepyCOYxaX1K1vKomYn2Ey2Jw9yKWFcDNx7NvJ6nzeGJGFwLwV2/RwQoj7KUvLDxYJiQksMjHbfAhirtFXntQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -16264,10 +16264,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.4.17:
-  version "0.4.17"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.17.tgz#868891f04e9e0fc0900414ad47b3bf3a92a53655"
-  integrity sha512-v5jB2vwS01/AU1rAe3MT1jc8D8q7q4Emk4vB6ZcXRAswXz6CkhcZZAQUzOCYWNyo9Hdaju0Srr7qht24jKM0Wg==
+react-native-piratechain@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.0.tgz#74519d6983d6281eda9b0b788081eb2221a08204"
+  integrity sha512-cCYNGll6Zye+2oIABBLMSg6DEuIEUJomZkODXKnEDvG8SSIByz2w00Crt6Ol3UjIaDlA69Y10Ty4SiKvLTy2EQ==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16374,10 +16374,10 @@ react-native-webview@^13.8.4:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.7.7:
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.7.tgz#3c139fd154e85104ef5fbca2da1cbcd01bb43f9a"
-  integrity sha512-q5RbMY62Dp/WQEikMp1GV8ZcSwsAKpJBuYnprjFzUFzMfS3R1IzJGHejLV5ACQBChEFdb7Tk1ney78Wv5Z1cmA==
+react-native-zcash@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.8.0.tgz#ca3dc76c9e4ae9e7b3e4840526f38acb4b139d7b"
+  integrity sha512-UtgdWTo8ZNAHvYaKiGGlm9jJZ+jGQxUVZWuoEUUjPxgr87+Tb8FpXTpkvzm5ThRxDrgEKS8Dj98mdJnKO06rAA==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"
