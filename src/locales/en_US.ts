@@ -100,6 +100,7 @@ const strings = {
   error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
   error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
+  error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -1120,10 +1121,7 @@ const strings = {
   price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
-  update_notice_deprecate_electrum_servers_message:
-    '%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.' +
-    '\n\n' +
-    'NOTE: If you had custom nodes enabled, those wallets will not sync until corrected.',
+  update_notice_deprecate_electrum_servers_message: `%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.\n\nNOTE: If you had custom nodes enabled, those wallets will not sync until corrected.`,
 
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
@@ -1221,9 +1219,7 @@ const strings = {
   loan_breakdown_title: 'Loan Breakdown',
   loan_close_swap_warning:
     "Closing your loan will liquidate some of the deposited collateral if you do not have enough balance to repay the remaining principal and interest on your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
-  loan_close_loan_no_tx_needed_message:
-    `There appears to be no principal to repay nor collateral to withdraw.\n\n` +
-    `No transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
+  loan_close_loan_no_tx_needed_message: `There appears to be no principal to repay nor collateral to withdraw.\n\nNo transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
   loan_close_loan_title: 'Close Loan',
   loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
@@ -1859,7 +1855,7 @@ const strings = {
 
   auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
   contacts_load_failed_message_s: 'Failed to load contacts: %s'
-}
+} as const
 
 // eslint-disable-next-line import/no-default-export
 export default strings

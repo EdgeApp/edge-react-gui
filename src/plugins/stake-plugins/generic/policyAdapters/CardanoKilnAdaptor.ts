@@ -1,11 +1,13 @@
 import { eq, gt, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
+import { lstrings } from '../../../../locales/strings'
+import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import { infoServerData } from '../../../../util/network'
 import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
-import { makeKilnApi } from '../util/kilnUtils'
+import { KilnError, makeKilnApi } from '../util/kilnUtils'
 import { StakePolicyAdapter } from './types'
 
 export interface CardanoPooledKilnAdapterConfig {
@@ -71,7 +73,21 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         throw new Error('Insufficient funds')
       }
 
-      const stakeTransaction = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId)
+      const result = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId).catch(error => {
+        if (error instanceof Error) return error
+        throw error
+      })
+      if (result instanceof KilnError) {
+        if (/Value \d+ less than the minimum UTXO value \d+/.test(result.error)) {
+          const displayBalance = await wallet.nativeToDenomination(walletBalance, wallet.currencyInfo.currencyCode)
+          throw new HumanFriendlyError(lstrings.error_amount_too_low_to_stake_s, `${displayBalance} ${wallet.currencyInfo.currencyCode}`)
+        }
+      }
+      if (result instanceof Error) {
+        throw result
+      }
+
+      const stakeTransaction = result
       const edgeTx: EdgeTransaction = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
 
       const allocations: QuoteAllocation[] = [

@@ -17,6 +17,7 @@ import {
   StakePosition
 } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -169,6 +170,8 @@ const StakeModifySceneComponent = (props: Props) => {
             setErrorMessage(errMessage)
           } else if (err instanceof InsufficientFundsError) {
             setErrorMessage(lstrings.exchange_insufficient_funds_title)
+          } else if (err instanceof HumanFriendlyError) {
+            setErrorMessage(err.message)
           } else {
             showError(err)
             setErrorMessage(lstrings.unknown_error_occurred_fragment)

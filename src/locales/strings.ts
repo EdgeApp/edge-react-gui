@@ -15,7 +15,10 @@ import zh from './strings/zh.json'
 
 const allLocales = { en, de, ru, es, esMX, it, pt, ja, fr, ko, vi, zh }
 
-export const lstrings = { ...en }
+export const lstrings = { ...en } as const
+export type LStrings = typeof lstrings
+export type LStringsKey = keyof LStrings
+export type LStringsValues = LStrings[LStringsKey]
 
 // Set the language at boot:
 const [firstLocale] = getLocales()
