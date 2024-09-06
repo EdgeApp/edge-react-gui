@@ -157,6 +157,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     forceFiatCurrencyCode: 'iso:AUD',
     displayName: ''
   },
+  paypal: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    displayName: ''
+  },
   pix: {
     pluginId: 'amountquote',
     storeId: '',
@@ -185,6 +193,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     forceFiatCurrencyCode: 'iso:TRY',
     defaultFiatAmount: '2000',
+    displayName: ''
+  },
+  revolut: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: ''
   },
   sepa: {
