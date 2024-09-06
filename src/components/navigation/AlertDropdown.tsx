@@ -13,19 +13,25 @@ interface Props {
   bridge: AirshipBridge<void>
   message: string
 
-  // True for orange warning, false for red alert:
+  /** True for orange warning, false for red alert: */
   warning?: boolean
-  devAlert?: boolean
+
+  /** No auto-hide, must dismiss through the tap. */
+  persistent?: boolean
+
+  /** If given, pressing the body of the dropdown invokes onPress, while the
+   * close icon dismisses the dropdown */
+  onPress?: () => void
 }
 
 export function AlertDropdown(props: Props) {
-  const { bridge, devAlert, message, warning } = props
+  const { bridge, persistent, message, warning, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = warning ? theme.dropdownWarning : theme.dropdownError
 
   return (
-    <AirshipDropdown autoHideMs={devAlert ? 0 : undefined} bridge={bridge} backgroundColor={color}>
+    <AirshipDropdown autoHideMs={persistent ? 0 : undefined} bridge={bridge} backgroundColor={color} onPress={onPress}>
       <View style={styles.container}>
         <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
         <Text style={styles.text}>

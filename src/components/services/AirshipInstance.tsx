@@ -14,6 +14,7 @@ export interface ShowErrorWarningOptions {
   // Report error to external bug tracking tool (ie. Bugsnag)
   trackError?: boolean
   tag?: string
+  onPress?: () => void
 }
 /**
  * Shows an error to the user.
@@ -56,7 +57,7 @@ export async function showDevErrorAsync(error: unknown, options: ShowErrorWarnin
 
   if (__DEV__ || appVersion === '99.99.99' || appVersion.includes('-d')) {
     // Non-production (develop) builds show all errors
-    await Airship.show(bridge => <AlertDropdown bridge={bridge} devAlert message={translatedMessage} />)
+    await Airship.show(bridge => <AlertDropdown bridge={bridge} persistent message={translatedMessage} />)
   } else {
     // Production/staging builds don't show visible errors, but just saves a
     // breadcrumb.
@@ -81,13 +82,13 @@ export function showDevError(error: unknown, options: ShowErrorWarningOptions = 
  * Used when some user-requested operation succeeds but with a warning.
  */
 export function showWarning(error: unknown, options: ShowErrorWarningOptions = {}): void {
-  const { trackError: doTrackError = true, tag } = options
+  const { trackError: doTrackError = true, tag, onPress } = options
   const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
   if (doTrackError) {
     trackError(`showWarning: ${translatedError}`)
   }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />).catch(err => console.error(err))
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} onPress={onPress} warning />).catch(err => console.error(err))
 }
 
 /**
