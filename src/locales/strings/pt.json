@@ -1203,6 +1203,7 @@
   "util_s_and_s": "%1$s e %2$s",
   "util_truncate_delimeter": "...",
   "stake_estimated_return": "Retorno Estimado: %s",
+  "stake_estimated_apr_s": "%s Estimated APR",
   "stake_s_staked": "%s Staked",
   "stake_s_earned": "%s Ganhos",
   "stake_s_unstaked": "%s Unstaked",
