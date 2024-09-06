@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.13.0
+
 - added: Cardano staking through Kiln staking pools
 - added: Support for `isLiquidStaking` field on staking policies
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
@@ -14,7 +16,7 @@
 - removed: 'fasterpayments' payment type
 - removed: Turking bank transfer support
 
-## 4.12.0
+## 4.12.0 (2024-08-30)
 
 - added: `CryptoIcon` logo support to displayed request QR codes
 - added: Initial implementation of `SceneHeaderUi4`
