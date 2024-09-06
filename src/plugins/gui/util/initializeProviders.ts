@@ -1,5 +1,5 @@
 import { ENV } from '../../../env'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { findTokenIdByNetworkLocation, getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { makeUuid } from '../../../util/rnUtils'
 import { FiatPluginFactoryArgs } from '../fiatPluginTypes'
 import { FiatProvider, FiatProviderFactory } from '../fiatProviderTypes'
@@ -14,6 +14,10 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
   const providerPromises: Array<Promise<FiatProvider<T>>> = []
 
   const getTokenIdProvider = (pluginId: string, currencyCode: string) => getTokenId(account.currencyConfig[pluginId], currencyCode)
+  const getTokenIdFromContract = (params: { pluginId: string; contractAddress: string }) => {
+    const { pluginId, contractAddress } = params
+    return findTokenIdByNetworkLocation({ account, pluginId, networkLocation: { contractAddress } })
+  }
 
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue
@@ -22,7 +26,7 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
     if (apiKeys == null) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, getTokenId: getTokenIdProvider, io: { makeUuid, store } }))
+    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, getTokenId: getTokenIdProvider, getTokenIdFromContract, io: { makeUuid, store } }))
   }
 
   return await Promise.all(providerPromises)

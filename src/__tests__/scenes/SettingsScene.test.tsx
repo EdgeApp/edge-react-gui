@@ -10,6 +10,7 @@ describe('SettingsScene', () => {
   const mockState: FakeState = {
     core: {
       account: {
+        rootLoginId: 'XXX',
         currencyConfig: {},
         username: 'some user',
         watch: () => () => {}

@@ -85,8 +85,8 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   }
 }
 
-const allowedBuyCurrencyCodes: FiatProviderAssetMap = { providerId, requiredAmountType: 'fiat', crypto: {}, fiat: {} }
-const allowedSellCurrencyCodes: FiatProviderAssetMap = { providerId, requiredAmountType: 'crypto', crypto: {}, fiat: {} }
+const allowedBuyCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
+const allowedSellCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = { US: true }
 
 /**
@@ -190,10 +190,10 @@ const asBlockchains = asObject({
  */
 
 // Define cleaners for nested objects and properties
-// const asAmountCurrency = asObject({
-//   amount: asNumber,
-//   currency: asString
-// })
+const asAmountCurrency = asObject({
+  amount: asNumber,
+  currency: asString
+})
 
 // const asRequest = asObject({
 //   transactionType: asValue('buy', 'sell'),
@@ -219,14 +219,14 @@ const asMinMaxValue = asObject({
 
 const asQuote = asObject({
   // asset: asString,
-  // baseAmount: asAmountCurrency,
+  baseAmount: asAmountCurrency,
   // pricePerUnit: asNumber,
   // price: asPrice,
   // processingFee: asAmountCurrency,
   // bridgeFee: asAmountCurrency,
   // networkFee: asAmountCurrency,
   // smartContractFee: asAmountCurrency,
-  // totalFee: asAmountCurrency,
+  totalFee: asAmountCurrency,
   // receiveAmountAfterFees: asAmountCurrency,
   // receiveUnitCountAfterFees: asAmountCurrency,
   receive: asObject({
@@ -397,6 +397,7 @@ interface GetQuoteParams {
   amount: number
   blockchain: string
   currency: string
+  reverse: boolean
   asset: string
 }
 
@@ -505,12 +506,6 @@ export const kadoProvider: FiatProviderFactory = {
         const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
-        if (direction === 'buy' && amountType !== 'fiat') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
-        if (direction === 'sell' && amountType !== 'crypto') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
@@ -533,12 +528,15 @@ export const kadoProvider: FiatProviderFactory = {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
 
+        const reverse = (direction === 'sell' && amountType === 'fiat') || (direction === 'buy' && amountType === 'crypto')
+
         const queryParams: GetQuoteParams = {
           transactionType: direction,
           fiatMethod,
           amount: Number(exchangeAmount),
           blockchain,
           currency: 'USD',
+          reverse,
           asset
         }
 
@@ -561,17 +559,31 @@ export const kadoProvider: FiatProviderFactory = {
 
         const { amount: minAmount, unit: minUnit } = quote.data.quote.minValue
         const { amount: maxAmount, unit: maxUnit } = quote.data.quote.maxValue
+        const { baseAmount } = quote.data.quote
 
         let fiatAmount: string
         let cryptoAmount: string
+        const { totalFee } = quote.data.quote
+        const { amount, unitCount } = quote.data.quote.receive
         if (direction === 'buy') {
-          const { unitCount } = quote.data.quote.receive
-          cryptoAmount = unitCount.toString()
-          fiatAmount = exchangeAmount
+          if (amountType === 'fiat') {
+            cryptoAmount = unitCount.toString()
+            fiatAmount = exchangeAmount
+          } else {
+            // For some reason, the totalFee is not included in the fiatAmount on buy reverse quotes
+            fiatAmount = (amount + totalFee.amount).toString()
+            cryptoAmount = exchangeAmount
+          }
         } else {
-          const { amount } = quote.data.quote.receive
-          cryptoAmount = exchangeAmount
-          fiatAmount = amount.toString()
+          if (amountType === 'crypto') {
+            cryptoAmount = exchangeAmount
+            fiatAmount = amount.toString()
+          } else {
+            fiatAmount = exchangeAmount
+            // The unitCount is 0 for sell reverse quotes but seems to be in
+            // the baseAmount.amount so use that
+            cryptoAmount = baseAmount.amount.toString()
+          }
         }
         if (lt(fiatAmount, minAmount.toString()))
           throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minAmount, displayCurrencyCode: minUnit })

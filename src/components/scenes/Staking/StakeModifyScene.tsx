@@ -17,6 +17,7 @@ import {
   StakePosition
 } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -26,6 +27,7 @@ import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUt
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
+import { WarningCard } from '../../cards/WarningCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -33,7 +35,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputMod
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -110,6 +112,12 @@ const StakeModifySceneComponent = (props: Props) => {
         currencyCode: stakePolicy.rewardAssets[0].currencyCode,
         nativeAmount: existingAllocations.earned[0].nativeAmount
       })
+    } else if ((modification === 'stake' || modification === 'unstake') && stakePolicy.isLiquidStaking === true) {
+      setChangeQuoteRequest({
+        ...changeQuoteRequest,
+        currencyCode: stakePolicy.rewardAssets[0].currencyCode,
+        nativeAmount: '1' // Amounts for liquid staking are a noop
+      })
     } else if (modification === 'unstake' && mustMaxUnstake) {
       setChangeQuoteRequest({
         ...changeQuoteRequest,
@@ -150,7 +158,7 @@ const StakeModifySceneComponent = (props: Props) => {
                   setErrorMessage(errMessage)
                 })
                 .catch(err => {
-                  showError(err)
+                  showDevError(err)
                   setErrorMessage(errMessage)
                 })
             } else {
@@ -162,6 +170,8 @@ const StakeModifySceneComponent = (props: Props) => {
             setErrorMessage(errMessage)
           } else if (err instanceof InsufficientFundsError) {
             setErrorMessage(lstrings.exchange_insufficient_funds_title)
+          } else if (err instanceof HumanFriendlyError) {
+            setErrorMessage(err.message)
           } else {
             showError(err)
             setErrorMessage(lstrings.unknown_error_occurred_fragment)
@@ -455,7 +465,8 @@ const StakeModifySceneComponent = (props: Props) => {
         <EdgeCard icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
           <EdgeRow title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
         </EdgeCard>
-        {stakeUnstakeAllocations.map(renderEditableQuoteAmountRow)}
+        {/* Editable rows are not show for liquid-staking policies */}
+        {stakePolicy.isLiquidStaking !== true ? stakeUnstakeAllocations.map(renderEditableQuoteAmountRow) : null}
         {claimAllocations.map(renderEditableQuoteAmountRow)}
         {
           // Render stake/unstake fee tiles
@@ -476,6 +487,10 @@ const StakeModifySceneComponent = (props: Props) => {
           stakePolicy.stakeAssets.map(asset => renderFutureUnstakeFeeAmountRow(modification, asset))
         }
         {quoteInfo?.breakEvenDays != null ? renderBreakEvenDays() : null}
+        {/* A warning card is show for liquid-staking policies, informing the user that staking is all-or-nothing. */}
+        {stakePolicy.isLiquidStaking === true && (modification === 'stake' || modification === 'unstake') ? (
+          <WarningCard title={lstrings.stake_liquid_staking_warning_title} header={sprintf(lstrings.stake_liquid_staking_warning_header, modification)} />
+        ) : null}
         {errorMessage === '' || sliderLocked ? null : <ErrorTile message={errorMessage} />}
       </View>
     )

@@ -643,3 +643,7 @@ export function getOsVersion(): string {
 export const removeIsoPrefix = (currencyCode: string): string => {
   return currencyCode.replace('iso:', '')
 }
+
+export const getDisplayUsername = (loginId: string, username?: string) => {
+  return username == null ? sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3)) : username
+}

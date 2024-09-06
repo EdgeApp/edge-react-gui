@@ -100,6 +100,7 @@ const strings = {
   error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
   error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
+  error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -401,7 +402,7 @@ const strings = {
   incorrect_pin: 'Incorrect PIN',
   invalid_spend_request: 'Invalid Spend Request',
   invalid_custom_fee: 'Minimum custom fee is',
-  missing_username: '<No username>',
+  guest_account_id_1s: 'Guest Account (%1$s)',
   settings_detect_tokens: 'Detect & Enable Tokens',
   settings_enable_detected_tokens_toast: 'Enabled detected tokens',
   settings_no_detected_tokens_toast: 'No balances found on disabled tokens',
@@ -1120,10 +1121,7 @@ const strings = {
   price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
-  update_notice_deprecate_electrum_servers_message:
-    '%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.' +
-    '\n\n' +
-    'NOTE: If you had custom nodes enabled, those wallets will not sync until corrected.',
+  update_notice_deprecate_electrum_servers_message: `%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.\n\nNOTE: If you had custom nodes enabled, those wallets will not sync until corrected.`,
 
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
@@ -1221,9 +1219,7 @@ const strings = {
   loan_breakdown_title: 'Loan Breakdown',
   loan_close_swap_warning:
     "Closing your loan will liquidate some of the deposited collateral if you do not have enough balance to repay the remaining principal and interest on your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
-  loan_close_loan_no_tx_needed_message:
-    `There appears to be no principal to repay nor collateral to withdraw.\n\n` +
-    `No transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
+  loan_close_loan_no_tx_needed_message: `There appears to be no principal to repay nor collateral to withdraw.\n\nNo transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
   loan_close_loan_title: 'Close Loan',
   loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
@@ -1414,6 +1410,8 @@ const strings = {
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
   stake_earn_button_label: 'Earn',
   stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
+  stake_liquid_staking_warning_title: 'Liquid Staking Pool Notice',
+  stake_liquid_staking_warning_header: `This is a liquid-staking pool, meaning the entire wallet's balance is either staked/unstaked in the pool. Wallet funds will remain liquid (transferable), however all current and future funds will be exposed to the risks and rewards of the staking pool while staked.`,
 
   // Tron resource staking
   stake_resource_display_name: 'TRON Resources',
@@ -1447,7 +1445,7 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again: 'Failed to send funds for sell transaction. Please try again.',
   fiat_plugin_cannot_continue_camera_permission: 'Cannot continue. Camera permission needed for ID verifications',
-  fiat_plugin_purchase_limit_error: 'Please back up your account to increase the purchase limit',
+  fiat_plugin_purchase_limit_error: 'Please create a full account to increase the purchase limit',
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
   fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %1$s',
@@ -1525,21 +1523,21 @@ const strings = {
   backup_account: 'Back Up Account',
   backup_delete_confirm_message:
     'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
-  backup_info_message: 'Create a username and password to securely encrypt and back up your account',
-  backup_dismiss_button: 'Continue Without a Backup',
+  backup_info_message: 'Create a username and password to create a full account and secure your funds. No personal information is required',
+  backup_dismiss_button: 'Continue with Guest Account',
   backup_warning_message: 'Without a backup, you risk losing your funds!',
   backup_web3_handle_warning_message: 'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
-    'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
+    'To buy, sell, and receive funds, please create a full account. Edge full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
   guest_account: 'Guest Account',
   tap_to_create_username_password: 'Tap to create a username and password',
 
   // Backup Message Variants
-  backup_title: 'Back Up Your Account',
+  backup_title: 'Create Full Account',
   backup_message: 'Create a username and password to continue.',
-  backup_message_subtext: 'Backing up your account ensures you can safely recover your funds in the event that you lose access to your device.',
+  backup_message_subtext: 'Creating a full account ensures you can safely recover your funds in the event that you lose access to your device.',
 
   no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 
@@ -1857,7 +1855,7 @@ const strings = {
 
   auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
   contacts_load_failed_message_s: 'Failed to load contacts: %s'
-}
+} as const
 
 // eslint-disable-next-line import/no-default-export
 export default strings

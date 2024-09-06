@@ -1,33 +1,31 @@
 import { asMaybe, asObject, asValue, Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
-import { CreateAccountType } from 'edge-login-ui-rn'
 
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 import { ENV } from './env'
 import { isMaestro } from './util/maestro'
 
-export type BackupTextType = 'original' | 'backup' | 'secure' | 'create'
+export type UspSigninCtaType = 'alreadyHaveAccount' | 'signIn'
 
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
 export interface ExperimentConfig {
-  createAccountType: CreateAccountType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
+  uspSigninCta: UspSigninCtaType
 }
 
 // Defined default "unchanged" values before experimentation.
 export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
-  createAccountType: 'full',
-  signupCaptcha: 'withoutCaptcha'
+  signupCaptcha: 'withoutCaptcha',
+  uspSigninCta: 'alreadyHaveAccount'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
 
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
-  createAccountType: [50, 50],
   signupCaptcha: [50, 50],
-  backupText: [25, 25, 25, 25]
+  uspSigninCta: [50, 50]
 }
 
 /**
@@ -67,8 +65,8 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 }
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
-  createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha'])),
+  uspSigninCta: asMaybe(asValue('alreadyHaveAccount', 'signIn'), generateExperimentConfigVal('uspSigninCta', ['alreadyHaveAccount', 'signIn']))
 })
 
 /**

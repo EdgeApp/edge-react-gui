@@ -23,7 +23,7 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
@@ -97,8 +97,8 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         )
         this.setState({ activationCost, bitpayUrl, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], paymentInfo })
       } catch (e: any) {
-        showError(e)
-        this.setState({ errorMessage: e.message })
+        showDevError(String(e))
+        this.setState({ errorMessage: String(e) })
       }
     }
 

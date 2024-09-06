@@ -170,13 +170,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     let lockedNativeAmount = '0'
     const stakePositionMap: StakePositionMap = {}
     for (const stakePolicy of stakePolicies) {
+      // Don't show liquid staking positions as locked amount
+      if (stakePolicy.isLiquidStaking === true) continue
+
       let total: string | undefined
-      const { stakePolicyId } = stakePolicy
       const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
       if (stakePlugin == null) continue
       try {
         const stakePosition = await stakePlugin.fetchStakePosition({
-          stakePolicyId,
+          stakePolicyId: stakePolicy.stakePolicyId,
           wallet: this.props.wallet,
           account: this.props.account
         })
@@ -326,7 +328,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         // priority assets for swapping.
         const isPriorityAssetMatch =
           currencyWallet.currencyInfo.pluginId === priorityAsset.pluginId &&
-          currencyWallet.enabledTokenIds.some(enabledTokenId => enabledTokenId === priorityAsset.tokenId)
+          (priorityAsset.tokenId == null || currencyWallet.enabledTokenIds.some(enabledTokenId => enabledTokenId === priorityAsset.tokenId))
 
         // If the wallet or enabled tokens has a priority swap asset match,
         // calculate its USD value and add it to the ownedAssets array along
