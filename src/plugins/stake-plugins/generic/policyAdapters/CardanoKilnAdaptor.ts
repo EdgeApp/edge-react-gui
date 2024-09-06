@@ -1,4 +1,4 @@
-import { eq, gt, sub } from 'biggystring'
+import { eq, gt, lt, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../../locales/strings'
@@ -9,6 +9,8 @@ import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { KilnError, makeKilnApi } from '../util/kilnUtils'
 import { StakePolicyAdapter } from './types'
+
+const MIN_STAKE_LOVELACE_AMOUNT = '2300000'
 
 export interface CardanoPooledKilnAdapterConfig {
   type: 'cardano-pooled-kiln'
@@ -60,7 +62,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
@@ -71,6 +74,13 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
       if (eq(walletBalance, '0')) {
         throw new Error('Insufficient funds')
+      }
+      if (lt(walletBalance, MIN_STAKE_LOVELACE_AMOUNT)) {
+        const balanceDisplayAmount = await wallet.nativeToDenomination(walletBalance, wallet.currencyInfo.currencyCode)
+        const minimumDisplayAmount = await wallet.nativeToDenomination(MIN_STAKE_LOVELACE_AMOUNT, wallet.currencyInfo.currencyCode)
+        const balanceDisplayString = `${balanceDisplayAmount} ${wallet.currencyInfo.currencyCode}`
+        const minimumDisplayString = `${minimumDisplayAmount} ${wallet.currencyInfo.currencyCode}`
+        throw new HumanFriendlyError(lstrings.error_balance_below_minimum_to_stake_2s, balanceDisplayString, minimumDisplayString)
       }
 
       const result = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId).catch(error => {
@@ -109,7 +119,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
@@ -144,7 +155,8 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         allocations,
         approve: async () => {
           const signedTx = await wallet.signTx(edgeTx)
-          await wallet.broadcastTx(signedTx)
+          const broadcastTx = await wallet.broadcastTx(signedTx)
+          await wallet.saveTx(broadcastTx)
         }
       }
     },
