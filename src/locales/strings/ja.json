@@ -1203,6 +1203,7 @@
   "util_s_and_s": "%1$s と %2$s",
   "util_truncate_delimeter": "...",
   "stake_estimated_return": "推定リターン: %s",
+  "stake_estimated_apr_s": "%s Estimated APR",
   "stake_s_staked": "%s ステーク済み",
   "stake_s_earned": "%s 獲得",
   "stake_s_unstaked": "%s Unstaked",
