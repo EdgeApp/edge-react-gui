@@ -71,6 +71,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       <View key={key} style={styles.optionContainer}>
         <EdgeTouchableOpacity onPress={() => handleStakeOptionPress(item)}>
           <StakingOptionCard
+            apy={item.apy}
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
             secondaryText={secondaryText}

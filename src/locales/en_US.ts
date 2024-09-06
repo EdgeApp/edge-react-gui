@@ -1366,6 +1366,7 @@ const strings = {
 
   // Stake
   stake_estimated_return: 'Estimated Return: %s',
+  stake_estimated_apr_s: '%s Estimated APR',
   stake_s_staked: '%s Staked',
   stake_s_earned: '%s Earned',
   stake_s_unstaked: '%s Unstaked',
