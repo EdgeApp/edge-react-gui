@@ -63,6 +63,7 @@
   "error_paymentprotocol_no_payment_option": "No currencies available for this Payment Protocol invoice. Accepted currencies: %s",
   "error_paymentprotocol_tx_verification_failed": "La verificación de la transacción del protocolo de pago no coincide",
   "error_spend_amount_less_then_min_s": "Spend amount is less than minimum of %s",
+  "error_amount_too_low_to_stake_s": "The amount %s is too low to stake successfully",
   "warning_low_fee_selected": "Tarifa baja seleccionada",
   "warning_custom_fee_selected": "Tarifa personalizada seleccionada",
   "warning_low_or_custom_fee": "Usar una comisión baja puede aumentar la cantidad de tiempo que tarda en confirmar tu transacción. En raras ocasiones tu transacción puede fallar.",
