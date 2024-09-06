@@ -64,6 +64,7 @@
   "error_paymentprotocol_tx_verification_failed": "Überprüfung des Zahlungsprotokolls stimmt nicht überein",
   "error_spend_amount_less_then_min_s": "Spend amount is less than minimum of %s",
   "error_amount_too_low_to_stake_s": "The amount %s is too low to stake successfully",
+  "error_balance_below_minimum_to_stake_2s": "Your balance of %1$s does not meet the minimum %2$s required to stake.",
   "warning_low_fee_selected": "Niedrige Gebühr ausgewählt",
   "warning_custom_fee_selected": "Eigene Gebühr ausgewählt",
   "warning_low_or_custom_fee": "Die Verwendung einer niedrigen Gebühr kann die Dauer der Bestätigung Ihrer Transaktion erhöhen. In seltenen Fällen kann Ihre Transaktion fehlschlagen.",
