@@ -63,6 +63,7 @@
   "error_paymentprotocol_no_payment_option": "このペイメント・プロトコルの請求書に利用可能な通貨がありません。使用可能な通貨: %s",
   "error_paymentprotocol_tx_verification_failed": "ペイメント・プロトコルのトランザクション検証の不一致",
   "error_spend_amount_less_then_min_s": "使用金額が最低額の%s未満です",
+  "error_amount_too_low_to_stake_s": "The amount %s is too low to stake successfully",
   "warning_low_fee_selected": "低料金が選択されました",
   "warning_custom_fee_selected": "カスタム料金が選択されました",
   "warning_low_or_custom_fee": "低い手数料を選択すると、トランザクションの承認にかかる時間が増える可能性がある上、まれにトランザクションが失敗することがあります。",
