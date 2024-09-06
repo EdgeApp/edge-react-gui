@@ -137,6 +137,20 @@ Settlement: 1 - 48 hours",
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "googlepay",
@@ -185,6 +199,20 @@ Limit $1000",
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "applepay",
@@ -208,6 +236,20 @@ Settlement: 10 - 30 minutes",
     ],
     "pluginId": "creditcard",
     "title": "Credit and Debit Card",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "revolut",
+    "paymentTypeLogoKey": "revolut",
+    "paymentTypes": [
+      "revolut",
+    ],
+    "pluginId": "revolut",
+    "title": "Revolut",
   },
   {
     "cryptoCodes": [],
@@ -259,6 +301,20 @@ Settlement: 2 - 3 days",
     ],
     "pluginId": "ach",
     "title": "ACH Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
   },
   {
     "cryptoCodes": [],

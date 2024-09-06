@@ -31,8 +31,11 @@ const pluginDisplayName = 'Moonpay'
 const supportEmail = 'support@moonpay.com'
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
-  buy: { credit: { providerId, fiat: {}, crypto: {} } },
-  sell: { credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' } }
+  buy: { credit: { providerId, fiat: {}, crypto: {} }, paypal: { providerId, fiat: {}, crypto: {} } },
+  sell: {
+    credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
+    paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
+  }
 }
 const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = { buy: {}, sell: {} }
 
@@ -105,7 +108,7 @@ const asApiKeys = asString
 
 const asMoonpayCountries = asArray(asMoonpayCountry)
 
-type MoonpayPaymentMethod = 'ach_bank_transfer' | 'credit_debit_card'
+type MoonpayPaymentMethod = 'ach_bank_transfer' | 'credit_debit_card' | 'paypal'
 
 interface MoonpayWidgetQueryParams {
   apiKey: string
@@ -150,7 +153,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, MoonpayPaymentMe
   applepay: 'credit_debit_card',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
-  iach: 'ach_bank_transfer'
+  iach: 'ach_bank_transfer',
+  paypal: 'paypal'
 }
 
 const NETWORK_CODE_PLUGINID_MAP: StringMap = {
@@ -177,7 +181,8 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
 const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefined>> = {
   applepay: 'credit',
   credit: 'credit',
-  googlepay: 'credit'
+  googlepay: 'credit',
+  paypal: 'paypal'
 }
 
 let lastChecked = 0
@@ -200,7 +205,7 @@ export const moonpayProvider: FiatProviderFactory = {
         const assetMap = allowedCurrencyCodes[direction][paymentType]
         if (assetMap == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        if (isDailyCheckDue(lastChecked)) {
+        if (Object.keys(assetMap.crypto).length === 0 || isDailyCheckDue(lastChecked)) {
           const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
           if (response == null || !response.ok) return assetMap
 

@@ -81,8 +81,10 @@ const paymentTypeLogosById = {
   interac: 'paymentTypeLogoInterac',
   payid: 'paymentTypeLogoPayid',
   paynow: 'paymentTypeLogoPaynow',
+  paypal: 'paymentTypeLogoPaypal',
   pix: 'paymentTypeLogoPix',
   poli: 'paymentTypeLogoPoli',
+  revolut: 'paymentTypeLogoRevolut',
   sofort: 'paymentTypeLogoSofort',
   upi: 'paymentTypeLogoUpi',
   visa: 'paymentTypeVisa'

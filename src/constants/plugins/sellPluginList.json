@@ -143,6 +143,23 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "paypal",
+    "pluginId": "paypal",
+    "paymentType": "paypal",
+    "paymentTypes": ["paypal"],
+    "title": "Paypal",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": [
+      "AE", "AR", "AT", "AU", "BE", "BR", "CA", "CH", "CL", "CO",
+      "CZ", "DE", "DK", "EG", "ES", "FI", "FR", "GH", "GR", "HK",
+      "HU", "IE", "IL", "IN", "IT", "JP", "KE", "KR", "MX", "MY",
+      "NG", "NL", "NO", "NZ", "PE", "PH", "PL", "PT", "RU", "SA",
+      "SE", "SG", "TH", "TR", "TZ", "US", "VN", "ZA"
+    ],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "paypal"
+  },
+  {
     "id": "pix",
     "pluginId": "pix",
     "paymentType": "pix",
@@ -502,6 +519,25 @@
     }
   },
   {
+    "##": "Disabled for now",
+    "id": "revolut",
+    "pluginId": "revolut",
+    "paymentType": "revolut",
+    "paymentTypes": ["revolut"],
+    "title": "Revolut",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": [],
+    "-forCountries": [
+      "AU", "BR", "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI",
+      "FR", "GR", "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV",
+      "MT", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK", "JP", "NZ",
+      "SG", "CH", "GB", "US", "IO", "IM", "JE", "GG", "GF", "GP", "YT",
+      "MQ", "RE", "MF"
+    ],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "revolut"
+  },
+  {
     "id": "xanpool",
     "pluginId": "xanpool",
     "paymentTypes": [
@@ -545,6 +581,14 @@
   {
     "id": "pix",
     "sortIndex": 10
+  },
+  {
+    "id": "paypal",
+    "sortIndex": 15
+  },
+  {
+    "id": "revolut",
+    "sortIndex": 15
   },
   {
     "id": "bitsofgold",
