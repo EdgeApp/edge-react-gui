@@ -64,6 +64,7 @@
   "error_paymentprotocol_tx_verification_failed": "La verificación de la transacción del protocolo de pago no coincide",
   "error_spend_amount_less_then_min_s": "El importe del gasto es inferior al mínimo de %s",
   "error_amount_too_low_to_stake_s": "The amount %s is too low to stake successfully",
+  "error_balance_below_minimum_to_stake_2s": "Your balance of %1$s does not meet the minimum %2$s required to stake.",
   "warning_low_fee_selected": "Tarifa baja seleccionada",
   "warning_custom_fee_selected": "Tarifa personalizada seleccionada",
   "warning_low_or_custom_fee": "Usar una comisión baja puede aumentar la cantidad de tiempo que tarda en confirmar tu transacción. En raras ocasiones tu transacción puede fallar.",
