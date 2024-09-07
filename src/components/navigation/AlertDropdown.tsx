@@ -4,35 +4,54 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { textStyle } from '../../styles/common/textStylesThemed'
 import { AirshipDropdown } from '../common/AirshipDropdown'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   bridge: AirshipBridge<void>
   message: string
 
-  // True for orange warning, false for red alert:
+  /** True for orange warning, false for red alert: */
   warning?: boolean
-  devAlert?: boolean
+
+  /** No auto-hide, must dismiss through the tap. */
+  persistent?: boolean
+
+  /** If given, pressing the body of the dropdown invokes onPress, while the
+   * close icon dismisses the dropdown */
+  onPress?: () => void | Promise<void>
 }
 
 export function AlertDropdown(props: Props) {
-  const { bridge, devAlert, message, warning } = props
+  const { bridge, persistent, message, warning, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = warning ? theme.dropdownWarning : theme.dropdownError
 
+  const handleOnPress = useHandler(async () => {
+    if (onPress != null) await onPress()
+    bridge.resolve()
+  })
+
+  const handleClose = useHandler(() => {
+    bridge.resolve()
+  })
+
   return (
-    <AirshipDropdown autoHideMs={devAlert ? 0 : undefined} bridge={bridge} backgroundColor={color}>
+    <AirshipDropdown autoHideMs={persistent ? 0 : undefined} bridge={bridge} backgroundColor={color} onPress={handleOnPress}>
       <View style={styles.container}>
         <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
         <Text style={styles.text}>
           <Text style={styles.textBold}>{warning ? lstrings.alert_dropdown_warning : lstrings.alert_dropdown_alert}</Text>
           {message}
         </Text>
-        <AntDesignIcon name="closecircle" size={theme.rem(1)} style={styles.icon} />
+        <EdgeTouchableOpacity onPress={handleClose}>
+          <AntDesignIcon name="closecircle" size={theme.rem(1)} style={styles.icon} />
+        </EdgeTouchableOpacity>
       </View>
     </AirshipDropdown>
   )
