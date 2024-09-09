@@ -9,6 +9,7 @@
 - changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - changed: Restrict Bity buy/sell to no-KYC asset
 - changed: Determine Moonpay asset support using chainCode/contractAddress
+- changed: Allow private key sweep in light accounts for amounts less than $50
 - changed: Allow reverse quotes for Kado
 - changed: Credit card allowed countries to add Botswana, Cambodia, Panama, and Sri Lanka
 - fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets

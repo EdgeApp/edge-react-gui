@@ -1,4 +1,4 @@
-import { gt } from 'biggystring'
+import { abs, eq, gt, mul } from 'biggystring'
 import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -10,7 +10,7 @@ import { WalletListModal, WalletListResult } from '../components/modals/WalletLi
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { convertCurrency } from '../selectors/WalletSelectors'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -278,17 +278,22 @@ async function privateKeyModalActivated(
 }
 
 async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]) {
-  if (checkAndShowLightBackupModal(account, navigation)) return
-
   try {
     const unsignedTx = await wallet.sweepPrivateKeys({
       tokenId: null,
       privateKeys,
       spendTargets: []
     })
-    // Check for a $50 maximum sweep for light accounts
-    const sweepAmountFiat = convertCurrency(state, wallet.currencyInfo.currencyCode, 'USD', unsignedTx.nativeAmount)
-    if (gt(sweepAmountFiat, 50) && checkAndShowLightBackupModal(account, navigation)) return
+
+    // Check for a $50 maximum sweep for light accounts:
+    const sendNativeAmount = abs(unsignedTx.nativeAmount)
+    const sendExchangeAmount = await wallet.nativeToDenomination(sendNativeAmount, wallet.currencyInfo.currencyCode)
+    const exchangeRate = getExchangeRate(state, wallet.currencyInfo.currencyCode, 'iso:USD')
+    const sweepAmountFiat = mul(sendExchangeAmount, exchangeRate)
+    if (eq(exchangeRate, '0') || gt(sweepAmountFiat, '50')) {
+      const modalShown = checkAndShowLightBackupModal(account, navigation)
+      if (modalShown) return
+    }
 
     // Continue with sweep if above requirements met
     const signedTx = await wallet.signTx(unsignedTx)
