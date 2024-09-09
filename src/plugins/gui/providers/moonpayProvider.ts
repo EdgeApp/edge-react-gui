@@ -23,7 +23,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, isDailyCheckDue, NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_PAYMENT, validateExactRegion } from './common'
+import { addExactRegion, isDailyCheckDue, NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS, validateExactRegion } from './common'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
@@ -115,6 +115,7 @@ interface MoonpayWidgetQueryParams {
   lockAmount: true
   showAllCurrencies: false
   paymentMethod: MoonpayPaymentMethod
+  redirectURL: string
 }
 
 type MoonpayBuyWidgetQueryParams = MoonpayWidgetQueryParams & {
@@ -140,7 +141,6 @@ type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
   /** crypto currency code */
   baseCurrencyCode: string
   refundWalletAddress: string
-  redirectURL: string
 
   /** fiat amount to receive */
   quoteCurrencyAmount?: number
@@ -399,7 +399,8 @@ export const moonpayProvider: FiatProviderFactory = {
                 baseCurrencyCode: fiatCurrencyObj.code,
                 lockAmount: true,
                 showAllCurrencies: false,
-                enableRecurringBuys: false
+                enableRecurringBuys: false,
+                redirectURL: RETURN_URL_SUCCESS
               }
               if (params.amountType === 'crypto') {
                 queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
@@ -408,7 +409,59 @@ export const moonpayProvider: FiatProviderFactory = {
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay buy quote url=' + urlObj.href)
-              await showUi.openExternalWebView({ url: urlObj.href })
+              let inWebview = false
+              const openWebView = async () => {
+                await showUi.openWebView({
+                  url: urlObj.href,
+                  onUrlChange: async (uri: string) => {
+                    console.log('Moonpay WebView url change: ' + uri)
+                    if (uri.startsWith(RETURN_URL_SUCCESS)) {
+                      console.log('Moonpay WebView launch buy success: ' + uri)
+                      if (inWebview) {
+                        return
+                      }
+                      inWebview = true
+                      const urlObj = new URL(uri, true)
+                      const { query } = urlObj
+                      const { transactionId, transactionStatus } = query
+                      if (transactionId == null || transactionStatus == null) {
+                        await showUi.exitScene()
+                        return
+                      }
+                      await showUi.trackConversion('Buy_Success', {
+                        conversionValues: {
+                          conversionType: 'buy',
+                          sourceFiatCurrencyCode: fiatCurrencyCode,
+                          sourceFiatAmount: fiatAmount,
+                          destAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: cryptoAmount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId: transactionId
+                        }
+                      })
+                      await showUi.exitScene()
+
+                      const message =
+                        sprintf(lstrings.fiat_plugin_buy_complete_message_s, cryptoAmount, displayCurrencyCode, fiatAmount, displayFiatCurrencyCode, '1') +
+                        '\n\n' +
+                        sprintf(lstrings.fiat_plugin_buy_complete_message_2_hour_s, '1') +
+                        '\n\n' +
+                        lstrings.fiat_plugin_buy_sell_complete_message_3
+                      await showUi.buttonModal({
+                        buttons: {
+                          ok: { label: lstrings.string_ok, type: 'primary' }
+                        },
+                        title: lstrings.fiat_plugin_buy_complete_title,
+                        message
+                      })
+                    }
+                  }
+                })
+              }
+              await openWebView()
             } else {
               const urlObj = new URL('https://sell.moonpay.com?', true)
               const queryObj: MoonpaySellWidgetQueryParams = {
@@ -549,7 +602,7 @@ export const moonpayProvider: FiatProviderFactory = {
                           '\n\n' +
                           sprintf(lstrings.fiat_plugin_sell_complete_message_2_hour_s, '1') +
                           '\n\n' +
-                          lstrings.fiat_plugin_sell_complete_message_3
+                          lstrings.fiat_plugin_buy_sell_complete_message_3
                         await showUi.buttonModal({
                           buttons: {
                             ok: { label: lstrings.string_ok, type: 'primary' }

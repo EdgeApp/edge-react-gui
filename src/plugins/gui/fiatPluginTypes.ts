@@ -12,7 +12,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { BuyConversionValues, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
@@ -160,7 +160,7 @@ export interface FiatPluginUi {
   trackConversion: (
     event: TrackingEventName,
     opts: {
-      conversionValues: SellConversionValues
+      conversionValues: SellConversionValues | BuyConversionValues
     }
   ) => Promise<void>
   exitScene: () => {}
