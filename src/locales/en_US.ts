@@ -127,6 +127,7 @@ const strings = {
   warning_token_contract_override_3s:
     'The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
+  warning_uk_risk: `Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.`,
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
