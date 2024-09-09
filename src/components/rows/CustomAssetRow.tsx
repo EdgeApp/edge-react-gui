@@ -6,7 +6,6 @@ import { useSelector } from '../../types/reactRedux'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
-import { TickerText } from '../text/TickerText'
 import { IconDataRow } from './IconDataRow'
 
 // For display of custom assets such as AAVE collateral tokens
@@ -23,21 +22,19 @@ export interface CustomAsset {
 interface Props {
   customAsset: CustomAsset
   marginRem?: number[] | number
-  showRate?: boolean
 }
 
 /**
  * A view representing the data from a custom asset, used for rows, cards, etc.
  */
 const CustomAssetRowComponent = (props: Props) => {
-  const { customAsset, marginRem, showRate = false } = props
+  const { customAsset, marginRem } = props
   const { wallet, referenceTokenId, displayName, currencyCode, nativeBalance } = customAsset
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Balance stuff:
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-  const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={referenceTokenId} /> : null
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={referenceTokenId} nativeAmount={nativeBalance} withSymbol /> : null
   const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeBalance} tokenId={referenceTokenId} wallet={wallet} /> : null
 
@@ -50,15 +47,7 @@ const CustomAssetRowComponent = (props: Props) => {
   }
 
   return (
-    <IconDataRow
-      icon={icon}
-      leftText={displayCurrencyCode}
-      leftTextExtended={tickerText}
-      leftSubtext={displayName}
-      rightText={cryptoText}
-      rightSubText={fiatText}
-      marginRem={marginRem}
-    />
+    <IconDataRow icon={icon} leftText={displayCurrencyCode} leftSubtext={displayName} rightText={cryptoText} rightSubText={fiatText} marginRem={marginRem} />
   )
 }
 

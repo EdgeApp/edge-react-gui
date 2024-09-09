@@ -31,7 +31,7 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
   const assetFiatPrice = useCurrencyFiatRate({ currencyCode, isoFiatCurrencyCode })
   const assetFiatYestPrice = useSelector(state => {
     // The extra _ at the end means there is yesterday's date string at the end of the key
-    const pair = Object.keys(state.exchangeRates).find(pair => pair.includes(`${currencyCode}_iso:USD_`))
+    const pair = Object.keys(state.exchangeRates).find(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
     if (pair != null) return state.exchangeRates[pair]
     return '0'
   })

@@ -11,7 +11,6 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
-import { TickerText } from '../text/TickerText'
 import { IconDataRow } from './IconDataRow'
 
 interface Props {
@@ -19,7 +18,6 @@ interface Props {
   nativeAmount?: string
   /** Override user show/hide balance settings. If unset, defaults to user show/hide balance settings. */
   hideBalance?: boolean
-  showRate?: boolean
   token?: EdgeToken
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
@@ -29,7 +27,7 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyRowComponent = (props: Props) => {
-  const { marginRem, nativeAmount, hideBalance, showRate = false, token, tokenId, wallet } = props
+  const { marginRem, nativeAmount, hideBalance, token, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   const theme = useTheme()
@@ -57,7 +55,6 @@ const CurrencyRowComponent = (props: Props) => {
   const hideBalanceSetting = useSelector(state => (hideBalance == null ? !state.ui.settings.isAccountBalanceVisible : hideBalance))
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
-  const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={tokenId} /> : null
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalanceSetting} />
   const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalanceSetting} />
 
@@ -66,17 +63,7 @@ const CurrencyRowComponent = (props: Props) => {
     displayCurrencyCode = `${tokenFromId.displayName}`
   }
 
-  return (
-    <IconDataRow
-      icon={icon}
-      leftText={displayCurrencyCode}
-      leftTextExtended={tickerText}
-      leftSubtext={name}
-      rightText={cryptoText}
-      rightSubText={fiatText}
-      marginRem={marginRem}
-    />
-  )
+  return <IconDataRow icon={icon} leftText={displayCurrencyCode} leftSubtext={name} rightText={cryptoText} rightSubText={fiatText} marginRem={marginRem} />
 }
 
 export const CurrencyRow = React.memo(CurrencyRowComponent)
