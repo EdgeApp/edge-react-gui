@@ -89,7 +89,7 @@
     "big-integer": "^1.6.51",
     "biggystring": "^4.2.3",
     "cleaner-config": "^0.1.9",
-    "cleaners": "^0.3.16",
+    "cleaners": "^0.3.17",
     "core-js": "^2.5.2",
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.22.1",

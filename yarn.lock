@@ -7609,10 +7609,10 @@ cleaner-config@^0.1.9:
     minimist "^1.2.5"
     sucrase "^3.17.1"
 
-cleaners@^0.3.12, cleaners@^0.3.13, cleaners@^0.3.14, cleaners@^0.3.16, cleaners@^0.3.8, cleaners@^0.3.9:
-  version "0.3.16"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.16.tgz#d3a7ab936cb78b0d6ac19ba87b2d28ec41f30502"
-  integrity sha512-Ecu8Fwv3wT7GV44K4Zas2CQJI11ZV/yPwoh8Gg9BSV6rAmhNsqFeWceA1RII1czbarFSG3XClUePrpI806OvRw==
+cleaners@^0.3.12, cleaners@^0.3.13, cleaners@^0.3.14, cleaners@^0.3.16, cleaners@^0.3.17, cleaners@^0.3.8, cleaners@^0.3.9:
+  version "0.3.17"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.17.tgz#dae498f3d49b7e9364050402d2f4ad09abcd31ba"
+  integrity sha512-X5acjsLwJK+JEK5hv0Rve7G78+E6iYh1TzJZ40z7Yjrba0WhW6spTq28WgG9w+AK+YQIOHtQTrzaiuntMBBIwQ==
 
 cli-boxes@^3.0.0:
   version "3.0.0"
