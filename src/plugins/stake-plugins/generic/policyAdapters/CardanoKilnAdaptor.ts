@@ -7,10 +7,10 @@ import { infoServerData } from '../../../../util/network'
 import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
-import { KilnError, makeKilnApi } from '../util/kilnUtils'
+import { KilnError, makeKilnApi } from '../util/KilnApi'
 import { StakePolicyAdapter } from './types'
 
-const MIN_STAKE_LOVELACE_AMOUNT = '2300000'
+const MIN_STAKE_LOVELACE_AMOUNT = '4000000'
 
 export interface CardanoPooledKilnAdapterConfig {
   type: 'cardano-pooled-kiln'

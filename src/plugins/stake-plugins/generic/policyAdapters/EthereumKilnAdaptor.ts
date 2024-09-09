@@ -8,7 +8,7 @@ import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePositio
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
-import { makeKilnApi } from '../util/kilnUtils'
+import { makeKilnApi } from '../util/KilnApi'
 import { StakePolicyAdapter } from './types'
 
 export interface EthereumPooledKilnAdapterConfig {
