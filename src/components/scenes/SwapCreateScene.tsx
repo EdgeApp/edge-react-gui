@@ -211,14 +211,17 @@ export const SwapCreateScene = (props: Props) => {
       toTokenId: fromTokenId,
       errorDisplayInfo
     })
-    const newNativeAmountFor = inputNativeAmountFor === 'from' ? 'to' : 'from'
     // Clear amount input state:
-    setInputNativeAmountFor(newNativeAmountFor)
+    setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
+
     // Swap the amounts:
-    const toAmount = newNativeAmountFor === 'to' ? inputFiatAmount : '0'
-    const fromAmount = newNativeAmountFor === 'from' ? inputFiatAmount : '0'
-    toInputRef.current?.setAmount('fiat', toAmount)
-    fromInputRef.current?.setAmount('fiat', fromAmount)
+    if (inputNativeAmountFor === 'from') {
+      fromInputRef.current?.setAmount('fiat', '0')
+      toInputRef.current?.setAmount('fiat', inputFiatAmount)
+    } else {
+      toInputRef.current?.setAmount('fiat', '0')
+      fromInputRef.current?.setAmount('fiat', inputFiatAmount)
+    }
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
