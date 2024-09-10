@@ -64,7 +64,7 @@ function TransactionListComponent(props: Props) {
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${state.ui.settings.defaultIsoFiat}`])
-  const spamFilterOn = false // useSelector(state => state.ui.settings.spamFilterOn)
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null
 
