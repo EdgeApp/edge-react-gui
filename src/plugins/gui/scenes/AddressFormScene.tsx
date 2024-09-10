@@ -3,7 +3,7 @@ import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 import { Platform, ScrollView, View, ViewStyle } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
@@ -60,7 +60,6 @@ export const AddressFormScene = React.memo((props: Props) => {
   const { route, navigation } = props
   const { countryCode, headerTitle, /* headerIconUri, */ onSubmit, onClose } = route.params
   const disklet = useSelector(state => state.core.disklet)
-  const dropdownBorderColor = React.useMemo(() => [theme.iconDeactivated, theme.iconTappable], [theme])
 
   const [formData, setFormData] = React.useState<HomeAddress>({
     address: '',
@@ -95,9 +94,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       duration: isAnimateHintsNumChange ? 250 : 0,
       easing: Easing.inOut(Easing.circle)
     }),
-    opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 }),
-
-    borderColor: interpolateColor(sAnimationMult.value, [0, 1], dropdownBorderColor)
+    opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 })
   }))
 
   const handleHintLayout = useHandler(event => {
@@ -353,8 +350,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     backgroundColor: theme.modal,
     borderRadius: theme.rem(0.5),
     zIndex: 1,
-    borderColor: theme.iconTappable,
-    borderWidth: theme.thinLineWidth,
     overflow: 'hidden',
     position: 'absolute',
     left: theme.rem(0.5),
