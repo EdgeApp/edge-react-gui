@@ -15,6 +15,7 @@
 - fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
 - fixed: "FIO Address does not exist" error after transferring a FIO name
 - fixed: Fix incorrect string comparison resulting in wrong rate used for 24 change calculation
+- fixed: Crypto amount display bug after flipping the wallet input on `SwapCreateScne`
 - removed: 'fasterpayments' payment type
 - removed: Turking bank transfer support
 
