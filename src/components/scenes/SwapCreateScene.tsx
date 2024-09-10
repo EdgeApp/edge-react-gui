@@ -215,13 +215,17 @@ export const SwapCreateScene = (props: Props) => {
     setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
 
     // Swap the amounts:
-    if (inputNativeAmountFor === 'from') {
-      fromInputRef.current?.setAmount('fiat', '0')
-      toInputRef.current?.setAmount('fiat', inputFiatAmount)
-    } else {
-      toInputRef.current?.setAmount('fiat', '0')
-      fromInputRef.current?.setAmount('fiat', inputFiatAmount)
-    }
+    // Use setTimeout to allow the component's state to change before making
+    // the imperative state changes.
+    setTimeout(() => {
+      if (inputNativeAmountFor === 'from') {
+        fromInputRef.current?.setAmount('fiat', '0')
+        toInputRef.current?.setAmount('fiat', inputFiatAmount)
+      } else {
+        toInputRef.current?.setAmount('fiat', '0')
+        fromInputRef.current?.setAmount('fiat', inputFiatAmount)
+      }
+    }, 0)
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
