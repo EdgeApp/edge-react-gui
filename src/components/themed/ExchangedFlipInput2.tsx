@@ -14,6 +14,7 @@ import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
+
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
 export interface ExchangedFlipInputRef {
