@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
-import { Platform, ScrollView, View, ViewStyle } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
+import { ExpandableList } from '../../../components/common/ExpandableList'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -73,29 +73,18 @@ export const AddressFormScene = React.memo((props: Props) => {
   const [searchResults, setSearchResults] = React.useState<HomeAddress[]>([])
   const [prevAddressQuery, setPrevAddressQuery] = React.useState<string | undefined>(undefined)
   const [isHintsDropped, setIsHintsDropped] = React.useState(false)
-  const [isAnimateHintsNumChange, setIsAnimateHintsNumChange] = React.useState(false)
   const [hintHeight, setHintHeight] = React.useState<number>(0)
 
   const rAddressInput = React.createRef<FilledTextInputRef>()
 
   const mounted = React.useRef<boolean>(true)
 
-  const sAnimationMult = useSharedValue(0)
-
-  const dFinalHeight = useDerivedValue(() => {
-    return hintHeight * Math.min(searchResults.length, MAX_DISPLAYED_HINTS)
-  })
-
-  // Further calculations to determine the height. Also add another
-  // conditional animation based on the number of hints changing as
-  // the search query changes from user input
-  const aDropContainerStyle = useAnimatedStyle(() => ({
-    height: withTiming(dFinalHeight.value * sAnimationMult.value, {
-      duration: isAnimateHintsNumChange ? 250 : 0,
-      easing: Easing.inOut(Easing.circle)
-    }),
-    opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 })
-  }))
+  const addressHintPress = (selectedAddressHint: HomeAddress) => () => {
+    setFormData({ ...selectedAddressHint })
+    if (rAddressInput.current != null) {
+      rAddressInput.current.blur()
+    }
+  }
 
   const handleHintLayout = useHandler(event => {
     if (event != null && hintHeight === 0) {
@@ -104,16 +93,27 @@ export const AddressFormScene = React.memo((props: Props) => {
     }
   })
 
+  const addressHints = React.useMemo(() => {
+    return searchResults.map(searchResult => {
+      const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
+      return (
+        <EdgeTouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
+          <View style={styles.rowContainer} onLayout={handleHintLayout}>
+            <EdgeText style={styles.addressHintText} numberOfLines={2}>
+              {displaySearchResult}
+            </EdgeText>
+          </View>
+        </EdgeTouchableOpacity>
+      )
+    })
+  }, [searchResults, countryCode, addressHintPress, handleHintLayout, styles.rowContainer, styles.addressHintText])
+
   const handleShowAddressHints = useHandler(() => {
     setIsHintsDropped(true)
   })
 
   const handleHideAddressHints = useHandler(() => {
     setIsHintsDropped(false)
-
-    // Avoid stacking multiple animation multipliers the next
-    // time the dropdown opens
-    setIsAnimateHintsNumChange(false)
   })
 
   // Search for address hints
@@ -169,14 +169,6 @@ export const AddressFormScene = React.memo((props: Props) => {
 
   // Populate the address fields with the values from the selected search
   // results
-  const addressHintPress = (selectedAddressHint: HomeAddress) => () => {
-    setFormData({ ...selectedAddressHint }) // Update address's value with new value
-
-    if (rAddressInput.current != null) {
-      rAddressInput.current.blur()
-    }
-  }
-
   const handleChangeAddress = useHandler((inputValue: string) => {
     setIsNeedsFuzzySearch(true)
     setFormData({ ...formData, address: inputValue })
@@ -205,15 +197,6 @@ export const AddressFormScene = React.memo((props: Props) => {
     await onSubmit(formData)
   })
 
-  // The main hints dropdown animation depending on focus state of the
-  // address field
-  React.useEffect(() => {
-    sAnimationMult.value = withTiming(isHintsDropped ? 1 : 0, {
-      duration: 500,
-      easing: Easing.inOut(Easing.circle)
-    })
-  }, [sAnimationMult, isHintsDropped])
-
   // Periodically run a fuzzy search on changed address user input
   React.useEffect(() => {
     const task = makePeriodicTask(handlePeriodicSearch, FUZZY_SEARCH_INTERVAL)
@@ -221,16 +204,6 @@ export const AddressFormScene = React.memo((props: Props) => {
 
     return () => task.stop()
   }, [handlePeriodicSearch])
-
-  // Changes to the number of address hints results should trigger
-  // another animation if the hints are are open
-  React.useEffect(() => {
-    setIsAnimateHintsNumChange(isHintsDropped)
-
-    // Don't want to react on isHintsDropped, only changes to the
-    // number of results while dropdown is open
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchResults])
 
   // Unmount cleanup
   React.useEffect(() => {
@@ -269,22 +242,7 @@ export const AddressFormScene = React.memo((props: Props) => {
         onFocus={handleShowAddressHints}
         onBlur={handleHideAddressHints}
       />
-      <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
-        <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-          {searchResults.map(searchResult => {
-            const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
-            return (
-              <EdgeTouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
-                <View style={styles.rowContainer} onLayout={handleHintLayout}>
-                  <EdgeText style={styles.addressHintText} numberOfLines={2}>
-                    {displaySearchResult}
-                  </EdgeText>
-                </View>
-              </EdgeTouchableOpacity>
-            )
-          })}
-        </ScrollView>
-      </Animated.View>
+      <ExpandableList isExpanded={isHintsDropped} items={addressHints} maxDisplayedItems={MAX_DISPLAYED_HINTS} itemHeight={hintHeight} />
       <GuiFormField
         fieldType="address2"
         label={lstrings.form_field_title_address_line_2}
@@ -346,15 +304,6 @@ export const AddressFormScene = React.memo((props: Props) => {
 })
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const dropContainerCommon: ViewStyle = {
-    backgroundColor: theme.modal,
-    borderRadius: theme.rem(0.5),
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    left: theme.rem(0.5),
-    right: theme.rem(0.5)
-  }
   return {
     addressHintText: {
       marginHorizontal: theme.rem(0.5),
@@ -362,16 +311,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     container: {
       paddingTop: 0,
-      marginHorizontal: theme.rem(0.5),
+      paddingHorizontal: theme.rem(0.5),
       flexGrow: 1
-    },
-    dropContainer: {
-      top: theme.rem(3.75),
-      ...dropContainerCommon
-    },
-    dropContainerAndroid: {
-      top: theme.rem(4) - 3,
-      ...dropContainerCommon
     },
     formSectionTitle: {
       marginLeft: theme.rem(0.5),
