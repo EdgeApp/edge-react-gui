@@ -177,7 +177,6 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   React.useImperativeHandle(ref, () => ({
     setAmount: (field, value) => {
-      console.log(field, value)
       if (field === 'crypto') {
         const { displayAmount, fiatAmount } = convertFromCryptoNative(value)
         flipInputRef.current?.setAmounts([displayAmount, fiatAmount])
