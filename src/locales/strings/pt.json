@@ -81,6 +81,7 @@
   "warning_token_code_override_2s": "O endereço do contrato informado difere do endereço do contrato do token %1$sincorporado. Proceda com cuidado e verifique se o contrato é legítimo, já que o uso desse token pode resultar em perda de fundos. Se você tiver dúvidas sobre este recurso ou contrato, entre em contato com %2$s.",
   "warning_token_contract_override_3s": "O token %1$s informado existe como um token %2$s interno com o mesmo endereço de contrato. Prossiga com cuidado e verifique se o contrato é legítimo, já que o uso desse token pode resultar em perda de fundos. Se você tiver dúvidas sobre este recurso, por favor contate %3$s.",
   "warning_token_exists_1s": "O token informado já existe como um token interno %1$s",
+  "warning_uk_risk": "Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.",
   "alert_dropdown_alert": "Alerta! ",
   "alert_dropdown_warning": "Atenção! ",
   "azteco_success": "Você resgatou um cartão bitcoin Azteco. Os fundos devem chegar em breve.",
