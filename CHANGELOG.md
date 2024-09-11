@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
+- added: Include custom tokens within wallet data in log output
 
 ## 4.13.0
 

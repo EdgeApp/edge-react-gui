@@ -1,5 +1,5 @@
 import { uncleaner } from 'cleaners'
-import { EdgeDataDump } from 'edge-core-js'
+import { EdgeDataDump, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
@@ -50,6 +50,7 @@ interface LoggedInUser {
 
 interface WalletData {
   currencyCode?: string
+  customTokens?: EdgeTokenMap
   imported?: boolean
   repoId?: string
   pluginDump?: EdgeDataDump
@@ -180,6 +181,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
           const currencyCode = wallet.currencyInfo.currencyCode ?? ''
           logOutput.loggedInUser.wallets.push({
             currencyCode,
+            customTokens: wallet.currencyConfig.customTokens,
             imported,
             repoId: getRepoId(syncKey),
             pluginDump: await wallet.dumpData().catch(error => ({
