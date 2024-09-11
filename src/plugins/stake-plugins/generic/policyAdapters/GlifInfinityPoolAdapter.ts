@@ -111,9 +111,11 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
           maxPriorityFeePerGas,
           nonce: nextNonce(),
           customData: {
-            name: metadataName,
-            category: 'Expense:Fee',
-            notes: `Stake into ${metadataPoolAssetName} pool contract`
+            metadata: {
+              name: metadataName,
+              category: 'Expense:Fee',
+              notes: `Stake into ${metadataPoolAssetName} pool contract`
+            }
           }
         })
       )
@@ -152,9 +154,11 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
             maxPriorityFeePerGas,
             nonce: nextNonce(),
             customData: {
-              name: metadataName,
-              category: 'Expense:Fees',
-              notes: `Approve ${metadataPoolAssetName} liquidity pool contract`
+              metadata: {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Approve ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           })
         )
@@ -168,9 +172,11 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
           maxPriorityFeePerGas,
           nonce: nextNonce(),
           customData: {
-            name: metadataName,
-            category: 'Transfer:Staking',
-            notes: `Remove liquidity from ${metadataPoolAssetName} pool contract`
+            metadata: {
+              name: metadataName,
+              category: 'Transfer:Staking',
+              notes: `Remove liquidity from ${metadataPoolAssetName} pool contract`
+            }
           }
         })
       )
