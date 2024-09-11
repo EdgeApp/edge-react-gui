@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
+
 ## 4.13.0
 
 - added: Cardano staking through Kiln staking pools
