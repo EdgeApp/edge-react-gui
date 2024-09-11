@@ -81,6 +81,7 @@
   "warning_token_code_override_2s": "La dirección del contrato ingresada difiere de la dirección del contrato del token integrado %1$s. Por favor. Proceda con precaución y verifique que el contrato sea legítimo, ya que el uso de este token puede provocar la pérdida de fondos. Si tiene preguntas sobre esta función o contrato, comuníquese con %2$s.",
   "warning_token_contract_override_3s": "El token ingresado %1$s existe como un token integrado %2$s con la misma dirección de contrato. Por favor. Proceda con precaución y verifique que el contrato sea legítimo, ya que el uso de este token puede provocar la pérdida de fondos. Si tiene preguntas sobre esta función, comuníquese con %3$s.",
   "warning_token_exists_1s": "El token ingresado ya existe como token integrado %1$s",
+  "warning_uk_risk": "Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.",
   "alert_dropdown_alert": "¡Alerta! ",
   "alert_dropdown_warning": "¡Advertencia! ",
   "azteco_success": "Has canjeado una tarjeta de bitcoin Azteco. Los fondos deberían llegar pronto.",
