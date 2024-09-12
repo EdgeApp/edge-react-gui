@@ -10,7 +10,7 @@ import { StakePolicyConfig } from '../types'
 import { KilnError, makeKilnApi } from '../util/KilnApi'
 import { StakePolicyAdapter } from './types'
 
-const MIN_STAKE_LOVELACE_AMOUNT = '4000000'
+const MIN_STAKE_LOVELACE_AMOUNT = '5000000'
 
 export interface CardanoPooledKilnAdapterConfig {
   type: 'cardano-pooled-kiln'
