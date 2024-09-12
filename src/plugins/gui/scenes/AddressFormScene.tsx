@@ -95,18 +95,19 @@ export const AddressFormScene = React.memo((props: Props) => {
 
   const addressHints = React.useMemo(() => {
     return searchResults.map(searchResult => {
-      const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
+      const displaySearchResult1 = searchResult.address
+      const displaySearchResult2 = `${searchResult.city}, ${searchResult.state}, ${countryCode}`
+
       return (
         <EdgeTouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
           <View style={styles.rowContainer} onLayout={handleHintLayout}>
-            <EdgeText style={styles.addressHintText} numberOfLines={2}>
-              {displaySearchResult}
-            </EdgeText>
+            <EdgeText>{displaySearchResult1}</EdgeText>
+            <EdgeText>{displaySearchResult2}</EdgeText>
           </View>
         </EdgeTouchableOpacity>
       )
     })
-  }, [searchResults, countryCode, addressHintPress, handleHintLayout, styles.rowContainer, styles.addressHintText])
+  }, [searchResults, countryCode, addressHintPress, handleHintLayout, styles.rowContainer])
 
   const handleShowAddressHints = useHandler(() => {
     setIsHintsDropped(true)
@@ -305,10 +306,6 @@ export const AddressFormScene = React.memo((props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {
-    addressHintText: {
-      marginHorizontal: theme.rem(0.5),
-      marginVertical: theme.rem(0.25)
-    },
     container: {
       paddingTop: 0,
       paddingHorizontal: theme.rem(0.5),
@@ -321,11 +318,12 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.fontFaceBold
     },
     rowContainer: {
-      display: 'flex',
-      height: theme.rem(2.75),
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
+      flexGrow: 1,
+      flexShrink: 1,
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      marginHorizontal: theme.rem(0.5),
+      marginVertical: theme.rem(0.25)
     }
   }
 })
