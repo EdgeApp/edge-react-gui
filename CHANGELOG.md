@@ -5,6 +5,7 @@
 - added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
 - added: Include custom tokens within wallet data in log output
 - added: Warning message about risks of investing to all UK IPs
+- fixed: Crash on HomeScene when logging while in airplane mode
 
 ## 4.13.0
 
