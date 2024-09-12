@@ -41,7 +41,8 @@ const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
  * @param countryCode - An optional string representing the country code to filter by. If `null`, an empty array is returned.
  * @returns An array of `ContentPost` objects that match the provided country code.
  */
-export const filterContentPosts = (contentPosts: ContentPost[], countryCode?: string) => {
+export const filterContentPosts = (contentPosts?: ContentPost[], countryCode?: string): ContentPost[] => {
+  if (contentPosts == null) return []
   return contentPosts.filter((contentPost: ContentPost) => {
     const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } = contentPost
 
@@ -109,10 +110,10 @@ export const HomeScene = (props: Props) => {
       excludeCountryCodes: [],
       ...legacyBlogPost
     }))
-    setBlogPosts([...nonGeoPosts, ...(filterContentPosts(infoServerData.rollup?.blogPostsGeo as ContentPost[], countryCode) ?? [])])
+    setBlogPosts([...nonGeoPosts, ...filterContentPosts(infoServerData.rollup?.blogPostsGeo, countryCode)])
 
     // Get video posts
-    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts ?? [], countryCode))
+    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
   }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])

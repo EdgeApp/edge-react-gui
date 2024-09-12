@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
+- added: Include custom tokens within wallet data in log output
+- added: Warning message about risks of investing to all UK IPs
+
 ## 4.13.0
 
 - added: Cardano staking through Kiln staking pools
@@ -12,6 +16,7 @@
 - changed: Allow private key sweep in light accounts for amounts less than $50
 - changed: Allow reverse quotes for Kado
 - changed: Credit card allowed countries to add Botswana, Cambodia, Panama, and Sri Lanka
+- fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
 - fixed: "FIO Address does not exist" error after transferring a FIO name
 - fixed: Fix incorrect string comparison resulting in wrong rate used for 24 change calculation
