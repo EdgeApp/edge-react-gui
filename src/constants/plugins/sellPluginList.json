@@ -12,11 +12,7 @@
       "US"
     ],
     "notStateProvinces": {
-      "US": [
-        "FL",
-        "NY",
-        "TX"
-      ]
+      "US": ["AK", "AR", "CT", "NC", "NY", "TX"]
     },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
