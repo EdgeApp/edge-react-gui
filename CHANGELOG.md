@@ -1,5 +1,9 @@
 # edge-react-gui
 
+- added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
+- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- fixed: Inconsistent corners in `SideMenu`
+
 ## Unreleased
 
 - added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
