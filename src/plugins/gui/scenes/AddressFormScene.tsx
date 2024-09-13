@@ -80,6 +80,7 @@ export const AddressFormScene = React.memo((props: Props) => {
   const mounted = React.useRef<boolean>(true)
 
   const addressHintPress = (selectedAddressHint: HomeAddress) => () => {
+    handleHideAddressHints()
     setFormData({ ...selectedAddressHint })
     if (rAddressInput.current != null) {
       rAddressInput.current.blur()
@@ -243,7 +244,7 @@ export const AddressFormScene = React.memo((props: Props) => {
         onFocus={handleShowAddressHints}
         onBlur={handleHideAddressHints}
       />
-      <ExpandableList isExpanded={isHintsDropped} items={addressHints} maxDisplayedItems={MAX_DISPLAYED_HINTS} itemHeight={hintHeight} />
+      <ExpandableList isExpanded={isHintsDropped} items={addressHints} maxDisplayedItems={MAX_DISPLAYED_HINTS} />
       <GuiFormField
         fieldType="address2"
         label={lstrings.form_field_title_address_line_2}

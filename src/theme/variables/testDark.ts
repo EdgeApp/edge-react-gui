@@ -472,6 +472,18 @@ export const testDark: Theme = {
     elevation: 0
   },
 
+  dropdownListShadow: {
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 10,
+      height: 10
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 64,
+    // Disable Android shadow
+    elevation: 0
+  },
+
   // Basic Card Styles
   cardBaseColor: palette.whiteOp10,
   cardGradientWarning: {

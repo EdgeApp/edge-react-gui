@@ -442,6 +442,7 @@ export interface Theme {
 
   // Shadows
   iconShadow: ThemeShadowParams
+  dropdownListShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string

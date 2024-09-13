@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
@@ -11,9 +12,10 @@ import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { lstrings } from '../../locales/strings'
+import { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -112,6 +114,27 @@ export function DevTestScene(props: Props) {
     )).catch(error => console.log(error))
   }
 
+  const navigation2 = useNavigation<NavigationBase>()
+
+  const handleAddressFormPress = () => {
+    navigation2.navigate('buyTab', {
+      screen: 'guiPluginAddressForm',
+      params: {
+        // Add any necessary props here
+        countryCode: 'US',
+        headerTitle: 'Address Form',
+        onSubmit: async (homeAddress: HomeAddress) => {
+          console.log('Address submitted:', homeAddress)
+          // Handle the submitted address
+        },
+        onClose: () => {
+          console.log('Address form closed')
+          // Handle closing the form
+        }
+      }
+    })
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -132,6 +155,10 @@ export function DevTestScene(props: Props) {
       <SceneHeaderUi4 title="Scene Header" />
       <SceneHeader title="Scene Header (Legacy)" underline />
       <SectionView>
+        <>
+          <SectionHeader leftTitle="Scenes" />
+          <EdgeButton label="AddressFormScene" onPress={handleAddressFormPress} marginRem={0.5} />
+        </>
         <>
           <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
           <EdgeButton
