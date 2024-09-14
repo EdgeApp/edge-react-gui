@@ -244,9 +244,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -260,9 +262,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -290,9 +294,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -316,9 +322,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '500000',
               customData: {
-                name: metadataName,
-                category: 'Transfer:Staking',
-                notes: `Add liquidity to ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: `Add liquidity to ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             }
           )
@@ -348,9 +356,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
           gasPrice,
           gasLimit: '500000',
           customData: {
-            name: metadataName,
-            category: 'Transfer:Staking',
-            notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+            metadata: {
+              name: metadataName,
+              category: 'Transfer:Staking',
+              notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+            }
           }
         })
       })
@@ -368,9 +378,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '1000000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -387,9 +399,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '1000000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -414,9 +428,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
             gasPrice,
             gasLimit: '10000000',
             customData: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Leverage ${metadataPoolAssetName} liquidity pool contract`
+              metadata: {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Leverage ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           }
         )
@@ -459,9 +475,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -481,9 +499,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
             gasPrice,
             gasLimit: '1000000',
             customData: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+              metadata: {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           })
       )

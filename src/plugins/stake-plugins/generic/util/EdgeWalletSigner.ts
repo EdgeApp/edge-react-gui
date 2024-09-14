@@ -74,13 +74,17 @@ export class EdgeWalletSigner extends ethers.Signer {
     }
 
     const data = await transaction.data
+
     const memoHexValue = data == null ? undefined : typeof data === 'string' ? data.replace('0x', '') : base16.stringify(data)
     const memos: EdgeMemo[] = memoHexValue == null ? [] : [{ type: 'hex', value: memoHexValue }]
+
+    const customData = await transaction.customData
+
     const edgeTransaction = await this.wallet.makeSpend({
       tokenId: null,
       spendTargets,
       memos,
-      metadata: await transaction.customData,
+      metadata: customData?.metadata,
       networkFeeOption: 'custom',
       customNetworkFee: {
         gasPrice: ethers.utils.formatUnits(gasPrice, 'gwei').toString(),
