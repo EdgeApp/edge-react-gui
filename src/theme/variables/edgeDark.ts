@@ -472,6 +472,19 @@ export const edgeDark: Theme = {
     },
     shadowOpacity: 0.6,
     shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
+  dropdownListShadow: {
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 10,
+      height: 10
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 64,
+    // Disable Android shadow
     elevation: 0
   },
 
