@@ -1266,10 +1266,10 @@
   dependencies:
     "@babel/runtime" "^7.21.0"
 
-"@chain-registry/types@^0.45.44":
-  version "0.45.44"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.45.44.tgz#d732643e2c33f1ec5bcff75ff149be9c5188f5ec"
-  integrity sha512-s59rl13Uvv8yECDRFTx81YHWwH8Kw/X3mZaafe2qGjGVhsCeJvVqFBhxK1Znnx1m6/auL+S4sVhcTYFqb/3ujQ==
+"@chain-registry/types@^0.45.73":
+  version "0.45.73"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.45.73.tgz#affdccc8c79070afd2d7e5ccebffc08bda11ae06"
+  integrity sha512-DXp7vUuAGdL0HgzmQ6GaSgGoI7Ey0ODoBCi+IawDf6uAsB9KkJiEfV4Yb5dW4pj4frJoI+yZExMMGmilFgMWIQ==
 
 "@chain-registry/utils@^1.14.0":
   version "1.14.0"
@@ -2202,9 +2202,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -7455,12 +7455,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^1.63.50:
-  version "1.63.54"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.63.54.tgz#e34b5f70b7c5bacd6a60b38b55d1c7ee8b2b0f9a"
-  integrity sha512-qiJnoZqkOQayW5JMTd+vWSohj+CxIxuXd8kCk+u8tDsItNPVA1gltgOvDi00FZL/+j2+xrnxiVR6hVn5H6/8kg==
+chain-registry@^1.63.92:
+  version "1.63.92"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.63.92.tgz#8b049aef4913fcd3e848f608f97025215688aad2"
+  integrity sha512-IXa/cOGoTYEUDuCByuDNVKsHMYD+krR5scD2XNyLxBHvqCexMkdxZ3XyeZGe/Vr3JKiM6cHyinDNvRQr4j2kpQ==
   dependencies:
-    "@chain-registry/types" "^0.45.44"
+    "@chain-registry/types" "^0.45.73"
 
 chainsaw@~0.1.0:
   version "0.1.0"
@@ -9126,10 +9126,10 @@ edge-core-js@^2.18.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.24.3:
-  version "4.24.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.24.3.tgz#f4dac2d7b404c92db603a597982da5fab11308e2"
-  integrity sha512-IvnidxzMeFFrtZ56qJP894xuKtyon8GkwEwVWCg/5wAe5WWLKkssDmnfKru2nvyaoLXXVZX3k46ItwxCjOr8iw==
+edge-currency-accountbased@^4.24.4:
+  version "4.24.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.24.4.tgz#0836c597bc3971b1f73e82cd8e7164ce9507d600"
+  integrity sha512-dK41pCcw6lOnAwVpfs7DB7hdj4I3wiq+OhmRaOweD8o8wpjj6wOa8cqWA0jFkmpwTDVqKz9kULlxbOIibQvbbA==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -9149,7 +9149,7 @@ edge-currency-accountbased@^4.24.3:
     biggystring "^4.1.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^1.63.50"
+    chain-registry "^1.63.92"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     eth-sig-util "^3.0.1"
@@ -10459,9 +10459,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
