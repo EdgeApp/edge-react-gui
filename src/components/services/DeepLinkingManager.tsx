@@ -1,6 +1,7 @@
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
 import * as React from 'react'
 import { Linking } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { ENV } from '../../env'
@@ -12,7 +13,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { parsePushMessage } from '../../util/PushMessageParser'
-import { showDevError, showError } from './AirshipInstance'
+import { FlashNotification } from '../navigation/FlashNotification'
+import { Airship, showDevError, showError } from './AirshipInstance'
+import { cacheStyles, Theme, useTheme } from './ThemeContext'
 
 interface Props {
   navigation: NavigationBase
@@ -21,6 +24,8 @@ interface Props {
 export function DeepLinkingManager(props: Props) {
   const { navigation } = props
   const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   const [pendingLink, setPendingLink] = React.useState<DeepLink | null>()
 
@@ -64,7 +69,8 @@ export function DeepLinkingManager(props: Props) {
         }
       }
 
-      function handlePushMessage(message: FirebaseMessagingTypes.RemoteMessage): void {
+      /** Handler for push messages received while app is in the background. */
+      function handleBackgroundPushMessage(message: FirebaseMessagingTypes.RemoteMessage): void {
         try {
           const link = parsePushMessage(message)
           if (link != null) setPendingLink(link)
@@ -74,15 +80,37 @@ export function DeepLinkingManager(props: Props) {
         }
       }
 
+      /** Handler for push messages received while app is in the foreground. */
+      const handleForegroundPushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
+        const body = message.notification?.body ?? ''
+
+        if (body === '') {
+          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no body')
+          return
+        }
+
+        // Show a FlashNotification:
+        Airship.show(bridge => (
+          <FlashNotification
+            bridge={bridge}
+            message={body}
+            onPress={() => {
+              bridge.resolve()
+            }}
+            icon={<FontAwesomeIcon name="bell-o" size={theme.rem(2)} style={styles.icon} />}
+          />
+        )).catch(error => showDevError(String(error)))
+      }
+
       // Subscribe to various incoming events:
       const linkingCleanup = Linking.addEventListener('url', event => {
         handleDeepLink(event.url)
       })
       const messageCleanup = messaging().onMessage(message => {
-        // do nothing for now except return the unsubscribe function
+        handleForegroundPushMessage(message)
       })
       const launchCleanup = messaging().onNotificationOpenedApp(message => {
-        handlePushMessage(message)
+        handleBackgroundPushMessage(message)
       })
 
       // Load any tapped links:
@@ -91,7 +119,7 @@ export function DeepLinkingManager(props: Props) {
 
       // Load any links sent by push messages:
       const message = await messaging().getInitialNotification()
-      if (message != null) handlePushMessage(message)
+      if (message != null) handleBackgroundPushMessage(message)
 
       return () => {
         if (linkingCleanup != null) linkingCleanup.remove()
@@ -105,3 +133,11 @@ export function DeepLinkingManager(props: Props) {
 
   return null
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  icon: {
+    alignSelf: 'center',
+    color: theme.iconTappable,
+    margin: theme.rem(0.5)
+  }
+}))
