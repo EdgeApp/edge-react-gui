@@ -12,13 +12,14 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { getOsVersion } from '../../util/utils'
-import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
+import { Anim, EdgeAnim } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
 import { FilteredInfoCard, InfoCard } from './InfoCard'
 
 interface Props {
   navigation: NavigationBase
+  enterAnim: Anim
   screenWidth: number
   // TODO: Add info server InfoCard export
   cards?: PromoCard2[] | AssetStatus2[]
@@ -26,7 +27,7 @@ interface Props {
 }
 
 export const InfoCardCarousel = (props: Props) => {
-  const { countryCode, navigation, screenWidth, cards = [] } = props
+  const { enterAnim, countryCode, navigation, screenWidth, cards } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -39,6 +40,7 @@ export const InfoCardCarousel = (props: Props) => {
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
+    if (cards == null) return
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
     const currentDate = new Date()
@@ -76,7 +78,7 @@ export const InfoCardCarousel = (props: Props) => {
 
   if (activeCards == null || activeCards.length === 0) return null
   return (
-    <EdgeAnim enter={fadeInUp110}>
+    <EdgeAnim enter={enterAnim}>
       <EdgeCarousel data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
     </EdgeAnim>
   )

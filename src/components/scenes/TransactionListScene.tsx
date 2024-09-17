@@ -1,9 +1,8 @@
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
-import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -11,17 +10,15 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
-import { getLocaleOrDefaultString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
-import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
-import { AssetStatusCard } from '../cards/AssetStatusCard'
+import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -38,6 +35,7 @@ export interface TransactionListParams {
   walletId: string
   walletName: string
   tokenId: EdgeTokenId
+  countryCode?: string
 }
 
 type ListItem = EdgeTransaction | string | null
@@ -49,6 +47,8 @@ function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const { width: screenWidth } = useSafeAreaFrame()
 
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
@@ -139,27 +139,6 @@ function TransactionListComponent(props: Props) {
     }
   }, [enabledTokenIds, navigation, tokenId])
 
-  // Check for AssetStatuses from info server (known sync issues, etc):
-  const assetStatuses = React.useMemo<AssetStatus[]>(() => {
-    const pluginTokenId = `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
-    const allAssetStatuses = (infoServerData.rollup?.assetStatusCards ?? {})[pluginTokenId] ?? []
-    const version = getVersion()
-    return allAssetStatuses.filter(assetStatus => {
-      const { appId, appVersions, localeStatusBody, localeStatusTitle, statusStartIsoDate, statusEndIsoDate } = assetStatus
-      const curDate = new Date().toISOString()
-
-      const title = getLocaleOrDefaultString(localeStatusTitle)
-      const message = getLocaleOrDefaultString(localeStatusBody)
-
-      if (title == null || message == null) return false
-      if (appId != null && appId !== config.appId) return false
-      if (appVersions != null && !appVersions.includes(version)) return false
-      if (statusEndIsoDate != null && statusEndIsoDate < curDate) return false
-      if (statusStartIsoDate != null && statusStartIsoDate > curDate) return false
-      return true
-    })
-  }, [pluginId, tokenId])
-
   //
   // Handlers
   //
@@ -217,16 +196,16 @@ function TransactionListComponent(props: Props) {
           onSearchingChange={setIsSearching}
           onSearchTextChange={setSearchText}
         />
-        {assetStatuses.length > 0 && !isSearching
-          ? assetStatuses.map(assetStatus => (
-              <EdgeAnim enter={fadeInDown10} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
-                <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
-              </EdgeAnim>
-            ))
-          : null}
+        <InfoCardCarousel
+          enterAnim={fadeInDown10}
+          cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
+          navigation={navigation}
+          countryCode={route.params.countryCode}
+          screenWidth={screenWidth}
+        />
       </>
     )
-  }, [assetStatuses, isLightAccount, listItems.length, navigation, isSearching, tokenId, wallet])
+  }, [listItems.length, navigation, isSearching, tokenId, wallet, isLightAccount, pluginId, route.params.countryCode, screenWidth])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {

@@ -13,8 +13,9 @@
 - added: Foreground push notifications displayed in app
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
 - changed: Added Iraq to list of Visa/MC supported countries
-- changed: Updated ACH supported US states
-- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- changed: Updated ACH supported US stat- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- changed: Use new platform-specific `assetStatsCards2` info server data
+- changed: Display Asset Status cards in the same style as Promo Cards
 - fixed: Inconsistent corners in `SideMenu`
 - fixed: Crash on HomeScene when logging while in airplane mode
 
