@@ -371,6 +371,8 @@
   "swap_preferred_instructions": "Quando várias exchanges puderem preencher a uma ordem, prefira:",
   "swap_preferred_promo_instructions": "Quando várias exchanges podem preencher a uma ordem, a promoção atual sempre prefere:",
   "swap_token_no_enabled_exchanges_2s": "No enabled exchanges support %1$s (on %2$s) at this time",
+  "swap_minimum_receive_amount": "Min Receive Amount",
+  "swap_minimum_amount_1s": "Min %1$s",
   "settings_button_clear_logs": "Limpar Logs",
   "settings_button_send_logs": "Enviar Logs para o Edge",
   "settings_button_export_logs": "Exportar Logs",
