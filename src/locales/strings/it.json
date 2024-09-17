@@ -371,6 +371,8 @@
   "swap_preferred_instructions": "Quando più cambi valuta possono eseguire un ordine, preferisci:",
   "swap_preferred_promo_instructions": "Quando più cambi valuta possono eseguire un ordine, la promozione corrente preferisce sempre:",
   "swap_token_no_enabled_exchanges_2s": "Nessun cambio valuta abilitato supporta %1$s (su %2$s) al momento",
+  "swap_minimum_receive_amount": "Min Receive Amount",
+  "swap_minimum_amount_1s": "Min %1$s",
   "settings_button_clear_logs": "Cancella i log",
   "settings_button_send_logs": "Invia i logs a Edge",
   "settings_button_export_logs": "Esporta i logs",
