@@ -1,5 +1,5 @@
 import { asDate } from 'cleaners'
-import { PromoCard2 } from 'edge-info-server'
+import { AssetStatus2, PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
@@ -7,55 +7,38 @@ import shajs from 'sha.js'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
+import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationBase } from '../../types/routerTypes'
-import { infoServerData } from '../../util/network'
-import { getOsVersion, zeroString } from '../../util/utils'
+import { getOsVersion } from '../../util/utils'
 import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
-import { FilteredPromoCard, PromoCard } from './PromoCard'
+import { FilteredInfoCard, InfoCard } from './InfoCard'
 
 interface Props {
   navigation: NavigationBase
   screenWidth: number
+  // TODO: Add info server InfoCard export
+  cards?: PromoCard2[] | AssetStatus2[]
   countryCode?: string
 }
 
-export const PromoCards = (props: Props) => {
-  const { countryCode, navigation, screenWidth } = props
+export const InfoCardCarousel = (props: Props) => {
+  const { countryCode, navigation, screenWidth, cards = [] } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const account = useSelector(state => state.core.account)
   const accountReferral = useSelector(state => state.account.accountReferral)
 
-  const currencyWallets = useWatch(account, 'currencyWallets')
-
-  const [filteredCards, setFilteredCards] = React.useState<FilteredPromoCard[]>([])
-  const [accountFunded, setAccountFunded] = React.useState<boolean>()
-
-  const walletsSynced = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const { userPausedWalletsSet } = state.ui.settings
-    const unPausedWallets = Object.values(currencyWallets).filter(wallet => !userPausedWalletsSet?.has(wallet.id))
-    const unSyncedWallets = unPausedWallets.filter(wallet => wallet.syncRatio < 1)
-
-    return unSyncedWallets.length === 0
-  })
+  const [filteredCards, setFilteredCards] = React.useState<FilteredInfoCard[]>([])
 
   // Set account funded status
-  React.useEffect(() => {
-    if (!walletsSynced) return
-    setAccountFunded(Object.values(currencyWallets).some(wallet => [...wallet.balanceMap.values()].some(balanceVal => !zeroString(balanceVal))))
-  }, [currencyWallets, walletsSynced])
+  const accountFunded = useIsAccountFunded()
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
-    const cards = infoServerData.rollup?.promoCards2 ?? []
-
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
     const currentDate = new Date()
@@ -65,7 +48,7 @@ export const PromoCards = (props: Props) => {
     const osVersion = getOsVersion()
 
     setFilteredCards(
-      filterPromoCards({
+      filterInfoCards({
         cards,
         countryCode,
         accountFunded,
@@ -77,18 +60,18 @@ export const PromoCards = (props: Props) => {
         currentDate
       })
     )
-  }, [accountFunded, accountReferral, countryCode])
+  }, [accountFunded, accountReferral, cards, countryCode])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
 
   // List rendering methods:
-  const keyExtractor = useHandler((item: FilteredPromoCard) => item.messageId)
-  const renderItem: ListRenderItem<FilteredPromoCard> = useHandler(({ item }) => {
+  const keyExtractor = useHandler((item: FilteredInfoCard) => item.messageId)
+  const renderItem: ListRenderItem<FilteredInfoCard> = useHandler(({ item }) => {
     const handleClose = async (): Promise<void> => {
       await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
     }
-    return <PromoCard navigation={navigation} promoInfo={item} onClose={handleClose} />
+    return <InfoCard navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
 
   if (activeCards == null || activeCards.length === 0) return null
@@ -100,11 +83,11 @@ export const PromoCards = (props: Props) => {
 }
 
 /**
- * Finds the promo cards that are relevant to our application version &
+ * Finds the info server cards that are relevant to our application version &
  * other factors.
  */
-export function filterPromoCards(params: {
-  cards: PromoCard2[]
+export function filterInfoCards(params: {
+  cards: PromoCard2[] | AssetStatus2[]
   countryCode?: string
   buildNumber: string
   osType: string
@@ -113,7 +96,7 @@ export function filterPromoCards(params: {
   currentDate: Date
   accountFunded?: boolean
   accountReferral?: Partial<AccountReferral>
-}): FilteredPromoCard[] {
+}): FilteredInfoCard[] {
   const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, accountReferral } = params
 
   let accountPromoIds: string[] | undefined
@@ -125,7 +108,7 @@ export function filterPromoCards(params: {
 
   // Find relevant cards:
   const ccLowerCase = countryCode?.toLowerCase()
-  const filteredCards: FilteredPromoCard[] = []
+  const filteredCards: FilteredInfoCard[] = []
   for (const card of cards) {
     const {
       appVersion,

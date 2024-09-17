@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { PromoCard2 } from 'edge-info-server'
 
-import { filterPromoCards } from '../../components/cards/PromoCards'
+import { filterInfoCards } from '../../components/cards/InfoCardCarousel'
 
 const dummyCard: PromoCard2 = {
   localeMessages: { en: 'hello' },
@@ -33,12 +33,12 @@ const currentDate = new Date('2024-06-13T20:53:33.013Z')
 describe('filterPromoCards', () => {
   test('No cards', () => {
     const cards: PromoCard2[] = []
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
     expect(result.length).toBe(0)
   })
   test('Card no filters', () => {
     const cards: PromoCard2[] = [{ ...dummyCard }]
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('hello')
   })
@@ -49,7 +49,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, osTypes: ['web'], localeMessages: { en: 'Web Message' } },
       { ...dummyCard, osTypes: ['ios'], localeMessages: { en: 'Another iOS Message' } }
     ]
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber, osType: 'ios', version, osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber, osType: 'ios', version, osVersion, currentDate })
     expect(result.length).toBe(2)
     expect(result[0].localeMessages.en).toBe('iOS Message')
     expect(result[1].localeMessages.en).toBe('Another iOS Message')
@@ -61,7 +61,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, exactBuildNum: '432', osTypes: ['web'], localeMessages: { en: 'Web Message' } },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['android'], localeMessages: { en: 'Another Android Message' } }
     ]
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber: '432', osType: 'android', version: '1.2.3', osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber: '432', osType: 'android', version: '1.2.3', osVersion, currentDate })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('Another Android Message')
   })
@@ -72,7 +72,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, osTypes: ['web'], localeMessages: { en: 'Web Message' } },
       { ...dummyCard, osTypes: ['android'], localeMessages: { en: 'Another Android Message' }, appVersion: '1.2.4' }
     ]
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber: '432', osType: 'android', version: '1.2.3', osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber: '432', osType: 'android', version: '1.2.3', osVersion, currentDate })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('Android message')
   })
@@ -83,7 +83,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, minBuildNum: '4', maxBuildNum: '5', localeMessages: { en: '4-5' } },
       { ...dummyCard, minBuildNum: '1', maxBuildNum: '4', localeMessages: { en: '1-4' } }
     ]
-    const result = filterPromoCards({ cards, countryCode: 'US', buildNumber: '4', osType, version: '1.2.3', osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'US', buildNumber: '4', osType, version: '1.2.3', osVersion, currentDate })
     expect(result.length).toBe(3)
     expect(result[0].localeMessages.en).toBe('3-5')
     expect(result[1].localeMessages.en).toBe('4-5')
@@ -97,7 +97,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, countryCodes: ['uk'], localeMessages: { en: 'UK message' } },
       { ...dummyCard, countryCodes: ['es'], localeMessages: { en: 'ES message' } }
     ]
-    const result = filterPromoCards({ cards, buildNumber, osType, version, osVersion, currentDate })
+    const result = filterInfoCards({ cards, buildNumber, osType, version, osVersion, currentDate })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('no country')
   })
@@ -108,7 +108,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, excludeCountryCodes: ['uk'], localeMessages: { en: 'UK message' } },
       { ...dummyCard, excludeCountryCodes: ['es'], localeMessages: { en: 'ES message' } }
     ]
-    const result = filterPromoCards({ cards, countryCode: 'us', buildNumber: '4', osType, version, osVersion, currentDate })
+    const result = filterInfoCards({ cards, countryCode: 'us', buildNumber: '4', osType, version, osVersion, currentDate })
     expect(result.length).toBe(2)
     expect(result[0].localeMessages.en).toBe('UK message')
     expect(result[1].localeMessages.en).toBe('ES message')
@@ -120,7 +120,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
-    const result = filterPromoCards({
+    const result = filterInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -140,7 +140,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
-    const result = filterPromoCards({
+    const result = filterInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
