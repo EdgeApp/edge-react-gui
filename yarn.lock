@@ -9225,10 +9225,10 @@ edge-exchange-plugins@^2.7.5:
     regenerator-runtime "0.13.11"
     xrpl "^2.10.0"
 
-edge-info-server@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-2.6.0.tgz#944720cb98e90bf2ce5c8c75517b82677c8e886f"
-  integrity sha512-tA5MbnkVYihBje4hAr7CCsf5TVmcKMoTjxZDR+ijLSLO5TmWybVQdYVVE4bZabKv+FKq33tTZ0JJYHVDTSwXkA==
+edge-info-server@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-2.7.0.tgz#dd59760a779b922285a3bb6108331f25d87395d0"
+  integrity sha512-6FecnV0nm1tufSZlai4nd0mRslrquTNMicQf9VTNOR0GJmXD55AZgm28GSjeQx/VIJdnwh+620BNfidQeqGc0w==
   dependencies:
     cleaners "^0.3.16"
 
