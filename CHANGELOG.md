@@ -1,9 +1,5 @@
 # edge-react-gui
 
-- added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
-- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
-- fixed: Inconsistent corners in `SideMenu`
-
 ## Unreleased
 
 - added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
@@ -12,8 +8,12 @@
 - added: Sell with Moonpay
 - added: Buy/sell with Paypal
 - added: Buy with Revolut
+- added: Foreground push notifications displayed in app
+- added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Updated ACH supported US states
+- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- fixed: Inconsistent corners in `SideMenu`
 - fixed: Crash on HomeScene when logging while in airplane mode
 
 ## 4.13.0
