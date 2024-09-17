@@ -10,6 +10,7 @@
 - added: Foreground push notifications displayed in app
 - added: Minimum receive amount to `SwapConfirmationScene`
 - added: New analytics tracking param: `accountAgeMonths`
+- added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
 - added: Sell with Moonpay
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Display Asset Status cards in the same style as Promo Cards
