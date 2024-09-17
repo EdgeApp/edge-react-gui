@@ -371,6 +371,8 @@
   "swap_preferred_instructions": "При выполнении ордера предпочесть следующие биржи:",
   "swap_preferred_promo_instructions": "При выполнении обмена несколькими биржами предпочтение отдается текущим предложениям:",
   "swap_token_no_enabled_exchanges_2s": "No enabled exchanges support %1$s (on %2$s) at this time",
+  "swap_minimum_receive_amount": "Min Receive Amount",
+  "swap_minimum_amount_1s": "Min %1$s",
   "settings_button_clear_logs": "Clear Logs",
   "settings_button_send_logs": "Send Logs to Edge",
   "settings_button_export_logs": "Export Logs",
