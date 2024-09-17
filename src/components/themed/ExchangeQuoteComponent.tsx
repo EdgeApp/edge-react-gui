@@ -15,6 +15,7 @@ import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { FiatText } from '../text/FiatText'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -71,6 +72,11 @@ export const ExchangeQuote = (props: Props) => {
   const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
   const totalFiatText = `${formatFiatString({ fiatAmount: add(feeFiatAmount, fromFiatAmount) })} ${fiatCurrencyCode}`
 
+  const minCryptoAmountText = useCryptoText({ wallet: toWallet, tokenId: toTokenId, nativeAmount: quote.minReceiveAmount ?? '0', withSymbol: false })
+  const minFiatAmountText = (
+    <FiatText wallet={toWallet} tokenId={toTokenId} nativeCryptoAmount={quote.minReceiveAmount ?? '0'} hideFiatSymbol appendFiatCurrencyCode />
+  )
+
   const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {
     return (
       <View style={[styles.row, style]}>
@@ -99,8 +105,20 @@ export const ExchangeQuote = (props: Props) => {
           )}
         </View>
       )
+    } else if (quote.minReceiveAmount != null) {
+      // Show the minimum receive amount
+      return (
+        <View style={styles.bottomContainer}>
+          {renderRow(
+            <EdgeText style={styles.bottomText}>{lstrings.swap_minimum_receive_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>{minCryptoAmountText}</EdgeText>
+          )}
+          {renderRow(<></>, <EdgeText style={styles.bottomText}>({minFiatAmountText})</EdgeText>)}
+        </View>
+      )
+    } else {
+      return null
     }
-    return null
   }
 
   return (
