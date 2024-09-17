@@ -258,6 +258,18 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
   const daysBetween = msBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
+export const monthsBetween = (startDate: Date, endDate: Date): number => {
+  let months
+  months = (endDate.getFullYear() - startDate.getFullYear()) * 12
+  months += endDate.getMonth() - startDate.getMonth()
+
+  // Adjust for days in the month
+  if (endDate.getDate() < startDate.getDate()) {
+    months--
+  }
+
+  return months <= 0 ? 0 : months
+}
 
 export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout: Promise<T> = new Promise((resolve, reject) => {
