@@ -244,18 +244,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           bridge.resolve()
         }}
       >
-        {!config.disableSwaps ? (
-          <SelectableRow
-            marginRem={0.5}
-            title={sprintf(lstrings.swap_s_to_from_crypto, sceneCurrencyCode)}
-            onPress={() => this.handleTradeSwap(bridge)}
-            icon={
-              <View style={styles.singleIconContainer}>
-                <Ionicons name="swap-horizontal" size={theme.rem(2.5)} color={theme.iconTappable} />
-              </View>
-            }
-          />
-        ) : null}
         <SelectableRow
           marginRem={0.5}
           title={sprintf(lstrings.title_plugin_buy_s, sceneCurrencyCode)}
@@ -278,6 +266,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </View>
           }
         />
+        {!config.disableSwaps ? (
+          <SelectableRow
+            marginRem={0.5}
+            title={sprintf(lstrings.swap_s_to_from_crypto, sceneCurrencyCode)}
+            onPress={() => this.handleTradeSwap(bridge)}
+            icon={
+              <View style={styles.singleIconContainer}>
+                <Ionicons name="swap-horizontal" size={theme.rem(2.5)} color={theme.iconTappable} />
+              </View>
+            }
+          />
+        ) : null}
       </EdgeModal>
     ))
   }
