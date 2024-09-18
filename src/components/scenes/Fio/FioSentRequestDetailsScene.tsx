@@ -7,13 +7,17 @@ import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { FioRequestStatus, GuiExchangeRates } from '../../../types/types'
+import { FioRequest, FioRequestStatus, GuiExchangeRates } from '../../../types/types'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+
+export interface FioSentRequestDetailsParams {
+  selectedFioSentRequest: FioRequest
+}
 
 interface OwnProps extends EdgeSceneProps<'fioSentRequestDetails'> {}
 

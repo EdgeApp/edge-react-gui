@@ -1,6 +1,5 @@
 import * as NavigationCore from '@react-navigation/core'
 import type { StackActionHelpers } from '@react-navigation/native'
-import type { EdgeTokenId } from 'edge-core-js'
 
 import type { ChangeMiningFeeParams } from '../components/scenes/ChangeMiningFeeScene'
 import type { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -16,6 +15,8 @@ import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNo
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
 import type { EditTokenParams } from '../components/scenes/EditTokenScene'
+import type { FioAddressDetailsParams } from '../components/scenes/Fio/FioAddressDetailsScene'
+import type { FioAddressRegisterSuccessParams } from '../components/scenes/Fio/FioAddressRegisteredScene'
 import type { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
 import type { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
 import type { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
@@ -24,7 +25,9 @@ import type { FioDomainRegisterSelectWalletParams } from '../components/scenes/F
 import type { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
 import type { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
 import type { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
-import { FioStakingChangeParams } from '../components/scenes/Fio/FioStakingChangeScene'
+import type { FioSentRequestDetailsParams } from '../components/scenes/Fio/FioSentRequestDetailsScene'
+import type { FioStakingChangeParams } from '../components/scenes/Fio/FioStakingChangeScene'
+import type { FioStakingOverviewParams } from '../components/scenes/Fio/FioStakingOverviewScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -64,7 +67,6 @@ import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPlug
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
-import type { FioRequest } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -136,17 +138,11 @@ export interface RouteParamList {
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
   fioCreateHandle: FioCreateHandleParams
-  fioAddressDetails: {
-    fioAddressName: string
-    bundledTxs: number
-  }
+  fioAddressDetails: FioAddressDetailsParams
   fioAddressList: undefined
   fioAddressRegister: undefined
   fioAddressRegisterSelectWallet: FioAddressRegisterSelectWalletParams
-  fioAddressRegisterSuccess: {
-    fioName: string
-    expiration?: string
-  }
+  fioAddressRegisterSuccess: FioAddressRegisterSuccessParams
   fioAddressSettings: FioAddressSettingsParams
   fioConnectToWalletsConfirm: FioConnectWalletConfirmParams
   fioDomainConfirm: FioNameConfirmParams
@@ -156,14 +152,9 @@ export interface RouteParamList {
   fioNameConfirm: FioNameConfirmParams
   fioRequestConfirmation: FioRequestConfirmationParams
   fioRequestList: undefined
-  fioSentRequestDetails: {
-    selectedFioSentRequest: FioRequest
-  }
+  fioSentRequestDetails: FioSentRequestDetailsParams
   fioStakingChange: FioStakingChangeParams
-  fioStakingOverview: {
-    tokenId: EdgeTokenId
-    walletId: string
-  }
+  fioStakingOverview: FioStakingOverviewParams
   loanDashboard: undefined
   loanDetails: LoanDetailsParams
   loanCreate: LoanCreateParams

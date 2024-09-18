@@ -8,6 +8,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 
+export interface FioAddressRegisterSuccessParams {
+  fioName: string
+  expiration?: string
+}
+
 interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSuccess'> {}
 
 type Props = OwnProps & ThemeProps
