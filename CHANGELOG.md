@@ -18,6 +18,7 @@
 - changed: Use new platform-specific `assetStatsCards2` info server data
 - fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent corners in `SideMenu`
+- fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
 
 ## 4.13.0 (2024-09-18)
 
