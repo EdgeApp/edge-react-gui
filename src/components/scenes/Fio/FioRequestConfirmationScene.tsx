@@ -27,7 +27,7 @@ import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showError, showToast } from '../../services/AirshipInstance'
+import { Airship, showDevError, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -87,7 +87,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   componentDidMount() {
-    this.setAddressesState().catch(err => showError(err))
+    this.setAddressesState().catch(err => showDevError(err))
   }
 
   setAddressesState = async () => {
@@ -211,9 +211,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
-        showError(
-          `${lstrings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
-        )
+        showError(`${lstrings.fio_request_error_header}: "${error.json?.fields?.[0]?.error ?? ''}"`)
       }
     } else {
       showError(lstrings.fio_wallet_missing_for_fio_address)

@@ -2,7 +2,29 @@
 
 ## Unreleased
 
-## 4.12.0
+- added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
+- added: Include custom tokens within wallet data in log output
+- added: Warning message about risks of investing to all UK IPs
+
+## 4.13.0
+
+- added: Cardano staking through Kiln staking pools
+- added: Support for `isLiquidStaking` field on staking policies
+- changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
+- changed: Restrict Bity buy/sell to no-KYC asset
+- changed: Determine Moonpay asset support using chainCode/contractAddress
+- changed: Allow private key sweep in light accounts for amounts less than $50
+- changed: Allow reverse quotes for Kado
+- changed: Credit card allowed countries to add Botswana, Cambodia, Panama, and Sri Lanka
+- fixed: Crash on HomeScene when logging while in airplane mode
+- fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
+- fixed: "FIO Address does not exist" error after transferring a FIO name
+- fixed: Fix incorrect string comparison resulting in wrong rate used for 24 change calculation
+- fixed: Crypto amount display bug after flipping the wallet input on `SwapCreateScne`
+- removed: 'fasterpayments' payment type
+- removed: Turking bank transfer support
+
+## 4.12.0 (2024-08-30)
 
 - added: `CryptoIcon` logo support to displayed request QR codes
 - added: Initial implementation of `SceneHeaderUi4`
@@ -11,12 +33,16 @@
 - added: Ethereum (Holesky) staking via Kiln
 - added: dRPC api key option for EVM chains
 - added: Handle KYC error responses from Bity
+- changed: Use a $50 USD default fiat purchase amount for light accounts
+- changed: Enable Bitpay payments for FIO names and domains
 - changed: Disable Home scene swap and FIO cards if configured
 - changed: Allow some chains to be disabled in env.json
 - changed: Use quoteAllocations to create amount rows in StakeModifyScene
 - changed: Add more metadata to zealot upload
 - changed: Token swap error demoted to red error dropdown to a toast
 - changed: 1 cent minimum requirement for high fee warning
+- changed: "Guest Account (<3 characters of loginId>)" shown in `SideMenu` if more than 1 account and logged in to a light account
+- changed: No account name shown in `SideMenu` if only a single light account exists on the device
 - changed: Properly escape newlines in Zealot changelog
 - fixed: `Carousel` cards not showing in iOS after new account creation until any scroll gesture performed, if there is only one `Carousel` card to display
 - fixed: Cutoff UI in `CreateWalletImportScene` when keyboard open
@@ -40,7 +66,6 @@
 - changed: Conditionalize use of Paybis promoCodes for new users <$1k purchases
 - changed: Cache exchange rates for five minutes to account for server or connection instability
 - changed: Query supported countries and US states for fiat plugins
-- changed: Enable Bitpay payments for FIO names and domains
 - fixed: Disable max spend for zkSync
 - fixed: Do not show duplicate password-recovery modals when launching a freshly-installed app for the first time.
 - fixed: If handling a deep link requires a signed-in account, correctly save it for later.

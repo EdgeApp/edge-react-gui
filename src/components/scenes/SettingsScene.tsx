@@ -30,7 +30,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
-import { removeIsoPrefix } from '../../util/utils'
+import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -39,7 +39,7 @@ import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../services/AirshipInstance'
 import { changeTheme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
@@ -73,10 +73,11 @@ export const SettingsScene = (props: Props) => {
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
   const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
-  const [touchIdText, setTouchIdText] = React.useState(lstrings.settings_button_use_touchID)
+  const [touchIdText, setTouchIdText] = React.useState<string>(lstrings.settings_button_use_touchID)
 
   const iconSize = theme.rem(1.25)
   const isLightAccount = username == null
+  const displayUsername = getDisplayUsername(account.rootLoginId, username)
 
   const autoLogout = secondsToDisplay(autoLogoutTimeInSeconds)
   const timeStrings = {
@@ -203,7 +204,7 @@ export const SettingsScene = (props: Props) => {
           await account.deleteRemoteAccount()
           await dispatch(logoutRequest(navigation))
           await context.forgetAccount(rootLoginId)
-          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
+          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showDevError(err))
           return true
         }}
       />
@@ -305,7 +306,7 @@ export const SettingsScene = (props: Props) => {
         <>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
+            label={`${lstrings.settings_account_title_cap}: ${displayUsername}`}
           />
           {isLightAccount ? (
             <EdgeCard>

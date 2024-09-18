@@ -23,6 +23,7 @@ export interface StakePolicyConfig<AdapterConfig> {
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
   isStablePool?: boolean
+  isLiquidStaking?: boolean
   mustMaxUnstake?: boolean
   deprecated?: boolean
   claimWarning?: string | null

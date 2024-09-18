@@ -52,27 +52,16 @@ export interface SwapErrorDisplayInfo {
 
 interface Props extends EdgeSceneProps<'swapCreate'> {}
 
-interface State {
-  nativeAmount: string
-  fiatAmount: string
-  nativeAmountFor: 'from' | 'to'
-}
-
-const defaultState: State = {
-  nativeAmount: '0',
-  fiatAmount: '0',
-  nativeAmountFor: 'from'
-}
-
 export const SwapCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { fromWalletId, fromTokenId = null, toWalletId, toTokenId = null, errorDisplayInfo } = route.params ?? {}
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const [state, setState] = useState({
-    ...defaultState
-  })
+  // Input state is the state of the user input
+  const [inputNativeAmount, setInputNativeAmount] = useState('0')
+  const [inputFiatAmount, setInputFiatAmount] = useState('0')
+  const [inputNativeAmountFor, setInputNativeAmountFor] = useState<'from' | 'to'>('from')
 
   const fromInputRef = React.useRef<ExchangedFlipInputRef>(null)
   const toInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -104,7 +93,7 @@ export const SwapCreateScene = (props: Props) => {
     fromWallet == null ||
     toWallet == null ||
     // Don't show next button if the amount is zero:
-    zeroString(state.nativeAmount) ||
+    zeroString(inputNativeAmount) ||
     // Don't show next button if the amount exceeds the balance:
     checkAmountExceedsBalance()
 
@@ -141,12 +130,12 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null) return false
     // We do not know what the from amount is if we are quoting "to" a
     // specific amount. Therefore we always return false in this case.
-    if (state.nativeAmountFor === 'to') return false
+    if (inputNativeAmountFor === 'to') return false
     // Get the balance:
     const fromWalletBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
     // If there is a balance and the amount is greater than the balance,
     // return true (which means amount exceeded balance).
-    return gte(fromWalletBalance, '0') && gt(state.nativeAmount, fromWalletBalance)
+    return gte(fromWalletBalance, '0') && gt(inputNativeAmount, fromWalletBalance)
   }
 
   const getQuote = (swapRequest: EdgeSwapRequest) => {
@@ -187,7 +176,9 @@ export const SwapCreateScene = (props: Props) => {
   }
 
   const resetState = () => {
-    setState(defaultState)
+    setInputNativeAmount('0')
+    setInputFiatAmount('0')
+    setInputNativeAmountFor('from')
   }
 
   const showWalletListModal = async (whichWallet: 'from' | 'to') => {
@@ -220,17 +211,21 @@ export const SwapCreateScene = (props: Props) => {
       toTokenId: fromTokenId,
       errorDisplayInfo
     })
-    const newNativeAmountFor = state.nativeAmountFor === 'from' ? 'to' : 'from'
     // Clear amount input state:
-    setState({
-      ...state,
-      nativeAmountFor: newNativeAmountFor
-    })
+    setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
+
     // Swap the amounts:
-    const toAmount = newNativeAmountFor === 'to' ? state.fiatAmount : '0'
-    const fromAmount = newNativeAmountFor === 'from' ? state.fiatAmount : '0'
-    toInputRef.current?.setAmount('fiat', toAmount)
-    fromInputRef.current?.setAmount('fiat', fromAmount)
+    // Use setTimeout to allow the component's state to change before making
+    // the imperative state changes.
+    setTimeout(() => {
+      if (inputNativeAmountFor === 'from') {
+        fromInputRef.current?.setAmount('fiat', '0')
+        toInputRef.current?.setAmount('fiat', inputFiatAmount)
+      } else {
+        toInputRef.current?.setAmount('fiat', '0')
+        fromInputRef.current?.setAmount('fiat', inputFiatAmount)
+      }
+    }, 0)
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
@@ -279,7 +274,7 @@ export const SwapCreateScene = (props: Props) => {
     // Should only happen if the user initiated the swap from the keyboard
     if (fromWallet == null || toWallet == null) return
 
-    if (zeroString(state.nativeAmount)) {
+    if (zeroString(inputNativeAmount)) {
       showToast(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
       return
     }
@@ -287,8 +282,8 @@ export const SwapCreateScene = (props: Props) => {
     const request: EdgeSwapRequest = {
       fromTokenId: fromTokenId,
       fromWallet: fromWallet,
-      nativeAmount: state.nativeAmount,
-      quoteFor: state.nativeAmountFor,
+      nativeAmount: inputNativeAmount,
+      quoteFor: inputNativeAmountFor,
       toTokenId: toTokenId,
       toWallet: toWallet
     }
@@ -307,23 +302,17 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    setState({
-      ...state,
-      nativeAmount: amounts.nativeAmount,
-      fiatAmount: amounts.fiatAmount,
-      nativeAmountFor: 'from'
-    })
+    setInputNativeAmount(amounts.nativeAmount)
+    setInputFiatAmount(amounts.fiatAmount)
+    setInputNativeAmountFor('from')
     // Clear other input's amount:
     toInputRef.current?.setAmount('crypto', '0')
   })
 
   const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    setState({
-      ...state,
-      nativeAmount: amounts.nativeAmount,
-      fiatAmount: amounts.fiatAmount,
-      nativeAmountFor: 'to'
-    })
+    setInputNativeAmount(amounts.nativeAmount)
+    setInputFiatAmount(amounts.fiatAmount)
+    setInputNativeAmountFor('to')
     // Clear other input's amount:
     fromInputRef.current?.setAmount('crypto', '0')
   })

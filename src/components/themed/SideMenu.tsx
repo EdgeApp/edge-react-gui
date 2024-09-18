@@ -28,6 +28,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
@@ -62,6 +63,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
   const watchedUsername = useWatch(account, 'username')
+  const displayUsername = getDisplayUsername(account.rootLoginId, watchedUsername)
 
   const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
@@ -72,6 +74,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = React.useState(false)
   const isMultiUsers = sortedUsers.length > 0
+  const isAccountRowShown = watchedUsername != null || isMultiUsers
+
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
@@ -91,7 +95,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
         <ButtonsModal
           bridge={bridge}
           title={lstrings.forget_account_title}
-          message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
+          message={sprintf(lstrings.forget_account_message_common, displayUsername)}
           buttons={{
             ok: {
               label: lstrings.string_forget,
@@ -286,75 +290,89 @@ export function SideMenu(props: DrawerContentComponentProps) {
   const footerBottomColor = theme.modal
   const rootNavigation = getRootNavigation(navigation)
 
+  /// ---- Renderers ----
+
+  const topPanel = (
+    <View style={styles.topPanel}>
+      <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
+      {isAccountRowShown ? (
+        <>
+          <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
+            <View style={styles.leftIconContainer}>
+              <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+            </View>
+            <View style={styles.rowBodyContainer}>
+              <TitleText style={styles.text}>{displayUsername}</TitleText>
+            </View>
+            {isMultiUsers ? (
+              <View style={styles.rightIconContainer}>
+                <Animated.View style={aRotate}>
+                  <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
+                </Animated.View>
+              </View>
+            ) : null}
+          </Pressable>
+          <DividerLine marginRem={[0.25, -2, 0, 1]} />
+        </>
+      ) : null}
+    </View>
+  )
+
+  const usernameDropdown = (
+    <>
+      <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
+        <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+          {sortedUsers.map(userInfo => (
+            <View key={userInfo.loginId} style={styles.rowContainer}>
+              {/* This empty container is required to align the row contents properly */}
+              <View style={styles.leftIconContainer} />
+              <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
+                <TitleText style={styles.text}>
+                  {userInfo.username == null ? sprintf(lstrings.guest_account_id_1s, userInfo.loginId.slice(userInfo.loginId.length - 3)) : userInfo.username}
+                </TitleText>
+              </EdgeTouchableOpacity>
+              <EdgeTouchableOpacity style={styles.rightIconContainer} onPress={handleDeleteAccount(userInfo)}>
+                <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
+              </EdgeTouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </Animated.View>
+      <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
+      <Pressable style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]} onPress={handleToggleDropdown} />
+    </>
+  )
+
+  const navigationRows = (
+    <>
+      <View style={styles.rowsContainer}>
+        <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+          {rowDatas.map(rowData => (
+            <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+              <View style={styles.leftIconContainer}>
+                {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
+                {rowData.iconNameFontAwesome != null ? (
+                  <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
+                ) : null}
+              </View>
+              <View style={styles.rowBodyContainer}>
+                <TitleText style={styles.text}>{rowData.title}</TitleText>
+              </View>
+            </EdgeTouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+      <LinearGradient colors={[footerTopColor, footerBottomColor]} style={footerContainerStyle} start={footerGradientStart} end={footerGradientEnd} />
+    </>
+  )
+
   return (
     <OuterView insets={insets}>
-      {/* ==== Top Panel Start ==== */}
-      <View style={styles.topPanel}>
-        <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
-        <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
-          <View style={styles.rowIconContainer}>
-            <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
-          </View>
-          <View style={styles.rowBodyContainer}>
-            <TitleText style={styles.text}>{watchedUsername ?? lstrings.missing_username}</TitleText>
-          </View>
-          {isMultiUsers ? (
-            <View style={styles.rowIconContainer}>
-              <Animated.View style={aRotate}>
-                <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
-              </Animated.View>
-            </View>
-          ) : null}
-        </Pressable>
-        <DividerLine marginRem={[0.25, -2, 2, 1]} />
-      </View>
-      {/* ==== Top Panel End ==== */}
-      {/* ==== Bottom Panel Start ==== */}
+      {topPanel}
       <View style={styles.bottomPanel} onLayout={handleBottomPanelLayout}>
-        {/* === Dropdown Start === */}
-        <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
-          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-            {sortedUsers.map(userInfo => (
-              <View key={userInfo.loginId} style={styles.rowContainer}>
-                {/* This empty container is required to align the row contents properly */}
-                <View style={styles.rowIconContainer} />
-                <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
-                  <TitleText style={styles.text}>{userInfo.username ?? lstrings.missing_username}</TitleText>
-                </EdgeTouchableOpacity>
-                <EdgeTouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(userInfo)}>
-                  <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
-                </EdgeTouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
-        </Animated.View>
-        {/* === Dropdown End === */}
-        <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        <Pressable style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]} onPress={handleToggleDropdown} />
-        {/* === Navigation Rows Start === */}
-        <View style={styles.rowsContainer}>
-          <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-            {rowDatas.map(rowData => (
-              <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
-                <View style={styles.rowIconContainer}>
-                  {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
-                  {rowData.iconNameFontAwesome != null ? (
-                    <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
-                  ) : null}
-                </View>
-                <View style={styles.rowBodyContainer}>
-                  <TitleText style={styles.text}>{rowData.title}</TitleText>
-                </View>
-              </EdgeTouchableOpacity>
-            ))}
-          </ScrollView>
-          {/* === Navigation Rows End === */}
-        </View>
-        {/* === Footer Start === */}
-        <LinearGradient colors={[footerTopColor, footerBottomColor]} style={footerContainerStyle} start={footerGradientStart} end={footerGradientEnd} />
-        {/* === Footer End === */}
+        {usernameDropdown}
+        {navigationRows}
       </View>
-      {/* ==== Bottom Panel End ==== */}
       <Services navigation={rootNavigation} />
     </OuterView>
   )
@@ -398,8 +416,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderTopColor: theme.sideMenuBorderColor,
     borderLeftColor: theme.sideMenuBorderColor,
     borderTopWidth: theme.sideMenuBorderWidth,
-    borderLeftWidth: theme.sideMenuBorderWidth,
-    height: theme.rem(7.75)
+    borderLeftWidth: theme.sideMenuBorderWidth
   },
   footerContainer: {
     position: 'absolute',
@@ -432,13 +449,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  rowIconContainer: {
-    display: 'flex',
+  leftIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: theme.rem(3),
-    aspectRatio: 1,
-    marginLeft: theme.rem(0.25)
+    aspectRatio: 1
+  },
+  rightIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: theme.rem(3),
+    marginHorizontal: theme.rem(0.5)
   },
   rowBodyContainer: {
     display: 'flex',
@@ -446,8 +467,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexGrow: 1,
-    flexShrink: 1,
-    marginRight: theme.rem(1)
+    flexShrink: 1
   },
   // Animation
   dropContainer: {
@@ -472,8 +492,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(1.5)
   },
   text: {
-    fontFamily: theme.sideMenuFont,
-    marginLeft: theme.rem(0.5)
+    fontFamily: theme.sideMenuFont
   },
   invisibleTapper: {
     position: 'absolute',

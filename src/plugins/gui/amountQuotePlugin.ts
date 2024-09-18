@@ -50,6 +50,7 @@ type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
 const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
 
 const DEFAULT_FIAT_AMOUNT = '500'
+const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
 
 /**
  * Amount that we will attempt to get a quote for if the user presses the MAX button
@@ -234,21 +235,23 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
-      // Pick a default fiat amount that is roughly equal to DEFAULT_FIAT_AMOUNT
+      // Pick a default fiat amount in the foreign fiat amount that is roughly
+      // equal to the default USD fiat amount
       let initialValue1: string | undefined
+      const startingFiatAmount = isLightAccount ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
       if (displayFiatCurrencyCode !== 'USD' && defaultFiatAmount == null) {
         const isoFiatCurrencyCode = `iso:${displayFiatCurrencyCode}`
         const isoNow = new Date().toISOString()
         const ratePair = `${isoFiatCurrencyCode}_iso:USD`
         const rate = await getHistoricalRate(ratePair, isoNow)
-        initialValue1 = div(DEFAULT_FIAT_AMOUNT, String(rate), DECIMAL_PRECISION)
+        initialValue1 = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
         // Round out a decimals
         initialValue1 = round(initialValue1, 0)
 
         // Only leave the first decimal
         initialValue1 = round(initialValue1, initialValue1.length - 1)
       } else {
-        initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+        initialValue1 = requireCrypto ? undefined : startingFiatAmount
       }
 
       // Navigate to scene to have user enter amount
