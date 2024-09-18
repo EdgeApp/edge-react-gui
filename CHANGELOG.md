@@ -2,37 +2,39 @@
 
 ## Unreleased
 
+## 4.14.0
+
+- added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
+- added: Buy with Revolut
+- added: Buy/sell with Paypal
+- added: Foreground push notifications displayed in app
 - added: Minimum receive amount to `SwapConfirmationScene`
 - added: New analytics tracking param: `accountAgeMonths`
-- added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
-- added: Include custom tokens within wallet data in log output
-- added: Warning message about risks of investing to all UK IPs
 - added: Sell with Moonpay
-- added: Buy/sell with Paypal
-- added: Buy with Revolut
-- added: Foreground push notifications displayed in app
-- added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
 - changed: Added Iraq to list of Visa/MC supported countries
+- changed: Display Asset Status cards in the same style as Promo Cards
 - changed: Updated ACH supported US stat- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
 - changed: Use new platform-specific `assetStatsCards2` info server data
-- changed: Display Asset Status cards in the same style as Promo Cards
-- fixed: Inconsistent corners in `SideMenu`
 - fixed: Crash on HomeScene when logging while in airplane mode
+- fixed: Inconsistent corners in `SideMenu`
 
-## 4.13.0
+## 4.13.0 (2024-09-18)
 
+- added: Add 'Free Talk Live' and 'Crypto Canal' options to survey modal
 - added: Cardano staking through Kiln staking pools
+- added: Include custom tokens within wallet data in log output
 - added: Support for `isLiquidStaking` field on staking policies
-- changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
-- changed: Restrict Bity buy/sell to no-KYC asset
-- changed: Determine Moonpay asset support using chainCode/contractAddress
+- added: Warning message about risks of investing to all UK IPs
 - changed: Allow private key sweep in light accounts for amounts less than $50
 - changed: Allow reverse quotes for Kado
 - changed: Credit card allowed countries to add Botswana, Cambodia, Panama, and Sri Lanka
-- fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
+- changed: Determine Moonpay asset support using chainCode/contractAddress
+- changed: Restrict Bity buy/sell to no-KYC asset
+- changed: Some unecessary `showError` dropdowns demoted to hidden `showDevError`
 - fixed: "FIO Address does not exist" error after transferring a FIO name
-- fixed: Fix incorrect string comparison resulting in wrong rate used for 24 change calculation
 - fixed: Crypto amount display bug after flipping the wallet input on `SwapCreateScne`
+- fixed: Default swap pair logic from the trade modal was not prioritizing mainnet assets
+- fixed: Fix incorrect string comparison resulting in wrong rate used for 24 change calculation
 - removed: 'fasterpayments' payment type
 - removed: Turking bank transfer support
 
