@@ -22,7 +22,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { BuyConversionValues, OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { datelog } from '../../util/utils'
 import {
   FiatPaymentType,
@@ -258,7 +258,7 @@ export const executePlugin = async (params: {
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)
     },
-    trackConversion: async (event: TrackingEventName, opts: { conversionValues: SellConversionValues }) => {
+    trackConversion: async (event: TrackingEventName, opts: { conversionValues: BuyConversionValues | SellConversionValues }) => {
       onLogEvent(event, opts)
     },
     exitScene: async () => {
