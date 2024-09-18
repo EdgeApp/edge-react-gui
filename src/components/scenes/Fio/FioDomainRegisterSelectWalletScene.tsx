@@ -184,7 +184,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   cryptoAmount
                 }
               })
-              navigation.navigate('homeTab', { screen: 'home' })
+              navigation.navigate('home')
             }
           }
         })

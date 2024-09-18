@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
@@ -215,7 +215,7 @@ const Tab = createBottomTabNavigator<AppParamList>()
 
 const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefined
 
-const defaultScreenOptions: StackNavigationOptions = {
+const defaultScreenOptions: StackNavigationOptions & BottomTabNavigationOptions = {
   title: '',
   headerTitle: EdgeHeader,
   headerLeft: () => <BackButton />,
@@ -226,7 +226,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerBackground: HeaderBackground,
   headerTransparent: true
 }
-const firstSceneScreenOptions: StackNavigationOptions = {
+const firstSceneScreenOptions: StackNavigationOptions & BottomTabNavigationOptions = {
   headerLeft: () => <HeaderTextButton type="help" />,
   headerTitle: EdgeHeader,
   headerTitleAlign: 'center'
@@ -235,14 +235,6 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 // -------------------------------------------------------------------------
 // Tab router
 // -------------------------------------------------------------------------
-
-const EdgeHomeTabScreen = () => {
-  return (
-    <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="home" component={HomeScene} options={firstSceneScreenOptions} />
-    </Stack.Navigator>
-  )
-}
 
 const EdgeWalletsTabScreen = () => {
   return (
@@ -386,7 +378,7 @@ const EdgeSwapTabScreen = () => {
 
 const EdgeTabs = () => {
   const { defaultScreen } = getDeviceSettings()
-  const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'homeTab'
+  const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'home'
 
   return (
     <Tab.Navigator
@@ -396,7 +388,7 @@ const EdgeTabs = () => {
         headerShown: false
       }}
     >
-      <Tab.Screen name="homeTab" component={EdgeHomeTabScreen} />
+      <Tab.Screen name="home" component={HomeScene} options={{ ...defaultScreenOptions, ...firstSceneScreenOptions }} />
       <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />

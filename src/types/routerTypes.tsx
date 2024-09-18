@@ -76,9 +76,6 @@ export interface RouteParamList {
   // Tab router
   // -------------------------------------------------------------------------
 
-  // `homeTab`:
-  home: undefined
-
   // `walletsTab`:
   walletList: undefined
   transactionList: TransactionListParams
@@ -103,7 +100,7 @@ export interface RouteParamList {
   swapProcessing: SwapProcessingParams
 
   // `edgeTabs`:
-  homeTab: {}
+  home: undefined
   walletsTab: {}
   buyTab: {}
   sellTab: {}

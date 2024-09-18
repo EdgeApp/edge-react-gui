@@ -87,7 +87,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await readLocalAccountSettings(account)
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        navigation.replace('edgeTabs', { screen: 'homeTab', params: { screen: 'home' } })
+        navigation.replace('edgeTabs', { screen: 'home' })
         const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
