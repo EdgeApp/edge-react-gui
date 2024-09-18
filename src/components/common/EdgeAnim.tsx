@@ -63,7 +63,7 @@ type AnimTypeStretchIns = 'stretchInY'
 type AnimTypeStretchOuts = 'stretchOutY'
 type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts | AnimTypeStretchIns | AnimTypeStretchOuts
 
-interface Anim {
+export interface Anim {
   type: AnimType
   delay?: number
   duration?: number

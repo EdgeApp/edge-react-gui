@@ -1,12 +1,13 @@
 import { EdgeSwapQuote } from 'edge-core-js'
 import React from 'react'
 import FastImage from 'react-native-fast-image'
+import { sprintf } from 'sprintf-js'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { SmallText, WarningText } from '../themed/EdgeText'
 import { IconDataRow } from './IconDataRow'
 
 export interface Props {
@@ -28,13 +29,24 @@ export const SwapProviderRow = (props: Props) => {
 
   const costOrReceiveAmount = useCryptoText({ wallet, tokenId, nativeAmount })
 
+  const minCryptoAmountText = useCryptoText({ wallet: toWallet, tokenId: toTokenId, nativeAmount: quote.minReceiveAmount ?? '0', withSymbol: false })
+  const minReceiveAmountOrPartial =
+    quote.minReceiveAmount != null ? (
+      sprintf(lstrings.swap_minimum_amount_1s, minCryptoAmountText)
+    ) : quote.canBePartial ? (
+      <WarningText>
+        <SmallText>{lstrings.quote_partial_settlement}</SmallText>
+      </WarningText>
+    ) : undefined
+  const maybeVariableSymbol = quote.minReceiveAmount || quote.canBePartial ? '~ ' : ''
+
   return (
     <IconDataRow
       icon={<FastImage style={styles.providerIcon} source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} resizeMode="contain" />}
       leftText={quote.swapInfo.displayName}
       leftSubtext={quote.swapInfo.isDex ? lstrings.quote_dex_provider : lstrings.quote_centralized_provider}
-      rightText={costOrReceiveAmount}
-      rightSubText={quote.canBePartial ? <EdgeText style={styles.partialSettlementText}>{lstrings.quote_partial_settlement}</EdgeText> : ''}
+      rightText={`${maybeVariableSymbol}${costOrReceiveAmount}`}
+      rightSubText={minReceiveAmountOrPartial}
     />
   )
 }
@@ -44,9 +56,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     aspectRatio: 1,
     width: theme.rem(2),
     height: theme.rem(2)
-  },
-  partialSettlementText: {
-    fontSize: theme.rem(0.75),
-    color: theme.warningText
   }
 }))

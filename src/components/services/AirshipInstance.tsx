@@ -56,7 +56,7 @@ export async function showDevErrorAsync(error: unknown, options: ShowErrorWarnin
 
   if (__DEV__ || appVersion === '99.99.99' || appVersion.includes('-d')) {
     // Non-production (develop) builds show all errors
-    await Airship.show(bridge => <AlertDropdown bridge={bridge} devAlert message={translatedMessage} />)
+    await Airship.show(bridge => <AlertDropdown bridge={bridge} persistent message={translatedMessage} />)
   } else {
     // Production/staging builds don't show visible errors, but just saves a
     // breadcrumb.

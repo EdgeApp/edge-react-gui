@@ -15,7 +15,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
-export interface FilteredPromoCard {
+export interface FilteredInfoCard {
   background: PromoCard2['background']
   ctaButton: PromoCard2['ctaButton']
   dismissable: PromoCard2['dismissable']
@@ -26,11 +26,11 @@ export interface FilteredPromoCard {
 
 interface Props {
   navigation: NavigationBase
-  promoInfo: FilteredPromoCard
+  promoInfo: FilteredInfoCard
   onClose: () => Promise<void>
 }
 
-export function PromoCard(props: Props) {
+export function InfoCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -49,7 +49,7 @@ export function PromoCard(props: Props) {
     const { localeUrls } = ctaButton
     const url = getLocaleOrDefaultString(localeUrls)
     if (url == null) {
-      showError('No PromoCard URL found')
+      showError('No Carousel Card URL found')
       return
     }
 

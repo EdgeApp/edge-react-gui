@@ -176,7 +176,6 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // Track the destination height of the dropdown
   const userListDesiredHeight = styles.rowContainer.height * sortedUsers.length + theme.rem(1)
   const userListHeight = Math.min(userListDesiredHeight, bottomPanelHeight)
-  const isUserListHeightOverflowing = userListDesiredHeight >= bottomPanelHeight
 
   // Height value above can change if users are added/removed
   const sMaxHeight = useSharedValue(userListHeight)
@@ -196,11 +195,6 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   /// ---- Dynamic CSS ----
 
-  const themeRem2 = theme.rem(2) // We cannot call theme.rem from within worklet
-  const aBorderBottomRightRadius = useAnimatedStyle(() => ({
-    // Use a easeInCirc easing function for the border transition
-    borderBottomRightRadius: isUserListHeightOverflowing ? themeRem2 - themeRem2 * (1 - Math.sqrt(1 - sAnimationMult.value ** 4)) : themeRem2
-  }))
   const aDropdown = useAnimatedStyle(() => ({
     height: sMaxHeight.value * sAnimationMult.value
   }))
@@ -320,7 +314,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const usernameDropdown = (
     <>
-      <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
+      <Animated.View style={[styles.dropContainer, aDropdown]}>
         <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
           {sortedUsers.map(userInfo => (
             <View key={userInfo.loginId} style={styles.rowContainer}>
@@ -472,7 +466,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Animation
   dropContainer: {
     backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(1),
     zIndex: 2,
     position: 'absolute',
     width: '100%'
@@ -498,7 +492,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     height: '100%',
     width: '100%',
-    borderBottomLeftRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(1),
     zIndex: 1
   }
 }))

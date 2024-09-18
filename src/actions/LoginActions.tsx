@@ -10,6 +10,7 @@ import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
+import { AlertDropdown } from '../components/navigation/AlertDropdown'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
@@ -22,8 +23,8 @@ import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
-import { runWithTimeout } from '../util/utils'
-import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
+import { openLink, runWithTimeout } from '../util/utils'
+import { getCountryCodeByIp, loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
@@ -249,12 +250,27 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       showError(error)
     }
 
+    // Post login stuff:
     if (!newAccount && !hideSurvey && !getDeviceSettings().isSurveyDiscoverShown && config.disableSurveyModal !== true) {
       // Show the survey modal once per app install, only if this isn't the
       // first login of a newly created account and the user didn't get any
       // other modals or scene changes immediately after login.
       await Airship.show(bridge => <SurveyModal bridge={bridge} />)
       await writeIsSurveyDiscoverShown(true)
+    }
+
+    if ((await getCountryCodeByIp()) === 'GB') {
+      await Airship.show(bridge => (
+        <AlertDropdown
+          bridge={bridge}
+          message={lstrings.warning_uk_risk}
+          persistent
+          warning
+          onPress={async () => {
+            await openLink('https://edge.app/due-diligence/')
+          }}
+        />
+      ))
     }
   }
 }
