@@ -404,7 +404,7 @@ const SendComponent = (props: Props) => {
         }
         setWalletId(result.walletId)
         const { pluginId: newPluginId } = currencyWallets[result.walletId].currencyInfo
-        if (pluginId !== newPluginId || currencyCode !== result.currencyCode) {
+        if (pluginId !== newPluginId || tokenId !== result.tokenId) {
           setTokenId(result.tokenId)
           setSpendInfo({ tokenId: result.tokenId, spendTargets: [{}] })
         }

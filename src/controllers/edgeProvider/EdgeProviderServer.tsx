@@ -29,7 +29,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
@@ -115,14 +115,14 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       <WalletListModal bridge={bridge} navigation={this._navigation} showCreateWallet allowedAssets={allowedAssets} headerTitle={lstrings.choose_your_wallet} />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, currencyCode } = result
+      const { walletId, tokenId } = result
 
       this._selectedWallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(this._selectedWallet, tokenId)
       if (this._selectedWallet == null) throw new Error(`Missing wallet for walletId`)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
-      const tokenId = getTokenIdForced(account, pluginId, currencyCode)
       this._selectedTokenId = tokenId
 
       const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)

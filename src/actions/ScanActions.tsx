@@ -15,7 +15,7 @@ import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
@@ -103,14 +103,13 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
       <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} allowedAssets={edgeAssets} showCreateWallet />
     )).then(async result => {
       if (result?.type === 'wallet') {
-        const { walletId, currencyCode } = result
+        const { walletId, tokenId } = result
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
-        const tokenId = getWalletTokenId(wallet, currencyCode)
 
         // TODO: Extend getReceiveAddress() to generate the full bitcion:XXXX address instead of using raw addresses here
         const { publicAddress } = await wallet.getReceiveAddress({ tokenId })
-        jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${currencyCode}`] = publicAddress
+        jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${getCurrencyCode(wallet, tokenId)}`] = publicAddress
       }
     })
   }

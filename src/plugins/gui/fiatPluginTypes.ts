@@ -125,8 +125,6 @@ export interface FiatPluginOpenExternalWebViewParams {
 export interface FiatPluginWalletPickerResult {
   walletId: string
   tokenId: EdgeTokenId
-  /** @deprecated Use tokenId instead */
-  currencyCode: string
 }
 
 export interface SaveTxMetadataParams {
