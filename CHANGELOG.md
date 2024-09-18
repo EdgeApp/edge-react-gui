@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Battery Saver warning message for Android
 - added: Buy conversion tracking for Moonpay
 - added: Error tracking for failure to report conversions to referral server
 - changed: Remove whitespaces from custom token contract address input
