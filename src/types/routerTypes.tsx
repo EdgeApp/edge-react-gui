@@ -127,17 +127,16 @@ export interface RouteParamList {
   createWalletAccountSelect: CreateWalletAccountSelectParams
   createWalletAccountSetup: CreateWalletAccountSetupParams
   createWalletCompletion: CreateWalletCompletionParams
+  createWalletEditName: CreateWalletEditNameParams
   createWalletImport: CreateWalletImportParams
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
-  createWalletEditName: CreateWalletEditNameParams
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: undefined
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
-  fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: FioAddressDetailsParams
   fioAddressList: undefined
   fioAddressRegister: undefined
@@ -145,6 +144,7 @@ export interface RouteParamList {
   fioAddressRegisterSuccess: FioAddressRegisterSuccessParams
   fioAddressSettings: FioAddressSettingsParams
   fioConnectToWalletsConfirm: FioConnectWalletConfirmParams
+  fioCreateHandle: FioCreateHandleParams
   fioDomainConfirm: FioNameConfirmParams
   fioDomainRegister: undefined
   fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams
@@ -155,22 +155,21 @@ export interface RouteParamList {
   fioSentRequestDetails: FioSentRequestDetailsParams
   fioStakingChange: FioStakingChangeParams
   fioStakingOverview: FioStakingOverviewParams
-  loanDashboard: undefined
-  loanDetails: LoanDetailsParams
+  loanClose: LoanCloseParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams
-  loanClose: LoanCloseParams
+  loanDashboard: undefined
+  loanDetails: LoanDetailsParams
   loanManage: LoanManageParams
   loanStatus: LoanStatusParams
   manageTokens: ManageTokensParams
-  migrateWalletCompletion: MigrateWalletCompletionParams
   migrateWalletCalculateFee: MigrateWalletCalculateFeeParams
+  migrateWalletCompletion: MigrateWalletCompletionParams
   migrateWalletSelectCrypto: MigrateWalletSelectCryptoParams
   notificationSettings: undefined
   otpRepair: OtpRepairParams
   otpSetup: undefined
   passwordRecovery: undefined
-  upgradeUsername: undefined
   pluginView: PluginViewParams
   promotionSettings: undefined
   request: RequestParams
@@ -184,17 +183,18 @@ export interface RouteParamList {
   stakeOverview: StakeOverviewParams
   swapSettings: undefined
   swapSuccess: undefined
-  sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
-  sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
   sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
+  sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
+  sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
   // transactionDetails is copied here
   transactionsExport: TransactionsExportParams
-  webView: WebViewSceneParams
+  upgradeUsername: undefined
+  wcConnect: WcConnectParams
   wcConnections: WcConnectionsParams | undefined
   wcDisconnect: WcDisconnectParams
-  wcConnect: WcConnectParams
+  webView: WebViewSceneParams
 
   // -------------------------------------------------------------------------
   // Root router
