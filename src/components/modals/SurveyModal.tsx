@@ -29,6 +29,7 @@ const SURVEY_OPTS = [
   // Show names intentionally left untranslated:
   { label: 'Free Talk Live', selected: false },
   { label: 'Crypto Canal', selected: false },
+  { label: 'Cris Cyborg', selected: false },
   { label: lstrings.survey_opt_other_specify, selected: false }
 ]
 
