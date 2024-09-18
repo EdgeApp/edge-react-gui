@@ -19,7 +19,6 @@ import {
   togglePinLoginEnabled,
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
-import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -134,7 +133,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleDefaultFiat = useHandler(() => {
-    navigation.navigate('defaultFiatSetting', {})
+    navigation.navigate('defaultFiatSetting')
   })
 
   const handleShowRestoreWalletsModal = useHandler(async () => {
@@ -156,19 +155,19 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleChangePassword = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePassword', {})
+    isLocked ? handleUnlock() : navigation.navigate('changePassword')
   })
 
   const handleChangePin = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePin', {})
+    isLocked ? handleUnlock() : navigation.navigate('changePin')
   })
 
   const handleChangeOtp = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('otpSetup', {})
+    isLocked ? handleUnlock() : navigation.navigate('otpSetup')
   })
 
   const handleChangeRecovery = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('passwordRecovery', {})
+    isLocked ? handleUnlock() : navigation.navigate('passwordRecovery')
   })
 
   const handleDeleteAccount = useHandler(async () => {
@@ -212,11 +211,11 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleExchangeSettings = useHandler((): void => {
-    navigation.navigate('swapSettings', {})
+    navigation.navigate('swapSettings')
   })
 
   const handleSpendingLimits = useHandler((): void => {
-    navigation.navigate('spendingLimits', {})
+    navigation.navigate('spendingLimits')
   })
 
   const handleTermsOfService = useHandler(() => {
@@ -228,11 +227,11 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleNotificationSettings = useHandler(() => {
-    navigation.navigate('notificationSettings', {})
+    navigation.navigate('notificationSettings')
   })
 
   const handlePromotionSettings = useHandler(() => {
-    navigation.navigate('promotionSettings', {})
+    navigation.navigate('promotionSettings')
   })
 
   const handleToggleVerboseLogging = useHandler(() => {
@@ -349,10 +348,7 @@ export const SettingsScene = (props: Props) => {
             />
             <SettingsSwitchRow key="spamFilter" label={lstrings.settings_hide_spam_transactions} value={spamFilterOn} onPress={handleToggleSpamFilter} />
             <SettingsTappableRow label={lstrings.settings_notifications} onPress={handleNotificationSettings} />
-            <SettingsTappableRow
-              label={lstrings.settings_asset_settings}
-              onPress={() => navigation.push('assetSettings', { currencySettingsKeys: CURRENCY_SETTINGS_KEYS })}
-            />
+            <SettingsTappableRow label={lstrings.settings_asset_settings} onPress={() => navigation.push('assetSettings')} />
             <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={handlePromotionSettings} />
 
             <SettingsSwitchRow key="disableAnim" label={lstrings.button_disable_animations} value={disableAnim} onPress={handleToggleDisableAnimations} />

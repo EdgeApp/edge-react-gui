@@ -14,7 +14,7 @@ describe('ChangePinComponent', () => {
 
     const actual = renderer.render(
       <FakeProviders initialState={rootState}>
-        <ChangePinScene {...fakeSceneProps('changePin', {})} />
+        <ChangePinScene {...fakeSceneProps('changePin', undefined)} />
       </FakeProviders>
     )
 

@@ -14,7 +14,7 @@ describe('ChangePasswordScene', () => {
 
     const actual = renderer.render(
       <FakeProviders initialState={rootState}>
-        <ChangePasswordScene {...fakeSceneProps('changePassword', {})} />
+        <ChangePasswordScene {...fakeSceneProps('changePassword', undefined)} />
       </FakeProviders>
     )
 

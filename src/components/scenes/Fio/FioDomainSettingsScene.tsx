@@ -86,7 +86,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList', {})
+    return navigation.navigate('fioAddressList')
   }
 
   onVisibilityPress = () => {

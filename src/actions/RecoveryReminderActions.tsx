@@ -54,5 +54,5 @@ async function showReminderModal(navigation: NavigationBase) {
       }}
     />
   ))
-  if (reply === 'ok') navigation.push('passwordRecovery', {})
+  if (reply === 'ok') navigation.push('passwordRecovery')
 }

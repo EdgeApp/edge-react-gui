@@ -23,7 +23,7 @@ describe('FioAddressList', () => {
 
     const actual = renderer.render(
       <FioAddressList
-        {...fakeSceneProps('fioAddressList', {})}
+        {...fakeSceneProps('fioAddressList', undefined)}
         fioAddresses={[
           {
             name: 'fio@edge',

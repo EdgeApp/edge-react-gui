@@ -157,7 +157,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
-      navigation.push('securityAlerts', {})
+      navigation.push('securityAlerts')
       hideSurvey = true
     }
 

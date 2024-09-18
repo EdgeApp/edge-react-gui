@@ -82,7 +82,7 @@ exports[`ChangePinComponent should render with loading props 1`] = `
                 {
                   "key": "changePin-0",
                   "name": "changePin",
-                  "params": {},
+                  "params": undefined,
                 }
               }
             />

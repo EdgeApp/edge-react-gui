@@ -75,16 +75,16 @@ export interface RouteParamList {
   // -------------------------------------------------------------------------
 
   // `homeTab`:
-  home: {}
+  home: undefined
 
   // `walletsTab`:
-  walletList: {}
+  walletList: undefined
   transactionList: TransactionListParams
   transactionDetails: TransactionDetailsParams
 
   // `buyTab` / `sellTab`:
-  pluginListBuy: GuiPluginListParams
-  pluginListSell: GuiPluginListParams
+  pluginListBuy: GuiPluginListParams | undefined
+  pluginListSell: GuiPluginListParams | undefined
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -96,7 +96,7 @@ export interface RouteParamList {
   rewardsCardWelcome: RewardsCardWelcomeParams
 
   // `swapTab`:
-  swapCreate: SwapCreateParams
+  swapCreate: SwapCreateParams | undefined
   swapConfirmation: SwapConfirmationParams
   swapProcessing: SwapProcessingParams
 
@@ -115,11 +115,11 @@ export interface RouteParamList {
   // -------------------------------------------------------------------------
 
   edgeTabs: {} // Tab navigator
-  assetSettings: {}
+  assetSettings: undefined
   changeMiningFee2: ChangeMiningFeeParams
-  changePassword: {}
-  changePin: {}
-  coinRanking: {}
+  changePassword: undefined
+  changePin: undefined
+  coinRanking: undefined
   coinRankingDetails: CoinRankingDetailsParams
   confirmScene: ConfirmSceneParams
   createWalletAccountSelect: CreateWalletAccountSelectParams
@@ -132,7 +132,7 @@ export interface RouteParamList {
   createWalletEditName: CreateWalletEditNameParams
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
-  defaultFiatSetting: {}
+  defaultFiatSetting: undefined
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
   fioCreateHandle: FioCreateHandleParams
@@ -140,8 +140,8 @@ export interface RouteParamList {
     fioAddressName: string
     bundledTxs: number
   }
-  fioAddressList: {}
-  fioAddressRegister: {}
+  fioAddressList: undefined
+  fioAddressRegister: undefined
   fioAddressRegisterSelectWallet: FioAddressRegisterSelectWalletParams
   fioAddressRegisterSuccess: {
     fioName: string
@@ -150,12 +150,12 @@ export interface RouteParamList {
   fioAddressSettings: FioAddressSettingsParams
   fioConnectToWalletsConfirm: FioConnectWalletConfirmParams
   fioDomainConfirm: FioNameConfirmParams
-  fioDomainRegister: {}
+  fioDomainRegister: undefined
   fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams
   fioDomainSettings: FioDomainSettingsParams
   fioNameConfirm: FioNameConfirmParams
   fioRequestConfirmation: FioRequestConfirmationParams
-  fioRequestList: {}
+  fioRequestList: undefined
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
   }
@@ -164,7 +164,7 @@ export interface RouteParamList {
     tokenId: EdgeTokenId
     walletId: string
   }
-  loanDashboard: {}
+  loanDashboard: undefined
   loanDetails: LoanDetailsParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams
@@ -175,33 +175,33 @@ export interface RouteParamList {
   migrateWalletCompletion: MigrateWalletCompletionParams
   migrateWalletCalculateFee: MigrateWalletCalculateFeeParams
   migrateWalletSelectCrypto: MigrateWalletSelectCryptoParams
-  notificationSettings: {}
+  notificationSettings: undefined
   otpRepair: OtpRepairParams
-  otpSetup: {}
-  passwordRecovery: {}
-  upgradeUsername: {}
+  otpSetup: undefined
+  passwordRecovery: undefined
+  upgradeUsername: undefined
   pluginView: PluginViewParams
-  promotionSettings: {}
+  promotionSettings: undefined
   request: RequestParams
-  securityAlerts: {}
+  securityAlerts: undefined
   send2: SendScene2Params
-  settingsOverview: {}
-  settingsOverviewTab: {}
-  spendingLimits: {}
+  settingsOverview: undefined
+  settingsOverviewTab: undefined
+  spendingLimits: undefined
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
-  swapSettings: {}
-  swapSuccess: {}
+  swapSettings: undefined
+  swapSuccess: undefined
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
   sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
-  testScene: {}
+  testScene: undefined
   // transactionDetails is copied here
   transactionsExport: TransactionsExportParams
   webView: WebViewSceneParams
-  wcConnections: WcConnectionsParams
+  wcConnections: WcConnectionsParams | undefined
   wcDisconnect: WcDisconnectParams
   wcConnect: WcConnectParams
 
