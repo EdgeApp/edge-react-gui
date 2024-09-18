@@ -1,3 +1,4 @@
+import type { NavigatorScreenParams } from '@react-navigation/core'
 import * as NavigationCore from '@react-navigation/core'
 import type { StackActionHelpers } from '@react-navigation/native'
 
@@ -68,20 +69,20 @@ import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPlug
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 
-/**
- * Defines the acceptable route parameters for each scene key.
- */
-export interface RouteParamList {
-  // -------------------------------------------------------------------------
-  // Tab router
-  // -------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+// Router types
+//
+// These must all be `type`, not `interface`, because of
+// https://reactnavigation.org/docs/typescript#type-checking-the-navigator
+// -------------------------------------------------------------------------
 
-  // `walletsTab`:
+export type WalletsTabParamList = {} & {
   walletList: undefined
   transactionList: TransactionListParams
   transactionDetails: TransactionDetailsParams
+}
 
-  // `buyTab` / `sellTab`:
+export type BuyTabParamList = {} & {
   pluginListBuy: GuiPluginListParams | undefined
   pluginListSell: GuiPluginListParams | undefined
   pluginViewBuy: PluginViewParams
@@ -93,27 +94,28 @@ export interface RouteParamList {
   guiPluginWebView: FiatPluginOpenWebViewParams
   rewardsCardDashboard: RewardsCardDashboardParams
   rewardsCardWelcome: RewardsCardWelcomeParams
+}
 
-  // `swapTab`:
+export type SwapTabParamList = {} & {
   swapCreate: SwapCreateParams | undefined
   swapConfirmation: SwapConfirmationParams
   swapProcessing: SwapProcessingParams
+}
 
-  // `edgeTabs`:
+export type EdgeTabsParamList = {} & {
   home: undefined
-  walletsTab: {}
-  buyTab: {}
-  sellTab: {}
-  swapTab: {}
+  walletsTab: NavigatorScreenParams<WalletsTabParamList> | undefined
+  buyTab: NavigatorScreenParams<BuyTabParamList> | undefined
+  sellTab: NavigatorScreenParams<BuyTabParamList> | undefined
+  swapTab: NavigatorScreenParams<SwapTabParamList> | undefined
   extraTab: undefined
   devTab: undefined
+}
 
-  // -------------------------------------------------------------------------
-  // Main `edgeAppStack`
-  // The tabs live inside this stack, as well as most app scenes.
-  // -------------------------------------------------------------------------
+export type EdgeAppStackParamList = {} & {
+  // We nest the tabs inside this master stack:
+  edgeTabs: NavigatorScreenParams<EdgeTabsParamList>
 
-  edgeTabs: {} // Tab navigator
   assetSettings: undefined
   changeMiningFee2: ChangeMiningFeeParams
   changePassword: undefined
@@ -134,6 +136,7 @@ export interface RouteParamList {
   defaultFiatSetting: undefined
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
+  extraTab: undefined
   fioAddressDetails: FioAddressDetailsParams
   fioAddressList: undefined
   fioAddressRegister: undefined
@@ -185,32 +188,46 @@ export interface RouteParamList {
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
-  // transactionDetails is copied here
+  transactionDetails: TransactionDetailsParams
   transactionsExport: TransactionsExportParams
   upgradeUsername: undefined
   wcConnect: WcConnectParams
-  wcConnections: WcConnectionsParams | undefined
+  wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams
   webView: WebViewSceneParams
+}
 
-  // -------------------------------------------------------------------------
-  // Root router
-  // -------------------------------------------------------------------------
+// A drawer router that contains the main `edgeAppStack`
+export type DrawerParamList = {} & {
+  edgeAppStack: NavigatorScreenParams<EdgeAppStackParamList> | undefined
+}
 
-  // `edgeApp`:
-  edgeAppStack: {}
-
-  // Root routes:
-  edgeApp: {} // A drawer router that contains the main `edgeAppStack`
+export type RootParamList = {} & {
+  edgeApp: NavigatorScreenParams<DrawerParamList> | undefined
   gettingStarted: GettingStartedParams
   login: LoginParams
 }
 
-export type RouteSceneKey = keyof RouteParamList
+// -------------------------------------------------------------------------
+// Legacy types
+//
+// These are a giant hack to smooth away the differences
+// between different navigation objects.
+// They pretend that any navigator to visit any scene,
+// as if the whole app were flat. That's not how react-navigation works,
+// but it's "close enough" until we can utilize the proper types
+// defined above.
+// -------------------------------------------------------------------------
 
-export type AppParamList = {
-  [key in RouteSceneKey]: RouteParamList[key]
-}
+export type AppParamList = RootParamList &
+  DrawerParamList &
+  EdgeAppStackParamList &
+  EdgeTabsParamList &
+  SwapTabParamList &
+  BuyTabParamList &
+  WalletsTabParamList
+
+export type RouteSceneKey = keyof AppParamList
 
 /**
  * The of the `navigation` prop passed to each scene,

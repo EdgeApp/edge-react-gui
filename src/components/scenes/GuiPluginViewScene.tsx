@@ -3,7 +3,7 @@ import * as React from 'react'
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { UriQueryMap } from '../../types/WebTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
@@ -17,7 +17,12 @@ export interface PluginViewParams {
   deepQuery?: UriQueryMap
 }
 
-interface Props extends EdgeSceneProps<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'> {}
+interface Props {
+  navigation: NavigationProp<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'>
+
+  // Work around an extremely strange & hard-to-debug type error:
+  route: any // RouteProp<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'>
+}
 
 export function GuiPluginViewScene(props: Props): JSX.Element {
   const { route, navigation } = props

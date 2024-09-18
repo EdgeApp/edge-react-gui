@@ -114,7 +114,7 @@ export const executePlugin = async (params: {
   function maybeNavigateToCorrectTabScene() {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
-      navigation.navigate(tabSceneKey, {})
+      navigation.navigate(tabSceneKey)
       navigation.navigate(listSceneKey, {})
     }
   }

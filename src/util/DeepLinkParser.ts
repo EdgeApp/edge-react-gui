@@ -5,7 +5,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
-import { RouteParamList } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -160,7 +160,7 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'scene': {
       const sceneName = url.pathname.replace('/', '')
-      return { type: 'scene', sceneName: sceneName as keyof RouteParamList, query: parseQuery(url.query) }
+      return { type: 'scene', sceneName: sceneName as keyof AppParamList, query: parseQuery(url.query) }
     }
 
     case 'swap': {

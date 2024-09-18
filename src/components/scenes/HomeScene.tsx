@@ -76,16 +76,16 @@ export const HomeScene = (props: Props) => {
   //
 
   const handleBuyPress = useHandler(() => {
-    navigation.navigate('buyTab', {})
+    navigation.navigate('buyTab')
   })
   const handleSellPress = useHandler(() => {
-    navigation.navigate('sellTab', {})
+    navigation.navigate('sellTab')
   })
   const handleFioPress = useHandler(() => {
     navigation.navigate('fioAddressList')
   })
   const handleSwapPress = useHandler(() => {
-    navigation.navigate('swapTab', {})
+    navigation.navigate('swapTab')
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('walletsTab', { screen: 'walletList' })
