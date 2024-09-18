@@ -5,13 +5,14 @@ import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/PaymentMethod'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
@@ -100,6 +101,7 @@ export function WalletListModal(props: Props) {
 
   const showCustomAssets = customAssets != null && customAssets.length > 0
 
+  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -144,6 +146,8 @@ export function WalletListModal(props: Props) {
     } else {
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
+
+      dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
       bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
     }
   })

@@ -7,7 +7,6 @@ import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
-import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
@@ -242,7 +241,6 @@ export const SwapCreateScene = (props: Props) => {
           })
     }
     navigation.setParams(params)
-    dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
   const handleMaxPress = useHandler(() => {
