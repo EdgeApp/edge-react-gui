@@ -47,6 +47,7 @@ export interface SwapCreateParams {
 export interface SwapErrorDisplayInfo {
   message: string
   title: string
+  error: unknown
 }
 
 interface Props extends EdgeSceneProps<'swapCreate'> {}
@@ -109,6 +110,34 @@ export const SwapCreateScene = (props: Props) => {
   //
   // Callbacks
   //
+
+  /** Potentially clear an error if swap parameters relevant to the error have
+   * been user-modified. */
+  const maybeClearError = (changed: 'amount' | 'asset') => {
+    const { error } = errorDisplayInfo ?? {}
+
+    let clearError = false
+
+    // Unknown error, clear it no matter what the user changes.
+    if (!(error instanceof Error) || error.name == null) {
+      clearError = true
+    }
+    // Amount related errors
+    else if (changed === 'amount' && ['InsufficientFundsError', 'SwapAboveLimitError', 'SwapBelowLimitError'].includes(error.name)) {
+      clearError = true
+    }
+    // Selected asset related errors
+    else if (changed === 'asset' && ['SwapPermissionError', 'SwapCurrencyError'].includes(error.name)) {
+      clearError = true
+    }
+
+    if (clearError) {
+      navigation.setParams({
+        ...route.params,
+        errorDisplayInfo: undefined
+      })
+    }
+  }
 
   const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
     const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
@@ -202,6 +231,8 @@ export const SwapCreateScene = (props: Props) => {
   //
 
   const handleFlipWalletPress = useHandler(() => {
+    maybeClearError('asset')
+
     // Flip params:
     navigation.setParams({
       fromWalletId: toWalletId,
@@ -228,6 +259,8 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
+    maybeClearError('asset')
+
     const params = {
       ...route.params,
       ...(direction === 'to'
@@ -300,6 +333,8 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+    maybeClearError('amount')
+
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
     setInputNativeAmountFor('from')
@@ -308,6 +343,8 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+    maybeClearError('amount')
+
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
     setInputNativeAmountFor('to')

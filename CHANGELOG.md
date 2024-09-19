@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
+
 ## 4.14.0
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
