@@ -100,6 +100,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return { type: 'other', uri, protocol }
     }
 
+    case 'fiatprovider': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'fiatProvider',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
+      }
+    }
+
     case 'plugin': {
       const [pluginId, ...deepPath] = pathParts
 
