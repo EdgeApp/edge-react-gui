@@ -1450,6 +1450,7 @@ const strings = {
   fiat_plugin_buy_complete_message_s: 'Your buy order of %1$s %2$s with %3$s %4$s has been completed.',
   fiat_plugin_buy_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your wallet.',
   fiat_plugin_buy_complete_message_2_hours_s: 'Please allow up to %1$s hours for the funds to appear in your wallet.',
+  fiat_plugin_buy_failed_try_again: 'Buy order failed. Please try again',
   fiat_plugin_sell_complete_title: 'Sell Order Complete',
   fiat_plugin_sell_complete_message_s: 'Your sell order of %1$s %2$s for %3$s %4$s has been completed.',
   fiat_plugin_sell_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your account.',
