@@ -224,7 +224,7 @@ function EditTokenSceneComponent(props: Props) {
               onChangeText={value =>
                 setLocation(location => {
                   const out = new Map(location)
-                  out.set(item.key, value)
+                  out.set(item.key, value.replace(/\s/g, ''))
                   return out
                 })
               }

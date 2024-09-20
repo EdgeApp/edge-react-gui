@@ -4,6 +4,7 @@
 
 - added: Buy conversion tracking for Moonpay
 - added: Error tracking for failure to report conversions to referral server
+- changed: Remove whitespaces from custom token contract address input
 - fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
 - fixed: AddressTile2 touchable area states
 - fixed: Cases where it was possible to create duplicate custom tokens
@@ -21,8 +22,9 @@
 - added: Sell with Moonpay
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Display Asset Status cards in the same style as Promo Cards
-- changed: Updated ACH supported US stat- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
+- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
 - fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent corners in `SideMenu`
 - fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
