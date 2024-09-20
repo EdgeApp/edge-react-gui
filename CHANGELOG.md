@@ -6,6 +6,8 @@
 - added: Error tracking for failure to report conversions to referral server
 - fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
 - fixed: AddressTile2 touchable area states
+- fixed: Cases where it was possible to create duplicate custom tokens
+- fixed: Message about overriding a built-in token contract, which is not possible to do
 
 ## 4.14.0
 

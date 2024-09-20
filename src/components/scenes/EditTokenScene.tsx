@@ -26,7 +26,10 @@ export interface EditTokenParams {
   displayName?: string
   multiplier?: string
   networkLocation?: JsonObject
-  tokenId?: EdgeTokenId // Acts like "add token" if this is missing
+
+  /** If exists, means they are editing an existing custom token.
+   * If missing, then creating/adding a new token */
+  tokenId?: EdgeTokenId
   walletId: string
 }
 
@@ -138,45 +141,49 @@ function EditTokenSceneComponent(props: Props) {
       await wallet.currencyConfig.changeCustomToken(tokenId, customTokenInput)
       navigation.goBack()
     } else {
+      // Creating a new token
       const { currencyConfig } = wallet
       const { builtinTokens } = currencyConfig
 
+      const newTokenId = await currencyConfig.getTokenId(customTokenInput)
+
       // Check if custom token input conflicts with built-in tokens.
-      // There's currently no mechanism to obtain a new custom token's tokenId
-      // for proper comparison against built-in tokens besides physically adding
-      // the new custom token first.
-      const newTokenId = await currencyConfig.addCustomToken(customTokenInput)
-
-      const matchingContractToken =
-        Object.keys(builtinTokens).find(builtinTokenId => builtinTokenId === newTokenId) == null ? undefined : builtinTokens[newTokenId]
-      const isMatchingCurrencyCode = Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
-
-      if (matchingContractToken != null && isMatchingCurrencyCode) {
-        await showMessage(sprintf(lstrings.warning_token_exists_1s, currencyCode))
+      const matchingBuiltinTokenId = Object.keys(builtinTokens).find(builtinTokenId => builtinTokenId === newTokenId)
+      if (matchingBuiltinTokenId != null) {
+        await showMessage(sprintf(lstrings.warning_token_exists_1s, builtinTokens[matchingBuiltinTokenId].currencyCode))
         return
       }
 
-      const warningMessage =
-        isMatchingCurrencyCode && matchingContractToken == null
-          ? sprintf(lstrings.warning_token_code_override_2s, currencyCode, config.supportEmail)
-          : matchingContractToken != null && !isMatchingCurrencyCode
-          ? sprintf(lstrings.warning_token_contract_override_3s, currencyCode, matchingContractToken.currencyCode, config.supportEmail)
-          : undefined
-
-      const approveAdd =
-        warningMessage == null
-          ? true
-          : await Airship.show<boolean>(bridge => (
-              <ConfirmContinueModal bridge={bridge} body={warningMessage} title={lstrings.string_warning} warning isSkippable />
-            ))
+      const isMatchingBuiltinCurrencyCode = Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
+      const approveAdd = !isMatchingBuiltinCurrencyCode
+        ? true
+        : await Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              body={sprintf(lstrings.warning_token_code_override_2s, currencyCode, config.supportEmail)}
+              title={lstrings.string_warning}
+              warning
+              isSkippable
+            />
+          ))
 
       if (approveAdd) {
+        // Check if custom token input conflicts with custom tokens.
+        if (currencyConfig.customTokens[newTokenId] != null) {
+          // Always override changes to custom tokens
+          // TODO: Fine for if they are on this scene intentionally modifying a
+          // custom token, but maybe warn about this override if they are trying
+          // to add a new custom token with the same contract address as an
+          // existing custom token
+          await currencyConfig.changeCustomToken(newTokenId, customTokenInput)
+        } else {
+          await currencyConfig.addCustomToken(customTokenInput)
+        }
+
         await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, newTokenId])
         logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${newTokenId} -- ${currencyCode} -- ${decimals}`)
-        navigation.goBack()
-      } else {
-        await currencyConfig.removeCustomToken(newTokenId)
       }
+      navigation.goBack()
     }
   })
 
