@@ -274,12 +274,25 @@ async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
-  await fetchReferral(`api/v1/event`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify({ ...values, event })
-  })
+  const body = JSON.stringify({ ...values, event })
+
+  try {
+    const response = await fetchReferral(`api/v1/event`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      console.warn(`logToUtilServer:fetch ${event} ${text} body length: ${body.length}`)
+      captureException(new Error(`logToUtilServer:fetch !ok ${event} ${text}`), { event_id: 'logToUtilServer', data: body })
+    }
+  } catch (e) {
+    console.warn(`logToUtilServer:fetch ${event}`)
+    console.warn(e)
+    captureException(e, { event_id: 'logToUtilServer', data: body })
+  }
 }
