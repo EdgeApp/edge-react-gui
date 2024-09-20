@@ -246,7 +246,7 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Thorchain DEX Aggregator',
+    givenName: 'Swap Kit',
     hasThumbnail: true,
     thumbnailPath: 'thorchain.png',
     emailAddresses: [],
