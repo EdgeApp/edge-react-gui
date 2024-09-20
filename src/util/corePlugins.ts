@@ -88,6 +88,7 @@ export const swapPlugins = {
   // Defi Swaps
   rango: ENV.RANGO_INIT,
   spookySwap: false,
+  mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
   thorchain: ENV.THORCHAIN_INIT,
   thorchainda: ENV.THORCHAIN_DA_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,

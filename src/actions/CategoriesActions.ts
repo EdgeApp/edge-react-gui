@@ -536,6 +536,7 @@ export const pluginIdIcons: Record<string, string> = {
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
   lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
+  mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
   rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
   sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add Maya Protocol
 - added: Re-enable Piratechain on iOS
 - added: Battery Saver warning message for Android
 - added: Buy conversion tracking for Moonpay
