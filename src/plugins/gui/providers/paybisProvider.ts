@@ -590,8 +590,8 @@ export const paybisProvider: FiatProviderFactory = {
               return
             }
 
-            const successReturnURL = encodeURI(RETURN_URL_SUCCESS)
-            const failureReturnURL = encodeURI(RETURN_URL_FAIL)
+            const successReturnURL = encodeURIComponent(RETURN_URL_SUCCESS)
+            const failureReturnURL = encodeURIComponent(RETURN_URL_FAIL)
             const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}${promoCodeParam}`
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
