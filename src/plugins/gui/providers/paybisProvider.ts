@@ -195,7 +195,7 @@ const asQuote = asObject({
 
 const asPaymentDetails = asObject({
   assetId: asString,
-  invoice: asString,
+  // invoice: asString,
   blockchain: asString,
   network: asString,
   depositAddress: asString,
@@ -609,7 +609,7 @@ export const paybisProvider: FiatProviderFactory = {
                     inPayment = true
                     try {
                       const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey, promoCode })
-                      const { assetId, amount, currencyCode: pbCurrencyCode, invoice, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
+                      const { assetId, amount, currencyCode: pbCurrencyCode, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
                       const { pluginId, tokenId } = PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
                       console.log(`Creating Paybis payment`)
@@ -626,7 +626,7 @@ export const paybisProvider: FiatProviderFactory = {
                       }
                       const savedAction: EdgeTxActionFiat = {
                         actionType: 'fiat',
-                        orderId: invoice,
+                        orderId: requestId,
                         orderUri: `${widgetUrl}?requestId=${requestId}`,
                         isEstimate: true,
                         fiatPlugin: {
@@ -694,7 +694,7 @@ export const paybisProvider: FiatProviderFactory = {
                             exchangeAmount: amount
                           }),
                           fiatProviderId: providerId,
-                          orderId: invoice
+                          orderId: requestId
                         }
                       })
 
