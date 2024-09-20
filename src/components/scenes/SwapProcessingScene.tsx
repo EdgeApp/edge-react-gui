@@ -42,7 +42,12 @@ export function SwapProcessingScene(props: Props) {
   const toDenomination = useDisplayDenom(swapRequest.toWallet.currencyConfig, swapRequest.toTokenId)
 
   const doWork = async (): Promise<EdgeSwapQuote[]> => {
+    console.debug('🚀 - doWork - swapRequest:', swapRequest)
+    console.debug('🚀 - doWork - swapRequestOptions:', swapRequestOptions)
     const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
+
+    console.debug('🚀 - doWork - quotes:', quotes)
+
     return quotes
   }
 
@@ -144,6 +149,7 @@ function processSwapQuoteError({
   }
 
   const currencyError = asMaybeSwapCurrencyError(error)
+  console.debug(currencyError)
   if (currencyError != null) {
     const fromCurrencyCode = getCurrencyCode(swapRequest.fromWallet, swapRequest.fromTokenId)
     const toCurrencyCode = getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId)
