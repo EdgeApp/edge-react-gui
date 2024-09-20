@@ -84,6 +84,8 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
   })
 
+  const allowTilePress = !lockInputs && !!recipientAddress
+
   // ---------------------------------------------------------------------------
   // Handlers
   // ---------------------------------------------------------------------------
@@ -240,7 +242,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   })
 
   const handleTilePress = useHandler(async () => {
-    if (!lockInputs && !!recipientAddress) {
+    if (allowTilePress) {
       resetSendTransaction()
     }
   })
