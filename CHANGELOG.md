@@ -19,6 +19,7 @@
 - fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent corners in `SideMenu`
 - fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
+- fixed: "Apple Pay" renamed to "Pay with Apple Pay" to align with branding guidelines
 
 ## 4.13.0 (2024-09-18)
 
