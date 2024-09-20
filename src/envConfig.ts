@@ -280,6 +280,14 @@ export const asEnvConfig = asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),
       ninerealmsClientId: asOptional(asString, ''),
+      thorname: asOptional(asString, 'ej')
+    }).withRest
+  ),
+  THORCHAIN_DA_INIT: asCorePluginInit(
+    asObject({
+      affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      ninerealmsClientId: asOptional(asString, ''),
       thorname: asOptional(asString, 'ej'),
       thorswapApiKey: asOptional(asString)
     }).withRest

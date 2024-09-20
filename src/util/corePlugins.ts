@@ -89,7 +89,7 @@ export const swapPlugins = {
   rango: ENV.RANGO_INIT,
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
-  thorchainda: ENV.THORCHAIN_INIT,
+  thorchainda: ENV.THORCHAIN_DA_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
