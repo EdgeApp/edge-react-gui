@@ -8,7 +8,7 @@ import { pickWallet } from '../components/modals/WalletListModal'
 import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
-import { executePlugin } from '../plugins/gui/fiatPlugin'
+import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -120,6 +120,11 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         navigation,
         onLogEvent: (event, values) => dispatch(logEvent(event, values))
       })
+      break
+    }
+
+    case 'fiatProvider': {
+      fiatProviderDeeplinkHandler(link)
       break
     }
 

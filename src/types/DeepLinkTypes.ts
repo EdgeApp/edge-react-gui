@@ -71,6 +71,15 @@ export interface FiatPluginLink {
   paymentType?: FiatPaymentType
 }
 
+export interface FiatProviderLink {
+  type: 'fiatProvider'
+  direction: FiatDirection
+  providerId: string
+  path: string
+  query: { [key: string]: string | null }
+  uri: string
+}
+
 export interface PromotionLink {
   type: 'promotion'
   installerId?: string
@@ -123,6 +132,7 @@ export type DeepLink =
   | SceneLink
   | EdgeLoginLink
   | FiatPluginLink
+  | FiatProviderLink
   | ModalLink
   | NoopLink
   | PasswordRecoveryLink

@@ -8,11 +8,12 @@ import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Permission } from '../../reducers/PermissionsReducer'
+import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { BuyConversionValues, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
@@ -53,6 +54,7 @@ export interface FiatPluginAddressFormParams {
   onClose: () => void
 }
 
+export type LinkHandler = (url: FiatProviderLink) => void
 export interface FiatPluginSepaFormParams {
   headerTitle: string
   doneLabel: string
@@ -109,6 +111,15 @@ export interface FiatPluginOpenExternalWebViewParams {
    * redirect to the external webview.
    */
   redirectExternal?: boolean
+
+  /**
+   * @param url
+   * @returns void
+   *
+   * providerId is required if deeplinkHandler is provided
+   */
+  deeplinkHandler?: LinkHandler
+  providerId?: string
 }
 
 export interface FiatPluginWalletPickerResult {
@@ -160,7 +171,7 @@ export interface FiatPluginUi {
   trackConversion: (
     event: TrackingEventName,
     opts: {
-      conversionValues: SellConversionValues
+      conversionValues: SellConversionValues | BuyConversionValues
     }
   ) => Promise<void>
   exitScene: () => {}

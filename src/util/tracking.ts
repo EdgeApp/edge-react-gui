@@ -21,6 +21,7 @@ export type TrackingEventName =
   | 'Buy_Quote'
   | 'Buy_Quote_Change_Provider'
   | 'Buy_Quote_Next'
+  | 'Buy_Success'
   | 'Create_Wallet_Failed'
   | 'Create_Wallet_From_Search_Failed'
   | 'Create_Wallet_From_Search_Success'
@@ -94,6 +95,22 @@ export interface SellConversionValues {
 }
 
 /**
+ * Analytics: Buy from fiat
+ */
+export interface BuyConversionValues {
+  conversionType: 'buy'
+
+  // The quoted fiat amounts resulting from this sale
+  sourceFiatAmount: string
+  sourceFiatCurrencyCode: string
+
+  destAmount: CryptoAmount
+
+  fiatProviderId: string // Fiat provider that provided the conversion
+  orderId?: string // Unique order identifier provided by fiat provider
+}
+
+/**
  * Culmination of defined tracking value types, including those defined in
  * LoginUi.
  */
@@ -106,7 +123,7 @@ export interface TrackingValues extends LoginTrackingValues {
   surveyResponse?: string // User's answer to a survey
 
   // Conversion values
-  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues
+  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues
 }
 
 // Set up the global Posthog analytics instance at boot
@@ -189,12 +206,26 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           if (conversionType === 'dollar') {
             params.currency = 'USD'
             params.dollarRevenue = Math.abs(Number(conversionValues.dollarRevenue.toFixed(2)))
+          } else if (conversionType === 'buy') {
+            const { destAmount, sourceFiatAmount, sourceFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
+
+            params.destDollarValue = Math.abs(Number(destAmount.displayDollarValue(exchangeRates)))
+            params.destCryptoAmount = Math.abs(Number(destAmount.exchangeAmount))
+            params.destCurrencyCode = destAmount.currencyCode
+            params.dollarValue = params.destDollarValue
+
+            params.sourceFiatValue = Math.abs(Number(sourceFiatAmount)).toFixed(2)
+            params.sourceFiatCurrencyCode = sourceFiatCurrencyCode
+
+            if (orderId != null) params.orderId = orderId
+            if (fiatProviderId != null) params.fiatProviderId = fiatProviderId
           } else if (conversionType === 'sell') {
             const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
 
             params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
             params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
             params.sourceCurrencyCode = sourceAmount.currencyCode
+            params.dollarValue = params.sourceDollarValue
 
             params.destFiatValue = Math.abs(Number(destFiatAmount)).toFixed(2)
             params.destFiatCurrencyCode = destFiatCurrencyCode
@@ -243,12 +274,25 @@ async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
-  await fetchReferral(`api/v1/event`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify({ ...values, event })
-  })
+  const body = JSON.stringify({ ...values, event })
+
+  try {
+    const response = await fetchReferral(`api/v1/event`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      console.warn(`logToUtilServer:fetch ${event} ${text} body length: ${body.length}`)
+      captureException(new Error(`logToUtilServer:fetch !ok ${event} ${text}`), { event_id: 'logToUtilServer', data: body })
+    }
+  } catch (e) {
+    console.warn(`logToUtilServer:fetch ${event}`)
+    console.warn(e)
+    captureException(e, { event_id: 'logToUtilServer', data: body })
+  }
 }

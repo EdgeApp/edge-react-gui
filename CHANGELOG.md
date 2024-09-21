@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Buy conversion tracking for Moonpay
+- added: Error tracking for failure to report conversions to referral server
 - fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
 
 ## 4.14.0
