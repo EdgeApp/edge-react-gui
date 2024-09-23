@@ -89,7 +89,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList', {})
+    return navigation.navigate('fioAddressList')
   }
 
   onTransferPress = () => {

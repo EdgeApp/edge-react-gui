@@ -8,6 +8,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 
+export interface FioAddressRegisterSuccessParams {
+  fioName: string
+  expiration?: string
+}
+
 interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSuccess'> {}
 
 type Props = OwnProps & ThemeProps
@@ -46,7 +51,7 @@ export class FioAddressRegistered extends React.Component<Props> {
             <Text style={styles.title}>{fioName}</Text>
             {this.renderExpDate()}
           </View>
-          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList', {})} label={lstrings.title_fio_names} />
+          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList')} label={lstrings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

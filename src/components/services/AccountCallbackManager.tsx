@@ -75,7 +75,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts) {
-          navigation.navigate('securityAlerts', {})
+          navigation.navigate('securityAlerts')
         }
       })
     ]

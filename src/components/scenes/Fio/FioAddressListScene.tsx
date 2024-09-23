@@ -153,11 +153,11 @@ export class FioAddressList extends React.Component<Props, LocalState> {
             <ButtonsView
               primary={{
                 label: lstrings.fio_address_list_screen_button_register,
-                onPress: () => navigation.navigate('fioAddressRegister', {})
+                onPress: () => navigation.navigate('fioAddressRegister')
               }}
               secondary={{
                 label: lstrings.fio_address_list_domain_register,
-                onPress: () => navigation.navigate('fioDomainRegister', {})
+                onPress: () => navigation.navigate('fioDomainRegister')
               }}
             />
           </View>

@@ -1,5 +1,5 @@
 import { add, gt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +25,11 @@ import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+
+export interface FioStakingOverviewParams {
+  tokenId: EdgeTokenId
+  walletId: string
+}
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
 

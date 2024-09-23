@@ -29,7 +29,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
@@ -213,10 +212,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     ))
       .then(result => {
         if (result?.type === 'wallet') {
-          const { currencyCode, walletId } = result
+          const { tokenId, walletId } = result
           const wallet = account.currencyWallets[walletId]
           if (wallet == null) return
-          const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
           navigation.setParams({ tokenId, walletId })
         }
       })
@@ -284,7 +282,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleTradeBuy = (bridge: AirshipBridge<void>) => {
     const { navigation, wallet, tokenId } = this.props
-    const forcedWalletResult = { type: 'wallet', walletId: wallet.id, tokenId }
+    const forcedWalletResult: WalletListResult = {
+      type: 'wallet',
+      walletId: wallet.id,
+      tokenId
+    }
 
     navigation.navigate('buyTab', { screen: 'pluginListBuy', params: { forcedWalletResult } })
     bridge.resolve()
@@ -292,7 +294,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleTradeSell = (bridge: AirshipBridge<void>) => {
     const { navigation, wallet, tokenId } = this.props
-    const forcedWalletResult = { type: 'wallet', walletId: wallet.id, tokenId }
+    const forcedWalletResult: WalletListResult = {
+      type: 'wallet',
+      walletId: wallet.id,
+      tokenId
+    }
 
     navigation.navigate('sellTab', { screen: 'pluginListSell', params: { forcedWalletResult } })
     bridge.resolve()

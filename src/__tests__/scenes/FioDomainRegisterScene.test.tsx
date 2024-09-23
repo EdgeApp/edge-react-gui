@@ -20,7 +20,7 @@ describe('FioDomainRegister', () => {
 
     const actual = renderer.render(
       <FioDomainRegister
-        {...fakeSceneProps('fioDomainRegister', {})}
+        {...fakeSceneProps('fioDomainRegister', undefined)}
         fioWallets={[fakeWallet]}
         fioPlugin={
           {

@@ -62,7 +62,7 @@ describe('SwapSuccessSceneComponent', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
-        <SwapSuccessScene {...fakeSceneProps('swapSuccess', {})} />
+        <SwapSuccessScene {...fakeSceneProps('swapSuccess', undefined)} />
       </FakeProviders>
     )
 

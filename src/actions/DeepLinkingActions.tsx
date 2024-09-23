@@ -162,7 +162,7 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       } else {
         showError(lstrings.azteco_service_unavailable)
       }
-      navigation.navigate('homeTab', { screen: 'home' })
+      navigation.navigate('home')
       break
     }
 

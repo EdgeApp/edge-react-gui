@@ -6,6 +6,7 @@ import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { removeIsoPrefix, runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
@@ -137,10 +138,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
-    const { walletId, currencyCode, tokenId } = walletListResult
+    const { walletId, tokenId } = walletListResult
 
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+    const currencyCode = getCurrencyCode(wallet, tokenId)
 
     let providerQuote: FiatProviderQuote | undefined
     let counter = 0

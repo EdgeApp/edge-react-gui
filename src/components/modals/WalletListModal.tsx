@@ -15,7 +15,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { CustomAsset } from '../rows/CustomAssetRow'
@@ -37,8 +37,6 @@ export type WalletListResult =
       type: 'wallet'
       walletId: string
       tokenId: EdgeTokenId
-      /** @deprecated Use tokenId instead */
-      currencyCode: string
     }
   | { type: 'wyre'; fiatAccountId: string }
   | { type: 'bankSignupRequest' }
@@ -144,11 +142,8 @@ export function WalletListModal(props: Props) {
     } else if (customAsset != null) {
       bridge.resolve({ type: 'custom', customAsset })
     } else {
-      const wallet = await account.waitForCurrencyWallet(walletId)
-      const currencyCode = getCurrencyCode(wallet, tokenId)
-
       dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
-      bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
+      bridge.resolve({ type: 'wallet', walletId, tokenId })
     }
   })
   const handleSearchClear = useHandler(() => {
@@ -313,9 +308,7 @@ export const pickWallet = async (args: {
   if (matchingWallets.length === 1) {
     // Only one matching wallet and asset. Auto pick the wallet and token
     const { walletId, tokenId } = matchingWallets[0]
-    const wallet = currencyWallets[walletId]
-    const currencyCode = getCurrencyCode(wallet, tokenId)
-    return { type: 'wallet', walletId, currencyCode, tokenId }
+    return { type: 'wallet', walletId, tokenId }
   } else {
     // There is more than one match or we don't have a wallet for this asset. Launch the picker
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
