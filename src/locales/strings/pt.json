@@ -79,7 +79,6 @@
   "warning_scam_message_no_1s": "Great, if you ever have any questions, please reach out to our support team at %1$s.",
   "warning_scam_message_yes_1s": "Please proceed with caution! Assistance with account creation has the potential for fraud. Users should never share passwords or private keys. Social media and chat platforms have been involved in attacks. Do not send cryptocurrency to strangers. If you believe you’re being taken advantage of, please contact our support team at %1$s.",
   "warning_token_code_override_2s": "O endereço do contrato informado difere do endereço do contrato do token %1$sincorporado. Proceda com cuidado e verifique se o contrato é legítimo, já que o uso desse token pode resultar em perda de fundos. Se você tiver dúvidas sobre este recurso ou contrato, entre em contato com %2$s.",
-  "warning_token_contract_override_3s": "O token %1$s informado existe como um token %2$s interno com o mesmo endereço de contrato. Prossiga com cuidado e verifique se o contrato é legítimo, já que o uso desse token pode resultar em perda de fundos. Se você tiver dúvidas sobre este recurso, por favor contate %3$s.",
   "warning_token_exists_1s": "O token informado já existe como um token interno %1$s",
   "warning_uk_risk": "Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.",
   "alert_dropdown_alert": "Alerta! ",
