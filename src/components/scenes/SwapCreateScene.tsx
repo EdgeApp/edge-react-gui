@@ -231,8 +231,6 @@ export const SwapCreateScene = (props: Props) => {
   //
 
   const handleFlipWalletPress = useHandler(() => {
-    maybeClearError('asset')
-
     // Flip params:
     navigation.setParams({
       fromWalletId: toWalletId,
@@ -241,6 +239,10 @@ export const SwapCreateScene = (props: Props) => {
       toTokenId: fromTokenId,
       errorDisplayInfo
     })
+
+    // Clear error state:
+    maybeClearError('asset')
+
     // Clear amount input state:
     setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
 
@@ -259,9 +261,7 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
-    maybeClearError('asset')
-
-    const params = {
+    navigation.setParams({
       ...route.params,
       ...(direction === 'to'
         ? {
@@ -272,8 +272,10 @@ export const SwapCreateScene = (props: Props) => {
             fromWalletId: walletId,
             fromTokenId: tokenId
           })
-    }
-    navigation.setParams(params)
+    })
+
+    // Clear error state:
+    maybeClearError('asset')
   })
 
   const handleMaxPress = useHandler(() => {
