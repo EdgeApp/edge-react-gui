@@ -240,9 +240,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   })
 
   const handleTilePress = useHandler(async () => {
-    if (!lockInputs && !!recipientAddress) {
-      resetSendTransaction()
-    }
+    resetSendTransaction()
   })
 
   // ---------------------------------------------------------------------------
@@ -266,7 +264,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
-    <EdgeRow rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
+    <EdgeRow rightButtonType={tileType} loading={loading} title={title} onPress={!lockInputs && !!recipientAddress ? handleTilePress : undefined}>
       {!recipientAddress && (
         <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
           <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
