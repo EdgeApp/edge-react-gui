@@ -9855,46 +9855,22 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 }
               />
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
-                    "flexShrink": 1,
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
                 }
               >
                 <View
@@ -12873,46 +12849,22 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 }
               />
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
-                    "flexShrink": 1,
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
                 }
               >
                 <View
@@ -14203,46 +14155,22 @@ exports[`SendScene2 Render SendScene 1`] = `
               }
             >
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
-                    "flexShrink": 1,
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
                 }
               >
                 <View
