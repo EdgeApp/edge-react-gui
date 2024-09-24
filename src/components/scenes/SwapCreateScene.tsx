@@ -1,5 +1,14 @@
 import { gt, gte } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  asMaybeSwapAboveLimitError,
+  asMaybeSwapBelowLimitError,
+  asMaybeSwapCurrencyError,
+  asMaybeSwapPermissionError,
+  EdgeCurrencyWallet,
+  EdgeSwapRequest,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
@@ -115,6 +124,11 @@ export const SwapCreateScene = (props: Props) => {
    * been user-modified. */
   const getNewErrorInfo = (changed: 'amount' | 'asset'): { errorDisplayInfo?: SwapErrorDisplayInfo } => {
     const { error } = errorDisplayInfo ?? {}
+    const isInsufficentFunds = asMaybeInsufficientFundsError(error) != null
+    const isSwapAboveLimit = asMaybeSwapAboveLimitError(error) != null
+    const isSwapBelowLimit = asMaybeSwapBelowLimitError(error) != null
+    const isSwapPermission = asMaybeSwapPermissionError(error) != null
+    const isSwapCurrency = asMaybeSwapCurrencyError(error) != null
 
     let clearError = false
 
@@ -123,11 +137,12 @@ export const SwapCreateScene = (props: Props) => {
       clearError = true
     }
     // Amount related errors
-    else if (changed === 'amount' && ['InsufficientFundsError', 'SwapAboveLimitError', 'SwapBelowLimitError'].includes(error.name)) {
+    else if (changed === 'amount' && (isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
       clearError = true
     }
-    // Selected asset related errors
-    else if (changed === 'asset' && ['SwapPermissionError', 'SwapCurrencyError'].includes(error.name)) {
+    // Selected asset related errors (arbitrarily includes all amount-related
+    // errors as well)
+    else if (changed === 'asset' && (isSwapPermission || isSwapCurrency || isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
       clearError = true
     }
 
