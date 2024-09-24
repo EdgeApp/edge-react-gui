@@ -323,7 +323,6 @@ const strings = {
   activate_wallet_token_transaction_name_xrp: 'XRP Ledger',
   activate_wallet_token_transaction_notes_xrp: 'Activate XRP token by enabling Trust Line to issuer',
   activate_wallet_token_scene_title: 'Activate Token',
-  activate_wallet_tokens_scene_title: 'Activate Tokens',
   activate_wallet_token_scene_tile_title: 'Token to Activate',
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
