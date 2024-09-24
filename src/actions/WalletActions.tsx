@@ -14,7 +14,7 @@ import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelec
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, getToken, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -147,9 +147,8 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
   }
 }
 
-function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenIds?: string[]): ThunkAction<Promise<void>> {
+export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenIds: EdgeTokenId[]): ThunkAction<Promise<void>> {
   return async (_dispatch, getState) => {
-    if (tokenIds == null) throw new Error('Activating mainnet wallets unsupported')
     const state = getState()
     const { account } = state.core
     const { defaultIsoFiat, defaultFiat } = state.ui.settings
@@ -168,7 +167,7 @@ function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWa
         }
       })
       const tokensText = tokenIds.map(tokenId => {
-        const { currencyCode, displayName } = getToken(wallet, tokenId) ?? {}
+        const { currencyCode, displayName } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
         return `${displayName} (${currencyCode})`
       })
       const tileTitle = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_scene_tile_title : lstrings.activate_wallet_token_scene_tile_title

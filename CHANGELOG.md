@@ -16,6 +16,7 @@
 - fixed: AddressTile2 touchable area states
 - fixed: Cases where it was possible to create duplicate custom tokens
 - fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
+- fixed: Handle race condition when navigating to a token's transaction list which requires token activation (XRP, Algorand, etc)
 - fixed: Message about overriding a built-in token contract, which is not possible to do
 - fixed: Round Kado-provided amounts during sell
 

@@ -4,8 +4,10 @@ import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
+import { activateWalletTokens } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
@@ -14,7 +16,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
@@ -47,6 +49,7 @@ function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const { width: screenWidth } = useSafeAreaFrame()
 
@@ -70,6 +73,7 @@ function TransactionListComponent(props: Props) {
 
   // Watchers:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
+  const unactivatedTokenIds = useWatch(wallet, 'unactivatedTokenIds')
 
   // ---------------------------------------------------------------------------
   // Derived values
@@ -138,6 +142,21 @@ function TransactionListComponent(props: Props) {
       navigation.goBack()
     }
   }, [enabledTokenIds, navigation, tokenId])
+
+  // Automatically navigate to the token activation confirmation scene if
+  // the token appears in the unactivatedTokenIds list once the wallet loads
+  // this state.
+  useAsyncEffect(
+    async () => {
+      if (unactivatedTokenIds.length > 0) {
+        if (unactivatedTokenIds.some(unactivatedTokenId => unactivatedTokenId === tokenId)) {
+          await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
+        }
+      }
+    },
+    [unactivatedTokenIds],
+    'TransactionListScene unactivatedTokenIds check'
+  )
 
   //
   // Handlers
