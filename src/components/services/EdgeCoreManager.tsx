@@ -22,7 +22,7 @@ import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
-const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
+const LOGIN_TEST_SERVER = 'https://login-test.edge.app/api'
 const INFO_TEST_SERVER = 'https://info-tester.edge.app'
 const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 
@@ -137,7 +137,7 @@ export function EdgeCoreManager(props: Props) {
   ]
 
   let infoServer: string | undefined
-  let loginServer: string | undefined
+  let loginServer: string | undefined = LOGIN_TEST_SERVER
   let syncServer: string | undefined
 
   if ((ENV.ENABLE_TEST_SERVERS == null && isMaestro()) || ENV.ENABLE_TEST_SERVERS === true) {
@@ -164,7 +164,7 @@ export function EdgeCoreManager(props: Props) {
           {...contextOptions}
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_CURRENCY_PLUGINS || ENV.DEBUG_PLUGINS}
+          allowDebugging={true || ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CURRENCY_PLUGINS || ENV.DEBUG_PLUGINS}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}
