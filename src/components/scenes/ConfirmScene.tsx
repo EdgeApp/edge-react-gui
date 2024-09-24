@@ -24,7 +24,7 @@ export interface ConfirmSceneParams {
   onBack?: () => void
 }
 
-const ConfirmComponent = (props: Props) => {
+const ConfirmSceneComponent = (props: Props) => {
   const { navigation, route } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -70,7 +70,7 @@ const ConfirmComponent = (props: Props) => {
   )
 }
 
-export const ConfirmScene = React.memo(ConfirmComponent)
+export const ConfirmScene = React.memo(ConfirmSceneComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
