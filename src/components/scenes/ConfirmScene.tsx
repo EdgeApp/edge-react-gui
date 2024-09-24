@@ -6,13 +6,13 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { SafeSlider } from '../themed/SafeSlider'
-import { SceneHeader } from '../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 interface Props extends EdgeSceneProps<'confirmScene'> {}
 
@@ -52,9 +52,9 @@ const ConfirmComponent = (props: Props) => {
   }, [onBack])
 
   return (
-    <SceneWrapper>
+    <SceneWrapper scroll padding={theme.rem(0.5)}>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <SceneHeader title={titleText} underline />
+        <SceneHeaderUi4 title={titleText} />
         <View style={styles.body}>
           <EdgeText disableFontScaling numberOfLines={16}>
             {bodyText}
@@ -63,7 +63,7 @@ const ConfirmComponent = (props: Props) => {
         {renderInfoTiles()}
         <View style={styles.footer}>
           <SafeSlider disabled={false} onSlidingComplete={handleSliderComplete} />
-          <MainButton label={lstrings.string_cancel_cap} type="escape" marginRem={0.5} onPress={handleBackButton} />
+          <EdgeButton label={lstrings.string_cancel_cap} type="tertiary" marginRem={1} onPress={handleBackButton} />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
@@ -79,8 +79,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   body: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: theme.rem(1),
-    marginTop: theme.rem(1.5)
+    margin: theme.rem(0.5)
   },
   footer: {
     margin: theme.rem(1),
