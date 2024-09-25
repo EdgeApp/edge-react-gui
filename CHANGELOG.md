@@ -5,10 +5,11 @@
 - added: Buy conversion tracking for Moonpay
 - added: Error tracking for failure to report conversions to referral server
 - changed: Remove whitespaces from custom token contract address input
-- fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
 - fixed: AddressTile2 touchable area states
 - fixed: Cases where it was possible to create duplicate custom tokens
+- fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
 - fixed: Message about overriding a built-in token contract, which is not possible to do
+- fixed: Round Kado-provided amounts during sell
 
 ## 4.14.0
 

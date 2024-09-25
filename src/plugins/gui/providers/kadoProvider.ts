@@ -1,5 +1,5 @@
-import { gt, lt } from 'biggystring'
-import { asArray, asBoolean, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { gt, lt, round } from 'biggystring'
+import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import URL from 'url-parse'
 
@@ -383,7 +383,12 @@ const asOrderData = asObject({
   // settlementTimeInSeconds: asNumber
 })
 
-const asWebviewMessage = asObject({ type: asValue('PLAID_NEW_ACH_LINK'), payload: asObject({ link: asString }) })
+const asWebviewMessage = asObject({
+  // We also see "RAMP_ORDER_ID" here, so we should eventually add
+  // some `asEither` logic to switch between various valid message types:
+  type: asValue('PLAID_NEW_ACH_LINK' as const),
+  payload: asObject({ link: asString })
+})
 
 const asOrderInfo = asObject({
   success: asBoolean,
@@ -647,15 +652,10 @@ export const kadoProvider: FiatProviderFactory = {
             // webview to prevent some glitchiness. When needed, Kado will send an onMessage
             // trigger with the url to open. The below code is derived from Kado's sample code
             const onMessage = (data: string) => {
-              try {
-                datelog(`**** Kado onMessage ${data}`)
-                const message = asWebviewMessage(JSON.parse(data))
-                showUi.openExternalWebView({ url: message.payload.link, redirectExternal: true }).catch(e => {
-                  throw e
-                })
-              } catch (error) {
-                // Handle parsing errors gracefully
-                showUi.showError(`Error parsing message: ${String(error)}`).catch(e => {})
+              datelog(`**** Kado onMessage ${data}`)
+              const message = asMaybe(asWebviewMessage)(JSON.parse(data))
+              if (message?.type === 'PLAID_NEW_ACH_LINK') {
+                showUi.openExternalWebView({ url: message.payload.link, redirectExternal: true }).catch(async error => await showUi.showError(error))
               }
             }
 
@@ -759,7 +759,7 @@ export const kadoProvider: FiatProviderFactory = {
                       console.log(`  blockchain: ${blockchain}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode)
+                      const nativeAmount = round(await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode), 0)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
