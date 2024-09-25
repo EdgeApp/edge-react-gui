@@ -1,4 +1,4 @@
-import { gt, lt } from 'biggystring'
+import { gt, lt, round } from 'biggystring'
 import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import URL from 'url-parse'
@@ -759,7 +759,7 @@ export const kadoProvider: FiatProviderFactory = {
                       console.log(`  blockchain: ${blockchain}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode)
+                      const nativeAmount = round(await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode), 0)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
