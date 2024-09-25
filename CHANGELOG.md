@@ -5,21 +5,23 @@
 ## 4.14.0
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
+- added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
 - added: Buy with Revolut
 - added: Buy/sell with Paypal
 - added: Foreground push notifications displayed in app
 - added: Minimum receive amount to `SwapConfirmationScene`
 - added: New analytics tracking param: `accountAgeMonths`
-- added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
 - added: Sell with Moonpay
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Display Asset Status cards in the same style as Promo Cards
-- changed: Updated ACH supported US stat- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
-- fixed: Crash on HomeScene when logging while in airplane mode
-- fixed: Inconsistent corners in `SideMenu`
-- fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
 - fixed: "Apple Pay" renamed to "Pay with Apple Pay" to align with branding guidelines
+- fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
+- fixed: Crash on HomeScene when logging while in airplane mode
+- fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- fixed: Inconsistent corners in `SideMenu`
+- fixed: Round Kado-provided amounts during sell
 
 ## 4.13.0 (2024-09-18)
 
