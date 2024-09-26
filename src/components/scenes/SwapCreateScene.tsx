@@ -1,5 +1,14 @@
 import { gt, gte } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  asMaybeSwapAboveLimitError,
+  asMaybeSwapBelowLimitError,
+  asMaybeSwapCurrencyError,
+  asMaybeSwapPermissionError,
+  EdgeCurrencyWallet,
+  EdgeSwapRequest,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
@@ -113,8 +122,13 @@ export const SwapCreateScene = (props: Props) => {
 
   /** Potentially clear an error if swap parameters relevant to the error have
    * been user-modified. */
-  const maybeClearError = (changed: 'amount' | 'asset') => {
+  const getNewErrorInfo = (changed: 'amount' | 'asset'): { errorDisplayInfo?: SwapErrorDisplayInfo } => {
     const { error } = errorDisplayInfo ?? {}
+    const isInsufficentFunds = asMaybeInsufficientFundsError(error) != null
+    const isSwapAboveLimit = asMaybeSwapAboveLimitError(error) != null
+    const isSwapBelowLimit = asMaybeSwapBelowLimitError(error) != null
+    const isSwapPermission = asMaybeSwapPermissionError(error) != null
+    const isSwapCurrency = asMaybeSwapCurrencyError(error) != null
 
     let clearError = false
 
@@ -123,20 +137,16 @@ export const SwapCreateScene = (props: Props) => {
       clearError = true
     }
     // Amount related errors
-    else if (changed === 'amount' && ['InsufficientFundsError', 'SwapAboveLimitError', 'SwapBelowLimitError'].includes(error.name)) {
+    else if (changed === 'amount' && (isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
       clearError = true
     }
-    // Selected asset related errors
-    else if (changed === 'asset' && ['SwapPermissionError', 'SwapCurrencyError'].includes(error.name)) {
+    // Selected asset related errors (arbitrarily includes all amount-related
+    // errors as well)
+    else if (changed === 'asset' && (isSwapPermission || isSwapCurrency || isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
       clearError = true
     }
 
-    if (clearError) {
-      navigation.setParams({
-        ...route.params,
-        errorDisplayInfo: undefined
-      })
-    }
+    return { errorDisplayInfo: clearError ? undefined : errorDisplayInfo }
   }
 
   const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
@@ -237,11 +247,9 @@ export const SwapCreateScene = (props: Props) => {
       fromTokenId: toTokenId,
       toWalletId: fromWalletId,
       toTokenId: fromTokenId,
-      errorDisplayInfo
+      // Update the error state:
+      ...getNewErrorInfo('asset')
     })
-
-    // Clear error state:
-    maybeClearError('asset')
 
     // Clear amount input state:
     setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
@@ -271,11 +279,10 @@ export const SwapCreateScene = (props: Props) => {
         : {
             fromWalletId: walletId,
             fromTokenId: tokenId
-          })
+          }),
+      // Update the error state:
+      ...getNewErrorInfo('asset')
     })
-
-    // Clear error state:
-    maybeClearError('asset')
   })
 
   const handleMaxPress = useHandler(() => {
@@ -335,7 +342,11 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    maybeClearError('amount')
+    navigation.setParams({
+      ...route.params,
+      // Update the error state:
+      ...getNewErrorInfo('amount')
+    })
 
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
@@ -345,7 +356,11 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    maybeClearError('amount')
+    navigation.setParams({
+      ...route.params,
+      // Update the error state:
+      ...getNewErrorInfo('amount')
+    })
 
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
