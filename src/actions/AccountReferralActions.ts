@@ -200,17 +200,17 @@ export interface ValidateFuncs {
   getVersion: () => string
 }
 
-export const getCountryCodeByIp = async (): Promise<string> => {
+export const getCountryCodeByIp = async (): Promise<string | undefined> => {
   const apiKey = ENV.IP_API_KEY ?? ''
-  let out = '--'
+
   try {
     const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
     const { countryCode } = asIpApi(await reply.json())
-    out = countryCode
+    return countryCode
   } catch (e: any) {
-    console.error(e.message)
+    console.warn(`getCountryCodeByIp() failed: ${String(e)}`)
+    return undefined
   }
-  return out
 }
 
 /**

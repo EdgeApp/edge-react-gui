@@ -95,7 +95,7 @@ export const HomeScene = (props: Props) => {
   // Set countryCode once
   useAsyncEffect(
     async () => {
-      const countryCode = await getCountryCodeByIp().catch(() => '')
+      const countryCode = await getCountryCodeByIp()
       setCountryCode(countryCode)
     },
     [],

@@ -27,6 +27,7 @@
 - changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
 - fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- fixed: Allow `InfoCardCarousel` to receive undefined `countryCodes`
 - fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent corners in `SideMenu`
 - fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`

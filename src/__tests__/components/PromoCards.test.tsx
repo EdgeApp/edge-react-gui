@@ -1,9 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
-import { PromoCard2 } from 'edge-info-server'
+import { InfoCard } from 'edge-info-server'
 
 import { filterInfoCards } from '../../components/cards/InfoCardCarousel'
 
-const dummyCard: PromoCard2 = {
+const dummyCard: InfoCard = {
   localeMessages: { en: 'hello' },
   background: { darkMode: '', lightMode: '' },
   ctaButton: undefined,
@@ -32,18 +32,18 @@ const currentDate = new Date('2024-06-13T20:53:33.013Z')
 
 describe('filterPromoCards', () => {
   test('No cards', () => {
-    const cards: PromoCard2[] = []
+    const cards: InfoCard[] = []
     const result = filterInfoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
     expect(result.length).toBe(0)
   })
   test('Card no filters', () => {
-    const cards: PromoCard2[] = [{ ...dummyCard }]
+    const cards: InfoCard[] = [{ ...dummyCard }]
     const result = filterInfoCards({ cards, countryCode: 'US', buildNumber, osType, version, osVersion, currentDate })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('hello')
   })
   test('Cards for iOS', () => {
-    const cards: PromoCard2[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, osTypes: ['android'], localeMessages: { en: 'Android message' } },
       { ...dummyCard, osTypes: ['ios'], localeMessages: { en: 'iOS Message' } },
       { ...dummyCard, osTypes: ['web'], localeMessages: { en: 'Web Message' } },
@@ -55,7 +55,7 @@ describe('filterPromoCards', () => {
     expect(result[1].localeMessages.en).toBe('Another iOS Message')
   })
   test('Cards for Android, exactBuildNum', () => {
-    const cards: PromoCard2[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, exactBuildNum: '123', osTypes: ['android'], localeMessages: { en: 'Android message' } },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['ios'], localeMessages: { en: 'iOS Message' } },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['web'], localeMessages: { en: 'Web Message' } },
@@ -66,7 +66,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('Another Android Message')
   })
   test('Cards for Android, version', () => {
-    const cards: PromoCard2[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, osTypes: ['android'], localeMessages: { en: 'Android message' }, appVersion: '1.2.3' },
       { ...dummyCard, osTypes: ['ios'], localeMessages: { en: 'iOS Message' } },
       { ...dummyCard, osTypes: ['web'], localeMessages: { en: 'Web Message' } },
@@ -114,7 +114,7 @@ describe('filterPromoCards', () => {
     expect(result[1].localeMessages.en).toBe('ES message')
   })
   test('With installerId', () => {
-    const cards: PromoCard2[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
       { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
@@ -134,7 +134,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('Bob2 Message')
   })
   test('With promotions.installerId', () => {
-    const cards: PromoCard2[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
       { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
