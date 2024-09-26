@@ -1,45 +1,42 @@
 import * as React from 'react'
+import { check } from 'react-native-permissions'
 
-import { setContactsPermissionOn } from '../../actions/LocalSettingsActions'
-import { showError } from '../../components/services/AirshipInstance'
-import { showContactsPermissionModal } from '../../components/services/PermissionsManager'
+import { maybeShowContactsPermissionModal } from '../../components/modals/ContactsPermissionModal'
+import { requestContactsPermission } from '../../components/services/PermissionsManager'
+import { permissionNames } from '../../reducers/PermissionsReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
 import { normalizeForSearch } from '../../util/utils'
-
-export const maybeShowContactsPermissionModal = (dispatch: Dispatch, contactsPermissionOn: boolean) => {
-  // Ignored if 'Contacts Access' setting is disabled
-  if (!contactsPermissionOn) return
-
-  // Contacts permission request:
-  showContactsPermissionModal(contactsPermissionOn)
-    .then(modalResult => {
-      if (modalResult !== undefined) {
-        // Update the Edge setting and system permission setting
-        dispatch(setContactsPermissionOn(modalResult === 'allow')).catch(error => showError(error))
-      }
-    })
-    .catch(error => showError(error))
-}
+import { useAsyncEffect } from '../useAsyncEffect'
 
 /**
- * Looks up a thumbnail image for a contact.
+ * Looks up a thumbnail image for a contact. Will show a contacts permission
+ * request modal if we haven't shown it before and the system contacts
+ * permission is not granted.
  */
 export const useContactThumbnail = (name?: string): string | undefined => {
-  const dispatch = useDispatch()
   const contacts = useSelector(state => state.contacts)
-  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
+  const dispatch = useDispatch()
+  const [currentContactsPermissionOn, setCurrentContactsPermissionOn] = React.useState(false)
 
-  React.useEffect(() => {
-    maybeShowContactsPermissionModal(dispatch, contactsPermissionOn)
+  useAsyncEffect(
+    async () => {
+      const currentContactsPermissionOn = (await check(permissionNames.contacts).catch(_error => 'denied')) === 'granted'
+      setCurrentContactsPermissionOn(currentContactsPermissionOn)
 
-    // Avoid popping up the modal when the scene calling the hook is mounted and
-    // the user changes contactsPermissionOn.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+      if (!currentContactsPermissionOn) {
+        const result = await dispatch(maybeShowContactsPermissionModal())
+        if (result === 'allow') {
+          await requestContactsPermission(true)
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [],
+    'useContactThumbnail'
+  )
 
   return React.useMemo(() => {
-    if (name == null || !contactsPermissionOn) return
+    if (name == null || !currentContactsPermissionOn) return
 
     const searchName = normalizeForSearch(name)
     for (const contact of contacts) {
@@ -49,5 +46,5 @@ export const useContactThumbnail = (name?: string): string | undefined => {
         return contact.thumbnailPath
       }
     }
-  }, [contacts, contactsPermissionOn, name])
+  }, [contacts, currentContactsPermissionOn, name])
 }

@@ -1980,7 +1980,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                         ]
                       }
                       tintColor="#888888"
-                      value={true}
+                      value={false}
                     />
                   </View>
                 </View>

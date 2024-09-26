@@ -19,6 +19,7 @@
 - fixed: Handle race condition when navigating to a token's transaction list which requires token activation (XRP, Algorand, etc)
 - fixed: Message about overriding a built-in token contract, which is not possible to do
 - fixed: Round Kado-provided amounts during sell
+- fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
 
 ## 4.14.0
 
