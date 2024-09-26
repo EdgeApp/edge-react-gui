@@ -5,7 +5,7 @@ import { EdgeAccount } from 'edge-core-js/types'
 import { ENV } from '../env'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
-import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
+import { asCurrencyCode, asIpApi, asIp2LocationIo, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -208,7 +208,13 @@ export const getCountryCodeByIp = async (): Promise<string> => {
     const { countryCode } = asIpApi(await reply.json())
     out = countryCode
   } catch (e: any) {
-    console.error(e.message)
+    try {
+      const reply2 = await fetch(`https://api.ip2location.io`)
+      const { country_code } = asIp2LocationIo(await reply2.json())
+      out = country_code
+    } catch (e: any) {
+      console.error(e.message)
+    }
   }
   return out
 }
