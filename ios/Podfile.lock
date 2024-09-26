@@ -572,11 +572,12 @@ PODS:
     - React-RCTImage
   - RNSecureRandom (1.0.1):
     - React
-  - RNSentry (5.22.3):
+  - RNSentry (5.33.1):
     - hermes-engine
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-hermes
-    - Sentry/HybridSDK (= 8.26.0)
+    - Sentry/HybridSDK (= 8.36.0)
   - RNShare (10.2.0):
     - React-Core
   - RNSound (0.11.0):
@@ -597,7 +598,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry/HybridSDK (8.26.0)
+  - Sentry/HybridSDK (8.36.0)
   - SQLite.swift/standalone (0.15.3):
     - sqlite3
   - "sqlite3 (3.46.0+1)":
@@ -1174,7 +1175,7 @@ SPEC CHECKSUMS:
   RNReanimated: 271f958e94385e59e0660b872ce866407e36bb45
   RNScreens: 93ae3be2f119d955620f9bbb39ad372adb53b7a9
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
-  RNSentry: 7e184247ee04989474d12cce0b7ef7bc4a71632f
+  RNSentry: 0744d3c79504bc4778190d047d1b60daf4a378cd
   RNShare: 554a91f5cfbe4adac4cfe3654826ee8b299fe365
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 923b1c888c13469925bf0256dc2c046eab557ce5
@@ -1182,7 +1183,7 @@ SPEC CHECKSUMS:
   RNVectorIcons: bfb663f3f7b37340cd90120151b720641523dc84
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: 74a073c71c998117edb08f56f443c83570a31bed
+  Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   SQLite.swift: 8d054987f02728cc912b0eb5a9659650573a65a2
   sqlite3: 292c3e1bfe89f64e51ea7fc7dab9182a017c8630
   SwiftNIO: 829958aab300642625091f82fc2f49cb7cf4ef24
