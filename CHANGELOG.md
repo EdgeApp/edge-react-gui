@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Re-enable Piratechain on iOS
 - added: Battery Saver warning message for Android
 - added: Buy conversion tracking for Moonpay
 - added: Error tracking for failure to report conversions to referral server
