@@ -36,6 +36,18 @@ avg=0.870833
 
 ## Reducing all other mounted scenes (side menu but with Service)
 
+0.83
+1.15
+1.37
+0.78
+0.65
+0.58
+0.80
+0.63
+0.75
+2.36
+avg=0.99
+
 ## Reducing all other mounted scenes (side menu and without Service)
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets
@@ -77,6 +89,18 @@ avg=3.926
 ## halting all engines (set paused on)
 
 ## Reducing all other mounted scenes (side menu but with Service)
+
+3.10
+3.52
+3.03
+3.07
+3.36
+3.50
+3.17
+4.35
+5.65
+8.57
+avg=4.132
 
 ## Reducing all other mounted scenes (side menu and without Service)
 
