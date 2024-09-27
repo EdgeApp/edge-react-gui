@@ -38,6 +38,18 @@ avg=0.870833
 
 ## Reducing all other mounted scenes (side menu and without Service)
 
+0.47
+0.47
+0.31
+0.38
+0.35
+0.38
+0.38
+0.42
+0.28
+0.47
+avg=0.391
+
 ## Reducing app down to bare minimum of the two scenes Home and Assets
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets but only rendering a blank View
@@ -79,6 +91,18 @@ avg=3.926
 ## Reducing all other mounted scenes (side menu but with Service)
 
 ## Reducing all other mounted scenes (side menu and without Service)
+
+2.29
+1.96
+1.76
+1.97
+2.12
+2.36
+2.08
+2.01
+2.13
+2.08
+avg=2.076
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets
 

@@ -1,5 +1,4 @@
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
@@ -23,7 +22,6 @@ import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import {
   BuyTabParamList,
-  DrawerParamList,
   EdgeAppStackParamList,
   EdgeTabsParamList,
   NavigationBase,
@@ -135,7 +133,6 @@ import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
 import { DeepLinkingManager } from './services/DeepLinkingManager'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
-import { SideMenu } from './themed/SideMenu'
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
@@ -226,7 +223,6 @@ const WebViewScene = ifLoggedIn(WebViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
 
 const RootStack = createStackNavigator<RootParamList>()
-const Drawer = createDrawerNavigator<DrawerParamList>()
 const AppStack = createStackNavigator<EdgeAppStackParamList>()
 const Tabs = createBottomTabNavigator<EdgeTabsParamList>()
 const SwapStack = createStackNavigator<SwapTabParamList>()
@@ -789,23 +785,6 @@ const EdgeAppStack = () => {
 // Root router
 // -------------------------------------------------------------------------
 
-const EdgeApp = () => {
-  return (
-    <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
-      initialRouteName="edgeAppStack"
-      screenOptions={{
-        drawerPosition: 'right',
-        drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
-        headerShown: false
-      }}
-    >
-      <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
-    </Drawer.Navigator>
-  )
-}
-
 export const Main = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -871,7 +850,7 @@ export const Main = () => {
               headerShown: false
             }}
           >
-            <RootStack.Screen name="edgeApp" component={EdgeApp} />
+            <RootStack.Screen name="edgeApp" component={EdgeAppStack} />
 
             <RootStack.Screen name="gettingStarted" initialParams={{ experimentConfig }}>
               {(props: RootSceneProps<'gettingStarted'>) => {
