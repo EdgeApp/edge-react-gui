@@ -81,6 +81,7 @@
   "warning_token_code_override_2s": "La dirección del contrato ingresada difiere de la dirección del contrato del token integrado %1$s. Por favor. Proceda con precaución y verifique que el contrato sea legítimo, ya que el uso de este token puede provocar la pérdida de fondos. Si tiene preguntas sobre esta función o contrato, comuníquese con %2$s.",
   "warning_token_exists_1s": "El token ingresado ya existe como token integrado %1$s",
   "warning_uk_risk": "No invierta a menos que esté dispuesto a perder todo el dinero que invierta. Esta es una inversión de alto riesgo y no debe esperar estar protegido si algo sale mal. Tómese al menos dos minutos para obtener más información.",
+  "warning_battery_saver": "Battery Saver mode detected. Balances and transactions may be inaccurate",
   "alert_dropdown_alert": "¡Alerta! ",
   "alert_dropdown_warning": "¡Advertencia! ",
   "azteco_success": "Has canjeado una tarjeta de bitcoin Azteco. Los fondos deberían llegar pronto.",
