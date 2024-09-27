@@ -32,6 +32,8 @@ avg=0.870833
 
 ## Render both scenes with nothing but a blank View
 
+Instantaneous (too quick to measure by hand)
+
 ## halting all engines (set paused on)
 
 ## Reducing all other mounted scenes (side menu but with Service)
@@ -73,6 +75,18 @@ avg=5.407
 avg=3.926
 
 ## Render both scenes with nothing but a blank View
+
+1.07
+1.05
+0.95
+1.08
+1.10
+1.10
+0.82
+1.10
+1.02
+1.33
+avg=1.062
 
 ## halting all engines (set paused on)
 
