@@ -30,7 +30,7 @@ export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): st
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
   let exchangeRateText
   if (isEstimate) {
-    exchangeRateText = `1 ${quote.displayCurrencyCode} ~= ${localeRate} ${fiatCode}\n${lstrings.estimated_quote}`
+    exchangeRateText = `1 ${quote.displayCurrencyCode} ≈ ${localeRate} ${fiatCode}\n${lstrings.estimated_quote}`
   } else {
     exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
   }
