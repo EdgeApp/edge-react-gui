@@ -39,6 +39,7 @@ import { Services } from '../services/Services'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
+import { EdgeText } from './EdgeText'
 
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
@@ -296,7 +297,9 @@ export function SideMenu(props: DrawerContentComponentProps) {
               <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
             </View>
             <View style={styles.rowBodyContainer}>
-              <TitleText style={styles.text}>{displayUsername}</TitleText>
+              <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
+                {displayUsername}
+              </EdgeText>
             </View>
             {isMultiUsers ? (
               <View style={styles.rightIconContainer}>
@@ -321,9 +324,9 @@ export function SideMenu(props: DrawerContentComponentProps) {
               {/* This empty container is required to align the row contents properly */}
               <View style={styles.leftIconContainer} />
               <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
-                <TitleText style={styles.text}>
+                <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
                   {userInfo.username == null ? sprintf(lstrings.guest_account_id_1s, userInfo.loginId.slice(userInfo.loginId.length - 3)) : userInfo.username}
-                </TitleText>
+                </EdgeText>
               </EdgeTouchableOpacity>
               <EdgeTouchableOpacity style={styles.rightIconContainer} onPress={handleDeleteAccount(userInfo)}>
                 <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />

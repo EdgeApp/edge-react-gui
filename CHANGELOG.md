@@ -16,6 +16,7 @@
 - changed: Display Asset Status cards in the same style as Promo Cards
 - changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
+- fixed: Missing ellipses for long usernames displayed in the `SideMenu`
 - fixed: "Apple Pay" renamed to "Pay with Apple Pay" to align with branding guidelines
 - fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
 - fixed: Crash on HomeScene when logging while in airplane mode
