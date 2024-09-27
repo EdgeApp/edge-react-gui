@@ -8,6 +8,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="28"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false" />
+        <activity
+        android:name="com.facebook.react.devsupport.DevSettingsActivity"
+        android:exported="false">
+        <intent-filter android:label="Edge Site" android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" /> 
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+            <data android:host="edge.app" />
+        </intent-filter>
+        </activity>
     </application>
 </manifest>
