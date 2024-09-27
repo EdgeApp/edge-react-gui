@@ -40,6 +40,18 @@ avg=0.870833
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets
 
+0.33
+0.40
+0.38
+0.37
+0.42
+0.43
+0.35
+0.40
+0.44
+0.58
+avg=0.41
+
 ## Reducing app down to bare minimum of the two scenes Home and Assets but only rendering a blank View
 
 # Motorola Moto G Power (2022) | edgy-sam2
@@ -81,5 +93,17 @@ avg=3.926
 ## Reducing all other mounted scenes (side menu and without Service)
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets
+
+2.88
+2.08
+2.03
+2.05
+2.08
+2.05
+2.08
+2.08
+2.01
+2.03
+avg=2.137
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets but only rendering a blank View
