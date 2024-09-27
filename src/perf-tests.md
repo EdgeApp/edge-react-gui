@@ -42,6 +42,8 @@ avg=0.870833
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets but only rendering a blank View
 
+Instantaneous (too quick to measure by hand)
+
 # Motorola Moto G Power (2022) | edgy-sam2
 
 ## Base (all wallets synced)
@@ -83,3 +85,15 @@ avg=3.926
 ## Reducing app down to bare minimum of the two scenes Home and Assets
 
 ## Reducing app down to bare minimum of the two scenes Home and Assets but only rendering a blank View
+
+0.51
+0.67
+0.61
+0.70
+0.60
+0.65
+0.57
+0.65
+0.68
+0.63
+avg=0.627
