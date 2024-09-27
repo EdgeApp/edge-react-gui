@@ -103,7 +103,7 @@
     "edge-currency-plugins": "^3.4.0",
     "edge-exchange-plugins": "^2.9.0",
     "edge-info-server": "^3.0.1",
-    "edge-login-ui-rn": "^3.22.2",
+    "edge-login-ui-rn": "^3.22.3",
     "ethers": "^5.7.2",
     "expo": "^48.0.0",
     "jsrsasign": "^11.1.0",
