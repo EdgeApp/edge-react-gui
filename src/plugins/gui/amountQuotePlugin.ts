@@ -225,9 +225,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       let goodQuotes: FiatProviderQuote[] = []
       let lastSourceFieldNum: number
 
-      // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
-      // wallet fiat selection regardless of region.
-      // TODO: Remove when Fiat selection is designed.
       const fiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
       const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
       const isBuy = direction === 'buy'
