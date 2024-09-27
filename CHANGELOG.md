@@ -35,6 +35,7 @@
 - changed: Display Asset Status cards in the same style as Promo Cards
 - changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
+- fixed: Missing ellipses for long usernames displayed in the `SideMenu`
 - fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
 - fixed: Allow `InfoCardCarousel` to receive undefined `countryCodes`
 - fixed: Crash on HomeScene when logging while in airplane mode
