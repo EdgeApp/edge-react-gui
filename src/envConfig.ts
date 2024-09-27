@@ -275,7 +275,22 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  MAYA_PROTOCOL_INIT: asCorePluginInit(
+    asObject({
+      affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      thorname: asOptional(asString, 'ej')
+    }).withRest
+  ),
   THORCHAIN_INIT: asCorePluginInit(
+    asObject({
+      affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      ninerealmsClientId: asOptional(asString, ''),
+      thorname: asOptional(asString, 'ej')
+    }).withRest
+  ),
+  THORCHAIN_DA_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),

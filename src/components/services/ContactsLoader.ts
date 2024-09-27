@@ -234,6 +234,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Maya Protocol',
+    hasThumbnail: true,
+    thumbnailPath: 'mayaprotocol.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Thorchain',
     hasThumbnail: true,
     thumbnailPath: 'thorchain.png',
