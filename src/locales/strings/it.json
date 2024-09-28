@@ -81,7 +81,7 @@
   "warning_token_code_override_2s": "L'indirizzo del contratto inserito differisce dall'indirizzo del contratto del token integrato %1$s. Si prega di procedere con cautela e verificare che il contratto sia legittimo in quanto l'uso di questo token può comportare la perdita di fondi. Se hai domande su questa funzione o sul contratto contatta %2$s.",
   "warning_token_exists_1s": "Il token inserito esiste già come token integrato %1$s",
   "warning_uk_risk": "Non investire a meno che non sia disposto a perdere tutti i soldi che investi. Questo è un investimento ad alto rischio e non dovresti aspettarti di essere protetto se qualcosa va storto. Prenditi 2 minuti per saperne di più.",
-  "warning_battery_saver": "Battery Saver mode detected. Balances and transactions may be inaccurate",
+  "warning_battery_saver": "Modalità risparmio batteria rilevata. I saldi e le transazioni potrebbero essere imprecisi",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "azteco_success": "Hai riscattato una carta bitcoin Azteco. I fondi dovrebbero arrivare a breve.",
