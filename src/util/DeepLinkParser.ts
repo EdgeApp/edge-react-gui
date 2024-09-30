@@ -251,6 +251,7 @@ const prefixes: Array<[string, string]> = [
 
   // Alternative schemes:
   ['https://deep.edge.app/', 'edge://'],
+  ['https://return.edge.app/', 'edge://'],
   ['airbitz://', 'edge://'],
   ['reqaddr://', 'edge://reqaddr']
 ]
