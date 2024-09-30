@@ -12,6 +12,7 @@
 - added: Minimum receive amount to `SwapConfirmationScene`
 - added: New analytics tracking param: `accountAgeMonths`
 - added: Sell with Moonpay
+- changed: Enable Cardano staking
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Display Asset Status cards in the same style as Promo Cards
 - changed: Updated ACH supported US states
