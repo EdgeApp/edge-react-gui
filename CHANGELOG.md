@@ -9,6 +9,8 @@
 ## 4.14.1
 
 - added: Foreground push notification title data displayed in dropdown
+- changed: More informative buy amount limit errors for light accounts
+- fixed: Default buy amounts for light accounts can potentially be over limit for non-USD currencies
 
 ## 4.14.0
 
