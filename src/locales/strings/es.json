@@ -261,7 +261,6 @@
   "activate_wallet_token_transaction_name_xrp": "Libro contable de XRP",
   "activate_wallet_token_transaction_notes_xrp": "Activar el token XRP habilitando la Línea de Confianza al emisor",
   "activate_wallet_token_scene_title": "Activate Token",
-  "activate_wallet_tokens_scene_title": "Activate Tokens",
   "activate_wallet_token_scene_tile_title": "Token para activar",
   "activate_wallet_tokens_scene_tile_title": "Tokens para activar",
   "activate_wallet_token_scene_body": "To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.",
