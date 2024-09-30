@@ -261,7 +261,6 @@
   "activate_wallet_token_transaction_name_xrp": "XRP Ledger",
   "activate_wallet_token_transaction_notes_xrp": "トラストラインを発行者に有効にしてXRPトークンを有効にする",
   "activate_wallet_token_scene_title": "トークンを有効にする",
-  "activate_wallet_tokens_scene_title": "トークンを有効にする",
   "activate_wallet_token_scene_tile_title": "有効にするトークン",
   "activate_wallet_tokens_scene_tile_title": "有効にするトークン",
   "activate_wallet_token_scene_body": "選択したトークンを送受信するには、まずブロックチェーントランザクションでトークンを有効にする必要があります。 この取引には以下の手数料がかかります。\n\n下のスライダーを使用して確認してください。",
