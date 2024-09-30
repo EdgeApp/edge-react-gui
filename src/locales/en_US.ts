@@ -1458,7 +1458,7 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again: 'Failed to send funds for sell transaction. Please try again.',
   fiat_plugin_cannot_continue_camera_permission: 'Cannot continue. Camera permission needed for ID verifications',
-  fiat_plugin_purchase_limit_error: 'Please create a full account to increase the purchase limit',
+  fiat_plugin_purchase_limit_error_2s: 'Please create a full account to increase the purchase limit above %1$s %2$s',
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
   fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %1$s',
