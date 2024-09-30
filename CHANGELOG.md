@@ -9,6 +9,7 @@
 - added: Buy conversion tracking for Paybis
 - added: Support for return.edge.app deeplinks
 - added: Error tracking for failure to report conversions to referral server
+- changed: Enable Cardano staking
 - changed: Remove whitespaces from custom token contract address input
 - changed: Use unique ENV configs for thorchain and thorchainda swap plugins
 - fixed: Correctly tag `tokenApproval` `actionType` in  `getTxActionDisplayInfo`
