@@ -42,6 +42,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     googlepay: true,
     pix: true,
     pse: true,
+    revolut: true,
     spei: true
   },
   sell: {
@@ -64,6 +65,7 @@ const asApiKeys = asObject({
 const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
+  'method-id_bridgerpay_revolutpay',
 
   // XXX Hack. Fake payment methods for googlepay/applepay
   'fake-id-googlepay',
@@ -278,6 +280,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
+  'method-id_bridgerpay_revolutpay': 'revolut',
 
   // XXX Hack. Fake payment methods for googlepay/applepay
   'fake-id-googlepay': 'googlepay',
@@ -302,6 +305,7 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: Paymen
   googlepay: 'method-id-credit-card',
   pix: 'method-id_bridgerpay_directa24_pix',
   pse: 'method-id_bridgerpay_directa24_pse',
+  revolut: 'method-id_bridgerpay_revolutpay',
   spei: 'method-id_bridgerpay_directa24_spei'
 }
 
@@ -345,6 +349,10 @@ export const paybisProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+        // Do not allow sell to debit in US
+        if (direction === 'sell' && paymentTypes.includes('credit') && regionCode.countryCode === 'US') {
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        }
         validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)

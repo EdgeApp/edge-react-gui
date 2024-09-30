@@ -11,7 +11,7 @@ import { ThunkAction } from '../types/reduxTypes'
 import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
-import { consify } from './utils'
+import { consify, monthsBetween } from './utils'
 
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
@@ -165,7 +165,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         // Populate referral params:
         const state = getState()
-        const { exchangeRates, account, deviceReferral } = state
+        const { exchangeRates, account, deviceReferral, core } = state
         const { accountReferral } = account
         params.refDeviceInstallerId = deviceReferral.installerId
         params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
@@ -174,6 +174,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
         params.refAccountInstallerId = accountReferral.installerId
         params.refAccountCurrencyCodes = accountReferral.currencyCodes
+
+        // Get the account age in months:
+        const { created: accountCreatedDate } = core.account
+        params.accountAgeMonths = accountCreatedDate == null ? undefined : monthsBetween(accountCreatedDate, new Date())
 
         // Adjust params:
         if (createdWalletCurrencyCode != null) params.currency = createdWalletCurrencyCode

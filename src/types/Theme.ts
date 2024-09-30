@@ -424,8 +424,10 @@ export interface Theme {
   paymentTypeLogoInterac: ImageProp
   paymentTypeLogoPayid: ImageProp
   paymentTypeLogoPaynow: ImageProp
+  paymentTypeLogoPaypal: ImageProp
   paymentTypeLogoPix: ImageProp
   paymentTypeLogoPoli: ImageProp
+  paymentTypeLogoRevolut: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
   paymentTypeVisa: ImageProp
@@ -440,6 +442,7 @@ export interface Theme {
 
   // Shadows
   iconShadow: ThemeShadowParams
+  dropdownListShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string

@@ -39,6 +39,7 @@ import { Services } from '../services/Services'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
+import { EdgeText } from './EdgeText'
 
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
@@ -176,7 +177,6 @@ export function SideMenu(props: DrawerContentComponentProps) {
   // Track the destination height of the dropdown
   const userListDesiredHeight = styles.rowContainer.height * sortedUsers.length + theme.rem(1)
   const userListHeight = Math.min(userListDesiredHeight, bottomPanelHeight)
-  const isUserListHeightOverflowing = userListDesiredHeight >= bottomPanelHeight
 
   // Height value above can change if users are added/removed
   const sMaxHeight = useSharedValue(userListHeight)
@@ -196,11 +196,6 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   /// ---- Dynamic CSS ----
 
-  const themeRem2 = theme.rem(2) // We cannot call theme.rem from within worklet
-  const aBorderBottomRightRadius = useAnimatedStyle(() => ({
-    // Use a easeInCirc easing function for the border transition
-    borderBottomRightRadius: isUserListHeightOverflowing ? themeRem2 - themeRem2 * (1 - Math.sqrt(1 - sAnimationMult.value ** 4)) : themeRem2
-  }))
   const aDropdown = useAnimatedStyle(() => ({
     height: sMaxHeight.value * sAnimationMult.value
   }))
@@ -302,7 +297,9 @@ export function SideMenu(props: DrawerContentComponentProps) {
               <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
             </View>
             <View style={styles.rowBodyContainer}>
-              <TitleText style={styles.text}>{displayUsername}</TitleText>
+              <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
+                {displayUsername}
+              </EdgeText>
             </View>
             {isMultiUsers ? (
               <View style={styles.rightIconContainer}>
@@ -320,16 +317,16 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const usernameDropdown = (
     <>
-      <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
+      <Animated.View style={[styles.dropContainer, aDropdown]}>
         <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
           {sortedUsers.map(userInfo => (
             <View key={userInfo.loginId} style={styles.rowContainer}>
               {/* This empty container is required to align the row contents properly */}
               <View style={styles.leftIconContainer} />
               <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
-                <TitleText style={styles.text}>
+                <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
                   {userInfo.username == null ? sprintf(lstrings.guest_account_id_1s, userInfo.loginId.slice(userInfo.loginId.length - 3)) : userInfo.username}
-                </TitleText>
+                </EdgeText>
               </EdgeTouchableOpacity>
               <EdgeTouchableOpacity style={styles.rightIconContainer} onPress={handleDeleteAccount(userInfo)}>
                 <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
@@ -472,7 +469,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Animation
   dropContainer: {
     backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(1),
     zIndex: 2,
     position: 'absolute',
     width: '100%'
@@ -498,7 +495,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     height: '100%',
     width: '100%',
-    borderBottomLeftRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(1),
     zIndex: 1
   }
 }))

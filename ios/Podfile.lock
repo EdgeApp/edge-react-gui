@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.14.0):
+  - edge-core-js (2.18.0):
     - React-Core
-  - edge-currency-accountbased (4.24.1-2):
+  - edge-currency-accountbased (4.24.6):
     - React-Core
   - edge-currency-plugins (3.3.2):
     - React-Core
-  - edge-exchange-plugins (2.7.5):
+  - edge-exchange-plugins (2.9.1):
     - React-Core
-  - edge-login-ui-rn (3.19.2):
+  - edge-login-ui-rn (3.22.3):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -430,7 +430,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.8.0):
+  - react-native-zcash (0.8.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1078,12 +1078,12 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 9e7f9dc8b064c7be712e2988feb78db0ed5dbd77
-  edge-currency-accountbased: a4e78ccd42797465cc7025934ab76301597bd916
+  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  edge-core-js: 36f9eccd1b3e22ad3e1ca14773c9754c2bf83b63
+  edge-currency-accountbased: 86f333e5789a79adb7b47519104d72db21e1eb72
   edge-currency-plugins: d2d7466f1215ffed6ff18d056fb5470dd2f86ab3
-  edge-exchange-plugins: 6ed47d7adb64b432e787a9036f46ce947d488ad6
-  edge-login-ui-rn: d4b91425b848a18c302f31c2ff16e07d66bf2d04
+  edge-exchange-plugins: 5a0502c8ecc7691fe1b4ef682038ee7905620b41
+  edge-login-ui-rn: 42c2652b2bd8b9a98b7208368ecc2827eea23955
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1100,7 +1100,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
   FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
@@ -1140,7 +1140,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: e9be77ab00cc04fe3c19125e12817c00d9356bc8
+  react-native-zcash: 2959ff77ba393d08bcd65aa582fef8445c99453c
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

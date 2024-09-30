@@ -19,10 +19,10 @@ import { infoServerData } from '../../util/network'
 import { BalanceCard } from '../cards/BalanceCard'
 import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
+import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { MarketsCard } from '../cards/MarketsCard'
-import { PromoCards } from '../cards/PromoCards'
 import { SupportCard } from '../cards/SupportCard'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp110, fadeInUp140 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SectionView } from '../layout/SectionView'
@@ -141,7 +141,13 @@ export const HomeScene = (props: Props) => {
                   <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
-                <PromoCards countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
+                <InfoCardCarousel
+                  enterAnim={fadeInUp110}
+                  cards={infoServerData.rollup?.promoCards2}
+                  countryCode={countryCode}
+                  navigation={navigation}
+                  screenWidth={screenWidth}
+                />
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
                   <HomeTileCard
                     title={lstrings.buy_crypto}

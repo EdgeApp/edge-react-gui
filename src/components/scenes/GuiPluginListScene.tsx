@@ -38,7 +38,7 @@ import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
-import { filterPromoCards } from '../cards/PromoCards'
+import { filterInfoCards } from '../cards/InfoCardCarousel'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -81,8 +81,10 @@ const paymentTypeLogosById = {
   interac: 'paymentTypeLogoInterac',
   payid: 'paymentTypeLogoPayid',
   paynow: 'paymentTypeLogoPaynow',
+  paypal: 'paymentTypeLogoPaypal',
   pix: 'paymentTypeLogoPix',
   poli: 'paymentTypeLogoPoli',
+  revolut: 'paymentTypeLogoRevolut',
   sofort: 'paymentTypeLogoSofort',
   upi: 'paymentTypeLogoUpi',
   visa: 'paymentTypeVisa'
@@ -262,7 +264,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
     if (plugin.nativePlugin != null) {
       const cards = infoServerData.rollup?.promoCards2 ?? []
-      const promoCards = filterPromoCards({
+      const promoCards = filterInfoCards({
         accountReferral,
         cards,
         countryCode,
