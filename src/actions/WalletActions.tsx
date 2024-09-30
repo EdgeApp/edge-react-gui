@@ -11,10 +11,10 @@ import { Airship, showError, showToast } from '../components/services/AirshipIns
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
-import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, getToken, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -53,7 +53,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
       if (unactivatedTokenIds.find(unactivatedTokenId => unactivatedTokenId === tokenId) != null) {
-        await activateWalletTokens(dispatch, state, navigation, wallet, [tokenId])
+        await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
         return false
       }
       if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
@@ -147,101 +147,97 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
   }
 }
 
-const activateWalletTokens = async (
-  dispatch: Dispatch,
-  state: RootState,
-  navigation: NavigationBase,
-  wallet: EdgeCurrencyWallet,
-  tokenIds?: string[]
-): Promise<void> => {
-  if (tokenIds == null) throw new Error('Activating mainnet wallets unsupported')
-  const { account } = state.core
-  const { defaultIsoFiat, defaultFiat } = state.ui.settings
-  const { assetOptions } = await account.getActivationAssets({ activateWalletId: wallet.id, activateTokenIds: tokenIds })
-  const { pluginId } = wallet.currencyInfo
+export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenIds: EdgeTokenId[]): ThunkAction<Promise<void>> {
+  return async (_dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    const { defaultIsoFiat, defaultFiat } = state.ui.settings
+    const { assetOptions } = await account.getActivationAssets({ activateWalletId: wallet.id, activateTokenIds: tokenIds })
+    const { pluginId } = wallet.currencyInfo
 
-  // See if there is only one wallet option for activation
-  if (assetOptions.length === 1 && assetOptions[0].paymentWalletId != null) {
-    const { paymentWalletId, tokenId } = assetOptions[0]
-    const activationQuote = await account.activateWallet({
-      activateWalletId: wallet.id,
-      activateTokenIds: tokenIds,
-      paymentInfo: {
-        walletId: paymentWalletId,
-        tokenId
-      }
-    })
-    const tokensText = tokenIds.map(tokenId => {
-      const { currencyCode, displayName } = getToken(wallet, tokenId) ?? {}
-      return `${displayName} (${currencyCode})`
-    })
-    const tileTitle = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_scene_tile_title : lstrings.activate_wallet_token_scene_tile_title
-    const tileBody = tokensText.join(', ')
-
-    const { networkFee } = activationQuote
-    const { nativeAmount: nativeFee, currencyPluginId, tokenId: feeTokenId } = networkFee
-    if (currencyPluginId !== pluginId) throw new Error('Internal Error: Fee asset mismatch.')
-
-    const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
-
-    const exchangeNetworkFee = await wallet.nativeToDenomination(nativeFee, paymentCurrencyCode)
-    const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
-    const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
-    let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
-    if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
-    else fiatFee = round(fiatFee, -3)
-    const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${defaultFiat})`
-    let bodyText = lstrings.activate_wallet_token_scene_body
-
-    const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-    if (tokenActivationAdditionalReserveText != null) {
-      bodyText += '\n\n' + tokenActivationAdditionalReserveText
-    }
-
-    navigation.navigate('confirmScene', {
-      titleText: lstrings.activate_wallet_token_scene_title,
-      bodyText,
-      infoTiles: [
-        { label: tileTitle, value: tileBody },
-        { label: lstrings.mining_fee, value: feeString }
-      ],
-      onConfirm: (resetSlider: () => void) => {
-        if (lt(wallet.balanceMap.get(feeTokenId) ?? '0', nativeFee)) {
-          const msg = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_insufficient_funds_s : lstrings.activate_wallet_token_insufficient_funds_s
-          Airship.show<'ok' | undefined>(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={lstrings.create_wallet_account_unfinished_activation_title}
-              message={sprintf(msg, feeString)}
-              buttons={{ ok: { label: lstrings.string_ok } }}
-            />
-          )).catch(err => showError(err))
-          navigation.pop()
-          return
+    // See if there is only one wallet option for activation
+    if (assetOptions.length === 1 && assetOptions[0].paymentWalletId != null) {
+      const { paymentWalletId, tokenId } = assetOptions[0]
+      const activationQuote = await account.activateWallet({
+        activateWalletId: wallet.id,
+        activateTokenIds: tokenIds,
+        paymentInfo: {
+          walletId: paymentWalletId,
+          tokenId
         }
+      })
+      const tokensText = tokenIds.map(tokenId => {
+        const { currencyCode, displayName } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
+        return `${displayName} (${currencyCode})`
+      })
+      const tileTitle = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_scene_tile_title : lstrings.activate_wallet_token_scene_tile_title
+      const tileBody = tokensText.join(', ')
 
-        const name = activateWalletName[pluginId]?.name ?? lstrings.activate_wallet_token_transaction_name_category_generic
-        const notes = activateWalletName[pluginId]?.notes ?? lstrings.activate_wallet_token_transaction_notes_generic
-        activationQuote
-          .approve({
-            metadata: {
-              name,
-              category: `Expense:${lstrings.activate_wallet_token_transaction_name_category_generic}`,
-              notes
-            }
-          })
-          .then(result => {
-            showToast(lstrings.activate_wallet_token_success, ACTIVATION_TOAST_AUTO_HIDE_MS)
-            navigation.pop()
-          })
-          .catch(e => {
-            navigation.pop()
-            showError(e)
-          })
+      const { networkFee } = activationQuote
+      const { nativeAmount: nativeFee, currencyPluginId, tokenId: feeTokenId } = networkFee
+      if (currencyPluginId !== pluginId) throw new Error('Internal Error: Fee asset mismatch.')
+
+      const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
+
+      const exchangeNetworkFee = await wallet.nativeToDenomination(nativeFee, paymentCurrencyCode)
+      const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
+      const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
+      let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
+      if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
+      else fiatFee = round(fiatFee, -3)
+      const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${defaultFiat})`
+      let bodyText = lstrings.activate_wallet_token_scene_body
+
+      const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+      if (tokenActivationAdditionalReserveText != null) {
+        bodyText += '\n\n' + tokenActivationAdditionalReserveText
       }
-    })
-  } else {
-    throw new Error('Activation with multiple wallet options not supported yet')
+
+      navigation.navigate('confirmScene', {
+        titleText: lstrings.activate_wallet_token_scene_title,
+        bodyText,
+        infoTiles: [
+          { label: tileTitle, value: tileBody },
+          { label: lstrings.mining_fee, value: feeString }
+        ],
+        onConfirm: (resetSlider: () => void) => {
+          if (lt(wallet.balanceMap.get(feeTokenId) ?? '0', nativeFee)) {
+            const msg = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_insufficient_funds_s : lstrings.activate_wallet_token_insufficient_funds_s
+            Airship.show<'ok' | undefined>(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={lstrings.create_wallet_account_unfinished_activation_title}
+                message={sprintf(msg, feeString)}
+                buttons={{ ok: { label: lstrings.string_ok } }}
+              />
+            )).catch(err => showError(err))
+            navigation.pop()
+            return
+          }
+
+          const name = activateWalletName[pluginId]?.name ?? lstrings.activate_wallet_token_transaction_name_category_generic
+          const notes = activateWalletName[pluginId]?.notes ?? lstrings.activate_wallet_token_transaction_notes_generic
+          activationQuote
+            .approve({
+              metadata: {
+                name,
+                category: `Expense:${lstrings.activate_wallet_token_transaction_name_category_generic}`,
+                notes
+              }
+            })
+            .then(result => {
+              showToast(lstrings.activate_wallet_token_success, ACTIVATION_TOAST_AUTO_HIDE_MS)
+              navigation.pop()
+            })
+            .catch(e => {
+              navigation.pop()
+              showError(e)
+            })
+        }
+      })
+    } else {
+      throw new Error('Activation with multiple wallet options not supported yet')
+    }
   }
 }
 
