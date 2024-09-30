@@ -2,13 +2,14 @@ import { EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Platform } from 'react-native'
+import { check } from 'react-native-permissions'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
-import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
+import { setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
@@ -20,9 +21,11 @@ import {
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
 import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { permissionNames } from '../../reducers/PermissionsReducer'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
@@ -39,6 +42,7 @@ import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
+import { requestContactsPermission } from '../services/PermissionsManager'
 import { changeTheme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
@@ -53,7 +57,6 @@ export const SettingsScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds)
-  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const isLocked = useSelector(state => state.ui.settings.changesLocked)
@@ -67,6 +70,8 @@ export const SettingsScene = (props: Props) => {
 
   const context = useSelector(state => state.core.context)
   const logSettings = useWatch(context, 'logSettings')
+
+  const [localContactPermissionOn, setLocalContactsPermissionOn] = React.useState(false)
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(theme === config.darkTheme)
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
@@ -223,7 +228,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleToggleContactsPermission = useHandler(async () => {
-    await dispatch(setContactsPermissionOn(!contactsPermissionOn))
+    setLocalContactsPermissionOn(await requestContactsPermission(!localContactPermissionOn))
   })
 
   const handleNotificationSettings = useHandler(() => {
@@ -272,6 +277,15 @@ export const SettingsScene = (props: Props) => {
       setTouchIdText(lstrings.settings_button_use_biometric)
     }
   }
+
+  useAsyncEffect(
+    async () => {
+      const currentContactsPermission = await check(permissionNames.contacts)
+      setLocalContactsPermissionOn(currentContactsPermission === 'granted')
+    },
+    [],
+    'SettingsScene'
+  )
 
   // Load biometry type on mount
   React.useEffect(() => {
@@ -343,7 +357,7 @@ export const SettingsScene = (props: Props) => {
 
             <SettingsSwitchRow
               label={lstrings.settings_button_contacts_access_permission}
-              value={contactsPermissionOn}
+              value={localContactPermissionOn ?? false}
               onPress={handleToggleContactsPermission}
             />
             <SettingsSwitchRow key="spamFilter" label={lstrings.settings_hide_spam_transactions} value={spamFilterOn} onPress={handleToggleSpamFilter} />

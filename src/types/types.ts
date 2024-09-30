@@ -130,7 +130,7 @@ export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInf
 const asTokenWarningsShown = asArray(asString)
 
 const asLocalAccountSettingsInner = asObject({
-  contactsPermissionOn: asMaybe(asBoolean, true),
+  contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
