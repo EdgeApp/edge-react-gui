@@ -261,7 +261,6 @@
   "activate_wallet_token_transaction_name_xrp": "Ledger XRP",
   "activate_wallet_token_transaction_notes_xrp": "Attiva il token XRP abilitando Trust Line all'emittente",
   "activate_wallet_token_scene_title": "Attiva Token",
-  "activate_wallet_tokens_scene_title": "Attiva Token",
   "activate_wallet_token_scene_tile_title": "Token da attivare",
   "activate_wallet_tokens_scene_tile_title": "Token da attivare",
   "activate_wallet_token_scene_body": "Per inviare e ricevere il token selezionato dovrai prima attivarlo con una transazione blockchain. Questa transazione costerà la seguente commissione.\n\nSi prega di confermare utilizzando il cursore qui sotto.",
