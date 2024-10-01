@@ -22,6 +22,10 @@
 - fixed: Round Kado-provided amounts during sell
 - fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
 
+## 4.14.1
+
+- added: Foreground push notification title data displayed in dropdown
+
 ## 4.14.0
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`

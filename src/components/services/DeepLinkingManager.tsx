@@ -82,18 +82,30 @@ export function DeepLinkingManager(props: Props) {
 
       /** Handler for push messages received while app is in the foreground. */
       const handleForegroundPushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
+        const title = message.notification?.title ?? ''
         const body = message.notification?.body ?? ''
 
-        if (body === '') {
-          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no body')
+        if (title === '' && body === '') {
+          console.error('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title and no body')
           return
+        }
+
+        let notifMessage: string
+        if (title === '') {
+          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title')
+          notifMessage = body
+        } else if (body === '') {
+          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no body')
+          notifMessage = title
+        } else {
+          notifMessage = `${title}\n\n${body}`
         }
 
         // Show a FlashNotification:
         Airship.show(bridge => (
           <FlashNotification
             bridge={bridge}
-            message={body}
+            message={notifMessage}
             onPress={() => {
               bridge.resolve()
             }}
