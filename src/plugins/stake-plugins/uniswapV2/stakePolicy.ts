@@ -1,4 +1,4 @@
-import { AssetId, StakePolicy, StakeProviderInfo } from '../types'
+import { StakeAssetInfo, StakePolicy, StakeProviderInfo } from '../types'
 import { InfoServerResponse } from '../util/internalTypes'
 import { StakePluginPolicy } from './types'
 
@@ -10,8 +10,8 @@ export interface StakePolicyInfo {
   policy: StakePluginPolicy
   isStablePool?: boolean
   poolAddress?: string
-  stakeAssets: AssetId[]
-  rewardAssets: AssetId[]
+  stakeAssets: StakeAssetInfo[]
+  rewardAssets: StakeAssetInfo[]
 }
 
 export const toStakePolicy =

@@ -4,7 +4,7 @@ import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import { infoServerData } from '../../../../util/network'
-import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { KilnError, makeKilnApi } from '../util/KilnApi'
@@ -37,7 +37,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
       const stakeTransaction = await kiln.adaWithdrawRewards(walletAddress, nativeAmount)
@@ -68,7 +68,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, _requestNativeAmount: string): Promise<ChangeQuote> {
+    async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
@@ -125,7 +125,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, _requestNativeAmount: string): Promise<ChangeQuote> {
+    async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
@@ -161,7 +161,7 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchUnstakeExactQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchUnstakeExactQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
       throw new Error('fetchUnstakeExactQuote not implemented')
     },
 
