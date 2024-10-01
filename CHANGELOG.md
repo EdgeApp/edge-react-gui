@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.14.1
+
+- added: Foreground push notification title data displayed in dropdown
+
 ## 4.14.0
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
