@@ -26,7 +26,7 @@
 
 - added: Foreground push notification title data displayed in dropdown
 
-## 4.14.0
+## 4.14.0 (2024-09-30)
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
 - added: Buy with Revolut
