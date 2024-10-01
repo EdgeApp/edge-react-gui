@@ -124,10 +124,9 @@ const strings = {
 
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
-  warning_token_contract_override_3s:
-    'The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
   warning_uk_risk: `Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.`,
+  warning_battery_saver: `Battery Saver mode detected. Balances and transactions may be inaccurate`,
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -324,7 +323,6 @@ const strings = {
   activate_wallet_token_transaction_name_xrp: 'XRP Ledger',
   activate_wallet_token_transaction_notes_xrp: 'Activate XRP token by enabling Trust Line to issuer',
   activate_wallet_token_scene_title: 'Activate Token',
-  activate_wallet_tokens_scene_title: 'Activate Tokens',
   activate_wallet_token_scene_tile_title: 'Token to Activate',
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
@@ -1447,6 +1445,11 @@ const strings = {
   fiat_plugin_fetching_assets: 'Fetching supported assets',
   fiat_plugin_sell_cancelled: 'Sell order cancelled',
   fiat_plugin_finalizing_quote: 'Finalizing your exchange quote. Please wait as this may take up to a minute',
+  fiat_plugin_buy_complete_title: 'Buy Order Complete',
+  fiat_plugin_buy_complete_message_s: 'Your buy order of %1$s %2$s with %3$s %4$s has been completed.',
+  fiat_plugin_buy_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your wallet.',
+  fiat_plugin_buy_complete_message_2_hours_s: 'Please allow up to %1$s hours for the funds to appear in your wallet.',
+  fiat_plugin_buy_failed_try_again: 'Buy order failed. Please try again',
   fiat_plugin_sell_complete_title: 'Sell Order Complete',
   fiat_plugin_sell_complete_message_s: 'Your sell order of %1$s %2$s for %3$s %4$s has been completed.',
   fiat_plugin_sell_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your account.',

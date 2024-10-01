@@ -28,7 +28,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, removeIsoPrefix, truncateDecimals, zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -291,12 +291,12 @@ export const LoanCreateScene = (props: Props) => {
           setDestWallet(borrowEngineWallet)
           setDestTokenId(hardDestTokenAddr)
         } else if (result?.type === 'wallet') {
-          const { walletId, currencyCode, tokenId } = result
+          const { walletId, tokenId } = result
           const selectedWallet = wallets[walletId]
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)
-            setSrcCurrencyCode(currencyCode)
+            setSrcCurrencyCode(getCurrencyCode(selectedWallet, tokenId))
           } else {
             setDestBankId(undefined)
             setDestWallet(selectedWallet)

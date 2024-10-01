@@ -108,7 +108,8 @@ function processSwapQuoteError({
   if (insufficientFunds != null || errorMessage === 'InsufficientFundsError') {
     return {
       title: lstrings.exchange_insufficient_funds_title,
-      message: lstrings.exchange_insufficient_funds_message
+      message: lstrings.exchange_insufficient_funds_message,
+      error
     }
   }
 
@@ -122,7 +123,8 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+      message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name),
+      error
     }
   }
 
@@ -136,7 +138,8 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+      message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name),
+      error
     }
   }
 
@@ -147,7 +150,8 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
+      message: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode),
+      error
     }
   }
 
@@ -155,13 +159,15 @@ function processSwapQuoteError({
   if (permissionError?.reason === 'geoRestriction') {
     return {
       title: lstrings.exchange_generic_error_title,
-      message: lstrings.ss_geolock
+      message: lstrings.ss_geolock,
+      error
     }
   }
 
   // Anything else:
   return {
     title: lstrings.exchange_generic_error_title,
-    message: errorMessage
+    message: errorMessage,
+    error
   }
 }

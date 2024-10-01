@@ -180,7 +180,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         await dispatch(saveLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
-        navigation.navigate('loanDashboard', {})
+        navigation.navigate('loanDashboard')
         navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
 
         // Further route to LoanStatusScene only if Action Program contains multiple ops

@@ -70,7 +70,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
     closeRow()
     dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
       .then(async activated => {
-        const countryCode = await getCountryCodeByIp().catch(() => '')
+        const countryCode = await getCountryCodeByIp()
         if (activated) {
           navigation.navigate('transactionList', { tokenId, walletId: wallet.id, walletName: wallet.name ?? wallet.currencyInfo.displayName, countryCode })
         }

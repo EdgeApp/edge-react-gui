@@ -14,7 +14,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -112,13 +112,14 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
     ))
       .then(async result => {
         if (result?.type === 'wallet') {
-          const { walletId, currencyCode } = result
+          const { walletId, tokenId } = result
+          const wallet = account.currencyWallets[walletId]
           setWalletAccountActivationQuoteError('')
           setWalletId(walletId)
           const createdWalletInstance = await handleRenameAndReturnWallet()
           const paymentInfo: ActivationPaymentInfo = {
             requestedAccountName: accountName,
-            currencyCode,
+            currencyCode: getCurrencyCode(wallet, tokenId),
             ownerPublicKey: createdWalletInstance.publicWalletInfo.keys.ownerPublicKey,
             activePublicKey: createdWalletInstance.publicWalletInfo.keys.publicKey,
             requestedAccountCurrencyCode: existingCurrencyCode

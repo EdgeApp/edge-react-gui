@@ -134,6 +134,10 @@ describe('parseDeepLink', function () {
       'https://deep.edge.app/edge/1234567890a': {
         type: 'edgeLogin',
         lobbyId: '1234567890a'
+      },
+      'https://return.edge.app/edge/1234567890a': {
+        type: 'edgeLogin',
+        lobbyId: '1234567890a'
       }
     })
 
@@ -223,6 +227,26 @@ describe('parseDeepLink', function () {
         providerId: 'moonpay',
         direction: 'buy',
         paymentType: 'applepay'
+      }
+    })
+  })
+  describe('fiatProvider', function () {
+    makeLinkTests({
+      'https://deep.edge.app/fiatprovider/buy/moonpay?param=alice': {
+        type: 'fiatProvider',
+        providerId: 'moonpay',
+        direction: 'buy',
+        path: '',
+        query: { param: 'alice' },
+        uri: 'edge://fiatprovider/buy/moonpay?param=alice'
+      },
+      'https://return.edge.app/fiatprovider/buy/moonpay?param=alice': {
+        type: 'fiatProvider',
+        providerId: 'moonpay',
+        direction: 'buy',
+        path: '',
+        query: { param: 'alice' },
+        uri: 'edge://fiatprovider/buy/moonpay?param=alice'
       }
     })
   })

@@ -5,7 +5,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
-import { RouteParamList } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -100,6 +100,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return { type: 'other', uri, protocol }
     }
 
+    case 'fiatprovider': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'fiatProvider',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
+      }
+    }
+
     case 'plugin': {
       const [pluginId, ...deepPath] = pathParts
 
@@ -146,7 +160,7 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'scene': {
       const sceneName = url.pathname.replace('/', '')
-      return { type: 'scene', sceneName: sceneName as keyof RouteParamList, query: parseQuery(url.query) }
+      return { type: 'scene', sceneName: sceneName as keyof AppParamList, query: parseQuery(url.query) }
     }
 
     case 'swap': {
@@ -237,6 +251,7 @@ const prefixes: Array<[string, string]> = [
 
   // Alternative schemes:
   ['https://deep.edge.app/', 'edge://'],
+  ['https://return.edge.app/', 'edge://'],
   ['airbitz://', 'edge://'],
   ['reqaddr://', 'edge://reqaddr']
 ]

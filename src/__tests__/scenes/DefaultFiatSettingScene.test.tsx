@@ -12,7 +12,7 @@ describe('DefaultFiatSettingComponent', () => {
 
     const actual = renderer.render(
       <DefaultFiatSettingComponent
-        {...fakeSceneProps('defaultFiatSetting', {})}
+        {...fakeSceneProps('defaultFiatSetting', undefined)}
         supportedFiats={[
           {
             label: 'Dollars',

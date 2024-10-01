@@ -4,13 +4,15 @@ import { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { maybeShowContactsPermissionModal } from '../../hooks/redux/useContactThumbnail'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
+import { maybeShowContactsPermissionModal } from './ContactsPermissionModal'
 import { ListModal } from './ListModal'
 
 export interface ContactModalResult {
@@ -29,7 +31,6 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const styles = getStyles(theme)
   const contacts = useSelector(state => state.contacts)
   const dispatch = useDispatch()
-  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
 
   const rowComponent = ({ givenName, familyName, hasThumbnail, thumbnailPath }: GuiContact) => {
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
@@ -57,13 +58,16 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
 
   const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
 
-  React.useEffect(() => {
-    maybeShowContactsPermissionModal(dispatch, contactsPermissionOn)
-
-    // Avoid popping up the modal when component is mounted and the user changes
-    // contactsPermissionOn.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+  useAsyncEffect(
+    async () => {
+      const result = await dispatch(maybeShowContactsPermissionModal())
+      if (result === 'allow') {
+        await requestContactsPermission(true)
+      }
+    },
+    [],
+    'ContactListModal'
+  )
 
   return (
     <ListModal

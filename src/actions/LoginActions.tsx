@@ -86,8 +86,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       // during account creation
       await readLocalAccountSettings(account)
 
-      const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        navigation.replace('edgeTabs', { screen: 'homeTab', params: { screen: 'home' } })
+      const newAccountFlow = async (
+        navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>,
+        items: WalletCreateItem[]
+      ) => {
+        navigation.replace('edgeTabs', { screen: 'home' })
         const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
@@ -114,7 +117,13 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
-      rootNavigation.replace('edgeApp', {})
+      rootNavigation.replace('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'edgeTabs',
+          params: { screen: 'home' }
+        }
+      })
       referralPromise.catch(() => console.log(`Failed to load account referral info`))
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
@@ -157,7 +166,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
-      navigation.push('securityAlerts', {})
+      navigation.push('securityAlerts')
       hideSurvey = true
     }
 

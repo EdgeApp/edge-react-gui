@@ -23,7 +23,7 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
   })
     .then((userSel?: BackupModalResult) => {
       if (userSel === 'upgrade') {
-        navigation.navigate('upgradeUsername', {})
+        navigation.navigate('upgradeUsername')
       }
     })
     .finally(() => {
@@ -43,7 +43,7 @@ export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: N
     })
       .then((userSel?: BackupForTransferModalResult) => {
         if (userSel === 'upgrade') {
-          navigation.navigate('upgradeUsername', {})
+          navigation.navigate('upgradeUsername')
         }
       })
       .finally(() => {

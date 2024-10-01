@@ -2,11 +2,32 @@
 
 ## Unreleased
 
+## 4.15.0
+
+- added: Add Maya Protocol
+- added: Re-enable Piratechain on iOS
+- added: Battery Saver warning message for Android
+- added: Buy conversion tracking for Moonpay
+- added: Buy conversion tracking for Paybis
+- added: Support for return.edge.app deeplinks
+- added: Error tracking for failure to report conversions to referral server
+- changed: Remove whitespaces from custom token contract address input
+- changed: Use unique ENV configs for thorchain and thorchainda swap plugins
+- fixed: Correctly tag `tokenApproval` `actionType` in `getTxActionDisplayInfo`
+- fixed: URI encoding in Paybis return URIs
+- fixed: AddressTile2 touchable area states
+- fixed: Cases where it was possible to create duplicate custom tokens
+- fixed: Clear previous swap errors when new amounts are entered or swap assets are changed in `SwapCreateScene`
+- fixed: Handle race condition when navigating to a token's transaction list which requires token activation (XRP, Algorand, etc)
+- fixed: Message about overriding a built-in token contract, which is not possible to do
+- fixed: Round Kado-provided amounts during sell
+- fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
+
 ## 4.14.1
 
 - added: Foreground push notification title data displayed in dropdown
 
-## 4.14.0
+## 4.14.0 (2024-09-30)
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
 - added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
@@ -22,12 +43,12 @@
 - changed: Updated ACH supported US states
 - changed: Use new platform-specific `assetStatsCards2` info server data
 - fixed: Missing ellipses for long usernames displayed in the `SideMenu`
-- fixed: "Apple Pay" renamed to "Pay with Apple Pay" to align with branding guidelines
-- fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
-- fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent content of address hint dropdown between iOS and Android in `AddressFormScene`
+- fixed: Allow `InfoCardCarousel` to receive undefined `countryCodes`
+- fixed: Crash on HomeScene when logging while in airplane mode
 - fixed: Inconsistent corners in `SideMenu`
-- fixed: Round Kado-provided amounts during sell
+- fixed: "Most Recent Wallets" do not show those chosen through `fiatPlugin`
+- fixed: "Apple Pay" renamed to "Pay with Apple Pay" to align with branding guidelines
 
 ## 4.13.0 (2024-09-18)
 

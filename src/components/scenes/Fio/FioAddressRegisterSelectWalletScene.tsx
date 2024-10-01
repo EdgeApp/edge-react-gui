@@ -195,7 +195,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                   cryptoAmount
                 }
               })
-              navigation.navigate('homeTab', { screen: 'home' })
+              navigation.navigate('home')
             }
           }
         })

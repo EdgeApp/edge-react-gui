@@ -186,7 +186,7 @@ export const SwapConfirmationScene = (props: Props) => {
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      navigation.push('swapSuccess', {})
+      navigation.push('swapSuccess')
 
       // Dispatch the success action and callback
       onApprove()

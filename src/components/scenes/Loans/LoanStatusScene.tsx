@@ -94,7 +94,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
 
   const handleDonePress = useHandler(() => {
     if (loanAccountId != null) navigation.navigate('loanDetails', { loanAccountId })
-    else navigation.navigate('loanDashboard', {})
+    else navigation.navigate('loanDashboard')
   })
 
   const isProgramDone = steps.length > 0 && steps[steps.length - 1].status === 'done'

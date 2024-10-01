@@ -122,7 +122,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }
 
   const handleBorrow = () => {
-    navigation.navigate('loanDashboard', {})
+    navigation.navigate('loanDashboard')
     navigation.dispatch(DrawerActions.closeDrawer())
   }
 
@@ -148,7 +148,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }
 
   const handleMarketsPress = () => {
-    navigation.navigate('coinRanking', {})
+    navigation.navigate('coinRanking')
   }
 
   const handleShareApp = () => {
@@ -216,7 +216,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }> = [
     {
       pressHandler: () => {
-        navigation.navigate('fioAddressList', {})
+        navigation.navigate('fioAddressList')
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio-names',
@@ -224,7 +224,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
     },
     {
       pressHandler: () => {
-        navigation.navigate('fioRequestList', {})
+        navigation.navigate('fioRequestList')
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio',
@@ -252,7 +252,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
       pressHandler: () => {
-        navigation.navigate('settingsOverview', {})
+        navigation.navigate('settingsOverview')
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-settings',

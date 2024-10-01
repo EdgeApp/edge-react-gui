@@ -98,7 +98,7 @@ exports[`initialState 1`] = `
       },
       "autoLogoutTimeInSeconds": 3600,
       "changesLocked": true,
-      "contactsPermissionOn": true,
+      "contactsPermissionShown": false,
       "countryCode": "",
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",

@@ -26,7 +26,7 @@ export function withLoanAccount<Props extends { loanAccount: LoanAccount }>(
     const loanAccount = loanAccounts[route.params.loanAccountId]
 
     React.useEffect(() => {
-      if (loanAccount == null) navigation.navigate('loanDashboard', {})
+      if (loanAccount == null) navigation.navigate('loanDashboard')
     }, [navigation, loanAccount, loanAccounts])
 
     if (loanAccount == null) {

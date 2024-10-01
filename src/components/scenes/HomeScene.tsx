@@ -76,16 +76,16 @@ export const HomeScene = (props: Props) => {
   //
 
   const handleBuyPress = useHandler(() => {
-    navigation.navigate('buyTab', {})
+    navigation.navigate('buyTab')
   })
   const handleSellPress = useHandler(() => {
-    navigation.navigate('sellTab', {})
+    navigation.navigate('sellTab')
   })
   const handleFioPress = useHandler(() => {
-    navigation.navigate('fioAddressList', {})
+    navigation.navigate('fioAddressList')
   })
   const handleSwapPress = useHandler(() => {
-    navigation.navigate('swapTab', {})
+    navigation.navigate('swapTab')
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('walletsTab', { screen: 'walletList' })
@@ -95,7 +95,7 @@ export const HomeScene = (props: Props) => {
   // Set countryCode once
   useAsyncEffect(
     async () => {
-      const countryCode = await getCountryCodeByIp().catch(() => '')
+      const countryCode = await getCountryCodeByIp()
       setCountryCode(countryCode)
     },
     [],
@@ -210,7 +210,7 @@ export const HomeScene = (props: Props) => {
                 </>
               )}
               <>
-                <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
+                <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking')} />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCard navigation={navigation} numRows={5} />
                 </EdgeAnim>
