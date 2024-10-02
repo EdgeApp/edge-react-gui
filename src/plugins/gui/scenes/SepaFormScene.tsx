@@ -16,6 +16,14 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
+export interface FiatPluginSepaFormParams {
+  headerTitle: string
+  doneLabel: string
+  headerIconUri?: string
+  onDone: (sepaInfo: SepaInfo) => Promise<void>
+  onClose: () => void
+}
+
 interface Props extends EdgeSceneProps<'guiPluginSepaForm'> {}
 
 export const SepaFormScene = React.memo((props: Props) => {

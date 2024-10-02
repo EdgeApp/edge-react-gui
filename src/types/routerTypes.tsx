@@ -63,11 +63,13 @@ import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScen
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
-import type { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
+import type { FiatPluginAddressFormParams } from '../plugins/gui/scenes/AddressFormScene'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
+import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
+import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormScene'
 
 // -------------------------------------------------------------------------
 // Router types
