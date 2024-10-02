@@ -137,8 +137,15 @@ function EditTokenSceneComponent(props: Props) {
       networkLocation
     }
 
+    function logMessage(action: string, tokenId: string): string {
+      return `${action} Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${
+        wallet.type
+      } -- ${tokenId} -- ${displayName} -- ${currencyCode} -- ${decimals} -- ${JSON.stringify(customTokenInput.networkLocation)}`
+    }
+
     if (tokenId != null) {
       await wallet.currencyConfig.changeCustomToken(tokenId, customTokenInput)
+      logActivity(logMessage('Edit', tokenId))
       navigation.goBack()
     } else {
       // Creating a new token
@@ -181,7 +188,7 @@ function EditTokenSceneComponent(props: Props) {
         }
 
         await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, newTokenId])
-        logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${newTokenId} -- ${currencyCode} -- ${decimals}`)
+        logActivity(logMessage('Add', newTokenId))
       }
       navigation.goBack()
     }

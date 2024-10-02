@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Add display name and network location to add/edit token logs
+
 ## 4.15.0
 
 - added: Add Maya Protocol
