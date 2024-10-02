@@ -14,9 +14,12 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { BuyConversionValues, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
+import { FiatPluginSepaTransferParams } from './scenes/InfoDisplayScene'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
+import { FiatPluginSepaFormParams } from './scenes/SepaFormScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -46,22 +49,7 @@ export const asFiatPaymentType = asValue(
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
-export interface FiatPluginAddressFormParams {
-  countryCode: string
-  headerTitle: string
-  headerIconUri?: string
-  onSubmit: (homeAddress: HomeAddress) => Promise<void>
-  onClose: () => void
-}
-
 export type LinkHandler = (url: FiatProviderLink) => void
-export interface FiatPluginSepaFormParams {
-  headerTitle: string
-  doneLabel: string
-  headerIconUri?: string
-  onDone: (sepaInfo: SepaInfo) => Promise<void>
-  onClose: () => void
-}
 
 export interface FiatPluginSepaTransferInfo {
   input: {
@@ -80,14 +68,6 @@ export interface FiatPluginSepaTransferInfo {
     recipient: string
     reference: string
   }
-}
-
-export interface FiatPluginSepaTransferParams {
-  headerTitle: string
-  promptMessage: string
-  transferInfo: FiatPluginSepaTransferInfo
-  headerIconUri?: string
-  onDone: () => Promise<void>
 }
 
 export interface FiatPluginListModalParams {
