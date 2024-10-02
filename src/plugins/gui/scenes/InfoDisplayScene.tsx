@@ -12,6 +12,15 @@ import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
+
+export interface FiatPluginSepaTransferParams {
+  headerTitle: string
+  promptMessage: string
+  transferInfo: FiatPluginSepaTransferInfo
+  headerIconUri?: string
+  onDone: () => Promise<void>
+}
 
 interface InfoDisplayGroup {
   groupTitle: string

@@ -23,6 +23,14 @@ import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { GuiFormField } from '../components/GuiFormField'
 
+export interface FiatPluginAddressFormParams {
+  countryCode: string
+  headerTitle: string
+  headerIconUri?: string
+  onSubmit: (homeAddress: HomeAddress) => Promise<void>
+  onClose: () => void
+}
+
 interface Props extends EdgeSceneProps<'guiPluginAddressForm'> {}
 
 const FUZZY_SEARCH_INTERVAL = 2000
