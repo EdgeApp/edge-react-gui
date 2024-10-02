@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.14.2
+
+- fixed: Downgrade edge-exchange-plugins to v2.8.1 to remove Thorchain bugs introduced by Maya protocol additions
+
 ## 4.14.1
 
 - added: Foreground push notification title data displayed in dropdown
