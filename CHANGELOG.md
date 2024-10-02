@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fixed obscured "done" button display bug on Sepa info display scene for small-screen devices
+
 ## 4.15.0
 
 - added: Add Maya Protocol
