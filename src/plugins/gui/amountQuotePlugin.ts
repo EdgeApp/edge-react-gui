@@ -1,4 +1,4 @@
-import { div, eq, gt, mul, round, toFixed } from 'biggystring'
+import { div, eq, gt, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
@@ -60,6 +60,27 @@ const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
 const MAX_QUOTE_VALUE = '10000000000'
 
 const NO_PROVIDER_TOAST_DURATION_MS = 10000
+
+/** Pick a default fiat amount in the foreign fiat amount that is roughly equal
+ to the default USD fiat amount. Prioritizes rounding up/down to a nice looking
+ whole number. */
+async function getInitialFiatValue(date: string, startingFiatAmount: string, isoFiatCurrencyCode: string) {
+  let initialValue1: string | undefined
+  if (isoFiatCurrencyCode !== 'iso:USD') {
+    const ratePair = `${isoFiatCurrencyCode}_iso:USD`
+    const rate = await getHistoricalRate(ratePair, date)
+    initialValue1 = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
+
+    // Round out all decimals
+    initialValue1 = round(initialValue1, 0)
+
+    // Keep only the first decimal place
+    initialValue1 = round(initialValue1, initialValue1.length - 1)
+  } else {
+    initialValue1 = startingFiatAmount
+  }
+  return initialValue1
+}
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
@@ -225,34 +246,16 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       let goodQuotes: FiatProviderQuote[] = []
       let lastSourceFieldNum: number
 
-      // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
-      // wallet fiat selection regardless of region.
-      // TODO: Remove when Fiat selection is designed.
-      const fiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
-      const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
+      const isoFiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
+      const displayFiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
-      // Pick a default fiat amount in the foreign fiat amount that is roughly
-      // equal to the default USD fiat amount
-      let initialValue1: string | undefined
       const startingFiatAmount = isLightAccount ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
-      if (displayFiatCurrencyCode !== 'USD' && defaultFiatAmount == null) {
-        const isoFiatCurrencyCode = `iso:${displayFiatCurrencyCode}`
-        const isoNow = new Date().toISOString()
-        const ratePair = `${isoFiatCurrencyCode}_iso:USD`
-        const rate = await getHistoricalRate(ratePair, isoNow)
-        initialValue1 = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
-        // Round out a decimals
-        initialValue1 = round(initialValue1, 0)
-
-        // Only leave the first decimal
-        initialValue1 = round(initialValue1, initialValue1.length - 1)
-      } else {
-        initialValue1 = requireCrypto ? undefined : startingFiatAmount
-      }
+      const isoNow = new Date().toISOString()
+      const initialValue1 = requireCrypto ? undefined : await getInitialFiatValue(isoNow, startingFiatAmount, isoFiatCurrencyCode)
 
       // Navigate to scene to have user enter amount
       const enterAmount: InternalFiatPluginEnterAmountParams = {
@@ -385,7 +388,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               pluginUtils,
               tokenId,
               exchangeAmount: value,
-              fiatCurrencyCode,
+              fiatCurrencyCode: isoFiatCurrencyCode,
               amountType: 'fiat',
               direction,
               paymentTypes,
@@ -401,7 +404,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               pluginUtils,
               tokenId,
               exchangeAmount: value,
-              fiatCurrencyCode,
+              fiatCurrencyCode: isoFiatCurrencyCode,
               amountType: 'crypto',
               direction,
               paymentTypes,
@@ -516,12 +519,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           // Restrict light accounts from buying more than $50 at a time
           if (isLightAccount && isBuy) {
             const quoteFiatCurrencyCode = bestQuote.fiatCurrencyCode
-            const quoteFiatRate =
-              quoteFiatCurrencyCode === 'iso:USD' ? '1' : (await getHistoricalRate(`${quoteFiatCurrencyCode}_iso:USD`, new Date().toISOString())).toString()
-            const quoteDollarValue = mul(bestQuote.fiatAmount, quoteFiatRate)
 
-            if (gt(quoteDollarValue, '50')) {
-              stateManager.update({ statusText: { content: lstrings.fiat_plugin_purchase_limit_error, textType: 'error' } })
+            if (initialValue1 != null && gt(bestQuote.fiatAmount, initialValue1)) {
+              stateManager.update({
+                statusText: {
+                  content: sprintf(lstrings.fiat_plugin_purchase_limit_error_2s, initialValue1, removeIsoPrefix(quoteFiatCurrencyCode)),
+                  textType: 'error'
+                }
+              })
               return
             }
           }
