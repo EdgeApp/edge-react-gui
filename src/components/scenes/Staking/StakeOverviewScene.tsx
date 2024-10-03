@@ -12,7 +12,7 @@ import { selectDisplayDenomByCurrencyCode } from '../../../selectors/Denominatio
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StyledButtonContainer } from '../../buttons/ButtonsView'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -54,7 +54,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
     denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
     return denomMap
   }, {})
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
@@ -147,14 +146,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeader title={title} withTopMargin />
-      <View style={styles.card}>
-        <StakingReturnsCard
-          fromCurrencyLogos={policyIcons.stakeAssetUris}
-          toCurrencyLogos={policyIcons.rewardAssetUris}
-          apy={stakePolicy.apy}
-          stakeProviderInfo={stakePolicy.stakeProviderInfo}
-        />
-      </View>
+      <StakingReturnsCard wallet={wallet} stakePolicy={stakePolicy} />
       {stakePosition == null ? (
         <>
           <View style={styles.shimmer}>
