@@ -1289,7 +1289,7 @@
   "fiat_plugin_sell_failed_try_again": "Ordine di vendita non riuscito. Riprova.",
   "fiat_plugin_sell_failed_to_send_try_again": "Impossibile inviare fondi per la transazione di vendita. Riprova.",
   "fiat_plugin_cannot_continue_camera_permission": "Impossibile continuare. Autorizzazione fotocamera necessaria per la verifica dell'ID",
-  "fiat_plugin_purchase_limit_error": "Crea un account completo per aumentare il limite di acquisto",
+  "fiat_plugin_purchase_limit_error_2s": "Please create a full account to increase the purchase limit above %1$s %2$s",
   "fiat_plugin_max_buy_quote_error": "Il provider non può creare la quota di acquisto massimo",
   "fiat_plugin_max_sell_quote_error": "Il provider non può creare la quota di vendita massima",
   "fiat_plugin_max_sell_quote_error_1s": "Impossibile creare la quota di vendita massima per %1$s",
