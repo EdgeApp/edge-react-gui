@@ -44,6 +44,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const defaultFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const displayDenominations = useSelector(state => {
     const { denominationSettings = {} } = state.ui.settings
@@ -97,7 +98,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       const exchangeDenom = denominations.find(denom => denom.name === currencyCode) as EdgeDenomination
       const displayDenom = displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
-      const transactionFee = convertTransactionFeeToDisplayFee(currencyCode, receivingWallet.fiatCurrencyCode, exchangeRates, tx, displayDenom, exchangeDenom)
+      const transactionFee = convertTransactionFeeToDisplayFee(currencyCode, defaultFiat, exchangeRates, tx, displayDenom, exchangeDenom)
       const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
       const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${truncateDecimals(transactionFee.cryptoAmount)} (${
         transactionFee.fiatSymbol ?? ''
