@@ -14,6 +14,7 @@
 - changed: Remove whitespaces from custom token contract address input
 - changed: Use unique ENV configs for thorchain and thorchainda swap plugins
 - fixed: Correctly tag `tokenApproval` `actionType` in `getTxActionDisplayInfo`
+- fixed: Fixed obscured "done" button display bug on Sepa info display scene for small-screen devices
 - fixed: URI encoding in Paybis return URIs
 - fixed: AddressTile2 touchable area states
 - fixed: Cases where it was possible to create duplicate custom tokens
