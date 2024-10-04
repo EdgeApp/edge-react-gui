@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-- fixed: Fixed obscured "done" button display bug on Sepa info display scene for small-screen devices
-
 ## 4.15.0
 
 - added: Add Maya Protocol
@@ -13,10 +11,10 @@
 - added: Buy conversion tracking for Paybis
 - added: Support for return.edge.app deeplinks
 - added: Error tracking for failure to report conversions to referral server
-- changed: Enable Cardano staking
 - changed: Remove whitespaces from custom token contract address input
 - changed: Use unique ENV configs for thorchain and thorchainda swap plugins
 - fixed: Correctly tag `tokenApproval` `actionType` in `getTxActionDisplayInfo`
+- fixed: Fixed obscured "done" button display bug on Sepa info display scene for small-screen devices
 - fixed: URI encoding in Paybis return URIs
 - fixed: AddressTile2 touchable area states
 - fixed: Cases where it was possible to create duplicate custom tokens
@@ -35,13 +33,14 @@
 ## 4.14.0 (2024-09-30)
 
 - added: `ExpandableList` component, replacing the address hint dropdown in `AddressFormScene`
+- added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
 - added: Buy with Revolut
 - added: Buy/sell with Paypal
 - added: Foreground push notifications displayed in app
 - added: Minimum receive amount to `SwapConfirmationScene`
 - added: New analytics tracking param: `accountAgeMonths`
-- added: Add 'Cris Cyborg,' 'Free Talk Live,' and 'Crypto Canal' options to survey modal
 - added: Sell with Moonpay
+- changed: Enable Cardano staking
 - changed: Added Iraq to list of Visa/MC supported countries
 - changed: Display Asset Status cards in the same style as Promo Cards
 - changed: Updated ACH supported US states
