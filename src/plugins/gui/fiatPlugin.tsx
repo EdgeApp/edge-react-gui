@@ -28,12 +28,9 @@ import { datelog } from '../../util/utils'
 import {
   FiatDirection,
   FiatPaymentType,
-  FiatPluginAddressFormParams,
   FiatPluginListModalParams,
   FiatPluginPermissions,
   FiatPluginRegionCode,
-  FiatPluginSepaFormParams,
-  FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
   FiatPluginUtils,
@@ -173,7 +170,7 @@ export const executePlugin = async (params: {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
     },
-    addressForm: async (params: FiatPluginAddressFormParams) => {
+    addressForm: async params => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
@@ -208,7 +205,7 @@ export const executePlugin = async (params: {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('rewardsCardWelcome', params)
     },
-    sepaForm: async (params: FiatPluginSepaFormParams) => {
+    sepaForm: async params => {
       const { headerTitle, headerIconUri, doneLabel, onDone } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
@@ -226,7 +223,7 @@ export const executePlugin = async (params: {
         })
       })
     },
-    sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
+    sepaTransferInfo: async params => {
       return await new Promise((resolve, reject) => {
         const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
         maybeNavigateToCorrectTabScene()
