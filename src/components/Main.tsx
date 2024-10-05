@@ -108,6 +108,7 @@ import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/Se
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
 import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/SpendingLimitsScene'
+import { EarnScene as EarnSceneComponent } from './scenes/Staking/EarnScene'
 import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/StakeModifyScene'
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
@@ -154,6 +155,7 @@ const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
 const EditTokenScene = ifLoggedIn(EditTokenSceneComponent)
+const EarnScene = ifLoggedIn(EarnSceneComponent)
 const ExtraTabScene = ifLoggedIn(ExtraTabSceneComponent)
 const FiatPluginEnterAmountScene = ifLoggedIn(FiatPluginEnterAmountSceneComponent)
 const FioAddressDetailsScene = ifLoggedIn(FioAddressDetailsSceneComponent)
@@ -562,6 +564,13 @@ const EdgeAppStack = () => {
         component={ExtraTabScene}
         options={{
           headerLeft: () => <HeaderTextButton type="help" />
+        }}
+      />
+      <AppStack.Screen
+        name="earnScene"
+        component={EarnScene}
+        options={{
+          title: lstrings.stake_earn_button_label
         }}
       />
       <AppStack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
