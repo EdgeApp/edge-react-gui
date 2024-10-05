@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Navigate to wallet list after restoring wallets
+
 ## 4.15.0
 
 - added: Add Maya Protocol
