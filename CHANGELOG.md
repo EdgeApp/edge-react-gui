@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+- added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
+- changed: FIO Home Scene tile replaced with Earn
+- changed: Stake Overview Scene `StakingReturnsCard` redesigned
 - changed: Android `AutoLogoutModal` duration picker
 - changed: Enable Ethereum staking
 - changed: Prevent exchange rate fluctuations from restarting transaction list stream

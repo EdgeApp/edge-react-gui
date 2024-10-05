@@ -46,6 +46,7 @@ import type { MigrateWalletSelectCryptoParams } from '../components/scenes/Migra
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
+import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
 import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
@@ -136,6 +137,7 @@ export type EdgeAppStackParamList = {} & {
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: undefined
+  earnScene: EarnSceneParams
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
   extraTab: undefined

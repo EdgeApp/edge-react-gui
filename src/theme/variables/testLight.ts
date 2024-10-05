@@ -73,6 +73,7 @@ const palette = {
   grayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
+  greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
@@ -473,8 +474,8 @@ export const testLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  fioCardGradient: {
-    colors: [palette.purpleOp24, palette.transparent],
+  earnCardGradient: {
+    colors: [palette.greenOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
