@@ -8,6 +8,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="28"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
         <activity
         android:name="com.facebook.react.devsupport.DevSettingsActivity"
         android:exported="false">
