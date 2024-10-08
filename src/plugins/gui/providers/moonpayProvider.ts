@@ -213,6 +213,14 @@ export const moonpayProvider: FiatProviderFactory = {
           let moonpayCurrencies: MoonpayCurrency[] = []
           try {
             moonpayCurrencies = asMoonpayCurrencies(result)
+
+            // HACK: Moonpay API returns the burn address for EVM chain native currency
+            moonpayCurrencies = moonpayCurrencies.map(currency => {
+              if (currency.metadata?.contractAddress === '0x0000000000000000000000000000000000000000') {
+                currency.metadata.contractAddress = null
+              }
+              return currency
+            })
           } catch (error: any) {
             console.log(error.message)
             console.log(JSON.stringify(error, null, 2))
