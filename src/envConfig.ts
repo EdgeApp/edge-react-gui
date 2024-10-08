@@ -321,7 +321,9 @@ export const asEnvConfig = asObject({
   ),
   '0XGASLESS_INIT': asCorePluginInit(
     asObject({
-      apiKey: asOptional(asString, '')
+      apiKey: asOptional(asString, ''),
+      feePercentage: asOptional(asNumber, 0.0075),
+      feeReceiveAddress: asOptional(asString, '0xd75eB391357b89C48eb64Ea621A785FF9B77e661')
     })
   ),
   ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),
