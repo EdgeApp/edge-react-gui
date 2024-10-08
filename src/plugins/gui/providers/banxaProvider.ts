@@ -684,10 +684,10 @@ export const banxaProvider: FiatProviderFactory = {
                             )
                           }
                           insideInterval = false
-                        } catch (e: any) {
-                          if (e.message === SendErrorBackPressed) {
+                        } catch (e: unknown) {
+                          if (e instanceof Error && e.message === SendErrorBackPressed) {
                             await showUi.exitScene()
-                          } else if (e.message === SendErrorNoTransaction) {
+                          } else if (e instanceof Error && e.message === SendErrorNoTransaction) {
                             await showUi.exitScene()
                             await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
                           } else {

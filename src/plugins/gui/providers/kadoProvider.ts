@@ -839,10 +839,10 @@ export const kadoProvider: FiatProviderFactory = {
                         }
                         await showUi.saveTxAction(params)
                       }
-                    } catch (e: any) {
-                      if (e.message === SendErrorNoTransaction) {
+                    } catch (e: unknown) {
+                      if (e instanceof Error && e.message === SendErrorNoTransaction) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
-                      } else if (e.message === SendErrorBackPressed) {
+                      } else if (e instanceof Error && e.message === SendErrorBackPressed) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_cancelled)
                         await showUi.exitScene()
                       } else {

@@ -627,8 +627,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
                       sendResponse('onsenttransaction', tx.signedTx, injectJs)
                     }
-                    send().catch(e => {
-                      if (!e.message.includes(SendErrorBackPressed)) {
+                    send().catch((e: unknown) => {
+                      if (!(e instanceof Error && e.message.includes(SendErrorBackPressed))) {
                         showError(e)
                       }
                     })
