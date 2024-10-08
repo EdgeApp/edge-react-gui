@@ -174,7 +174,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       await coreWallet.parseUri(clipboard, currencyCode)
       await changeAddress(clipboard)
     } catch (error) {
-      showError(error)
+      showError(error, { trackError: false })
     }
   })
 
