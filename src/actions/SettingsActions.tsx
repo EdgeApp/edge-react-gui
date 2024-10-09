@@ -10,9 +10,7 @@ import { lstrings } from '../locales/strings'
 import { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
 import { asMostRecentWallet, MostRecentWallet } from '../types/types'
-import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -243,40 +241,6 @@ export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: false
       })
-    }
-  }
-}
-
-export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const response = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.restore_wallets_modal_title}
-        message={lstrings.restore_wallets_modal_description}
-        buttons={{
-          confirm: { label: lstrings.restore_wallets_modal_confirm },
-          cancel: { label: lstrings.restore_wallets_modal_cancel }
-        }}
-      />
-    ))
-    if (response === 'confirm') {
-      const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
-      await Promise.all(
-        restoreKeys
-          .map(key => key.id)
-          .map(
-            async walletId =>
-              await account.changeWalletStates({
-                [walletId]: { archived: false, deleted: false }
-              })
-          )
-      )
-      logActivity(`Restore Wallets: ${account.username}`)
-
-      navigation.navigate('walletsTab', { screen: 'walletList' })
     }
   }
 }
