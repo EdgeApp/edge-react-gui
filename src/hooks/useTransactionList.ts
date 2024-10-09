@@ -29,6 +29,13 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
 
   const requestMore = React.useRef(() => {})
 
+  // Ignore changes to the spamThreshold unless it's changing to or from 0
+  // This prevents starting the stream over when the exchange rate changes
+  const spamThresholdRef = React.useRef(spamThreshold)
+  if (spamThreshold !== spamThresholdRef.current && (spamThreshold === '0' || spamThresholdRef.current === '0')) {
+    spamThresholdRef.current = spamThreshold
+  }
+
   // The effect maintains internal mutable state,
   // and then calls `setOutput` to expose it atomically.
   const [output, setOutput] = React.useState<Omit<Output, 'requestMore'>>({
@@ -105,7 +112,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
         batchSize: 30,
         firstBatchSize: 10,
         searchString,
-        spamThreshold,
+        spamThreshold: spamThresholdRef.current,
         tokenId
       })
 
@@ -153,7 +160,8 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
       cleanupChanged()
       cleanupStream()
     }
-  }, [searchString, spamThreshold, tokenId, wallet])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, spamThresholdRef.current, tokenId, wallet])
 
   return {
     ...output,
