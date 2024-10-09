@@ -6,7 +6,7 @@ import { ShadowedView } from 'react-native-fast-shadow'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import { lstrings } from '../../locales/strings'
+import { toLocaleTime } from '../../locales/intl'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -34,7 +34,7 @@ export const WalletRestoreCard = (props: Props) => {
 
   const [isSelected, setIsSelected] = React.useState(false)
 
-  const dateLabel = created?.toLocaleDateString() ?? lstrings.n_a
+  const dateLabel = created == null ? '' : toLocaleTime(created)
 
   // Primary Currency icon
   const primaryCurrencyIconUrl = React.useMemo(() => {
