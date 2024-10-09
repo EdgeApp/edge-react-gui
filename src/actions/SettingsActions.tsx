@@ -1,5 +1,5 @@
 import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
-import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
+import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType, EdgeWalletInfoFull } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
@@ -247,7 +247,7 @@ export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
   }
 }
 
-export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction<Promise<void>> {
+export function showRestoreWalletsModal(navigation: NavigationBase, restoreKeys: EdgeWalletInfoFull[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -263,7 +263,6 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       />
     ))
     if (response === 'confirm') {
-      const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
       await Promise.all(
         restoreKeys
           .map(key => key.id)
@@ -276,7 +275,7 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       )
       logActivity(`Restore Wallets: ${account.username}`)
 
-      navigation.navigate('home')
+      navigation.goBack()
     }
   }
 }

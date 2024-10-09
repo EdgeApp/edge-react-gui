@@ -15,7 +15,6 @@ import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
   showReEnableOtpModal,
-  showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
   updateTouchIdEnabled
@@ -142,7 +141,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleShowRestoreWalletsModal = useHandler(async () => {
-    await dispatch(showRestoreWalletsModal(navigation))
+    navigation.navigate('walletRestore')
   })
 
   const handleShowUnlockSettingsModal = useHandler(async () => {
