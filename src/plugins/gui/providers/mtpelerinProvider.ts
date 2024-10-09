@@ -8,6 +8,7 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
+import { SendErrorBackPressed } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -626,8 +627,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
                       sendResponse('onsenttransaction', tx.signedTx, injectJs)
                     }
-                    send().catch(e => {
-                      if (!e.message.includes('SendErrorBackPressed')) {
+                    send().catch((e: unknown) => {
+                      if (!(e instanceof Error && e.message.includes(SendErrorBackPressed))) {
                         showError(e)
                       }
                     })

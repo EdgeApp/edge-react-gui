@@ -608,13 +608,13 @@ export const moonpayProvider: FiatProviderFactory = {
                           title: lstrings.fiat_plugin_sell_complete_title,
                           message
                         })
-                      } catch (e: any) {
+                      } catch (e: unknown) {
                         await showUi.exitScene()
                         // Reopen the webivew on the Paybis payment screen
                         await openWebView()
-                        if (e.message === SendErrorNoTransaction) {
+                        if (e instanceof Error && e.message === SendErrorNoTransaction) {
                           await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
-                        } else if (e.message === SendErrorBackPressed) {
+                        } else if (e instanceof Error && e.message === SendErrorBackPressed) {
                           // Do nothing
                         } else {
                           await showUi.showError(e)
