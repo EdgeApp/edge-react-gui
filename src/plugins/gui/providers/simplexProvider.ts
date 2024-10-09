@@ -108,7 +108,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   one: { ONE: 'ONE' },
   optimism: { ETH: 'ETH-OPTIMISM', OP: 'OP' },
   polkadot: { DOT: 'DOT' },
-  polygon: { GMEE: 'GMEE', MATIC: 'MATIC', USDC: 'USDC-MATIC' },
+  polygon: { GMEE: 'GMEE', POL: 'POL', USDC: 'USDC-MATIC' },
   qtum: { QTUM: 'QTUM' },
   ravencoin: { RVN: 'RVN' },
   ripple: { XRP: 'XRP' },
