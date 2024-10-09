@@ -454,7 +454,7 @@ export interface Theme {
   // Special Home Scene Tiled Cards
   buyCardGradient: ThemeGradientParams
   sellCardGradient: ThemeGradientParams
-  fioCardGradient: ThemeGradientParams
+  earnCardGradient: ThemeGradientParams
   swapCardGradient: ThemeGradientParams
 
   txDirBgReceive: string

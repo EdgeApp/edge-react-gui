@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- added: Earn Scene
+- changed: FIO Home Scene tile replaced with Earn
+- changed: Stake Overview Scene `StakingReturnsCard` redesigned
+
 ## 4.15.0
 
 - added: Add Maya Protocol

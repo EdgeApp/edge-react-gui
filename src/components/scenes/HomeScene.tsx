@@ -82,7 +82,7 @@ export const HomeScene = (props: Props) => {
     navigation.navigate('sellTab')
   })
   const handleFioPress = useHandler(() => {
-    navigation.navigate('fioAddressList')
+    navigation.navigate('earnScene', {})
   })
   const handleSwapPress = useHandler(() => {
     navigation.navigate('swapTab')
@@ -118,7 +118,7 @@ export const HomeScene = (props: Props) => {
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
-  const fioIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }), [theme])
+  const earnIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-earn') }), [theme])
   const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }), [theme])
   const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
   const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
@@ -176,12 +176,12 @@ export const HomeScene = (props: Props) => {
                   <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
                     {hideFio ? null : (
                       <HomeTileCard
-                        title={lstrings.fio_web3}
-                        footer={lstrings.fio_web3_footer}
-                        gradientBackground={theme.fioCardGradient}
+                        title={lstrings.staking_earn_crypto}
+                        footer={lstrings.staking_earn_crypto_footer}
+                        gradientBackground={theme.earnCardGradient}
                         nodeBackground={
                           <View style={styles.backroundImageContainer}>
-                            <FastImage source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                            <FastImage source={earnIcon} style={styles.backgroundImage} resizeMode="stretch" />
                           </View>
                         }
                         onPress={handleFioPress}
