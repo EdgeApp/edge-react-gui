@@ -250,7 +250,7 @@ const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   ETH: { pluginId: 'ethereum', tokenId: null },
   LTC: { pluginId: 'litecoin', tokenId: null },
   DOT: { pluginId: 'polkadot', tokenId: null },
-  'MATIC-POLYGON': { pluginId: 'polygon', currencyCode: 'MATIC', tokenId: null },
+  POL: { pluginId: 'polygon', currencyCode: 'POL', tokenId: null },
   SOL: { pluginId: 'solana', tokenId: null },
   TRX: { pluginId: 'tron', tokenId: null },
   XLM: { pluginId: 'stellar', tokenId: null },
