@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: "Go to Parent Wallet" `WalletListMenuModal` option
 - changed: Enable Ethereum staking
 - changed: Navigate to wallet list after restoring wallets
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
