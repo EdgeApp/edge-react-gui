@@ -31,6 +31,7 @@ export type WalletListMenuKey =
   | 'getSeed'
   | 'manageTokens'
   | 'viewXPub'
+  | 'goToParent'
   | 'getRawKeys'
   | 'rawDelete'
   | 'togglePause'
@@ -278,6 +279,21 @@ export function walletListMenuAction(
           const keys = JSON.stringify(rawKeys, null, 2)
           await Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
         }
+      }
+    }
+
+    case 'goToParent': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { account } = state.core
+        const { currencyWallets } = account
+        const wallet = currencyWallets[walletId]
+
+        navigation.navigate('transactionList', {
+          walletId,
+          tokenId: null,
+          walletName: getWalletName(wallet)
+        })
       }
     }
 
