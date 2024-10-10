@@ -443,6 +443,7 @@ export interface Theme {
   // Shadows
   iconShadow: ThemeShadowParams
   dropdownListShadow: ThemeShadowParams
+  notifcationCardShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string
