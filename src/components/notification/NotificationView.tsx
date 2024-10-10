@@ -193,7 +193,7 @@ const NotificationCardsContainer = styled(Animated.View)<{ hasTabs: boolean; ins
           paddingHorizontal: theme.rem(0.5),
           alignSelf: 'center',
           justifyContent: 'flex-end',
-          bottom: 0
+          bottom: theme.rem(0.5)
         },
         useAnimatedStyle(() => {
           const maybeMenuBarHeight = hasTabs ? interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) : 0

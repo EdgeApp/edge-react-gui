@@ -76,6 +76,7 @@ exports[`HelpModal should render with loading props 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",

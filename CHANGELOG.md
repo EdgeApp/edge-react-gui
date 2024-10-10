@@ -11,6 +11,7 @@
 - changed: Prevent exchange rate fluctuations from restarting transaction list stream
 - changed: Call `saveTx` after signing or broadcasting transactions from WalletConnect
 - changed: Navigate to wallet list after restoring wallets
+- changed: Update `NotificationCard` to UI4 styling
 - changed: Remove legacy non-segwit wallets from new account wallet selection scene
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 

@@ -477,6 +477,18 @@ export const edgeDark: Theme = {
     elevation: 0
   },
 
+  notifcationCardShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
   dropdownListShadow: {
     shadowColor: 'white',
     shadowOffset: {
