@@ -40,6 +40,7 @@ const icons: { [key: string]: string } = {
   exportWalletTransactions: 'export',
   getRawKeys: 'lock',
   getSeed: 'key',
+  goToParent: 'upcircleo',
   manageTokens: 'plus',
   rawDelete: 'warning',
   rename: 'edit',
@@ -158,6 +159,10 @@ export function WalletListMenuModal(props: Props) {
 
       if (tokenId != null) {
         setOptions([
+          {
+            label: lstrings.go_to_parent_wallet,
+            value: 'goToParent'
+          },
           {
             label: lstrings.string_resync,
             value: 'resync'
