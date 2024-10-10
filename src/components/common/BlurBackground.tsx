@@ -16,6 +16,8 @@ export const BlurBackground = () => {
 const getStyles = cacheStyles((theme: Theme) => ({
   blurView: {
     ...StyleSheet.absoluteFillObject,
+    // iOS needs this to properly round the container, while Android doesn't:
+    borderRadius: theme.cardBorderRadius,
     // We need this backgroundColor because Android applies an overlay to the
     // entire screen for the BlurView by default. We change this default
     // behavior with the transparent overlayColor, so we add this background

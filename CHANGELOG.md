@@ -4,6 +4,7 @@
 
 - changed: Enable Ethereum staking
 - changed: Navigate to wallet list after restoring wallets
+- changed: Update `NotificationCard` to UI4 styling
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 
 ## 4.15.0
