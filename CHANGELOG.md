@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- added: `WalletRestoreScene`
+- added: Button to access the `WalletRestoreScene` on `WalletListScene` if applicable
+- changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
 - fixed: Fixed obscured "done" button display bug on Sepa info display scene for small-screen devices
 
 ## 4.15.0
