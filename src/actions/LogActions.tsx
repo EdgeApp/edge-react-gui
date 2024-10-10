@@ -49,6 +49,7 @@ interface LoggedInUser {
 }
 
 interface WalletData {
+  created?: string
   currencyCode?: string
   customTokens?: EdgeTokenMap
   imported?: boolean
@@ -180,6 +181,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
         if (wallet && logOutput.loggedInUser) {
           const currencyCode = wallet.currencyInfo.currencyCode ?? ''
           logOutput.loggedInUser.wallets.push({
+            created: wallet.created?.toISOString(),
             currencyCode,
             customTokens: wallet.currencyConfig.customTokens,
             imported,
