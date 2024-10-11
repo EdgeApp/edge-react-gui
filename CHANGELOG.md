@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Include wallet creation date in wallet data in log output
+- changed: Android `AutoLogoutModal` duration picker
 - changed: Enable Ethereum staking
 - changed: Prevent exchange rate fluctuations from restarting transaction list stream
 - changed: Call `saveTx` after signing or broadcasting transactions from WalletConnect
