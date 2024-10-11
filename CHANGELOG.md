@@ -5,7 +5,6 @@
 ## 4.15.0
 
 - added: Add Maya Protocol
-- added: Re-enable Piratechain on iOS
 - added: Battery Saver warning message for Android
 - added: Buy conversion tracking for Moonpay
 - added: Buy conversion tracking for Paybis
