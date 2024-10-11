@@ -462,6 +462,7 @@
   "string_archive": "Archive",
   "string_archive_wallet": "Archive Wallet",
   "satPerByte": "Satoshi mỗi Byte",
+  "go_to_parent_wallet": "Go To Parent Wallet",
   "gasLimit": "Khí giới hạn",
   "gasPrice": "Giá Gas (Gwei)",
   "string_disable": "Disabled",
