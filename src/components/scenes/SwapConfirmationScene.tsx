@@ -186,7 +186,10 @@ export const SwapConfirmationScene = (props: Props) => {
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      navigation.push('swapSuccess')
+      navigation.push('swapSuccess', {
+        edgeTransaction: result.transaction,
+        walletId: request.fromWallet.id
+      })
 
       // Dispatch the success action and callback
       onApprove()

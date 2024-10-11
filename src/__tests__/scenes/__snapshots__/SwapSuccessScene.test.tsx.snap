@@ -290,7 +290,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
           ]
         }
       >
-        Your exchange has been successfully completed!
+        Your exchange is being processed!
       </Text>
       <Text
         adjustsFontSizeToFit={true}
@@ -320,7 +320,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
           ]
         }
       >
-        Exchanges may take a few minutes and up to 24 hours to process.
+        Processing may take up to 24 hours to complete.
       </Text>
     </View>
   </View>,

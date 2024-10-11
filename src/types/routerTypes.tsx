@@ -53,6 +53,7 @@ import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOver
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
 import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
+import { SwapSuccessParams } from '../components/scenes/SwapSuccessScene'
 import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
 import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
@@ -186,7 +187,7 @@ export type EdgeAppStackParamList = {} & {
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
   swapSettings: undefined
-  swapSuccess: undefined
+  swapSuccess: SwapSuccessParams
   sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
   sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams

@@ -610,6 +610,7 @@
   "trade_currency": "Trade",
   "trade_s": "Trade %1$s",
   "swap_s_to_from_crypto": "Swap %1$s to/from another crypto",
+  "transaction_details": "Transaction Details",
   "transaction_details_category_title": "Category",
   "transaction_details_payee": "Payee",
   "transaction_details_payer": "Payer",
