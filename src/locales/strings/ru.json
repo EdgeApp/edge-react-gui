@@ -462,6 +462,7 @@
   "string_archive": "Archive",
   "string_archive_wallet": "Archive Wallet",
   "satPerByte": "Сатоши за байт",
+  "go_to_parent_wallet": "Go To Parent Wallet",
   "gasLimit": "Лимит газа",
   "gasPrice": "Цена газа (Gwei)",
   "string_disable": "Отключено",
