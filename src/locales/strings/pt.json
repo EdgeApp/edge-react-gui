@@ -462,6 +462,7 @@
   "string_archive": "Arquivar",
   "string_archive_wallet": "Arquivar Carteira",
   "satPerByte": "Satoshi por Byte",
+  "go_to_parent_wallet": "Go To Parent Wallet",
   "gasLimit": "Limite de gás",
   "gasPrice": "Preço do Gás (Gwei)",
   "string_disable": "Desativado",
