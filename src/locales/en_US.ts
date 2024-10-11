@@ -500,8 +500,13 @@ const strings = {
   staking_change_unlock_explainer_title: 'Unstaked Funds',
   staking_change_unlock_explainer1: 'Unstaked funds are not immediately available. ',
   staking_change_unlock_explainer2: 'These continue to be locked and unusable for 7 days after you unstake the funds.',
+  staking_discover: 'Discover',
+  staking_earning_pools: 'Earning Pools',
+  staking_earn_crypto: 'Earn Crypto',
+  staking_earn_crypto_footer: 'Stake crypto for passive returns',
   staking_overview_header: 'Stake %s',
   staking_overview_explainer: 'You have the following funds staked:',
+  staking_portfolio: 'Portfolio',
   staking_locked_title: 'Unstaked and locked until %1$s',
   staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
@@ -1368,6 +1373,14 @@ const strings = {
   // Stake
   stake_estimated_return: 'Estimated Return: %s',
   stake_estimated_apr_s: '%s Estimated APR',
+  stake_stake_1s: 'Stake: %1$s',
+  stake_staked_1s: 'Staked: %1$s',
+  stake_earn_1s: 'Earn: %1$s',
+  stake_earning_1s: 'Earning: %1$s',
+
+  stake_apy_1s: '%1$s APY',
+  stake_variable_apy: 'Variable APY',
+
   stake_s_staked: '%s Staked',
   stake_s_earned: '%s Earned',
   stake_s_unstaked: '%s Unstaked',

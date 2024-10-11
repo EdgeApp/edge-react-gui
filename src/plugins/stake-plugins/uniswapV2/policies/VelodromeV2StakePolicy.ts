@@ -8,7 +8,7 @@ import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import VELODROME_V2_VOTER from '../../../abi/VELODROME_V2_VOTER.json'
 import { cacheTxMetadata } from '../../metadataCache'
-import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
@@ -50,7 +50,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: AssetId) => `${assetId.pluginId}:${assetId.currencyCode}`
+  const serializeAssetId = (assetId: StakeAssetInfo) => `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
@@ -94,7 +94,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
     return reservesMap
   }
 
-  function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: AssetId): string {
+  function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: StakeAssetInfo): string {
     const contractInfo = eco.getContractInfo(assetId.currencyCode)
     const { address } = contractInfo
     return address.toLowerCase()
