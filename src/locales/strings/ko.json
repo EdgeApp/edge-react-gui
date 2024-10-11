@@ -462,6 +462,7 @@
   "string_archive": "Archive",
   "string_archive_wallet": "Archive Wallet",
   "satPerByte": "바이트당 사토시",
+  "go_to_parent_wallet": "Go To Parent Wallet",
   "gasLimit": "가스 한도",
   "gasPrice": "가스 가격 (Gwei)",
   "string_disable": "Disabled",
