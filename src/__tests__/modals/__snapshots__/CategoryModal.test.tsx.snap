@@ -76,6 +76,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -1463,6 +1464,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
