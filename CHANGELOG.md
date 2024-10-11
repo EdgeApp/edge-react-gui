@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: "Go to Parent Wallet" `WalletListMenuModal` option
 - added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
 - changed: FIO Home Scene tile replaced with Earn

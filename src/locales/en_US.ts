@@ -530,6 +530,7 @@ const strings = {
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
   satPerByte: 'Satoshi Per Byte',
+  go_to_parent_wallet: 'Go to Parent Wallet',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price (Gwei)',
   string_disable: 'Disabled',
