@@ -462,6 +462,7 @@
   "string_archive": "アーカイブ",
   "string_archive_wallet": "ウォレットをアーカイブ",
   "satPerByte": "1バイトあたりのSatoshi",
+  "go_to_parent_wallet": "Go To Parent Wallet",
   "gasLimit": "ガスリミット",
   "gasPrice": "ガス価格 (Gwei)",
   "string_disable": "無効化済み",
