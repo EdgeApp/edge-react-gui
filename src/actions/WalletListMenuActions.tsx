@@ -144,6 +144,7 @@ export function walletListMenuAction(
     case 'split': {
       return async () => {
         navigation.navigate('createWalletSelectCrypto', {
+          disableLegacy: true,
           splitPluginIds,
           splitSourceWalletId: walletId
         })
