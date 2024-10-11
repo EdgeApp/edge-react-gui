@@ -111,7 +111,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         screen: 'edgeAppStack',
         params: {
           screen: 'createWalletSelectCryptoNewAccount',
-          params: { newAccountFlow, defaultSelection }
+          params: { newAccountFlow, defaultSelection, disableLegacy: true }
         }
       })
 
