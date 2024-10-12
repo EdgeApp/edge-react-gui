@@ -851,10 +851,12 @@ const strings = {
   sweep_private_key_syncing_balances: 'Searching for balances...',
   sweep_private_key_syncing_balances_slow: 'Looking up balances is taking longer than usual.\nPlease wait...',
 
+  restore: 'Restore',
   restore_wallets_modal_title: 'Restore Wallets',
-  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_body: 'This will restore all selected wallets',
   restore_wallets_modal_confirm: 'Confirm',
   restore_wallets_modal_cancel: 'Cancel',
+  older_date: 'Older',
 
   memo_destination_tag_title: 'Destination Tag',
   memo_memo_title: 'Transaction Memo',

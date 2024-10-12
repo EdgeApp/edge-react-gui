@@ -4,11 +4,13 @@ import { View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useBackButtonToast } from '../../hooks/useBackButtonToast'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeButton } from '../buttons/EdgeButton'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
@@ -35,6 +37,10 @@ export function WalletListScene(props: Props) {
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
+
+  const account = useSelector(state => state.core.account)
+  const allKeys = useWatch(account, 'allKeys')
+  const hasRestoreWallets = allKeys.filter(key => key.archived || key.deleted).length > 0
 
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
 
@@ -75,6 +81,10 @@ export function WalletListScene(props: Props) {
     setSorting(false)
   })
 
+  const handlePressRestoreWallets = useHandler(() => {
+    navigation.navigate('walletRestore')
+  })
+
   const handleFooterLayoutHeight = useHandler((height: number) => {
     setFooterHeight(height)
   })
@@ -86,6 +96,10 @@ export function WalletListScene(props: Props) {
   const renderHeader = React.useMemo(() => {
     return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
   }, [handleSort, navigation, isSearching, sorting])
+
+  const renderListFooter = React.useMemo(() => {
+    return <SceneButtons secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }} />
+  }, [handlePressRestoreWallets])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
@@ -134,7 +148,7 @@ export function WalletListScene(props: Props) {
               <WalletListSwipeable
                 key="fullList"
                 header={renderHeader}
-                footer={undefined}
+                footer={hasRestoreWallets ? renderListFooter : undefined}
                 navigation={navigation}
                 insetStyle={insetStyle}
                 searching={isSearching}

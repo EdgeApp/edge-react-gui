@@ -125,6 +125,7 @@ import { TransactionList as TransactionListComponent } from './scenes/Transactio
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
+import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
@@ -215,6 +216,7 @@ const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
+const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
@@ -756,6 +758,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <AppStack.Screen name="walletRestore" component={WalletRestoreScene} />
       <AppStack.Screen name="wcConnect" component={WcConnectScene} />
       <AppStack.Screen name="wcConnections" component={WcConnectionsScene} />
       <AppStack.Screen name="wcDisconnect" component={WcDisconnectScene} />

@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+- added: `WalletRestoreScene`
+- added: Button to access the `WalletRestoreScene` on `WalletListScene` if applicable
 - added: "Go to Parent Wallet" `WalletListMenuModal` option
 - added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
+- changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
 - changed: FIO Home Scene tile replaced with Earn
 - changed: Stake Overview Scene `StakingReturnsCard` redesigned
 - changed: Android `AutoLogoutModal` duration picker

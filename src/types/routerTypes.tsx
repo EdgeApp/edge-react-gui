@@ -195,6 +195,7 @@ export type EdgeAppStackParamList = {} & {
   transactionDetails: TransactionDetailsParams
   transactionsExport: TransactionsExportParams
   upgradeUsername: undefined
+  walletRestore: undefined
   wcConnect: WcConnectParams
   wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams
