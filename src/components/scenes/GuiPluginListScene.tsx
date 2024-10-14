@@ -377,11 +377,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+    const forcedWallet = forcedWalletResult?.type === 'wallet' ? account.currencyWallets[forcedWalletResult.walletId] : undefined
 
     const titleAsset =
-      forcedWalletResult == null || forcedWalletResult.type !== 'wallet'
+      forcedWalletResult == null || forcedWalletResult.type !== 'wallet' || forcedWallet == null
         ? lstrings.cryptocurrency
-        : getCurrencyCodeWithAccount(account, account.currencyWallets[forcedWalletResult.walletId].currencyInfo.pluginId, forcedWalletResult.tokenId ?? null)
+        : getCurrencyCodeWithAccount(account, forcedWallet.currencyInfo.pluginId, forcedWalletResult.tokenId ?? null)
 
     const countryCard =
       stateProvinceData == null ? (
