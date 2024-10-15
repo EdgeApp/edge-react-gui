@@ -15,7 +15,7 @@ import { lstrings } from '../../locales/strings'
 import { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
+import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -47,7 +47,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 
-interface Props extends EdgeSceneProps<'devTab'> {}
+interface Props extends EdgeTabsSceneProps<'devTab'> {}
 
 export function DevTestScene(props: Props) {
   const { navigation } = props
@@ -235,7 +235,7 @@ export function DevTestScene(props: Props) {
             label="PasswordReminderModal"
             marginRem={0.25}
             onPress={async () => {
-              await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
+              await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation as NavigationBase} />)
             }}
           />
           <EdgeButton
@@ -244,7 +244,12 @@ export function DevTestScene(props: Props) {
             onPress={async () => {
               if (coreWallet == null) return
               await Airship.show(bridge => (
-                <InsufficientFeesModal bridge={bridge} coreError={new InsufficientFundsError({ tokenId: null })} navigation={navigation} wallet={coreWallet} />
+                <InsufficientFeesModal
+                  bridge={bridge}
+                  coreError={new InsufficientFundsError({ tokenId: null })}
+                  navigation={navigation as NavigationBase}
+                  wallet={coreWallet}
+                />
               ))
             }}
           />
@@ -263,7 +268,7 @@ export function DevTestScene(props: Props) {
             label="BackupModal (Long, Original with image)"
             marginRem={0.25}
             onPress={async () => {
-              showBackupModal({ navigation, forgetLoginId: 'test' })
+              showBackupModal({ navigation: navigation as NavigationBase, forgetLoginId: 'test' })
             }}
           />
           <EdgeButton
@@ -441,7 +446,7 @@ export function DevTestScene(props: Props) {
             onPress={() => {
               const parsed = parseDeepLink(deepLinkInputValue)
               console.debug('parsed deeplink: ', parsed)
-              dispatch(launchDeepLink(navigation, parsed)).catch(e => showError(e))
+              dispatch(launchDeepLink(navigation as NavigationBase, parsed)).catch(e => showError(e))
             }}
             label="Activate DeepLink"
             type="primary"
