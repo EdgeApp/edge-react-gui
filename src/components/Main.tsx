@@ -28,6 +28,7 @@ import {
   EdgeTabsParamList,
   NavigationBase,
   RootParamList,
+  RootSceneProps,
   SwapTabParamList,
   WalletsTabParamList
 } from '../types/routerTypes'
@@ -862,7 +863,7 @@ export const Main = () => {
             <RootStack.Screen name="edgeApp" component={EdgeApp} />
 
             <RootStack.Screen name="gettingStarted" initialParams={{ experimentConfig }}>
-              {(props: EdgeSceneProps<'gettingStarted'>) => {
+              {(props: RootSceneProps<'gettingStarted'>) => {
                 if (navigation == null) setTimeout(() => setNavigation(props.navigation as NavigationBase), 0)
                 return <GettingStartedScene {...props} />
               }}
