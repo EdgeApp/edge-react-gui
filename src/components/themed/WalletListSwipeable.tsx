@@ -11,7 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
@@ -24,7 +24,8 @@ import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 interface Props {
   footer?: React.ComponentType<{}> | React.ReactElement
   header?: React.ComponentType<{}> | React.ReactElement
-  navigation: NavigationProp<'walletList'>
+  navigation: WalletsTabSceneProps<'walletList'>['navigation']
+
   searching: boolean
   searchText: string
   insetStyle: InsetStyle
@@ -68,7 +69,7 @@ function WalletListSwipeableComponent(props: Props) {
   const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
     const wallet = account.currencyWallets[walletId]
     const countryCode = await getCountryCodeByIp()
-    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
       .then(
         activationNotRequired =>
           activationNotRequired &&

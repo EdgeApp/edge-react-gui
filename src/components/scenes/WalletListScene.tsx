@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -21,7 +21,7 @@ import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 
-interface Props extends EdgeSceneProps<'walletList'> {}
+interface Props extends WalletsTabSceneProps<'walletList'> {}
 
 export function WalletListScene(props: Props) {
   const { navigation } = props
@@ -84,7 +84,7 @@ export function WalletListScene(props: Props) {
   //
 
   const renderHeader = React.useMemo(() => {
-    return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
+    return <WalletListHeader navigation={navigation as NavigationBase} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
   }, [handleSort, navigation, isSearching, sorting])
 
   const renderFooter: FooterRender = React.useCallback(
