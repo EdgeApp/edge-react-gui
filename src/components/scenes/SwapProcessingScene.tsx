@@ -15,7 +15,7 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -30,7 +30,7 @@ export interface SwapProcessingParams {
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
-interface Props extends EdgeSceneProps<'swapProcessing'> {}
+interface Props extends SwapTabSceneProps<'swapProcessing'> {}
 
 export function SwapProcessingScene(props: Props) {
   const { route, navigation } = props
@@ -75,7 +75,7 @@ export function SwapProcessingScene(props: Props) {
 
   return (
     <CancellableProcessingScene<EdgeSwapQuote[]>
-      navigation={navigation}
+      navigation={navigation as NavigationBase}
       doWork={doWork}
       onCancel={onCancel}
       onDone={onDone}
