@@ -9107,15 +9107,15 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.18.0:
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.18.0.tgz#9188b28bb68bf7646a1d8bdda0e06844ea9dc6e8"
-  integrity sha512-YqH4zNvk31THl01T6JPZ5oTFWMm7DpKueWlUDNOiLjknArxL9GaQfFMo1m+Yvr2JiPdaBKsrwM1MaN2rYyHRog==
+edge-core-js@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.19.0.tgz#ff84b4ae3c5a35cc71af5f082c1eed124d9cde2c"
+  integrity sha512-W0VTkKyuYSsERMPtAB1Ud925AWG0PpDFtWyvtVCgMPVL8b6p8YGy8L5STZKttv1U7jXK3Cg5stVVxVIxQrPAew==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
     biggystring "^4.0.0"
-    cleaners "^0.3.14"
+    cleaners "^0.3.17"
     currency-codes "^1.5.1"
     disklet "^0.5.2"
     edge-sync-client "^0.2.8"
