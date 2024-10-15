@@ -26,7 +26,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import { DrawerSceneProps, NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
@@ -45,8 +45,10 @@ const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
 
 export function SideMenu(props: DrawerContentComponentProps) {
-  // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
-  const navigation: NavigationBase = props.navigation as any
+  // Fix this type assertion (seems like DrawerContentComponentProps works just
+  // fine as NavigationBase?)
+  const { navigation } = props as any as DrawerSceneProps<'edgeAppStack'>
+  const navigationBase = props.navigation as any as NavigationBase
   const isDrawerOpen = useDrawerStatus() === 'open'
 
   const dispatch = useDispatch()
@@ -90,7 +92,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
     if (userInfo.username == null) {
-      showBackupModal({ navigation, forgetLoginId: userInfo.loginId })
+      showBackupModal({ navigation: navigationBase, forgetLoginId: userInfo.loginId })
     } else {
       Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
@@ -115,14 +117,14 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
     dispatch(
-      logoutRequest(navigation, {
+      logoutRequest(navigationBase, {
         nextLoginId: userInfo.loginId
       })
     ).catch(err => showError(err))
   }
 
   const handleBorrow = () => {
-    navigation.navigate('loanDashboard')
+    navigation.navigate('edgeAppStack', { screen: 'loanDashboard' })
     navigation.dispatch(DrawerActions.closeDrawer())
   }
 
@@ -141,14 +143,14 @@ export function SideMenu(props: DrawerContentComponentProps) {
       .then(async (result: string | undefined) => {
         if (result) {
           const deepLink = parseDeepLink(result)
-          await dispatch(launchDeepLink(navigation, deepLink))
+          await dispatch(launchDeepLink(navigationBase, deepLink))
         }
       })
       .catch(err => showError(err))
   }
 
   const handleMarketsPress = () => {
-    navigation.navigate('coinRanking')
+    navigation.navigate('edgeAppStack', { screen: 'coinRanking' })
   }
 
   const handleShareApp = () => {
@@ -216,7 +218,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }> = [
     {
       pressHandler: () => {
-        navigation.navigate('fioAddressList')
+        navigation.navigate('edgeAppStack', { screen: 'fioAddressList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio-names',
@@ -224,7 +226,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
     },
     {
       pressHandler: () => {
-        navigation.navigate('fioRequestList')
+        navigation.navigate('edgeAppStack', { screen: 'fioRequestList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio',
@@ -232,7 +234,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
     },
     {
       pressHandler: () => {
-        navigation.navigate('wcConnections', {})
+        navigation.navigate('edgeAppStack', { screen: 'wcConnections', params: {} })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-wallet-connect',
@@ -252,14 +254,14 @@ export function SideMenu(props: DrawerContentComponentProps) {
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
       pressHandler: () => {
-        navigation.navigate('settingsOverview')
+        navigation.navigate('edgeAppStack', { screen: 'settingsOverview' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-settings',
       title: lstrings.settings_title
     },
     {
-      pressHandler: async () => await dispatch(logoutRequest(navigation)),
+      pressHandler: async () => await dispatch(logoutRequest(navigationBase)),
       iconName: 'control-panel-logout',
       title: lstrings.settings_button_logout
     },
@@ -273,7 +275,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
+        dispatch(executePluginAction(navigationBase, 'rewardscard', 'sell')).catch(err => showError(err))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'credit-card',
@@ -283,7 +285,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const footerTopColor = theme.modal + '00' // Add full transparency to the modal color
   const footerBottomColor = theme.modal
-  const rootNavigation = getRootNavigation(navigation)
+  const rootNavigation = getRootNavigation(navigationBase)
 
   /// ---- Renderers ----
 
