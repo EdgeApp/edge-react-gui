@@ -11,7 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { WalletsTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -28,7 +28,7 @@ interface Option {
 
 interface Props {
   bridge: AirshipBridge<void>
-  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
+  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation']
 
   // Wallet identity:
   tokenId: EdgeTokenId

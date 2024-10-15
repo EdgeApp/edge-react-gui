@@ -9,7 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -25,7 +25,7 @@ export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId
 interface Props {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
-  navigation: NavigationProp<'transactionList'>
+  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
 }
 
 export const VisaCardCard = (props: Props) => {
@@ -36,7 +36,7 @@ export const VisaCardCard = (props: Props) => {
 
   const handlePress = useHandler(() => {
     dispatch(logEvent('Visa_Card_Launch'))
-    dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
+    dispatch(executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')).catch(err => showError(err))
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
