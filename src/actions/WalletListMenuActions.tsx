@@ -13,7 +13,7 @@ import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationProp } from '../types/routerTypes'
+import { WalletsTabSceneProps } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -38,7 +38,7 @@ export type WalletListMenuKey =
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
-  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
+  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation'],
   walletId: string,
   option: WalletListMenuKey,
   tokenId: EdgeTokenId,
