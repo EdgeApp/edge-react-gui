@@ -17,7 +17,7 @@ import { getExchangeDenom, selectDisplayDenom } from '../../selectors/Denominati
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { SwapTabSceneProps } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
@@ -50,7 +50,7 @@ export interface SwapConfirmationParams {
   onApprove: () => void
 }
 
-interface Props extends EdgeSceneProps<'swapConfirmation'> {}
+interface Props extends SwapTabSceneProps<'swapConfirmation'> {}
 
 interface Section {
   title: { title: string; rightTitle: string }
