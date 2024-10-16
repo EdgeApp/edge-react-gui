@@ -9,7 +9,7 @@ import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
 import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
@@ -38,7 +38,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressList'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressList'> {}
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 

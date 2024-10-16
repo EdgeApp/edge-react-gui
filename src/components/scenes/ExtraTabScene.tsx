@@ -4,11 +4,11 @@ import WebView from 'react-native-webview'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
 
-interface Props extends EdgeSceneProps<'extraTab'> {}
+interface Props extends EdgeAppSceneProps<'extraTab'> {}
 
 export function ExtraTabScene(props: Props) {
   if (config.extraTab == null) throw new Error('No extra tab config info')
@@ -25,7 +25,7 @@ export function ExtraTabScene(props: Props) {
 
     return (
       <SceneWrapper hasTabs>
-        <EdgeProviderComponent plugin={plugin} navigation={navigation} />
+        <EdgeProviderComponent plugin={plugin} navigation={navigation as NavigationBase} />
       </SceneWrapper>
     )
   }

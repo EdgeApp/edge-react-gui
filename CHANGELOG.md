@@ -8,6 +8,7 @@
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
+- changed: Use stack-specific scene navigation props instead of `NavigationProp`
 - changed: Wording in light account persistent notification
 - fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError

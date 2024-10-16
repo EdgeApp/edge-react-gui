@@ -12,7 +12,7 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -38,7 +38,7 @@ interface File {
   fileName: string // wallet-btc-2020.csv
 }
 
-interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
+interface OwnProps extends EdgeAppSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   account: EdgeAccount

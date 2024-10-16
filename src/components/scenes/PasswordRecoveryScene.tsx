@@ -4,11 +4,11 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface Props extends EdgeSceneProps<'passwordRecovery'> {}
+interface Props extends EdgeAppSceneProps<'passwordRecovery'> {}
 
 export const ChangeRecoveryScene = (props: Props) => {
   const { navigation } = props

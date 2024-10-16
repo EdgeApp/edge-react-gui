@@ -11,7 +11,7 @@ import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StyledButtonContainer } from '../../buttons/ButtonsView'
@@ -26,7 +26,7 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
-interface Props extends EdgeSceneProps<'stakeOverview'> {
+interface Props extends EdgeAppSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
 }
 
