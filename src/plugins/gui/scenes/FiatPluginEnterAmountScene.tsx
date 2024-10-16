@@ -14,7 +14,7 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { StateManager, useStateManager } from '../hooks/useStateManager'
@@ -51,7 +51,7 @@ export interface EnterAmountPoweredBy {
   poweredByText: string
 }
 
-interface Props extends EdgeSceneProps<'guiPluginEnterAmount'> {}
+interface Props extends BuyTabSceneProps<'guiPluginEnterAmount'> {}
 
 const defaultEnterAmountState: EnterAmountState = {
   spinner1: false,

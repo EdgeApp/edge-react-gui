@@ -12,7 +12,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { asSepaInfo, SEPA_FORM_DISKLET_NAME, SepaInfo } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
@@ -24,7 +24,7 @@ export interface FiatPluginSepaFormParams {
   onClose: () => void
 }
 
-interface Props extends EdgeSceneProps<'guiPluginSepaForm'> {}
+interface Props extends BuyTabSceneProps<'guiPluginSepaForm'> {}
 
 export const SepaFormScene = React.memo((props: Props) => {
   const theme = useTheme()
