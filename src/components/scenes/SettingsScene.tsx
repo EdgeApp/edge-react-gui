@@ -30,7 +30,7 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -49,7 +49,7 @@ import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface Props extends EdgeSceneProps<'settingsOverview'> {}
+interface Props extends EdgeAppSceneProps<'settingsOverview'> {}
 
 export const SettingsScene = (props: Props) => {
   const { navigation } = props
@@ -93,7 +93,7 @@ export const SettingsScene = (props: Props) => {
   const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
   const handleUpgrade = useHandler(() => {
-    showBackupModal({ navigation })
+    showBackupModal({ navigation: navigation as NavigationBase })
   })
 
   const handleUnlock = useHandler(() => {
@@ -142,7 +142,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleShowRestoreWalletsModal = useHandler(async () => {
-    await dispatch(showRestoreWalletsModal(navigation))
+    await dispatch(showRestoreWalletsModal(navigation as NavigationBase))
   })
 
   const handleShowUnlockSettingsModal = useHandler(async () => {
@@ -206,7 +206,7 @@ export const SettingsScene = (props: Props) => {
         onSubmit={async text => {
           if (text !== username) return lstrings.delete_account_verification_error
           await account.deleteRemoteAccount()
-          await dispatch(logoutRequest(navigation))
+          await dispatch(logoutRequest(navigation as NavigationBase))
           await context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showDevError(err))
           return true
