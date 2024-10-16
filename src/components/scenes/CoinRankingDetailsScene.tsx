@@ -94,7 +94,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       // Take this stale scene off the stack
       navigation.pop()
       // Force a refresh & refetch
-      navigation.navigate('coinRanking', {})
+      navigation.navigate('coinRanking')
     }
   }, [supportedFiat, initFiat, isFocused, navigation])
 

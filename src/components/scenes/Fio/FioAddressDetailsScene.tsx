@@ -19,6 +19,11 @@ import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
+export interface FioAddressDetailsParams {
+  fioAddressName: string
+  bundledTxs: number
+}
+
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }

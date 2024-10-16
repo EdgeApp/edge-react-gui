@@ -289,7 +289,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     )
   }
 
-  handleBackupPress = () => this.props.navigation.navigate('upgradeUsername', {})
+  handleBackupPress = () => this.props.navigation.navigate('upgradeUsername')
   renderLightAccountMode = () => {
     const styles = getStyles(this.props.theme)
     return (

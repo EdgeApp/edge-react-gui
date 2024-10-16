@@ -1,4 +1,4 @@
-import { PromoCard2 } from 'edge-info-server'
+import { InfoCard } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -16,11 +16,11 @@ import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 export interface FilteredInfoCard {
-  background: PromoCard2['background']
-  ctaButton: PromoCard2['ctaButton']
-  dismissable: PromoCard2['dismissable']
-  localeMessages: PromoCard2['localeMessages']
-  pluginPromotions: PromoCard2['pluginPromotions']
+  background: InfoCard['background']
+  ctaButton: InfoCard['ctaButton']
+  dismissable: InfoCard['dismissable']
+  localeMessages: InfoCard['localeMessages']
+  pluginPromotions: InfoCard['pluginPromotions']
   messageId: string
 }
 
@@ -30,7 +30,7 @@ interface Props {
   onClose: () => Promise<void>
 }
 
-export function InfoCard(props: Props) {
+export function InfoCarouselCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()

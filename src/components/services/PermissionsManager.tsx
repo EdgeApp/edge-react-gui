@@ -1,14 +1,16 @@
 import { Disklet } from 'disklet'
 import * as React from 'react'
-import { check, checkMultiple, PermissionStatus, request } from 'react-native-permissions'
+import { check, checkMultiple, openSettings, PermissionStatus, request } from 'react-native-permissions'
+import { sprintf } from 'sprintf-js'
 
 import { SETTINGS_PERMISSION_LIMITS, SETTINGS_PERMISSION_QUANTITY } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
+import { lstrings } from '../../locales/strings'
 import { Permission, permissionNames, PermissionsState } from '../../reducers/PermissionsReducer'
+import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { ContactsPermissionModal, ContactsPermissionResult } from '../modals/ContactsPermissionModal'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
 
@@ -29,30 +31,38 @@ export const PermissionsManager = () => {
   return null
 }
 
-let showModalPromise: Promise<ContactsPermissionResult | undefined>
 /**
- * Show the contacts permission modal if we enabled the Edge Contacts Access
- * setting, but the corresponding system permission is not granted. Only shows
- * modal once for simultaneous callers.
- *
- * Responding 'Deny' to the modal will disable the Edge Contacts Access setting.
- *
- * @param contactsAccessSettingOn - Edge Local Contact Access setting
- * @returns Result of Contacts Access modal or undefined if no modal shown or
- * the modal was dismissed somehow.
+ * If toggled on, will request permissions if system-level contacts permissions
+ * are not granted. If toggled off, will open system settings.
  */
-export async function showContactsPermissionModal(contactsAccessSettingOn: boolean): Promise<ContactsPermissionResult | undefined> {
-  // We requested to show the modal when the setting was off already or another
-  // caller to this fn is already handling it. Ignore this call.
-  if (!contactsAccessSettingOn || showModalPromise != null) return undefined
+export async function requestContactsPermission(contactsPermissionOn: boolean): Promise<boolean> {
+  const currentContactsPermissionOn = (await check(permissionNames.contacts)) === 'granted'
 
-  showModalPromise = (async () => {
-    if (contactsAccessSettingOn && (await check(permissionNames.contacts)) !== 'granted') {
-      return await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
-    }
-  })()
+  if (contactsPermissionOn && !currentContactsPermissionOn) {
+    // Initial prompt to inform the reason of the permissions request.
+    // Denying this prompt will cause permissionStatus to be 'blocked',
+    // regardless of the prior permissions state.
+    await request(permissionNames.contacts, {
+      title: lstrings.contacts_permission_modal_title,
+      message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
+      buttonPositive: lstrings.string_allow,
+      buttonNegative: lstrings.string_deny
+    })
+      .then(async (permissionStatus: PermissionStatus) => {
+        // Can't request permission from within the app if previously blocked
+        if (permissionStatus === 'blocked') await openSettings()
+      })
+      // Handle any other potential failure in enabling the permission
+      // progmatically from within Edge by redirecting to the system settings
+      // instead. Any manual change in system settings causes an app restart.
+      .catch(async _e => await openSettings())
+  } else if (!contactsPermissionOn && currentContactsPermissionOn) {
+    // Can't deny permission from within the app if previously allowed
+    await openSettings()
+  }
 
-  return await showModalPromise
+  // Return the current permission state
+  return (await check(permissionNames.contacts)) === 'granted'
 }
 
 /**

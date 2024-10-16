@@ -115,6 +115,7 @@ interface MoonpayWidgetQueryParams {
   lockAmount: true
   showAllCurrencies: false
   paymentMethod: MoonpayPaymentMethod
+  redirectURL: string
 }
 
 type MoonpayBuyWidgetQueryParams = MoonpayWidgetQueryParams & {
@@ -140,7 +141,6 @@ type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
   /** crypto currency code */
   baseCurrencyCode: string
   refundWalletAddress: string
-  redirectURL: string
 
   /** fiat amount to receive */
   quoteCurrencyAmount?: number
@@ -213,6 +213,14 @@ export const moonpayProvider: FiatProviderFactory = {
           let moonpayCurrencies: MoonpayCurrency[] = []
           try {
             moonpayCurrencies = asMoonpayCurrencies(result)
+
+            // HACK: Moonpay API returns the burn address for EVM chain native currency
+            moonpayCurrencies = moonpayCurrencies.map(currency => {
+              if (currency.metadata?.contractAddress === '0x0000000000000000000000000000000000000000') {
+                currency.metadata.contractAddress = null
+              }
+              return currency
+            })
           } catch (error: any) {
             console.log(error.message)
             console.log(JSON.stringify(error, null, 2))
@@ -399,7 +407,8 @@ export const moonpayProvider: FiatProviderFactory = {
                 baseCurrencyCode: fiatCurrencyObj.code,
                 lockAmount: true,
                 showAllCurrencies: false,
-                enableRecurringBuys: false
+                enableRecurringBuys: false,
+                redirectURL: `https://deep.edge.app/fiatprovider/buy/moonpay`
               }
               if (params.amountType === 'crypto') {
                 queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
@@ -408,7 +417,49 @@ export const moonpayProvider: FiatProviderFactory = {
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay buy quote url=' + urlObj.href)
-              await showUi.openExternalWebView({ url: urlObj.href })
+              await showUi.openExternalWebView({
+                url: urlObj.href,
+                providerId,
+                deeplinkHandler: async link => {
+                  const { query, uri } = link
+                  console.log('Moonpay WebView launch buy success: ' + uri)
+                  const { transactionId, transactionStatus } = query
+                  if (transactionId == null || transactionStatus == null) {
+                    return
+                  }
+                  if (transactionStatus !== 'pending') {
+                    return
+                  }
+                  await showUi.trackConversion('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: fiatCurrencyCode,
+                      sourceFiatAmount: fiatAmount,
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: cryptoAmount
+                      }),
+                      fiatProviderId: providerId,
+                      orderId: transactionId
+                    }
+                  })
+
+                  const message =
+                    sprintf(lstrings.fiat_plugin_buy_complete_message_s, cryptoAmount, displayCurrencyCode, fiatAmount, displayFiatCurrencyCode, '1') +
+                    '\n\n' +
+                    sprintf(lstrings.fiat_plugin_buy_complete_message_2_hour_s, '1') +
+                    '\n\n' +
+                    lstrings.fiat_plugin_sell_complete_message_3
+                  await showUi.buttonModal({
+                    buttons: {
+                      ok: { label: lstrings.string_ok, type: 'primary' }
+                    },
+                    title: lstrings.fiat_plugin_buy_complete_title,
+                    message
+                  })
+                }
+              })
             } else {
               const urlObj = new URL('https://sell.moonpay.com?', true)
               const queryObj: MoonpaySellWidgetQueryParams = {

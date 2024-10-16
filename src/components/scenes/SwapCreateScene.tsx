@@ -1,5 +1,14 @@
 import { gt, gte } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  asMaybeSwapAboveLimitError,
+  asMaybeSwapBelowLimitError,
+  asMaybeSwapCurrencyError,
+  asMaybeSwapPermissionError,
+  EdgeCurrencyWallet,
+  EdgeSwapRequest,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
@@ -47,6 +56,7 @@ export interface SwapCreateParams {
 export interface SwapErrorDisplayInfo {
   message: string
   title: string
+  error: unknown
 }
 
 interface Props extends EdgeSceneProps<'swapCreate'> {}
@@ -109,6 +119,35 @@ export const SwapCreateScene = (props: Props) => {
   //
   // Callbacks
   //
+
+  /** Potentially clear an error if swap parameters relevant to the error have
+   * been user-modified. */
+  const getNewErrorInfo = (changed: 'amount' | 'asset'): { errorDisplayInfo?: SwapErrorDisplayInfo } => {
+    const { error } = errorDisplayInfo ?? {}
+    const isInsufficentFunds = asMaybeInsufficientFundsError(error) != null
+    const isSwapAboveLimit = asMaybeSwapAboveLimitError(error) != null
+    const isSwapBelowLimit = asMaybeSwapBelowLimitError(error) != null
+    const isSwapPermission = asMaybeSwapPermissionError(error) != null
+    const isSwapCurrency = asMaybeSwapCurrencyError(error) != null
+
+    let clearError = false
+
+    // Unknown error, clear it no matter what the user changes.
+    if (!(error instanceof Error) || error.name == null) {
+      clearError = true
+    }
+    // Amount related errors
+    else if (changed === 'amount' && (isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
+      clearError = true
+    }
+    // Selected asset related errors (arbitrarily includes all amount-related
+    // errors as well)
+    else if (changed === 'asset' && (isSwapPermission || isSwapCurrency || isInsufficentFunds || isSwapAboveLimit || isSwapBelowLimit)) {
+      clearError = true
+    }
+
+    return { errorDisplayInfo: clearError ? undefined : errorDisplayInfo }
+  }
 
   const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
     const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
@@ -208,8 +247,10 @@ export const SwapCreateScene = (props: Props) => {
       fromTokenId: toTokenId,
       toWalletId: fromWalletId,
       toTokenId: fromTokenId,
-      errorDisplayInfo
+      // Update the error state:
+      ...getNewErrorInfo('asset')
     })
+
     // Clear amount input state:
     setInputNativeAmountFor(inputNativeAmountFor === 'from' ? 'to' : 'from')
 
@@ -228,7 +269,7 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
-    const params = {
+    navigation.setParams({
       ...route.params,
       ...(direction === 'to'
         ? {
@@ -238,9 +279,10 @@ export const SwapCreateScene = (props: Props) => {
         : {
             fromWalletId: walletId,
             fromTokenId: tokenId
-          })
-    }
-    navigation.setParams(params)
+          }),
+      // Update the error state:
+      ...getNewErrorInfo('asset')
+    })
   })
 
   const handleMaxPress = useHandler(() => {
@@ -300,6 +342,12 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+    navigation.setParams({
+      ...route.params,
+      // Update the error state:
+      ...getNewErrorInfo('amount')
+    })
+
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
     setInputNativeAmountFor('from')
@@ -308,6 +356,12 @@ export const SwapCreateScene = (props: Props) => {
   })
 
   const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+    navigation.setParams({
+      ...route.params,
+      // Update the error state:
+      ...getNewErrorInfo('amount')
+    })
+
     setInputNativeAmount(amounts.nativeAmount)
     setInputFiatAmount(amounts.fiatAmount)
     setInputNativeAmountFor('to')

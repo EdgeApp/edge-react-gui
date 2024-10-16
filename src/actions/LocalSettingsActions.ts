@@ -1,11 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
-import { openSettings, PermissionStatus, request } from 'react-native-permissions'
-import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
-import { lstrings } from '../locales/strings'
-import { permissionNames } from '../reducers/PermissionsReducer'
-import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { AccountNotifDismissInfo, asLocalAccountSettings, LocalAccountSettings, PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
@@ -71,43 +66,6 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
   }
 }
 
-/**
- * Toggle the 'Contacts Access' Edge setting. Will request permissions if
- * toggled on/enabled AND system-level contacts permissions are not granted.
- * Does NOT modify system-level contacts permissions if toggling the 'Contacts
- * Access' setting OFF
- */
-export function setContactsPermissionOn(contactsPermissionOn: boolean): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    await writeContactsPermissionSetting(account, contactsPermissionOn)
-
-    if (contactsPermissionOn) {
-      // Initial prompt to inform the reason of the permissions request.
-      // Denying this prompt will cause permissionStatus to be 'blocked',
-      // regardless of the prior permissions state.
-      await request(permissionNames.contacts, {
-        title: lstrings.contacts_permission_modal_title,
-        message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
-        buttonPositive: lstrings.string_allow,
-        buttonNegative: lstrings.string_deny
-      })
-        .then(async (permissionStatus: PermissionStatus) => {
-          // Can't request permission from within the app if previously blocked
-          if (permissionStatus === 'blocked') await openSettings()
-        })
-        // Handle any other potential failure in enabling the permission
-        // progmatically from within Edge by redirecting to the system settings
-        // instead. Any manual change in system settings causes an app restart.
-        .catch(async _e => await openSettings())
-    }
-
-    dispatch({ type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION', data: { contactsPermissionOn } })
-  }
-}
-
 const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
   await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, passwordReminder }
@@ -135,9 +93,9 @@ const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolea
   })
 }
 
-const writeContactsPermissionSetting = async (account: EdgeAccount, contactsPermissionOn: boolean) => {
+export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean) => {
   return await readLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, contactsPermissionOn }
+    const updatedSettings = { ...settings, contactsPermissionShown }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }

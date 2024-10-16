@@ -28,13 +28,13 @@ interface Props {
   // Which visual style to use. Defaults to primary (solid):
   type?: MainButtonType
 
-  // From ButtonUi4
+  // From EdgeButton
   layout?: 'row' | 'column' | 'solo'
 }
 
 /**
  * @deprecated
- * Use ButtonUi4 instead, and consider whether there is a genuine need for
+ * Use EdgeButton instead, and consider whether there is a genuine need for
  * special margins in MainButton use cases from a UI4 design perspective.
  */
 export function MainButton(props: Props) {

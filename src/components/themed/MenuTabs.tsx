@@ -41,7 +41,7 @@ export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
 export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
 
 const title: { readonly [key: string]: string } = {
-  homeTab: lstrings.title_home,
+  home: lstrings.title_home,
   walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
@@ -189,7 +189,7 @@ const Tab = ({
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
 
   const icon: { readonly [key: string]: JSX.Element } = {
-    homeTab: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
+    home: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
     walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
     buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
     sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
@@ -200,11 +200,11 @@ const Tab = ({
 
   const handleOnPress = useHandler(() => {
     switch (route.name) {
-      case 'homeTab':
+      case 'home':
         setTimeout(() => {
           writeDefaultScreen('home').catch(e => console.error('Failed to write defaultScreen setting: home'))
         }, SAVE_DEFAULT_SCREEN_DELAY)
-        return navigation.navigate('homeTab', currentName === 'homeTab' ? { screen: 'home' } : {})
+        return navigation.navigate('home')
       case 'walletsTab':
         setTimeout(() => {
           writeDefaultScreen('assets').catch(e => console.error('Failed to write defaultScreen setting: assets'))

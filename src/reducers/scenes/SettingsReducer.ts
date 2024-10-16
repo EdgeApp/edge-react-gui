@@ -67,7 +67,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'ACCOUNT_INIT_COMPLETE': {
       const {
         autoLogoutTimeInSeconds,
-        contactsPermissionOn,
+        contactsPermissionShown,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
@@ -90,7 +90,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const newState: SettingsState = {
         ...state,
         autoLogoutTimeInSeconds,
-        contactsPermissionOn,
+        contactsPermissionShown,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
@@ -160,11 +160,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/SET_CONTACTS_PERMISSION': {
-      const { contactsPermissionOn } = action.data
+    case 'UI/SETTINGS/SET_CONTACTS_PERMISSION_SHOWN': {
+      const { contactsPermissionShown } = action.data
       return {
         ...state,
-        contactsPermissionOn
+        contactsPermissionShown
       }
     }
 

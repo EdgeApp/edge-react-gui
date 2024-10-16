@@ -51,7 +51,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.checkingPassword) {
       this.props.bridge.resolve()
       this.props.dispatch({ type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD' })
-      setTimeout(() => this.props.navigation.navigate('changePassword', {}), 10)
+      setTimeout(() => this.props.navigation.navigate('changePassword'), 10)
     }
   }
 

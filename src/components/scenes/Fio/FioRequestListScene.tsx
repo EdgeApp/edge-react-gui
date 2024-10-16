@@ -12,7 +12,7 @@ import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationS
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -379,7 +379,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={allowedAssets} />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, currencyCode } = result
+      const { walletId, tokenId } = result
+      const wallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       onSelectWallet(walletId, currencyCode)
       await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }

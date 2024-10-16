@@ -1,6 +1,7 @@
 import { eq, lte, mul, round } from 'biggystring'
 import { asArray, asBoolean, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -195,7 +196,7 @@ const asQuote = asObject({
 
 const asPaymentDetails = asObject({
   assetId: asString,
-  invoice: asString,
+  // invoice: asString,
   blockchain: asString,
   network: asString,
   depositAddress: asString,
@@ -249,7 +250,7 @@ const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   ETH: { pluginId: 'ethereum', tokenId: null },
   LTC: { pluginId: 'litecoin', tokenId: null },
   DOT: { pluginId: 'polkadot', tokenId: null },
-  'MATIC-POLYGON': { pluginId: 'polygon', currencyCode: 'MATIC', tokenId: null },
+  POL: { pluginId: 'polygon', currencyCode: 'POL', tokenId: null },
   SOL: { pluginId: 'solana', tokenId: null },
   TRX: { pluginId: 'tron', tokenId: null },
   XLM: { pluginId: 'stellar', tokenId: null },
@@ -584,14 +585,55 @@ export const paybisProvider: FiatProviderFactory = {
             const promoCodeParam = promoCode != null ? `&promoCode=${promoCode}` : ''
 
             if (direction === 'buy') {
+              const successReturnURL = encodeURIComponent('https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=success')
+              const failureReturnURL = encodeURIComponent('https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=fail')
               await showUi.openExternalWebView({
-                url: `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}`
+                url: `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`,
+                providerId,
+                deeplinkHandler: async link => {
+                  const { query, uri } = link
+                  console.log('Paybis WebView launch buy success: ' + uri)
+                  const { transactionStatus } = query
+                  if (transactionStatus === 'success') {
+                    await showUi.trackConversion('Buy_Success', {
+                      conversionValues: {
+                        conversionType: 'buy',
+                        sourceFiatCurrencyCode: fiatCurrencyCode,
+                        sourceFiatAmount: fiatAmount,
+                        destAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: cryptoAmount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId: requestId
+                      }
+                    })
+                    const message =
+                      sprintf(lstrings.fiat_plugin_buy_complete_message_s, cryptoAmount, displayCurrencyCode, fiatAmount, fiat, '1') +
+                      '\n\n' +
+                      sprintf(lstrings.fiat_plugin_buy_complete_message_2_hour_s, '1') +
+                      '\n\n' +
+                      lstrings.fiat_plugin_sell_complete_message_3
+                    await showUi.buttonModal({
+                      buttons: {
+                        ok: { label: lstrings.string_ok, type: 'primary' }
+                      },
+                      title: lstrings.fiat_plugin_buy_complete_title,
+                      message
+                    })
+                  } else if (transactionStatus === 'failure') {
+                    await showUi.showToast(lstrings.fiat_plugin_buy_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                  } else {
+                    await showUi.showError(new Error(`Paybis: Invalid transactionStatus "${transactionStatus}".`))
+                  }
+                }
               })
               return
             }
 
-            const successReturnURL = encodeURI(RETURN_URL_SUCCESS)
-            const failureReturnURL = encodeURI(RETURN_URL_FAIL)
+            const successReturnURL = encodeURIComponent(RETURN_URL_SUCCESS)
+            const failureReturnURL = encodeURIComponent(RETURN_URL_FAIL)
             const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}${promoCodeParam}`
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
@@ -609,7 +651,7 @@ export const paybisProvider: FiatProviderFactory = {
                     inPayment = true
                     try {
                       const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey, promoCode })
-                      const { assetId, amount, currencyCode: pbCurrencyCode, invoice, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
+                      const { assetId, amount, currencyCode: pbCurrencyCode, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
                       const { pluginId, tokenId } = PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
                       console.log(`Creating Paybis payment`)
@@ -626,7 +668,7 @@ export const paybisProvider: FiatProviderFactory = {
                       }
                       const savedAction: EdgeTxActionFiat = {
                         actionType: 'fiat',
-                        orderId: invoice,
+                        orderId: requestId,
                         orderUri: `${widgetUrl}?requestId=${requestId}`,
                         isEstimate: true,
                         fiatPlugin: {
@@ -694,7 +736,7 @@ export const paybisProvider: FiatProviderFactory = {
                             exchangeAmount: amount
                           }),
                           fiatProviderId: providerId,
-                          orderId: invoice
+                          orderId: requestId
                         }
                       })
 

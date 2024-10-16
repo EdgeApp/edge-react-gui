@@ -1,6 +1,9 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { EmitterSubscription } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
+import { powerSavingModeChanged, powerSavingOn } from 'react-native-power-saving-mode'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
@@ -11,6 +14,7 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
+import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -18,6 +22,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
+import { AlertDropdown } from '../navigation/AlertDropdown'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
 import { Airship } from './AirshipInstance'
@@ -121,6 +126,52 @@ export function Services(props: Props) {
     },
     [account],
     'Services 2'
+  )
+
+  // Subscribe to Android Power Saver state, and show a warning only if it
+  // changes from off to on:
+  useAsyncEffect(
+    async () => {
+      // This method is only available for Android
+      if (powerSavingOn == null) return
+
+      let airshipBridge: AirshipBridge<void> | undefined
+      const handlePowerSavingModeChanged = async (isPowerSavingModeOn: boolean) => {
+        if (isPowerSavingModeOn && airshipBridge == null) {
+          await Airship.show(bridge => {
+            airshipBridge = bridge // Capture the bridge here
+            return <AlertDropdown bridge={bridge} message={lstrings.warning_battery_saver} warning persistent />
+          }).then(() => {
+            airshipBridge = undefined
+          })
+        } else if (!isPowerSavingModeOn && airshipBridge != null) {
+          // Dismiss the alert when power-saving mode turns off and there's an
+          // active warning that wasn't dismissed
+          airshipBridge.resolve()
+        }
+      }
+
+      // Show warning if Power Saver mode is on initially on app boot
+      await handlePowerSavingModeChanged(await powerSavingOn())
+
+      // Subscribe to Power Saver mode changes
+      let subscription: EmitterSubscription | undefined
+      if (powerSavingModeChanged != null) {
+        subscription = powerSavingModeChanged(handlePowerSavingModeChanged)
+      }
+
+      // Cleanup
+      return () => {
+        if (subscription != null) {
+          subscription.remove()
+        }
+        if (airshipBridge != null) {
+          airshipBridge.resolve()
+        }
+      }
+    },
+    [],
+    'Services 3'
   )
 
   // Methods to call periodically

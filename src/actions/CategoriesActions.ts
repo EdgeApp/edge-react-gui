@@ -324,6 +324,8 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
     const { assetActionType } = assetAct
     payeeText = TX_ACTION_LABEL_MAP[assetActionType]
 
+    let unsupported = false
+
     switch (actionType) {
       case 'swap': {
         iconPluginId = action.swapInfo.pluginId
@@ -379,7 +381,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
         }
         break
       }
@@ -450,7 +452,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           }
 
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
         }
         break
       }
@@ -479,13 +481,26 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
+        }
+        break
+      }
+      case 'tokenApproval': {
+        switch (assetActionType) {
+          case 'tokenApproval': {
+            edgeCategory = { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee }
+            break
+          }
+          default:
+            unsupported = true
         }
         break
       }
       default:
-        console.error(`Unsupported EdgeTxAction assetAction: '${assetAction}'`)
+        unsupported = true
     }
+
+    if (unsupported) console.error(`Unsupported EdgeTxAction assetAction:assetActionType '${assetAction}:${assetActionType}'`)
   }
   const savedData: EdgeMetadata = {
     name: payeeText,
@@ -521,6 +536,7 @@ export const pluginIdIcons: Record<string, string> = {
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
   lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
+  mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
   rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
   sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',

@@ -8,7 +8,7 @@ import { pickWallet } from '../components/modals/WalletListModal'
 import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
-import { executePlugin } from '../plugins/gui/fiatPlugin'
+import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -123,6 +123,11 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       break
     }
 
+    case 'fiatProvider': {
+      fiatProviderDeeplinkHandler(link)
+      break
+    }
+
     case 'promotion':
       await dispatch(activatePromotion(link.installerId ?? ''))
       break
@@ -157,7 +162,7 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       } else {
         showError(lstrings.azteco_service_unavailable)
       }
-      navigation.navigate('homeTab', { screen: 'home' })
+      navigation.navigate('home')
       break
     }
 

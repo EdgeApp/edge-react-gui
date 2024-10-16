@@ -36,8 +36,8 @@ export interface WcConnectionsParams {
 }
 
 export const WcConnectionsScene = (props: Props) => {
-  const { navigation } = props
-  const { uri } = props.route.params
+  const { navigation, route } = props
+  const { uri } = route.params ?? {}
   const theme = useTheme()
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])

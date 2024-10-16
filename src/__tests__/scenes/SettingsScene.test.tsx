@@ -25,7 +25,7 @@ describe('SettingsScene', () => {
   it('should render SettingsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <SettingsScene {...fakeSceneProps('settingsOverview', {})} />
+        <SettingsScene {...fakeSceneProps('settingsOverview', undefined)} />
       </FakeProviders>
     )
 

@@ -8,14 +8,18 @@ import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Permission } from '../../reducers/PermissionsReducer'
+import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { BuyConversionValues, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
+import { FiatPluginSepaTransferParams } from './scenes/InfoDisplayScene'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
+import { FiatPluginSepaFormParams } from './scenes/SepaFormScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -45,21 +49,7 @@ export const asFiatPaymentType = asValue(
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
-export interface FiatPluginAddressFormParams {
-  countryCode: string
-  headerTitle: string
-  headerIconUri?: string
-  onSubmit: (homeAddress: HomeAddress) => Promise<void>
-  onClose: () => void
-}
-
-export interface FiatPluginSepaFormParams {
-  headerTitle: string
-  doneLabel: string
-  headerIconUri?: string
-  onDone: (sepaInfo: SepaInfo) => Promise<void>
-  onClose: () => void
-}
+export type LinkHandler = (url: FiatProviderLink) => void
 
 export interface FiatPluginSepaTransferInfo {
   input: {
@@ -78,14 +68,6 @@ export interface FiatPluginSepaTransferInfo {
     recipient: string
     reference: string
   }
-}
-
-export interface FiatPluginSepaTransferParams {
-  headerTitle: string
-  promptMessage: string
-  transferInfo: FiatPluginSepaTransferInfo
-  headerIconUri?: string
-  onDone: () => Promise<void>
 }
 
 export interface FiatPluginListModalParams {
@@ -109,13 +91,20 @@ export interface FiatPluginOpenExternalWebViewParams {
    * redirect to the external webview.
    */
   redirectExternal?: boolean
+
+  /**
+   * @param url
+   * @returns void
+   *
+   * providerId is required if deeplinkHandler is provided
+   */
+  deeplinkHandler?: LinkHandler
+  providerId?: string
 }
 
 export interface FiatPluginWalletPickerResult {
   walletId: string
   tokenId: EdgeTokenId
-  /** @deprecated Use tokenId instead */
-  currencyCode: string
 }
 
 export interface SaveTxMetadataParams {
@@ -160,7 +149,7 @@ export interface FiatPluginUi {
   trackConversion: (
     event: TrackingEventName,
     opts: {
-      conversionValues: SellConversionValues
+      conversionValues: SellConversionValues | BuyConversionValues
     }
   ) => Promise<void>
   exitScene: () => {}

@@ -1,5 +1,5 @@
 import { asDate } from 'cleaners'
-import { AssetStatus2, PromoCard2 } from 'edge-info-server'
+import { InfoCard } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
@@ -15,14 +15,13 @@ import { getOsVersion } from '../../util/utils'
 import { Anim, EdgeAnim } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
-import { FilteredInfoCard, InfoCard } from './InfoCard'
+import { FilteredInfoCard, InfoCarouselCard } from './InfoCard'
 
 interface Props {
   navigation: NavigationBase
   enterAnim: Anim
   screenWidth: number
-  // TODO: Add info server InfoCard export
-  cards?: PromoCard2[] | AssetStatus2[]
+  cards?: InfoCard[]
   countryCode?: string
 }
 
@@ -73,7 +72,7 @@ export const InfoCardCarousel = (props: Props) => {
     const handleClose = async (): Promise<void> => {
       await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
     }
-    return <InfoCard navigation={navigation} promoInfo={item} onClose={handleClose} />
+    return <InfoCarouselCard navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
 
   if (activeCards == null || activeCards.length === 0) return null
@@ -89,7 +88,7 @@ export const InfoCardCarousel = (props: Props) => {
  * other factors.
  */
 export function filterInfoCards(params: {
-  cards: PromoCard2[] | AssetStatus2[]
+  cards: InfoCard[]
   countryCode?: string
   buildNumber: string
   osType: string
