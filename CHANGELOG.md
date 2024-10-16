@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Wording in light account persistent notification
+
 ## 4.16.0
 
 - added: "Transaction Details" button to `SwapSuccessScene`
