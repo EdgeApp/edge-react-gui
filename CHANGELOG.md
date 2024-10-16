@@ -23,6 +23,7 @@
 - changed: Remove legacy non-segwit wallets from new account wallet selection scene
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
+- fixed: ACH sell option for Florida visible with no accepted currencies
 
 ## 4.15.0 (2024-10-16)
 
