@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -31,7 +31,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
+interface OwnProps extends EdgeAppSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 

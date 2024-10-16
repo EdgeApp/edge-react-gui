@@ -7,7 +7,7 @@ import { createFioWallet } from '../../../actions/FioAddressActions'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
@@ -42,7 +42,7 @@ interface State {
   errorMessage: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegister'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegister'> {}
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]

@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -44,7 +44,7 @@ interface DispatchProps {
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {
+interface OwnProps extends EdgeAppSceneProps<'fioAddressSettings'> {
   wallet: EdgeCurrencyWallet
 }
 

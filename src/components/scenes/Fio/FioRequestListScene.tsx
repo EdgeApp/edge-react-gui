@@ -10,7 +10,7 @@ import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
 import { getCurrencyCode, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
@@ -63,7 +63,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeSceneProps<'fioRequestList'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioRequestList'> {}
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 

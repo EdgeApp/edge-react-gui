@@ -9,7 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -28,7 +28,7 @@ export interface CreateWalletImportOptionsParams {
   importText: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletImportOptions'> {}
+interface Props extends EdgeAppSceneProps<'createWalletImportOptions'> {}
 
 const CreateWalletImportOptionsComponent = (props: Props) => {
   const { navigation, route } = props

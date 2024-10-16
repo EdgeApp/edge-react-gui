@@ -8,7 +8,7 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError, showToast } from '../services/AirshipInstance'
@@ -18,7 +18,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 
-interface Props extends EdgeSceneProps<'spendingLimits'> {}
+interface Props extends EdgeAppSceneProps<'spendingLimits'> {}
 
 export const SpendingLimitsScene = (props: Props) => {
   const { navigation } = props

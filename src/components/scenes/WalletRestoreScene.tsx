@@ -7,7 +7,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { toLocaleDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { findCurrencyInfo } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
@@ -24,7 +24,7 @@ import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
-interface Props extends EdgeSceneProps<'walletRestore'> {}
+interface Props extends EdgeAppSceneProps<'walletRestore'> {}
 
 export function WalletRestoreScene(props: Props) {
   const { navigation } = props
@@ -64,7 +64,7 @@ export function WalletRestoreScene(props: Props) {
       await account.changeWalletStates(states)
       logActivity(`Restore Wallets: ${account.username}`)
 
-      navigation.navigate('walletsTab', { screen: 'walletList' })
+      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
     }
   })
 

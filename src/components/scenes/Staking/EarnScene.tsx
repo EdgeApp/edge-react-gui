@@ -11,7 +11,7 @@ import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import { StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getPluginFromPolicy, getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { EdgeSwitch } from '../../buttons/EdgeSwitch'
@@ -22,7 +22,7 @@ import { SectionHeader } from '../../common/SectionHeader'
 import { showDevError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 
-interface Props extends EdgeSceneProps<'earnScene'> {}
+interface Props extends EdgeAppSceneProps<'earnScene'> {}
 
 export interface EarnSceneParams {}
 

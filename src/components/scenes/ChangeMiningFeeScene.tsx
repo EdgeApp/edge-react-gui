@@ -8,7 +8,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
 import { AccentColors } from '../common/DotsBackground'
@@ -29,7 +29,7 @@ export interface ChangeMiningFeeParams {
   onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {
+interface OwnProps extends EdgeAppSceneProps<'changeMiningFee2'> {
   wallet: EdgeCurrencyWallet
 }
 

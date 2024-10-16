@@ -17,7 +17,7 @@ import {
   WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -36,14 +36,17 @@ import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 export interface CreateWalletSelectCryptoParams {
-  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
+  newAccountFlow?: (
+    navigation: EdgeAppSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>['navigation'],
+    items: WalletCreateItem[]
+  ) => Promise<void>
   defaultSelection?: EdgeAsset[]
   disableLegacy?: boolean
   splitPluginIds?: string[]
   splitSourceWalletId?: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
+interface Props extends EdgeAppSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
@@ -221,7 +224,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletsTab', { screen: 'walletList' })
+      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
     }
   })
 
@@ -236,7 +239,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={props.navigation}
+        navigation={props.navigation as NavigationBase}
         headerTitle={lstrings.choose_custom_token_wallet}
         allowedAssets={allowedCreateAssets}
         showCreateWallet

@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { EdgeAsset, FioDomain } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -42,7 +42,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSelectWallet'> {
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSelectWallet'> {
   wallet: EdgeCurrencyWallet
 }
 

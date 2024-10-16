@@ -9,7 +9,7 @@ import { CcWalletMap } from '../../../reducers/FioReducer'
 import { getExchangeDenom, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../../selectors/WalletSelectors'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
@@ -56,7 +56,7 @@ interface StateProps {
   defaultIsoFiat: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioRequestConfirmation'> {
+interface OwnProps extends EdgeAppSceneProps<'fioRequestConfirmation'> {
   wallet: EdgeCurrencyWallet
 }
 

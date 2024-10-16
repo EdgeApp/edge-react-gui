@@ -11,7 +11,7 @@ import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
@@ -76,7 +76,7 @@ export const COINGECKO_SUPPORTED_FIATS = {
 // Masking enable bit with 0 disables logging
 enableDebugLogType(LOG_COINRANK & 0)
 
-interface Props extends EdgeSceneProps<'coinRanking'> {}
+interface Props extends EdgeAppSceneProps<'coinRanking'> {}
 
 const percentChangeOrder: PercentChangeTimeFrame[] = ['hours1', 'hours24', 'days7', 'days30', 'year1']
 const percentChangeStrings: { [pc: string]: string } = {

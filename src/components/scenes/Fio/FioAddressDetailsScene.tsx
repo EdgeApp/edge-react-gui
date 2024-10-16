@@ -5,7 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -28,7 +28,7 @@ interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressDetails'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressDetails'> {}
 
 interface LocalState {
   fioWalletLoading: boolean

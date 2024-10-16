@@ -18,7 +18,7 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { lstrings } from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -37,7 +37,7 @@ export interface LoanStatusParams {
   loanAccountId: string
 }
 
-interface Props extends EdgeSceneProps<'loanStatus'> {
+interface Props extends EdgeAppSceneProps<'loanStatus'> {
   loanAccount: LoanAccount
 }
 

@@ -34,7 +34,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -68,7 +68,7 @@ import { ErrorTile } from '../tiles/ErrorTile'
 
 // TODO: Check contentPadding
 
-interface Props extends EdgeSceneProps<'send2'> {}
+interface Props extends EdgeAppSceneProps<'send2'> {}
 
 export interface SendScene2Params {
   walletId: string
@@ -202,7 +202,7 @@ const SendComponent = (props: Props) => {
   const pendingInsufficientFees = React.useRef<InsufficientFundsError | undefined>(undefined)
 
   async function showInsufficientFeesModal(error: InsufficientFundsError): Promise<void> {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={coreWallet} />)
+    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation as NavigationBase} wallet={coreWallet} />)
   }
 
   const handleChangeAddress =
@@ -290,7 +290,7 @@ const SendComponent = (props: Props) => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={doOpenCamera}
           fioToAddress={fioAddress}
-          navigation={navigation}
+          navigation={navigation as NavigationBase}
         />
       )
     }
@@ -397,7 +397,9 @@ const SendComponent = (props: Props) => {
   }
 
   const handleWalletPress = useHandler(() => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.fio_src_wallet} navigation={navigation} />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={lstrings.fio_src_wallet} navigation={navigation as NavigationBase} />
+    ))
       .then(result => {
         if (result?.type !== 'wallet') {
           return
@@ -568,7 +570,7 @@ const SendComponent = (props: Props) => {
 
     return (
       <SelectFioAddress2
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
         memoError={fioSender.memoError}
@@ -919,7 +921,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, coreWallet, tokenId)).catch(err => showError(err))
+      dispatch(checkAndShowGetCryptoModal(navigation as NavigationBase, coreWallet, tokenId)).catch(err => showError(err))
     }
   })
   useUnmount(() => {

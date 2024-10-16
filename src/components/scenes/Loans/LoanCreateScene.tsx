@@ -25,7 +25,7 @@ import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/type
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -52,7 +52,7 @@ export interface LoanCreateParams {
   borrowPlugin: BorrowPlugin
 }
 
-interface Props extends EdgeSceneProps<'loanCreate'> {}
+interface Props extends EdgeAppSceneProps<'loanCreate'> {}
 
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props

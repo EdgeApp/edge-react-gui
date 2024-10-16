@@ -7,7 +7,7 @@ import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConst
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -46,7 +46,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
-interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {
+interface OwnProps extends EdgeAppSceneProps<'fioDomainSettings'> {
   wallet: EdgeCurrencyWallet
 }
 

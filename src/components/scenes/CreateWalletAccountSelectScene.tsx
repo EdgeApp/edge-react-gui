@@ -12,7 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -53,7 +53,7 @@ export interface AccountActivationPaymentInfo {
   expireTime: number
 }
 
-interface Props extends EdgeSceneProps<'createWalletAccountSelect'> {
+interface Props extends EdgeAppSceneProps<'createWalletAccountSelect'> {
   wallet: EdgeCurrencyWallet
 }
 

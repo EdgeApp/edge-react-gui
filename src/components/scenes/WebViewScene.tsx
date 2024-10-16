@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { WebView } from 'react-native-webview'
 
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 export interface WebViewSceneParams {
@@ -9,7 +9,7 @@ export interface WebViewSceneParams {
   uri: string
 }
 
-interface Props extends EdgeSceneProps<'webView'> {}
+interface Props extends EdgeAppSceneProps<'webView'> {}
 
 export const WebViewScene = (props: Props) => {
   const { uri } = props.route.params

@@ -16,7 +16,7 @@ import { useMount } from '../../hooks/useMount'
 import { UNSUPPORTED_WC_VERSION, useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -28,7 +28,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'wcConnections'> {}
+interface Props extends EdgeAppSceneProps<'wcConnections'> {}
 
 const NO_WALLETS_DAPP_REQUIREMENTS = 'NO_WALLETS_DAPP_REQUIREMENTS'
 export interface WcConnectionsParams {
