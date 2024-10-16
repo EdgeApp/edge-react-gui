@@ -18,6 +18,7 @@
 - added: "Go to Parent Wallet" `WalletListMenuModal` option
 - added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
+- changed: Allow 0 amount entry in `SpendingLimitsScene`
 - changed: Wording on `SwapSuccessScene`
 - changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
 - changed: FIO Home Scene tile replaced with Earn
