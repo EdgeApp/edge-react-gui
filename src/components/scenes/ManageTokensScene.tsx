@@ -9,7 +9,7 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -41,7 +41,7 @@ interface Section {
   data: string[]
 }
 
-interface Props extends EdgeSceneProps<'manageTokens'> {
+interface Props extends EdgeAppSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
 }
 

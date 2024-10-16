@@ -17,7 +17,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -35,7 +35,7 @@ export interface SweepPrivateKeyCalculateFeeParams {
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
-interface Props extends EdgeSceneProps<'sweepPrivateKeyCalculateFee'> {}
+interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'> {}
 
 const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const { navigation, route } = props
@@ -110,7 +110,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={wallet} />)
+    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation as NavigationBase} wallet={wallet} />)
   })
 
   const handleSlidingComplete = useHandler(() => {

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Use stack-specific scene navigation props instead of `NavigationProp`
 - changed: Wording in light account persistent notification
 
 ## 4.15.1

@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -22,7 +22,7 @@ export interface CreateWalletAccountSetupParams {
   walletId: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {
+interface Props extends EdgeAppSceneProps<'createWalletAccountSetup'> {
   wallet: EdgeCurrencyWallet
 }
 

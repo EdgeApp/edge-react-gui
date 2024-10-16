@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -23,7 +23,7 @@ export interface EdgeLoginParams {
   lobbyId: string
 }
 
-interface Props extends EdgeSceneProps<'edgeLogin'> {}
+interface Props extends EdgeAppSceneProps<'edgeLogin'> {}
 
 export const EdgeLoginScene = (props: Props) => {
   const { navigation, route } = props

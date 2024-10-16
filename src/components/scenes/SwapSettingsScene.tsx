@@ -13,7 +13,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -26,7 +26,7 @@ import { SettingsSubHeader } from '../settings/SettingsSubHeader'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface OwnProps extends EdgeSceneProps<'swapSettings'> {}
+interface OwnProps extends EdgeAppSceneProps<'swapSettings'> {}
 
 interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void

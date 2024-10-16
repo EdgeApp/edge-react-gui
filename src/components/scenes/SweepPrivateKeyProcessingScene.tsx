@@ -2,7 +2,7 @@ import { EdgeCurrencyWallet, EdgeMemoryWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { showError } from '../services/AirshipInstance'
@@ -20,7 +20,7 @@ export interface SweepPrivateKeyItem {
   tokenId: EdgeTokenId
 }
 
-interface Props extends EdgeSceneProps<'sweepPrivateKeyProcessing'> {}
+interface Props extends EdgeAppSceneProps<'sweepPrivateKeyProcessing'> {}
 
 export function SweepPrivateKeyProcessingScene(props: Props) {
   const { route, navigation } = props
@@ -81,7 +81,7 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
   return (
     <CancellableProcessingScene
       animationDuration={1000}
-      navigation={navigation}
+      navigation={navigation as NavigationBase}
       doWork={promise}
       onCancel={onCancel}
       onDone={onDone}

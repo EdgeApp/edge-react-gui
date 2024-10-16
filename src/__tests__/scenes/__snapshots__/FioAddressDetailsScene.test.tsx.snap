@@ -52,23 +52,12 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       fioWallet={null}
       navigation={
         {
-          "addListener": [Function],
-          "canGoBack": [Function],
-          "dispatch": [Function],
-          "getId": [Function],
-          "getParent": [Function],
-          "getState": [Function],
-          "goBack": [Function],
-          "isFocused": [Function],
-          "navigate": [Function],
-          "pop": [Function],
-          "popToTop": [Function],
-          "push": [Function],
-          "removeListener": [Function],
-          "replace": [Function],
-          "reset": [Function],
-          "setOptions": [Function],
-          "setParams": [Function],
+          "addListener": [MockFunction],
+          "goBack": [MockFunction],
+          "navigate": [MockFunction],
+          "pop": [MockFunction],
+          "push": [MockFunction],
+          "replace": [MockFunction],
         }
       }
     />

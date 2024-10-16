@@ -10,7 +10,7 @@ import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { EdgeAsset } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -42,7 +42,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainRegisterSelectWallet'> {
+interface OwnProps extends EdgeAppSceneProps<'fioDomainRegisterSelectWallet'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -117,7 +117,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={this.props.navigation}
+        navigation={this.props.navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         allowedAssets={[...supportedAssets, { pluginId: 'fio', tokenId: null }]}
       />
@@ -162,7 +162,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           currencyConfig: wallet.currencyConfig
         })
 
-        await launchPaymentProto(this.props.navigation, this.props.account, bitpayUrl, {
+        await launchPaymentProto(this.props.navigation as NavigationBase, this.props.account, bitpayUrl, {
           wallet: wallet,
           metadata: {
             name: lstrings.fio_address_register_metadata_name,
@@ -184,7 +184,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   cryptoAmount
                 }
               })
-              navigation.navigate('home')
+              navigation.navigate('edgeTabs', { screen: 'home' })
             }
           }
         })

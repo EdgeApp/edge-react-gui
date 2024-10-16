@@ -25,7 +25,7 @@ import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -108,7 +108,7 @@ const MANAGE_ACTION_DATA_MAP: {
   }
 }
 
-interface Props extends EdgeSceneProps<'loanManage'> {
+interface Props extends EdgeAppSceneProps<'loanManage'> {
   loanAccount: LoanAccount
 }
 
@@ -361,7 +361,7 @@ export const LoanManageSceneComponent = (props: Props) => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         showCreateWallet={manageActionData.isFundDestWallet}
         createWalletId={manageActionData.isFundDestWallet ? borrowEngineWallet.id : undefined}

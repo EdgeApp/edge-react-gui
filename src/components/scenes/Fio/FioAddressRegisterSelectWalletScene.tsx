@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { EdgeAsset, FioDomain } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -42,7 +42,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSelectWallet'> {
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSelectWallet'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -132,7 +132,12 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation as NavigationBase}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={supportedAssets}
+      />
     ))
     if (result?.type === 'wallet') {
       const { walletId, tokenId } = result
@@ -170,7 +175,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           currencyConfig: wallet.currencyConfig
         })
 
-        await launchPaymentProto(this.props.navigation, this.props.account, bitpayUrl, {
+        await launchPaymentProto(this.props.navigation as NavigationBase, this.props.account, bitpayUrl, {
           wallet: wallet,
           metadata: {
             name: lstrings.fio_address_register_metadata_name,
@@ -195,7 +200,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                   cryptoAmount
                 }
               })
-              navigation.navigate('home')
+              navigation.navigate('edgeTabs', { screen: 'home' })
             }
           }
         })

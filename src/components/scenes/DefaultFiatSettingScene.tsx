@@ -10,7 +10,7 @@ import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { Theme } from '../../types/Theme'
 import { FlatListItem, GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
@@ -22,7 +22,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 
-interface OwnProps extends EdgeSceneProps<'defaultFiatSetting'> {}
+interface OwnProps extends EdgeAppSceneProps<'defaultFiatSetting'> {}
 
 interface StateProps {
   supportedFiats: GuiFiatType[]

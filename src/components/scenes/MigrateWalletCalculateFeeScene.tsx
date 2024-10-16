@@ -11,7 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -28,7 +28,7 @@ export interface MigrateWalletCalculateFeeParams {
   migrateWalletList: MigrateWalletItem[]
 }
 
-interface Props extends EdgeSceneProps<'migrateWalletCalculateFee'> {}
+interface Props extends EdgeAppSceneProps<'migrateWalletCalculateFee'> {}
 
 type AssetRowState = string | Error
 
@@ -124,7 +124,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={wallet} />)
+    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation as NavigationBase} wallet={wallet} />)
   })
 
   const handleSlidingComplete = useHandler(() => {

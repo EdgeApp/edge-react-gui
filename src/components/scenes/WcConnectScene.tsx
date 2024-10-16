@@ -13,7 +13,7 @@ import { useUnmount } from '../../hooks/useUnmount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -28,7 +28,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
-interface Props extends EdgeSceneProps<'wcConnect'> {
+interface Props extends EdgeAppSceneProps<'wcConnect'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -80,7 +80,13 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   const handleWalletListModal = useHandler(async () => {
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={edgeTokenIds}
+        showCreateWallet
+        navigation={navigation as NavigationBase}
+      />
     ))
     if (result?.type === 'wallet') {
       const { walletId } = result
