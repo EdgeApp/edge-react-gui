@@ -29,7 +29,7 @@ import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScro
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
@@ -94,7 +94,7 @@ const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-interface OwnProps extends EdgeSceneProps<'pluginListBuy' | 'pluginListSell'> {}
+interface OwnProps extends BuyTabSceneProps<'pluginListBuy' | 'pluginListSell'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -236,7 +236,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     // Don't allow light accounts to enter buy webview plugins
     const direction = this.getSceneDirection()
-    if (direction === 'buy' && plugin.nativePlugin == null && checkAndShowLightBackupModal(account, navigation)) return
+    if (direction === 'buy' && plugin.nativePlugin == null && checkAndShowLightBackupModal(account, navigation as NavigationBase)) return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow
@@ -298,7 +298,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         forcedWalletResult,
         guiPlugin: plugin,
         longPress,
-        navigation,
+        navigation: navigation as NavigationBase,
         paymentType,
         pluginPromotion,
         regionCode: { countryCode, stateProvinceCode },

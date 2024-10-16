@@ -11,7 +11,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
 
 export interface FiatPluginSepaTransferParams {
@@ -27,7 +27,7 @@ interface InfoDisplayGroup {
   items: Array<{ label: string; value?: string }>
 }
 
-interface Props extends EdgeSceneProps<'guiPluginInfoDisplay'> {}
+interface Props extends BuyTabSceneProps<'guiPluginInfoDisplay'> {}
 
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
