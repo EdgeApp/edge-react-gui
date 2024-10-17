@@ -146,8 +146,8 @@ const NotificationViewComponent = (props: Props) => {
       <EdgeAnim visible={isLightAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
-          title={lstrings.guest_account}
-          message={lstrings.tap_to_create_username_password}
+          title={lstrings.backup_notification_title}
+          message={sprintf(lstrings.backup_notification_body, config.appName)}
           persistent
           onPress={handleBackupPress}
         />

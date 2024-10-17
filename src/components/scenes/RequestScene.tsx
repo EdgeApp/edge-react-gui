@@ -297,7 +297,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
         <SceneHeader title={lstrings.fragment_request_subtitle} underline withTopMargin />
         <View style={styles.container}>
           <EdgeText numberOfLines={0} style={styles.backupText}>
-            {lstrings.backup_for_transfer_message}
+            {sprintf(lstrings.backup_for_transfer_message, config.appName)}
           </EdgeText>
           <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
         </View>
