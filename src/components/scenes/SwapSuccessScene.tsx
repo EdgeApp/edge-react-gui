@@ -1,3 +1,4 @@
+import { EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
@@ -14,6 +15,11 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
+export interface SwapSuccessParams {
+  edgeTransaction: EdgeTransaction
+  walletId: string
+}
+
 interface Props extends EdgeSceneProps<'swapSuccess'> {}
 
 const confettiProps = {
@@ -23,7 +29,8 @@ const confettiProps = {
 }
 
 export const SwapSuccessScene = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { edgeTransaction, walletId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -33,9 +40,13 @@ export const SwapSuccessScene = (props: Props) => {
   const userId = useSelector(state => state.core.account.id)
   const disklet = useSelector(state => state.core.disklet)
 
-  const done = useHandler(() => {
+  const handleDone = useHandler(() => {
     setShowButton(false)
     navigation.navigate('swapTab', { screen: 'swapCreate' })
+  })
+
+  const handleTransactionDetails = useHandler(() => {
+    navigation.replace('transactionDetails', { edgeTransaction, walletId })
   })
 
   useAsyncEffect(
@@ -65,13 +76,19 @@ export const SwapSuccessScene = (props: Props) => {
       <View style={styles.container}>
         <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
         <EdgeText style={styles.text} numberOfLines={2}>
-          {lstrings.exchange_congratulations_msg}
+          {lstrings.exchange_congratulations_success}
         </EdgeText>
         <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
-          {lstrings.exchange_congratulations_msg_info}
+          {lstrings.exchange_congratulations_note}
         </EdgeText>
         <EdgeAnim style={styles.animOverlay} visible={showButton} enter={fadeIn}>
-          <SceneButtons absolute primary={{ label: lstrings.string_done_cap, onPress: done }} />
+          <SceneButtons
+            primary={{ label: lstrings.string_done_cap, onPress: handleDone }}
+            secondary={{
+              label: lstrings.transaction_details,
+              onPress: handleTransactionDetails
+            }}
+          />
         </EdgeAnim>
         {renderConfetti()}
       </View>
@@ -82,8 +99,8 @@ export const SwapSuccessScene = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   animOverlay: {
     position: 'absolute',
-    width: '100%',
-    height: '100%'
+    height: '100%',
+    width: '100%'
   },
   container: {
     flexGrow: 1,

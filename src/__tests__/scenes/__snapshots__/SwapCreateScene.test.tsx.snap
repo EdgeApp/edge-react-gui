@@ -603,7 +603,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 0,
+          "bottom": 11,
           "justifyContent": "flex-end",
           "paddingHorizontal": 11,
           "position": "absolute",
@@ -625,215 +625,242 @@ exports[`SwapCreateScene should render with loading props 1`] = `
     >
       <View
         style={
-          [
-            {
-              "alignItems": "center",
-              "backgroundColor": "#1a1a1a",
-              "borderRadius": 11,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "margin": 11,
-              "marginTop": 0,
-              "padding": 11,
-              "shadowOffset": {
-                "height": 0,
-                "width": 0,
-              },
-              "shadowOpacity": 0.7,
-              "shadowRadius": 11,
+          {
+            "borderRadius": 16,
+            "elevation": 0,
+            "marginVertical": 6,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 3,
+              "width": 3,
             },
-            {
-              "opacity": 1,
-            },
-          ]
+            "shadowOpacity": 0.6,
+            "shadowRadius": 4,
+          }
         }
       >
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+        <BlurView
+          blurAmount={10}
+          blurType="dark"
+          overlayColor="rgba(0, 0, 0, 0)"
           style={
             {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexShrink": 1,
-              "justifyContent": "center",
-              "margin": 6,
-              "opacity": 1,
+              "backgroundColor": undefined,
+              "borderRadius": 16,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
             }
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginTop": 0,
+                "padding": 11,
+              },
+              {
+                "opacity": 1,
+              },
+            ]
           }
         >
           <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 56,
-                  "marginRight": 6,
-                  "width": 56,
-                },
-              ]
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
             }
-          >
-            <FastImageView
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/notifications/icon-lock.png",
-                }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-          <View
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignItems": "center",
+                "flexDirection": "row",
                 "flexShrink": 1,
-                "width": "100%",
+                "justifyContent": "center",
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "height": 79,
+                    "marginRight": 6,
+                    "width": 79,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/notifications/icon-lock.png",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "flexShrink": 1,
+                  "width": "100%",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Bold",
+                      "fontSize": 17,
+                      "marginBottom": 6,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                IP Validation Protection
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={3}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              </Text>
+            </View>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "margin": 6,
+                "opacity": 1,
               }
             }
           >
             <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
+              allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
+                    "color": "#00f1a2",
+                    "fontSize": 28,
                   },
+                  undefined,
                   {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Bold",
-                    "fontSize": 17,
-                    "marginHorizontal": 6,
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
-                  null,
+                  {},
                 ]
               }
-              type="info"
             >
-              IP Validation Protection
-            </Text>
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={3}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "color": "#3dd9f4",
-                    "fontSize": 17,
-                    "marginHorizontal": 6,
-                  },
-                  null,
-                ]
-              }
-              type="info"
-            >
-              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              
             </Text>
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "margin": 6,
-              "opacity": 1,
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            selectable={false}
-            style={
-              [
-                {
-                  "color": "#00f1a2",
-                  "fontSize": 28,
-                },
-                undefined,
-                {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
         </View>
       </View>
     </View>

@@ -15,7 +15,6 @@ import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
   showReEnableOtpModal,
-  showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
   updateTouchIdEnabled
@@ -67,6 +66,8 @@ export const SettingsScene = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const username = useWatch(account, 'username')
+  const allKeys = useWatch(account, 'allKeys')
+  const hasRestoreWallets = allKeys != null && allKeys.filter(key => key.archived || key.deleted).length > 0
 
   const context = useSelector(state => state.core.context)
   const logSettings = useWatch(context, 'logSettings')
@@ -142,7 +143,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleShowRestoreWalletsModal = useHandler(async () => {
-    await dispatch(showRestoreWalletsModal(navigation))
+    navigation.navigate('walletRestore')
   })
 
   const handleShowUnlockSettingsModal = useHandler(async () => {
@@ -366,7 +367,11 @@ export const SettingsScene = (props: Props) => {
             <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={handlePromotionSettings} />
 
             <SettingsSwitchRow key="disableAnim" label={lstrings.button_disable_animations} value={disableAnim} onPress={handleToggleDisableAnimations} />
-            <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={handleShowRestoreWalletsModal} />
+            <SettingsTappableRow
+              label={lstrings.restore_wallets_modal_title}
+              onPress={hasRestoreWallets ? handleShowRestoreWalletsModal : undefined}
+              disabled={!hasRestoreWallets}
+            />
             <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
             <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={handleTermsOfService} />
             <SettingsSwitchRow

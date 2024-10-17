@@ -38,6 +38,7 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
   defaultSelection?: EdgeAsset[]
+  disableLegacy?: boolean
   splitPluginIds?: string[]
   splitSourceWalletId?: string
 }
@@ -46,7 +47,7 @@ interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalle
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
-  const { newAccountFlow, defaultSelection = [], splitPluginIds = [], splitSourceWalletId } = route.params
+  const { newAccountFlow, defaultSelection = [], disableLegacy = false, splitPluginIds = [], splitSourceWalletId } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -67,7 +68,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const [searchTerm, setSearchTerm] = React.useState('')
 
   const allowedAssets = splitPluginIds.length > 0 ? splitPluginIds.map(pluginId => ({ pluginId, tokenId: null })) : undefined
-  const createList = getCreateWalletList(account, { allowedAssets, disableLegacy: splitPluginIds.length > 0 })
+  const createList = getCreateWalletList(account, { allowedAssets, disableLegacy })
 
   const createWalletList = React.useMemo(() => {
     const preselectedList: WalletCreateItem[] = []

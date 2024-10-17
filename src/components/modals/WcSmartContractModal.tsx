@@ -113,6 +113,7 @@ export const WcSmartContractModal = (props: Props) => {
           const tx = await wallet.makeSpend(spendInfo)
           const signTx = await wallet.signTx(tx)
           await walletConnect.approveRequest(topic, requestId, signTx.signedTx)
+          await wallet.saveTx(signTx)
           break
         }
         case 'eth_sendTransaction':
@@ -123,6 +124,7 @@ export const WcSmartContractModal = (props: Props) => {
           const signedTx = await wallet.signTx(tx)
           const sentTx = await wallet.broadcastTx(signedTx)
           await walletConnect.approveRequest(topic, requestId, sentTx.txid)
+          await wallet.saveTx(sentTx)
           break
         }
         case 'algo_signTxn': {

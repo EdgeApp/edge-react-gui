@@ -4,7 +4,7 @@ import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { infoServerData } from '../../../../util/network'
 import { DECIMAL_PRECISION } from '../../../../util/utils'
-import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { actionEnter, actionExit, actionPending, transactionConstruct, transactionSubmitHash, yieldGetSingleYieldBalances } from '../util/stakeKitUtils'
@@ -92,7 +92,7 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
       const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
 
       const yieldBalanceRes = await yieldGetSingleYieldBalances(adapterConfig.integrationId, {

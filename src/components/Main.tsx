@@ -108,6 +108,7 @@ import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/Se
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
 import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/SpendingLimitsScene'
+import { EarnScene as EarnSceneComponent } from './scenes/Staking/EarnScene'
 import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/StakeModifyScene'
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
@@ -124,6 +125,7 @@ import { TransactionList as TransactionListComponent } from './scenes/Transactio
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
+import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
@@ -154,6 +156,7 @@ const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
 const EditTokenScene = ifLoggedIn(EditTokenSceneComponent)
+const EarnScene = ifLoggedIn(EarnSceneComponent)
 const ExtraTabScene = ifLoggedIn(ExtraTabSceneComponent)
 const FiatPluginEnterAmountScene = ifLoggedIn(FiatPluginEnterAmountSceneComponent)
 const FioAddressDetailsScene = ifLoggedIn(FioAddressDetailsSceneComponent)
@@ -213,6 +216,7 @@ const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
+const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
@@ -564,6 +568,13 @@ const EdgeAppStack = () => {
           headerLeft: () => <HeaderTextButton type="help" />
         }}
       />
+      <AppStack.Screen
+        name="earnScene"
+        component={EarnScene}
+        options={{
+          title: lstrings.stake_earn_button_label
+        }}
+      />
       <AppStack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
       <AppStack.Screen name="fioAddressList" component={FioAddressListScene} />
       <AppStack.Screen name="fioAddressRegister" component={FioAddressRegisterScene} />
@@ -747,6 +758,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <AppStack.Screen name="walletRestore" component={WalletRestoreScene} />
       <AppStack.Screen name="wcConnect" component={WcConnectScene} />
       <AppStack.Screen name="wcConnections" component={WcConnectionsScene} />
       <AppStack.Screen name="wcDisconnect" component={WcDisconnectScene} />

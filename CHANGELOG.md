@@ -2,7 +2,29 @@
 
 ## Unreleased
 
-## 4.15.0
+## 4.16.0
+
+- added: "Transaction Details" button to `SwapSuccessScene`
+- added: `WalletRestoreScene`
+- added: Button to access the `WalletRestoreScene` on `WalletListScene` if applicable
+- added: "Go to Parent Wallet" `WalletListMenuModal` option
+- added: Earn Scene
+- added: Include wallet creation date in wallet data in log output
+- changed: Wording on `SwapSuccessScene`
+- changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
+- changed: FIO Home Scene tile replaced with Earn
+- changed: Stake Overview Scene `StakingReturnsCard` redesigned
+- changed: Android `AutoLogoutModal` duration picker
+- changed: Enable Ethereum staking
+- changed: Prevent exchange rate fluctuations from restarting transaction list stream
+- changed: Call `saveTx` after signing or broadcasting transactions from WalletConnect
+- changed: Navigate to wallet list after restoring wallets
+- changed: Update `NotificationCard` to UI4 styling
+- changed: Remove legacy non-segwit wallets from new account wallet selection scene
+- fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
+- fixed: Crash when archiving a wallet that recently accessed the trade modal
+
+## 4.15.0 (2024-10-16)
 
 - added: Add Maya Protocol
 - added: Battery Saver warning message for Android
@@ -23,7 +45,7 @@
 - fixed: Round Kado-provided amounts during sell
 - fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
 
-## 4.14.1
+## 4.14.1 (2024-09-30)
 
 - added: Foreground push notification title data displayed in dropdown
 - changed: More informative buy amount limit errors for light accounts

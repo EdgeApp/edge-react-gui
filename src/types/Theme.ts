@@ -443,6 +443,7 @@ export interface Theme {
   // Shadows
   iconShadow: ThemeShadowParams
   dropdownListShadow: ThemeShadowParams
+  notifcationCardShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string
@@ -454,7 +455,7 @@ export interface Theme {
   // Special Home Scene Tiled Cards
   buyCardGradient: ThemeGradientParams
   sellCardGradient: ThemeGradientParams
-  fioCardGradient: ThemeGradientParams
+  earnCardGradient: ThemeGradientParams
   swapCardGradient: ThemeGradientParams
 
   txDirBgReceive: string
