@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.16.0
+
 - added: "Transaction Details" button to `SwapSuccessScene`
 - added: `WalletRestoreScene`
 - added: Button to access the `WalletRestoreScene` on `WalletListScene` if applicable
@@ -22,7 +24,7 @@
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 
-## 4.15.0
+## 4.15.0 (2024-10-16)
 
 - added: Add Maya Protocol
 - added: Battery Saver warning message for Android
@@ -43,7 +45,7 @@
 - fixed: Round Kado-provided amounts during sell
 - fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
 
-## 4.14.1
+## 4.14.1 (2024-09-30)
 
 - added: Foreground push notification title data displayed in dropdown
 - changed: More informative buy amount limit errors for light accounts
