@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.15.1
+
+- fixed: "Apple Pay" title per latest branding requirements
+
 ## 4.15.0
 
 - added: Add Maya Protocol
@@ -22,10 +26,6 @@
 - fixed: Message about overriding a built-in token contract, which is not possible to do
 - fixed: Round Kado-provided amounts during sell
 - fixed: "Contacts Access" setting could be out of sync with the OS-level contacts access setting
-
-## 4.14.2
-
-- fixed: Downgrade edge-exchange-plugins to v2.8.1 to remove Thorchain bugs introduced by Maya protocol additions
 
 ## 4.14.1
 
