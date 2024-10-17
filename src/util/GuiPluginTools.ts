@@ -62,6 +62,7 @@ export function filterGuiPluginJson(
     if (row.deepQuery != null) merged.deepQuery = { ...merged.deepQuery, ...row.deepQuery }
     if (row.paymentType != null) merged.paymentType = row.paymentType
     if (row.title != null) merged.title = row.title
+    if (row.customTitleKey != null) merged.customTitleKey = row.customTitleKey
     if (row.description != null) merged.description = row.description
     if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath
     if (row.paymentTypeLogoKey != null) merged.paymentTypeLogoKey = row.paymentTypeLogoKey
