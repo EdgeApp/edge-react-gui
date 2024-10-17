@@ -12,6 +12,7 @@ import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -316,6 +317,30 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     onPluginOpened()
   }
 
+  renderTitle = (guiPluginRow: GuiPluginRow) => {
+    const styles = getStyles(this.props.theme)
+    const { title, customTitleKey } = guiPluginRow
+
+    switch (customTitleKey) {
+      case 'applepay':
+        // Per Apple branding guidelines, "Pay With" is NOT to be translated.
+        return (
+          <View style={styles.titleAppleContainer}>
+            <EdgeText style={styles.titleText} numberOfLines={1}>
+              {'Pay with '}
+            </EdgeText>
+            <Image style={styles.titleAppleLogo} source={paymentTypeLogoApplePay} />
+          </View>
+        )
+      default:
+        return (
+          <EdgeText style={styles.titleText} numberOfLines={1}>
+            {title}
+          </EdgeText>
+        )
+    }
+  }
+
   renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
@@ -328,7 +353,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
     const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
-
     return (
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
         <EdgeCard
@@ -344,9 +368,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>
-            <EdgeText style={styles.titleText} numberOfLines={1}>
-              {item.title}
-            </EdgeText>
+            {this.renderTitle(item)}
             {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
             {poweredBy != null && item.partnerIconPath != null ? (
               <>
@@ -528,6 +550,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleText: {
     fontFamily: theme.fontFaceMedium
+  },
+  titleAppleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    flexShrink: 1
+  },
+  titleAppleLogo: {
+    height: theme.rem(1),
+    width: 'auto',
+    aspectRatio: 150 / 64,
+    resizeMode: 'contain',
+    marginBottom: 1
   },
   subtitleText: {
     marginTop: theme.rem(0.25),
