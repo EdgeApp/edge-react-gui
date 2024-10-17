@@ -1,11 +1,28 @@
 import { gt } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import { EdgeMemo, EdgeMemoOption } from 'edge-core-js'
+import { EdgeMemo, EdgeMemoOption, EdgeSpendInfo, EdgeSpendTarget } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
 import { asBase16 } from './cleaners/asHex'
 import { asIntegerString } from './cleaners/asIntegerString'
+
+/**
+ * Creates an EdgeMemo from a memo option and text
+ */
+export const createEdgeMemo = (memoOptions: EdgeMemoOption[], text: string): EdgeMemo => {
+  const [memoOption] = memoOptions.filter(option => option.hidden !== true)
+  return {
+    type: memoOption.type,
+    memoName: memoOption.memoName,
+    value: text
+  }
+}
+
+/** Get a default memo, compatible with all potentially deprecated props */
+export const getDefaultMemoString = (spendInfo: EdgeSpendInfo, spendTarget?: EdgeSpendTarget) => {
+  return spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+}
 
 /**
  * Checks a memo against a memo option.
