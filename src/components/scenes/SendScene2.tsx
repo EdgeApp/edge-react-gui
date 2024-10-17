@@ -5,7 +5,6 @@ import {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
-  EdgeMemo,
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTokenId,
@@ -40,7 +39,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/memoUtils'
+import { createEdgeMemo, getDefaultMemoString, getMemoError, getMemoLabel, getMemoTitle } from '../../util/memoUtils'
 import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -585,7 +584,7 @@ const SendComponent = (props: Props) => {
   // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
   const renderUniqueIdentifier = () => {
     const spendTarget = spendInfo.spendTargets[0]
-    const uniqueIdentifier = spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+    const uniqueIdentifier = getDefaultMemoString(spendInfo, spendTarget)
     const [memoOption] = memoOptions.filter(option => option.hidden !== true)
 
     if (memoOption != null && spendTarget.publicAddress != null) {
@@ -602,12 +601,6 @@ const SendComponent = (props: Props) => {
         maxLength = 2 * memoOption.maxBytes
       }
 
-      const createEdgeMemo = (text: string): EdgeMemo => ({
-        type: memoOption.type,
-        memoName: memoOption.memoName,
-        value: text
-      })
-
       const handleUniqueIdentifier = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
@@ -619,11 +612,11 @@ const SendComponent = (props: Props) => {
             message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
-            onSubmit={async text => getMemoError(createEdgeMemo(text), memoOption) ?? true}
+            onSubmit={async text => getMemoError(createEdgeMemo(memoOptions, text), memoOption) ?? true}
           />
         )).then(value => {
           if (value == null) return
-          spendInfo.memos = [createEdgeMemo(value)]
+          spendInfo.memos = [createEdgeMemo(memoOptions, value)]
           setSpendInfo({ ...spendInfo })
         })
       }
