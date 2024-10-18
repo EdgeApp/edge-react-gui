@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 4.15.1
+## 4.15.1 (2024-10-18)
 
 - fixed: "Apple Pay" title per latest branding requirements
 
