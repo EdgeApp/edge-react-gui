@@ -151,7 +151,6 @@ const SendComponent = (props: Props) => {
   const initExpireDate = isoExpireDate != null ? new Date(isoExpireDate) : undefined
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
-  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { tokenId: null, spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [minNativeAmount, setMinNativeAmount] = useState<string | undefined>(initMinNativeAmount)
@@ -179,9 +178,24 @@ const SendComponent = (props: Props) => {
   const hasNotifications = useSelector(state => state.ui.notificationHeight > 0)
 
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const [tokenId, setTokenId] = useState<EdgeTokenId>(spendInfo.tokenId ?? tokenIdProp)
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
+
+  // Initialize `spendInfo` from route params, including possible memos
+  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(() => {
+    if (initSpendInfo == null) return { tokenId: null, spendTargets: [{}] }
+
+    const spendTarget = initSpendInfo.spendTargets[0]
+    const uniqueIdentifier = getDefaultMemoString(initSpendInfo, spendTarget)
+
+    if (uniqueIdentifier == null || spendTarget.publicAddress == null) {
+      return initSpendInfo
+    } else {
+      return { ...initSpendInfo, memos: [createEdgeMemo(memoOptions, uniqueIdentifier)] }
+    }
+  })
+
+  const [tokenId, setTokenId] = useState<EdgeTokenId>(spendInfo.tokenId ?? tokenIdProp)
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
   const cryptoDisplayDenomination = useDisplayDenom(coreWallet.currencyConfig, tokenId)
   const cryptoExchangeDenomination = getExchangeDenom(coreWallet.currencyConfig, tokenId)
