@@ -78,6 +78,8 @@ export interface GuiPluginRow {
 
   title: string
   description: string
+  /** Overrides `title` with a defined React node definition */
+  customTitleKey?: string
   paymentType?: FiatPaymentType
   partnerIconPath?: string
   paymentTypeLogoKey?: string
@@ -105,6 +107,7 @@ const asGuiPluginJsonRow = asObject({
 
   // List display options:
   title: asOptional(asString),
+  customTitleKey: asOptional(asString),
   description: asOptional(asString),
   partnerIconPath: asOptional(asString),
   paymentTypeLogoKey: asOptional(asString),

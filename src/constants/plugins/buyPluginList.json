@@ -319,7 +319,8 @@
     "paymentType": "applepay",
     "description": "Fee: 5-7%\nSettlement: 10 - 30 minutes",
     "paymentTypes": ["credit"],
-    "title": "Pay with Apple Pay",
+    "title": "",
+    "customTitleKey": "applepay",
     "forCountries": [
       "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR",
       "AS", "AT", "AU", "AW", "AZ", "BA", "BB", "BD", "BE", "BF",

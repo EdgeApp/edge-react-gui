@@ -4,6 +4,10 @@
 
 - changed: Wording in light account persistent notification
 
+## 4.15.1
+
+- fixed: "Apple Pay" title per latest branding requirements
+
 ## 4.16.0
 
 - added: "Transaction Details" button to `SwapSuccessScene`
