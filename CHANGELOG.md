@@ -26,6 +26,7 @@
 - changed: Navigate to wallet list after restoring wallets
 - changed: Update `NotificationCard` to UI4 styling
 - changed: Remove legacy non-segwit wallets from new account wallet selection scene
+- fixed: Deeplinking to `SendScene` may not retain memo information in the resulting broadcast
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: ACH sell option for Florida visible with no accepted currencies
