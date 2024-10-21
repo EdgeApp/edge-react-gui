@@ -58,7 +58,7 @@ export function WalletRestoreScene(props: Props) {
     ))
     if (response === 'confirm') {
       const states: EdgeWalletStates = {}
-      for (const info of restoreWalletInfos) {
+      for (const info of selectedWalletInfos) {
         states[info.id] = { archived: false, deleted: false }
       }
       await account.changeWalletStates(states)
