@@ -3,6 +3,8 @@
 ## Unreleased
 
 - changed: Wording in light account persistent notification
+- removed: Bank Wire Transfer Buy for Florida
+- removed: Paypal Sell for Canada
 
 ## 4.15.1
 
