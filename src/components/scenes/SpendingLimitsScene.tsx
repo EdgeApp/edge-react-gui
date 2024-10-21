@@ -45,7 +45,7 @@ export const SpendingLimitsScene = (props: Props) => {
     const spendingLimits = {
       transaction: {
         isEnabled: transactionIsEnabled,
-        amount: parseFloat(transactionAmount)
+        amount: zeroString(transactionAmount) ? 0 : parseFloat(transactionAmount)
       }
     }
     await writeSpendingLimits(account, spendingLimits)
@@ -61,8 +61,7 @@ export const SpendingLimitsScene = (props: Props) => {
     handleSubmitAsync().catch(err => showError(err))
   })
 
-  const amount = parseFloat(transactionAmount)
-  const enableSlider = password.length > 8 && !isNaN(amount) && amount > 0
+  const enableSlider = password.length > 8
   return (
     <SceneWrapper>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
