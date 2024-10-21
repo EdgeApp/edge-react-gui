@@ -256,7 +256,7 @@ const firstSceneScreenOptions: StackNavigationOptions & BottomTabNavigationOptio
 
 const EdgeWalletsTabScreen = () => {
   return (
-    <WalletsStack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
+    <WalletsStack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions} id="wallets-stack">
       <WalletsStack.Screen
         name="transactionDetails"
         component={TransactionDetailsScene}
@@ -276,7 +276,7 @@ const EdgeWalletsTabScreen = () => {
 
 const EdgeBuyTabScreen = () => {
   return (
-    <BuyStack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
+    <BuyStack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions} id="buy-stack">
       <BuyStack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <BuyStack.Screen
         name="pluginViewBuy"
@@ -324,7 +324,7 @@ const EdgeBuyTabScreen = () => {
 
 const EdgeSellTabScreen = () => {
   return (
-    <BuyStack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+    <BuyStack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions} id="sell-stack">
       <BuyStack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <BuyStack.Screen
         name="pluginViewSell"
@@ -372,7 +372,7 @@ const EdgeSellTabScreen = () => {
 
 const EdgeSwapTabScreen = () => {
   return (
-    <SwapStack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
+    <SwapStack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions} id="swap-stack">
       <SwapStack.Screen
         name="swapCreate"
         component={SwapCreateScene}
@@ -405,6 +405,7 @@ const EdgeTabs = () => {
       screenOptions={{
         headerShown: false
       }}
+      id="tabs-stack"
     >
       <Tabs.Screen name="home" component={HomeScene} options={{ ...defaultScreenOptions, ...firstSceneScreenOptions }} />
       <Tabs.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
@@ -424,7 +425,7 @@ const EdgeTabs = () => {
 
 const EdgeAppStack = () => {
   return (
-    <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
+    <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions} id="app-stack">
       <AppStack.Screen
         name="edgeTabs"
         component={EdgeTabs}
@@ -788,6 +789,7 @@ const EdgeApp = () => {
         drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
         headerShown: false
       }}
+      id="drawer-stack"
     >
       <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
     </Drawer.Navigator>
@@ -858,6 +860,7 @@ export const Main = () => {
             screenOptions={{
               headerShown: false
             }}
+            id="root-stack"
           >
             <RootStack.Screen name="edgeApp" component={EdgeApp} />
 
