@@ -118,7 +118,7 @@
     "title": "Paypal",
     "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
     "forCountries": [
-      "AE", "AR", "AT", "AU", "BE", "BR", "CA", "CH", "CL", "CO",
+      "AE", "AR", "AT", "AU", "BE", "BR", "CH", "CL", "CO",
       "CZ", "DE", "DK", "EG", "ES", "FI", "FR", "GH", "GR", "HK",
       "HU", "IE", "IL", "IN", "IT", "JP", "KE", "KR", "MX", "MY",
       "NG", "NL", "NO", "NZ", "PE", "PH", "PL", "PT", "RU", "SA",
