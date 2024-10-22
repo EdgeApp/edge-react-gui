@@ -1636,6 +1636,13 @@ const strings = {
 
   // #endregion Home
 
+  // #region UK Compliance
+
+  uk_ways_to_buy_1s: 'Ways to Buy %1$s',
+  uk_ways_to_sell_1s: 'Ways to Sell %1$s',
+
+  // #endregion UK Compliance
+
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
   split_from_1s: 'Split from %1$s',
