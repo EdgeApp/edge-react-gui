@@ -260,7 +260,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Navigate to scene to have user enter amount
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
-        headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
+        headerTitle: isBuy ? sprintf(lstrings.buy_1s, currencyCode) : sprintf(lstrings.sell_1s, currencyCode),
         initState: {
           value1: initialValue1,
           statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }
