@@ -30,6 +30,7 @@ interface Props {}
 
 const contextOptions: EdgeContextOptions = {
   apiKey: ENV.EDGE_API_KEY,
+  apiSecret: ENV.EDGE_API_SECRET,
   appId: '',
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
 
