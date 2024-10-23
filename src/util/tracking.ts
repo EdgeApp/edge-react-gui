@@ -160,11 +160,15 @@ export function trackError(
     err = 'Unknown error occurred'
   }
 
-  if (tag == null) {
-    captureException(err)
-  } else {
-    captureException(err, { event_id: tag, data: metadata })
+  let hint: { event_id?: string; data?: { [key: string]: any } } | undefined
+  if (tag != null) {
+    hint = { event_id: tag }
   }
+  if (metadata != null) {
+    hint = { data: metadata }
+  }
+
+  captureException(err, hint)
 }
 
 /**
