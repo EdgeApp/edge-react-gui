@@ -46,7 +46,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         .catch(() => '')
 
       const body = {
-        apiKey: ENV.AIRBITZ_API_KEY,
+        apiKey: ENV.EDGE_API_KEY,
         deviceId: state.core.context.clientId,
         deviceToken,
         loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
@@ -193,7 +193,7 @@ async function updateServerSettings(context: EdgeContext, data: DeviceUpdatePayl
     .catch(() => '')
 
   const body = {
-    apiKey: ENV.AIRBITZ_API_KEY,
+    apiKey: ENV.EDGE_API_KEY,
     deviceId,
     deviceToken,
     data: { ...data, loginIds }
@@ -279,7 +279,7 @@ async function legacyGet(path: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Api-Key': ENV.AIRBITZ_API_KEY
+      'X-Api-Key': ENV.EDGE_API_KEY
     }
   })
   if (response != null && response.ok) {
