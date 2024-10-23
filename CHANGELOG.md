@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+- changed: Various strings updated to UK compliance spec
 - changed: Wording in light account persistent notification
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
+- removed: Moonpay, Simplex, and Paybis for UK
+- removed: UK persistent investment risk banner
 
 ## 4.15.1
 
