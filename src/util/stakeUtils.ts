@@ -6,6 +6,7 @@ import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
+import { getUkCompliantString } from './ukComplianceUtils'
 
 /**
  * Returns an array of all currency codes for a particular asset type
@@ -41,7 +42,7 @@ export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAs
 /**
  * Returns the policy title
  */
-export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
+export const getPolicyTitleName = (stakePolicy: StakePolicy, countryCode?: string) => {
   const stakeCurrencyCodes = getAssetDisplayName(stakePolicy, 'stakeAssets')
   const rewardCurrencyCodes = getAssetDisplayName(stakePolicy, 'rewardAssets')
 
@@ -52,7 +53,7 @@ export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
 
   const yieldText = yieldType === 'stable' ? ` ${lstrings.stake_stable_yield}` : yieldType === 'variable' ? ` ${lstrings.stake_variable_yield}` : ''
 
-  return `${sprintf(lstrings.stake_x_to_earn_y, stakeName, rewardName)}${yieldText}`
+  return `${getUkCompliantString(countryCode, 'stake_x_to_earn_y', stakeName, rewardName)}${yieldText}`
 }
 
 /**

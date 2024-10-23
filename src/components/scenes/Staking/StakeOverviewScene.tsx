@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
@@ -60,6 +61,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
   const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -73,6 +75,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   useAsyncEffect(
     async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+
       let sp: StakePosition
       try {
         if (stakePosition == null) {
@@ -97,7 +101,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
     const sceneTitleMap = {
-      stake: getPolicyTitleName(stakePolicy),
+      stake: getPolicyTitleName(stakePolicy, countryCode),
       claim: lstrings.stake_claim_rewards,
       unstake: lstrings.stake_unstake,
       unstakeAndClaim: lstrings.stake_unstake_claim,
@@ -146,7 +150,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeader title={title} withTopMargin />
-      <StakingReturnsCard wallet={wallet} stakePolicy={stakePolicy} />
+      <StakingReturnsCard countryCode={countryCode} wallet={wallet} stakePolicy={stakePolicy} />
       {stakePosition == null ? (
         <>
           <View style={styles.shimmer}>

@@ -12,6 +12,7 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -67,8 +68,15 @@ export function SwapProcessingScene(props: Props) {
 
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
+      const { countryCode } = await getFirstOpenInfo()
       await Airship.show(bridge => (
-        <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={swapRequest.fromWallet} />
+        <InsufficientFeesModal
+          bridge={bridge}
+          countryCode={countryCode}
+          coreError={insufficientFunds}
+          navigation={navigation}
+          wallet={swapRequest.fromWallet}
+        />
       ))
     }
   }

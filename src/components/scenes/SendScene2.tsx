@@ -16,6 +16,7 @@ import { ActivityIndicator, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -215,7 +216,10 @@ const SendComponent = (props: Props) => {
   const pendingInsufficientFees = React.useRef<InsufficientFundsError | undefined>(undefined)
 
   async function showInsufficientFeesModal(error: InsufficientFundsError): Promise<void> {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={coreWallet} />)
+    const { countryCode } = await getFirstOpenInfo()
+    await Airship.show(bridge => (
+      <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation} wallet={coreWallet} />
+    ))
   }
 
   const handleChangeAddress =

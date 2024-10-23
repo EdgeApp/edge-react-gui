@@ -7,6 +7,7 @@ import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { StakePolicy } from '../../plugins/stake-plugins/types'
 import { getPolicyIconUris } from '../../util/stakeUtils'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
@@ -17,6 +18,7 @@ interface Props {
   stakePolicy: StakePolicy
   wallet: EdgeCurrencyWallet
 
+  countryCode?: string
   /** If false, show "Stake"/"Earn"
    * If true, show "Staked"/"Earned" */
   isOpenPosition?: boolean
@@ -27,7 +29,7 @@ export function StakingReturnsCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { stakePolicy, wallet, isOpenPosition, onPress } = props
+  const { stakePolicy, wallet, isOpenPosition, countryCode, onPress } = props
   const { apy, yieldType, stakeProviderInfo } = stakePolicy
 
   const { stakeAssets, rewardAssets } = stakePolicy
@@ -35,7 +37,9 @@ export function StakingReturnsCard(props: Props) {
   const rewardCurrencyCodes = rewardAssets.map(asset => asset.currencyCode).join(', ')
 
   const stakeText = sprintf(isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s, stakeCurrencyCodes)
-  const rewardText = sprintf(isOpenPosition ? lstrings.stake_earning_1s : lstrings.stake_earn_1s, rewardCurrencyCodes)
+  const rewardText = isOpenPosition
+    ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
+    : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
 
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
