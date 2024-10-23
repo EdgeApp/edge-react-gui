@@ -125,7 +125,6 @@ const strings = {
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
-  warning_uk_risk: `Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.`,
   warning_battery_saver: `Battery Saver mode detected. Balances and transactions may be inaccurate`,
 
   // Alert component:
@@ -654,10 +653,10 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
-  title_plugin_buy_s: 'Buy %1$s',
+  transaction_details_bought_1s: 'Buy %1$s',
   title_select_region: 'Select Region',
   title_select_payment_method: 'Select Payment Method',
-  title_plugin_sell_s: 'Sell %1$s',
+  transaction_details_sold_1s: 'Sell %1$s',
   title_otp: '2-Factor Security',
   title_register_fio_address: 'Register FIO Address',
   title_register_fio_domain: 'Register FIO Domain',
@@ -836,7 +835,8 @@ const strings = {
   buy_parent_crypto_modal_message_3s:
     '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
   buy_crypto_decline: 'Not at this time',
-  buy_crypto_modal_buy_action: 'Buy %s',
+  buy_1s: 'Buy %1$s',
+  sell_1s: 'Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
@@ -1441,8 +1441,6 @@ const strings = {
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
-  fiat_plugin_buy_currencycode: 'Buy %s', // TODO: string key convention
-  fiat_plugin_sell_currencycode_s: 'Sell %s',
   fiat_plugin_sell_network_fee: 'Sell Network Fee',
   fiat_plugin_amount_currencycode: 'Amount %s',
   fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
@@ -1636,6 +1634,13 @@ const strings = {
   button_support: 'Contact Support',
 
   // #endregion Home
+
+  // #region UK Compliance
+
+  uk_ways_to_buy_1s: 'Ways to Buy %1$s',
+  uk_ways_to_sell_1s: 'Ways to Sell %1$s',
+
+  // #endregion UK Compliance
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',

@@ -203,7 +203,7 @@ export const moonpayProvider: FiatProviderFactory = {
 
         // Return nothing if paymentTypes are not supported by this provider
         const assetMap = allowedCurrencyCodes[direction][paymentType]
-        if (assetMap == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (assetMap == null || regionCode.countryCode === 'GB') throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         if (Object.keys(assetMap.crypto).length === 0 || isDailyCheckDue(lastChecked)) {
           const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)

@@ -200,7 +200,7 @@ export const simplexProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, regionCode, paymentTypes }): Promise<FiatProviderAssetMap> => {
-        if (direction !== 'buy') {
+        if (direction !== 'buy' || regionCode.countryCode === 'GB') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
 

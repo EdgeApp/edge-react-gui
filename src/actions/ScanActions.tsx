@@ -19,9 +19,11 @@ import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
+import { getUkCompliantString } from '../util/ukComplianceUtils'
 import { getPluginIdFromChainCode, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
+import { getFirstOpenInfo } from './FirstOpenActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -340,6 +342,7 @@ const shownWalletGetCryptoModals: string[] = []
 export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
   return async dispatch => {
     try {
+      const { countryCode } = await getFirstOpenInfo()
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
       const balance = wallet.balanceMap.get(tokenId)
@@ -355,7 +358,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
             title={lstrings.buy_crypto_modal_title}
             message={messageSyntax}
             buttons={{
-              buy: { label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode) },
+              buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
               exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
               decline: { label: lstrings.buy_crypto_decline }
             }}

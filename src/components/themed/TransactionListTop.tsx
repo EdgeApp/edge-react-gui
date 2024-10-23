@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
@@ -31,6 +32,7 @@ import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -40,7 +42,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showDevError, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -95,6 +97,7 @@ interface DispatchProps {
 }
 
 interface State {
+  countryCode: string | undefined
   input: string
   stakePolicies: StakePolicy[] | null
   stakePlugins: StakePlugin[] | null
@@ -108,6 +111,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   constructor(props: Props) {
     super(props)
     this.state = {
+      countryCode: undefined,
       input: '',
       lockedNativeAmount: '0',
       stakePolicies: null,
@@ -136,6 +140,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   componentDidMount() {
     this.updatePluginsAndPolicies().catch(err => showError(err))
+    getFirstOpenInfo()
+      .then(firstOpenInfo => this.setState({ countryCode: firstOpenInfo.countryCode }))
+      .catch(err => showDevError(err))
   }
 
   updatePluginsAndPolicies = async () => {
@@ -244,7 +251,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       >
         <SelectableRow
           marginRem={0.5}
-          title={sprintf(lstrings.title_plugin_buy_s, sceneCurrencyCode)}
+          title={getUkCompliantString(this.state.countryCode, 'buy_1s', sceneCurrencyCode)}
           onPress={() => this.handleTradeBuy(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
@@ -255,7 +262,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         />
         <SelectableRow
           marginRem={0.5}
-          title={sprintf(lstrings.title_plugin_sell_s, sceneCurrencyCode)}
+          title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
           onPress={() => this.handleTradeSell(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
@@ -525,7 +532,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   renderButtons() {
     const { theme } = this.props
     const styles = getStyles(theme)
-    const { stakePolicies } = this.state
+    const { countryCode, stakePolicies } = this.state
     const isStakingAvailable = this.isStakingAvailable()
     const isStakePoliciesLoaded = stakePolicies !== null
     const bestApy = this.getBestApy()
@@ -542,7 +549,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
         ) : (
           isStakingAvailable && (
-            <IconButton label={lstrings.stake_earn_button_label} onPress={this.handleStakePress} superscriptLabel={bestApy}>
+            <IconButton label={getUkCompliantString(countryCode, 'stake_earn_button_label')} onPress={this.handleStakePress} superscriptLabel={bestApy}>
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
             </IconButton>
           )

@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
 import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
@@ -33,6 +34,7 @@ import {
 } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
+import { getUkCompliantString } from '../util/ukComplianceUtils'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
@@ -423,6 +425,16 @@ const EdgeTabs = () => {
 // -------------------------------------------------------------------------
 
 const EdgeAppStack = () => {
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useAsyncEffect(
+    async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+    },
+    [],
+    'EdgeAppStack'
+  )
+
   return (
     <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
       <AppStack.Screen
@@ -572,7 +584,7 @@ const EdgeAppStack = () => {
         name="earnScene"
         component={EarnScene}
         options={{
-          title: lstrings.stake_earn_button_label
+          title: getUkCompliantString(countryCode, 'stake_earn_button_label')
         }}
       />
       <AppStack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
