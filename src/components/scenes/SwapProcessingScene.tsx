@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/react-native'
 import {
   asMaybeInsufficientFundsError,
   asMaybeSwapAboveLimitError,
@@ -111,6 +112,9 @@ function processSwapQuoteError({
   // Some plugins get the insufficient funds error wrong:
   const errorMessage = error instanceof Error ? error.message : String(error)
 
+  // Track swap errors to sentry:
+  trackSwapError(error, swapRequest)
+
   // Check for known error types:
   const insufficientFunds = asMaybeInsufficientFundsError(error)
   if (insufficientFunds != null || errorMessage === 'InsufficientFundsError') {
@@ -178,4 +182,37 @@ function processSwapQuoteError({
     message: errorMessage,
     error
   }
+}
+
+/**
+ * REVIEWER BEWARE!!
+ *
+ * No specific account/wallet information should be included within the
+ * scope for this capture. No personal information such as wallet IDs,
+ * public keys, or transaction details, amounts, should be collected
+ * according to Edge's company policy.
+ */
+function trackSwapError(error: unknown, swapRequest: EdgeSwapRequest): void {
+  captureException(error, scope => {
+    // This is a warning level error because it's expected to occur but not wanted.
+    scope.setLevel('warning')
+    // Searchable tags:
+    scope.setTags({
+      errorType: 'swapQuoteFailure',
+      swapFromWalletKind: swapRequest.fromWallet.currencyInfo.pluginId,
+      swapFromCurrency: getCurrencyCode(swapRequest.fromWallet, swapRequest.fromTokenId),
+      swapToCurrency: getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId),
+      swapToWalletKind: swapRequest.toWallet.currencyInfo.pluginId,
+      swapDirectionType: swapRequest.quoteFor
+    })
+    // Unsearchable context data:
+    scope.setContext('Swap Request Details', {
+      fromTokenId: String(swapRequest.fromTokenId), // Stringify to include "null"
+      fromWalletType: swapRequest.fromWallet.type,
+      toTokenId: String(swapRequest.toTokenId), // Stringify to include "null"
+      toWalletType: swapRequest.fromWallet.type,
+      quoteFor: swapRequest.quoteFor
+    })
+    return scope
+  })
 }

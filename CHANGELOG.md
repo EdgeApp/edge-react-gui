@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Log swap errors to Sentry.
 - changed: Various strings updated to UK compliance spec
 - changed: Wording in light account persistent notification
 - fixed: Fix error massaging in trackError
