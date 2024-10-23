@@ -9,7 +9,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -24,7 +24,7 @@ export interface SweepPrivateKeyCompletionParams {
   unsignedEdgeTransactions: EdgeTransaction[]
 }
 
-interface Props extends EdgeSceneProps<'sweepPrivateKeyCompletion'> {}
+interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCompletion'> {}
 
 const SweepPrivateKeyCompletionComponent = (props: Props) => {
   const { navigation, route } = props
@@ -137,13 +137,13 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
           marginRem={[0, 0, 1]}
-          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          onPress={() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })}
         />
       </View>
     )
   }, [done, navigation, styles.bottomButton])
 
-  const keyExtractor = useHandler((tx: EdgeTransaction) => tx.walletId + tx.tokenId ?? '')
+  const keyExtractor = useHandler((tx: EdgeTransaction) => tx.walletId + tx.tokenId)
 
   return (
     <SceneWrapper>

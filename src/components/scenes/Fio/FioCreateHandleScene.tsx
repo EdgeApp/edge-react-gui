@@ -14,7 +14,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
 import { logEvent } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -29,7 +29,7 @@ export interface FioCreateHandleParams {
   freeRegRefCode: string
 }
 
-interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
+interface Props extends EdgeAppSceneProps<'fioCreateHandle'> {}
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,

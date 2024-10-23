@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { WcConnectionInfo } from '../../types/types'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -15,7 +15,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'wcDisconnect'> {}
+interface Props extends EdgeAppSceneProps<'wcDisconnect'> {}
 
 export interface WcDisconnectParams {
   wcConnectionInfo: WcConnectionInfo

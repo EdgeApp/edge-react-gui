@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 import { CreateWalletAccountSetupScene } from '../../components/scenes/CreateWalletAccountSetupScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletAccountSelect', () => {
   it('renders', () => {
@@ -26,7 +26,7 @@ describe('CreateWalletAccountSelect', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
         <CreateWalletAccountSetupScene
-          {...fakeSceneProps('createWalletAccountSetup', {
+          {...fakeEdgeAppSceneProps('createWalletAccountSetup', {
             accountHandle: '',
             isReactivation: true,
             walletId: '332s0ds39f'

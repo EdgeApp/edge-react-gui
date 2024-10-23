@@ -7,7 +7,7 @@ import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConst
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -46,7 +46,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
-interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {
+interface OwnProps extends EdgeAppSceneProps<'fioDomainSettings'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -204,7 +204,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
               successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
               fioWallet={fioWallet}
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showRenew && (
@@ -216,11 +216,16 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
               successMessage={lstrings.fio_request_renew_domain_ok_text}
               fioWallet={fioWallet}
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showTransfer && (
-            <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
+            <FioActionSubmit
+              goTo={this.goToTransfer}
+              getOperationFee={this.getTransferFee}
+              fioWallet={fioWallet}
+              navigation={this.props.navigation as NavigationBase}
+            />
           )}
           {!showRenew && !showVisibility && !showTransfer && (
             <EdgeCard sections>

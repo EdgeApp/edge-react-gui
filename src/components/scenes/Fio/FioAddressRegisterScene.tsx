@@ -7,7 +7,7 @@ import { createFioWallet } from '../../../actions/FioAddressActions'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
@@ -42,7 +42,7 @@ interface State {
   errorMessage: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegister'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegister'> {}
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
@@ -289,7 +289,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={this.props.navigation}
+        navigation={this.props.navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
       />
@@ -306,7 +306,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { domainsLoading } = this.state
     if (domainsLoading) return
     const response = await Airship.show<FioDomain | undefined>(bridge => (
-      <DomainListModal bridge={bridge} navigation={navigation} publicDomains={this.state.publicDomains} />
+      <DomainListModal bridge={bridge} navigation={navigation as NavigationBase} publicDomains={this.state.publicDomains} />
     ))
     if (response) {
       this.setState({ selectedDomain: response })

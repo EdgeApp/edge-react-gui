@@ -11,7 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -26,7 +26,7 @@ export interface CreateWalletImportParams {
   walletNames: { [key: string]: string }
 }
 
-interface Props extends EdgeSceneProps<'createWalletImport'> {}
+interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
 
 const CreateWalletImportComponent = (props: Props) => {
   const { navigation, route } = props

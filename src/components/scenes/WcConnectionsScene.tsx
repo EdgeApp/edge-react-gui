@@ -16,7 +16,7 @@ import { useMount } from '../../hooks/useMount'
 import { UNSUPPORTED_WC_VERSION, useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -28,7 +28,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'wcConnections'> {}
+interface Props extends EdgeAppSceneProps<'wcConnections'> {}
 
 const NO_WALLETS_DAPP_REQUIREMENTS = 'NO_WALLETS_DAPP_REQUIREMENTS'
 export interface WcConnectionsParams {
@@ -77,7 +77,13 @@ export const WcConnectionsScene = (props: Props) => {
       }
       const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, account.currencyConfig)
       const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={lstrings.select_wallet}
+          allowedAssets={edgeTokenIds}
+          showCreateWallet
+          navigation={navigation as NavigationBase}
+        />
       ))
 
       if (result?.type === 'wallet') {
@@ -103,7 +109,7 @@ export const WcConnectionsScene = (props: Props) => {
     // Show the scam warning modal if needed
     await showScamWarningModal('firstWalletConnect')
 
-    if (checkAndShowLightBackupModal(account, navigation)) {
+    if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       return await Promise.resolve()
     } else {
       const result = await Airship.show<string | undefined>(bridge => (

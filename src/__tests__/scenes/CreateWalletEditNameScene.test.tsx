@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletEditNameScene } from '../../components/scenes/CreateWalletEditNameScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletEditNameComponent', () => {
   const mockState: FakeState = {
@@ -54,7 +54,7 @@ describe('CreateWalletEditNameComponent', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
         <CreateWalletEditNameScene
-          {...fakeSceneProps('createWalletEditName', {
+          {...fakeEdgeAppSceneProps('createWalletEditName', {
             createWalletList: [
               {
                 type: 'create',

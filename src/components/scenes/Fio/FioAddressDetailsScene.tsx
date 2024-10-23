@@ -5,7 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -28,7 +28,7 @@ interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressDetails'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressDetails'> {}
 
 interface LocalState {
   fioWalletLoading: boolean
@@ -122,7 +122,12 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
             icon={<IonIcon name="link" color={theme.primaryText} size={theme.rem(1.5)} />}
             label={lstrings.fio_address_details_connect_to_wallets}
           />
-          <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
+          <ConnectWallets
+            fioAddressName={fioAddressName}
+            fioWallet={this.state.fioWallet}
+            navigation={navigation as NavigationBase}
+            disabled={this.state.fioWalletLoading}
+          />
         </View>
       </SceneWrapper>
     )

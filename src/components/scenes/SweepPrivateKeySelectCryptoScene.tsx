@@ -6,7 +6,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -22,7 +22,7 @@ export interface SweepPrivateKeySelectCryptoParams {
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
-interface Props extends EdgeSceneProps<'sweepPrivateKeySelectCrypto'> {}
+interface Props extends EdgeAppSceneProps<'sweepPrivateKeySelectCrypto'> {}
 
 const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props

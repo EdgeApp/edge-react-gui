@@ -7,7 +7,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeAnim, fadeIn } from '../common/EdgeAnim'
@@ -20,7 +20,7 @@ export interface SwapSuccessParams {
   walletId: string
 }
 
-interface Props extends EdgeSceneProps<'swapSuccess'> {}
+interface Props extends EdgeAppSceneProps<'swapSuccess'> {}
 
 const confettiProps = {
   count: 250,
@@ -42,7 +42,7 @@ export const SwapSuccessScene = (props: Props) => {
 
   const handleDone = useHandler(() => {
     setShowButton(false)
-    navigation.navigate('swapTab', { screen: 'swapCreate' })
+    navigation.navigate('edgeTabs', { screen: 'swapTab', params: { screen: 'swapCreate' } })
   })
 
   const handleTransactionDetails = useHandler(() => {

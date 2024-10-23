@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 import { SwapCreateScene } from '../../components/scenes/SwapCreateScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeSwapTabSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('SwapCreateScene', () => {
   it('should render with loading props', () => {
@@ -13,7 +13,7 @@ describe('SwapCreateScene', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SwapCreateScene {...fakeSceneProps('swapCreate', {})} />
+        <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
       </FakeProviders>
     )
 

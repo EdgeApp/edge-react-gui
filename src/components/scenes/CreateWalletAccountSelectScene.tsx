@@ -12,7 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -53,7 +53,7 @@ export interface AccountActivationPaymentInfo {
   expireTime: number
 }
 
-interface Props extends EdgeSceneProps<'createWalletAccountSelect'> {
+interface Props extends EdgeAppSceneProps<'createWalletAccountSelect'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -108,7 +108,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleSelect = useHandler(() => {
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
+      <WalletListModal bridge={bridge} navigation={props.navigation as NavigationBase} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
       .then(async result => {
         if (result?.type === 'wallet') {
@@ -139,7 +139,9 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleSubmit = useHandler(async () => {
     const createdWalletInstance = await handleRenameAndReturnWallet()
-    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId, activationPaymentInfo)).catch(err => showError(err))
+    dispatch(createAccountTransaction(props.navigation as NavigationBase, createdWalletInstance.id, accountName, walletId, activationPaymentInfo)).catch(err =>
+      showError(err)
+    )
   })
 
   const handleCancel = useHandler(() => setWalletId(''))

@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -44,7 +44,7 @@ interface DispatchProps {
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {
+interface OwnProps extends EdgeAppSceneProps<'fioAddressSettings'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -192,7 +192,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
               fioWallet={fioWallet}
               addressTitles
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showTransfer && (
@@ -201,7 +201,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
               getOperationFee={this.getTransferFee}
               fioWallet={fioWallet}
               addressTitles
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {!showAddBundledTxs && !showTransfer && (

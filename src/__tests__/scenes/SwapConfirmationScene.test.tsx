@@ -20,7 +20,7 @@ import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeSwapTabSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
 jest.useRealTimers()
@@ -134,7 +134,7 @@ describe('SwapConfirmationScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SwapConfirmationScene
-          {...fakeSceneProps('swapConfirmation', {
+          {...fakeSwapTabSceneProps('swapConfirmation', {
             quotes: [quote],
             selectedQuote: quote,
             onApprove: () => undefined

@@ -9,7 +9,7 @@ import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
@@ -23,7 +23,7 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'stakeOptions'> {
+interface Props extends EdgeAppSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
 }
 

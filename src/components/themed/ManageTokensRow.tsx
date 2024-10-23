@@ -9,7 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -19,7 +19,7 @@ import { EdgeText } from './EdgeText'
 
 export interface Props {
   // Scene properties:
-  navigation: NavigationProp<'manageTokens'>
+  navigation: EdgeAppSceneProps<'manageTokens'>['navigation']
   wallet: EdgeCurrencyWallet
 
   // Token information:

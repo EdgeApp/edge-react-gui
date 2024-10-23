@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('Request', () => {
   it('should render with loading props', () => {
@@ -12,7 +12,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
-        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
+        {...fakeEdgeAppSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount={false}
         fioAddressesExist={false}
@@ -41,7 +41,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
-        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
+        {...fakeEdgeAppSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount={false}
         fioAddressesExist={false}
@@ -70,7 +70,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
-        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
+        {...fakeEdgeAppSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount
         fioAddressesExist={false}

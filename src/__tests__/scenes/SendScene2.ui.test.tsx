@@ -11,7 +11,7 @@ import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
 jest.useRealTimers()
@@ -86,7 +86,7 @@ describe('SendScene2', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2
-          {...fakeSceneProps('send2', {
+          {...fakeEdgeAppSceneProps('send2', {
             walletId: btcWallet.id,
             tokenId: null,
             doCheckAndShowGetCryptoModal: false
@@ -106,7 +106,7 @@ describe('SendScene2', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2
-          {...fakeSceneProps('send2', {
+          {...fakeEdgeAppSceneProps('send2', {
             walletId: btcWallet.id,
             tokenId: null,
             spendInfo: {
@@ -130,7 +130,7 @@ describe('SendScene2', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2
-          {...fakeSceneProps('send2', {
+          {...fakeEdgeAppSceneProps('send2', {
             infoTiles: [
               { label: 'info tile label 1', value: 'info tile value 1' },
               { label: 'info tile label 2', value: 'info tile value 2' }
@@ -158,7 +158,7 @@ describe('SendScene2', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2
-          {...fakeSceneProps('send2', {
+          {...fakeEdgeAppSceneProps('send2', {
             walletId: btcWallet.id,
             tokenId: null,
             spendInfo: {
@@ -200,7 +200,7 @@ describe('SendScene2', () => {
     // Hide Address
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -209,7 +209,7 @@ describe('SendScene2', () => {
     params.hiddenFeaturesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
@@ -218,7 +218,7 @@ describe('SendScene2', () => {
     params.hiddenFeaturesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()
@@ -245,7 +245,7 @@ describe('SendScene2', () => {
     // Lock Address
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -254,7 +254,7 @@ describe('SendScene2', () => {
     params.lockTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
@@ -263,7 +263,7 @@ describe('SendScene2', () => {
     params.lockTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 {...fakeSceneProps('send2', params)} />
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()

@@ -14,7 +14,7 @@ import { lstrings } from '../../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
@@ -31,7 +31,7 @@ export interface FioStakingOverviewParams {
   walletId: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioStakingOverview'> {}
 
 interface StateProps {
   currencyWallet: EdgeCurrencyWallet

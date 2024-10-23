@@ -12,7 +12,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -30,7 +30,7 @@ export interface CreateWalletEditNameParams {
   splitSourceWalletId?: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletEditName'> {}
+interface Props extends EdgeAppSceneProps<'createWalletEditName'> {}
 
 const CreateWalletEditNameComponent = (props: Props) => {
   const { navigation, route } = props
@@ -85,7 +85,7 @@ const CreateWalletEditNameComponent = (props: Props) => {
         showError(error)
         dispatch(logEvent('Create_Wallet_Failed', { error: String(error) }))
       }
-      navigation.navigate('walletsTab', { screen: 'walletList' })
+      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
       return
     }
     // Any other combination goes to the completion scene
@@ -104,7 +104,7 @@ const CreateWalletEditNameComponent = (props: Props) => {
           break
         }
       }
-      navigation.navigate('walletsTab', { screen: 'walletList' })
+      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
     }
   })
 
@@ -161,7 +161,7 @@ const CreateWalletEditNameComponent = (props: Props) => {
     // If all remaining create items are tokens just go enable them and return home
     if (newWalletItemsCopy.length === 0 && newTokenItems.length > 0) {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletsTab', { screen: 'walletList' })
+      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
       return
     }
 

@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -31,7 +31,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
+interface OwnProps extends EdgeAppSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -115,7 +115,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             buttons={{ ok: { label: lstrings.string_ok_cap } }}
           />
         ))
-        navigation.navigate('home')
+        navigation.navigate('edgeTabs', { screen: 'home' })
       } else {
         // no free domains
         showError(lstrings.fio_get_fee_err_msg)
@@ -194,7 +194,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             onSubmit={this.saveFioName}
             getOperationFee={this.getFee}
             fioWallet={paymentWallet}
-            navigation={this.props.navigation}
+            navigation={this.props.navigation as NavigationBase}
             onCancel={() => navigation.goBack()}
           />
         </View>

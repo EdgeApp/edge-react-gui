@@ -1,6 +1,9 @@
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type { NavigatorScreenParams } from '@react-navigation/core'
 import * as NavigationCore from '@react-navigation/core'
-import type { StackActionHelpers } from '@react-navigation/native'
+import { DrawerScreenProps } from '@react-navigation/drawer'
+import type { CompositeScreenProps, StackActionHelpers } from '@react-navigation/native'
+import type { StackScreenProps } from '@react-navigation/stack'
 
 import type { ChangeMiningFeeParams } from '../components/scenes/ChangeMiningFeeScene'
 import type { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -86,6 +89,7 @@ export type WalletsTabParamList = {} & {
   transactionDetails: TransactionDetailsParams
 }
 
+// TODO: Split this up into distinct param lists?
 export type BuyTabParamList = {} & {
   pluginListBuy: GuiPluginListParams | undefined
   pluginListSell: GuiPluginListParams | undefined
@@ -100,6 +104,8 @@ export type BuyTabParamList = {} & {
   rewardsCardWelcome: RewardsCardWelcomeParams
 }
 
+export type SellTabParamList = {} & BuyTabParamList
+
 export type SwapTabParamList = {} & {
   swapCreate: SwapCreateParams | undefined
   swapConfirmation: SwapConfirmationParams
@@ -110,7 +116,7 @@ export type EdgeTabsParamList = {} & {
   home: undefined
   walletsTab: NavigatorScreenParams<WalletsTabParamList> | undefined
   buyTab: NavigatorScreenParams<BuyTabParamList> | undefined
-  sellTab: NavigatorScreenParams<BuyTabParamList> | undefined
+  sellTab: NavigatorScreenParams<SellTabParamList> | undefined
   swapTab: NavigatorScreenParams<SwapTabParamList> | undefined
   extraTab: undefined
   devTab: undefined
@@ -213,6 +219,40 @@ export type RootParamList = {} & {
   gettingStarted: GettingStartedParams
   login: LoginParams
 }
+
+// Upgraded types to comply with the navigation upgrade requirements
+export type RootSceneProps<Name extends keyof RootParamList> = StackScreenProps<RootParamList, Name>
+
+export type DrawerSceneProps<Name extends keyof DrawerParamList> = CompositeScreenProps<
+  DrawerScreenProps<DrawerParamList, Name>,
+  RootSceneProps<keyof RootParamList>
+>
+
+export type EdgeAppSceneProps<Name extends keyof EdgeAppStackParamList> = CompositeScreenProps<
+  StackScreenProps<EdgeAppStackParamList, Name>,
+  DrawerSceneProps<keyof DrawerParamList>
+>
+
+export type EdgeTabsSceneProps<Name extends keyof EdgeTabsParamList> = CompositeScreenProps<
+  BottomTabScreenProps<EdgeTabsParamList, Name>,
+  EdgeAppSceneProps<keyof EdgeAppStackParamList>
+>
+export type BuyTabSceneProps<Name extends keyof BuyTabParamList> = CompositeScreenProps<
+  StackScreenProps<BuyTabParamList, Name>,
+  EdgeTabsSceneProps<keyof EdgeTabsParamList>
+>
+export type SellTabSceneProps<Name extends keyof SellTabParamList> = CompositeScreenProps<
+  StackScreenProps<SellTabParamList, Name>,
+  EdgeTabsSceneProps<keyof EdgeTabsParamList>
+>
+export type SwapTabSceneProps<Name extends keyof SwapTabParamList> = CompositeScreenProps<
+  StackScreenProps<SwapTabParamList, Name>,
+  EdgeTabsSceneProps<keyof EdgeTabsParamList>
+>
+export type WalletsTabSceneProps<Name extends keyof WalletsTabParamList> = CompositeScreenProps<
+  StackScreenProps<WalletsTabParamList, Name>,
+  EdgeTabsSceneProps<keyof EdgeTabsParamList>
+>
 
 // -------------------------------------------------------------------------
 // Legacy types

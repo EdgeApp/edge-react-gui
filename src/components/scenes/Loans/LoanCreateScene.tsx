@@ -25,7 +25,7 @@ import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/type
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -52,7 +52,7 @@ export interface LoanCreateParams {
   borrowPlugin: BorrowPlugin
 }
 
-interface Props extends EdgeSceneProps<'loanCreate'> {}
+interface Props extends EdgeAppSceneProps<'loanCreate'> {}
 
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
@@ -265,7 +265,7 @@ export const LoanCreateScene = (props: Props) => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}

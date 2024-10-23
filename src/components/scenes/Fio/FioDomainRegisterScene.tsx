@@ -6,7 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { createFioWallet } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -31,7 +31,7 @@ interface LocalState {
   errorMessage: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainRegister'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioDomainRegister'> {}
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
@@ -174,7 +174,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={this.props.navigation}
+        navigation={this.props.navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
       />

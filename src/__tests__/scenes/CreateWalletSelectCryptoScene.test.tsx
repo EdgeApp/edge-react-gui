@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletSelectCrypto', () => {
   const mockState: FakeState = {
@@ -88,7 +88,7 @@ describe('CreateWalletSelectCrypto', () => {
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <CreateWalletSelectCryptoScene {...fakeSceneProps('createWalletSelectCrypto', {})} />
+        <CreateWalletSelectCryptoScene {...fakeEdgeAppSceneProps('createWalletSelectCrypto', {})} />
       </FakeProviders>
     )
 

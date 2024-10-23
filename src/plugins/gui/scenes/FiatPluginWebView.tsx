@@ -3,7 +3,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { useHandler } from '../../../hooks/useHandler'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
@@ -13,7 +13,7 @@ export interface FiatPluginOpenWebViewParams {
   onUrlChange?: (url: string) => void
 }
 
-interface Props extends EdgeSceneProps<'guiPluginWebView'> {}
+interface Props extends BuyTabSceneProps<'guiPluginWebView'> {}
 
 export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   const { route } = props

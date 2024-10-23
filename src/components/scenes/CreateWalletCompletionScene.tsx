@@ -12,7 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../rows/IconDataRow'
@@ -30,7 +30,7 @@ export interface CreateWalletCompletionParams {
   keyOptions?: Map<string, { [opt: string]: string | undefined }>
 }
 
-interface Props extends EdgeSceneProps<'createWalletCompletion'> {}
+interface Props extends EdgeAppSceneProps<'createWalletCompletion'> {}
 
 const CreateWalletCompletionComponent = (props: Props) => {
   const { navigation, route } = props
@@ -161,7 +161,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return null
   })
 
-  const handleNext = useHandler(() => navigation.navigate('walletsTab', { screen: 'walletList' }))
+  const handleNext = useHandler(() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } }))
 
   const handleMigrate = useHandler(() => {
     // Transform filtered items into the structure expected by the migration component

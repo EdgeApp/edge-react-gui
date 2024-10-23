@@ -1,16 +1,12 @@
-import { NavigationProp as NavigationCoreProp, StackActionHelpers } from '@react-navigation/native'
+import { NavigationProp } from '@react-navigation/native'
 import * as React from 'react'
 
-import { AppParamList, NavigationBase } from '../types/routerTypes'
-
 /**
- * Use this in place of NavigationProp/NavigationBase methods to prevent
+ * Use this in place of navigation methods to prevent
  * multiple navigations from rapid tapping. Navigation calls are only executed
  * if there isn't already another one in flight
  */
-export const useAsyncNavigation = <T extends keyof AppParamList>(
-  navigation: NavigationBase | (NavigationCoreProp<AppParamList, T> & StackActionHelpers<AppParamList>)
-): NavigationBase & (NavigationCoreProp<AppParamList, T> & StackActionHelpers<AppParamList>) => {
+export const useAsyncNavigation = <Nav extends NavigationProp<any>>(navigation: Nav): Nav => {
   const [isNavigating, setIsNavigating] = React.useState(false)
 
   React.useEffect(() => {
@@ -27,19 +23,30 @@ export const useAsyncNavigation = <T extends keyof AppParamList>(
     }
   }, [navigation])
 
-  const createDebouncedMethod = <U extends (...args: Parameters<U>) => void>(method: U): U => {
-    return ((...args: Parameters<U>) => {
+  const createDebouncedMethod = <Method extends (...args: any[]) => any>(method: Method): Method => {
+    return ((...args: Parameters<Method>) => {
       if (isNavigating) return
 
       setIsNavigating(true)
-      method(...args)
-    }) as U
+      return method(...args)
+    }) as Method
   }
 
-  return {
+  const out: Nav = {
     ...navigation,
-    push: createDebouncedMethod(navigation.push),
-    navigate: createDebouncedMethod(navigation.navigate)
-    // Add other navigation methods as needed
+    navigate: createDebouncedMethod(navigation.navigate),
+    // Wrap other methods if they exist
+    ...(Object.prototype.hasOwnProperty.call(navigation, 'push') && {
+      push: createDebouncedMethod((navigation as any).push)
+    }),
+    ...(Object.prototype.hasOwnProperty.call(navigation, 'replace') && {
+      replace: createDebouncedMethod((navigation as any).replace)
+    }),
+    ...(Object.prototype.hasOwnProperty.call(navigation, 'goBack') && {
+      goBack: createDebouncedMethod((navigation as any).goBack)
+    })
+    // Add other navigation methods as needed, checking if they exist
   }
+
+  return out
 }

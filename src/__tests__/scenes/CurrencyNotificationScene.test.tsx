@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CurrencyNotificationComponent', () => {
   const mockStore: FakeState = {
@@ -24,7 +24,7 @@ describe('CurrencyNotificationComponent', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockStore}>
         <CurrencyNotificationScene
-          {...fakeSceneProps('currencyNotificationSettings', {
+          {...fakeEdgeAppSceneProps('currencyNotificationSettings', {
             currencyInfo: {
               pluginId: 'bitcoin',
               displayName: 'Bitcoin',

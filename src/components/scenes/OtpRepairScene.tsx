@@ -5,7 +5,7 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
@@ -13,7 +13,7 @@ export interface OtpRepairParams {
   otpError: OtpError
 }
 
-interface Props extends EdgeSceneProps<'otpRepair'> {}
+interface Props extends EdgeAppSceneProps<'otpRepair'> {}
 
 export const OtpRepairScene = (props: Props) => {
   const { navigation, route } = props

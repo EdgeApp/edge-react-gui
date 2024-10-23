@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CurrencySettings', () => {
   it('should render', () => {
@@ -37,7 +37,7 @@ describe('CurrencySettings', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={state}>
         <CurrencySettingsScene
-          {...fakeSceneProps('currencySettings', {
+          {...fakeEdgeAppSceneProps('currencySettings', {
             currencyInfo
           })}
         />
