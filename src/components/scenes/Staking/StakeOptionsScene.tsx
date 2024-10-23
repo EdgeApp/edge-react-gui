@@ -4,7 +4,9 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
@@ -46,6 +48,16 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useAsyncEffect(
+    async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+    },
+    [],
+    'StakeOptionsSceneComponent'
+  )
+
   //
   // Handlers
   //
@@ -64,7 +76,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const renderOptions = ({ item }: { item: StakePolicy }) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
-    const secondaryText = getPolicyTitleName(item)
+    const secondaryText = getPolicyTitleName(item, countryCode)
     const key = [primaryText, secondaryText].join()
     const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
     return (
