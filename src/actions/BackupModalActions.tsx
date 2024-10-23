@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { BackupForAccountModal, BackupForTransferModal, BackupForTransferModalResult, BackupModalResult } from '../components/modals/BackupModal'
 import { Airship, showDevError } from '../components/services/AirshipInstance'
-import { NavigationBase } from '../types/routerTypes'
+import { RootSceneProps } from '../types/routerTypes'
 
 let isBackupModalShowing = false
 
@@ -12,7 +12,7 @@ let isBackupModalShowing = false
  * Shows a modal prompting the user to back up their account, only if the modal
  * isn't already showing.
  */
-export const showBackupModal = (props: { navigation: NavigationBase; forgetLoginId?: string }) => {
+export const showBackupModal = (props: { navigation: RootSceneProps<'edgeApp'>['navigation']; forgetLoginId?: string }) => {
   if (isBackupModalShowing) return
 
   isBackupModalShowing = true
@@ -23,7 +23,12 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
   })
     .then((userSel?: BackupModalResult) => {
       if (userSel === 'upgrade') {
-        navigation.navigate('upgradeUsername')
+        navigation.navigate('edgeApp', {
+          screen: 'edgeAppStack',
+          params: {
+            screen: 'upgradeUsername'
+          }
+        })
       }
     })
     .finally(() => {
@@ -36,14 +41,19 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
  * Checks an account for light status and shows a backup modal if the account is
  * a light account. Returns true if the modal was shown.
  */
-export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: NavigationBase): boolean => {
+export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: RootSceneProps<'edgeApp'>['navigation']): boolean => {
   if (account.username == null) {
     Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
       return <BackupForTransferModal bridge={bridge} />
     })
       .then((userSel?: BackupForTransferModalResult) => {
         if (userSel === 'upgrade') {
-          navigation.navigate('upgradeUsername')
+          navigation.navigate('edgeApp', {
+            screen: 'edgeAppStack',
+            params: {
+              screen: 'upgradeUsername'
+            }
+          })
         }
       })
       .finally(() => {

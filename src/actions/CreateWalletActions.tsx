@@ -12,7 +12,7 @@ import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelecto
 import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { RootSceneProps } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
@@ -83,7 +83,7 @@ export async function fetchAccountActivationInfo(account: EdgeAccount, pluginId:
 }
 
 export function createAccountTransaction(
-  navigation: NavigationBase,
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
   createdWalletId: string,
   accountName: string,
   paymentWalletId: string,
@@ -106,70 +106,85 @@ export function createAccountTransaction(
     const tokenId = getWalletTokenId(paymentWallet, currencyCode)
 
     if (handleAvailability.result === 'AccountAvailable') {
-      navigation.push('send2', {
-        tokenId,
-        spendInfo: {
-          tokenId,
-          spendTargets: [
-            {
-              nativeAmount,
-              publicAddress: paymentAddress
-            }
-          ]
-        },
-        lockTilesMap: {
-          address: true,
-          amount: true,
-          wallet: true
-        },
-        walletId: paymentWalletId,
-        onBack: () => {
-          // Hack. Keyboard pops up for some reason. Close it
-          dispatch(
-            logEvent('Activate_Wallet_Cancel', {
-              createdWalletCurrencyCode
-            })
-          )
-        },
-        onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-          if (error) {
-            console.log(error)
-            setTimeout(() => {
-              Airship.show<'ok' | undefined>(bridge => (
-                <ButtonsModal
-                  bridge={bridge}
-                  message={lstrings.create_wallet_account_error_sending_transaction}
-                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
-                />
-              )).catch(() => {})
-            }, 750)
-          } else if (edgeTransaction) {
-            dispatch(
-              logEvent('Activate_Wallet_Done', {
-                createdWalletCurrencyCode
-              })
-            )
-            const edgeMetadata: EdgeMetadata = {
-              name: sprintf(lstrings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
-              category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
-              notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
-            }
-            paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
-            navigation.navigate('walletsTab', { screen: 'walletList' })
-            setTimeout(() => {
-              Airship.show<'ok' | undefined>(bridge => (
-                <ButtonsModal
-                  bridge={bridge}
-                  title={lstrings.create_wallet_account_payment_sent_title}
-                  message={lstrings.create_wallet_account_payment_sent_message}
-                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
-                />
-              )).catch(() => {})
-            }, 750)
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'send2',
+          params: {
+            tokenId,
+            spendInfo: {
+              tokenId,
+              spendTargets: [
+                {
+                  nativeAmount,
+                  publicAddress: paymentAddress
+                }
+              ]
+            },
+            lockTilesMap: {
+              address: true,
+              amount: true,
+              wallet: true
+            },
+            walletId: paymentWalletId,
+            onBack: () => {
+              // Hack. Keyboard pops up for some reason. Close it
+              dispatch(
+                logEvent('Activate_Wallet_Cancel', {
+                  createdWalletCurrencyCode
+                })
+              )
+            },
+            onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+              if (error) {
+                console.log(error)
+                setTimeout(() => {
+                  Airship.show<'ok' | undefined>(bridge => (
+                    <ButtonsModal
+                      bridge={bridge}
+                      message={lstrings.create_wallet_account_error_sending_transaction}
+                      buttons={{ ok: { label: lstrings.string_ok_cap } }}
+                    />
+                  )).catch(() => {})
+                }, 750)
+              } else if (edgeTransaction) {
+                dispatch(
+                  logEvent('Activate_Wallet_Done', {
+                    createdWalletCurrencyCode
+                  })
+                )
+                const edgeMetadata: EdgeMetadata = {
+                  name: sprintf(lstrings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
+                  category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
+                  notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
+                }
+                paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
+                navigation.navigate('edgeApp', {
+                  screen: 'edgeAppStack',
+                  params: {
+                    screen: 'edgeTabs',
+                    params: {
+                      screen: 'walletsTab',
+                      params: { screen: 'walletList' }
+                    }
+                  }
+                })
+                setTimeout(() => {
+                  Airship.show<'ok' | undefined>(bridge => (
+                    <ButtonsModal
+                      bridge={bridge}
+                      title={lstrings.create_wallet_account_payment_sent_title}
+                      message={lstrings.create_wallet_account_payment_sent_message}
+                      buttons={{ ok: { label: lstrings.string_ok_cap } }}
+                    />
+                  )).catch(() => {})
+                }, 750)
+              }
+            },
+            alternateBroadcast:
+              createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
           }
-        },
-        alternateBroadcast:
-          createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
+        }
       })
     } else {
       // if handle is now unavailable
@@ -178,7 +193,11 @@ export function createAccountTransaction(
   }
 }
 
-export function createHandleUnavailableModal(navigation: NavigationBase, newWalletId: string, accountName: string): ThunkAction<Promise<void>> {
+export function createHandleUnavailableModal(
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
+  newWalletId: string,
+  accountName: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core

@@ -11,7 +11,7 @@ import { lstrings } from '../locales/strings'
 import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { RootSceneProps } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
@@ -36,7 +36,7 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
+export function launchDeepLink(navigation: RootSceneProps<'edgeApp'>['navigation'], link: DeepLink): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     await handleLink(navigation, dispatch, state, link)
@@ -48,7 +48,7 @@ export function launchDeepLink(navigation: NavigationBase, link: DeepLink): Thun
  * @returns true if the link is handled,
  * or false if the app is in the wrong state to handle this link.
  */
-async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<void> {
+async function handleLink(navigation: RootSceneProps<'edgeApp'>['navigation'], dispatch: Dispatch, state: RootState, link: DeepLink): Promise<void> {
   const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
   const { currencyWallets } = account
@@ -56,8 +56,14 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
 
   switch (link.type) {
     case 'edgeLogin':
-      navigation.push('edgeLogin', {
-        lobbyId: link.lobbyId
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'edgeLogin',
+          params: {
+            lobbyId: link.lobbyId
+          }
+        }
       })
       break
 
@@ -83,10 +89,16 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         break
       }
 
-      navigation.push('pluginView', {
-        plugin,
-        deepPath: path,
-        deepQuery: query
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'pluginView',
+          params: {
+            plugin,
+            deepPath: path,
+            deepQuery: query
+          }
+        }
       })
       break
     }
@@ -137,7 +149,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       break
 
     case 'swap':
-      navigation.navigate('swapTab', { screen: 'swapCreate' })
+      navigation.navigate('edgeApp', {
+        screen: 'edgeAppStack',
+        params: { screen: 'edgeTabs', params: { screen: 'swapTab', params: { screen: 'swapCreate' } } }
+      })
       break
 
     case 'azteco': {
@@ -162,13 +177,22 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       } else {
         showError(lstrings.azteco_service_unavailable)
       }
-      navigation.navigate('home')
+      navigation.navigate('edgeApp', {
+        screen: 'edgeAppStack',
+        params: { screen: 'edgeTabs', params: { screen: 'home' } }
+      })
       break
     }
 
     case 'walletConnect':
-      navigation.push('wcConnections', {
-        uri: link.uri
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'wcConnections',
+          params: {
+            uri: link.uri
+          }
+        }
       })
       break
 
@@ -194,11 +218,20 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       ))
 
       if (result === 'buy') {
-        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+        navigation.navigate('edgeApp', {
+          screen: 'edgeAppStack',
+          params: { screen: 'edgeTabs', params: { screen: 'buyTab', params: { screen: 'pluginListBuy' } } }
+        })
       } else if (result === 'sell') {
-        navigation.navigate('sellTab', { screen: 'pluginListSell' })
+        navigation.navigate('edgeApp', {
+          screen: 'edgeAppStack',
+          params: { screen: 'edgeTabs', params: { screen: 'sellTab', params: { screen: 'pluginListSell' } } }
+        })
       } else if (result === 'exchange') {
-        navigation.navigate('swapTab', { screen: 'swapCreate' })
+        navigation.navigate('edgeApp', {
+          screen: 'edgeAppStack',
+          params: { screen: 'edgeTabs', params: { screen: 'swapTab', params: { screen: 'swapCreate' } } }
+        })
       }
 
       break

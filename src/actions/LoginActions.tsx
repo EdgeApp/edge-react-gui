@@ -19,7 +19,7 @@ import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsRed
 import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
+import { EdgeAppSceneProps, RootSceneProps } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
@@ -53,7 +53,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   return { walletId: '', currencyCode: '' }
 }
 
-export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
+export function initializeAccount(navigation: RootSceneProps<'edgeApp'>['navigation'], account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const rootNavigation = getRootNavigation(navigation)
 
@@ -170,7 +170,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
-      navigation.push('securityAlerts')
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'securityAlerts'
+        }
+      })
       hideSurvey = true
     }
 
@@ -288,16 +293,16 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
   }
 }
 
-export function getRootNavigation(navigation: NavigationBase): NavigationBase {
+export function getRootNavigation(navigation: RootSceneProps<'edgeApp'>['navigation']): RootSceneProps<'edgeApp'>['navigation'] {
   while (true) {
-    const parent: NavigationBase = navigation.getParent()
+    const parent: RootSceneProps<'edgeApp'>['navigation'] = navigation.getParent()
     if (parent == null) return navigation
     navigation = parent
   }
 }
 
 export function logoutRequest(
-  navigation: NavigationBase,
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
   opts: {
     nextLoginId?: string
     passwordRecoveryKey?: string

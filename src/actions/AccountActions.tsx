@@ -5,17 +5,21 @@ import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { RootSceneProps } from '../types/routerTypes'
 
-export function handleOtpError(navigation: NavigationBase, otpError: OtpError): ThunkAction<void> {
+export function handleOtpError(navigation: RootSceneProps<'edgeApp'>['navigation'], otpError: OtpError): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account, otpErrorShown } = state.core
 
     if (account.loggedIn && !otpErrorShown) {
       dispatch({ type: 'OTP_ERROR_SHOWN' })
-      navigation.push('otpRepair', {
-        otpError
+      navigation.push('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'otpRepair',
+          params: { otpError }
+        }
       })
     }
   }
