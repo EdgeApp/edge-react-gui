@@ -418,11 +418,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader
-            title={direction === 'buy' ? sprintf(lstrings.title_plugin_buy_s, titleAsset) : sprintf(lstrings.title_plugin_sell_s, titleAsset)}
-            underline
-            withTopMargin
-          />
+          <SceneHeader title={direction === 'buy' ? sprintf(lstrings.buy_1s, titleAsset) : sprintf(lstrings.sell_1s, titleAsset)} underline withTopMargin />
         </EdgeAnim>
 
         {hasCountryData ? (

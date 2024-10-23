@@ -355,7 +355,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
             title={lstrings.buy_crypto_modal_title}
             message={messageSyntax}
             buttons={{
-              buy: { label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode) },
+              buy: { label: sprintf(lstrings.buy_1s, currencyCode) },
               exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
               decline: { label: lstrings.buy_crypto_decline }
             }}

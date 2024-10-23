@@ -244,7 +244,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       >
         <SelectableRow
           marginRem={0.5}
-          title={sprintf(lstrings.title_plugin_buy_s, sceneCurrencyCode)}
+          title={sprintf(lstrings.buy_1s, sceneCurrencyCode)}
           onPress={() => this.handleTradeBuy(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
@@ -255,7 +255,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         />
         <SelectableRow
           marginRem={0.5}
-          title={sprintf(lstrings.title_plugin_sell_s, sceneCurrencyCode)}
+          title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
           onPress={() => this.handleTradeSell(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
