@@ -29,7 +29,7 @@ const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 interface Props {}
 
 const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.AIRBITZ_API_KEY,
+  apiKey: ENV.EDGE_API_KEY,
   appId: '',
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
 

@@ -29,7 +29,7 @@ const asEvmApiKeys = asObject({
 
 export const asEnvConfig = asObject({
   // API keys:
-  AIRBITZ_API_KEY: asOptional(asString, ''),
+  EDGE_API_KEY: asOptional(asString, ''),
   COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   IP_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
