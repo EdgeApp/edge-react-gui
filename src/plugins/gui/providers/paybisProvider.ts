@@ -350,8 +350,8 @@ export const paybisProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        // Do not allow sell to debit in US
-        if (direction === 'sell' && paymentTypes.includes('credit') && regionCode.countryCode === 'US') {
+        // Do not allow sell to debit in US, disable all UK
+        if (regionCode.countryCode === 'GB' || (direction === 'sell' && paymentTypes.includes('credit') && regionCode.countryCode === 'US')) {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
         validateRegion(providerId, regionCode, SUPPORTED_REGIONS)

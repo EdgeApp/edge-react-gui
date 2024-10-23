@@ -14,6 +14,7 @@
 - added: "Go to Parent Wallet" `WalletListMenuModal` option
 - added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
+- changed: Various strings updated to UK compliance spec
 - changed: Allow 0 amount entry in `SpendingLimitsScene`
 - changed: Wording on `SwapSuccessScene`
 - changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
@@ -30,6 +31,8 @@
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: ACH sell option for Florida visible with no accepted currencies
+- removed: Moonpay, Simplex, and Paybis for UK
+- removed: UK persistent investment risk banner
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
 
