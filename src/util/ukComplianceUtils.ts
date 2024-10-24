@@ -3,6 +3,7 @@ import { lstrings } from '../locales/strings'
 
 const UK_COMPLIANT_STRING_MAP: { [key: string]: { default: LocaleStringKey; gb: LocaleStringKey } } = {
   buy_1s: { default: 'buy_1s', gb: 'uk_ways_to_buy_1s' },
+  buy_1s_title: { default: 'buy_1s', gb: 'uk_get_quote_provider_1s' },
   sell_1s: { default: 'sell_1s', gb: 'uk_ways_to_sell_1s' },
   stake_earn_1s: { default: 'stake_earn_1s', gb: 'stake_stake_1s' },
   stake_earn_button_label: { default: 'stake_earn_button_label', gb: 'fragment_stake_label' },

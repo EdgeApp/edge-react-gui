@@ -1639,6 +1639,7 @@ const strings = {
 
   uk_ways_to_buy_1s: 'Ways to Buy %1$s',
   uk_ways_to_sell_1s: 'Ways to Sell %1$s',
+  uk_get_quote_provider_1s: 'Get %1$s Quote from 3rd Party Provider',
 
   // #endregion UK Compliance
 
