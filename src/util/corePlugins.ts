@@ -4,9 +4,9 @@ import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
   // edge-currency-accountbased:
+  algorand: ENV.ALGORAND_INIT,
   amoy: ENV.AMOY_INIT,
   arbitrum: ENV.ARBITRUM_INIT,
-  algorand: ENV.ALGORAND_INIT,
   avalanche: ENV.AVALANCHE_INIT,
   axelar: ENV.AXELAR_INIT,
   base: ENV.BASE_INIT,
@@ -47,8 +47,8 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   thorchainrune: ENV.THORCHAIN_INIT,
   tron: true,
   wax: true,
-  zksync: ENV.ZKSYNC_INIT,
   zcash: true,
+  zksync: ENV.ZKSYNC_INIT,
   // edge-currency-bitcoin:
   bitcoin: ENV.BITCOIN_INIT,
   bitcoincash: ENV.BITCOINCASH_INIT,
