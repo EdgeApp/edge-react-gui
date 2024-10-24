@@ -46,7 +46,7 @@ export const SwapSuccessScene = (props: Props) => {
   })
 
   const handleTransactionDetails = useHandler(() => {
-    navigation.replace('transactionDetails', { edgeTransaction, walletId })
+    navigation.replace('transactionDetails', { edgeTransaction, walletId, onDone: handleDone })
   })
 
   useAsyncEffect(
