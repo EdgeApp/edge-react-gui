@@ -18,7 +18,7 @@ import {
   PaymentProtoVerificationPayment,
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
-import { NavigationBase } from '../types/routerTypes'
+
 import { EdgeAsset, MapObject, StringMap } from '../types/types'
 
 export interface LaunchPaymentProtoParams {
@@ -136,7 +136,7 @@ async function fetchPaymentProtoJsonResponse(uri: string, init: object): Promise
  * 3. Make preliminary transaction hexes to pass onto the Payment Protocol for verification
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
-export async function launchPaymentProto(navigation: NavigationBase, account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
+export async function launchPaymentProto(navigation: RootSceneProps<'edgeApp'>['navigation'], account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
   const { currencyWallets } = account
   const { hideScamWarning, metadata = {}, navigateReplace, tokenId: tokenIdParam = null, wallet, onBack, onDone } = params
   // Fetch payment options

@@ -12,7 +12,7 @@ import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/Wall
 import { lstrings } from '../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { NavigationBase, RootSceneProps } from '../types/routerTypes'
 import { MapObject } from '../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
@@ -20,7 +20,7 @@ import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
 
 export interface SelectWalletTokenParams {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   walletId: string
   tokenId: EdgeTokenId
   alwaysActivate?: boolean
@@ -85,7 +85,11 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 }
 
 // check if the wallet is activated (via public address blank string check) and route to activation scene(s)
-function selectActivationRequiredWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<boolean>> {
+function selectActivationRequiredWallet(
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
+  walletId: string,
+  currencyCode: string
+): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
@@ -147,7 +151,11 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
   }
 }
 
-export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenIds: EdgeTokenId[]): ThunkAction<Promise<void>> {
+export function activateWalletTokens(
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
+  wallet: EdgeCurrencyWallet,
+  tokenIds: EdgeTokenId[]
+): ThunkAction<Promise<void>> {
   return async (_dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -252,7 +260,7 @@ const asKeyInfo = asObject({
 
 type KeyInfo = ReturnType<typeof asKeyInfo>
 
-export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Promise<void>> {
+export function checkCompromisedKeys(navigation: RootSceneProps<'edgeApp'>['navigation']): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account = state.core.account

@@ -47,7 +47,7 @@ interface Props {
   lockInputs?: boolean
   isCameraOpen: boolean
   fioToAddress?: string
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 export const AddressTile2 = React.forwardRef((props: Props, ref: React.ForwardedRef<AddressTileRef>) => {

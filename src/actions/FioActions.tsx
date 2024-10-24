@@ -6,7 +6,7 @@ import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+
 import { FioAddress, FioDomain, FioObtRecord } from '../types/types'
 import { addToFioAddressCache, getFioObtData, refreshConnectedWalletsForFioAddress } from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
@@ -94,7 +94,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
   }
 }
 
-export const showFioExpiredModal = async (navigation: NavigationBase, fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
+export const showFioExpiredModal = async (navigation: RootSceneProps<'edgeApp'>['navigation'], fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
   const answer = await Airship.show<boolean>(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {

@@ -12,12 +12,12 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props<T> {
   animationDuration?: number
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 
   doWork: () => Promise<T>
   onCancel: () => void
   onDone: (res: T) => void
-  onError: (navigation: NavigationBase, error: unknown) => Promise<void>
+  onError: (navigation: RootSceneProps<'edgeApp'>['navigation'], error: unknown) => Promise<void>
 
   processingText: string
   longProcessingText?: string

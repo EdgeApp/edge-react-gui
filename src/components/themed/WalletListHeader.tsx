@@ -12,7 +12,7 @@ import { SectionHeader } from '../common/SectionHeader'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   sorting: boolean
   searching: boolean
   openSortModal: () => void

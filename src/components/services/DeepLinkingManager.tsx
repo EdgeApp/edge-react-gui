@@ -18,7 +18,7 @@ import { Airship, showDevError, showError } from './AirshipInstance'
 import { cacheStyles, Theme, useTheme } from './ThemeContext'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 export function DeepLinkingManager(props: Props) {

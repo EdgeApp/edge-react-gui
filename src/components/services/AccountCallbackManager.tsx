@@ -21,7 +21,7 @@ const REFRESH_RATES_MS = 30000
 
 interface Props {
   account: EdgeAccount
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 // Tracks items that need a refresh:

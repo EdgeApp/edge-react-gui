@@ -17,7 +17,7 @@ import {
   WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -239,7 +239,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={props.navigation as NavigationBase}
+        navigation={props.navigation.getParent()}
         headerTitle={lstrings.choose_custom_token_wallet}
         allowedAssets={allowedCreateAssets}
         showCreateWallet

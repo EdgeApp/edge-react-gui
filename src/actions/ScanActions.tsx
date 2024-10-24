@@ -14,7 +14,7 @@ import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
@@ -44,7 +44,7 @@ import { checkAndShowLightBackupModal } from './BackupModalActions'
  * - Disallow reqaddr's that specify other reqaddr's in the 'redir' query (prevent
  *    infinite redirect loops).
  */
-export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
+export const doRequestAddress = async (navigation: RootSceneProps<'edgeApp'>['navigation'], account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
   // Block light accounts:
   if (checkAndShowLightBackupModal(account, navigation)) return
 
@@ -173,7 +173,7 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
 }
 
 export function handleWalletUris(
-  navigation: NavigationBase,
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
   wallet: EdgeCurrencyWallet,
   parsedUri: EdgeParsedUri,
   fioAddress?: string
@@ -243,7 +243,7 @@ export function handleWalletUris(
 async function privateKeyModalActivated(
   state: RootState,
   account: EdgeAccount,
-  navigation: NavigationBase,
+  navigation: RootSceneProps<'edgeApp'>['navigation'],
   wallet: EdgeCurrencyWallet,
   privateKeys: string[]
 ): Promise<void> {
@@ -276,7 +276,7 @@ async function privateKeyModalActivated(
   ))
 }
 
-async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigation: RootSceneProps<'edgeApp'>['navigation'], wallet: EdgeCurrencyWallet, privateKeys: string[]) {
   try {
     const unsignedTx = await wallet.sweepPrivateKeys({
       tokenId: null,
@@ -337,7 +337,7 @@ async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigati
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
+export function checkAndShowGetCryptoModal(navigation: RootSceneProps<'edgeApp'>['navigation'], wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
   return async dispatch => {
     try {
       const currencyCode = getCurrencyCode(wallet, tokenId)

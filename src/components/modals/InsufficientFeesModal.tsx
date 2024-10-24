@@ -16,7 +16,7 @@ import { EdgeModal } from './EdgeModal'
 interface Props {
   bridge: AirshipBridge<void>
   coreError: InsufficientFundsError
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   wallet: EdgeCurrencyWallet
 
   // Called when the user wants to swap.

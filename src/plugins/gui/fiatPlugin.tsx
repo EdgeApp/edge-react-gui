@@ -78,7 +78,7 @@ export const executePlugin = async (params: {
   forcedWalletResult?: WalletListResult
   guiPlugin: GuiPlugin
   longPress?: boolean
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   paymentType?: FiatPaymentType
   pluginPromotion?: PluginPromotion
   providerId?: string

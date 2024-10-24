@@ -25,7 +25,7 @@ export interface FilteredInfoCard {
 }
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   promoInfo: FilteredInfoCard
   onClose: () => Promise<void>
 }

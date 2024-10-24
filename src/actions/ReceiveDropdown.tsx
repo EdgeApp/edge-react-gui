@@ -8,7 +8,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
 import { playReceiveSound } from './SoundActions'
 import { selectWalletToken } from './WalletActions'
@@ -18,7 +18,7 @@ let receiveDropdownShowing = false
 /**
  * Shows a drop-down alert for an incoming transaction.
  */
-export function showReceiveDropdown(navigation: NavigationBase, transaction: EdgeTransaction): ThunkAction<void> {
+export function showReceiveDropdown(navigation: RootSceneProps<'edgeApp'>['navigation'], transaction: EdgeTransaction): ThunkAction<void> {
   return (dispatch, getState) => {
     const { currencyCode, nativeAmount, tokenId, walletId } = transaction
 

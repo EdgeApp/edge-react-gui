@@ -22,13 +22,13 @@ import { EdgeModal } from './EdgeModal'
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
 
-export async function showHelpModal(navigation: NavigationBase): Promise<void> {
+export async function showHelpModal(navigation: RootSceneProps<'edgeApp'>['navigation']): Promise<void> {
   return await Airship.show(bridge => <HelpModal bridge={bridge} navigation={navigation} />)
 }
 
 interface Props {
   bridge: AirshipBridge<void>
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 export const HelpModal = (props: Props) => {

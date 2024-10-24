@@ -19,7 +19,7 @@ const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !
 interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 type Props = OwnProps

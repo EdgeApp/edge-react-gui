@@ -25,7 +25,7 @@ import { EdgeCard } from './EdgeCard'
 // use regular Text components which can auto shrink
 const MAX_ANIMATED_AMOUNT = '10000000'
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   onViewAssetsPress?: () => void
 }
 

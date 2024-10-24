@@ -387,7 +387,7 @@ const SceneFooter = styled(View)({
  *
  * @returns null
  */
-function FloatingNavFixer(props: { navigation: NavigationBase }) {
+function FloatingNavFixer(props: { navigation: RootSceneProps<'edgeApp'>['navigation'] }) {
   const { navigation } = props
 
   React.useEffect(() => {

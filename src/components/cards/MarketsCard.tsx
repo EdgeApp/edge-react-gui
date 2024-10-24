@@ -43,14 +43,14 @@ const COINGECKO_TO_EDGE_ASSET: Record<string, EdgeAsset> = {
   uniswap: { pluginId: 'ethereum', tokenId: '1f9840a85d5af5bf1d1762f925bdaddc4201f984' }
 }
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   numRows: number
 }
 
 interface CoinRowProps {
   coinRow: CoinRankingData
   index: number
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   fiatCurrencyCode: string
 }
 

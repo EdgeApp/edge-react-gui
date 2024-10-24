@@ -21,7 +21,7 @@ import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
   bridge: AirshipBridge<void>
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 /**

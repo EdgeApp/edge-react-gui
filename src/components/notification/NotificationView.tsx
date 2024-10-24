@@ -27,7 +27,7 @@ import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 
   hasTabs: boolean
   footerHeight: number

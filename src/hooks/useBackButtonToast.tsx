@@ -8,7 +8,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { defaultAccount } from '../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { NavigationBase } from '../types/routerTypes'
+
 
 /**
  * Shows a logout toast when the back button is pressed.
@@ -27,7 +27,7 @@ export function useBackButtonToast() {
 
   // Edge normally bans this hook, since it will crash when used in a modal,
   // but we already know that we are running in a real scene:
-  const navigation: NavigationBase = useNavigation()
+  const navigation: RootSceneProps<'edgeApp'>['navigation'] = useNavigation()
 
   useFocusEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {

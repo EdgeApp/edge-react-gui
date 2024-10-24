@@ -13,7 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import { RootSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -47,7 +47,7 @@ export type WalletListResult =
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 
   // Filtering:
   allowedAssets?: EdgeAsset[]
@@ -267,7 +267,7 @@ export const pickWallet = async (args: {
   account: EdgeAccount
   assets?: EdgeAsset[]
   headerTitle?: string
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   showCreateWallet?: boolean
 }): Promise<WalletListResult> => {
   const { account, assets = [], headerTitle = lstrings.select_wallet, navigation, showCreateWallet } = args

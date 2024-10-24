@@ -23,7 +23,7 @@ const EXPIRE_CHECK_TIMEOUT = 30000
 
 interface Props {
   account: EdgeAccount
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 export const FioService = (props: Props) => {

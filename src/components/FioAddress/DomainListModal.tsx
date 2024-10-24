@@ -31,7 +31,7 @@ interface StateProps {
 
 interface OwnProps {
   bridge: AirshipBridge<FioDomain | undefined>
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   publicDomains: FioDomain[]
 }
 

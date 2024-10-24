@@ -28,7 +28,7 @@ export interface Props {
   deepPath?: string
   deepQuery?: UriQueryMap
 
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 interface WebViewEvent {

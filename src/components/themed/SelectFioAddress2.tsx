@@ -18,7 +18,7 @@ import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   selected: string
   memo: string
   memoError: string

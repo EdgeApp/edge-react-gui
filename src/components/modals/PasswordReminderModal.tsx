@@ -15,7 +15,7 @@ import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 interface StateProps {

@@ -18,7 +18,7 @@ import { useTheme } from '../services/ThemeContext'
 import { FilteredInfoCard, InfoCarouselCard } from './InfoCard'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   enterAnim: Anim
   screenWidth: number
   cards?: InfoCard[]

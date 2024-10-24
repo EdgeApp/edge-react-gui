@@ -53,7 +53,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   _account: EdgeAccount
   _defaultIsoFiat: string
   _dispatch: Dispatch
-  _navigation: NavigationBase
+  _navigation: RootSceneProps<'edgeApp'>['navigation']
   _plugin: GuiPlugin
   _reloadWebView: () => void
   _selectedTokenId: EdgeTokenId
@@ -67,7 +67,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     deepLink: EdgeProviderDeepLink
     defaultIsoFiat: string
     dispatch: Dispatch
-    navigation: NavigationBase
+    navigation: RootSceneProps<'edgeApp'>['navigation']
     plugin: GuiPlugin
     reloadWebView: () => void
     selectedTokenId: string | null

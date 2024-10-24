@@ -37,7 +37,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
   wallet: EdgeCurrencyWallet
   transaction: EdgeTransaction
 }

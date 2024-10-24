@@ -40,7 +40,7 @@ import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes

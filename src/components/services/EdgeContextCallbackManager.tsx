@@ -7,13 +7,13 @@ import { NavigationBase } from '../../types/routerTypes'
 import { showDevError, showDevErrorAsync } from './AirshipInstance'
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 interface StateProps {
   context: EdgeContext
 }
 interface DispatchProps {
-  onOtpError: (navigation: NavigationBase, otpError: OtpError) => void
+  onOtpError: (navigation: RootSceneProps<'edgeApp'>['navigation'], otpError: OtpError) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -62,7 +62,7 @@ export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, Own
     context: state.core.context
   }),
   dispatch => ({
-    onOtpError(navigation: NavigationBase, otpError: OtpError) {
+    onOtpError(navigation: RootSceneProps<'edgeApp'>['navigation'], otpError: OtpError) {
       dispatch(handleOtpError(navigation, otpError))
     }
   })

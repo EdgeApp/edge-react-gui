@@ -9,7 +9,7 @@ import { SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { GetState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { getUniqueWalletName } from './CreateWalletActions'
@@ -28,7 +28,7 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
   }
 }
 
-export function linkReferralWithCurrencies(navigation: NavigationBase, uri: string): ThunkAction<Promise<void>> {
+export function linkReferralWithCurrencies(navigation: RootSceneProps<'edgeApp'>['navigation'], uri: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Fill in any addresses:
     const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)

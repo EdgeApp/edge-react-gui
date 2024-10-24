@@ -24,7 +24,7 @@ interface FioConnectWalletsProps {
   disabled: boolean
   fioAddressName: string
   fioWallet: EdgeCurrencyWallet | null
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.

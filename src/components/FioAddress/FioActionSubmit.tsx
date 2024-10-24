@@ -37,7 +37,7 @@ interface OwnProps {
   fioWallet: EdgeCurrencyWallet
   addressTitles?: boolean
   showPaymentWalletPicker?: boolean
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 }
 
 interface State {

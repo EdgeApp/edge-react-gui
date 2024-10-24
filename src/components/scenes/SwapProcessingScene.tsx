@@ -46,7 +46,7 @@ export function SwapProcessingScene(props: Props) {
     return quotes
   }
 
-  const onError = async (navigation: NavigationBase, error: unknown): Promise<void> => {
+  const onError = async (navigation: RootSceneProps<'edgeApp'>['navigation'], error: unknown): Promise<void> => {
     const errorDisplayInfo = processSwapQuoteError({
       error,
       swapRequest,

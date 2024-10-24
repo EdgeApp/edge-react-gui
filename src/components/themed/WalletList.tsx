@@ -7,7 +7,7 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { lstrings } from '../../locales/strings'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import { RootSceneProps } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
 import { showError } from '../services/AirshipInstance'
@@ -20,7 +20,7 @@ import { WalletListLoadingRow } from './WalletListLoadingRow'
 import { WalletListSectionHeader } from './WalletListSectionHeader'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: RootSceneProps<'edgeApp'>['navigation']
 
   // Filtering:
   allowedAssets?: EdgeAsset[]
