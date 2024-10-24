@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add TON
 - changed: Various strings updated to UK compliance spec
 - changed: Wording in light account persistent notification
 - removed: Bank Wire Transfer Buy for Florida
