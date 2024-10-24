@@ -419,7 +419,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader
-            title={direction === 'buy' ? getUkCompliantString(countryCode, 'buy_1s', titleAsset) : getUkCompliantString(countryCode, 'sell_1s', titleAsset)}
+            title={
+              direction === 'buy' ? getUkCompliantString(countryCode, 'buy_1s_title', titleAsset) : getUkCompliantString(countryCode, 'sell_1s', titleAsset)
+            }
             underline
             withTopMargin
           />
