@@ -45,6 +45,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   telos: true,
   tezos: true,
   thorchainrune: ENV.THORCHAIN_INIT,
+  ton: true,
   tron: true,
   wax: true,
   zcash: true,

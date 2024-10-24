@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add TON
 - added: Log swap errors to Sentry.
 - added: Tracking for unexpected fiat provider errors.
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
