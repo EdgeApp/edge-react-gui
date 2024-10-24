@@ -22,6 +22,7 @@
 - changed: Remove legacy non-segwit wallets from new account wallet selection scene
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
+- fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
 
 ## 4.15.0
 
