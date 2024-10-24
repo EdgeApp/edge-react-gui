@@ -23,6 +23,7 @@
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
+- fixed: Fix error massaging in trackError
 
 ## 4.15.0
 
