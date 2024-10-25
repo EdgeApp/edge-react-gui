@@ -16413,10 +16413,10 @@ react-native-contacts@^7.0.4:
   version "0.1.8"
   resolved "https://github.com/adminphoeniixx/react-native-custom-tabs#7605cda9d9d691c36367e98d8513937454627ecd"
 
-react-native-device-info@^10.11.0:
-  version "10.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.11.0.tgz#2c9f378f1c3c5eb9aafa803d015b84325991a9aa"
-  integrity sha512-qRzhuYOm5ZXQi5dhfJFjDq157oipxcEW/fo0QyMm5+TI6V6/+P/tju+Hif6z0rpLCf7MV7iDVRv2Kqha4D/yvQ==
+react-native-device-info@^13.2.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-13.2.0.tgz#2b4026daf59dd08d82b6d65b63c18cb26f310ed2"
+  integrity sha512-VpTxHZsEZ7kes2alaZkB31278KuSPXfTZ4TmCCN77+bYxNnaHUDiBiQ1TSoKAOp51b7gZ/7EvM4McfgHofcTBQ==
 
 react-native-draggable-flatlist@^4.0.1:
   version "4.0.1"
@@ -16561,11 +16561,6 @@ react-native-piratechain@^0.5.4:
   integrity sha512-TYnT9XRgnb6RrEfEqUBJtqKCwCze/atsvkFKRV8t1HesVq+/CPSJfk1CxFfM3qZIVNNIoB94srFbBKQLQ15V4g==
   dependencies:
     rfc4648 "^1.3.0"
-
-react-native-power-saving-mode@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-power-saving-mode/-/react-native-power-saving-mode-0.1.1.tgz#8ec758971979f11c81410751a6ea228abfce269d"
-  integrity sha512-aWRtlpW55fqjLQDTb/dEw6LqlG0iWx8NZxlhu6QWp5DcvQMzx3EDxCX7RC1h/ofrISCoNisd8Lb7YSa+9SY5VQ==
 
 react-native-reanimated@^3.14.0:
   version "3.14.0"
