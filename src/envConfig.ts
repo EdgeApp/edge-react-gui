@@ -1,5 +1,7 @@
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
+import { asBase16 } from './util/cleaners/asHex'
+
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
     if (raw == null) return null
@@ -29,7 +31,9 @@ const asEvmApiKeys = asObject({
 
 export const asEnvConfig = asObject({
   // API keys:
-  AIRBITZ_API_KEY: asOptional(asString, ''),
+  EDGE_API_KEY: asOptional(asString, ''),
+  EDGE_API_SECRET: asOptional(asBase16),
+
   COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   IP_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
