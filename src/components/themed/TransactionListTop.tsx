@@ -262,7 +262,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         />
         <SelectableRow
           marginRem={0.5}
-          title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
+          title={getUkCompliantString(this.state.countryCode, 'sell_1s', sceneCurrencyCode)}
           onPress={() => this.handleTradeSell(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
