@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/react-native'
+import { captureException, withScope } from '@sentry/react-native'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
@@ -8,6 +8,7 @@ import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { ThunkAction } from '../types/reduxTypes'
+import { addMetadataToContext } from './addMetadataToContext'
 import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { AggregateErrorFix, normalizeError } from './normalizeError'
@@ -153,7 +154,7 @@ if (ENV.POSTHOG_INIT) {
  */
 export function trackError(
   error: unknown,
-  tag?: string,
+  nameTag?: string,
   metadata?: {
     [key: string]: any
   }
@@ -161,21 +162,24 @@ export function trackError(
   const err = normalizeError(error)
 
   if (err instanceof AggregateErrorFix) {
-    // Track each error individually using a common event_id:
-    const aggTag = tag == null ? `AggregateError:${Date.now()}` : tag
-    err.errors.forEach(e => trackError(e, aggTag, metadata))
+    // Track each error individually using a common group tag:
+    const aggregateId = Date.now().toString(16)
+    withScope(scope => {
+      scope.setTag('aggregate.id', aggregateId)
+      err.errors.forEach(e => trackError(e, nameTag, metadata))
+    })
     return
   }
 
-  let hint: { event_id?: string; data?: { [key: string]: any } } | undefined
-  if (tag != null) {
-    hint = { event_id: tag }
-  }
-  if (metadata != null) {
-    hint = { data: metadata }
-  }
-
-  captureException(err, hint)
+  captureException(err, scope => {
+    scope.setTag('event.name', nameTag)
+    if (metadata) {
+      const context: Record<string, unknown> = {}
+      addMetadataToContext(context, metadata)
+      scope.setContext('Metadata', context)
+    }
+    return scope
+  })
 }
 
 /**
