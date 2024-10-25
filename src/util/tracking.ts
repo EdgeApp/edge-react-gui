@@ -10,6 +10,7 @@ import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
+import { normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
@@ -143,7 +144,12 @@ if (ENV.POSTHOG_INIT) {
 }
 
 /**
- * Track error to external reporting service (ie. Bugsnag)
+ * Track error to external reporting service (ie. Sentry).
+ *
+ * It will take an exception of `unknown` type and normalize it into an error
+ * for reporting.
+ *
+ * All normalization rules should be isolated to `normalizeError` utility.
  */
 export function trackError(
   error: unknown,
@@ -152,15 +158,7 @@ export function trackError(
     [key: string]: any
   }
 ): void {
-  let err: Error
-  if (error instanceof Error) {
-    err = error
-  } else if (typeof error === 'string') {
-    err = new Error(error)
-  } else {
-    // At least send an error which should give us the call-stack
-    err = new Error(`Unknown error occurred: ${String(error)}`)
-  }
+  const err = normalizeError(error)
 
   let hint: { event_id?: string; data?: { [key: string]: any } } | undefined
   if (tag != null) {
