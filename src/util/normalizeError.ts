@@ -13,5 +13,20 @@ export function normalizeError(error: unknown): Error {
   if (typeof error === 'string') {
     return new Error(error)
   }
+  if (Array.isArray(error)) {
+    const normalizedErrors = error.map(normalizeError)
+    const normalizedMessage = `[${normalizedErrors.map(e => e.message).join(', ')}]`
+    return new AggregateErrorFix(normalizedErrors, normalizedMessage)
+  }
+
   return new Error(`Unknown error: ${String(error)}`)
+}
+
+// This is a temporary patch for AggregateError until it is available in Hermes.
+// FIX: Remove this in newer versions of hermes.
+class AggregateErrorFix extends Error {
+  constructor(public errors: Error[], message?: string) {
+    super(message)
+    this.name = 'AggregateError'
+  }
 }
