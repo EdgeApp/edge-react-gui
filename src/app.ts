@@ -34,7 +34,13 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
 
     // Initialize Sentry within native iOS and Android code so we can catch crashes at
     // early app startup.
-    autoInitializeNativeSdk: false
+    autoInitializeNativeSdk: false,
+
+    integrations: [
+      Sentry.breadcrumbsIntegration({
+        console: false
+      })
+    ]
   })
 }
 
