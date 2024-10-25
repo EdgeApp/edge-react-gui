@@ -152,19 +152,25 @@ export function trackError(
     [key: string]: any
   }
 ): void {
-  let err: Error | string
-  if (error instanceof Error || typeof error === 'string') {
+  let err: Error
+  if (error instanceof Error) {
     err = error
+  } else if (typeof error === 'string') {
+    err = new Error(error)
   } else {
-    // At least send an error which should give us the callstack
-    err = 'Unknown error occurred'
+    // At least send an error which should give us the call-stack
+    err = new Error(`Unknown error occurred: ${String(error)}`)
   }
 
-  if (tag == null) {
-    captureException(err)
-  } else {
-    captureException(err, { event_id: tag, data: metadata })
+  let hint: { event_id?: string; data?: { [key: string]: any } } | undefined
+  if (tag != null) {
+    hint = { event_id: tag }
   }
+  if (metadata != null) {
+    hint = { data: metadata }
+  }
+
+  captureException(err, hint)
 }
 
 /**
