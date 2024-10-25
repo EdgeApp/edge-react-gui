@@ -10,7 +10,7 @@ import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
-import { normalizeError } from './normalizeError'
+import { AggregateErrorFix, normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
@@ -159,6 +159,13 @@ export function trackError(
   }
 ): void {
   const err = normalizeError(error)
+
+  if (err instanceof AggregateErrorFix) {
+    // Track each error individually using a common event_id:
+    const aggTag = tag == null ? `AggregateError:${Date.now()}` : tag
+    err.errors.forEach(e => trackError(e, aggTag, metadata))
+    return
+  }
 
   let hint: { event_id?: string; data?: { [key: string]: any } } | undefined
   if (tag != null) {
