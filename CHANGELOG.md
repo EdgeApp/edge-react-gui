@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Log swap errors to Sentry.
+- added: Tracking for unexpected fiat provider errors.
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
 - changed: Wording in light account persistent notification

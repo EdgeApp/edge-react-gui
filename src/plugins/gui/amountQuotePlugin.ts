@@ -168,9 +168,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         assetPromises.push(provider.getSupportedAssets({ direction, regionCode, paymentTypes }))
       }
 
-      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {
-        console.error('amountQuotePlugin error fetching assets: ', String(e))
-      })
+      const ps = fuzzyTimeout(assetPromises, 5000)
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
@@ -180,7 +178,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       const allowedProviders: { [providerId: string]: boolean } = {}
-      for (const assetMap of assetArray ?? []) {
+      for (const assetMap of assetArray) {
         if (assetMap == null) continue
         allowedProviders[assetMap.providerId] = true
         requireAmountCrypto[assetMap.providerId] = false
