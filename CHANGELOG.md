@@ -3,9 +3,14 @@
 ## Unreleased
 
 - added: Log swap errors to Sentry.
+- added: Tracking for unexpected fiat provider errors.
+- changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
 - changed: Various strings updated to UK compliance spec
+- changed: Track array of errors or AggregateErrors separately with a common tag
 - changed: Wording in light account persistent notification
 - fixed: Fix error massaging in trackError
+- fixed: Normalized error messages for tracking; removing localization from error messages.
+- fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada

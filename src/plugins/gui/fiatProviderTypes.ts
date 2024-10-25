@@ -44,7 +44,22 @@ export class FiatProviderError extends Error {
   readonly quoteError: FiatProviderQuoteError
 
   constructor(info: FiatProviderQuoteError) {
-    super('FiatProviderError')
+    function getMessage(): string {
+      switch (info.errorType) {
+        case 'overLimit':
+          return `Over limit: ${info.errorAmount} ${info.displayCurrencyCode}`
+        case 'underLimit':
+          return `Under limit: ${info.errorAmount} ${info.displayCurrencyCode}`
+        case 'regionRestricted':
+          return `Region restricted: ${info.displayCurrencyCode}`
+        case 'assetUnsupported':
+          return `Asset unsupported`
+        case 'paymentUnsupported':
+          return 'Payment unsupported'
+      }
+    }
+    super(getMessage())
+    this.name = 'FiatProviderError'
     this.quoteError = info
   }
 }
