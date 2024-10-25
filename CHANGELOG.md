@@ -4,6 +4,7 @@
 
 - changed: Various strings updated to UK compliance spec
 - changed: Wording in light account persistent notification
+- fixed: Fix error massaging in trackError
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
 - removed: Moonpay, Simplex, and Paybis for UK
