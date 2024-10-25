@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -95,7 +95,7 @@ export const HomeScene = (props: Props) => {
   // Set countryCode once
   useAsyncEffect(
     async () => {
-      const countryCode = await getCountryCodeByIp()
+      const { countryCode } = await getFirstOpenInfo()
       setCountryCode(countryCode)
     },
     [],
