@@ -31,6 +31,7 @@
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: ACH sell option for Florida visible with no accepted currencies
+- fixed: Slow `TransactionDetailsScene` navigation on slow networks
 - removed: Moonpay, Simplex, and Paybis for UK
 - removed: UK persistent investment risk banner
 - removed: Bank Wire Transfer Buy for Florida
