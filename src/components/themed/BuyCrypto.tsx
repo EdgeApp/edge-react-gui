@@ -9,6 +9,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -20,12 +21,13 @@ interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   navigation: NavigationBase
+  countryCode?: string
 }
 
 type Props = OwnProps
 
 export const BuyCrypto = (props: Props) => {
-  const { wallet, tokenId, navigation } = props
+  const { countryCode, wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -45,7 +47,7 @@ export const BuyCrypto = (props: Props) => {
             <View style={styles.buyCrypto}>
               <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-              <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>{getUkCompliantString(countryCode, 'buy_1s', displayName)}</EdgeText>
             </View>
           </View>
         </ButtonBox>
