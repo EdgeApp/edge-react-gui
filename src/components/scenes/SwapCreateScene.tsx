@@ -22,7 +22,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
@@ -59,7 +59,7 @@ export interface SwapErrorDisplayInfo {
   error: unknown
 }
 
-interface Props extends EdgeSceneProps<'swapCreate'> {}
+interface Props extends SwapTabSceneProps<'swapCreate'> {}
 
 export const SwapCreateScene = (props: Props) => {
   const { navigation, route } = props
@@ -223,7 +223,7 @@ export const SwapCreateScene = (props: Props) => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={props.navigation}
+        navigation={navigation as NavigationBase}
         headerTitle={whichWallet === 'to' ? lstrings.select_recv_wallet : lstrings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}

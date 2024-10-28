@@ -5,7 +5,7 @@ import { SharedValue } from 'react-native-reanimated'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { WalletsTabSceneProps } from '../../types/routerTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -16,7 +16,7 @@ import { WalletListErrorRow } from './WalletListErrorRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
 interface Props {
-  navigation: NavigationProp<'walletList'>
+  navigation: WalletsTabSceneProps<'walletList'>['navigation']
   walletId: string
 }
 

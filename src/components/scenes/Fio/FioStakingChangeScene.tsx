@@ -14,7 +14,7 @@ import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/i
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
@@ -33,7 +33,7 @@ import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 
-interface Props extends EdgeSceneProps<'fioStakingChange'> {
+interface Props extends EdgeAppSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
 }
 

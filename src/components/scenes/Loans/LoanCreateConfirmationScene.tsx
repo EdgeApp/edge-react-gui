@@ -17,7 +17,7 @@ import { lstrings } from '../../../locales/strings'
 import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateActionProgram } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
@@ -53,7 +53,7 @@ const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
   polygon: '1.5'
 }
 
-interface Props extends EdgeSceneProps<'loanCreateConfirmation'> {}
+interface Props extends EdgeAppSceneProps<'loanCreateConfirmation'> {}
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const dispatch = useDispatch()

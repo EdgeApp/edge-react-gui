@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -38,7 +38,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioConnectToWalletsConfirm'> {
+interface OwnProps extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 

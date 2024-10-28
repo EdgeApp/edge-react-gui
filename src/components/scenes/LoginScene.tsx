@@ -16,7 +16,7 @@ import { lstrings } from '../../locales/strings'
 import { performanceMarkersFromLoginUiPerfEvents } from '../../perf'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { NavigationBase, RootSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
@@ -34,7 +34,7 @@ export interface LoginParams {
 // @ts-expect-error
 global.ReactNativeBlurView = BlurView
 
-interface Props extends EdgeSceneProps<'login'> {}
+interface Props extends RootSceneProps<'login'> {}
 
 let firstRun = true
 
@@ -66,7 +66,7 @@ export function LoginScene(props: Props) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
+            await dispatch(initializeAccount(navigation as NavigationBase, account))
           })
           .catch(error => showError(error))
       }
@@ -74,7 +74,7 @@ export function LoginScene(props: Props) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
+            await dispatch(initializeAccount(navigation as NavigationBase, account))
           })
           .catch(error => showError(error))
       }
@@ -84,7 +84,7 @@ export function LoginScene(props: Props) {
       context
         .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
         .then(async account => {
-          await dispatch(initializeAccount(navigation, account))
+          await dispatch(initializeAccount(navigation as NavigationBase, account))
         })
         .catch(error => showError(error))
     }
@@ -98,7 +98,7 @@ export function LoginScene(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation).catch(err => showDevError(err))
+        showHelpModal(navigation as NavigationBase).catch(err => showDevError(err))
       },
       text: lstrings.string_help
     }),
@@ -112,7 +112,7 @@ export function LoginScene(props: Props) {
     : undefined
 
   const handleLogin = useHandler(async (account: EdgeAccount) => {
-    await dispatch(initializeAccount(navigation, account))
+    await dispatch(initializeAccount(navigation as NavigationBase, account))
   })
 
   const handleSendLogs = useHandler(() => {

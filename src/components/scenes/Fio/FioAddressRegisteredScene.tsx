@@ -3,7 +3,7 @@ import { Image, Text, View } from 'react-native'
 
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
@@ -13,7 +13,7 @@ export interface FioAddressRegisterSuccessParams {
   expiration?: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSuccess'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSuccess'> {}
 
 type Props = OwnProps & ThemeProps
 

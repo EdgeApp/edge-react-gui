@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { SettingsScene } from '../../components/scenes/SettingsScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('SettingsScene', () => {
   const mockState: FakeState = {
@@ -25,7 +25,7 @@ describe('SettingsScene', () => {
   it('should render SettingsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <SettingsScene {...fakeSceneProps('settingsOverview', undefined)} />
+        <SettingsScene {...fakeEdgeAppSceneProps('settingsOverview', undefined)} />
       </FakeProviders>
     )
 

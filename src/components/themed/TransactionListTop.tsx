@@ -27,7 +27,7 @@ import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { triggerHaptic } from '../../util/haptic'
@@ -64,7 +64,7 @@ const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
 ]
 
 interface OwnProps {
-  navigation: NavigationProp<'transactionList'>
+  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
 
   isLightAccount: boolean
 
@@ -214,7 +214,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         bridge={bridge}
         parentWalletId={tokenId == null ? undefined : parentWallet.id}
         headerTitle={lstrings.select_wallet}
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
       />
     ))
       .then(result => {
@@ -602,7 +602,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { account, navigation, tokenId, wallet } = this.props
 
     triggerHaptic('impactLight')
-    if (!checkAndShowLightBackupModal(account, navigation)) {
+    if (!checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       navigation.push('request', { tokenId, walletId: wallet.id })
     }
   }
@@ -650,7 +650,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   render() {
-    const { wallet, isEmpty, searching, theme, tokenId } = this.props
+    const { wallet, isEmpty, searching, theme, tokenId, navigation } = this.props
     const isStakingAvailable = this.isStakingAvailable()
     const styles = getStyles(theme)
 
@@ -665,7 +665,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             {this.renderButtons()}
           </>
         )}
-        {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
+        {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={navigation} />}
         {isEmpty || searching ? null : (
           <View style={styles.tempSceneHeader}>
             <DividerLine marginRem={[0.5, 0, 0.5, 0.5]} />

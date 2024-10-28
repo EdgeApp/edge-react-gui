@@ -22,7 +22,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../../util/utils'
@@ -46,7 +46,7 @@ export interface LoanDetailsParams {
   loanAccountId: string
 }
 
-interface Props extends EdgeSceneProps<'loanDetails'> {
+interface Props extends EdgeAppSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
 }
 
