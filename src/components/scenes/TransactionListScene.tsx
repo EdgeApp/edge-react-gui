@@ -17,7 +17,7 @@ import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSele
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
@@ -232,9 +232,9 @@ function TransactionListComponent(props: Props) {
     } else if (isSearching) {
       return <SectionHeaderCentered title={lstrings.transaction_list_search_no_result} />
     } else {
-      return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
+      return <BuyCrypto countryCode={route.params.countryCode} navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
     }
-  }, [isTransactionListUnsupported, navigation, isSearching, tokenId, wallet])
+  }, [isTransactionListUnsupported, isSearching, wallet, tokenId, route.params.countryCode, navigation])
 
   const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
     if (item == null) {
