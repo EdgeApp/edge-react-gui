@@ -5,9 +5,11 @@
 - added: Log swap errors to Sentry.
 - added: Tracking for unexpected fiat provider errors.
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
+- changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
 - changed: Wording in light account persistent notification
+- fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError
 - fixed: Normalized error messages for tracking; removing localization from error messages.
 - fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
