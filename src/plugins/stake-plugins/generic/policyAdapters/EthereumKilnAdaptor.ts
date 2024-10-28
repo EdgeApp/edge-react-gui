@@ -172,7 +172,7 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       const allocations: PositionAllocation[] = []
 
       const allPositions = await kiln.ethGetOnChainStakes(walletAddress)
-      const position = allPositions.find(position => position.integration_address === contractAddress)
+      const position = allPositions.find(position => position.integration_address.toLowerCase() === contractAddress.toLowerCase())
 
       // After fully unstaking, users are left with a single wei of the liquidity token. We should ignore this.
       const positionBalance = position?.balance ?? '0'
