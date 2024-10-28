@@ -232,9 +232,9 @@ function TransactionListComponent(props: Props) {
     } else if (isSearching) {
       return <SectionHeaderCentered title={lstrings.transaction_list_search_no_result} />
     } else {
-      return <BuyCrypto navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
+      return <BuyCrypto countryCode={route.params.countryCode} navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
     }
-  }, [isTransactionListUnsupported, navigation, isSearching, tokenId, wallet])
+  }, [isTransactionListUnsupported, isSearching, wallet, tokenId, route.params.countryCode, navigation])
 
   const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
     if (item == null) {

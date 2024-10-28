@@ -61,7 +61,7 @@ export function InsufficientFeesModal(props: Props) {
     <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <Paragraph>{message}</Paragraph>
       <ButtonsView
-        primary={{ label: getUkCompliantString(countryCode, 'transaction_details_bought_1s', currencyCode), onPress: handleBuy }}
+        primary={{ label: getUkCompliantString(countryCode, 'buy_1s_quote', currencyCode), onPress: handleBuy }}
         secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />
