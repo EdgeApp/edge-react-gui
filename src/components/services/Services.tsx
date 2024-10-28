@@ -1,6 +1,8 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { Platform } from 'react-native'
+import { BatteryOptEnabled, RequestDisableOptimization } from 'react-native-battery-optimization-check'
 import { usePowerState } from 'react-native-device-info'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
@@ -127,14 +129,24 @@ export function Services(props: Props) {
     'Services 2'
   )
 
-  // Show a warning only if Android low power mode is enabled
   useAsyncEffect(
     async () => {
-      if (powerState.lowPowerMode) {
-        Airship.show(bridge => {
-          return <AlertDropdown bridge={bridge} message={lstrings.warning_battery_saver} warning persistent />
-        }).catch(e => console.error('Services 3 AlertDropdown', e))
+      if (Platform.OS !== 'android' || !powerState.lowPowerMode) {
+        return
       }
+
+      const batteryOptEnabled = await BatteryOptEnabled()
+      if (!batteryOptEnabled) {
+        return
+      }
+      console.warn('Battery saver mode enabled and battery optimization is disabled')
+      await Airship.show(bridge => {
+        const onPress = async () => {
+          await RequestDisableOptimization()
+          bridge.resolve()
+        }
+        return <AlertDropdown bridge={bridge} onPress={onPress} message={lstrings.warning_battery_saver} warning persistent />
+      }).catch(e => showDevError(e))
     },
     [powerState],
     'Services 3'
