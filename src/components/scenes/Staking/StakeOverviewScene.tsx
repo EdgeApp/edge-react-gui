@@ -136,7 +136,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
-  const title = React.useMemo(() => getPolicyTitleName(stakePolicy), [stakePolicy])
+  const title = React.useMemo(() => getPolicyTitleName(stakePolicy, countryCode), [stakePolicy, countryCode])
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
