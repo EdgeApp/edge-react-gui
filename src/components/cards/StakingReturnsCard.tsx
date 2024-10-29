@@ -10,6 +10,7 @@ import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { EdgeCard } from './EdgeCard'
 
 interface StakingReturnsCardParams {
   fromCurrencyLogos: string[]
@@ -51,35 +52,21 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, st
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.leftCap} />
-      <View>
-        <View style={styles.iconsContainer}>
-          <View style={styles.middleLine} />
-          <View style={styles.icon}>
-            <PairIcons icons={fromCurrencyLogos} />
-            {renderArrow()}
-            <PairIcons icons={toCurrencyLogos} />
-          </View>
-          <View style={styles.middleLine} />
-        </View>
-        <View style={styles.textContainer}>
-          {renderEstimatedReturn()}
-          {renderStakeProvider()}
-        </View>
+    <EdgeCard>
+      <View style={styles.iconsContainer}>
+        <PairIcons icons={fromCurrencyLogos} />
+        {renderArrow()}
+        <PairIcons icons={toCurrencyLogos} />
       </View>
-      <View style={styles.rightCap} />
-    </View>
+      <View style={styles.textContainer}>
+        {renderEstimatedReturn()}
+        {renderStakeProvider()}
+      </View>
+    </EdgeCard>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonCap: ViewStyle = {
-    borderColor: theme.lineDivider,
-    borderBottomWidth: theme.thinLineWidth,
-    borderTopWidth: theme.thinLineWidth,
-    width: theme.rem(1)
-  }
   const commonArrow: ViewStyle = {
     position: 'absolute',
     width: theme.thinLineWidth * 2,
@@ -96,40 +83,15 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     iconsContainer: {
       flexDirection: 'row',
-      position: 'absolute'
+      marginVertical: theme.rem(0.5),
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     textContainer: {
       alignItems: 'center',
-      paddingHorizontal: theme.rem(1),
-      paddingTop: theme.rem(2),
-      paddingBottom: theme.rem(1),
-      borderBottomWidth: theme.thinLineWidth,
+      margin: theme.rem(0.5),
       borderColor: theme.lineDivider,
       minWidth: theme.rem(15)
-    },
-    icon: {
-      top: theme.rem(-1.5),
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    middleLine: {
-      flex: 1,
-      borderTopWidth: theme.thinLineWidth,
-      borderColor: theme.lineDivider
-    },
-    leftCap: {
-      ...commonCap,
-      borderLeftWidth: theme.thinLineWidth,
-      borderRightWidth: 0,
-      borderBottomLeftRadius: theme.rem(0.5),
-      borderTopLeftRadius: theme.rem(0.5)
-    },
-    rightCap: {
-      ...commonCap,
-      borderLeftWidth: 0,
-      borderRightWidth: theme.thinLineWidth,
-      borderBottomRightRadius: theme.rem(0.5),
-      borderTopRightRadius: theme.rem(0.5)
     },
     swapProvider: {
       marginTop: theme.rem(0.25),
