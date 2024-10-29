@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -15,8 +15,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
+  currencyInfo: EdgeCurrencyInfo
   stakePolicy: StakePolicy
-  wallet: EdgeCurrencyWallet
 
   countryCode?: string
   /** If false, show "Stake"/"Earn"
@@ -29,7 +29,7 @@ export function EarnOptionCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { stakePolicy, wallet, isOpenPosition, countryCode, onPress } = props
+  const { stakePolicy, currencyInfo, isOpenPosition, countryCode, onPress } = props
   const { apy, yieldType, stakeProviderInfo } = stakePolicy
 
   const { stakeAssets, rewardAssets } = stakePolicy
@@ -41,7 +41,7 @@ export function EarnOptionCard(props: Props) {
     ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
     : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
 
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  const policyIcons = getPolicyIconUris(currencyInfo, stakePolicy)
 
   const variablePrefix = yieldType === 'stable' ? '' : '~ '
   const apyText = apy == null || apy <= 0 ? lstrings.stake_variable_apy : variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))

@@ -119,7 +119,7 @@ export const EarnScene = (props: Props) => {
 
           return (
             <EdgeAnim key={`${wallet.id}-${index}`} enter={fadeInUp20}>
-              <EarnOptionCard wallet={wallet} stakePolicy={stakePolicy} isOpenPosition={isPortfolioSelected} onPress={handlePress} />
+              <EarnOptionCard currencyInfo={wallet.currencyInfo} stakePolicy={stakePolicy} isOpenPosition={isPortfolioSelected} onPress={handlePress} />
             </EdgeAnim>
           )
         })}
