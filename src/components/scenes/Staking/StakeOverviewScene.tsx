@@ -4,16 +4,15 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StyledButtonContainer } from '../../buttons/ButtonsView'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -26,7 +25,7 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
-interface Props extends EdgeAppSceneProps<'stakeOverview'> {
+interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -55,13 +54,13 @@ const StakeOverviewSceneComponent = (props: Props) => {
     denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
     return denomMap
   }, {})
+  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
   const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -75,8 +74,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   useAsyncEffect(
     async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-
       let sp: StakePosition
       try {
         if (stakePosition == null) {
@@ -101,7 +98,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
     const sceneTitleMap = {
-      stake: getPolicyTitleName(stakePolicy, countryCode),
+      stake: getPolicyTitleName(stakePolicy),
       claim: lstrings.stake_claim_rewards,
       unstake: lstrings.stake_unstake,
       unstakeAndClaim: lstrings.stake_unstake_claim,
@@ -150,7 +147,14 @@ const StakeOverviewSceneComponent = (props: Props) => {
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeader title={title} withTopMargin />
-      <StakingReturnsCard countryCode={countryCode} wallet={wallet} stakePolicy={stakePolicy} />
+      <View style={styles.card}>
+        <StakingReturnsCard
+          fromCurrencyLogos={policyIcons.stakeAssetUris}
+          toCurrencyLogos={policyIcons.rewardAssetUris}
+          apy={stakePolicy.apy}
+          stakeProviderInfo={stakePolicy.stakeProviderInfo}
+        />
+      </View>
       {stakePosition == null ? (
         <>
           <View style={styles.shimmer}>

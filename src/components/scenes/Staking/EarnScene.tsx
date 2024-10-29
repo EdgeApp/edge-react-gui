@@ -15,7 +15,7 @@ import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getPluginFromPolicy, getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { EdgeSwitch } from '../../buttons/EdgeSwitch'
-import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
+import { EarnOptionCard } from '../../cards/EarnOptionCard'
 import { EdgeAnim, fadeInUp20 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { SectionHeader } from '../../common/SectionHeader'
@@ -119,7 +119,7 @@ export const EarnScene = (props: Props) => {
 
           return (
             <EdgeAnim key={`${wallet.id}-${index}`} enter={fadeInUp20}>
-              <StakingReturnsCard wallet={wallet} stakePolicy={stakePolicy} isOpenPosition={isPortfolioSelected} onPress={handlePress} />
+              <EarnOptionCard wallet={wallet} stakePolicy={stakePolicy} isOpenPosition={isPortfolioSelected} onPress={handlePress} />
             </EdgeAnim>
           )
         })}
