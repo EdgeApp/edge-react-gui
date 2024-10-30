@@ -147,10 +147,8 @@ const strings = {
 
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  access_wallet_description:
-    'This application would like to create or access its wallet in your %1$s account.\n\n It will not have access to any other wallets.',
-  edge_description_warning:
-    'The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
+  access_wallet_description: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
+  edge_description_warning: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_success: 'Your exchange is being processed!',

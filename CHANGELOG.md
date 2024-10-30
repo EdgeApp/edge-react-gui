@@ -9,6 +9,7 @@
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
 - changed: Use stack-specific scene navigation props instead of `NavigationProp`
+- changed: Verbiage for login request scene for QR login has been updated to remove ambiguity.
 - changed: Wording in light account persistent notification
 - fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError
