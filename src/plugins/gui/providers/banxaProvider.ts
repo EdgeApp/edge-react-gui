@@ -549,7 +549,7 @@ export const banxaProvider: FiatProviderFactory = {
             const { showUi, coreWallet } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
+              await showUi.showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
@@ -684,10 +684,10 @@ export const banxaProvider: FiatProviderFactory = {
                             )
                           }
                           insideInterval = false
-                        } catch (e: any) {
-                          if (e.message === SendErrorBackPressed) {
+                        } catch (e: unknown) {
+                          if (e instanceof Error && e.message === SendErrorBackPressed) {
                             await showUi.exitScene()
-                          } else if (e.message === SendErrorNoTransaction) {
+                          } else if (e instanceof Error && e.message === SendErrorNoTransaction) {
                             await showUi.exitScene()
                             await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
                           } else {

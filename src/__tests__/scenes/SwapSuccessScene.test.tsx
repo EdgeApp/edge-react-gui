@@ -62,7 +62,27 @@ describe('SwapSuccessSceneComponent', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
-        <SwapSuccessScene {...fakeSceneProps('swapSuccess', undefined)} />
+        <SwapSuccessScene
+          {...fakeSceneProps('swapSuccess', {
+            walletId: fakeCoreWallet.id,
+            edgeTransaction: {
+              blockHeight: 0,
+              currencyCode: 'BTC',
+              date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+              isSend: false,
+              memos: [],
+              metadata: { name: 'timmy' },
+              nativeAmount: '12300000',
+              networkFee: '1',
+              otherParams: {},
+              ourReceiveAddresses: ['this is an address'],
+              signedTx: 'this is a signed tx',
+              tokenId: null,
+              txid: 'this is the txid',
+              walletId: fakeCoreWallet.id
+            }
+          })}
+        />
       </FakeProviders>
     )
 

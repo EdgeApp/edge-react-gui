@@ -6,7 +6,6 @@ import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
-import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
@@ -37,6 +36,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { filterInfoCards } from '../cards/InfoCardCarousel'
@@ -399,11 +399,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+    const forcedWallet = forcedWalletResult?.type === 'wallet' ? account.currencyWallets[forcedWalletResult.walletId] : undefined
 
     const titleAsset =
-      forcedWalletResult == null || forcedWalletResult.type !== 'wallet'
+      forcedWalletResult == null || forcedWalletResult.type !== 'wallet' || forcedWallet == null
         ? lstrings.cryptocurrency
-        : getCurrencyCodeWithAccount(account, account.currencyWallets[forcedWalletResult.walletId].currencyInfo.pluginId, forcedWalletResult.tokenId ?? null)
+        : getCurrencyCodeWithAccount(account, forcedWallet.currencyInfo.pluginId, forcedWalletResult.tokenId) ?? ''
 
     const countryCard =
       stateProvinceData == null ? (
@@ -418,7 +419,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader
-            title={direction === 'buy' ? sprintf(lstrings.title_plugin_buy_s, titleAsset) : sprintf(lstrings.title_plugin_sell_s, titleAsset)}
+            title={
+              direction === 'buy' ? getUkCompliantString(countryCode, 'buy_1s_quote', titleAsset) : getUkCompliantString(countryCode, 'sell_1s', titleAsset)
+            }
             underline
             withTopMargin
           />

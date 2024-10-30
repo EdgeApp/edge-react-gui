@@ -8,6 +8,7 @@ import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
 import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
+import { SendErrorBackPressed } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -609,10 +610,18 @@ export const bityProvider: FiatProviderFactory = {
                   return
                 }
 
-                if (isBuy) {
-                  await completeBuyOrder(approveQuoteRes, showUi)
-                } else {
-                  await completeSellOrder(approveQuoteRes, coreWallet, showUi, fiatCurrencyCode, tokenId)
+                try {
+                  if (isBuy) {
+                    await completeBuyOrder(approveQuoteRes, showUi)
+                  } else {
+                    await completeSellOrder(approveQuoteRes, coreWallet, showUi, fiatCurrencyCode, tokenId)
+                  }
+                } catch (e: unknown) {
+                  if (e instanceof Error && e.message === SendErrorBackPressed) {
+                    // Do nothing
+                  } else {
+                    throw e
+                  }
                 }
 
                 showUi.exitScene()

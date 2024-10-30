@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
 import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
@@ -33,6 +34,7 @@ import {
 } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
+import { getUkCompliantString } from '../util/ukComplianceUtils'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
@@ -108,6 +110,7 @@ import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/Se
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
 import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/SpendingLimitsScene'
+import { EarnScene as EarnSceneComponent } from './scenes/Staking/EarnScene'
 import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/StakeModifyScene'
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
@@ -124,6 +127,7 @@ import { TransactionList as TransactionListComponent } from './scenes/Transactio
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
+import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
@@ -154,6 +158,7 @@ const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
 const EditTokenScene = ifLoggedIn(EditTokenSceneComponent)
+const EarnScene = ifLoggedIn(EarnSceneComponent)
 const ExtraTabScene = ifLoggedIn(ExtraTabSceneComponent)
 const FiatPluginEnterAmountScene = ifLoggedIn(FiatPluginEnterAmountSceneComponent)
 const FioAddressDetailsScene = ifLoggedIn(FioAddressDetailsSceneComponent)
@@ -213,6 +218,7 @@ const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
+const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
@@ -419,6 +425,16 @@ const EdgeTabs = () => {
 // -------------------------------------------------------------------------
 
 const EdgeAppStack = () => {
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useAsyncEffect(
+    async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+    },
+    [],
+    'EdgeAppStack'
+  )
+
   return (
     <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
       <AppStack.Screen
@@ -562,6 +578,13 @@ const EdgeAppStack = () => {
         component={ExtraTabScene}
         options={{
           headerLeft: () => <HeaderTextButton type="help" />
+        }}
+      />
+      <AppStack.Screen
+        name="earnScene"
+        component={EarnScene}
+        options={{
+          title: getUkCompliantString(countryCode, 'stake_earn_button_label')
         }}
       />
       <AppStack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
@@ -747,6 +770,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <AppStack.Screen name="walletRestore" component={WalletRestoreScene} />
       <AppStack.Screen name="wcConnect" component={WcConnectScene} />
       <AppStack.Screen name="wcConnections" component={WcConnectionsScene} />
       <AppStack.Screen name="wcDisconnect" component={WcDisconnectScene} />

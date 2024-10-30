@@ -46,12 +46,14 @@ import type { MigrateWalletSelectCryptoParams } from '../components/scenes/Migra
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
+import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
 import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
 import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
+import { SwapSuccessParams } from '../components/scenes/SwapSuccessScene'
 import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
 import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
@@ -136,6 +138,7 @@ export type EdgeAppStackParamList = {} & {
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: undefined
+  earnScene: EarnSceneParams
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
   extraTab: undefined
@@ -184,7 +187,7 @@ export type EdgeAppStackParamList = {} & {
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
   swapSettings: undefined
-  swapSuccess: undefined
+  swapSuccess: SwapSuccessParams
   sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
   sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
@@ -193,6 +196,7 @@ export type EdgeAppStackParamList = {} & {
   transactionDetails: TransactionDetailsParams
   transactionsExport: TransactionsExportParams
   upgradeUsername: undefined
+  walletRestore: undefined
   wcConnect: WcConnectParams
   wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams

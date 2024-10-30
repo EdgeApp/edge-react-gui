@@ -10,7 +10,6 @@ import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
-import { AlertDropdown } from '../components/navigation/AlertDropdown'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
@@ -23,8 +22,8 @@ import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
-import { openLink, runWithTimeout } from '../util/utils'
-import { getCountryCodeByIp, loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
+import { runWithTimeout } from '../util/utils'
+import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
@@ -111,7 +110,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         screen: 'edgeAppStack',
         params: {
           screen: 'createWalletSelectCryptoNewAccount',
-          params: { newAccountFlow, defaultSelection }
+          params: { newAccountFlow, defaultSelection, disableLegacy: true }
         }
       })
 
@@ -266,20 +265,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       // other modals or scene changes immediately after login.
       await Airship.show(bridge => <SurveyModal bridge={bridge} />)
       await writeIsSurveyDiscoverShown(true)
-    }
-
-    if ((await getCountryCodeByIp()) === 'GB') {
-      await Airship.show(bridge => (
-        <AlertDropdown
-          bridge={bridge}
-          message={lstrings.warning_uk_risk}
-          persistent
-          warning
-          onPress={async () => {
-            await openLink('https://edge.app/due-diligence/')
-          }}
-        />
-      ))
     }
   }
 }

@@ -125,7 +125,6 @@ const strings = {
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
-  warning_uk_risk: `Don't invest unless you're prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong. Take 2 min to learn more.`,
   warning_battery_saver: `Battery Saver mode detected. Balances and transactions may be inaccurate`,
 
   // Alert component:
@@ -154,8 +153,8 @@ const strings = {
     'The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
-  exchange_congratulations_msg: 'Your exchange has been successfully completed!',
-  exchange_congratulations_msg_info: 'Exchanges may take a few minutes and up to 24 hours to process.',
+  exchange_congratulations_success: 'Your exchange is being processed!',
+  exchange_congratulations_note: 'Processing may take up to 24 hours to complete.',
   no_exchange_amount: 'No Amount Selected',
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
@@ -500,8 +499,13 @@ const strings = {
   staking_change_unlock_explainer_title: 'Unstaked Funds',
   staking_change_unlock_explainer1: 'Unstaked funds are not immediately available. ',
   staking_change_unlock_explainer2: 'These continue to be locked and unusable for 7 days after you unstake the funds.',
+  staking_discover: 'Discover',
+  staking_earning_pools: 'Earning Pools',
+  staking_earn_crypto: 'Earn Crypto',
+  staking_earn_crypto_footer: 'Stake crypto for passive returns',
   staking_overview_header: 'Stake %s',
   staking_overview_explainer: 'You have the following funds staked:',
+  staking_portfolio: 'Portfolio',
   staking_locked_title: 'Unstaked and locked until %1$s',
   staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
@@ -525,6 +529,7 @@ const strings = {
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
   satPerByte: 'Satoshi Per Byte',
+  go_to_parent_wallet: 'Go to Parent Wallet',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price (Gwei)',
   string_disable: 'Disabled',
@@ -648,10 +653,10 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
-  title_plugin_buy_s: 'Buy %1$s',
+  transaction_details_bought_1s: 'Buy %1$s',
   title_select_region: 'Select Region',
   title_select_payment_method: 'Select Payment Method',
-  title_plugin_sell_s: 'Sell %1$s',
+  transaction_details_sold_1s: 'Sell %1$s',
   title_otp: '2-Factor Security',
   title_register_fio_address: 'Register FIO Address',
   title_register_fio_domain: 'Register FIO Domain',
@@ -672,6 +677,7 @@ const strings = {
   trade_currency: 'Trade',
   trade_s: 'Trade %1$s',
   swap_s_to_from_crypto: 'Swap %1$s to/from another crypto',
+  transaction_details: 'Transaction Details',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
   transaction_details_payer: 'Payer',
@@ -829,7 +835,8 @@ const strings = {
   buy_parent_crypto_modal_message_3s:
     '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
   buy_crypto_decline: 'Not at this time',
-  buy_crypto_modal_buy_action: 'Buy %s',
+  buy_1s: 'Buy %1$s',
+  sell_1s: 'Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
@@ -845,10 +852,12 @@ const strings = {
   sweep_private_key_syncing_balances: 'Searching for balances...',
   sweep_private_key_syncing_balances_slow: 'Looking up balances is taking longer than usual.\nPlease wait...',
 
+  restore: 'Restore',
   restore_wallets_modal_title: 'Restore Wallets',
-  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_body: 'This will restore all selected wallets',
   restore_wallets_modal_confirm: 'Confirm',
   restore_wallets_modal_cancel: 'Cancel',
+  older_date: 'Older',
 
   memo_destination_tag_title: 'Destination Tag',
   memo_memo_title: 'Transaction Memo',
@@ -1368,6 +1377,14 @@ const strings = {
   // Stake
   stake_estimated_return: 'Estimated Return: %s',
   stake_estimated_apr_s: '%s Estimated APR',
+  stake_stake_1s: 'Stake: %1$s',
+  stake_staked_1s: 'Staked: %1$s',
+  stake_earn_1s: 'Earn: %1$s',
+  stake_earning_1s: 'Earning: %1$s',
+
+  stake_apy_1s: '%1$s APY',
+  stake_variable_apy: 'Variable APY',
+
   stake_s_staked: '%s Staked',
   stake_s_earned: '%s Earned',
   stake_s_unstaked: '%s Unstaked',
@@ -1424,8 +1441,6 @@ const strings = {
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
-  fiat_plugin_buy_currencycode: 'Buy %s', // TODO: string key convention
-  fiat_plugin_sell_currencycode_s: 'Sell %s',
   fiat_plugin_sell_network_fee: 'Sell Network Fee',
   fiat_plugin_amount_currencycode: 'Amount %s',
   fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
@@ -1619,6 +1634,14 @@ const strings = {
   button_support: 'Contact Support',
 
   // #endregion Home
+
+  // #region UK Compliance
+
+  uk_ways_to_buy_1s: 'Ways to Buy %1$s',
+  uk_ways_to_sell_1s: 'Ways to Sell %1$s',
+  uk_get_quote_provider_1s: 'Get %1$s Quote from 3rd Party Provider',
+
+  // #endregion UK Compliance
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',

@@ -22,8 +22,8 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
+import { getMemoTitle } from '../../util/memoUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor, removeIsoPrefix } from '../../util/utils'
-import { getMemoTitle } from '../../util/validateMemos'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -50,11 +50,12 @@ interface Props extends EdgeSceneProps<'transactionDetails'> {
 export interface TransactionDetailsParams {
   edgeTransaction: EdgeTransaction
   walletId: string
+  onDone?: () => void
 }
 
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { edgeTransaction: transaction, walletId } = route.params
+  const { edgeTransaction: transaction, walletId, onDone } = route.params
   const { currencyCode, metadata, nativeAmount, date, txid, tokenId } = transaction
   const { currencyInfo } = wallet
 
@@ -143,6 +144,8 @@ const TransactionDetailsComponent = (props: Props) => {
       })
       .catch(error => showError(error))
   })
+
+  const handleDone = useHandler(() => (onDone == null ? navigation.pop() : onDone()))
 
   // #endregion Crypto Fiat Rows
 
@@ -413,7 +416,7 @@ const TransactionDetailsComponent = (props: Props) => {
         <ButtonsView
           layout="column"
           primary={{
-            onPress: navigation.pop,
+            onPress: handleDone,
             label: lstrings.string_done_cap
           }}
           parentType="scene"

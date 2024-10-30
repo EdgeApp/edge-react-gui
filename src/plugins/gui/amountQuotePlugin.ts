@@ -2,6 +2,7 @@ import { div, eq, gt, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
@@ -10,6 +11,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -127,6 +129,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
       const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotion, providerId } = params
+      const { countryCode } = await getFirstOpenInfo()
+
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -260,7 +264,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Navigate to scene to have user enter amount
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
-        headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
+        headerTitle: isBuy ? getUkCompliantString(countryCode, 'buy_1s', currencyCode) : getUkCompliantString(countryCode, 'sell_1s', currencyCode),
         initState: {
           value1: initialValue1,
           statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }

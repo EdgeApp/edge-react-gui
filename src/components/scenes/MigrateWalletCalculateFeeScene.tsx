@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -124,7 +125,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={wallet} />)
+    const { countryCode } = await getFirstOpenInfo()
+    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation} wallet={wallet} />)
   })
 
   const handleSlidingComplete = useHandler(() => {

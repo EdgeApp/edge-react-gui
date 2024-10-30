@@ -73,6 +73,7 @@ const palette = {
   grayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
+  greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
@@ -431,6 +432,18 @@ export const edgeLight: Theme = {
     elevation: 0
   },
 
+  notifcationCardShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
   dropdownListShadow: {
     shadowColor: 'white',
     shadowOffset: {
@@ -473,17 +486,16 @@ export const edgeLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  fioCardGradient: {
-    colors: [palette.purpleOp24, palette.transparent],
-    end: { x: 0, y: 1 },
-    start: { x: 1, y: 0 }
-  },
   swapCardGradient: {
     colors: [palette.pinkOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
+  earnCardGradient: {
+    colors: [palette.greenOp50, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
   txDirBgReceive: palette.greenOp60,
   txDirBgSend: palette.redOp60,
   txDirBgSwap: palette.grayOp70,

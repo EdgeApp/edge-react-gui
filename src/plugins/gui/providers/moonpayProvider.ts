@@ -203,7 +203,7 @@ export const moonpayProvider: FiatProviderFactory = {
 
         // Return nothing if paymentTypes are not supported by this provider
         const assetMap = allowedCurrencyCodes[direction][paymentType]
-        if (assetMap == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (assetMap == null || regionCode.countryCode === 'GB') throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         if (Object.keys(assetMap.crypto).length === 0 || isDailyCheckDue(lastChecked)) {
           const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
@@ -608,13 +608,13 @@ export const moonpayProvider: FiatProviderFactory = {
                           title: lstrings.fiat_plugin_sell_complete_title,
                           message
                         })
-                      } catch (e: any) {
+                      } catch (e: unknown) {
                         await showUi.exitScene()
                         // Reopen the webivew on the Paybis payment screen
                         await openWebView()
-                        if (e.message === SendErrorNoTransaction) {
+                        if (e instanceof Error && e.message === SendErrorNoTransaction) {
                           await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
-                        } else if (e.message === SendErrorBackPressed) {
+                        } else if (e instanceof Error && e.message === SendErrorBackPressed) {
                           // Do nothing
                         } else {
                           await showUi.showError(e)

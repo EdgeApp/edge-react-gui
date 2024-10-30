@@ -3,10 +3,10 @@ import { EdgeAssetActionType } from 'edge-core-js'
 import { lstrings } from '../locales/strings'
 
 export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
-  buy: lstrings.fiat_plugin_buy_currencycode,
+  buy: lstrings.transaction_details_bought_1s,
   claim: lstrings.transaction_details_claim,
   claimOrder: lstrings.transaction_details_claim_order,
-  sell: lstrings.fiat_plugin_sell_currencycode_s,
+  sell: lstrings.transaction_details_sold_1s,
   sellNetworkFee: lstrings.fiat_plugin_sell_network_fee,
   swap: lstrings.transaction_details_swap,
   swapNetworkFee: lstrings.transaction_details_swap_network_fee,
