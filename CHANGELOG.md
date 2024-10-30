@@ -31,6 +31,7 @@
 - fixed: Remove Kado deposit details for "Sell" orders.
 - fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
+- fixed: Fix `currencyWallets` object reference in deep link paths that support wallet creation
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
 - removed: Moonpay, Simplex, and Paybis for UK
