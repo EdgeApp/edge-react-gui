@@ -7,6 +7,10 @@
 - added: Add TON
 - added: Log swap errors to Sentry.
 - added: Tracking for unexpected fiat provider errors.
+- changed: Redesign `StakingReturnsCard,` specifically for `StakeOverviewScene`
+- changed: `EarnScene` shows all possible stake options, instead of only those for enabled wallets
+- changed: `EarnScene` shows one card per stake option if multiple wallets have stake positions on that stake option
+- changed: `EarnScene` only intializes stake options once, regardless of re-navigation to the scene
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
