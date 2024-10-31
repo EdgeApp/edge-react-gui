@@ -17,7 +17,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -33,7 +33,7 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'loanDashboard'> {}
+interface Props extends EdgeAppSceneProps<'loanDashboard'> {}
 
 // First-element is the default wallet plugin used to create new wallet
 const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']
@@ -112,7 +112,7 @@ export const LoanDashboardScene = (props: Props) => {
       const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
-          navigation={navigation}
+          navigation={navigation as NavigationBase}
           headerTitle={lstrings.select_wallet}
           allowedAssets={allowedAssets}
           excludeWalletIds={Object.keys(loanAccountsMap)}

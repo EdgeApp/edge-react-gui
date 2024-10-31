@@ -6,7 +6,7 @@ import TestRenderer from 'react-test-renderer'
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 let account: EdgeAccount | undefined
 
@@ -17,7 +17,7 @@ describe('EdgeLoginScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <EdgeLoginScene
-          {...fakeSceneProps('edgeLogin', {
+          {...fakeEdgeAppSceneProps('edgeLogin', {
             lobbyId: 'AmNsSBDVeF2837'
           })}
         />

@@ -30,6 +30,13 @@ export function makeErrorLog(error: unknown): string {
  * @returns A translated, human-friendly string (in many cases).
  */
 export function translateError(error: unknown): string {
+  // Translate each individual error:
+  if (Array.isArray(error)) {
+    // Join multiple errors together separated by a semi-colon. This should
+    // also flatten nested arrays because of the recursion.
+    return error.map(translateError).join('; ')
+  }
+
   // GUI Error types:
   if (error instanceof PaymentProtoError) return translatePaymentProtoError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)

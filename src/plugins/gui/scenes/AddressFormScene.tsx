@@ -18,7 +18,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { ADDRESS_FORM_DISKLET_NAME, asHomeAddress, HomeAddress } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { GuiFormField } from '../components/GuiFormField'
@@ -31,7 +31,7 @@ export interface FiatPluginAddressFormParams {
   onClose: () => void
 }
 
-interface Props extends EdgeSceneProps<'guiPluginAddressForm'> {}
+interface Props extends BuyTabSceneProps<'guiPluginAddressForm'> {}
 
 const FUZZY_SEARCH_INTERVAL = 2000
 // Make this a fractional number so the user can tell that there are more

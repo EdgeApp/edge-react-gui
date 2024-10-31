@@ -24,14 +24,7 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
   const tagMessage = tag == null ? '' : ` Tag: ${tag}.`
   const translatedMessage = translateError(error) + tagMessage
   if (doTrackError) {
-    if (error instanceof Error) {
-      // Log error with stack trace and a translated message to bug tracker
-      error.message = translatedMessage
-      trackError(error)
-    } else {
-      // Any other types we just send the translated message to bug tracker
-      trackError(translatedMessage)
-    }
+    trackError(error)
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
 
@@ -84,7 +77,7 @@ export function showWarning(error: unknown, options: ShowErrorWarningOptions = {
   const { trackError: doTrackError = true, tag } = options
   const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
   if (doTrackError) {
-    trackError(`showWarning: ${translatedError}`)
+    trackError(error, tag)
   }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />).catch(err => console.error(err))

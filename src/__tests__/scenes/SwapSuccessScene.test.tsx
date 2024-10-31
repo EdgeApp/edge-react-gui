@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { SwapSuccessScene } from '../../components/scenes/SwapSuccessScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -63,7 +63,7 @@ describe('SwapSuccessSceneComponent', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <SwapSuccessScene
-          {...fakeSceneProps('swapSuccess', {
+          {...fakeEdgeAppSceneProps('swapSuccess', {
             walletId: fakeCoreWallet.id,
             edgeTransaction: {
               blockHeight: 0,

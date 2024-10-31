@@ -5,7 +5,7 @@ import { activatePromotion, removePromotion } from '../../actions/AccountReferra
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -14,7 +14,7 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSubHeader } from '../settings/SettingsSubHeader'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface OwnProps extends EdgeSceneProps<'promotionSettings'> {}
+interface OwnProps extends EdgeAppSceneProps<'promotionSettings'> {}
 
 interface StateProps {
   accountReferral: AccountReferral

@@ -7,7 +7,7 @@ function makeNativeHeaders() {
   // Grab the API key:
   let apiKey = 'Error: Set up env.json & re-run scripts/makeNativeHeaders.js'
   try {
-    apiKey = require('../env.json').AIRBITZ_API_KEY
+    apiKey = require('../env.json').EDGE_API_KEY
   } catch (e) {
     console.log(apiKey)
   }

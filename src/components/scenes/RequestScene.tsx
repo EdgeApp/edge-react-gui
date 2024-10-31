@@ -18,7 +18,7 @@ import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -51,7 +51,7 @@ export interface RequestParams {
   walletId: string
 }
 
-interface OwnProps extends EdgeSceneProps<'request'> {
+interface OwnProps extends EdgeAppSceneProps<'request'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -260,7 +260,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   handleOpenWalletListModal = async () => {
     const { navigation } = this.props
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation as NavigationBase} />
     ))
     if (result?.type === 'wallet') {
       const { walletId, tokenId } = result
@@ -297,7 +297,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
         <SceneHeader title={lstrings.fragment_request_subtitle} underline withTopMargin />
         <View style={styles.container}>
           <EdgeText numberOfLines={0} style={styles.backupText}>
-            {lstrings.backup_for_transfer_message}
+            {sprintf(lstrings.backup_for_transfer_message, config.appName)}
           </EdgeText>
           <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
         </View>
@@ -650,7 +650,7 @@ export const RequestScene = withWallet((props: OwnProps) => {
       wallet={wallet}
       refreshAllFioAddresses={async () => await dispatch(refreshAllFioAddresses())}
       onSelectWallet={async (walletId: string, tokenId: EdgeTokenId) => {
-        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+        await dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
       }}
       toggleAccountBalanceVisibility={() => dispatch(toggleAccountBalanceVisibility())}
     />

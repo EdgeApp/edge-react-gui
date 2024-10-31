@@ -70,6 +70,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:tron',
   'wallet:polkadot',
   'wallet:optimism',
+  'wallet:ton',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -509,6 +510,13 @@ export const SPECIAL_CURRENCY_INFO: {
       namespace: 'cosmos',
       reference: 'osmosis-1'
     }
+  },
+  ton: {
+    initWalletName: lstrings.string_first_ton_wallet_name,
+    chainCode: 'TON',
+    dummyPublicAddress: 'UQAc_4sYewa5e5eN1D3nrt9wDy2akCCQ3VyNlhcxF4VozlO5',
+    isImportKeySupported: false,
+    noChangeMiningFee: true
   },
   thorchainrune: {
     initWalletName: lstrings.string_first_thorchainrune_wallet_name,

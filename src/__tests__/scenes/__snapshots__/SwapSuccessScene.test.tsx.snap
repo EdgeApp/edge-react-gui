@@ -511,7 +511,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
                 }
                 type="warning"
               >
-                Guest Account
+                Create Username & Password
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
@@ -535,7 +535,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
                 }
                 type="warning"
               >
-                Tap to create a username and password
+                Funds will be lost if your device is lost or Edge is uninstalled.
               </Text>
             </View>
           </View>

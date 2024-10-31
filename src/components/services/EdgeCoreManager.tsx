@@ -14,6 +14,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
+import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { isMaestro } from '../../util/maestro'
@@ -29,7 +30,8 @@ const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 interface Props {}
 
 const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.AIRBITZ_API_KEY,
+  apiKey: ENV.EDGE_API_KEY,
+  apiSecret: ENV.EDGE_API_SECRET,
   appId: '',
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
 
@@ -67,8 +69,20 @@ const crashReporter: EdgeCrashReporter = {
     })
   },
   logCrash(event) {
-    const eventString = JSON.stringify(event, null, 2)
-    captureException(eventString, { level: 'fatal' })
+    // Index the crash error by the source and original error name:
+    const error = new Error(`${event.source}: ${String(event.error)}`)
+    // All of these crash errors are grouped together using this error name:
+    error.name = 'EdgeCrashLog'
+
+    captureException(error, scope => {
+      scope.setLevel('fatal')
+
+      const context: Record<string, unknown> = {}
+      addMetadataToContext(context, event.metadata)
+      scope.setContext('Edge Crash Metadata', context)
+
+      return scope
+    })
   }
 }
 

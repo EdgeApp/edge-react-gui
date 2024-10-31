@@ -19,7 +19,7 @@ import {
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
@@ -54,7 +54,7 @@ export interface StakeModifyParams {
   modification: ChangeQuoteRequest['action']
 }
 
-interface Props extends EdgeSceneProps<'stakeModify'> {
+interface Props extends EdgeAppSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
 

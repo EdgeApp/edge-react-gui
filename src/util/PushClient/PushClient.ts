@@ -13,7 +13,7 @@ import {
 import { ENV } from '../../env'
 import { base58 } from '../encoding'
 
-const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
+const { ACTION_QUEUE, EDGE_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
 
 export interface PushClient {
@@ -46,7 +46,7 @@ export const makePushClient = (account: EdgeAccount, clientId: string): PushClie
     getPushRequestBody(payload?: LoginUpdatePayload): PushRequestBody {
       const data = payload != null ? wasLoginUpdatePayload(payload) : undefined
       return {
-        apiKey: AIRBITZ_API_KEY,
+        apiKey: EDGE_API_KEY,
         deviceId: clientId,
         loginId: base58.parse(account.rootLoginId),
         data

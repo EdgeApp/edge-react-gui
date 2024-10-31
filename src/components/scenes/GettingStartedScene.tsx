@@ -24,7 +24,7 @@ import { ExperimentConfig, UspSigninCtaType } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { RootSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
@@ -43,7 +43,7 @@ export interface GettingStartedParams {
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
 }
 
-interface Props extends EdgeSceneProps<'gettingStarted'> {}
+interface Props extends RootSceneProps<'gettingStarted'> {}
 
 interface SectionData {
   image: ImageProp

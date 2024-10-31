@@ -17,7 +17,7 @@ import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSele
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
@@ -41,7 +41,7 @@ export interface TransactionListParams {
 }
 
 type ListItem = EdgeTransaction | string | null
-interface Props extends EdgeSceneProps<'transactionList'> {
+interface Props extends WalletsTabSceneProps<'transactionList'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -150,7 +150,7 @@ function TransactionListComponent(props: Props) {
     async () => {
       if (unactivatedTokenIds.length > 0) {
         if (unactivatedTokenIds.some(unactivatedTokenId => unactivatedTokenId === tokenId)) {
-          await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
+          await dispatch(activateWalletTokens(navigation as NavigationBase, wallet, [tokenId]))
         }
       }
     },
@@ -218,7 +218,7 @@ function TransactionListComponent(props: Props) {
         <InfoCardCarousel
           enterAnim={fadeInDown10}
           cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
-          navigation={navigation}
+          navigation={navigation as NavigationBase}
           countryCode={route.params.countryCode}
           screenWidth={screenWidth}
         />
@@ -251,7 +251,7 @@ function TransactionListComponent(props: Props) {
     }
     return (
       <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
+        <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )
   })

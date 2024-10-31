@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {
   const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children
@@ -33,7 +33,7 @@ describe('CreateWalletImportScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
         <CreateWalletImportScene
-          {...fakeSceneProps('createWalletImport', {
+          {...fakeEdgeAppSceneProps('createWalletImport', {
             createWalletList: [
               {
                 type: 'create',
