@@ -176,6 +176,7 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
   solana: 'solana',
   stellar: 'stellar',
   tron: 'tron',
+  ton: 'ton',
   zksync: 'zksync'
 }
 
