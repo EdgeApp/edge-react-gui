@@ -22,11 +22,7 @@
 - removed: Moonpay, Simplex, and Paybis for UK
 - removed: UK persistent investment risk banner
 
-## 4.15.1
-
-- fixed: "Apple Pay" title per latest branding requirements
-
-## 4.16.0
+## 4.16.0 (2024-10-30)
 
 - added: "Transaction Details" button to `SwapSuccessScene`
 - added: `WalletRestoreScene`
@@ -51,6 +47,10 @@
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: ACH sell option for Florida visible with no accepted currencies
 - fixed: Slow `TransactionDetailsScene` navigation on slow networks
+
+## 4.15.1 (2024-10-21)
+
+- fixed: "Apple Pay" title per latest branding requirements
 
 ## 4.15.0 (2024-10-16)
 
