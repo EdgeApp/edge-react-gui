@@ -42,11 +42,15 @@ export const SwapSuccessScene = (props: Props) => {
 
   const handleDone = useHandler(() => {
     setShowButton(false)
+    // Reset swap navigation stack:
     navigation.navigate('edgeTabs', { screen: 'swapTab', params: { screen: 'swapCreate' } })
   })
 
   const handleTransactionDetails = useHandler(() => {
-    navigation.replace('transactionDetails', { edgeTransaction, walletId, onDone: handleDone })
+    // Reset swap navigation stack:
+    navigation.navigate('edgeTabs', { screen: 'swapTab', params: { screen: 'swapCreate' } })
+    // Navigate to transaction details:
+    navigation.navigate('transactionDetails', { edgeTransaction, walletId, onDone: handleDone })
   })
 
   useAsyncEffect(
