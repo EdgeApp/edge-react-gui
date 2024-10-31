@@ -7,6 +7,7 @@
 - added: Add TON
 - added: Log swap errors to Sentry.
 - added: Tracking for unexpected fiat provider errors.
+- added: Add TON support to Banxa, Moonpay, Paybis, and Simplex fiat plugins
 - added: Add OSMO support to Moonpay fiat plugin
 - changed: Redesign `StakingReturnsCard,` specifically for `StakeOverviewScene`
 - changed: `EarnScene` shows all possible stake options, instead of only those for enabled wallets

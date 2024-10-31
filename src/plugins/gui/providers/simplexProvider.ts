@@ -115,6 +115,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   solana: { KIN: 'KIN', SOL: 'SOL' },
   stellar: { XLM: 'XLM' },
   tezos: { XTZ: 'XTZ' },
+  ton: { TON: 'TON', USDT: 'USDT-TON' },
   tron: {
     BTT: 'BTT',
     KLV: 'KLV',
