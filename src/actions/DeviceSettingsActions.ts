@@ -1,6 +1,6 @@
 import { makeReactNativeDisklet } from 'disklet'
 
-import { asDeviceSettings, DefaultScreen, DeviceNotifDismissInfo, DeviceSettings } from '../types/types'
+import { asDeviceNotifInfo, asDeviceSettings, DefaultScreen, DeviceNotifInfo, DeviceNotifState, DeviceSettings } from '../types/types'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
@@ -66,15 +66,40 @@ export const writeForceLightAccountCreate = async (forceLightAccountCreate: bool
 }
 
 /**
- * Track the state of whether particular one-time notifications associated with
- * the device were interacted with or dismissed.
+ * Manage the state of local notifications, used by both `NotificationView` and
+ * `NotificationCenterScene`
  **/
-export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: DeviceNotifDismissInfo) => {
-  const updatedSettings: DeviceSettings = {
-    ...deviceSettings,
-    deviceNotifDismissInfo
-  }
+const writeDeviceNotifState = async (deviceNotifState: DeviceNotifState) => {
+  const updatedSettings: DeviceSettings = { ...deviceSettings, deviceNotifState }
   return await writeDeviceSettings(updatedSettings)
+}
+
+/**
+ * Overwrite the values of local notifications or create new values per specific
+ * `deviceNotifState` key *with default values* unioned with provided
+ * `deviceNotifInfo.`
+ * Used by both `NotificationView` and `NotificationCenterScene`
+ **/
+export const createDeviceNotifInfo = async (deviceNotifStateKey: string, deviceNotifInfo: DeviceNotifInfo = {}) => {
+  return await writeDeviceNotifState({ ...deviceSettings.deviceNotifState, [deviceNotifStateKey]: { ...asDeviceNotifInfo(deviceNotifInfo) } })
+}
+
+/**
+ * Modify existing state of local notifications per specific `deviceNotifState`
+ * key with *existing values* unioned with provided `deviceNotifInfo.`
+ *
+ * If the particular key does not exist, it is created with default values.
+ *
+ * Used by both `NotificationView` and `NotificationCenterScene`
+ **/
+export const modifyDeviceNotifInfo = async (deviceNotifStateKey: string, deviceNotifInfo: Partial<DeviceNotifInfo> = {}) => {
+  if (deviceSettings.deviceNotifState[deviceNotifStateKey] == null) {
+    console.warn('modifyDeviceNotifInfo: deviceNotifStateKey does not exist. Creating with default values.')
+  }
+  return await createDeviceNotifInfo(deviceNotifStateKey, {
+    ...deviceSettings.deviceNotifState[deviceNotifStateKey],
+    ...asDeviceNotifInfo(deviceNotifInfo)
+  })
 }
 
 /**
