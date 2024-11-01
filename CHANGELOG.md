@@ -17,6 +17,7 @@
 - fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError
 - fixed: Normalized error messages for tracking; removing localization from error messages.
+- fixed: Remove Kado deposit details for "Sell" orders.
 - fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
 - removed: Bank Wire Transfer Buy for Florida
