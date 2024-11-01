@@ -295,7 +295,7 @@ export const asEnvConfig = asObject({
       thorname: asOptional(asString, 'ej')
     }).withRest
   ),
-  THORCHAIN_DA_INIT: asCorePluginInit(
+  SWAPKIT_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),
