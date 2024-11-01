@@ -113,7 +113,7 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
  * Track the state of whether particular one-time notifications associated with
  * the account were interacted with or dismissed.
  **/
-export const writeNotifDismissInfo = async (account: EdgeAccount, accountNotifDismissInfo: AccountNotifDismissInfo) => {
+export const writeAccountNotifDismissInfo = async (account: EdgeAccount, accountNotifDismissInfo: AccountNotifDismissInfo) => {
   const updatedSettings = { ...localAccountSettings, accountNotifDismissInfo }
   return await writeLocalAccountSettings(account, updatedSettings)
 }
