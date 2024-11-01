@@ -408,6 +408,7 @@ interface GetQuoteParams {
 
 interface WidgetParams {
   apiKey: string
+  hideDepositDetails: boolean
   isMobileWebview: true
   mode: 'minimal'
   network: string
@@ -617,6 +618,7 @@ export const kadoProvider: FiatProviderFactory = {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
                 fiatMethodList,
+                hideDepositDetails: true,
                 isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
@@ -633,6 +635,7 @@ export const kadoProvider: FiatProviderFactory = {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
                 fiatMethodList,
+                hideDepositDetails: true,
                 isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
