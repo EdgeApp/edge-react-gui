@@ -178,6 +178,7 @@ export type EdgeAppStackParamList = {} & {
   migrateWalletCompletion: MigrateWalletCompletionParams
   migrateWalletSelectCrypto: MigrateWalletSelectCryptoParams
   notificationSettings: undefined
+  notificationCenter: undefined
   otpRepair: OtpRepairParams
   otpSetup: undefined
   passwordRecovery: undefined

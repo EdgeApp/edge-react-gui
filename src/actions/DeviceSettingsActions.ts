@@ -96,6 +96,16 @@ export const modifyDeviceNotifInfo = async (deviceNotifStateKey: string, deviceN
   })
 }
 
+/** Returns 0 if any priority notifications exist, number of incomplete
+ * notifications otherwise. */
+export const getNotifNumber = (): number | undefined => {
+  const { deviceNotifState } = getDeviceSettings()
+  const priorityNotifs = Object.values(deviceNotifState).filter(deviceNotifInfo => deviceNotifInfo.isPriority).length
+  const incompleteNotifs = Object.values(deviceNotifState).filter(deviceNotifInfo => !deviceNotifInfo.isCompleted).length
+
+  return priorityNotifs > 0 ? 0 : incompleteNotifs
+}
+
 /**
  * Track the state of whether the "How did you Discover Edge" modal was shown.
  **/
