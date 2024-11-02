@@ -272,6 +272,14 @@ export function SideMenu(props: DrawerContentComponentProps) {
     }
   ]
 
+  if (ENV.FIO_INIT == null || ENV.FIO_INIT === false) {
+    // Remove FIO rows
+    let index = rowDatas.findIndex(row => row.title === lstrings.drawer_fio_names)
+    if (index >= 0) rowDatas.splice(index, 1)
+    index = rowDatas.findIndex(row => row.title === lstrings.drawer_fio_requests)
+    if (index >= 0) rowDatas.splice(index, 1)
+  }
+
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
