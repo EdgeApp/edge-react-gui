@@ -1,95 +1,130 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { toFixed } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { StakePolicy } from '../../plugins/stake-plugins/types'
-import { getPolicyIconUris } from '../../util/stakeUtils'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
+import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { TitleText } from '../text/TitleText'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
-interface Props {
-  stakePolicy: StakePolicy
-  wallet: EdgeCurrencyWallet
-
-  countryCode?: string
-  /** If false, show "Stake"/"Earn"
-   * If true, show "Staked"/"Earned" */
-  isOpenPosition?: boolean
-  onPress?: () => void
+interface StakingReturnsCardParams {
+  fromCurrencyLogos: string[]
+  toCurrencyLogos: string[]
+  apy?: number
+  stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingReturnsCard(props: Props) {
+export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, stakeProviderInfo }: StakingReturnsCardParams) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { stakePolicy, wallet, isOpenPosition, countryCode, onPress } = props
-  const { apy, yieldType, stakeProviderInfo } = stakePolicy
+  const renderArrow = () => {
+    return (
+      <View style={styles.arrowContainer}>
+        <View style={styles.arrowTopLine} />
+        <View style={styles.arrowBase} />
+        <View style={styles.arrowBottomLine} />
+      </View>
+    )
+  }
 
-  const { stakeAssets, rewardAssets } = stakePolicy
-  const stakeCurrencyCodes = stakeAssets.map(asset => asset.currencyCode).join(' + ')
-  const rewardCurrencyCodes = rewardAssets.map(asset => asset.currencyCode).join(', ')
+  const renderEstimatedReturn = () => {
+    if (apy == null || apy <= 0) return null
+    const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
+    return <EdgeText>{sprintf(lstrings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
+  }
 
-  const stakeText = sprintf(isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s, stakeCurrencyCodes)
-  const rewardText = isOpenPosition
-    ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
-    : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
-
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
-
-  const variablePrefix = yieldType === 'stable' ? '' : '~ '
-  const apyText = apy == null || apy <= 0 ? lstrings.stake_variable_apy : variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+  const renderStakeProvider = () => {
+    if (stakeProviderInfo == null) return null
+    const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
+    const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
+    return (
+      <View style={styles.swapProvider}>
+        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
+      </View>
+    )
+  }
 
   return (
-    <EdgeCard onPress={onPress}>
-      <View style={styles.contentContainer}>
-        <View style={styles.textContainer}>
-          <TitleText>{stakeText}</TitleText>
-          <EdgeText style={styles.rewardText}>{rewardText}</EdgeText>
-          <EdgeText style={styles.apyText}>{apyText}</EdgeText>
-          <EdgeText style={styles.providerText} numberOfLines={1}>{`${lstrings.plugin_powered_by_space}${stakeProviderInfo.displayName}`}</EdgeText>
-        </View>
-
-        <PairIcons icons={policyIcons.stakeAssetUris} />
+    <EdgeCard>
+      <View style={styles.iconsContainer}>
+        <PairIcons icons={fromCurrencyLogos} />
+        {renderArrow()}
+        <PairIcons icons={toCurrencyLogos} />
+      </View>
+      <View style={styles.textContainer}>
+        {renderEstimatedReturn()}
+        {renderStakeProvider()}
       </View>
     </EdgeCard>
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  contentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  textContainer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    justifyContent: 'center',
-    padding: theme.rem(0.5)
-  },
-  rewardText: {
-    fontSize: theme.rem(0.8),
-    marginTop: theme.rem(1),
-    marginBottom: theme.rem(0.15)
-  },
-  apyText: {
-    fontSize: theme.rem(0.8),
-    color: theme.positiveText,
-    marginVertical: theme.rem(0.15)
-  },
-  providerIcon: {
-    width: theme.rem(1),
-    height: theme.rem(1),
-    marginRight: theme.rem(0.25)
-  },
-  providerText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
+const getStyles = cacheStyles((theme: Theme) => {
+  const commonArrow: ViewStyle = {
+    position: 'absolute',
+    width: theme.thinLineWidth * 2,
+    height: theme.rem(0.625),
+    right: 0 + theme.thinLineWidth * 1.5,
+    borderRadius: theme.thinLineWidth,
+    backgroundColor: theme.icon
   }
-}))
+  return {
+    container: {
+      flexDirection: 'row',
+      minWidth: theme.rem(10),
+      marginTop: theme.rem(1.5)
+    },
+    iconsContainer: {
+      flexDirection: 'row',
+      marginVertical: theme.rem(0.5),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    textContainer: {
+      alignItems: 'center',
+      margin: theme.rem(0.5),
+      borderColor: theme.lineDivider,
+      minWidth: theme.rem(15)
+    },
+    swapProvider: {
+      marginTop: theme.rem(0.25),
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    swapProviderIcon: {
+      width: theme.rem(0.625),
+      height: theme.rem(0.625),
+      marginRight: theme.rem(0.5)
+    },
+    swapProviderText: {
+      fontSize: theme.rem(0.75),
+      color: theme.secondaryText
+    },
+    arrowContainer: {
+      flexDirection: 'row'
+    },
+    arrowBase: {
+      width: theme.rem(3),
+      height: theme.thinLineWidth * 2,
+      borderRadius: theme.thinLineWidth,
+      backgroundColor: theme.icon
+    },
+    arrowTopLine: {
+      ...commonArrow,
+      bottom: 0 - theme.thinLineWidth * 1.325,
+      transform: [{ rotateZ: '-45deg' }]
+    },
+    arrowBottomLine: {
+      ...commonArrow,
+      top: 0 - theme.thinLineWidth * 1.325,
+      transform: [{ rotateZ: '45deg' }]
+    }
+  }
+})
