@@ -33,6 +33,11 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
   const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
   const integrationContract = KilnLiquid20A__factory.connect(contractAddress, provider)
 
+  // Metadata constants:
+  const metadataName = 'Kiln Pooled Staking'
+  const stakeAsset = policyConfig.stakeAssets[0]
+  const metadataPoolAssetName = stakeAsset.currencyCode
+
   async function prepareChangeQuote(walletSigner: EdgeWalletSigner, tx: ethers.PopulatedTransaction, allocations: QuoteAllocation[]): Promise<ChangeQuote> {
     if (tx.gasLimit == null) {
       const estimatedGasLimit = await walletSigner.estimateGas(tx)
@@ -108,7 +113,14 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         gasLimit: '500000',
         maxFeePerGas,
         maxPriorityFeePerGas,
-        nonce: nextNonce()
+        nonce: nextNonce(),
+        customData: {
+          metadata: {
+            name: metadataName,
+            category: 'Income:Claim',
+            notes: `Claim ${metadataPoolAssetName} rewards`
+          }
+        }
       })
 
       return await prepareChangeQuote(walletSigner, tx, allocations)
@@ -122,7 +134,14 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         maxFeePerGas,
         maxPriorityFeePerGas,
         nonce: nextNonce(),
-        value: requestNativeAmount
+        value: requestNativeAmount,
+        customData: {
+          metadata: {
+            name: metadataName,
+            category: 'Transfer:Staking',
+            notes: `Stake ${metadataPoolAssetName}`
+          }
+        }
       })
 
       const allocations: QuoteAllocation[] = [
@@ -144,7 +163,14 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         gasLimit: '500000',
         maxFeePerGas,
         maxPriorityFeePerGas,
-        nonce: nextNonce()
+        nonce: nextNonce(),
+        customData: {
+          metadata: {
+            name: metadataName,
+            category: 'Transfer:Unstaking',
+            notes: `Unstake ${metadataPoolAssetName}`
+          }
+        }
       })
 
       const allocations: QuoteAllocation[] = [
