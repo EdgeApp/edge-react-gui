@@ -74,17 +74,17 @@ export const EarnScene = (props: Props) => {
         if (stakePolicyMap[pluginId] != null || !isStakingSupported) continue
 
         // Initialize stake policy
-        try {
-          const stakePlugins = await getStakePlugins(pluginId)
-          stakePolicyMap[pluginId] = []
+        const stakePlugins = await getStakePlugins(pluginId)
+        stakePolicyMap[pluginId] = []
 
-          for (const stakePlugin of stakePlugins) {
-            const stakePolicies = stakePlugin.getPolicies({ pluginId })
-            const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
+        const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
+        for (const stakePlugin of stakePlugins) {
+          const stakePolicies = stakePlugin.getPolicies({ pluginId })
 
-            for (const stakePolicy of stakePolicies) {
-              const walletStakePositions = []
-              for (const wallet of matchingWallets) {
+          for (const stakePolicy of stakePolicies) {
+            const walletStakePositions = []
+            for (const wallet of matchingWallets) {
+              try {
                 // Determine if a wallet matching this policy has an open position
                 const stakePosition = await stakePlugin.fetchStakePosition({ stakePolicyId: stakePolicy.stakePolicyId, wallet, account })
                 const allocations = getPositionAllocations(stakePosition)
@@ -92,19 +92,19 @@ export const EarnScene = (props: Props) => {
                 const isPositionOpen = [...staked, ...earned, ...unstaked].some(positionAllocation => !zeroString(positionAllocation.nativeAmount))
 
                 walletStakePositions.push({ wallet, isPositionOpen, stakePosition })
+              } catch (e) {
+                showDevError(e)
               }
-
-              stakePolicyMap[pluginId].push({
-                stakePlugin,
-                stakePolicy,
-                walletStakeInfos: walletStakePositions
-              })
-              // Trigger re-render
-              setUpdateCounter(prevCounter => prevCounter + 1)
             }
+
+            stakePolicyMap[pluginId].push({
+              stakePlugin,
+              stakePolicy,
+              walletStakeInfos: walletStakePositions
+            })
+            // Trigger re-render
+            setUpdateCounter(prevCounter => prevCounter + 1)
           }
-        } catch (e) {
-          showDevError(e)
         }
       }
       setIsLoading(false)
