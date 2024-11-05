@@ -116,11 +116,15 @@ export const EarnScene = (props: Props) => {
   const renderStakeItems = (displayStakeInfo: DisplayStakeInfo, currencyInfo: EdgeCurrencyInfo) => {
     const { stakePlugin, stakePolicy, walletStakeInfos } = displayStakeInfo
 
+    const openStakePositions = walletStakeInfos.filter(walletStakeInfo => walletStakeInfo.isPositionOpen)
+
+    if (isPortfolioSelected && openStakePositions.length === 0) {
+      return null
+    }
+
     const handlePress = async () => {
       let walletId: string | undefined
       let stakePosition
-
-      const openStakePositions = walletStakeInfos.filter(walletStakeInfo => walletStakeInfo.isPositionOpen)
 
       if (walletStakeInfos.length === 1 || (isPortfolioSelected && openStakePositions.length === 1)) {
         // Only one compatible wallet if on "Discover", or only one open
