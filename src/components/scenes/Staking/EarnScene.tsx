@@ -79,7 +79,7 @@ export const EarnScene = (props: Props) => {
           stakePolicyMap[pluginId] = []
 
           for (const stakePlugin of stakePlugins) {
-            const stakePolicies = stakePlugin.getPolicies({ currencyCode: currencyConfigMap[pluginId].currencyInfo.currencyCode })
+            const stakePolicies = stakePlugin.getPolicies({ pluginId })
             const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
 
             for (const stakePolicy of stakePolicies) {

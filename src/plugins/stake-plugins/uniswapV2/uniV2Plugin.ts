@@ -13,10 +13,10 @@ export const makeUniV2StakePlugin = async (pluginId: string): Promise<StakePlugi
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
       let out: StakePolicyInfo[] = [...pluginInfo.policyInfo]
-      const { currencyCode, wallet } = filter ?? {}
+      const { currencyCode, pluginId } = filter ?? {}
 
-      if (wallet != null) {
-        out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId))
+      if (pluginId != null) {
+        out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === pluginId))
       }
       if (currencyCode != null) {
         out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode))
