@@ -20,6 +20,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { makeCheckDue } from './common'
 import { ProviderSupportStore } from './ProviderSupportStore'
 
 const providerId = 'bity'
@@ -364,6 +365,7 @@ export const bityProvider: FiatProviderFactory = {
     const { apiKeys, getTokenId } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
+    const isCheckDue = makeCheckDue(1000 * 60 * 60) // 1 hour
     const supportedAssets = new ProviderSupportStore(providerId)
 
     // Bit supports buy and sell directions
@@ -397,55 +399,58 @@ export const bityProvider: FiatProviderFactory = {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
 
-        const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
-        if (response == null || !response.ok) {
-          console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
-          return supportedAssets.getFiatProviderAssetMap({
-            direction,
-            region,
-            payment
-          })
-        }
+        if (isCheckDue()) {
+          const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
+          if (response == null || !response.ok) {
+            console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
+            isCheckDue(true)
+            return supportedAssets.getFiatProviderAssetMap({
+              direction,
+              region,
+              payment
+            })
+          }
 
-        const result = await response.json()
-        let bityCurrencies: BityCurrency[] = []
-        try {
-          bityCurrencies = asBityCurrencyResponse(result).currencies
-        } catch (error: any) {
-          console.error(error)
-          return supportedAssets.getFiatProviderAssetMap({
-            direction,
-            region,
-            payment
-          })
-        }
+          const result = await response.json()
+          let bityCurrencies: BityCurrency[] = []
+          try {
+            bityCurrencies = asBityCurrencyResponse(result).currencies
+          } catch (error: any) {
+            console.error(error)
+            return supportedAssets.getFiatProviderAssetMap({
+              direction,
+              region,
+              payment
+            })
+          }
 
-        for (const currency of bityCurrencies) {
-          if (currency.tags.length === 1 && currency.tags[0] === 'fiat') {
-            const fiatCurrencyCode = 'iso:' + currency.code.toUpperCase()
-            supportedAssets.add.direction('*').region('*').fiat(fiatCurrencyCode).payment('*')
-            supportedAssets.addFiatInfo(fiatCurrencyCode, currency)
-          } else if (currency.tags.includes('crypto')) {
-            // Bity reports cryptos with a set of multiple tags such that there is
-            // overlap, such as USDC being 'crypto', 'ethereum', 'erc20'.
-            const pluginId = currency.tags.includes('erc20') && currency.tags.includes('ethereum') ? 'ethereum' : CURRENCY_PLUGINID_MAP[currency.code]
-            if (pluginId == null) continue
+          for (const currency of bityCurrencies) {
+            if (currency.tags.length === 1 && currency.tags[0] === 'fiat') {
+              const fiatCurrencyCode = 'iso:' + currency.code.toUpperCase()
+              supportedAssets.add.direction('*').region('*').fiat(fiatCurrencyCode).payment('*')
+              supportedAssets.addFiatInfo(fiatCurrencyCode, currency)
+            } else if (currency.tags.includes('crypto')) {
+              // Bity reports cryptos with a set of multiple tags such that there is
+              // overlap, such as USDC being 'crypto', 'ethereum', 'erc20'.
+              const pluginId = currency.tags.includes('erc20') && currency.tags.includes('ethereum') ? 'ethereum' : CURRENCY_PLUGINID_MAP[currency.code]
+              if (pluginId == null) continue
 
-            const tokenId = getTokenId(pluginId, currency.code)
-            if (tokenId === undefined) continue
+              const tokenId = getTokenId(pluginId, currency.code)
+              if (tokenId === undefined) continue
 
-            // If token is not in the no-KYC list do not add it
-            const list = noKycCurrencyCodes[direction].crypto[pluginId]
-            if (list == null || !list.some(t => t.tokenId === tokenId)) {
-              continue
+              // If token is not in the no-KYC list do not add it
+              const list = noKycCurrencyCodes[direction].crypto[pluginId]
+              if (list == null || !list.some(t => t.tokenId === tokenId)) {
+                continue
+              }
+
+              const crypto = `${pluginId}:${tokenId}`
+              supportedAssets.add.direction('*').region('*').fiat('*').payment('*').crypto(crypto)
+              supportedAssets.addCryptoInfo(crypto, currency)
+            } else {
+              // Unhandled combination not caught by cleaner. Skip to be safe.
+              console.log('Unhandled Bity supported currency: ', currency)
             }
-
-            const crypto = `${pluginId}:${tokenId}`
-            supportedAssets.add.direction('*').region('*').fiat('*').payment('*').crypto(crypto)
-            supportedAssets.addCryptoInfo(crypto, currency)
-          } else {
-            // Unhandled combination not caught by cleaner. Skip to be safe.
-            console.log('Unhandled Bity supported currency: ', currency)
           }
         }
 
