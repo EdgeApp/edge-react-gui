@@ -9,6 +9,7 @@
 - added: Tracking for unexpected fiat provider errors.
 - added: Add TON support to Banxa, Moonpay, Paybis, and Simplex fiat plugins
 - added: Add OSMO support to Moonpay fiat plugin
+- added: New post-install survey option for "BTCTKVR Magazine".
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
