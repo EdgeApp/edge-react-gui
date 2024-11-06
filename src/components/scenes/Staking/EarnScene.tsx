@@ -25,6 +25,9 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 
 interface Props extends EdgeAppSceneProps<'earnScene'> {}
 
+let USERNAME: string | undefined
+let STAKE_POLICY_MAP: StakePolicyMap = {}
+
 export interface EarnSceneParams {}
 
 interface WalletStakeInfo {
@@ -49,6 +52,11 @@ export const EarnScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  if (USERNAME !== account.username) {
+    // Reset local variable if user changes
+    USERNAME = account.username
+    STAKE_POLICY_MAP = {}
+  }
 
   const currencyConfigMap = useSelector(state => state.core.account.currencyConfig)
 
@@ -58,11 +66,7 @@ export const EarnScene = (props: Props) => {
   const [isPortfolioSelected, setIsPortfolioSelected] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
 
-  // Store `stakePolicyMap` in a ref and manage re-renders manually to avoid
-  // re-initializing it every time we enter the scene.
   const [updateCounter, setUpdateCounter] = React.useState(0)
-  const stakePolicyMapRef = React.useRef<StakePolicyMap>({})
-  const stakePolicyMap = stakePolicyMapRef.current
 
   const handleSelectEarn = useHandler(() => setIsPortfolioSelected(false))
   const handleSelectPortfolio = useHandler(() => setIsPortfolioSelected(true))
@@ -71,11 +75,11 @@ export const EarnScene = (props: Props) => {
     async () => {
       for (const pluginId of Object.keys(currencyConfigMap)) {
         const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING
-        if (stakePolicyMap[pluginId] != null || !isStakingSupported) continue
+        if (STAKE_POLICY_MAP[pluginId] != null || !isStakingSupported) continue
 
         // Initialize stake policy
         const stakePlugins = await getStakePlugins(pluginId)
-        stakePolicyMap[pluginId] = []
+        STAKE_POLICY_MAP[pluginId] = []
 
         const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
         for (const stakePlugin of stakePlugins) {
@@ -97,7 +101,7 @@ export const EarnScene = (props: Props) => {
               }
             }
 
-            stakePolicyMap[pluginId].push({
+            STAKE_POLICY_MAP[pluginId].push({
               stakePlugin,
               stakePolicy,
               walletStakeInfos: walletStakePositions
@@ -183,8 +187,8 @@ export const EarnScene = (props: Props) => {
     <SceneWrapper scroll padding={theme.rem(0.5)}>
       <EdgeSwitch labelA={lstrings.staking_discover} labelB={lstrings.staking_portfolio} onSelectA={handleSelectEarn} onSelectB={handleSelectPortfolio} />
       <SectionHeader leftTitle={lstrings.staking_earning_pools} />
-      {Object.keys(stakePolicyMap).map(pluginId =>
-        stakePolicyMap[pluginId].map(displayStakeInfo => renderStakeItems(displayStakeInfo, currencyConfigMap[pluginId].currencyInfo))
+      {Object.keys(STAKE_POLICY_MAP).map(pluginId =>
+        STAKE_POLICY_MAP[pluginId].map(displayStakeInfo => renderStakeItems(displayStakeInfo, currencyConfigMap[pluginId].currencyInfo))
       )}
       {isLoading && <ActivityIndicator style={styles.loader} size="large" color={theme.primaryText} />}
     </SceneWrapper>
