@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
+
 ## 4.17.0
 
 - added: Add TON
