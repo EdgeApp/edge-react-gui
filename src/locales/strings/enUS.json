@@ -988,7 +988,7 @@
   "personalize_wallet_title": "Personalize Your Wallet",
   "get_started_button": "Get Started",
   "not_now_button": "Not Now",
-  "scan_address_modal_title": "Enter Recipient FIO, ENS, or Public Address",
+  "scan_address_modal_title": "Enter Recipient FIO, ENS, RNS, or Public Address",
   "enter_any_title": "Enter any of the following:",
   "enter_any_body": "1. Public address to send money to\n2. Private key to sweep\n3. Wallet Connect URI to connect to a dApp\n4. Edge Login URI to login to another device\n\nEdge will auto-detect the URI format and allow you to select an appropriate wallet",
   "enter_any_input_hint": "Enter any of the above",

@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
+import { ENS_DOMAINS, RNS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
@@ -58,6 +58,8 @@ type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 export class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
+  rskProvider?: ethers.providers.JsonRpcProvider
+  rnsRegistryContract?: ethers.Contract
 
   constructor(props: Props) {
     super(props)
@@ -137,12 +139,14 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   checkIfDomain = (domain: string): boolean => {
-    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain) || this.checkIfRnsDomain(domain)
   }
 
   checkIfUnstoppableDomain = (name: string): boolean => UNSTOPPABLE_DOMAINS.some(domain => name.endsWith(domain))
 
   checkIfEnsDomain = (name: string): boolean => ENS_DOMAINS.some(domain => name.endsWith(domain))
+
+  checkIfRnsDomain = (name: string): boolean => RNS_DOMAINS.some(domain => name.endsWith(domain))
 
   fetchUnstoppableDomainAddress = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
@@ -170,6 +174,85 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return address
   }
 
+  // This approach considers resolution for tokens
+  getRnsChainIdFromPluginId = (pluginId: string): number => {
+    switch (pluginId) {
+      case 'rsk':
+        return 137
+      case 'ethereum':
+        return 60
+      case 'ethereumclassic':
+        return 61
+      case 'bitcoin':
+        return 0
+      case 'litecoin':
+        return 2
+      case 'dogecoin':
+        return 3
+      case 'dash':
+        return 5
+      case 'ripple':
+        return 144
+      case 'bitcoincash':
+        return 145
+      case 'binance':
+        return 714
+      case 'stellar':
+        return 148
+      case 'eos':
+        return 194
+      default:
+        return -1
+    }
+  }
+
+  fetchRnsAddress = async (domain: string): Promise<string> => {
+    try {
+      const chainId = this.getRnsChainIdFromPluginId(this.props.coreWallet.currencyInfo.pluginId)
+      if (chainId === -1) {
+        throw new ResolutionError('UnspecifiedCurrency', { domain })
+      }
+      if (this.rskProvider == null) {
+        const rskCurrencyInfo: EdgeCurrencyConfig = this.props.account.currencyConfig.rsk
+        const rskServerInfo = rskCurrencyInfo.currencyInfo.defaultSettings.otherSettings.rpcServers[0]
+        this.rskProvider = new ethers.providers.JsonRpcProvider(rskServerInfo)
+      }
+      if (!this.rnsRegistryContract) {
+        // REF: https://developers.rsk.co/rif/rns/architecture/registry/
+        const RNS_REGISTRY_ADDRESS = '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5' // hardcoded RNS registry address
+        this.rnsRegistryContract = new ethers.Contract(
+          RNS_REGISTRY_ADDRESS,
+          ['function resolver(bytes32 node) public view returns (address)'],
+          this.rskProvider
+        )
+      }
+      const nameHash = ethers.utils.namehash(domain)
+      const resolverAddress = await this.rnsRegistryContract.resolver(nameHash)
+      if (resolverAddress === ethers.constants.AddressZero) {
+        throw new ResolutionError('UnregisteredDomain', { domain })
+      }
+      // Check if current selected currency is on RSK chain 137 if not check for multichain address
+      let address = ''
+      if (chainId === 137) {
+        const addrResolverContract = new ethers.Contract(resolverAddress, ['function addr(bytes32 node) public view returns (address)'], this.rskProvider)
+        address = await addrResolverContract.addr(nameHash)
+      } else {
+        const multichainAddrResolverContract = new ethers.Contract(
+          resolverAddress,
+          ['function addr(bytes32 node, uint coinType) external view returns(bytes memory)'],
+          this.rskProvider
+        )
+        address = await multichainAddrResolverContract.addr(nameHash, chainId)
+      }
+      if (address === undefined || address === null) {
+        throw new ResolutionError('UnregisteredDomain', { domain })
+      }
+      return address.toLowerCase()
+    } catch (e) {
+      throw new ResolutionError('UnregisteredDomain', { domain })
+    }
+  }
+
   resolveAddress = async (domain: string, currencyTicker: string) => {
     this.setState({ errorLabel: undefined })
     if (!domain) return
@@ -179,6 +262,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
       let addr: string
       if (this.checkIfUnstoppableDomain(domain)) addr = await this.fetchUnstoppableDomainAddress(domain, currencyTicker)
       else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
+      else if (this.checkIfRnsDomain(domain)) addr = await this.fetchRnsAddress(domain)
       else {
         throw new ResolutionError('UnsupportedDomain', { domain })
       }
