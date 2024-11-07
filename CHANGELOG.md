@@ -7,6 +7,7 @@
 - added: Add TON
 - added: Log swap errors to Sentry.
 - added: Tracking for unexpected fiat provider errors.
+- added: Add OSMO support to Moonpay fiat plugin
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec

@@ -170,6 +170,7 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
   ethereum: 'ethereum',
   litecoin: 'litecoin',
   optimism: 'optimism',
+  osmosis: 'osmosis',
   polygon: 'polygon',
   ripple: 'ripple',
   solana: 'solana',
