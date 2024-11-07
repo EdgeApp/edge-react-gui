@@ -76,7 +76,12 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
   render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
-      return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+      const lowerCaseText = this.state.searchTerm.toLowerCase()
+      return (
+        FIAT_COUNTRY[entry.value]?.countryName.toLowerCase().includes(lowerCaseText) ||
+        entry.label.toLowerCase().includes(lowerCaseText) ||
+        entry.value.toLowerCase().includes(lowerCaseText)
+      )
     })
 
     return (
