@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
 
 ## 4.17.0
 

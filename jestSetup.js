@@ -245,3 +245,12 @@ jest.mock('use-context-selector', () => {
     }
   }
 })
+
+jest.mock('react-native-device-info', () => {
+  return {
+    getDeviceType: jest.fn(),
+    hasNotch: jest.fn(),
+    getBuildNumber: jest.fn(),
+    getVersion: jest.fn()
+  }
+})
