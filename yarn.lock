@@ -16373,6 +16373,11 @@ react-native-airship@^0.2.12, react-native-airship@^0.2.9:
   dependencies:
     yavent "^0.1.1"
 
+react-native-battery-optimization-check@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-battery-optimization-check/-/react-native-battery-optimization-check-1.0.8.tgz#1592e8662be02ac6dbff06e25523bf1835958a77"
+  integrity sha512-OXACVlMho/rmTg3YS2GQ0juGb7YKJTrvUnD7BMDNGpAUm6ykcgkU0i3vML76ZHRYTO1rB5Pdh4re+LeKSvVWsQ==
+
 react-native-bootsplash@^4.7.4:
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-4.7.4.tgz#5ff2b53751dcb2a380915ef6b853f3352b978a9f"
@@ -16413,10 +16418,10 @@ react-native-contacts@^7.0.4:
   version "0.1.8"
   resolved "https://github.com/adminphoeniixx/react-native-custom-tabs#7605cda9d9d691c36367e98d8513937454627ecd"
 
-react-native-device-info@^10.11.0:
-  version "10.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.11.0.tgz#2c9f378f1c3c5eb9aafa803d015b84325991a9aa"
-  integrity sha512-qRzhuYOm5ZXQi5dhfJFjDq157oipxcEW/fo0QyMm5+TI6V6/+P/tju+Hif6z0rpLCf7MV7iDVRv2Kqha4D/yvQ==
+react-native-device-info@^13.2.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-13.2.0.tgz#2b4026daf59dd08d82b6d65b63c18cb26f310ed2"
+  integrity sha512-VpTxHZsEZ7kes2alaZkB31278KuSPXfTZ4TmCCN77+bYxNnaHUDiBiQ1TSoKAOp51b7gZ/7EvM4McfgHofcTBQ==
 
 react-native-draggable-flatlist@^4.0.1:
   version "4.0.1"
@@ -16561,11 +16566,6 @@ react-native-piratechain@^0.5.4:
   integrity sha512-TYnT9XRgnb6RrEfEqUBJtqKCwCze/atsvkFKRV8t1HesVq+/CPSJfk1CxFfM3qZIVNNIoB94srFbBKQLQ15V4g==
   dependencies:
     rfc4648 "^1.3.0"
-
-react-native-power-saving-mode@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-power-saving-mode/-/react-native-power-saving-mode-0.1.1.tgz#8ec758971979f11c81410751a6ea228abfce269d"
-  integrity sha512-aWRtlpW55fqjLQDTb/dEw6LqlG0iWx8NZxlhu6QWp5DcvQMzx3EDxCX7RC1h/ofrISCoNisd8Lb7YSa+9SY5VQ==
 
 react-native-reanimated@^3.14.0:
   version "3.14.0"

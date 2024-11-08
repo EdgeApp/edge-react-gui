@@ -125,7 +125,7 @@ const strings = {
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
-  warning_battery_saver: `Battery Saver mode detected. Balances and transactions may be inaccurate`,
+  warning_battery_saver: `Battery Saver Detected! Balances may not update. For the best experience, please turn off battery saver mode.`,
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',

@@ -16,6 +16,7 @@
 - changed: `EarnScene` shows one card per stake option if multiple wallets have stake positions on that stake option
 - changed: `EarnScene` only intializes stake options once, regardless of re-navigation to the scene
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
+- changed: (Android) Add prompt for user to change battery optimization setting
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
