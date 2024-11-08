@@ -2,7 +2,6 @@
 
 ## Unreleased
 
-
 ## 4.17.0
 
 - added: Add TON
@@ -31,6 +30,7 @@
 - fixed: Remove Kado deposit details for "Sell" orders.
 - fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
+- fixed: (Android) Force portrait orientation
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
 - removed: Moonpay, Simplex, and Paybis for UK
