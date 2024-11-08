@@ -9324,10 +9324,10 @@ edge-currency-monero@^1.3.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.4.3.tgz#e347b36bca2a82656845cd45ce874f6d496a98e3"
-  integrity sha512-vqm7bjR1I7N2xCPqJmLUH83OthxctJN/7TYuC+fS3py7UDJo0IUtROO1eHVS7g3Ko+TzwC+xep/ge2BhN3fw0A==
+edge-currency-plugins@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.4.4.tgz#075635df788bcfd5bee46c76f5a2373a07c17e13"
+  integrity sha512-TMqkhZdx92UMUnotwf6rsB0Z90PU931SHRXZ7tMaUdBhSwr84PT4mx15BEGRF5OUXRTcsKe+evpLz2LTmlpHHg==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
@@ -9343,7 +9343,7 @@ edge-currency-plugins@^3.4.3:
     bs58 "^4.0.1"
     bs58grscheck "^2.1.2"
     bs58smartcheck "^2.0.4"
-    cleaners "^0.3.12"
+    cleaners "^0.3.17"
     disklet "^0.4.5"
     ecpair "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
     edge-sync-client "^0.2.7"
