@@ -1,3 +1,4 @@
+import Resolver from '@unstoppabledomains/resolution'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
@@ -7,7 +8,8 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
+import { ENS_DOMAINS, SPECIAL_CURRENCY_INFO, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
@@ -144,23 +146,27 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   checkIfEnsDomain = (name: string): boolean => ENS_DOMAINS.some(domain => name.endsWith(domain))
 
-  fetchUnstoppableDomainAddress = async (domain: string, currencyTicker: string): Promise<string> => {
+  fetchUnstoppableDomainAddress = async (resolver: Resolver, domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
     if (!this.checkIfUnstoppableDomain(domain)) {
       throw new ResolutionError('UnsupportedDomain', { domain })
     }
-    const baseurl = `https://unstoppabledomains.com/api/v1`
-    const url = `${baseurl}/${domain}`
-    const response = await global.fetch(url).then(async res => await res.json())
-    const { addresses, meta } = response
-    if (!meta || !meta.owner) {
-      throw new ResolutionError('UnregisteredDomain', { domain })
+
+    if (currencyTicker == null) {
+      throw new ResolutionError('UnsupportedCurrency', { currencyTicker: this.props.coreWallet.currencyInfo.displayName, domain })
     }
-    const ticker = currencyTicker.toUpperCase()
-    if (!addresses || !addresses[ticker]) {
-      throw new ResolutionError('UnspecifiedCurrency', { domain, currencyTicker })
+
+    const isValid = await resolver.isSupportedDomain(domain)
+    if (!isValid) {
+      throw new ResolutionError('UnsupportedDomain', { domain })
     }
-    return addresses[ticker]
+
+    const address = await resolver.addr(domain, currencyTicker)
+    if (address == null) {
+      throw new ResolutionError('RecordNotFound', { domain })
+    }
+
+    return address
   }
 
   fetchEnsAddress = async (domain: string): Promise<string> => {
@@ -177,8 +183,13 @@ export class AddressModalComponent extends React.Component<Props, State> {
     try {
       this.setState({ errorLabel: undefined, validLabel: lstrings.resolving })
       let addr: string
-      if (this.checkIfUnstoppableDomain(domain)) addr = await this.fetchUnstoppableDomainAddress(domain, currencyTicker)
-      else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
+      if (this.checkIfUnstoppableDomain(domain) && ENV.UNSTOPPABLE_DOMAINS_API_KEY != null) {
+        addr = await this.fetchUnstoppableDomainAddress(
+          new Resolver({ apiKey: ENV.UNSTOPPABLE_DOMAINS_API_KEY }),
+          domain,
+          unstoppableDomainsPluginIds[this.props.coreWallet.currencyInfo.pluginId]
+        )
+      } else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
       else {
         throw new ResolutionError('UnsupportedDomain', { domain })
       }
@@ -392,3 +403,10 @@ export function AddressModal(props: OwnProps): JSX.Element {
     />
   )
 }
+
+const unstoppableDomainsPluginIds = Object.entries(SPECIAL_CURRENCY_INFO).reduce((map: Record<string, string>, [pluginId, info]) => {
+  if (info.unstoppableDomainsTicker != null) {
+    map[pluginId] = info.unstoppableDomainsTicker
+  }
+  return map
+}, {})

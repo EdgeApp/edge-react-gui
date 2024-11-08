@@ -123,6 +123,7 @@ export const asEnvConfig = asObject({
   KILN_TESTNET_ACCOUNT_ID: asNullable(asString),
   KILN_MAINNET_API_KEY: asNullable(asString),
   KILN_MAINNET_ACCOUNT_ID: asNullable(asString),
+  UNSTOPPABLE_DOMAINS_API_KEY: asNullable(asString),
 
   // Core plugin options:
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),

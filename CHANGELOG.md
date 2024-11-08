@@ -23,6 +23,7 @@
 - changed: Verbiage for login request scene for QR login has been updated to remove ambiguity.
 - changed: Wording in light account persistent notification
 - changed: (Android) Allow exporting multiple files
+- fixed: Replace deprecated Unstoppable Domains fetch call with SDK
 - fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError
 - fixed: Normalized error messages for tracking; removing localization from error messages.
