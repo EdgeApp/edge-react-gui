@@ -169,13 +169,18 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
   const out: WalletCreateItem[] = []
   const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
-    const { currencyCode, displayName, pluginId, walletType } = item
+    const { currencyCode, displayName, pluginId, tokenId, walletType } = item
     if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
       out.push(item)
       continue
     }
     // Do an additional search for pluginId for mainnet create items
     if (walletType != null && normalizeForSearch(pluginId).includes(searchTarget)) {
+      out.push(item)
+      continue
+    }
+    // See if the search term contains the tokenId because we don't have contract addresses in scope. The tokenId is, in most cases, close enough to a contract address to be useful.
+    if (tokenId !== null && normalizeForSearch(searchTarget).includes(normalizeForSearch(tokenId))) {
       out.push(item)
     }
   }
