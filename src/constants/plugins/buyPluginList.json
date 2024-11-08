@@ -238,6 +238,17 @@
       "currency": "SGD"
     }
   },
+  {
+    "id": "otc",
+    "pluginId": "otc",
+    "paymentType": "wire",
+    "paymentTypes": ["wire"],
+    "title": "OTC",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $20000000",
+    "forCountries": ["US"],
+    "cryptoCodes": ["BTC", "ETH", "USDC"],
+    "paymentTypeLogoKey": "bank"
+  },
   "----- Sorting -----",
   {
     "id": "fasterpayments",
