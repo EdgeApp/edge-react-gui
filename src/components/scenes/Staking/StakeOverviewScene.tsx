@@ -177,7 +177,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       />
       <SceneButtons
         primary={{
-          label: lstrings.stake_stake_more_funds,
+          label: lstrings.fragment_stake_label,
           disabled: !canStake,
           onPress: handleModifyPress('stake')
         }}
