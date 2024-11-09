@@ -38,7 +38,7 @@ function WalletListSortableRowComponent(props: Props) {
 
   if (wallet == null || exchangeDenomination == null) {
     return (
-      <EdgeTouchableOpacity style={styles.container} activeOpacity={0.95} onLongPress={handleDrag}>
+      <EdgeTouchableOpacity style={styles.container} activeOpacity={0.95}>
         <View style={[styles.rowContainer, styles.loaderContainer]}>
           <ActivityIndicator color={theme.primaryText} size="small" />
         </View>
@@ -65,7 +65,7 @@ function WalletListSortableRowComponent(props: Props) {
 
   return (
     <View style={[styles.container, styles.rowContainer]}>
-      <EdgeTouchableOpacity delayLongPress={1} onLongPress={handleDrag}>
+      <EdgeTouchableOpacity delayLongPress={1} style={styles.handleContainer} onLongPress={handleDrag}>
         <View style={styles.iconContainer}>
           <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
@@ -90,6 +90,10 @@ function WalletListSortableRowComponent(props: Props) {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     paddingHorizontal: theme.rem(1)
+  },
+  handleContainer: {
+    margin: -theme.rem(0.5),
+    padding: theme.rem(0.5)
   },
   rowContainer: {
     flexDirection: 'row',
