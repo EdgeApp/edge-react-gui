@@ -1100,7 +1100,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.17.12", "@babel/preset-typescript@^7.18.6":
+"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.18.6":
   version "7.24.1"
   resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.24.1.tgz#89bdf13a3149a17b3b2a2c9c62547f06db8845ec"
   integrity sha512-1DBaMmRDpuYQBPWD8Pf/WEwCrtgRHxsZnP4mIy9G/X+hFfbI47Q2G4t1Paakld84+qsk2fSsUPMKg71jkoOOaQ==
@@ -16423,13 +16423,6 @@ react-native-device-info@^13.2.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-13.2.0.tgz#2b4026daf59dd08d82b6d65b63c18cb26f310ed2"
   integrity sha512-VpTxHZsEZ7kes2alaZkB31278KuSPXfTZ4TmCCN77+bYxNnaHUDiBiQ1TSoKAOp51b7gZ/7EvM4McfgHofcTBQ==
 
-react-native-draggable-flatlist@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-4.0.1.tgz#2f027d387ba4b8f3eb0907340e32cb85e6460df2"
-  integrity sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q==
-  dependencies:
-    "@babel/preset-typescript" "^7.17.12"
-
 react-native-email-link@^1.14.5:
   version "1.14.5"
   resolved "https://registry.yarnpkg.com/react-native-email-link/-/react-native-email-link-1.14.5.tgz#05e13002bd850ebaf98477b4cfbfdfa972a57608"
@@ -16580,6 +16573,11 @@ react-native-reanimated@^3.14.0:
     "@babel/preset-typescript" "^7.16.7"
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
+
+react-native-reorderable-list@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-reorderable-list/-/react-native-reorderable-list-0.5.0.tgz#5f85360d68988fdd350cea720b0201f413329101"
+  integrity sha512-p830KvMJP8r2nOsdEyGlNW6F1/CA4bvCTCoFsZR+HJ3RFjujHIX3C8tf+Sl75wFGBUlPd5SSuJMZ0t85wUJYZA==
 
 react-native-safari-view@^2.1.0:
   version "2.1.0"
