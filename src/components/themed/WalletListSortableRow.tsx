@@ -102,6 +102,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  touchableContainer: {
+    margin: -theme.rem(0.5),
+    padding: theme.rem(0.5)
+  },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
