@@ -1,7 +1,7 @@
 import { useIsFocused } from '@react-navigation/native'
 import { useMemo } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue, useWorkletCallback } from 'react-native-reanimated'
 
 import { createStateProvider } from './createStateProvider'
 
@@ -112,4 +112,40 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
   })
 
   return handler
+}
+
+/** Like `useSceneScrollHandler`, but specifically for worklets that need a
+ * `(event: NativeScrollEvent) => void` type prop */
+export const useSceneScrollWorkletHandler = () => {
+  const scrollY = useSceneScrollContext(state => state.scrollY)
+
+  // Create shared values for scroll position
+  const isFocused = useIsFocused()
+
+  const localScrollY = useSharedValue(0)
+
+  useAnimatedReaction(
+    () => {
+      return isFocused
+    },
+    isFocusedResult => {
+      if (isFocusedResult && localScrollY.value !== scrollY.value) {
+        scrollY.value = localScrollY.value
+      }
+    }
+  )
+
+  // Define the handleScroll function as a worklet using useWorkletCallback
+  const handleScroll = useWorkletCallback((event: NativeScrollEvent) => {
+    'worklet'
+    if (!isFocused) return
+
+    const y = event.contentOffset.y
+    if (scrollY.value !== y) {
+      localScrollY.value = y
+      scrollY.value = y
+    }
+  }, [])
+
+  return handleScroll
 }
