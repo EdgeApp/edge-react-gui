@@ -148,7 +148,7 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         showCreateWallet: true
       })
       if (result?.type !== 'wallet') break
-      const wallet = currencyWallets[result.walletId]
+      const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
       if (checkAndShowLightBackupModal(account, navigation)) break
@@ -250,7 +250,7 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         showCreateWallet: true
       })
       if (result?.type !== 'wallet') break
-      const wallet = currencyWallets[result.walletId]
+      const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
       // Re-parse the uri with the final chosen wallet
