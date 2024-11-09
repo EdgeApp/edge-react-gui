@@ -1,6 +1,6 @@
 import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
-import ReorderableList, { ReorderableListItem } from 'react-native-reorderable-list'
+import ReorderableList from 'react-native-reorderable-list'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
@@ -45,11 +45,7 @@ export function WalletListSortable(props: Props) {
   const keyExtractor = (item: string) => item
 
   const renderItem = useHandler(item => {
-    return (
-      <ReorderableListItem>
-        <WalletListSortableRow wallet={currencyWallets[item.item]} />
-      </ReorderableListItem>
-    )
+    return <WalletListSortableRow wallet={currencyWallets[item.item]} />
   })
 
   const handleScroll = useSceneScrollWorkletHandler()
