@@ -153,7 +153,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       const stakePlugins = await getStakePlugins(pluginId)
       const stakePolicies: StakePolicy[] = []
       for (const stakePlugin of stakePlugins) {
-        const policies = stakePlugin.getPolicies({ wallet, currencyCode })
+        const policies = stakePlugin.getPolicies({ pluginId, wallet, currencyCode })
         stakePolicies.push(...policies)
       }
       const newState = { stakePolicies, stakePlugins }
@@ -175,31 +175,31 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   updatePositions = async ({ stakePlugins = [], stakePolicies = [] }: { stakePlugins?: StakePlugin[]; stakePolicies?: StakePolicy[] }) => {
     let lockedNativeAmount = '0'
     const stakePositionMap: StakePositionMap = {}
-    for (const stakePolicy of stakePolicies) {
-      // Don't show liquid staking positions as locked amount
-      if (stakePolicy.isLiquidStaking === true) continue
+    for (const stakePlugin of stakePlugins) {
+      for (const stakePolicy of stakePolicies) {
+        // Don't show liquid staking positions as locked amount
+        if (stakePolicy.isLiquidStaking === true) continue
 
-      let total: string | undefined
-      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
-      if (stakePlugin == null) continue
-      try {
-        const stakePosition = await stakePlugin.fetchStakePosition({
-          stakePolicyId: stakePolicy.stakePolicyId,
-          wallet: this.props.wallet,
-          account: this.props.account
-        })
+        let total: string | undefined
+        try {
+          const stakePosition = await stakePlugin.fetchStakePosition({
+            stakePolicyId: stakePolicy.stakePolicyId,
+            wallet: this.props.wallet,
+            account: this.props.account
+          })
 
-        stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
-        const { staked, earned } = getPositionAllocations(stakePosition)
-        total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
-      } catch (err) {
-        console.error(err)
-        const { displayName } = stakePolicy.stakeProviderInfo
-        datelog(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
-        continue
+          stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
+          const { staked, earned } = getPositionAllocations(stakePosition)
+          total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+        } catch (err) {
+          console.error(err)
+          const { displayName } = stakePolicy.stakeProviderInfo
+          datelog(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
+          continue
+        }
+
+        lockedNativeAmount = add(lockedNativeAmount, total)
       }
-
-      lockedNativeAmount = add(lockedNativeAmount, total)
     }
     this.setState({ stakePositionMap })
     this.setState({ lockedNativeAmount })
@@ -641,7 +641,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       } else if (stakePolicies.length === 1) {
         const [stakePolicy] = stakePolicies
         const { stakePolicyId } = stakePolicy
-        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
+        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, { pluginId: wallet.currencyInfo.pluginId })
         // Transition to next scene immediately
         const stakePosition = stakePositionMap[stakePolicyId]
         if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })

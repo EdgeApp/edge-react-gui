@@ -183,6 +183,7 @@ export interface StakePosition {
 // -----------------------------------------------------------------------------
 
 export interface StakePolicyFilter {
+  pluginId?: string
   wallet?: EdgeCurrencyWallet
   currencyCode?: string
 }
@@ -191,13 +192,16 @@ export const filterStakePolicies = (policies: StakePolicy[], filter?: StakePolic
   if (filter == null) return policies
 
   let out: StakePolicy[] = [...policies]
-  const { currencyCode, wallet } = filter
+  const { currencyCode, pluginId, wallet } = filter
 
   if (wallet != null) {
     out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId))
   }
   if (currencyCode != null) {
     out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode))
+  }
+  if (pluginId != null) {
+    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === pluginId))
   }
   return out
 }

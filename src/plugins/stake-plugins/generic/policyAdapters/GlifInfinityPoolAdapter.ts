@@ -78,8 +78,13 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
     const walletSigner = new EdgeWalletSigner(wallet, provider)
     const walletAddress = await walletSigner.getAddress()
 
-    let txCount: number = await walletSigner.getTransactionCount('pending')
-    const nextNonce = (): number => txCount++
+    let txCount: number | undefined
+    const nextNonce = async (): Promise<number> => {
+      if (txCount == null) {
+        txCount = await walletSigner.getTransactionCount('pending')
+      }
+      return txCount++
+    }
 
     const feeData = await provider.getFeeData()
     const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
@@ -109,7 +114,7 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
           value: requestNativeAmount,
           maxFeePerGas,
           maxPriorityFeePerGas,
-          nonce: nextNonce(),
+          nonce: await nextNonce(),
           customData: {
             metadata: {
               name: metadataName,
@@ -152,7 +157,7 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
           await poolTokenContract.connect(walletSigner).populateTransaction.approve(simpleRampContract.address, expectedLiquidityAmount, {
             maxFeePerGas,
             maxPriorityFeePerGas,
-            nonce: nextNonce(),
+            nonce: await nextNonce(),
             customData: {
               metadata: {
                 name: metadataName,
@@ -170,7 +175,7 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
           gasLimit: 250000000,
           maxFeePerGas,
           maxPriorityFeePerGas,
-          nonce: nextNonce(),
+          nonce: await nextNonce(),
           customData: {
             metadata: {
               name: metadataName,
