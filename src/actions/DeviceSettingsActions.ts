@@ -1,6 +1,6 @@
 import { makeReactNativeDisklet } from 'disklet'
 
-import { asDeviceSettings, DeviceSettings } from '../types/types'
+import { asDeviceSettings, DefaultScreen, DeviceNotifDismissInfo, DeviceSettings } from '../types/types'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
@@ -35,7 +35,7 @@ export const writeDisableAnimations = async (disableAnimations: boolean) => {
   return await writeDeviceSettings(updatedSettings)
 }
 
-export const writeHasInteractedWithBackupModal = async (hasInteractedWithBackupModal: boolean) => {
+export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -43,8 +43,36 @@ export const writeHasInteractedWithBackupModal = async (hasInteractedWithBackupM
   } catch (e) {
     console.log(e)
   }
-  const updatedSettings = { ...deviceSettings, hasInteractedWithBackupModal }
+  const updatedSettings: DeviceSettings = { ...deviceSettings, defaultScreen }
   return await writeDeviceSettings(updatedSettings)
+}
+
+export const writeForceLightAccountCreate = async (forceLightAccountCreate: boolean) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings: DeviceSettings = { ...deviceSettings, forceLightAccountCreate }
+  return await writeDeviceSettings(updatedSettings)
+}
+
+/**
+ * Track the state of whether particular one-time notifications associated with
+ * the device were interacted with or dismissed.
+ **/
+export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: DeviceNotifDismissInfo) => {
+  const updatedSettings: DeviceSettings = { ...deviceSettings, deviceNotifDismissInfo }
+  return await writeDeviceSettings(updatedSettings)
+}
+
+/**
+ * Track the state of whether the "How did you Discover Edge" modal was shown.
+ **/
+export const writeIsSurveyDiscoverShown = async (isSurveyDiscoverShown: boolean) => {
+  return await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
 }
 
 const readDeviceSettings = async (): Promise<DeviceSettings> => {

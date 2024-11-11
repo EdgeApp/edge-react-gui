@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressBar should render with loading props 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "row",
+      "zIndex": 100,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      {
+        "backgroundColor": "#00f1a2",
+        "height": 3,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "width": "10%",
+      }
+    }
+  />
+</View>
+`;

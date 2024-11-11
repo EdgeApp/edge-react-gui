@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Platform, ScrollView, Text, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -36,17 +37,6 @@ export function ModalTitle(props: ModalTitleProps) {
   )
 }
 
-export function ModalMessage(props: { children: React.ReactNode; paddingRem?: number[] | number; isWarning?: boolean }) {
-  const { children, isWarning, paddingRem } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const warningStyle = isWarning ? styles.warningText : null
-  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
-
-  return <Text style={[styles.messageText, padding, warningStyle, androidAdjust]}>{children}</Text>
-}
-
 /**
  * Renders a close button
  */
@@ -55,9 +45,9 @@ export function ModalFooter(props: ModalFooterProps) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
+    <EdgeTouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
       <AntDesignIcon accessibilityHint={lstrings.modal_close_hint} color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
@@ -128,16 +118,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleCenter: {
     textAlign: 'center',
     flexGrow: 1
-  },
-  warningText: {
-    color: theme.warningText
-  },
-  messageText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.5),
-    textAlign: 'left'
   },
   footerFadeContainer: {
     position: 'absolute',

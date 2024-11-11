@@ -1,5 +1,5 @@
-import { abs, div, gt, log10 } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { abs, div, eq, gt, log10 } from 'biggystring'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -9,13 +9,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
-import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -31,10 +30,10 @@ import {
   truncateDecimals,
   unixToLocaleDateTime
 } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { SectionView } from '../layout/SectionView'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
-import { SectionView } from '../ui4/SectionView'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -48,25 +47,20 @@ export function TransactionListRow(props: Props) {
   const styles = getStyles(theme)
 
   const { navigation, wallet, transaction } = props
-  const { canReplaceByFee = false } = wallet.currencyInfo
-
   const { metadata = {}, currencyCode, tokenId } = transaction
-  const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
-
-  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
-  const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
 
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const account = useSelector(state => state.core.account)
+
   const displayDenomination = useDisplayDenom(wallet.currencyConfig, tokenId)
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
-  const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
+  const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
   const denominationSymbol = displayDenomination.symbol
-
-  const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
+  const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const rateKey = `${currencyCode}_${fiatCurrencyCode}`
+  const rateKey = `${currencyCode}_${defaultIsoFiat}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
@@ -90,10 +84,10 @@ export function TransactionListRow(props: Props) {
 
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
-  const historicalRate = useHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, isoDate)
+  const historicalRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
   const amountFiat = (defaultAmountFiat ?? 0) > 0 ? defaultAmountFiat ?? 0 : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
-  const fiatSymbol = getSymbolFromCurrency(nonIsoFiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 
@@ -149,22 +143,10 @@ export function TransactionListRow(props: Props) {
     )
 
   // Pending Text and Style
-  const currentConfirmations = transaction.confirmations
-  const isConfirmed = currentConfirmations === 'confirmed'
+  const unconfirmedOrTimeText = getConfirmationText(currencyInfo, transaction)
 
-  const unconfirmedOrTimeText = isConfirmed
-    ? unixToLocaleDateTime(transaction.date).time
-    : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-    ? lstrings.fragment_transaction_list_unconfirmed_rbf
-    : currentConfirmations === 'unconfirmed'
-    ? lstrings.fragment_wallet_unconfirmed
-    : currentConfirmations === 'dropped'
-    ? lstrings.fragment_transaction_list_tx_dropped
-    : typeof currentConfirmations === 'number'
-    ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-    : lstrings.fragment_transaction_list_tx_synchronizing
-
-  const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
+  const confirmationStyle =
+    transaction.confirmations === 'confirmed' ? null : transaction.confirmations === 'failed' ? styles.failedText : styles.unconfirmedText
 
   // Transaction Category
   let categoryText
@@ -186,6 +168,7 @@ export function TransactionListRow(props: Props) {
   const handleLongPress = useHandler(() => {
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
+      failOnCancel: false,
       url
     }
     Share.open(shareOptions).catch(e => showError(e))
@@ -193,7 +176,7 @@ export function TransactionListRow(props: Props) {
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return (
-    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
@@ -203,7 +186,7 @@ export function TransactionListRow(props: Props) {
             <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={unconfirmedOrTimeStyle}>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
               {unconfirmedOrTimeText}
             </EdgeText>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
@@ -215,7 +198,7 @@ export function TransactionListRow(props: Props) {
           </View>
         )}
       </SectionView>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 
@@ -300,12 +283,42 @@ const getStyles = cacheStyles((theme: Theme) => ({
   secondaryText: {
     flexShrink: 1,
     fontSize: theme.rem(0.75),
-    color: theme.secondaryText
+    color: theme.secondaryText,
+    marginRight: theme.rem(1)
   },
   unconfirmedText: {
-    flexShrink: 1,
-    fontSize: theme.rem(0.75),
-    color: theme.warningText,
-    marginRight: theme.rem(1)
+    color: theme.warningText
+  },
+  failedText: {
+    color: theme.dangerText
   }
 }))
+
+function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTransaction): string {
+  // Default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
+  // Default canReplaceByFee to false, so we don't show the RBF message unless the currencyInfo has it set.
+  const { canReplaceByFee = false, requiredConfirmations = 1 } = currencyInfo
+
+  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+
+  if (transaction.confirmations === 'confirmed') {
+    return unixToLocaleDateTime(transaction.date).time
+  }
+  if (!isSentTransaction && canReplaceByFee && transaction.confirmations === 'unconfirmed') {
+    return lstrings.fragment_transaction_list_unconfirmed_rbf
+  }
+  if (transaction.confirmations === 'unconfirmed') {
+    return lstrings.fragment_wallet_unconfirmed
+  }
+  if (transaction.confirmations === 'dropped') {
+    return lstrings.fragment_transaction_list_tx_dropped
+  }
+  if (transaction.confirmations === 'failed') {
+    return lstrings.fragment_transaction_list_tx_failed
+  }
+  if (typeof transaction.confirmations === 'number') {
+    return sprintf(lstrings.fragment_transaction_list_confirmation_progress, transaction.confirmations, requiredConfirmations)
+  }
+
+  return lstrings.fragment_transaction_list_tx_synchronizing
+}

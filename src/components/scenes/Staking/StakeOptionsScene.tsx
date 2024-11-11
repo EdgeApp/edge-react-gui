@@ -1,28 +1,31 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
+import { AccentColors } from '../../common/DotsBackground'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { CryptoIcon } from '../../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
-import { AccentColors } from '../../ui4/DotsBackground'
 
-interface Props extends EdgeSceneProps<'stakeOptions'> {
+interface Props extends EdgeAppSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -45,6 +48,16 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useAsyncEffect(
+    async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+    },
+    [],
+    'StakeOptionsSceneComponent'
+  )
+
   //
   // Handlers
   //
@@ -63,19 +76,20 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const renderOptions = ({ item }: { item: StakePolicy }) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
-    const secondaryText = getPolicyTitleName(item)
+    const secondaryText = getPolicyTitleName(item, countryCode)
     const key = [primaryText, secondaryText].join()
     const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
     return (
       <View key={key} style={styles.optionContainer}>
-        <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
+        <EdgeTouchableOpacity onPress={() => handleStakeOptionPress(item)}>
           <StakingOptionCard
+            apy={item.apy}
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
             secondaryText={secondaryText}
             stakeProviderInfo={item.stakeProviderInfo}
           />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </View>
     )
   }
@@ -101,7 +115,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
+        <CryptoIcon marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>

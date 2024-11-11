@@ -35,8 +35,8 @@ exports[`CreateWalletAccountSelect renders 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -170,7 +170,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -186,7 +186,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -202,7 +202,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -310,22 +310,23 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         </View>
       </View>
       <Text
+        adjustsFontSizeToFit={false}
+        numberOfLines={0}
         style={
           [
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
+              "includeFontPadding": false,
             },
             {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             },
-            null,
+            false,
             null,
           ]
         }
@@ -333,22 +334,23 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         Create a unique account handle, this will also be the name of your BTC wallet:
       </Text>
       <Text
+        adjustsFontSizeToFit={false}
+        numberOfLines={0}
         style={
           [
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
+              "includeFontPadding": false,
             },
             {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             },
-            null,
+            false,
             null,
           ]
         }
@@ -358,12 +360,19 @@ exports[`CreateWalletAccountSelect renders 1`] = `
 
       </Text>
       <View
+        marginRemStyle={
+          {
+            "marginBottom": 45,
+            "marginLeft": 22,
+            "marginRight": 22,
+            "marginTop": 22,
+          }
+        }
+        multiline={false}
         style={
           {
-            "alignItems": undefined,
-            "flex": undefined,
-            "flexDirection": "column",
-            "justifyContent": undefined,
+            "flexGrow": undefined,
+            "flexShrink": undefined,
             "marginBottom": 45,
             "marginLeft": 22,
             "marginRight": 22,
@@ -376,7 +385,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             {
               "busy": undefined,
               "checked": undefined,
-              "disabled": undefined,
+              "disabled": false,
               "expanded": undefined,
               "selected": undefined,
             }
@@ -412,8 +421,9 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "alignItems": "center",
                 "borderRadius": 11,
                 "borderWidth": 1,
-                "flex": undefined,
                 "flexDirection": "row",
+                "flexGrow": undefined,
+                "flexShrink": undefined,
                 "paddingHorizontal": 17,
               },
               {
@@ -571,7 +581,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   "value": 1,
                 }
               }
-              secureTextEntry={false}
               selectionColor="#FFFFFF"
               style={
                 [

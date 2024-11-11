@@ -1,6 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -18,8 +18,9 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { lstrings } from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
@@ -36,7 +37,7 @@ export interface LoanStatusParams {
   loanAccountId: string
 }
 
-interface Props extends EdgeSceneProps<'loanStatus'> {
+interface Props extends EdgeAppSceneProps<'loanStatus'> {
   loanAccount: LoanAccount
 }
 
@@ -93,7 +94,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
 
   const handleDonePress = useHandler(() => {
     if (loanAccountId != null) navigation.navigate('loanDetails', { loanAccountId })
-    else navigation.navigate('loanDashboard', {})
+    else navigation.navigate('loanDashboard')
   })
 
   const isProgramDone = steps.length > 0 && steps[steps.length - 1].status === 'done'
@@ -102,9 +103,9 @@ export const LoanStatusSceneComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_status_title}
         underline

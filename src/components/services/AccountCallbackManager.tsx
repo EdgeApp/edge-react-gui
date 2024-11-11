@@ -4,11 +4,10 @@ import * as React from 'react'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
-import { checkFioObtData } from '../../actions/FioActions'
+import { checkFioObtData, refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
-import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
@@ -40,6 +39,7 @@ export function AccountCallbackManager(props: Props) {
   const { account, navigation } = props
   const dispatch = useDispatch()
   const [dirty, setDirty] = React.useState<DirtyList>(notDirty)
+  const numWallets = React.useRef(0)
 
   // Helper for marking wallets dirty:
   function setRatesDirty() {
@@ -52,12 +52,19 @@ export function AccountCallbackManager(props: Props) {
   // Subscribe to the account:
   React.useEffect(() => {
     const cleanups = [
-      account.watch('currencyWallets', () =>
+      account.watch('currencyWallets', () => {
+        let ratesDirty: true | undefined
+        const numW = Object.keys(account.currencyWallets).length
+        if (numWallets.current !== numW) {
+          numWallets.current = numW
+          ratesDirty = true
+        }
         setDirty(dirty => ({
           ...dirty,
-          walletList: true
+          walletList: true,
+          rates: ratesDirty ?? dirty.rates
         }))
-      ),
+      }),
 
       account.watch('loggedIn', () => {
         if (!account.loggedIn) {
@@ -68,7 +75,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts) {
-          navigation.navigate('securityAlerts', {})
+          navigation.navigate('securityAlerts')
         }
       })
     ]
@@ -79,10 +86,6 @@ export function AccountCallbackManager(props: Props) {
   // Subscribe to each wallet that comes online:
   useWalletsSubscriber(account, wallet => {
     const cleanups = [
-      wallet.watch('syncRatio', ratio => {
-        dispatch(updateWalletLoadingProgress(wallet.id, ratio))
-      }),
-
       wallet.on('newTransactions', transactions => {
         for (const tx of transactions) {
           const txid = tx.txid.toLowerCase()
@@ -137,8 +140,7 @@ export function AccountCallbackManager(props: Props) {
         dispatch({ type: 'CORE/NEW_TOKENS', data: { walletId: wallet.id, enablingTokenIds } })
       }),
 
-      // These ones defer their work until later:
-      wallet.watch('balanceMap', () => setRatesDirty()),
+      // This one defers their work until later:
       wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 
@@ -157,7 +159,7 @@ export function AccountCallbackManager(props: Props) {
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
         datelog('Updating wallet list')
-        await dispatch(updateWalletsRequest())
+        await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
         await snooze(1000)
       }
     },

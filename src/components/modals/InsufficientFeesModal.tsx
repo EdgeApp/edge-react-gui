@@ -3,17 +3,17 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useDispatch } from '../../types/reactRedux'
+import { config } from '../../theme/appConfig'
 import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { roundedFee } from '../../util/utils'
-import { ModalMessage } from '../themed/ModalParts'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { Paragraph } from '../themed/EdgeText'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -21,6 +21,7 @@ interface Props {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
 
+  countryCode?: string
   // Called when the user wants to swap.
   // The default behavior is to navigate to the swap scene,
   // but the swap scene itself needs a different behavior here.
@@ -31,13 +32,12 @@ interface Props {
  * Show this modal when the wallet doesn't have enough funds to cover fees.
  */
 export function InsufficientFeesModal(props: Props) {
-  const { bridge, coreError, navigation, wallet, onSwap } = props
-  const dispatch = useDispatch()
+  const { bridge, countryCode, coreError, navigation, wallet, onSwap } = props
 
   // Get the display amount:
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const { multiplier, name } = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const { multiplier, name: denomName } = useDisplayDenom(wallet.currencyConfig, tokenId)
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   const handleCancel = useHandler(() => bridge.resolve())
@@ -46,20 +46,37 @@ export function InsufficientFeesModal(props: Props) {
     bridge.resolve()
   })
   const handleSwap = useHandler(async () => {
-    if (onSwap) return onSwap()
-    await dispatch(selectWalletForExchange(wallet.id, tokenId, 'to'))
-    navigation.navigate('exchangeTab', { screen: 'exchange' })
+    if (onSwap) onSwap()
+    navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
     bridge.resolve()
   })
 
+  // Give extra information about the network name like Base or Arbitrum where
+  // the mainnet token is ETH but the network is not Ethereum.
+  let message: string
+  let secondary
+  if (config.disableSwaps === true) {
+    secondary = undefined
+    message =
+      currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
+        ? sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_3s, amountString, denomName, wallet.currencyInfo.displayName)
+        : sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_2s, amountString, denomName)
+  } else {
+    secondary = { label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }
+    message =
+      currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
+        ? sprintf(lstrings.buy_parent_crypto_modal_message_3s, amountString, denomName, wallet.currencyInfo.displayName)
+        : sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, denomName)
+  }
+
   return (
-    <ModalUi4 bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
-      <ModalMessage>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
-      <ButtonsViewUi4
-        primary={{ label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode), onPress: handleBuy }}
-        secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
+    <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
+      <Paragraph>{message}</Paragraph>
+      <ButtonsView
+        primary={{ label: getUkCompliantString(countryCode, 'buy_1s_quote', currencyCode), onPress: handleBuy }}
+        secondary={secondary}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

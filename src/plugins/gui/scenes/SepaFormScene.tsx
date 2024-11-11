@@ -1,28 +1,38 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../../components/ui4/ButtonsViewUi4'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { asSepaInfo, SEPA_FORM_DISKLET_NAME, SepaInfo } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
-interface Props extends EdgeSceneProps<'guiPluginSepaForm'> {}
+export interface FiatPluginSepaFormParams {
+  headerTitle: string
+  doneLabel: string
+  headerIconUri?: string
+  onDone: (sepaInfo: SepaInfo) => Promise<void>
+  onClose: () => void
+}
+
+interface Props extends BuyTabSceneProps<'guiPluginSepaForm'> {}
 
 export const SepaFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   // TODO: headerIconUri
-  const { route } = props
-  const { headerTitle, onSubmit } = route.params
+  const { route, navigation } = props
+  const { headerTitle, doneLabel, onDone, onClose } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
   const [name, setName] = React.useState('')
@@ -43,7 +53,7 @@ export const SepaFormScene = React.memo((props: Props) => {
     // Save user input to disk
     await setDiskletForm(disklet, SEPA_FORM_DISKLET_NAME, { name, iban, swift })
 
-    await onSubmit({ name, iban, swift })
+    await onDone({ name, iban, swift })
   })
 
   // Initialize scene with any saved forms from disklet
@@ -60,29 +70,59 @@ export const SepaFormScene = React.memo((props: Props) => {
     'SepaFormScene'
   )
 
+  // Unmount cleanup
+  React.useEffect(() => {
+    return navigation.addListener('beforeRemove', () => {
+      if (onClose != null) onClose()
+    })
+  }, [navigation, onClose])
+
+  const scrollContent = (
+    <>
+      <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
+      <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
+      <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
+      <SceneButtons
+        primary={{
+          label: doneLabel,
+          disabled: !name.trim() || !iban.trim() || !swift.trim(),
+          onPress: handleSubmit
+        }}
+      />
+    </>
+  )
+
   return (
-    <SceneWrapper hasNotifications>
-      <SceneHeader title={headerTitle} underline withTopMargin />
-      <View style={styles.container}>
-        <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
-        <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
-        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
-        <ButtonsViewUi4
-          primary={{
-            label: lstrings.string_next_capitalized,
-            disabled: !name.trim() || !iban.trim() || !swift.trim(),
-            onPress: handleSubmit
-          }}
-          parentType="scene"
-        />
-      </View>
+    <SceneWrapper hasTabs hasNotifications avoidKeyboard>
+      {({ undoInsetStyle, insetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+          <SceneHeader title={headerTitle} underline withTopMargin />
+          {Platform.OS === 'ios' ? (
+            <ScrollView contentContainerStyle={{ ...insetStyle, ...styles.container }} keyboardShouldPersistTaps="handled">
+              {scrollContent}
+            </ScrollView>
+          ) : (
+            <KeyboardAwareScrollView
+              contentContainerStyle={{ ...insetStyle, ...styles.container }}
+              keyboardShouldPersistTaps="handled"
+              extraScrollHeight={theme.rem(2.75)}
+              enableAutomaticScroll
+              enableOnAndroid
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            >
+              {scrollContent}
+            </KeyboardAwareScrollView>
+          )}
+        </View>
+      )}
     </SceneWrapper>
   )
 })
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    margin: theme.rem(0.5),
+    paddingTop: 0,
+    marginHorizontal: theme.rem(0.5),
     flexGrow: 1
   },
   formSectionTitle: {

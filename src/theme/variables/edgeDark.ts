@@ -17,8 +17,10 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
+import paymentTypeLogoPaypal from '../../assets/images/paymentTypes/paymentTypeLogoPaypal.png'
 import paymentTypeLogoPix from '../../assets/images/paymentTypes/paymentTypeLogoPix.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentTypeLogoRevolut-dark.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
@@ -35,9 +37,16 @@ const palette = {
 
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
+
   gray: '#888888',
-  darkGrey: '#494949',
-  lightGray: '#D9E3ED',
+  darkGray: '#494949',
+  darkGrayOp30: 'hsla(0, 0%, 53%, 0.3)',
+  lightGray: '#e2e2e2',
+
+  blueGray: '#D9E3ED',
+  blueGrayOp75: 'rgba(217, 227, 237, .75)',
+  blueGrayOp80: 'rgba(135, 147, 158, .8)',
+
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
@@ -49,17 +58,13 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
   blackOp70: 'rgba(0, 0, 0, .7)',
 
-  darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
-
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp37: 'rgba(255, 255, 255, .37)',
   whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
-  grayOp80: 'rgba(135, 147, 158, .8)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
-  lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)',
 
   // Fonts
@@ -74,9 +79,10 @@ const palette = {
   skyBlue: '#3dd9f4',
   blackOp65: 'rgba(0, 0, 0, .65)',
   redOp60: 'rgba(232, 84, 102, .6)',
-  grayOp70: 'rgba(135, 147, 158, .7)',
+  blueGrayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
+  greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
@@ -180,7 +186,7 @@ export const edgeDark: Theme = {
   modalBorderRadiusRem: 1,
   modalBackground: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.darkGreyOp30,
+  modalDragbarColor: palette.darkGrayOp30,
 
   modalLikeBackground: '#333232',
 
@@ -204,7 +210,7 @@ export const edgeDark: Theme = {
   secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.lightGray,
+  negativeText: palette.blueGray,
   negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
@@ -312,7 +318,7 @@ export const edgeDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [palette.blackOp10, palette.blackOp70],
+  tabBarBackground: [palette.transparent, palette.transparent],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
@@ -330,7 +336,7 @@ export const edgeDark: Theme = {
   toggleButtonOff: palette.gray,
 
   // Confirmation slider
-  confirmationSlider: palette.darkGrey,
+  confirmationSlider: palette.darkGray,
   confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.backgroundBlack,
@@ -410,10 +416,10 @@ export const edgeDark: Theme = {
   textInputTextColorDisabled: palette.gray,
   textInputTextColorFocused: palette.white,
   textInputBackgroundColor: palette.graySecondary,
-  textInputBackgroundColorDisabled: palette.graySecondary,
+  textInputBackgroundColorDisabled: palette.transparent,
   textInputBackgroundColorFocused: palette.graySecondary,
   textInputBorderColor: `${palette.edgeMint}00`,
-  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorDisabled: palette.graySecondary,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
   textInputBorderWidth: 1,
@@ -443,8 +449,10 @@ export const edgeDark: Theme = {
   paymentTypeLogoInterac,
   paymentTypeLogoPayid,
   paymentTypeLogoPaynow,
+  paymentTypeLogoPaypal,
   paymentTypeLogoPix,
   paymentTypeLogoPoli,
+  paymentTypeLogoRevolut,
   paymentTypeLogoSofort,
   paymentTypeLogoUpi,
   paymentTypeVisa,
@@ -465,6 +473,31 @@ export const edgeDark: Theme = {
     },
     shadowOpacity: 0.6,
     shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
+  notifcationCardShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
+  dropdownListShadow: {
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 10,
+      height: 10
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 64,
+    // Disable Android shadow
     elevation: 0
   },
 
@@ -498,8 +531,8 @@ export const edgeDark: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  fioCardGradient: {
-    colors: [palette.purpleOp50, palette.transparent],
+  earnCardGradient: {
+    colors: [palette.greenOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
@@ -511,8 +544,8 @@ export const edgeDark: Theme = {
 
   txDirBgReceive: palette.greenOp60,
   txDirBgSend: palette.redOp60,
-  txDirBgSwap: palette.grayOp70,
+  txDirBgSwap: palette.blueGrayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.blueGray
 }

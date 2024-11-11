@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Keyboard, View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -10,19 +10,19 @@ import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { Theme } from '../../types/Theme'
 import { FlatListItem, GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { showError } from '../services/AirshipInstance'
+import { showDevError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 
-interface OwnProps extends EdgeSceneProps<'defaultFiatSetting'> {}
+interface OwnProps extends EdgeAppSceneProps<'defaultFiatSetting'> {}
 
 interface StateProps {
   supportedFiats: GuiFiatType[]
@@ -76,7 +76,12 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
   render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
-      return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+      const lowerCaseText = this.state.searchTerm.toLowerCase()
+      return (
+        FIAT_COUNTRY[entry.value]?.countryName.toLowerCase().includes(lowerCaseText) ||
+        entry.label.toLowerCase().includes(lowerCaseText) ||
+        entry.value.toLowerCase().includes(lowerCaseText)
+      )
     })
 
     return (
@@ -85,8 +90,8 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
               <SimpleTextInput
-                top={1}
-                horizontal={0.5}
+                topRem={1}
+                horizontalRem={0.5}
                 autoCorrect={false}
                 autoCapitalize="words"
                 onChangeText={this.handleSearchTermChange}
@@ -115,11 +120,11 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
     const { navigation } = this.props
     if (!this.isValidFiat(selectedFiat)) {
-      Alert.alert(lstrings.fragment_create_wallet_select_valid)
+      showToast(lstrings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat).catch(err => showError(err))
+      this.props.onSelectFiat(selectedFiat).catch(err => showDevError(err))
       navigation.goBack()
     }
   }

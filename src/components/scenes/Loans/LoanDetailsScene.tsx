@@ -1,7 +1,7 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { Fontello } from '../../../assets/vector'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
@@ -22,14 +22,17 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
+import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -38,14 +41,12 @@ import { SectionHeading } from '../../text/SectionHeading'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 
 export interface LoanDetailsParams {
   loanAccountId: string
 }
 
-interface Props extends EdgeSceneProps<'loanDetails'> {
+interface Props extends EdgeAppSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
 }
 
@@ -54,6 +55,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
 
   const { navigation, loanAccount } = props
@@ -62,7 +65,6 @@ export const LoanDetailsSceneComponent = (props: Props) => {
 
   // Derive state from borrowEngine:
   const { currencyWallet: wallet } = borrowEngine
-  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
@@ -99,10 +101,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   )
 
   const summaryDetails = [
-    { label: lstrings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
+    { label: lstrings.loan_collateral_value, value: displayFiatTotal(defaultIsoFiat, collateralTotal) },
     {
       label: lstrings.loan_available_equity,
-      value: displayFiatTotal(wallet, availableEquity),
+      value: displayFiatTotal(defaultIsoFiat, availableEquity),
       icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
     }
   ]
@@ -116,16 +118,16 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
-        <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
-          <CardUi4 marginRem={[0, 0, 1]}>
-            <Space sideways>
+        <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
+          <EdgeCard marginRem={[0, 0, 1]}>
+            <Space row>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
               </EdgeText>
             </Space>
-          </CardUi4>
-        </TouchableOpacity>
+          </EdgeCard>
+        </EdgeTouchableOpacity>
       )
     } else return null
   }
@@ -192,7 +194,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
           const { title, iconName, handlePress, isDisabled } = actionCardConfigData
           return (
             <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
-              <Space right={1}>
+              <Space rightRem={1}>
                 <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
               </Space>
               <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
@@ -221,37 +223,37 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={`${lstrings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
         underline
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <Space around={1} top={1.5}>
+        <Space aroundRem={1} topRem={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
-            currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
-            currencyCode={fiatCurrencyCode}
+            currencyIcon={<FiatIcon fiatCurrencyCode={defaultFiat} />}
+            currencyCode={defaultFiat}
             total={debtTotal}
             details={summaryDetails}
             ltv={loanToValue}
           />
         </Space>
-        <Space horizontal={1}>
-          <Space bottom={1}>
+        <Space horizontalRem={1}>
+          <Space bottomRem={1}>
             <SectionHeading>{lstrings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
           {debts.map(debt => {
             if (zeroString(debt.nativeAmount)) return null
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
-              <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space sideways>
-                  <Space right={1}>
-                    <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
+              <EdgeCard key={debt.tokenId} marginRem={[0, 0, 1]}>
+                <Space row>
+                  <Space rightRem={1}>
+                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>
@@ -260,14 +262,14 @@ export const LoanDetailsSceneComponent = (props: Props) => {
                     <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
                   </Space>
                 </Space>
-              </CardUi4>
+              </EdgeCard>
             )
           })}
         </Space>
 
         {/* Tappable Action Cards */}
-        <Space horizontal={1}>
-          <Space bottom={1}>
+        <Space horizontalRem={1}>
+          <Space bottomRem={1}>
             <SectionHeading>{lstrings.loan_actions_title}</SectionHeading>
             {isActionProgramRunning ? (
               <Alert type="warning" title={lstrings.warning_please_wait_title} message={lstrings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
@@ -315,28 +317,34 @@ export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
 export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
-    const fiatAmount = calculateFiatAmount(wallet, exchangeRates, tokenAmount.tokenId, tokenAmount.nativeAmount)
+    const fiatAmount = calculateFiatAmount(wallet, defaultIsoFiat, exchangeRates, tokenAmount.tokenId, tokenAmount.nativeAmount)
     return add(sum, fiatAmount)
   }, '0')
 }
 
-export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string) => {
-  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+export const displayFiatTotal = (isoFiatCurrencyCode: string, fiatAmount: string) => {
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }
 
-export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: EdgeTokenId, nativeAmount: string): string => {
+export const calculateFiatAmount = (
+  wallet: EdgeCurrencyWallet,
+  isoFiatCurrencyCode: string,
+  exchangeRates: GuiExchangeRates,
+  tokenId: EdgeTokenId,
+  nativeAmount: string
+): string => {
   if (tokenId == null) return '0' // TODO: Support wrapped native token
 
   const token = getToken(wallet, tokenId)
   if (token == null) return '0'
 
   const { currencyCode, denominations } = token
-  const key = `${currencyCode}_${wallet.fiatCurrencyCode}`
+  const key = `${currencyCode}_${isoFiatCurrencyCode}`
   const assetFiatPrice = exchangeRates[key] ?? '0'
   if (zeroString(assetFiatPrice)) {
     return '0'

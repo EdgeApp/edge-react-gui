@@ -1,34 +1,31 @@
 import { EdgeAccount } from 'edge-core-js'
 import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
-import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
-import { checkVersion } from 'react-native-check-version'
 import { BlurView } from 'rn-id-blurview'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
-import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
-import { updateNotificationSettings } from '../../actions/NotificationActions'
+import { initializeAccount } from '../../actions/LoginActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { performanceMarkersFromLoginUiPerfEvents } from '../../perf'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
-import { GuiTouchIdInfo } from '../../types/types'
-import { isMaestro } from '../../util/maestro'
-import { logEvent, trackError } from '../../util/tracking'
-import { withServices } from '../hoc/withServices'
+import { NavigationBase, RootSceneProps } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
+import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
-import { UpdateModal } from '../modals/UpdateModal'
-import { Airship, showError } from '../services/AirshipInstance'
-import { DotsBackground } from '../ui4/DotsBackground'
+import { showDevError, showError } from '../services/AirshipInstance'
 import { LoadingScene } from './LoadingScene'
 
 export interface LoginParams {
+  passwordRecoveryKey?: string
+  nextLoginId?: string
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
   loginUiInitialRoute?: InitialRouteName
 }
@@ -37,13 +34,13 @@ export interface LoginParams {
 // @ts-expect-error
 global.ReactNativeBlurView = BlurView
 
-interface Props extends EdgeSceneProps<'login'> {}
+interface Props extends RootSceneProps<'login'> {}
 
 let firstRun = true
 
-export function LoginSceneComponent(props: Props) {
+export function LoginScene(props: Props) {
   const { navigation, route } = props
-  const { loginUiInitialRoute = 'login', experimentConfig } = route.params
+  const { experimentConfig, loginUiInitialRoute = 'login', nextLoginId, passwordRecoveryKey } = route.params
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -54,22 +51,7 @@ export function LoginSceneComponent(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
-  const disklet = useSelector(state => state.core.disklet)
-  const pendingDeepLink = useSelector(state => state.pendingDeepLink)
-  const nextLoginId = useSelector(state => state.nextLoginId)
   const loggedIn = useWatch(account, 'loggedIn')
-
-  const [counter, setCounter] = React.useState<number>(0)
-  const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
-  const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
-
-  const fontDescription = React.useMemo(
-    () => ({
-      headingFontFamily: theme.fontFaceMedium,
-      regularFontFamily: theme.fontFaceDefault
-    }),
-    [theme]
-  )
 
   // ---------------------------------------------------------------------
   // Effects
@@ -84,17 +66,17 @@ export function LoginSceneComponent(props: Props) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+            await dispatch(initializeAccount(navigation as NavigationBase, account))
           })
-          .catch(showError)
+          .catch(error => showError(error))
       }
       if (YOLO_PASSWORD != null) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+            await dispatch(initializeAccount(navigation as NavigationBase, account))
           })
-          .catch(showError)
+          .catch(error => showError(error))
       }
     } else if (YOLO_USERNAME == null && account.username == null && context.localUsers[0]?.loginId != null && typeof YOLO_PIN === 'string') {
       // Allow YOLO_PIN with light accounts
@@ -102,48 +84,11 @@ export function LoginSceneComponent(props: Props) {
       context
         .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
         .then(async account => {
-          await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+          await dispatch(initializeAccount(navigation as NavigationBase, account))
         })
-        .catch(showError)
+        .catch(error => showError(error))
     }
   }, [account, context, dispatch, navigation])
-
-  React.useEffect(() => {
-    if (pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
-      // Log out if necessary:
-      if (account.loggedIn) {
-        dispatch(logoutRequest(navigation)).catch(err => showError(err))
-      }
-
-      // Pass the link to our component:
-      const { passwordRecoveryKey } = pendingDeepLink
-      setPasswordRecoveryKey(passwordRecoveryKey)
-      setCounter(counter => counter + 1)
-      dispatch({ type: 'DEEP_LINK_HANDLED' })
-    }
-  }, [account, dispatch, navigation, pendingDeepLink])
-
-  const checkForUpdates = useHandler(async () => {
-    if (isMaestro()) return
-    const response = await checkVersion()
-    const skipUpdate = (await disklet.getText('ignoreUpdate.json').catch(() => '')) === response.version
-    if (response.needsUpdate && !skipUpdate) {
-      await Airship.show(bridge => (
-        <UpdateModal
-          bridge={bridge}
-          onSkip={() => {
-            disklet
-              .setText('ignoreUpdate.json', response.version)
-              .then(() => bridge.resolve())
-              .catch(err => bridge.reject(err))
-          }}
-        />
-      ))
-    }
-  })
-  React.useEffect(() => {
-    checkForUpdates().catch(error => showError(error))
-  }, [checkForUpdates])
 
   // ---------------------------------------------------------------------
   // Handlers
@@ -153,32 +98,21 @@ export function LoginSceneComponent(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation).catch(err => showError(err))
+        showHelpModal(navigation as NavigationBase).catch(err => showDevError(err))
       },
       text: lstrings.string_help
     }),
     [navigation]
   )
 
-  const maybeHandleComplete =
-    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.landingType !== 'A_legacy'
-      ? () => {
-          navigation.navigate('gettingStarted', { experimentConfig })
-        }
-      : undefined
-
-  const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
-    setPasswordRecoveryKey(undefined)
-    await dispatch(initializeAccount(navigation, account, touchIdInfo ?? dummyTouchIdInfo))
-
-    if (notificationPermissionsInfo) {
-      try {
-        await dispatch(updateNotificationSettings(notificationPermissionsInfo.notificationOptIns))
-      } catch (e) {
-        trackError(e, 'LoginScene:onLogin:setDeviceSettings')
-        console.error(e)
+  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
+    ? () => {
+        navigation.replace('gettingStarted', { experimentConfig })
       }
-    }
+    : undefined
+
+  const handleLogin = useHandler(async (account: EdgeAccount) => {
+    await dispatch(initializeAccount(navigation as NavigationBase, account))
   })
 
   const handleSendLogs = useHandler(() => {
@@ -189,7 +123,9 @@ export function LoginSceneComponent(props: Props) {
     dispatch(logEvent(event, values))
   })
 
-  const inMaestro = isMaestro()
+  const handlePerfEvent = useHandler(event => {
+    performanceMarkersFromLoginUiPerfEvents(event)
+  })
 
   return loggedIn ? (
     <LoadingScene />
@@ -197,26 +133,24 @@ export function LoginSceneComponent(props: Props) {
     <View style={styles.container} testID="edge: login-scene">
       <DotsBackground />
       <LoginScreen
-        key={String(counter)}
         accountOptions={accountOptions}
         appConfig={config}
         appId={config.appId}
         appName={config.appNameShort}
         context={context}
-        fontDescription={fontDescription}
-        initialLoginId={nextLoginId ?? undefined}
+        experimentConfig={experimentConfig}
+        fastLogin
+        forceLightAccountCreate={getDeviceSettings().forceLightAccountCreate}
+        initialLoginId={nextLoginId}
         initialRoute={loginUiInitialRoute}
         parentButton={parentButton}
         primaryLogo={theme.primaryLogo}
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
-        skipOtpReminder={inMaestro}
-        skipSecurityAlerts
-        experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
         onLogEvent={handleLogEvent}
         onLogin={handleLogin}
-        onNotificationPermit={setNotificationPermissionsInfo}
+        onPerfEvent={handlePerfEvent}
       />
     </View>
   )
@@ -226,16 +160,9 @@ const accountOptions = {
   pauseWallets: true
 }
 
-const dummyTouchIdInfo: GuiTouchIdInfo = {
-  isTouchEnabled: true,
-  isTouchSupported: true
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight
   }
 }))
-
-export const LoginScene = withServices(LoginSceneComponent)

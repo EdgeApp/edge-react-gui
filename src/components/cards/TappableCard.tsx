@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   children: React.ReactNode
   disabled?: boolean
-  onPress?: () => void
+  onPress: () => void
   warning?: boolean
   marginRem?: number[] | number
   paddingRem?: number[] | number
@@ -33,9 +33,9 @@ const TappableCardComponent = ({ children, disabled = false, onPress, ...cardPro
   )
 
   return (
-    <CardUi4 {...cardProps}>
-      {disabled ? renderTouchableChildren() : <TouchableOpacity onPress={disabled ? undefined : onPress}>{renderTouchableChildren()}</TouchableOpacity>}
-    </CardUi4>
+    <EdgeCard {...cardProps}>
+      {disabled ? renderTouchableChildren() : <EdgeTouchableOpacity onPress={onPress}>{renderTouchableChildren()}</EdgeTouchableOpacity>}
+    </EdgeCard>
   )
 }
 

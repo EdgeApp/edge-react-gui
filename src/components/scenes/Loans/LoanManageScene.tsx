@@ -1,6 +1,5 @@
 import { add, gt, max, mul } from 'biggystring'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -26,15 +25,16 @@ import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
-import { zeroString } from '../../../util/utils'
+import { removeIsoPrefix, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
@@ -108,7 +108,7 @@ const MANAGE_ACTION_DATA_MAP: {
   }
 }
 
-interface Props extends EdgeSceneProps<'loanManage'> {
+interface Props extends EdgeAppSceneProps<'loanManage'> {
   loanAccount: LoanAccount
 }
 
@@ -124,12 +124,13 @@ export const LoanManageSceneComponent = (props: Props) => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const executionContext = useExecutionContext()
 
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
-  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
+  const { currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const manageActionData = MANAGE_ACTION_DATA_MAP[loanManageType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
@@ -152,7 +153,7 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
 
   // #endregion Constants
 
@@ -360,7 +361,7 @@ export const LoanManageSceneComponent = (props: Props) => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         showCreateWallet={manageActionData.isFundDestWallet}
         createWalletId={manageActionData.isFundDestWallet ? borrowEngineWallet.id : undefined}
@@ -420,12 +421,12 @@ export const LoanManageSceneComponent = (props: Props) => {
       onSliderComplete={handleSliderComplete}
       sliderDisabled={actionProgram == null}
       headerTertiary={
-        <TouchableOpacity onPress={handleInfoIconPress}>
+        <EdgeTouchableOpacity onPress={handleInfoIconPress}>
           <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       }
     >
-      <Space vertical={1} around={0.5}>
+      <Space verticalRem={1} aroundRem={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
@@ -436,14 +437,14 @@ export const LoanManageSceneComponent = (props: Props) => {
         />
         {isShowAprChange ? <AprCard apr={newApr} key="apr" /> : null}
         <EdgeText style={styles.textTitle}>{manageActionData.srcDestCard}</EdgeText>
-        <Space around={0.5}>
+        <Space aroundRem={0.5}>
           <Shimmer isShown={bankAccountsMap == null} />
           <Peek isShown={bankAccountsMap != null}>
             <TappableAccountCard emptyLabel={lstrings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
           </Peek>
         </Space>
       </Space>
-      <Space vertical={1} around={0.25}>
+      <Space verticalRem={1} aroundRem={0.25}>
         <TotalDebtCollateralTile
           title={isActionSideDebts ? lstrings.loan_current_principal : lstrings.loan_current_collateral}
           wallet={borrowEngineWallet}

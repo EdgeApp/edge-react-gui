@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioConnectWalletConfirm } from '../../components/scenes/Fio/FioConnectWalletConfirmScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioConnectWalletConfirm', () => {
   it('should render with loading props', () => {
@@ -18,17 +18,19 @@ describe('FioConnectWalletConfirm', () => {
       date: 220322,
       txid: '0x34346463',
       signedTx: '0xdgs3442',
-      ourReceiveAddresses: ['FioAddress']
+      ourReceiveAddresses: ['FioAddress'],
+      id: 'id'
     }
 
     const actual = renderer.render(
       <FioConnectWalletConfirm
-        {...fakeSceneProps('fioConnectToWalletsConfirm', {
-          fioWallet: fakeWallet,
+        {...fakeEdgeAppSceneProps('fioConnectToWalletsConfirm', {
+          walletId: fakeWallet.id,
           fioAddressName: 'MyFioAddress',
           walletsToConnect: [],
           walletsToDisconnect: []
         })}
+        wallet={fakeWallet}
         ccWalletMap={['FIO'] as any}
         isConnected
         updateConnectedWallets={(fioAddress, ccWalletMap) => undefined}

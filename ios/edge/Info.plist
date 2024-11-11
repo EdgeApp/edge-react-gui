@@ -62,9 +62,21 @@
 		<string>https</string>
 		<string>http</string>
 		<string>bankid</string>
+		<string>edge</string>
+		<string>airbitz</string>
+		<string>edge-ret</string>
+		<string>airbitz-ret</string>
+		<string>dash</string>
+		<string>litecoin</string>
+		<string>ethereum</string>
+		<string>bitcoincash</string>
+		<string>bitcoin</string>
+		<string>reqaddr</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
 	<key>NSAppTransportSecurity</key>
@@ -163,10 +175,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>bugsnag</key>
-	<dict>
-		<key>apiKey</key>
-		<string>a0000000000000000000000000000000</string>
-	</dict>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:edge.app</string>
+	</array>
 </dict>
 </plist>

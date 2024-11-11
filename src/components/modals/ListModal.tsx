@@ -6,9 +6,10 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
-import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalFooter, ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { Paragraph } from '../themed/EdgeText'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
+import { ModalFooter } from '../themed/ModalParts'
+import { EdgeModal } from './EdgeModal'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -66,16 +67,14 @@ export function ListModal<T>({
   const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
-    return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
+    return { paddingBottom: theme.rem(ModalFooter.bottomRem), marginTop: theme.rem(0.5) }
   }, [theme])
 
   return (
-    <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
-      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+    <EdgeModal title={title} bridge={bridge} onCancel={handleCancel}>
+      {message == null ? null : <Paragraph>{message}</Paragraph>}
       {!textInput ? null : (
-        <FilledTextInput
-          vertical={1}
-          horizontal={0.5}
+        <ModalFilledTextInput
           // Our props:
           searchIcon
           blurOnClear={false}
@@ -103,6 +102,6 @@ export function ListModal<T>({
         onViewableItemsChanged={onViewableItemsChanged}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

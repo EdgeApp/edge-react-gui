@@ -9,8 +9,9 @@ import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
+import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioNameRow } from '../../FioAddress/FioName'
@@ -19,7 +20,6 @@ import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 
 interface LocalState {
   initLoading: boolean
@@ -38,7 +38,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressList'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressList'> {}
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -101,7 +101,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
     if (fioWallet == null) return
     navigation.navigate('fioDomainSettings', {
-      fioWallet,
+      walletId: fioWallet.id,
       fioDomainName: name,
       expiration,
       isPublic
@@ -140,7 +140,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                   key={`${domain.name}`}
                   name={domain.name}
                   expiration={domain.expiration}
-                  icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  icon={<IonIcon name="at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
                   onPress={() => this.onDomainPress(domain)}
                 />
               ))}
@@ -150,14 +150,14 @@ export class FioAddressList extends React.Component<Props, LocalState> {
             </EdgeAnim>
           </ScrollView>
           <View style={styles.buttons}>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{
                 label: lstrings.fio_address_list_screen_button_register,
-                onPress: () => navigation.navigate('fioAddressRegister', {})
+                onPress: () => navigation.navigate('fioAddressRegister')
               }}
               secondary={{
                 label: lstrings.fio_address_list_domain_register,
-                onPress: () => navigation.navigate('fioDomainRegister', {})
+                onPress: () => navigation.navigate('fioDomainRegister')
               }}
             />
           </View>

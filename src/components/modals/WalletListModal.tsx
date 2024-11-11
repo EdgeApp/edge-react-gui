@@ -1,23 +1,25 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItem, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/PaymentMethod'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { BooleanMap, EdgeAsset } from '../../types/types'
-import { getCurrencyCode, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
-import { CustomAsset } from '../data/row/CustomAssetRow'
-import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
+import { EdgeAsset } from '../../types/types'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { CustomAsset } from '../rows/CustomAssetRow'
+import { PaymentMethodRow } from '../rows/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -26,16 +28,15 @@ import { ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
+import { EdgeModal } from './EdgeModal'
 
+export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
 export type WalletListResult =
   | {
       type: 'wallet'
       walletId: string
       tokenId: EdgeTokenId
-      /** @deprecated Use tokenId instead */
-      currencyCode: string
     }
   | { type: 'wyre'; fiatAccountId: string }
   | { type: 'bankSignupRequest' }
@@ -62,6 +63,7 @@ interface Props {
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
+  parentWalletId?: string
 }
 
 const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
@@ -89,15 +91,16 @@ export function WalletListModal(props: Props) {
     createWalletId,
     headerTitle,
     showBankOptions = false,
-    showCreateWallet
+    showCreateWallet,
+    parentWalletId
   } = props
 
   // #region Constants
 
   const showCustomAssets = customAssets != null && customAssets.length > 0
 
+  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -105,7 +108,6 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
   const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
@@ -133,24 +135,20 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
+  const handleWalletListPress = useHandler(async (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
     } else if (customAsset != null) {
       bridge.resolve({ type: 'custom', customAsset })
     } else {
-      const wallet = currencyWallets[walletId]
-      const currencyCode = getCurrencyCode(wallet, tokenId)
-      bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
+      dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
+      bridge.resolve({ type: 'wallet', walletId, tokenId })
     }
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
-    setSearching(false)
   })
-  const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
-  const handleSearchFocus = useHandler(() => setSearching(true))
 
   // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
   const handleShowBankPlugin = useHandler(async () => {
@@ -173,9 +171,9 @@ export function WalletListModal(props: Props) {
 
   const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
     return (
-      <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
+      <EdgeTouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
         <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   })
 
@@ -191,48 +189,34 @@ export function WalletListModal(props: Props) {
     }
     return (
       <View style={styles.bankMargin}>
-        <FlashList
-          estimatedItemSize={theme.rem(4.25)}
-          data={Object.values(bankAccountsMap)}
-          keyboardShouldPersistTaps="handled"
-          renderItem={renderPaymentMethod}
-          keyExtractor={item => item.id}
-        />
+        <FlatList data={Object.values(bankAccountsMap)} keyboardShouldPersistTaps="handled" renderItem={renderPaymentMethod} keyExtractor={item => item.id} />
       </View>
     )
-  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin, theme])
+  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin])
 
   const customAssetSection = React.useMemo<React.ReactNode>(() => {
     if (!showCustomAssets) return null
     return (
       <View style={styles.customAssetMargin}>
-        <FlashList
-          estimatedItemSize={theme.rem(4.25)}
-          data={customAssets}
-          keyboardShouldPersistTaps="handled"
-          renderItem={renderCustomAsset}
-          keyExtractor={item => item.referenceTokenId}
-        />
+        <FlatList data={customAssets} keyboardShouldPersistTaps="handled" renderItem={renderCustomAsset} keyExtractor={item => item.referenceTokenId} />
       </View>
     )
-  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin, theme])
+  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin])
 
   // #endregion Renderers
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
-      scroll
       title={
         <View style={styles.header}>
           <ModalTitle>{headerTitle}</ModalTitle>
           <SimpleTextInput
-            around={0.5}
+            aroundRem={0.5}
+            autoFocus
             returnKeyType="search"
             placeholder={lstrings.search_wallets}
             onChangeText={setSearchText}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchUnfocus}
             onClear={handleSearchClear}
             value={searchText}
             iconComponent={SearchIconAnimated}
@@ -250,14 +234,14 @@ export function WalletListModal(props: Props) {
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
-        searching={searching}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
+        parentWalletId={parentWalletId}
         onPress={handleWalletListPress}
         navigation={navigation}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 
@@ -279,67 +263,56 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // Given a list of assets, shows a modal for a user to pick a wallet for that asset.
 // If only one wallet exists for that asset, auto pick that wallet
-export const pickWallet = async ({
-  account,
-  allowedWalletIds,
-  assets,
-  headerTitle = lstrings.select_wallet,
-  navigation,
-  showCreateWallet
-}: {
+export const pickWallet = async (args: {
   account: EdgeAccount
-  allowedWalletIds?: string[]
   assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
 }): Promise<WalletListResult> => {
+  const { account, assets = [], headerTitle = lstrings.select_wallet, navigation, showCreateWallet } = args
   const { currencyWallets } = account
 
-  const walletIdMap: BooleanMap = {}
+  const matchingWallets: Array<{ walletId: string; tokenId: EdgeTokenId }> = []
+  const matchingAssets: EdgeAsset[] = []
 
-  // Check if user owns any wallets that
-  const matchingAssets = (assets ?? []).filter(asset => {
-    const matchingWalletIds: string[] = Object.keys(currencyWallets).filter(key => {
-      const { pluginId, tokenId } = asset
-      const currencyWallet = currencyWallets[key]
-      const pluginIdMatch = currencyWallet.currencyInfo.pluginId === pluginId
+  for (const asset of assets) {
+    const { pluginId, tokenId } = asset
+    for (const walletId of Object.keys(currencyWallets)) {
+      const wallet = currencyWallets[walletId]
+      const pluginIdMatch = wallet.currencyInfo.pluginId === pluginId
 
       // No wallet with matching pluginId, fail this asset
-      if (!pluginIdMatch) return false
+      if (!pluginIdMatch) continue
       if (tokenId == null) {
-        walletIdMap[key] = true
-        return true
+        matchingWallets.push({ walletId, tokenId })
+        matchingAssets.push(asset)
+        continue
       }
       // See if this wallet has a matching token enabled
-      const tokenIdMatch = currencyWallet.enabledTokenIds.find(tid => tokenId)
+      const tokenIdMatch = wallet.enabledTokenIds.find(tid => tokenId)
+
       if (tokenIdMatch != null) {
-        const cc = getCurrencyCode(currencyWallet, tokenIdMatch)
-        walletIdMap[`${key}:${cc}`] = true
-        return true
+        matchingWallets.push({ walletId, tokenId })
+        matchingAssets.push(asset)
+        continue
       }
-      return false
-    })
-    return matchingWalletIds.length !== 0
-  })
+    }
+  }
 
-  if (assets != null && matchingAssets.length === 0) return
+  // If there are not matching wallets and we can't create any wallets then error
+  if (showCreateWallet !== true && matchingWallets.length === 0) {
+    throw new Error(ErrorNoMatchingWallets)
+  }
 
-  if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
-    // Only one matching wallet and asset. Auto pick the wallet
-    const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
-    const tokenId = getTokenIdForced(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
-    return { type: 'wallet', walletId, currencyCode, tokenId }
+  if (matchingWallets.length === 1) {
+    // Only one matching wallet and asset. Auto pick the wallet and token
+    const { walletId, tokenId } = matchingWallets[0]
+    return { type: 'wallet', walletId, tokenId }
   } else {
+    // There is more than one match or we don't have a wallet for this asset. Launch the picker
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={navigation}
-        headerTitle={headerTitle}
-        allowedWalletIds={allowedWalletIds}
-        allowedAssets={assets}
-        showCreateWallet={showCreateWallet}
-      />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
     ))
     return walletListResult
   }

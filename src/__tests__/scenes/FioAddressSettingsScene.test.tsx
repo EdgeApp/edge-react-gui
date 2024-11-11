@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressSettingsComponent } from '../../components/scenes/Fio/FioAddressSettingsScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressSettingsComponent', () => {
   it('should render with loading props', () => {
@@ -18,15 +18,17 @@ describe('FioAddressSettingsComponent', () => {
       date: 220322,
       txid: '0x34346463',
       signedTx: '0xdgs3442',
-      ourReceiveAddresses: ['FioAddress']
+      ourReceiveAddresses: ['FioAddress'],
+      id: 'id'
     }
 
     const actual = renderer.render(
       <FioAddressSettingsComponent
-        {...fakeSceneProps('fioAddressSettings', {
-          fioWallet: fakeWallet,
+        {...fakeEdgeAppSceneProps('fioAddressSettings', {
+          walletId: fakeWallet.id,
           fioAddressName: 'MyFioAddress'
         })}
+        wallet={fakeWallet}
         isConnected
         refreshAllFioAddresses={async () => {}}
         theme={getTheme()}

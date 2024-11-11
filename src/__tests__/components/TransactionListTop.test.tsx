@@ -6,7 +6,7 @@ import TestRenderer from 'react-test-renderer'
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
 import { ENV } from '../../env'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeCompositeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListTop', () => {
   const currencyInfo: EdgeCurrencyInfo = {
@@ -66,7 +66,7 @@ describe('TransactionListTop', () => {
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
           isEmpty={false}
-          navigation={fakeNavigation}
+          navigation={fakeCompositeNavigation}
           searching={false}
           tokenId={null}
           wallet={fakeWallet}
@@ -87,7 +87,7 @@ describe('TransactionListTop', () => {
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
           isEmpty={false}
-          navigation={fakeNavigation}
+          navigation={fakeCompositeNavigation}
           searching={false}
           tokenId={null}
           wallet={fakeWallet}

@@ -1,11 +1,9 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { SectionList, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
-import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -32,18 +30,13 @@ interface Props {
   filterActivation?: boolean
 
   // Visuals:
-  searching: boolean
   searchText: string
   showCreateWallet?: boolean
   createWalletId?: string
+  parentWalletId?: string
 
   // Callbacks:
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
-}
-
-interface Section {
-  title: string
-  data: Array<WalletListItem | WalletCreateItem>
 }
 
 /**
@@ -63,10 +56,10 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    searching,
     searchText,
     showCreateWallet,
     createWalletId,
+    parentWalletId,
 
     // Callbacks:
     onPress
@@ -94,10 +87,10 @@ export function WalletList(props: Props) {
     const allowedWalletSet = new Set<string>(allowedWalletIds ?? [])
 
     return sortedWalletList.filter(item => {
-      const { tokenId, wallet } = item
-
       // Exclude loading wallets:
-      if (wallet == null) return false
+      if (item.type !== 'asset') return false
+
+      const { tokenId, wallet } = item
 
       // Remove excluded walletIds:
       if (excludeWalletSet.has(wallet.id)) return false
@@ -113,6 +106,21 @@ export function WalletList(props: Props) {
     })
   }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
 
+  const parentWalletSection: Array<WalletListItem | string> = React.useMemo(() => {
+    const out: Array<WalletListItem | string> = []
+    if (parentWalletId != null) {
+      // Always show a "Parent Wallet" header:
+      out.push(lstrings.wallet_list_modal_header_parent)
+
+      // The parent wallet should always be available from sortedWalletList:
+      const parentWalletListItem = sortedWalletList.find(
+        walletListItem => walletListItem.type === 'asset' && walletListItem.wallet?.id === parentWalletId && walletListItem.tokenId == null
+      )
+      if (parentWalletListItem != null) out.push({ ...parentWalletListItem, key: `parent-${parentWalletListItem.key}` })
+    }
+    return out
+  }, [parentWalletId, sortedWalletList])
+
   // Extract recent wallets:
   const recentWalletList = React.useMemo(() => {
     const out: WalletListItem[] = []
@@ -127,14 +135,14 @@ export function WalletList(props: Props) {
     for (const item of mostRecentWallets) {
       // Find the mentioned wallet, if it still exists:
       const row = filteredWalletList.find(row => {
+        if (row.type !== 'asset') return false
         const { wallet, token } = row
-        if (wallet == null) return false
         if (wallet.id !== item.id) return false
-        const { currencyCode } = token == null ? wallet.currencyInfo : token
+        const { currencyCode } = token ?? wallet.currencyInfo
         return currencyCode.toLowerCase() === item.currencyCode.toLowerCase()
       })
 
-      if (row != null) out.push(row)
+      if (row != null) out.push({ ...row, key: `recent-${row.key}` })
       if (out.length >= maxLength) break
     }
 
@@ -149,10 +157,10 @@ export function WalletList(props: Props) {
   )
 
   // Merge the lists, filtering based on the search term:
-  const { walletList, sectionList } = React.useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
+  const walletList = React.useMemo<Array<WalletListItem | WalletCreateItem | string>>(() => {
     const walletList: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
-      ...searchWalletList(filteredWalletList, searching, searchText)
+      ...searchWalletList(filteredWalletList, searchText)
     ]
 
     // Show the create-wallet list, filtered by the search term:
@@ -161,71 +169,58 @@ export function WalletList(props: Props) {
     }
 
     // Show a flat list if we are searching, or have no recent wallets:
-    if (searching || searchText.length > 0 || recentWalletList.length === 0) {
-      return { walletList }
+    if (searchText.length > 0 || recentWalletList.length === 0) {
+      return walletList
     }
 
-    // Add the recent wallets section:
-    return {
-      sectionList: [
-        {
-          title: lstrings.wallet_list_modal_header_mru,
-          data: [...recentWalletList]
-        },
-        {
-          title: lstrings.wallet_list_modal_header_all,
-          data: walletList
-        }
-      ],
-      walletList
-    }
-  }, [createWalletList, filteredWalletList, recentWalletList, searchText, searching, showCreateWallet])
+    return [
+      // Parent section and wallet, if defined
+      ...parentWalletSection,
+      // Show a sectioned list with sectioned recent/all wallets:
+      lstrings.wallet_list_modal_header_mru,
+      ...recentWalletList,
+      lstrings.wallet_list_modal_header_all,
+      ...walletList
+    ]
+  }, [createWalletList, filteredWalletList, parentWalletSection, recentWalletList, searchText, showCreateWallet])
 
   // rendering -------------------------------------------------------------
 
-  const renderRow = useHandler((item: FlatListItem<any>) => {
-    if (item.item.walletId == null) {
-      const createItem: WalletCreateItem = item.item
-      return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
-    }
+  const renderRow = React.useCallback(
+    (item: FlatListItem<WalletListItem | WalletCreateItem | string>) => {
+      if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
 
-    const walletItem: WalletListItem = item.item
-    const { token, tokenId, wallet } = walletItem
-
-    if (wallet == null) {
-      return <WalletListLoadingRow />
-    }
-    return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
-  })
-
-  const renderSectionHeader = useHandler((section: { section: Section }) => {
-    return <WalletListSectionHeader title={section.section.title} />
-  })
-
-  const handleItemLayout = useRowLayout()
+      switch (item.item.type) {
+        case 'asset': {
+          const { token, tokenId, wallet } = item.item
+          return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+        }
+        case 'create':
+          return <WalletListCreateRow createItem={item.item} createWalletId={createWalletId} onPress={handlePress} />
+        case 'loading':
+          return <WalletListLoadingRow />
+      }
+    },
+    [createWalletId, handlePress]
+  )
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
   }, [theme])
 
-  return sectionList == null ? (
-    <FlashList
+  return (
+    <FlatList
       contentContainerStyle={scrollPadding}
       data={walletList}
-      estimatedItemSize={theme.rem(4.25)}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
+      keyExtractor={keyExtractor}
       renderItem={renderRow}
-    />
-  ) : (
-    <SectionList
-      contentContainerStyle={scrollPadding}
-      getItemLayout={handleItemLayout}
-      keyboardDismissMode="on-drag"
-      keyboardShouldPersistTaps="handled"
-      renderItem={renderRow}
-      renderSectionHeader={renderSectionHeader}
-      sections={sectionList}
     />
   )
+}
+
+const keyExtractor = (item: WalletListItem | WalletCreateItem | string): string => {
+  if (typeof item === 'string') return item
+  return item.key
 }

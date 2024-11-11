@@ -3,13 +3,11 @@ import { combineReducers } from 'redux'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
 import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
-import { DeepLink } from '../types/DeepLinkTypes'
 import { Action } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
 import { GuiContact, GuiExchangeRates, WalletListItem } from '../types/types'
 import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
-import { cryptoExchange, CryptoExchangeState } from './CryptoExchangeReducer'
 import { network, NetworkState } from './NetworkReducer'
 import { permissions, PermissionsState } from './PermissionsReducer'
 import { ui, UiState } from './uiReducer'
@@ -25,12 +23,6 @@ export interface RootState {
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
 
-  // Next username to auto-fill at the login screen, or blank if none:
-  readonly nextLoginId: string | null
-
-  // Deep link waiting to be fulfilled:
-  readonly pendingDeepLink: DeepLink | null
-
   // Notification settings for price change/marketing/etc
   readonly notificationSettings: NotificationSettings
 
@@ -41,7 +33,6 @@ export interface RootState {
   readonly account: AccountState
   readonly actionQueue: ActionQueueState
   readonly core: CoreState
-  readonly cryptoExchange: CryptoExchangeState
   readonly loanManager: LoanManagerState
   readonly permissions: PermissionsState
   readonly ui: UiState
@@ -77,27 +68,6 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  nextLoginId(state: string | null = null, action: Action): string | null {
-    switch (action.type) {
-      case 'LOGOUT': {
-        return action.data.nextLoginId ?? null
-      }
-      default:
-        return state
-    }
-  },
-
-  pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
-    switch (action.type) {
-      case 'DEEP_LINK_RECEIVED':
-        return action.data
-      case 'DEEP_LINK_HANDLED':
-        return null
-      default:
-        return state
-    }
-  },
-
   notificationSettings(state: NotificationSettings = { ignoreMarketing: false, ignorePriceChanges: false, plugins: {} }, action: Action): NotificationSettings {
     switch (action.type) {
       case 'NOTIFICATION_SETTINGS_UPDATE':
@@ -122,7 +92,6 @@ export const rootReducer = combineReducers<RootState, Action>({
   account,
   actionQueue,
   core,
-  cryptoExchange,
   loanManager,
   permissions,
   ui,

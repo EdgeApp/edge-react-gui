@@ -13,7 +13,7 @@ import {
   VelodromeLPToken__factory,
   VelodromeRouterV2__factory
 } from '../../../contracts'
-import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
@@ -208,7 +208,7 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
   const instance = {
     stakePolicyId,
-    fetchStakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> => {
+    fetchStakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
       const { gasPrice, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
 
       // determine both amounts
@@ -244,9 +244,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -260,9 +262,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -290,9 +294,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -316,9 +322,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '500000',
               customData: {
-                name: metadataName,
-                category: 'Transfer:Staking',
-                notes: `Add liquidity to ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: `Add liquidity to ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             }
           )
@@ -348,9 +356,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
           gasPrice,
           gasLimit: '500000',
           customData: {
-            name: metadataName,
-            category: 'Transfer:Staking',
-            notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+            metadata: {
+              name: metadataName,
+              category: 'Transfer:Staking',
+              notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+            }
           }
         })
       })
@@ -368,9 +378,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '1000000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -387,9 +399,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '1000000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -414,9 +428,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
             gasPrice,
             gasLimit: '10000000',
             customData: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Leverage ${metadataPoolAssetName} liquidity pool contract`
+              metadata: {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Leverage ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           }
         )
@@ -440,7 +456,7 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
-    fetchUnstakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> => {
+    fetchUnstakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
       const { gasPrice, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
       const collateralContract = TarotCollateral__factory.connect(collateralContractAddress, provider)
       const tarotRouterContract = TarotRouter__factory.connect(tarotRouterContractAddress, provider)
@@ -459,9 +475,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
               gasPrice,
               gasLimit: '60000',
               customData: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+                metadata: {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             })
         )
@@ -481,9 +499,11 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
             gasPrice,
             gasLimit: '1000000',
             customData: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+              metadata: {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           })
       )
@@ -505,10 +525,10 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
-    fetchClaimQuote: (wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string) => {
+    fetchClaimQuote: (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string) => {
       throw new Error('fetchClaimQuote not implemented for TarotPoolAdapter')
     },
-    fetchUnstakeExactQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> => {
+    fetchUnstakeExactQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
       throw new Error('fetchUnstakeExactQuote not implemented for TarotPoolAdapter')
     },
     fetchStakePosition: async (wallet: EdgeCurrencyWallet): Promise<StakePosition> => {
@@ -519,7 +539,7 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       const tarot = tarotUtils(adapterConfig, provider, walletAddress)
 
-      function getPositionAllocation(token: AssetId, nativeAmount: string): PositionAllocation {
+      function getPositionAllocation(token: StakeAssetInfo, nativeAmount: string): PositionAllocation {
         return {
           pluginId: token.pluginId,
           currencyCode: token.currencyCode,

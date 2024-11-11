@@ -3,6 +3,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import { WalletConnectChainId } from '../types/types'
+import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -69,6 +70,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:tron',
   'wallet:polkadot',
   'wallet:optimism',
+  'wallet:ton',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -102,7 +104,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:liberlandtestnet',
   'wallet:coreum',
   'wallet:osmosis',
-  'wallet:thorchainrune'
+  'wallet:thorchainrune',
+  'wallet:bobevm'
 ]
 
 // Put these in reverse order of preference
@@ -145,21 +148,19 @@ interface SpecialCurrencyInfo {
   isAccountActivationRequired?: boolean
   tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
-  isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
   needsAccountNameSetup?: boolean
-  skipAccountNameValidation?: boolean
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
-  isPaymentProtocolSupported?: boolean
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
-  stakeActions?: { [stakeActionKey: string]: string }
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
+  chainIcon?: boolean
+  unstoppableDomainsTicker?: string // https://support.unstoppabledomains.com/support/solutions/articles/48001185621
 }
 
 /*
@@ -181,6 +182,14 @@ export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo =>
 export const SPECIAL_CURRENCY_INFO: {
   [pluginId: string]: SpecialCurrencyInfo
 } = {
+  amoy: {
+    allowZeroTx: true,
+    chainCode: 'ETH',
+    displayBuyCrypto: false,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_amoy_wallet_name,
+    isImportKeySupported: true
+  },
   bitcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     hasSegwit: true,
@@ -190,7 +199,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'BTC'
   },
   bitcointestnet: {
     hasSegwit: true,
@@ -198,8 +207,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   bitcoincash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -209,7 +217,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'BCH'
   },
   bitcoinsv: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -217,7 +225,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BSV',
     keysOnlyMode: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'BSV'
   },
   digibyte: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -225,7 +233,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'DGB',
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'DGB'
   },
   litecoin: {
     hasSegwit: true,
@@ -236,7 +244,7 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'LTC'
   },
   rsk: {
     initWalletName: lstrings.string_first_rsk_wallet_name,
@@ -244,11 +252,11 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '30'
-    }
+    },
+    unstoppableDomainsTicker: 'RSK'
   },
   stellar: {
     initWalletName: lstrings.string_first_stellar_wallet_name,
@@ -260,7 +268,8 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_xlm_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    unstoppableDomainsTicker: 'XLM'
   },
   ripple: {
     initWalletName: lstrings.string_first_ripple_wallet_name,
@@ -274,34 +283,55 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     displayBuyCrypto: false,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    unstoppableDomainsTicker: 'XRP'
   },
   monero: {
     initWalletName: lstrings.string_first_monero_wallet_name,
     chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    unstoppableDomainsTicker: 'XMR'
+  },
+  cardano: {
+    initWalletName: lstrings.string_first_cardano_wallet_name,
+    chainCode: 'ADA',
+    noChangeMiningFee: true,
+    noMaxSpend: true,
+    dummyPublicAddress: 'addr1qyh498v7479sljadw8mdlmshnlt3n30ewzpqnmvrsz2v8rpqt56tgy6jhzgcc7v8mlh7lhw9a9j2hdlmek4arx2238us9e5fq0',
+    isImportKeySupported: true,
+    isStakingSupported: true,
+    unstoppableDomainsTicker: 'ADA'
+  },
+  cardanotestnet: {
+    initWalletName: lstrings.string_first_cardano_preprod_wallet_name,
+    chainCode: 'ADA',
+    noChangeMiningFee: true,
+    noMaxSpend: true,
+    dummyPublicAddress: 'addr_test1qqke2p8jjn322vrm4pns3w0geks83yk965n2myqt4z5dvrcx5reaxqm5g2yhcn76d67lca5hcgfzun7zssej3ashtnxqkghlfn',
+    isImportKeySupported: true
   },
   eos: {
     chainCode: 'EOS',
     dummyPublicAddress: 'edgecreator2',
     initWalletName: lstrings.string_first_eos_wallet_name,
-    isAccountActivationRequired: true,
-    isCustomTokensSupported: true,
+    isAccountActivationRequired: false,
     isImportKeySupported: true,
     keysOnlyMode: true,
     needsAccountNameSetup: true,
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'EOS'
   },
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
     chainCode: 'TLOS',
-    isAccountActivationRequired: true,
+    keysOnlyMode: true,
+    isAccountActivationRequired: false,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true
+    unstoppableDomainsTicker: 'TLOS'
   },
   wax: {
     initWalletName: lstrings.string_first_wax_wallet_name,
@@ -311,8 +341,8 @@ export const SPECIAL_CURRENCY_INFO: {
     needsAccountNameSetup: false,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    keysOnlyMode: true
+    keysOnlyMode: true,
+    unstoppableDomainsTicker: 'WAXP'
   },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,
@@ -322,12 +352,11 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '1'
-    }
+    },
+    unstoppableDomainsTicker: 'ETH'
   },
   arbitrum: {
     initWalletName: lstrings.string_first_arbitrum_wallet_name,
@@ -335,8 +364,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42161'
@@ -348,8 +376,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
@@ -362,9 +389,8 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isCustomTokensSupported: false,
-    isPaymentProtocolSupported: false,
-    noMaxSpend: true
+    noMaxSpend: true,
+    unstoppableDomainsTicker: 'FIL'
   },
   filecoinfevm: {
     initWalletName: lstrings.string_first_filecoin_fevm_wallet_name,
@@ -372,10 +398,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: false,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isTransactionListUnsupported: true,
-    isCustomTokensSupported: false,
-    isPaymentProtocolSupported: false
+    isStakingSupported: true
   },
   filecoinfevmcalibration: {
     initWalletName: lstrings.string_first_filecoin_fevm_calibratio_wallet_name,
@@ -383,10 +406,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: false,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isTransactionListUnsupported: true,
-    isCustomTokensSupported: false,
-    isPaymentProtocolSupported: false
+    isStakingSupported: true
   },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
@@ -395,43 +415,19 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
-    isStakingSupported: true
-  },
-  kovan: {
-    initWalletName: lstrings.string_first_ethereum_wallet_name,
-    chainCode: 'ETH',
-    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true,
-    displayBuyCrypto: true,
-    isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
-    walletConnectV2ChainId: {
-      namespace: 'eip155',
-      reference: '42'
-    }
-  },
-  goerli: {
-    initWalletName: lstrings.string_first_ethereum_wallet_name,
-    chainCode: 'ETH',
-    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true,
-    isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false
+    isStakingSupported: true,
+    unstoppableDomainsTicker: 'TRX'
   },
   ethereumclassic: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
-    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '61'
-    }
+    },
+    unstoppableDomainsTicker: 'ETC'
   },
   ethereumpow: {
     initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
@@ -439,8 +435,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -453,22 +447,31 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
     isStakingSupported: true,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
     }
   },
-  zksync: {
-    initWalletName: lstrings.string_first_zksync_wallet_name,
-    chainCode: 'OP',
+  bobevm: {
+    initWalletName: lstrings.string_first_bobevm_wallet_name,
+    chainCode: 'ETH',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '60808'
+    }
+  },
+  zksync: {
+    allowZeroTx: true,
+    chainCode: 'OP',
+    chainIcon: true,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_zksync_wallet_name,
+    isImportKeySupported: true,
+    noMaxSpend: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '324'
@@ -481,7 +484,8 @@ export const SPECIAL_CURRENCY_INFO: {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    unstoppableDomainsTicker: 'XTZ'
   },
   axelar: {
     initWalletName: lstrings.string_first_axelar_wallet_name,
@@ -514,25 +518,34 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'cosmos',
       reference: 'cosmoshub-4'
-    }
+    },
+    unstoppableDomainsTicker: 'ATOM'
   },
   osmosis: {
     initWalletName: lstrings.string_first_osmosis_wallet_name,
     chainCode: 'OSMO',
     dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
-    isCustomTokensSupported: true,
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'cosmos',
       reference: 'osmosis-1'
     }
   },
+  ton: {
+    initWalletName: lstrings.string_first_ton_wallet_name,
+    chainCode: 'TON',
+    dummyPublicAddress: 'UQAc_4sYewa5e5eN1D3nrt9wDy2akCCQ3VyNlhcxF4VozlO5',
+    isImportKeySupported: false,
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'TON'
+  },
   thorchainrune: {
     initWalletName: lstrings.string_first_thorchainrune_wallet_name,
     chainCode: 'RUNE',
     noChangeMiningFee: true,
     dummyPublicAddress: 'thor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    unstoppableDomainsTicker: 'RUNE'
   },
   binance: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
@@ -548,7 +561,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isStakingSupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '56'
@@ -557,10 +569,10 @@ export const SPECIAL_CURRENCY_INFO: {
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
-    isCustomTokensSupported: true,
     isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'SOL'
   },
   celo: {
     initWalletName: lstrings.string_first_celo_wallet_name,
@@ -568,11 +580,11 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42220'
-    }
+    },
+    unstoppableDomainsTicker: 'CELO'
   },
   fio: {
     allowZeroTx: true,
@@ -582,10 +594,6 @@ export const SPECIAL_CURRENCY_INFO: {
     noChangeMiningFee: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    stakeActions: {
-      add: 'stakeFioTokens',
-      remove: 'unStakeFioTokens'
-    },
     stakeMaxApy: 450
   },
   dash: {
@@ -594,14 +602,14 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'DASH',
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'DASH'
   },
   ravencoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'RVN'
   },
   dogecoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -610,29 +618,28 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'DOGE'
   },
   zcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'FIRO'
   },
   smartcash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true,
-    keysOnlyMode: true
+    keysOnlyMode: true,
+    unstoppableDomainsTicker: 'SMART'
   },
   vertcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   bitcoingold: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -640,28 +647,27 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BTG',
     isImportKeySupported: true,
     isSplittingDisabled: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'BTG'
   },
   feathercoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
-    isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    isImportKeySupported: true
   },
   groestlcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'GRS'
   },
   qtum: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
     isImportKeySupported: true,
-    isPaymentProtocolSupported: true
+    unstoppableDomainsTicker: 'QTUM'
   },
   eboost: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -682,21 +688,20 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '250'
-    }
+    },
+    unstoppableDomainsTicker: 'FTM'
   },
   hedera: {
     initWalletName: lstrings.string_first_hedera_wallet_name,
     chainCode: 'HBAR',
     dummyPublicAddress: '0.0.14625',
     isImportKeySupported: true,
-    isAccountActivationRequired: true,
-    skipAccountNameValidation: true,
     noMaxSpend: true,
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'HBAR'
   },
   polkadot: {
     initWalletName: lstrings.string_first_polkadot_wallet_name,
@@ -708,7 +713,8 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_dot_minimum_notification_body,
       alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    unstoppableDomainsTicker: 'DOT'
   },
   liberland: {
     initWalletName: lstrings.string_first_liberland_wallet_name,
@@ -722,7 +728,6 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
@@ -737,7 +742,6 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
@@ -766,7 +770,8 @@ export const SPECIAL_CURRENCY_INFO: {
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
       }
-    ]
+    ],
+    unstoppableDomainsTicker: 'ZEC'
   },
   piratechain: {
     initWalletName: lstrings.string_first_piratechain_wallet_name,
@@ -774,7 +779,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode: Platform.OS === 'android' ? Platform.constants.Version < 28 : false,
+    keysOnlyMode: Platform.OS === 'android' ? Platform.constants.Version < 28 : Platform.OS === 'ios',
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
@@ -787,7 +792,8 @@ export const SPECIAL_CURRENCY_INFO: {
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
       }
-    ]
+    ],
+    unstoppableDomainsTicker: 'ARRR'
   },
   polygon: {
     initWalletName: lstrings.string_first_polygon_wallet_name,
@@ -796,11 +802,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '137'
-    }
+    },
+    unstoppableDomainsTicker: 'MATIC'
   },
   pulsechain: {
     initWalletName: lstrings.string_first_pulsechain_wallet_name,
@@ -810,8 +816,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '369'
@@ -824,31 +828,59 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '43114'
-    }
+    },
+    unstoppableDomainsTicker: 'AVAX'
   },
   algorand: {
     initWalletName: lstrings.string_first_algorand_wallet_name,
     chainCode: 'ALGO',
     dummyPublicAddress: 'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
-    isCustomTokensSupported: true,
     noChangeMiningFee: true,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'algorand',
-      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8='
+      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73k'
+    },
+    unstoppableDomainsTicker: 'ALGO'
+  },
+  holesky: {
+    initWalletName: lstrings.string_first_holesky_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '170000'
+    }
+  },
+  sepolia: {
+    initWalletName: lstrings.string_first_sepolia_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '11155111'
     }
   }
 }
 
 export const USD_FIAT = 'iso:USD'
-export const getSymbolFromCurrency = (currencyCode: string) => {
-  if (typeof currencyCode !== 'string') return ''
-  const codeWithoutIso = currencyCode.replace('iso:', '')
+/**
+ * Get the fiat symbol from an iso:[fiat] OR fiat currency code
+ */
+export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
+  if (typeof isoOrFiatCurrencyCode !== 'string') return ''
+  const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }
@@ -1016,6 +1048,7 @@ export const FIAT_CODES_SYMBOLS: { [code: string]: string } = {
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
 export const FIO_STR = 'FIO'
+export const FIO_PLUGIN_ID = 'fio'
 export const FIO_DOMAIN_DEFAULT = {
   name: 'edge',
   expiration: new Date().toDateString(),

@@ -26,12 +26,6 @@ export function showResyncWalletModal(walletId: string): ThunkAction<Promise<voi
 
     if (resolveValue === 'confirm') {
       await wallet.resyncBlockchain()
-      dispatch({
-        type: 'RESET_WALLET_LOADING_PROGRESS',
-        data: {
-          walletId
-        }
-      })
     }
   }
 }

@@ -6,15 +6,15 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalMessage } from '../themed/ModalParts'
+import { EdgeRow } from '../rows/EdgeRow'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
-import { ModalUi4 } from '../ui4/ModalUi4'
-import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   acceleratedTx: EdgeTransaction
@@ -24,6 +24,7 @@ interface OwnProps {
 }
 interface StateProps {
   exchangeRates: GuiExchangeRates
+  isoFiatCurrencyCode: string
   feeDisplayDenomination: EdgeDenomination
 }
 type Props = OwnProps & StateProps & ThemeProps
@@ -84,10 +85,17 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    const { exchangeRates, feeDisplayDenomination, wallet } = this.props
+    const { exchangeRates, feeDisplayDenomination, wallet, isoFiatCurrencyCode } = this.props
 
     const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
-    const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
+    const transactionFee = convertTransactionFeeToDisplayFee(
+      wallet.currencyInfo.currencyCode,
+      isoFiatCurrencyCode,
+      exchangeRates,
+      edgeTransaction,
+      feeDisplayDenomination,
+      feeDefaultDenomination
+    )
 
     const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
 
@@ -107,11 +115,11 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const isSending = status === 'sending'
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
-        <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
+      <EdgeModal bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
+        <Paragraph>{lstrings.transaction_details_accelerate_transaction_instructional}</Paragraph>
         <View style={styles.container}>
-          <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <RowUi4 title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <EdgeRow title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <EdgeRow title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
         {isLowerAmount ? (
           <WarningCard
@@ -135,7 +143,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }
@@ -161,13 +169,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    exchangeRates: state.exchangeRates,
-    feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
-  }),
-  dispatch => ({})
-)(withTheme(AccelerateTxModalComponent))
+export function AccelerateTxModal(props: OwnProps): JSX.Element {
+  const theme = useTheme()
+
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const feeDisplayDenomination = useSelector(state => selectDisplayDenom(state, props.wallet.currencyConfig, null))
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+
+  return (
+    <AccelerateTxModalComponent
+      {...props}
+      exchangeRates={exchangeRates}
+      feeDisplayDenomination={feeDisplayDenomination}
+      isoFiatCurrencyCode={isoFiatCurrencyCode}
+      theme={theme}
+    />
+  )
+}
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
   // Transaction amounts are negative for send transactions

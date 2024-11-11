@@ -53,7 +53,7 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
           data: { subcategories: newSubcategories.sort() }
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -281,7 +281,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
-  const currencyName = tokenId == null ? currencyInfo.displayName : currencyConfig.allTokens[tokenId].displayName
+  const { displayName } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId] ?? { displayName: '' }
 
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
@@ -298,14 +298,14 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
   // Default text for send or receive
   if (isSentTransaction) {
-    payeeText = sprintf(lstrings.transaction_sent_1s, currencyName)
+    payeeText = sprintf(lstrings.transaction_sent_1s, displayName)
     direction = 'send'
     edgeCategory = {
       category: 'expense',
       subcategory: ''
     }
   } else {
-    payeeText = sprintf(lstrings.transaction_received_1s, currencyName)
+    payeeText = sprintf(lstrings.transaction_received_1s, displayName)
     direction = 'receive'
     edgeCategory = {
       category: 'income',
@@ -324,6 +324,8 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
     const { assetActionType } = assetAct
     payeeText = TX_ACTION_LABEL_MAP[assetActionType]
 
+    let unsupported = false
+
     switch (actionType) {
       case 'swap': {
         iconPluginId = action.swapInfo.pluginId
@@ -331,7 +333,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'transfer': {
             const txSrc = action.payoutWalletId !== wallet.id
             const toFromStr = txSrc ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
-            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? currencyName
+            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? displayName
             edgeCategory = {
               category: 'transfer',
               subcategory: sprintf(toFromStr, walletName)
@@ -358,7 +360,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
               category: 'exchange',
               subcategory: sprintf(toFromStr, getCurrencyCodeWithAccount(account, otherAsset.pluginId, otherAsset.tokenId))
             }
-            direction = txSrcSameAsset ? 'receive' : 'send'
+            direction = txSrcSameAsset ? 'send' : 'receive'
             break
           }
 
@@ -379,7 +381,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
         }
         break
       }
@@ -450,7 +452,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           }
 
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
         }
         break
       }
@@ -458,7 +460,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         iconPluginId = action.fiatPlugin.providerId
         switch (assetActionType) {
           case 'buy': {
-            payeeText = sprintf(payeeText, currencyName)
+            payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
             edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode) }
@@ -466,7 +468,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           case 'sell': {
-            payeeText = sprintf(payeeText, currencyName)
+            payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
             edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode) }
@@ -479,13 +481,26 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+            unsupported = true
+        }
+        break
+      }
+      case 'tokenApproval': {
+        switch (assetActionType) {
+          case 'tokenApproval': {
+            edgeCategory = { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee }
+            break
+          }
+          default:
+            unsupported = true
         }
         break
       }
       default:
-        console.error(`Unsupported EdgeTxAction assetAction: '${assetAction}'`)
+        unsupported = true
     }
+
+    if (unsupported) console.error(`Unsupported EdgeTxAction assetAction:assetActionType '${assetAction}:${assetActionType}'`)
   }
   const savedData: EdgeMetadata = {
     name: payeeText,
@@ -511,14 +526,18 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 }
 
 export const pluginIdIcons: Record<string, string> = {
+  '0xgasless': EDGE_CONTENT_SERVER_URI + '/0xgasless.png',
   bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
   bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
   changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
   changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
+  cosmosibc: EDGE_CONTENT_SERVER_URI + '/cosmosibc.png',
   exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
   lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
+  mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
+  rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
   sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',

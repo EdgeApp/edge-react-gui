@@ -9,7 +9,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
@@ -25,7 +25,7 @@ export interface MigrateWalletSelectCryptoParams {
   preSelectedWalletIds?: string[]
 }
 
-interface Props extends EdgeSceneProps<'migrateWalletSelectCrypto'> {}
+interface Props extends EdgeAppSceneProps<'migrateWalletSelectCrypto'> {}
 
 export interface MigrateWalletItem extends WalletCreateItem {
   createWalletIds: [string]
@@ -61,6 +61,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
         if (tokenId != null && !enabledTokenIds.includes(tokenId)) continue // ignore token
         const currencyCode = getCurrencyCode(wallet, tokenId)
         walletAssetList.push({
+          type: 'create',
           createWalletIds: [walletId],
           currencyCode,
           displayName: getWalletName(wallet),
@@ -148,7 +149,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
             data={migrateWalletList}
             extraData={selectedItems}
             keyboardShouldPersistTaps="handled"

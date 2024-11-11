@@ -1,8 +1,9 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
+import { PluginPromotion } from 'edge-info-server'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
@@ -15,22 +16,26 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
+import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPluginEnterAmountScene'
+import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { AppParamList, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { OnLogEvent, TrackingEventName } from '../../util/tracking'
+import { BuyConversionValues, OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { datelog } from '../../util/utils'
 import {
+  FiatDirection,
   FiatPaymentType,
-  FiatPluginAddressFormParams,
   FiatPluginListModalParams,
   FiatPluginPermissions,
   FiatPluginRegionCode,
-  FiatPluginSepaFormParams,
-  FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
+  FiatPluginUtils,
   FiatPluginWalletPickerResult,
+  LinkHandler,
   SaveTxActionParams,
   SaveTxMetadataParams
 } from './fiatPluginTypes'
@@ -38,16 +43,44 @@ import {
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
 export const SendErrorBackPressed = 'SendErrorBackPressed'
 
+const deeplinkListeners: { listener: { direction: FiatDirection; providerId: string; deeplinkHandler: LinkHandler } | null } = { listener: null }
+
+export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
+  if (deeplinkListeners.listener == null) {
+    showError(`No buy/sell interface currently open to handle fiatProvider deeplink`)
+    return
+  }
+  const { direction, providerId, deeplinkHandler } = deeplinkListeners.listener
+  if (link.providerId !== providerId) {
+    showError(`Deeplink providerId ${link.providerId} does not match expected providerId ${providerId}`)
+    return
+  }
+
+  if (link.direction !== direction) {
+    showError(`Deeplink direction ${link.direction} does not match expected direction ${direction}`)
+    return
+  }
+
+  // Close the SafariView if it's open. Otherwise we can't see the Edge app interface
+  if (Platform.OS === 'ios') {
+    SafariView.dismiss()
+  }
+  deeplinkHandler(link)
+}
+
 export const executePlugin = async (params: {
   account: EdgeAccount
   disklet: Disklet
+  defaultIsoFiat: string
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
+  forcedWalletResult?: WalletListResult
   guiPlugin: GuiPlugin
   longPress?: boolean
   navigation: NavigationBase
   paymentType?: FiatPaymentType
+  pluginPromotion?: PluginPromotion
   providerId?: string
   regionCode: FiatPluginRegionCode
   onLogEvent: OnLogEvent
@@ -55,26 +88,30 @@ export const executePlugin = async (params: {
   const {
     disablePlugins = {},
     account,
+    defaultIsoFiat,
     deviceId,
     direction,
     disklet,
+    forcedWalletResult,
     guiPlugin,
     longPress = false,
     navigation,
     paymentType,
+    pluginPromotion,
     providerId,
     regionCode,
     onLogEvent
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
+  const isBuy = direction === 'buy'
 
-  const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
-  const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
+  const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
+  const listSceneKey = isBuy ? 'pluginListBuy' : 'pluginListSell'
 
   function maybeNavigateToCorrectTabScene() {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
-      navigation.navigate(tabSceneKey, {})
+      navigation.navigate(tabSceneKey)
       navigation.navigate(listSceneKey, {})
     }
   }
@@ -91,14 +128,35 @@ export const executePlugin = async (params: {
     },
 
     openExternalWebView: async (params): Promise<void> => {
-      if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
+      const { deeplinkHandler, providerId, redirectExternal, url } = params
+      datelog(`**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`)
+      if (deeplinkHandler != null) {
+        if (providerId == null) throw new Error('providerId is required for deeplinkHandler')
+        deeplinkListeners.listener = { direction, providerId, deeplinkHandler }
+      }
+      if (redirectExternal === true) {
+        await Linking.openURL(url)
+        return
+      }
+      if (Platform.OS === 'ios') await SafariView.show({ url })
       else await CustomTabs.openURL(params.url)
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
-      const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
-      ))
+
+      const result =
+        forcedWalletResult == null
+          ? await Airship.show<WalletListResult>(bridge => (
+              <WalletListModal
+                bridge={bridge}
+                navigation={navigation}
+                headerTitle={headerTitle}
+                allowedAssets={allowedAssets}
+                showCreateWallet={showCreateWallet}
+              />
+            ))
+          : forcedWalletResult
+
       if (result?.type === 'wallet') return result
     },
     showError: async (e: unknown): Promise<void> => showError(e),
@@ -108,11 +166,11 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+    enterAmount(params: FiatPluginEnterAmountParams) {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
     },
-    addressForm: async (params: FiatPluginAddressFormParams) => {
+    addressForm: async params => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
@@ -123,6 +181,9 @@ export const executePlugin = async (params: {
           onSubmit: async (homeAddress: HomeAddress) => {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
+          },
+          onClose: async () => {
+            resolve(undefined)
           }
         })
       })
@@ -144,21 +205,25 @@ export const executePlugin = async (params: {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('rewardsCardWelcome', params)
     },
-    sepaForm: async (params: FiatPluginSepaFormParams) => {
-      const { headerTitle, headerIconUri, onSubmit } = params
+    sepaForm: async params => {
+      const { headerTitle, headerIconUri, doneLabel, onDone } = params
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
-          onSubmit: async (sepaInfo: SepaInfo) => {
-            if (onSubmit != null) await onSubmit(sepaInfo)
+          doneLabel,
+          onDone: async (sepaInfo: SepaInfo) => {
+            if (onDone != null) await onDone(sepaInfo)
             resolve(sepaInfo)
+          },
+          onClose: () => {
+            resolve(undefined)
           }
         })
       })
     },
-    sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
+    sepaTransferInfo: async params => {
       return await new Promise((resolve, reject) => {
         const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
         maybeNavigateToCorrectTabScene()
@@ -222,24 +287,19 @@ export const executePlugin = async (params: {
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)
     },
-    trackConversion: async (
-      event: TrackingEventName,
-      opts: {
-        destCurrencyCode: string
-        destExchangeAmount: string
-        destPluginId?: string
-        sourceCurrencyCode: string
-        sourceExchangeAmount: string
-        sourcePluginId?: string
-        pluginId: string
-        orderId?: string
-      }
-    ) => {
+    trackConversion: async (event: TrackingEventName, opts: { conversionValues: BuyConversionValues | SellConversionValues }) => {
       onLogEvent(event, opts)
     },
     exitScene: async () => {
       navigation.pop()
+    },
+    waitForAnimationFrame: async () => {
+      await new Promise(resolve => requestAnimationFrame(resolve))
     }
+  }
+
+  const pluginUtils: FiatPluginUtils = {
+    getHistoricalRate
   }
 
   if (guiPlugin.nativePlugin == null) {
@@ -256,6 +316,7 @@ export const executePlugin = async (params: {
     disablePlugins: filteredDisablePlugins,
     longPress,
     guiPlugin,
+    pluginUtils,
     showUi
   })
   if (plugin == null) {
@@ -269,11 +330,14 @@ export const executePlugin = async (params: {
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams: FiatPluginStartParams = {
     direction,
+    defaultIsoFiat,
     regionCode,
     paymentTypes,
     forceFiatCurrencyCode,
     defaultFiatAmount,
+    pluginPromotion,
     providerId
   }
-  plugin.startPlugin(startPluginParams).catch(showError)
+  await plugin.startPlugin(startPluginParams)
+  deeplinkListeners.listener = null
 }

@@ -2,11 +2,11 @@ import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 
-import { asMaybeContractLocation } from '../../../components/scenes/EditTokenScene'
 import { StringMap } from '../../../types/types'
+import { asMaybeContractLocation } from '../../../util/cleaners'
 import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
-import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
+import { cleanMultiFetch, fetchInfo, fetchWaterfall, infoServerData } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
 import {
   ChangeQuote,
@@ -222,7 +222,10 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 
 let inboundAddressesLastUpdate: number = 0
 
-export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
+export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
+  if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
+    return
+  }
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
   if (!policiesInitialized && !initializingPolicies) {
@@ -259,26 +262,12 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
     }
   }
 
-  const fetchResponse = await fetchInfo(`v1/apyValues`)
-    .then(async res => {
-      if (!res.ok) {
-        throw new Error(`Fetch APY invalid response: ${await res.text()}`)
-      }
-      return res
-    })
-    .catch(err => {
-      const msg = `Fetch APY failed: ${err.message}`
-      console.warn(msg)
-    })
-  if (fetchResponse != null) {
-    try {
-      const fetchResponseJson = await fetchResponse.json()
-      const infoServerResponse = asInfoServerResponse(fetchResponseJson)
-      updatePolicyApys(infoServerResponse)
-    } catch (err: any) {
-      const msg = `Parsing Fetch APY failed: ${err.message}`
-      console.warn(msg)
-    }
+  try {
+    const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues)
+    updatePolicyApys(infoServerResponse)
+  } catch (err: any) {
+    const msg = `Parsing Fetch APY failed`
+    console.warn(msg)
   }
 
   const instance: StakePlugin = {
@@ -298,7 +287,14 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
         throw new Error('pluginId mismatch between request and policy')
       }
 
-      return await changeQuoteFuncs[action](opts, request)
+      switch (action) {
+        case 'stake':
+          return await stakeRequest(opts, request)
+        case 'unstake':
+        case 'claim':
+        case 'unstakeExact':
+          return await unstakeRequest(opts, request)
+      }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       await updateInboundAddresses(opts)
@@ -556,7 +552,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 1. Sort the outputs by how they are sent to makeSpend making the target output the 1st, change 2nd
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
-    otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
     assetAction: { assetActionType: 'stake' },
     savedAction: {
       actionType: 'stake',
@@ -583,13 +579,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   if (!isToken && lt(addressBalance, nativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
     needsFundingPrimary = true
   } else {
     try {
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.parentNetworkFee ?? estimateTx.networkFee
     } catch (e: unknown) {
-      if (asMaybeInsufficientFundsError(e) != null && !isToken) {
+      if (!isEvm && asMaybeInsufficientFundsError(e) != null) {
         needsFundingPrimary = true
       } else {
         throw e
@@ -622,7 +623,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           }
         ]
       },
-      otherParams: { forceChangeAddress }
+      otherParams: { forceChangeAddress, enableRbf: false }
     }
 
     const estimateTx = await wallet.makeSpend(fundingSpendInfo)
@@ -788,7 +789,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
   const { pluginId } = wallet.currencyInfo
 
-  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
+  const tokenId = getTokenId(wallet.currencyConfig, currencyCode) ?? null
   const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
@@ -877,9 +878,11 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 
   const spendInfo: EdgeSpendInfo = {
-    tokenId,
+    // For unstaking we always send just the mainnet coin since we are only sending a message
+    // to the Thorchain pool to withdraw the funds
+    tokenId: null,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
-    otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
     assetAction: { assetActionType: 'unstakeOrder' },
     savedAction: {
       actionType: 'stake',
@@ -888,7 +891,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         {
           pluginId,
           tokenId,
-          nativeAmount
+          nativeAmount: totalUnstakeNativeAmount
         }
       ]
     },
@@ -912,6 +915,12 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 
   if (lt(balanceToCheck, sendNativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
+    // Easy check to see if primary address doesn't have enough funds
     needsFundingPrimary = true
   } else {
     try {
@@ -919,7 +928,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.networkFee
     } catch (e: unknown) {
-      if (asMaybeInsufficientFundsError(e) != null) {
+      if (!isEvm && asMaybeInsufficientFundsError(e) != null) {
         needsFundingPrimary = true
       } else {
         throw e
@@ -949,7 +958,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
           {
             pluginId,
             tokenId,
-            nativeAmount
+            nativeAmount: totalUnstakeNativeAmount
           }
         ]
       }
@@ -969,7 +978,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         allocationType: 'unstake',
         pluginId,
         currencyCode,
-        nativeAmount
+        nativeAmount: totalUnstakeNativeAmount
       },
       {
         allocationType: 'networkFee',
@@ -1007,7 +1016,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
               }
             ]
           },
-          otherParams: { forceChangeAddress }
+          otherParams: { enableRbf: false, forceChangeAddress }
         })
         const signedTx = await wallet.signTx(tx)
         const broadcastedTx = await wallet.broadcastTx(signedTx)
@@ -1020,13 +1029,6 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       await wallet.saveTx(broadcastedTx)
     }
   }
-}
-
-const changeQuoteFuncs = {
-  stake: stakeRequest,
-  unstake: unstakeRequest,
-  claim: unstakeRequest,
-  unstakeExact: unstakeRequest
 }
 
 const headers = {
@@ -1196,7 +1198,7 @@ const edgeToTcAsset = (account: EdgeAccount, wallet: EdgeCurrencyWallet, currenc
         `Currency type ${type} does not support token savers and currencyCode ${currencyCode} mismatches wallet currency code ${wallet.currencyInfo.currencyCode}`
       )
     }
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
     if (tokenId == null) {
       throw new Error(`getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`)
     }

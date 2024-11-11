@@ -21,6 +21,8 @@ const accountHack: any = {
   activeWalletIds: [],
   currencyConfig: {},
   currencyWallets: {},
+  rootLoginId: '',
+  username: '',
   watch: () => () => {}
 }
 export const defaultAccount: EdgeAccount = accountHack

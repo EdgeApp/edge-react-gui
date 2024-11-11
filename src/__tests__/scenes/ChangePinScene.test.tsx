@@ -5,7 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { ChangePinScene } from '../../components/scenes/ChangePinScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('ChangePinComponent', () => {
   it('should render with loading props', () => {
@@ -14,7 +14,7 @@ describe('ChangePinComponent', () => {
 
     const actual = renderer.render(
       <FakeProviders initialState={rootState}>
-        <ChangePinScene {...fakeSceneProps('changePin', {})} />
+        <ChangePinScene {...fakeEdgeAppSceneProps('changePin', undefined)} />
       </FakeProviders>
     )
 

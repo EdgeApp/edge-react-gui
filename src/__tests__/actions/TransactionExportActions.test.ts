@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { EdgeTransaction } from 'edge-core-js'
 import fs from 'fs'
 
-import { exportTransactionsToCSVInner, exportTransactionsToQBOInner } from '../../actions/TransactionExportActions'
+import { exportTransactionsToCSVInner, exportTransactionsToQBO } from '../../actions/TransactionExportActions'
 
 const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', { encoding: 'utf8' })
 const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encoding: 'utf8' })
@@ -161,6 +161,6 @@ test('export CSV matches reference data', function () {
 })
 
 test('export QBO matches reference data', function () {
-  const out = exportTransactionsToQBOInner([...edgeTxs], 'BTC', 'iso:USD', '100', 1524578071304)
+  const out = exportTransactionsToQBO([...edgeTxs], 'iso:USD', '100', 1524578071304)
   expect(out).toEqual(qboResult)
 })

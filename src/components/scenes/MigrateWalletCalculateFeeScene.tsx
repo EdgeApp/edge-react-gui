@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -11,12 +12,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -28,7 +29,7 @@ export interface MigrateWalletCalculateFeeParams {
   migrateWalletList: MigrateWalletItem[]
 }
 
-interface Props extends EdgeSceneProps<'migrateWalletCalculateFee'> {}
+interface Props extends EdgeAppSceneProps<'migrateWalletCalculateFee'> {}
 
 type AssetRowState = string | Error
 
@@ -45,12 +46,15 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     const { denominationSettings = {} } = state.ui.settings
     return denominationSettings
   })
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const mounted = React.useRef<boolean>(true)
 
   const [feeState, setFeeState] = React.useState<Map<string, AssetRowState | undefined>>(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
+  const [migrateWalletsSynced, setMigrateWalletsSynced] = React.useState(false)
 
   const renderCurrencyRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
@@ -66,7 +70,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     const fee = feeState.get(key)
 
     let rightSide: JSX.Element
-    if (fee == null) {
+    if (fee == null || !migrateWalletsSynced) {
       rightSide = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
     } else if (fee instanceof Error) {
       rightSide = <EdgeText style={{ color: theme.negativeText, fontSize: theme.rem(0.75) }}>{fee.message}</EdgeText>
@@ -102,7 +106,14 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       const exchangeDenom = denominations.find(denom => denom.name === currencyCode) as EdgeDenomination
       const displayDenom = displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
-      const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, fakeEdgeTransaction, displayDenom, exchangeDenom)
+      const transactionFee = convertTransactionFeeToDisplayFee(
+        wallet.currencyInfo.currencyCode,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        fakeEdgeTransaction,
+        displayDenom,
+        exchangeDenom
+      )
       const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
       const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${truncateDecimals(transactionFee.cryptoAmount)} (${
         transactionFee.fiatSymbol ?? ''
@@ -114,7 +125,10 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={wallet} />)
+    const { countryCode } = await getFirstOpenInfo()
+    await Airship.show(bridge => (
+      <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation as NavigationBase} wallet={wallet} />
+    ))
   })
 
   const handleSlidingComplete = useHandler(() => {
@@ -126,6 +140,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   // track of which makeSpends are successful so we can enable the slider. A single failure from any of a wallet's assets will cast them all as failures.
   useAsyncEffect(
     async () => {
+      if (!migrateWalletsSynced) return
+
       // This bundles the assets by similar walletId with the main asset (ie. ETH) at the end of each array so its makeSpend is called last
       const bundledWalletAssets: MigrateWalletItem[][] = migrateWalletList.reduce((bundles: MigrateWalletItem[][], asset) => {
         const { createWalletIds } = asset
@@ -218,9 +234,47 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         mounted.current = false
       }
     },
-    [],
+    [migrateWalletsSynced],
     'MigrateWalletCalculateFeeComponent'
   )
+
+  // Wait for wallets to sync
+  React.useEffect(() => {
+    const migrateWalletIds = migrateWalletList.map(item => item.createWalletIds[0])
+
+    const updateProgress = () => {
+      const syncedWallets = migrateWalletIds.filter(walletId => {
+        const wallet = currencyWallets[walletId]
+
+        return (
+          // Count the number of wallets that are fully synced
+          wallet.syncRatio >= 1
+        )
+      }).length
+
+      if (syncedWallets === migrateWalletIds.length) {
+        // HACK: Balances are not ready yet immediately after syncRatio === 1.
+        // Wait a bit before checking for sufficient balances for fees.
+        setTimeout(() => {
+          setMigrateWalletsSynced(true)
+        }, 5000)
+      }
+    }
+
+    showToast(lstrings.fragment_transaction_list_tx_synchronizing)
+    updateProgress()
+
+    // Set up listeners for each wallet's syncRatio
+    const unsubscribers = migrateWalletIds.map(walletId => {
+      const wallet = currencyWallets[walletId]
+      return wallet.watch('syncRatio', updateProgress)
+    })
+
+    // Clean up listeners when component unmounts or dependencies change
+    return () => {
+      unsubscribers.forEach(unsubscribe => unsubscribe())
+    }
+  }, [currencyWallets, migrateWalletList])
 
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
@@ -238,6 +292,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          contentContainerStyle={{ marginHorizontal: theme.rem(0.5) }}
         />
         <SafeSlider
           parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}

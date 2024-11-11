@@ -26,7 +26,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     >
       Remaining bundled transactions: 100
     </EdgeText>
-    <CardUi4
+    <EdgeCard
       paddingRem={0.25}
     >
       <Memo(SettingsTappableRowComponent)
@@ -34,13 +34,13 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         label="Reload and Transfer"
         onPress={[Function]}
       />
-    </CardUi4>
+    </EdgeCard>
     <Memo(SettingsHeaderRowComponent)
       icon={
         <Icon
           allowFontScaling={false}
           color="#FFFFFF"
-          name="ios-link"
+          name="link"
           size={34}
         />
       }
@@ -52,23 +52,12 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       fioWallet={null}
       navigation={
         {
-          "addListener": [Function],
-          "canGoBack": [Function],
-          "dispatch": [Function],
-          "getId": [Function],
-          "getParent": [Function],
-          "getState": [Function],
-          "goBack": [Function],
-          "isFocused": [Function],
-          "navigate": [Function],
-          "pop": [Function],
-          "popToTop": [Function],
-          "push": [Function],
-          "removeListener": [Function],
-          "replace": [Function],
-          "reset": [Function],
-          "setOptions": [Function],
-          "setParams": [Function],
+          "addListener": [MockFunction],
+          "goBack": [MockFunction],
+          "navigate": [MockFunction],
+          "pop": [MockFunction],
+          "push": [MockFunction],
+          "replace": [MockFunction],
         }
       }
     />

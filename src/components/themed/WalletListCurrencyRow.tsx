@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
@@ -8,10 +7,11 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
+import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CurrencyView } from '../layout/CurrencyView'
+import { CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
-import { CurrencyViewUi4 } from '../ui4/CurrencyViewUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -39,14 +39,15 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
-  const isPaused = (pausedWallets != null && pausedWallets.has(wallet.id)) || isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+  const isPaused = pausedWallets != null && pausedWallets.has(wallet.id)
+  const isDisabled = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
   const { pluginId } = wallet.currencyInfo
 
   //
   // State
   //
   const iconColor = useIconColor({ pluginId, tokenId })
-  const primaryColor = iconColor != null ? `${iconColor}88` : 'rgba(0, 0, 0, 0)'
+  const primaryColor = iconColor != null ? `${iconColor}30` : 'rgba(0, 0, 0, 0)'
 
   //
   // Handlers
@@ -63,18 +64,22 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return customAsset != null ? (
     // TODO: Update to UI4
-    <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
+    <EdgeTouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
       <CustomAssetRow customAsset={customAsset} />
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   ) : (
-    <CardUi4
-      overlay={isPaused ? <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText> : null}
+    <EdgeCard
+      overlay={
+        isPaused || isDisabled ? (
+          <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
+        ) : null
+      }
       onLongPress={handleLongPress}
       onPress={handlePress}
       gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
     >
-      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
-    </CardUi4>
+      <CurrencyView token={token} tokenId={tokenId} wallet={wallet} />
+    </EdgeCard>
   )
 }
 

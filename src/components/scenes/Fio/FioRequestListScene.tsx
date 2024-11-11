@@ -10,9 +10,9 @@ import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -63,7 +63,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeSceneProps<'fioRequestList'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioRequestList'> {}
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
@@ -199,7 +199,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (answer === 'ok') {
       return navigation.navigate('fioAddressSettings', {
         showAddBundledTxs: true,
-        fioWallet,
+        walletId: fioWallet.id,
         fioAddressName
       })
     }
@@ -376,10 +376,17 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const allowedAssets = [{ pluginId, tokenId }]
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={allowedAssets} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation as NavigationBase}
+        headerTitle={lstrings.fio_src_wallet}
+        allowedAssets={allowedAssets}
+      />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, currencyCode } = result
+      const { walletId, tokenId } = result
+      const wallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       onSelectWallet(walletId, currencyCode)
       await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }

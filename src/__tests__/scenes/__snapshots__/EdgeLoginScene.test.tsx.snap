@@ -58,8 +58,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -193,7 +193,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -209,7 +209,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -225,7 +225,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -315,6 +315,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -333,7 +334,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
         <Text
           adjustsFontSizeToFit={true}
@@ -382,9 +383,9 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           ]
         }
       >
-        This application would like to create or access its wallet in your Edge account.
+        You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.
 
- It will not have access to any other wallets.
+DO NOT accept this login unless you trust the application and person who provided the QR code
       </Text>
     </View>
   </View>

@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -19,9 +20,9 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { scale } from '../../util/scaling'
+import { BlurBackground } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
-import { BlurBackground } from '../ui4/BlurBackground'
 import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
@@ -33,15 +34,18 @@ const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_m
 // devices with a notch.
 const MAYBE_BOTTOM_PADDING = Platform.OS === 'ios' && !Platform.isPad && DeviceInfo.hasNotch() ? 0 : scale(16) * 0.75
 
+// Delay writing out defaultScreen settings when switching tabs to prevent clogging up the
+// bridge and CPU while a scene transition is occurring
+const SAVE_DEFAULT_SCREEN_DELAY = 3000
 export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
 export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
 
 const title: { readonly [key: string]: string } = {
-  homeTab: lstrings.title_home,
+  home: lstrings.title_home,
   walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
-  exchangeTab: lstrings.title_exchange,
+  swapTab: lstrings.title_exchange,
   extraTab: lstrings[extraTabString],
   devTab: lstrings.title_dev_tab
 }
@@ -59,7 +63,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (!ENV.DEV_TAB && route.name === 'devTab') {
           return false
         }
-        if (config.disableSwaps === true && route.name === 'exchangeTab') {
+        if (config.disableSwaps === true && route.name === 'swapTab') {
           return false
         }
         return true
@@ -79,14 +83,14 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
-  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])
+  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT))
   const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
 
   return (
     <Container shiftY={shiftY} pointerEvents="box-none">
       <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
         <BlurBackground />
-        <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
+        <BackgroundLinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
       </Background>
       {renderFooter()}
       <Tabs openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight}>
@@ -146,6 +150,10 @@ const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; op
     }
 )
 
+const BackgroundLinearGradient = styled(LinearGradient)({
+  flex: 1
+})
+
 const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
   return [
     {
@@ -181,27 +189,33 @@ const Tab = ({
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
 
   const icon: { readonly [key: string]: JSX.Element } = {
-    homeTab: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
+    home: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
     walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
     buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
     sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-    exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+    swapTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
     extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />,
     devTab: <SimpleLineIcons name="wrench" size={theme.rem(1.25)} color={color} />
   }
 
   const handleOnPress = useHandler(() => {
     switch (route.name) {
-      case 'homeTab':
-        return navigation.navigate('home', currentName === 'homeTab' ? { screen: 'home' } : {})
+      case 'home':
+        setTimeout(() => {
+          writeDefaultScreen('home').catch(e => console.error('Failed to write defaultScreen setting: home'))
+        }, SAVE_DEFAULT_SCREEN_DELAY)
+        return navigation.navigate('home')
       case 'walletsTab':
+        setTimeout(() => {
+          writeDefaultScreen('assets').catch(e => console.error('Failed to write defaultScreen setting: assets'))
+        }, SAVE_DEFAULT_SCREEN_DELAY)
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
         return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
       case 'sellTab':
         return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
-      case 'exchangeTab':
-        return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
+      case 'swapTab':
+        return navigation.navigate('swapTab', currentName === 'swapTab' ? { screen: 'swapCreate' } : {})
       case 'extraTab':
         return navigation.navigate('extraTab')
       case 'devTab':

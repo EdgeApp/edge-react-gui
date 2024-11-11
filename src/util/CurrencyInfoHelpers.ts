@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId, EdgeTokenMap, JsonObject } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -14,16 +14,61 @@ export function isKeysOnlyPlugin(pluginId: string): boolean {
   return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
 }
 
-/**
- * Grab all the EdgeCurrencyInfo objects in an account.
- */
-export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
-  const { currencyConfig = {} } = account
-  return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
+export type FindTokenParams =
+  | {
+      account: EdgeAccount
+      pluginId: string
+      networkLocation: JsonObject
+    }
+  | {
+      allTokens: EdgeTokenMap
+      networkLocation: JsonObject
+    }
+
+export const findTokenIdByNetworkLocation = (params: FindTokenParams): EdgeTokenId | undefined => {
+  const { networkLocation } = params
+  let allTokens: EdgeTokenMap
+  if ('allTokens' in params) {
+    allTokens = params.allTokens
+  } else {
+    allTokens = params.account.currencyConfig[params.pluginId]?.allTokens
+    if (allTokens == null) return
+  }
+
+  for (const tokenId in allTokens) {
+    const edgeToken = allTokens[tokenId]
+    if (edgeToken == null) return
+    let found = true
+    for (const key in networkLocation) {
+      const left = edgeToken?.networkLocation?.[key]
+      const right = networkLocation[key]
+      if (left === undefined) {
+        // If the key is not found then assume this key doesn't exist in any token
+        // and we can early return undefined
+        console.warn(`findTokenIdByNetworkLocation: key '${key}' not found`)
+        return
+      }
+      if (left === right) continue
+
+      // In the special case of EVM contract addresses which are valid in both lower and upper case,
+      // we need to compare them case-insensitively. We know the stored contract address is lower case
+      // so only lower case the parameter if it's a string.
+      if (typeof right === 'string') {
+        if (left === right.toLowerCase()) {
+          continue
+        }
+      }
+      found = false
+      break
+    }
+    if (found) {
+      return tokenId
+    }
+  }
+  // If we get here, return undefined as we found no match
 }
 
-export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId | undefined => {
-  const currencyConfig = account.currencyConfig[pluginId]
+export const getTokenId = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeTokenId | undefined => {
   if (currencyConfig == null) return
   if (currencyConfig.currencyInfo.currencyCode === currencyCode) return null
   const { allTokens } = currencyConfig
@@ -32,7 +77,7 @@ export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode:
 }
 
 export const getTokenIdForced = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId => {
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getTokenId(account.currencyConfig[pluginId], currencyCode)
   if (tokenId === undefined) throw new Error('getTokenIdForced: tokenId not found')
   return tokenId
 }
@@ -52,8 +97,16 @@ export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: strin
  * Get the currencyCode associated with a tokenId
  */
 export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
-  const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
-  return currencyCode
+  if (tokenId == null) {
+    return wallet.currencyInfo.currencyCode
+  } else {
+    if (wallet.currencyConfig.allTokens[tokenId] == null) {
+      // Fail gracefully if we don't have the token for some reason
+      console.warn(`getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`)
+      return ''
+    }
+    return wallet.currencyConfig.allTokens[tokenId].currencyCode
+  }
 }
 
 /**
@@ -63,8 +116,17 @@ export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: strin
   if (account.currencyConfig[pluginId] == null) {
     return
   }
-  const { currencyCode } = tokenId != null ? account.currencyConfig[pluginId].allTokens[tokenId] : account.currencyConfig[pluginId].currencyInfo
-  return currencyCode
+
+  if (tokenId == null) {
+    return account.currencyConfig[pluginId].currencyInfo.currencyCode
+  } else {
+    if (account.currencyConfig[pluginId].allTokens[tokenId] == null) {
+      // Fail gracefully if we don't have the token for some reason
+      console.warn(`getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`)
+      return ''
+    }
+    return account.currencyConfig[pluginId].allTokens[tokenId].currencyCode
+  }
 }
 
 export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): EdgeToken | undefined => {
@@ -136,4 +198,14 @@ export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: s
   }
 
   return edgeTokenIds
+}
+
+/**
+ * Find the currencyInfo for the given walletType
+ */
+export const findCurrencyInfo = (account: EdgeAccount, walletType: string): EdgeCurrencyInfo | undefined => {
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const config = account.currencyConfig[pluginId]
+    if (config.currencyInfo.walletType === walletType) return config.currencyInfo
+  }
 }

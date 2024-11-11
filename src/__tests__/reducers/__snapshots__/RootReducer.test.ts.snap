@@ -24,55 +24,14 @@ exports[`initialState 1`] = `
       "activeWalletIds": [],
       "currencyConfig": {},
       "currencyWallets": {},
+      "rootLoginId": "",
+      "username": "",
       "watch": [Function],
     },
     "context": {},
     "disklet": {},
     "enabledDetectedTokens": {},
     "otpErrorShown": false,
-  },
-  "cryptoExchange": {
-    "fromBalanceMessage": "",
-    "fromCurrencyCode": null,
-    "fromDisplayAmount": "0",
-    "fromNativeAmount": "0",
-    "fromWalletId": null,
-    "fromWalletPrimaryInfo": {
-      "displayCurrencyCode": "",
-      "displayDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "exchangeCurrencyCode": "",
-      "exchangeDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "tokenId": null,
-      "walletId": "",
-    },
-    "genericShapeShiftError": null,
-    "insufficientError": false,
-    "shiftPendingTransaction": false,
-    "toBalanceMessage": "",
-    "toCurrencyCode": null,
-    "toDisplayAmount": "0",
-    "toNativeAmount": "0",
-    "toWalletId": null,
-    "toWalletPrimaryInfo": {
-      "displayCurrencyCode": "",
-      "displayDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "exchangeCurrencyCode": "",
-      "exchangeDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "tokenId": null,
-      "walletId": "",
-    },
   },
   "deviceReferral": {
     "messages": [],
@@ -88,13 +47,11 @@ exports[`initialState 1`] = `
   "network": {
     "isConnected": true,
   },
-  "nextLoginId": null,
   "notificationSettings": {
     "ignoreMarketing": false,
     "ignorePriceChanges": false,
     "plugins": {},
   },
-  "pendingDeepLink": null,
   "permissions": {
     "camera": "denied",
     "contacts": "denied",
@@ -102,20 +59,6 @@ exports[`initialState 1`] = `
   },
   "sortedWalletList": [],
   "ui": {
-    "createWallet": {
-      "handleActivationInfo": {
-        "activationCost": "",
-        "supportedAssets": [],
-      },
-      "walletAccountActivationPaymentInfo": {
-        "amount": "",
-        "currencyCode": "",
-        "exchangeAmount": "",
-        "expireTime": 0,
-        "paymentAddress": "",
-      },
-      "walletAccountActivationQuoteError": "",
-    },
     "exchangeInfo": {
       "buy": {
         "disablePlugins": {},
@@ -133,16 +76,13 @@ exports[`initialState 1`] = `
     },
     "fio": {
       "connectedWalletsByFioAddress": {},
-      "expireReminderShown": false,
-      "expiredChecking": false,
-      "expiredLastChecks": {},
-      "walletsCheckedForExpired": {},
     },
     "fioAddress": {
       "fioAddresses": [],
       "fioAddressesLoading": false,
       "fioDomains": [],
     },
+    "notificationHeight": 0,
     "passwordReminder": {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,
@@ -153,9 +93,12 @@ exports[`initialState 1`] = `
       "passwordUseCount": 0,
     },
     "settings": {
+      "accountNotifDismissInfo": {
+        "ip2FaNotifShown": false,
+      },
       "autoLogoutTimeInSeconds": 3600,
       "changesLocked": true,
-      "contactsPermissionOn": true,
+      "contactsPermissionShown": false,
       "countryCode": "",
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
@@ -194,6 +137,7 @@ exports[`initialState 1`] = `
         },
       },
       "stateProvinceCode": undefined,
+      "tokenWarningsShown": [],
       "userPausedWallets": [],
       "userPausedWalletsSet": null,
       "walletsSort": "manual",
@@ -203,7 +147,6 @@ exports[`initialState 1`] = `
       "fioWallets": [],
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
-      "walletLoadingProgress": {},
     },
   },
 }

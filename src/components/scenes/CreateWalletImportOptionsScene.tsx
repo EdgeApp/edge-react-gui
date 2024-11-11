@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, TouchableOpacity, View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -9,31 +9,30 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
-import { RowUi4 } from '../ui4/RowUi4'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
   walletNames: { [key: string]: string }
-  fiatCode: string
   importText: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletImportOptions'> {}
+interface Props extends EdgeAppSceneProps<'createWalletImportOptions'> {}
 
 const CreateWalletImportOptionsComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList, fiatCode, importText, walletNames } = route.params
+  const { createWalletList, importText, walletNames } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -110,12 +109,12 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           Linking.openURL(knowledgeBaseUri).catch(err => showError(err))
         }
         description = (
-          <ModalMessage>
+          <Paragraph>
             {message}
-            <TouchableOpacity onPress={onPress}>
+            <EdgeTouchableOpacity onPress={onPress}>
               <Ionicon name="help-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
-            </TouchableOpacity>
-          </ModalMessage>
+            </EdgeTouchableOpacity>
+          </Paragraph>
         )
       } else {
         description = message
@@ -146,7 +145,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     return (
       <View style={styles.optionContainer}>
         <View style={styles.optionHeader}>
-          <CryptoIconUi4 sizeRem={1.25} pluginId={pluginId} tokenId={null} />
+          <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
           <EdgeText style={styles.pluginIdText}>{currencyConfig[pluginId].currencyInfo.displayName}</EdgeText>
         </View>
         {arr.map(opt => {
@@ -158,7 +157,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
           return (
             <View key={key} style={styles.optionInput}>
-              <RowUi4
+              <EdgeRow
                 rightButtonType="editable"
                 title={opt.displayName}
                 maximumHeight="large"
@@ -183,7 +182,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                     {lstrings.fragment_required}
                   </EdgeText>
                 </View>
-              </RowUi4>
+              </EdgeRow>
             </View>
           )
         })}
@@ -206,7 +205,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
       allKeyOptions.set(pluginId, keyOptions)
     })
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, keyOptions: allKeyOptions, importText })
+    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, keyOptions: allKeyOptions, importText })
   })
 
   const keyExtractor = useHandler((item: [string, Set<ImportKeyOption>]) => item[0])

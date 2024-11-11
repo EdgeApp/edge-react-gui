@@ -1,15 +1,17 @@
+import { useIsFocused } from '@react-navigation/native'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
-import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
-import { readSyncedSettings, SyncedAccountSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -18,6 +20,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
+import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -25,31 +28,34 @@ import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScro
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
-import { base58ToUuid } from '../../util/utils'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { base58ToUuid, getOsVersion } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { filterInfoCards } from '../cards/InfoCardCarousel'
+import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
-import { CountryListModal } from '../modals/CountryListModal'
-import { StateProvinceListModal } from '../modals/StateProvinceListModal'
+import { SectionHeader } from '../common/SectionHeader'
 import { TextInputModal } from '../modals/TextInputModal'
+import { WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { CardUi4 } from '../ui4/CardUi4'
-import { RowUi4 } from '../ui4/RowUi4'
-import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
   launchPluginId?: string
+  forcedWalletResult?: WalletListResult
 }
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
@@ -76,8 +82,10 @@ const paymentTypeLogosById = {
   interac: 'paymentTypeLogoInterac',
   payid: 'paymentTypeLogoPayid',
   paynow: 'paymentTypeLogoPaynow',
+  paypal: 'paymentTypeLogoPaypal',
   pix: 'paymentTypeLogoPix',
   poli: 'paymentTypeLogoPoli',
+  revolut: 'paymentTypeLogoRevolut',
   sofort: 'paymentTypeLogoSofort',
   upi: 'paymentTypeLogoUpi',
   visa: 'paymentTypeVisa'
@@ -86,7 +94,7 @@ const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-interface OwnProps extends EdgeSceneProps<'pluginListBuy' | 'pluginListSell'> {}
+interface OwnProps extends BuyTabSceneProps<'pluginListBuy' | 'pluginListSell'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -94,20 +102,20 @@ interface StateProps {
   accountReferral: AccountReferral
   coreDisklet: Disklet
   countryCode: string
-  stateProvinceCode?: string
+  defaultIsoFiat: string
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
-  handleScroll: SceneScrollHandler
+  forcedWalletResult?: WalletListResult
+  stateProvinceCode?: string
+  onCountryPress: () => Promise<void>
+  onPluginOpened: () => void
   onLogEvent: OnLogEvent
+  onScroll: SceneScrollHandler
 }
 
-interface DispatchProps {
-  updateCountryCode: (params: { countryCode: string; stateProvinceCode?: string }) => void
-}
-
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps
 interface State {
   developerUri: string
   buySellPlugins: BuySellPlugins
@@ -130,7 +138,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     this.updatePlugins()
-    this.checkCountry()
     const { developerPluginUri } = getDeviceSettings()
     if (developerPluginUri != null) {
       this.setState({ developerUri: developerPluginUri })
@@ -199,21 +206,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   /**
-   * Verify that we have a country selected
-   */
-  checkCountry() {
-    const { countryCode, stateProvinceCode } = this.props
-    if (!countryCode) this.showCountrySelectionModal().catch(showError)
-    else {
-      const countryData = COUNTRY_CODES.find(cc => cc['alpha-2'] === countryCode)
-      if (countryData != null && stateProvinceCode == null) {
-        // This country needs a state/provice but doesn't have one picked
-        this.showCountrySelectionModal(true).catch(e => showError(e))
-      }
-    }
-  }
-
-  /**
    * Get the scene's direction from the route information. This determines
    * which plugin list to show.
    */
@@ -225,15 +217,26 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
+    const {
+      account,
+      accountReferral,
+      coreDisklet,
+      countryCode,
+      defaultIsoFiat,
+      deviceId,
+      disablePlugins,
+      forcedWalletResult,
+      navigation,
+      stateProvinceCode,
+      onLogEvent,
+      onPluginOpened
+    } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
-    // Don't allow light accounts to enter plugins
-    if (account.username == null) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-      return
-    }
+    // Don't allow light accounts to enter buy webview plugins
+    const direction = this.getSceneDirection()
+    if (direction === 'buy' && plugin.nativePlugin == null && checkAndShowLightBackupModal(account, navigation as NavigationBase)) return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow
@@ -260,9 +263,26 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         writeDeveloperPluginUri(deepPath).catch(error => showError(error))
       }
     }
-
-    const direction = this.getSceneDirection()
     if (plugin.nativePlugin != null) {
+      const cards = infoServerData.rollup?.promoCards2 ?? []
+      const promoCards = filterInfoCards({
+        accountReferral,
+        cards,
+        countryCode,
+        buildNumber: getBuildNumber(),
+        osType: Platform.OS,
+        version: getVersion(),
+        osVersion: getOsVersion(),
+        currentDate: new Date()
+      })
+      const pluginPromos = promoCards.map(card => card.pluginPromotions ?? []).flat()
+      const filteredPromos = pluginPromos.filter(promo => {
+        const pluginIdMatch = (promo.pluginIds ?? []).some(pid => pid === pluginId)
+        return pluginIdMatch && promo.pluginType === direction
+      })
+
+      // For lack of a better algo, choose the first promotion that matches
+      const pluginPromotion = filteredPromos[0]
       const disableProviders = disablePlugins[pluginId]
 
       // This should not happen, since we don't show disabled rows:
@@ -270,14 +290,17 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
+        defaultIsoFiat,
         deviceId,
         direction,
         disablePlugins: disableProviders,
         disklet: coreDisklet,
+        forcedWalletResult,
         guiPlugin: plugin,
         longPress,
-        navigation,
+        navigation: navigation as NavigationBase,
         paymentType,
+        pluginPromotion,
         regionCode: { countryCode, stateProvinceCode },
         onLogEvent
       })
@@ -289,47 +312,33 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         deepQuery
       })
     }
+
+    // Reset potential filterAsset after the user launched a plugin.
+    onPluginOpened()
   }
 
-  async showCountrySelectionModal(skipCountry?: boolean) {
-    const { account, updateCountryCode, countryCode, stateProvinceCode } = this.props
+  renderTitle = (guiPluginRow: GuiPluginRow) => {
+    const styles = getStyles(this.props.theme)
+    const { title, customTitleKey } = guiPluginRow
 
-    let selectedCountryCode: string = countryCode
-    if (skipCountry !== true) {
-      selectedCountryCode = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
+    switch (customTitleKey) {
+      case 'applepay':
+        // Per Apple branding guidelines, "Pay With" is NOT to be translated.
+        return (
+          <View style={styles.titleAppleContainer}>
+            <EdgeText style={styles.titleText} numberOfLines={1}>
+              {'Pay with '}
+            </EdgeText>
+            <Image style={styles.titleAppleLogo} source={paymentTypeLogoApplePay} />
+          </View>
+        )
+      default:
+        return (
+          <EdgeText style={styles.titleText} numberOfLines={1}>
+            {title}
+          </EdgeText>
+        )
     }
-    if (selectedCountryCode) {
-      try {
-        const country = COUNTRY_CODES.find(country => country['alpha-2'] === selectedCountryCode)
-        if (country == null) throw new Error('Invalid country code')
-        const { stateProvinces, name } = country
-        let selectedStateProvince: string | undefined
-        if (stateProvinces != null) {
-          // This country has states/provinces. Show picker for that
-          const previousStateProvince = stateProvinces.some(sp => sp['alpha-2'] === stateProvinceCode) ? stateProvinceCode : undefined
-          selectedStateProvince = await Airship.show<string>(bridge => (
-            <StateProvinceListModal countryCode={selectedCountryCode} bridge={bridge} stateProvince={previousStateProvince} stateProvinces={stateProvinces} />
-          ))
-          if (selectedStateProvince == null) {
-            throw new Error(sprintf(lstrings.error_must_select_state_province_s, name))
-          }
-        }
-        const syncedSettings = await readSyncedSettings(account)
-        const updatedSettings: SyncedAccountSettings = {
-          ...syncedSettings,
-          countryCode: selectedCountryCode,
-          stateProvinceCode: selectedStateProvince
-        }
-        updateCountryCode({ countryCode: selectedCountryCode, stateProvinceCode: selectedStateProvince })
-        await writeSyncedSettings(account, updatedSettings)
-      } catch (error: any) {
-        showError(error)
-      }
-    }
-  }
-
-  _handleCountryPress = () => {
-    this.showCountrySelectionModal().catch(showError)
   }
 
   renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
@@ -344,10 +353,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
     const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
-
     return (
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <CardUi4
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
+        <EdgeCard
           icon={
             <Image
               style={styles.logo}
@@ -355,14 +363,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () => await this.openPlugin(item).catch(showError)}
-          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+          onPress={async () => await this.openPlugin(item).catch(error => showError(error))}
+          onLongPress={async () => await this.openPlugin(item, true).catch(error => showError(error))}
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>
-            <EdgeText style={styles.titleText} numberOfLines={1}>
-              {item.title}
-            </EdgeText>
+            {this.renderTitle(item)}
             {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
             {poweredBy != null && item.partnerIconPath != null ? (
               <>
@@ -375,13 +381,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               </>
             ) : null}
           </View>
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
     )
   }
 
   renderTop = () => {
-    const { countryCode, stateProvinceCode, theme } = this.props
+    const { account, countryCode, stateProvinceCode, onCountryPress, theme, forcedWalletResult } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
@@ -393,29 +399,47 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+    const forcedWallet = forcedWalletResult?.type === 'wallet' ? account.currencyWallets[forcedWalletResult.walletId] : undefined
+
+    const titleAsset =
+      forcedWalletResult == null || forcedWalletResult.type !== 'wallet' || forcedWallet == null
+        ? lstrings.cryptocurrency
+        : getCurrencyCodeWithAccount(account, forcedWallet.currencyInfo.pluginId, forcedWalletResult.tokenId) ?? ''
 
     const countryCard =
       stateProvinceData == null ? (
-        <CardUi4>
-          <RowUi4 onPress={this._handleCountryPress} rightButtonType="none" icon={icon} body={countryName} />
-        </CardUi4>
+        <EdgeCard>
+          <EdgeRow onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
+        </EdgeCard>
       ) : (
-        <SelectableRow onPress={this._handleCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
+        <SelectableRow onPress={onCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
       )
 
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
+          <SceneHeader
+            title={
+              direction === 'buy' ? getUkCompliantString(countryCode, 'buy_1s_quote', titleAsset) : getUkCompliantString(countryCode, 'sell_1s', titleAsset)
+            }
+            underline
+            withTopMargin
+          />
         </EdgeAnim>
 
         {hasCountryData ? (
-          <EdgeAnim enter={fadeInUp60}>
-            <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+          <EdgeAnim enter={fadeInUp60} style={styles.hackContainer}>
+            <SectionHeader leftTitle={lstrings.title_select_region} />
           </EdgeAnim>
         ) : null}
-        <EdgeAnim enter={fadeInUp30}>{countryCard}</EdgeAnim>
-        {hasCountryData ? <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} /> : null}
+        <EdgeAnim enter={fadeInUp30} style={styles.hackContainer}>
+          {countryCard}
+        </EdgeAnim>
+        {hasCountryData ? (
+          <EdgeAnim enter={fadeInUp20} style={styles.hackContainer}>
+            <SectionHeader leftTitle={lstrings.title_select_payment_method} />
+          </EdgeAnim>
+        ) : null}
       </>
     )
   }
@@ -435,10 +459,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, insetStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
-    const styles = getStyles(theme)
 
     // Pick a filter based on our direction:
     let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins, stateProvinceCode)
@@ -457,34 +480,35 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <View style={styles.sceneContainer}>
-        <Animated.FlatList
-          data={plugins}
-          onScroll={this.props.handleScroll}
-          ListHeaderComponent={this.renderTop}
-          ListEmptyComponent={this.renderEmptyList}
-          renderItem={this.renderPlugin}
-          keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-          contentContainerStyle={insetStyle}
-        />
-      </View>
+      <Animated.FlatList
+        data={plugins}
+        onScroll={this.props.onScroll}
+        ListHeaderComponent={this.renderTop}
+        ListEmptyComponent={this.renderEmptyList}
+        renderItem={this.renderPlugin}
+        keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+        contentContainerStyle={insetStyle}
+      />
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   header: {
-    marginLeft: -theme.rem(0.5),
-    width: '100%'
+    marginRight: -theme.rem(0.5),
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    overflow: 'visible'
   },
   cardContentContainer: {
     flexDirection: 'column',
     flexShrink: 1,
     marginRight: theme.rem(0.5)
   },
-  sceneContainer: {
-    flex: 1,
-    padding: theme.rem(0.5)
+  hackContainer: {
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    paddingHorizontal: theme.rem(0.5)
   },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
@@ -529,6 +553,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
     fontFamily: theme.fontFaceMedium
   },
+  titleAppleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    flexShrink: 1
+  },
+  titleAppleLogo: {
+    height: theme.rem(1),
+    width: 'auto',
+    aspectRatio: 150 / 64,
+    resizeMode: 'contain',
+    marginBottom: 1
+  },
   subtitleText: {
     marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
@@ -547,6 +584,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const { navigation, route } = props
+  const { params = { forcedWalletResult: undefined } } = route
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -556,20 +594,52 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const accountReferral = useSelector(state => state.account.accountReferral)
   const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
   const coreDisklet = useSelector(state => state.core.disklet)
-  const countryCode = useSelector(state => state.ui.settings.countryCode)
-  const stateProvinceCode = useSelector(state => state.ui.settings.stateProvinceCode)
-  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+  const isFocused = useIsFocused()
 
-  const updateCountryCode = (params: { countryCode: string; stateProvinceCode?: string }): void => {
-    const { countryCode, stateProvinceCode } = params
-    dispatch(updateOneSetting({ countryCode, stateProvinceCode }))
-  }
+  const debouncedNavigation = useAsyncNavigation(navigation)
+
+  const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
   })
+
+  const handleCountryPress = useHandler(async () => {
+    await dispatch(
+      showCountrySelectionModal({
+        account,
+        countryCode,
+        stateProvinceCode
+      })
+    )
+  })
+  const handlePluginOpened = useHandler(() => {
+    // Reset the temporary 1-time asset filter after opening a plugin.
+    // Known issue: We can't resolve the case where the user navigates to this
+    // scene with a 'filterAsset,' but does not select a payment method before
+    // navigating away.
+
+    setTimeout(() => {
+      // Wait a short amount of time for the scene transition animation to
+      // complete before we reset the forced asset
+      setForcedWalletResultLocal(undefined)
+    }, 500)
+  })
+
+  React.useEffect(() => {
+    // HACK: Latest React Navigation causes multiple mounts
+    if (!isFocused) return
+
+    dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  React.useEffect(() => {
+    setForcedWalletResultLocal(params.forcedWalletResult)
+  }, [params])
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
@@ -577,22 +647,25 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
         return (
           <View style={undoInsetStyle}>
             <GuiPluginList
-              handleScroll={handleScroll}
-              navigation={navigation}
-              route={route}
-              deviceId={deviceId}
               account={account}
               accountPlugins={accountPlugins}
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
-              stateProvinceCode={stateProvinceCode}
+              defaultIsoFiat={defaultIsoFiat}
               developerModeOn={developerModeOn}
+              deviceId={deviceId}
               disablePlugins={disablePlugins}
-              updateCountryCode={updateCountryCode}
-              theme={theme}
+              forcedWalletResult={forcedWalletResultLocal}
+              onScroll={handleScroll}
               insetStyle={insetStyle}
+              navigation={debouncedNavigation}
+              route={route}
+              stateProvinceCode={stateProvinceCode}
+              theme={theme}
+              onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
+              onPluginOpened={handlePluginOpened}
             />
           </View>
         )

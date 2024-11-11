@@ -3,15 +3,14 @@ import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { showError } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
-import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
+import { EdgeModal } from './EdgeModal'
 
 export interface ButtonInfo {
   label: string
-  type?: 'primary' | 'secondary' | 'escape'
 
   // The modal will show a spinner as long as this promise is pending.
   // Returning true will dismiss the modal,
@@ -23,14 +22,19 @@ export interface ButtonInfo {
 
 export interface ButtonModalProps<Buttons> {
   bridge: AirshipBridge<keyof Buttons | undefined>
-  title?: string
-  message?: string
-  children?: React.ReactNode
   buttons: Buttons
+  /** Used to pass non-text children, to be rendered after the title and message
+   * but before the buttons themselves. */
+  children?: React.ReactNode
+  /** No corner close button */
   disableCancel?: boolean
+  /** Full height (flex: 1) */
   fullScreen?: boolean
-
-  // Adds a border:
+  /** Main body message */
+  message?: string
+  /** Modal title */
+  title?: string
+  /** Adds a border around the modal */
   warning?: boolean
 
   /** @deprecated. Does nothing. */
@@ -52,67 +56,62 @@ export interface ButtonModalProps<Buttons> {
 export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
   const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   const containerStyle: ViewStyle = {
-    flex: fullScreen ? 1 : 0
-  }
-  const textStyle: ViewStyle = {
-    justifyContent: 'flex-start'
-  }
-  const buttonsStyle: ViewStyle = {
-    justifyContent: 'flex-end',
-    marginTop: theme.rem(0.5)
+    flexGrow: fullScreen ? 1 : 0,
+    flexShrink: fullScreen ? 0 : 1
   }
 
-  // TODO:
-  // Since we don't have clear definitions yet for primary/secondary/tertiary
-  // button assignments, we can't use ButtonsViewUi4. For now, just style
-  // the buttons with a shared width
-  const innerButtonStyle: ViewStyle = {
+  const buttonInfo = Object.keys(buttons).map((key, i, arr) => {
+    const { label, onPress } = buttons[key]
+
+    const handlePress = (): Promise<void> | undefined => {
+      if (onPress == null) {
+        bridge.resolve(key)
+        return
+      }
+      return onPress().then(
+        result => {
+          if (result) bridge.resolve(key)
+        },
+        error => showError(error)
+      )
+    }
+
+    return { label, onPress: handlePress }
+  })
+
+  return (
+    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
+      <View style={[styles.textStyle, containerStyle]}>
+        {message != null ? <Paragraph>{message}</Paragraph> : null}
+        {children}
+        <ModalButtons
+          primary={buttonInfo.length > 0 ? buttonInfo[0] : undefined}
+          secondary={buttonInfo.length > 1 ? buttonInfo[1] : undefined}
+          tertiary={buttonInfo.length > 2 ? buttonInfo[2] : undefined}
+        />
+      </View>
+    </EdgeModal>
+  )
+}
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  buttonsStyle: {
+    justifyContent: 'flex-end',
+    marginTop: theme.rem(0.5)
+  },
+  // TODO: Remove
+  innerButtonStyle: {
     justifyContent: 'space-between',
     alignSelf: 'center', // Shrink view around buttons
     alignItems: 'stretch', // Stretch our children out
     flexDirection: 'column'
+  },
+  textStyle: {
+    justifyContent: 'flex-start'
   }
-
-  return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
-      <View style={containerStyle}>
-        <View style={textStyle}>
-          {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-          {children}
-        </View>
-      </View>
-      <View style={buttonsStyle}>
-        <View style={innerButtonStyle}>
-          {Object.keys(buttons).map((key, i, arr) => {
-            let defaultType: 'primary' | 'secondary'
-            if (theme.preferPrimaryButton) {
-              defaultType = i === 0 ? 'primary' : 'secondary'
-            } else {
-              defaultType = i === 0 && arr.length > 1 ? 'primary' : 'secondary'
-            }
-            const { type = defaultType, label, onPress } = buttons[key]
-
-            const handlePress = (): Promise<void> | undefined => {
-              if (onPress == null) {
-                bridge.resolve(key)
-                return
-              }
-              return onPress().then(
-                result => {
-                  if (result) bridge.resolve(key)
-                },
-                error => showError(error)
-              )
-            }
-
-            return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} layout="column" />
-          })}
-        </View>
-      </View>
-    </ModalUi4>
-  )
-}
+}))

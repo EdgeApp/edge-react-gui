@@ -5,29 +5,33 @@ import { Action } from '../types/reduxTypes'
 import { exchangeInfo } from './ExchangeInfoReducer'
 import { fio, FioState } from './FioReducer'
 import { passwordReminder, PasswordReminderState } from './PasswordReminderReducer'
-import { createWallet, CreateWalletState } from './scenes/CreateWalletReducer'
 import { fioAddress, FioAddressSceneState } from './scenes/FioAddressSceneReducer'
 import { settings, SettingsState } from './scenes/SettingsReducer'
 import { wallets, WalletsState } from './scenes/WalletsReducer'
 
 export interface UiState {
-  readonly createWallet: CreateWalletState
   readonly exchangeInfo: ExchangeInfo
   readonly fio: FioState
   readonly fioAddress: FioAddressSceneState
   readonly passwordReminder: PasswordReminderState
   readonly settings: SettingsState
+  readonly notificationHeight: number
   readonly subcategories: string[]
   readonly wallets: WalletsState
 }
 
 const uiInner = combineReducers<UiState, Action>({
-  createWallet,
   exchangeInfo,
   fio,
   fioAddress,
   passwordReminder,
   settings,
+  notificationHeight(state = 0, action) {
+    if (action.type === 'UI/SET_NOTIFICATION_HEIGHT') {
+      return action.data.height
+    }
+    return state
+  },
 
   subcategories(state = [], action) {
     switch (action.type) {

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -18,29 +17,30 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { makeAaveCloseAction } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { filterNull } from '../../../util/safeFilters'
 import { translateError } from '../../../util/translateError'
 import { zeroString } from '../../../util/utils'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Space } from '../../layout/Space'
+import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface LoanCloseParams {
   loanAccountId: string
 }
 
-export interface Props extends EdgeSceneProps<'loanClose'> {
+export interface Props extends EdgeAppSceneProps<'loanClose'> {
   loanAccount: LoanAccount
 }
 
@@ -74,10 +74,12 @@ export const LoanCloseSceneComponent = (props: Props) => {
 
   // Create Action Ops
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const [actionProgram, actionProgramError] = useAsyncValue(async () => {
     const actionOp = await makeAaveCloseAction({
       borrowPluginId,
       borrowEngine,
+      defaultIsoFiat,
       exchangeRates
     })
 
@@ -123,7 +125,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
       // Update the loan program marking it as close
       await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
       // Navigate to loan dashboard scene if no action program is necessary
-      navigation.navigate('loanDashboard', {})
+      navigation.navigate('loanDashboard')
     }
   })
 
@@ -131,9 +133,9 @@ export const LoanCloseSceneComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_close_loan_title}
         underline
@@ -148,18 +150,18 @@ export const LoanCloseSceneComponent = (props: Props) => {
         <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <RowUi4 title={lstrings.loan_remaining_principal}>
+          <EdgeRow title={lstrings.loan_remaining_principal}>
             {debts.map(debt => (
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
-          </RowUi4>
+          </EdgeRow>
         ) : null}
         {collaterals.length > 0 ? (
-          <RowUi4 title={lstrings.loan_collateral_amount}>
+          <EdgeRow title={lstrings.loan_collateral_amount}>
             {collaterals.map(collateral => (
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
-          </RowUi4>
+          </EdgeRow>
         ) : null}
         {aggregateErrorMessage.length > 0 ? (
           <Alert
@@ -181,7 +183,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
           />
         )}
 
-        <Space top={1} bottom={2}>
+        <Space topRem={1} bottomRem={2}>
           <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} disabledText={lstrings.send_confirmation_slide_to_confirm} />
         </Space>
       </KeyboardAwareScrollView>

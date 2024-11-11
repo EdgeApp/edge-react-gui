@@ -30,14 +30,19 @@ export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): st
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
   let exchangeRateText
   if (isEstimate) {
-    exchangeRateText = `1 ${quote.displayCurrencyCode} ~= ${localeRate} ${fiatCode}\n${lstrings.estimated_quote}`
+    exchangeRateText = `1 ${quote.displayCurrencyCode} ≈ ${localeRate} ${fiatCode}\n${lstrings.estimated_quote}`
   } else {
     exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
   }
   return exchangeRateText
 }
 
-export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): string | undefined => {
+export interface BestError {
+  errorText?: string
+  quoteError?: FiatProviderQuoteError
+}
+
+export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): BestError => {
   let bestError: FiatProviderQuoteError | undefined
   for (const eq of errorQuotes) {
     const errorQuote = eq.quoteError
@@ -62,8 +67,8 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
       }
     }
   }
-  if (bestError == null) return
-  return getErrorText(bestError, currencyCode, direction)
+  if (bestError == null) return {}
+  return { errorText: getErrorText(bestError, currencyCode, direction), quoteError: bestError }
 }
 
 const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {

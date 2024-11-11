@@ -1,12 +1,12 @@
 import { add, gt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
@@ -14,19 +14,24 @@ import { lstrings } from '../../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
+import { ButtonsView } from '../../buttons/ButtonsView'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 
-interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
+export interface FioStakingOverviewParams {
+  tokenId: EdgeTokenId
+  walletId: string
+}
+
+interface OwnProps extends EdgeAppSceneProps<'fioStakingOverview'> {}
 
 interface StateProps {
   currencyWallet: EdgeCurrencyWallet
@@ -93,19 +98,19 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.navigate('fioStakingChange', { change: 'add', tokenId, walletId })
+    navigation.navigate('fioStakingChange', { assetActionType: 'stake', tokenId, walletId })
   }
   const handlePressUnstake = () => {
-    navigation.navigate('fioStakingChange', { change: 'remove', tokenId, walletId })
+    navigation.navigate('fioStakingChange', { assetActionType: 'unstake', tokenId, walletId })
   }
 
   const renderItems = () =>
     locks.map(item => {
       const amount = `${item.amount} ${currencyCode}`
       return (
-        <RowUi4 key={item.id} title={item.title}>
+        <EdgeRow key={item.id} title={item.title}>
           <EdgeText>{amount}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     })
 
@@ -121,21 +126,21 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
         <View style={styles.container}>
           <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
 
-          <CardUi4>
-            <RowUi4 title="Currently Staked">
+          <EdgeCard>
+            <EdgeRow title="Currently Staked">
               <EdgeText>
                 {staked}
                 <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
               </EdgeText>
-            </RowUi4>
-          </CardUi4>
-          <CardUi4 sections>{renderItems()}</CardUi4>
+            </EdgeRow>
+          </EdgeCard>
+          <EdgeCard sections>{renderItems()}</EdgeCard>
         </View>
       </SceneWrapper>
 
-      <ButtonsViewUi4
+      <ButtonsView
         parentType="scene"
-        primary={{ label: lstrings.staking_stake_funds_button, onPress: handlePressStake }}
+        primary={{ label: lstrings.fragment_stake_label, onPress: handlePressStake }}
         tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}
       />
     </>
@@ -179,6 +184,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       }
     } = ownProps
     const { account } = state.core
+    const { defaultIsoFiat, defaultFiat } = state.ui.settings
     const currencyWallet = account.currencyWallets[walletId]
     const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
@@ -190,7 +196,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
 
     const defaultDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, currencyCode)
     const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakedNativeAmount ?? '0')
-    const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
+    const stakingFiatBalance = convertCurrency(state, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
     return {
@@ -198,8 +204,8 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       stakingCryptoAmountFormat,
       stakingFiatBalanceFormat,
       currencyDenomination,
-      fiatCurrencyCode: currencyWallet.fiatCurrencyCode.replace('iso:', ''),
-      fiatSymbol: getSymbolFromCurrency(currencyWallet.fiatCurrencyCode)
+      fiatCurrencyCode: defaultFiat,
+      fiatSymbol: getFiatSymbol(defaultIsoFiat)
     }
   },
   dispatch => ({

@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
-import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
+import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi, FiatPluginUtils } from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
@@ -44,7 +44,22 @@ export class FiatProviderError extends Error {
   readonly quoteError: FiatProviderQuoteError
 
   constructor(info: FiatProviderQuoteError) {
-    super('FiatProviderError')
+    function getMessage(): string {
+      switch (info.errorType) {
+        case 'overLimit':
+          return `Over limit: ${info.errorAmount} ${info.displayCurrencyCode}`
+        case 'underLimit':
+          return `Under limit: ${info.errorAmount} ${info.displayCurrencyCode}`
+        case 'regionRestricted':
+          return `Region restricted: ${info.displayCurrencyCode}`
+        case 'assetUnsupported':
+          return `Asset unsupported`
+        case 'paymentUnsupported':
+          return 'Payment unsupported'
+      }
+    }
+    super(getMessage())
+    this.name = 'FiatProviderError'
     this.quoteError = info
   }
 }
@@ -65,6 +80,21 @@ export interface FiatProviderSupportedRegions {
     forStateProvinces?: string[]
     notStateProvinces?: string[]
   }
+}
+
+/**
+ * Map of supported countryCodes
+ * All supported countries must be in the map. A value of undefined, null, or false
+ * means the country is not supported. True or an object means it
+ * is supported. An object means support is conditional on the stateProvince.
+ */
+export interface FiatProviderExactRegions {
+  [countryCode: string]:
+    | boolean
+    | {
+        forStateProvinces?: string[]
+        notStateProvinces?: string[]
+      }
 }
 
 // Supported fiats and cryptos per provider
@@ -88,6 +118,8 @@ export interface FiatProviderGetQuoteParams {
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
+  pluginUtils: FiatPluginUtils
+  promoCode?: string
   paymentTypes: FiatPaymentType[]
 }
 
@@ -114,11 +146,13 @@ export interface FiatProvider<OtherMethods = null> {
 }
 
 export type FiatProviderGetTokenId = (pluginId: string, currencyCode: string) => EdgeTokenId | undefined
-
+export type FiatProviderGetTokenIdFromContract = (params: { pluginId: string; contractAddress: string }) => EdgeTokenId | undefined
+export type FiatProviderMakeUuid = () => Promise<string>
 export interface FiatProviderFactoryParams {
   deviceId: string
-  io: { store: FiatProviderStore }
+  io: { store: FiatProviderStore; makeUuid: FiatProviderMakeUuid }
   getTokenId: FiatProviderGetTokenId
+  getTokenIdFromContract: FiatProviderGetTokenIdFromContract
   apiKeys?: unknown // Data specific to the requirements of each provider,
   // which lets the provider know that these orders were made from within Edge.
   // Typically an API key, but can be some other information like a client ID.

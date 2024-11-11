@@ -1,24 +1,14 @@
-import { EdgeCorePluginOptions } from 'edge-core-js'
-
-import { fetchInfo } from '../../../util/network'
+import { infoServerData } from '../../../util/network'
 import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
 import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
 import { StakePolicyInfo, toStakePolicy } from './stakePolicy'
 
-export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
-  const fetchResponse = await fetchInfo(`v1/apyValues`)
-    .then(async res => {
-      if (!res.ok) {
-        throw new Error(`Fetch APY invalid response: ${await res.text()}`)
-      }
-      return res
-    })
-    .catch(err => {
-      throw new Error(`Fetch APY failed: ${err.message}`)
-    })
-  const fetchResponseJson = await fetchResponse.json()
-  const infoServerResponse = asInfoServerResponse(fetchResponseJson)
+export const makeUniV2StakePlugin = async (pluginId: string): Promise<StakePlugin | undefined> => {
+  if (!pluginInfo.policyInfo.some(info => info.parentPluginId === pluginId)) {
+    return
+  }
+  const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
 
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {

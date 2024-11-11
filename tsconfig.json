@@ -1,18 +1,7 @@
 {
+  "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    "noEmit": true,
-
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-native",
-    "lib": ["es2017"],
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "target": "esnext",
-    "types": ["react-native"],
-    "sourceMap": true,
-
-    "strict": true
+    "allowJs": false,
+    "noEmit": true
   }
 }

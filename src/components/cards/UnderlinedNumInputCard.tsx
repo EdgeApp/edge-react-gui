@@ -1,15 +1,16 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
 import { zeroString } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 const UnderlinedNumInputCardComponent = (props: {
   currencyCode: string
@@ -33,7 +34,7 @@ const UnderlinedNumInputCardComponent = (props: {
   }
 
   const handlePress = useHandler(async () => {
-    if (onPress == null) return null
+    if (onPress == null) return
     try {
       await onPress()
     } catch (err) {
@@ -43,8 +44,8 @@ const UnderlinedNumInputCardComponent = (props: {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress}>
-        <CardUi4>
+      <EdgeTouchableOpacity onPress={handlePress}>
+        <EdgeCard>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
               <EdgeText style={styles.textTitle}>{title}</EdgeText>
@@ -69,8 +70,8 @@ const UnderlinedNumInputCardComponent = (props: {
             </View>
             <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
-        </CardUi4>
-      </TouchableOpacity>
+        </EdgeCard>
+      </EdgeTouchableOpacity>
     </View>
   )
 }

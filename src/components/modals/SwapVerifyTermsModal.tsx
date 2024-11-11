@@ -8,9 +8,10 @@ import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { ModalTitle } from '../themed/ModalParts'
+import { EdgeModal } from './EdgeModal'
 
 interface TermsUri {
   termsUri?: string
@@ -59,7 +60,7 @@ function SwapVerifyTermsModal(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
@@ -69,7 +70,7 @@ function SwapVerifyTermsModal(props: Props) {
       }
       onCancel={() => bridge.resolve(false)}
     >
-      <ModalMessage>{lstrings.swap_terms_statement}</ModalMessage>
+      <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
       <MainButton label={lstrings.swap_terms_accept_button} marginRem={1} onPress={() => bridge.resolve(true)} />
       <MainButton label={lstrings.swap_terms_reject_button} marginRem={1} type="secondary" onPress={() => bridge.resolve(false)} />
       <View style={styles.linkContainer}>
@@ -89,7 +90,7 @@ function SwapVerifyTermsModal(props: Props) {
           </Text>
         )}
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

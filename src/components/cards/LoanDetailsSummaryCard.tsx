@@ -6,7 +6,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
 import { getLtvColorValue } from '../tiles/LtvRatioTile'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface SummaryDetail {
   label: string
@@ -28,7 +28,7 @@ export const LoanDetailsSummaryCard = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <CardUi4>
+    <EdgeCard>
       <View style={styles.container}>
         <View style={styles.totalContainer}>
           <View style={styles.iconContainer}>{currencyIcon}</View>
@@ -56,7 +56,7 @@ export const LoanDetailsSummaryCard = (props: Props) => {
           </View>
         ) : null}
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

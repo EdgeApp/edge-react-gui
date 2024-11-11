@@ -20,7 +20,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     <Icon
       allowFontScaling={false}
       color="#FFFFFF"
-      name="ios-at"
+      name="at"
       size={34}
       style={
         {
@@ -73,8 +73,8 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     >
       A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
     </EdgeText>
-    <CardUi4>
-      <RowUi4
+    <EdgeCard>
+      <EdgeRow
         onPress={[Function]}
         rightButtonType="editable"
         title="Choose a FIO Domain"
@@ -106,8 +106,8 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             
           </EdgeText>
         </View>
-      </RowUi4>
-    </CardUi4>
+      </EdgeRow>
+    </EdgeCard>
     <Memo(EdgeAnimInner)
       enter={
         {

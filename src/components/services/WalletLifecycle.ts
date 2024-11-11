@@ -84,7 +84,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // If we have become paused (app into background), shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
-      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(showError)
+      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(error => showError(error))
     }
     this.paused = paused
 
@@ -108,15 +108,16 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // Use the sortedWalletList to boot the wallets in the same order they appear in the list
     for (const walletItem of sortedWalletList) {
       if (this.booting.length >= BOOT_LIMIT) break
-      const { token, tokenId, wallet, walletId } = walletItem
 
       // Ignore missing wallets, token rows, started wallets, already-booting
       // wallets, keysOnlyMode, and user-paused wallets:
-      if (token != null || tokenId != null || wallet == null) continue
+      if (walletItem.type !== 'asset') continue
+      const { token, tokenId, wallet } = walletItem
+      if (token != null || tokenId != null) continue
       if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) continue
       if (!wallet.paused) continue
-      if (this.booting.find(boot => boot.walletId === walletId) != null) continue
-      if (userPausedWalletsSet.has(walletId)) continue
+      if (this.booting.find(boot => boot.walletId === wallet.id) != null) continue
+      if (userPausedWalletsSet.has(wallet.id)) continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
     }
@@ -184,7 +185,7 @@ function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot 
         out.close()
       }, 5000)
     })
-    .catch(showError)
+    .catch(error => showError(error))
 
   return out
 }

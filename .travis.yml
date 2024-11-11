@@ -1,6 +1,11 @@
+branches:
+  only:
+  - develop
+  - staging
+dist: jammy
 language: node_js
 node_js:
-  - 16
+  - 18
 before_install:
   - node scripts/hack-travis.mjs
 install:

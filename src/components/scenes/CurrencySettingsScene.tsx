@@ -6,7 +6,7 @@ import { setDenominationKeyRequest } from '../../actions/SettingsActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
@@ -18,7 +18,7 @@ export interface CurrencySettingsParams {
   currencyInfo: EdgeCurrencyInfo
 }
 
-interface Props extends EdgeSceneProps<'currencySettings'> {}
+interface Props extends EdgeAppSceneProps<'currencySettings'> {}
 
 export function CurrencySettingsScene(props: Props) {
   const { route } = props

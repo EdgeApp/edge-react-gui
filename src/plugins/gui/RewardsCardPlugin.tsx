@@ -6,8 +6,9 @@ import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
-import { runWithTimeout, snooze } from '../../util/utils'
+import { removeIsoPrefix, runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -37,7 +38,7 @@ export interface UserRewardsCards {
 const PROVIDER_FACTORIES = [makeIoniaProvider]
 
 export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
-  const { showUi, account, guiPlugin } = params
+  const { showUi, account, guiPlugin, pluginUtils } = params
   const { pluginId } = guiPlugin
 
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
@@ -114,12 +115,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const answer = await showUi.buttonModal({
       buttons: {
         delete: { label: lstrings.string_delete, type: 'secondary' },
-        keep: { label: lstrings.string_keep, type: 'escape' }
+        keep: { label: lstrings.string_keep, type: 'tertiary' }
       },
       title: lstrings.delete_card_confirmation_title,
       message: lstrings.rewards_card_delete_modal_message,
       children: (
-        <Space around={0.5}>
+        <Space aroundRem={0.5}>
           <RewardsCard item={card} />
         </Space>
       )
@@ -137,15 +138,16 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
-    const { walletId, currencyCode, tokenId } = walletListResult
+    const { walletId, tokenId } = walletListResult
 
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+    const currencyCode = getCurrencyCode(wallet, tokenId)
 
     let providerQuote: FiatProviderQuote | undefined
     let counter = 0
     const fiatCurrencyCode = HARD_CODED_FIAT_CURRENCY_CODE // wallet.fiatCurrencyCode
-    const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+    const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
     showUi.enterAmount({
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
       label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
@@ -171,6 +173,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
+            pluginUtils,
             amountType: 'fiat',
             ...redundantQuoteParams
           }
@@ -183,6 +186,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
+            pluginUtils,
             amountType: 'crypto',
             ...redundantQuoteParams
           }
@@ -216,7 +220,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
             await showDashboard({ showLoading: true })
-            await refreshRewardsCards(0).catch(showError)
+            await refreshRewardsCards(0).catch(error => showError(error))
             await showDashboard({ showLoading: false })
           })
           .catch(error => {
@@ -260,7 +264,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
                 },
                 no: {
                   label: lstrings.string_decline,
-                  type: 'escape'
+                  type: 'tertiary'
                 }
               }
             })

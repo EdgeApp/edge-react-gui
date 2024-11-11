@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressList } from '../../components/scenes/Fio/FioAddressListScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressList', () => {
   it('should render with loading props', () => {
@@ -23,7 +23,7 @@ describe('FioAddressList', () => {
 
     const actual = renderer.render(
       <FioAddressList
-        {...fakeSceneProps('fioAddressList', {})}
+        {...fakeEdgeAppSceneProps('fioAddressList', undefined)}
         fioAddresses={[
           {
             name: 'fio@edge',

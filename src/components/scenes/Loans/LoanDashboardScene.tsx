@@ -1,6 +1,5 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -18,11 +17,12 @@ import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
 import { LoanWelcomeModal } from '../../modals/LoanWelcomeModal'
@@ -32,9 +32,8 @@ import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
 
-interface Props extends EdgeSceneProps<'loanDashboard'> {}
+interface Props extends EdgeAppSceneProps<'loanDashboard'> {}
 
 // First-element is the default wallet plugin used to create new wallet
 const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']
@@ -113,7 +112,7 @@ export const LoanDashboardScene = (props: Props) => {
       const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
-          navigation={navigation}
+          navigation={navigation as NavigationBase}
           headerTitle={lstrings.select_wallet}
           allowedAssets={allowedAssets}
           excludeWalletIds={Object.keys(loanAccountsMap)}
@@ -127,14 +126,13 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
-        if (info != null) return info // Already found
-        return getCurrencyInfos(account).find(currencyInfo => pluginId === currencyInfo.pluginId)
-      }, undefined)
-      if (filteredCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      const [createPluginId] = SUPPORTED_WALLET_PLUGIN_IDS.filter(pluginId => account.currencyConfig[pluginId] != null)
+      if (createPluginId == null) {
+        throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      }
       newLoanWallet = await createWallet(account, {
         name: `AAVE Loan Account`,
-        walletType: filteredCurrencyInfo.walletType
+        walletType: account.currencyConfig[createPluginId].currencyInfo.walletType
       })
     }
 
@@ -176,19 +174,19 @@ export const LoanDashboardScene = (props: Props) => {
     return (
       <>
         {isNewLoanLoading ? (
-          <CardUi4 marginRem={[0, 0.5, 0, 0.5, 0]}>
+          <EdgeCard marginRem={[0, 0.5, 0, 0.5, 0]}>
             <FillLoader />
-          </CardUi4>
+          </EdgeCard>
         ) : null}
         {isLoansLoading ? (
-          <Space around={1}>
+          <Space aroundRem={1}>
             <FillLoader />
           </Space>
         ) : (
-          <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+          <EdgeTouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
+            <Ionicon name="add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.loan_new_loan}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         )}
       </>
     )
@@ -207,9 +205,9 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_dashboard_title}
         underline
@@ -219,17 +217,17 @@ export const LoanDashboardScene = (props: Props) => {
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
-            <Space expand around horizontal={1} bottom={2.5}>
+            <Space expand alignCenter horizontalRem={1} bottomRem={2.5}>
               <EdgeText style={styles.emptyText}>{lstrings.loan_loading_loans}</EdgeText>
             </Space>
           ) : (
             <>
-              <Space expand around horizontal={1} top={1}>
+              <Space expand alignCenter horizontalRem={1} topRem={1}>
                 <EdgeText style={styles.emptyText} numberOfLines={4}>
                   {lstrings.loan_no_active_loans}
                 </EdgeText>
               </Space>
-              <Space around bottom={1}>
+              <Space alignCenter bottomRem={1}>
                 {renderFooter()}
               </Space>
             </>

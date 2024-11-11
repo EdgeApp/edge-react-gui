@@ -19,6 +19,8 @@ import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
 
+export const UNSUPPORTED_WC_VERSION = 'UNSUPPORTED_WC_VERSION'
+
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
@@ -87,7 +89,7 @@ export function useWalletConnect(): WalletConnect {
 
     const parsedUri = parseUri(uri)
     if (parsedUri.version !== 2) {
-      throw new Error('Unsupported WalletConnect version')
+      throw new Error(UNSUPPORTED_WC_VERSION)
     }
 
     return await runWithTimeout(
@@ -123,11 +125,13 @@ export function useWalletConnect(): WalletConnect {
     const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
 
     // Check that we support all required methods
-    const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
-      return !supportedNamespaces[chainId.namespace].methods.includes(method)
-    })
-    if (unsupportedMethods.length > 0) {
-      throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+    if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
+      const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
+        return !supportedNamespaces[chainId.namespace].methods.includes(method)
+      })
+      if (unsupportedMethods.length > 0) {
+        throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+      }
     }
 
     await runWithTimeout(
@@ -204,7 +208,6 @@ const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => 
   const { namespace, reference } = chainId
 
   let methods: string[]
-  let events = ['chainChanged', 'accountsChanged']
   switch (namespace) {
     case 'eip155':
       methods = [
@@ -223,14 +226,13 @@ const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => 
       break
     case 'cosmos':
       methods = ['cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino']
-      events = []
   }
 
   return {
     [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
-      events,
+      events: ['chainChanged', 'accountsChanged'],
       accounts: [`${namespace}:${reference}:${addr}`]
     }
   }

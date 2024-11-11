@@ -1,28 +1,34 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConnectWallets } from '../../FioAddress/ConnectWallets'
-import { showError } from '../../services/AirshipInstance'
+import { ButtonsModal } from '../../modals/ButtonsModal'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
+
+export interface FioAddressDetailsParams {
+  fioAddressName: string
+  bundledTxs: number
+}
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressDetails'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressDetails'> {}
 
 interface LocalState {
   fioWalletLoading: boolean
@@ -41,9 +47,16 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { route } = this.props
     const { fioAddressName } = route.params
     if (!fioAddressName) {
-      Alert.alert(lstrings.fio_address_details_screen_alert_title, lstrings.fio_address_details_screen_alert_message, [
-        { text: lstrings.fio_address_details_screen_alert_button }
-      ])
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.fio_address_details_screen_alert_title}
+          message={lstrings.fio_address_details_screen_alert_message}
+          buttons={{
+            ok: { label: lstrings.fio_address_details_screen_alert_button }
+          }}
+        />
+      )).catch(() => {})
     }
     this.findFioWallet().catch(err => showError(err))
   }
@@ -63,7 +76,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { fioWallet } = this.state
     if (fioWallet) {
       navigation.navigate('fioAddressSettings', {
-        fioWallet,
+        walletId: fioWallet.id,
         fioAddressName,
         bundledTxs,
         refreshAfterAddBundledTxs: true
@@ -87,9 +100,9 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     }
 
     return (
-      <CardUi4 paddingRem={0.25}>
+      <EdgeCard paddingRem={0.25}>
         <SettingsTappableRow action="setting" label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings} />
-      </CardUi4>
+      </EdgeCard>
     )
   }
 
@@ -106,10 +119,15 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
           <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
           {this.renderAccountSettings()}
           <SettingsHeaderRow
-            icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
+            icon={<IonIcon name="link" color={theme.primaryText} size={theme.rem(1.5)} />}
             label={lstrings.fio_address_details_connect_to_wallets}
           />
-          <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
+          <ConnectWallets
+            fioAddressName={fioAddressName}
+            fioWallet={this.state.fioWallet}
+            navigation={navigation as NavigationBase}
+            disabled={this.state.fioWalletLoading}
+          />
         </View>
       </SceneWrapper>
     )

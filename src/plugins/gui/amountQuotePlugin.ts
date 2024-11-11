@@ -1,23 +1,30 @@
-import { div, eq, gt, toFixed } from 'biggystring'
+import { div, eq, gt, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { fuzzyTimeout } from '../../util/utils'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
-import { getBestError, getRateFromQuote } from './pluginUtils'
+import { StateManager } from './hooks/useStateManager'
+import { BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
 import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
+import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { simplexProvider } from './providers/simplexProvider'
+import { EnterAmountState, FiatPluginEnterAmountParams } from './scenes/FiatPluginEnterAmountScene'
 import { initializeProviders } from './util/initializeProviders'
 
 // A map keyed by provider pluginIds, and values representing preferred priority
@@ -33,13 +40,54 @@ type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPri
 
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, paybisProvider, simplexProvider]
+interface ConvertValueInternalResult {
+  stateManagerUpdate?: Partial<EnterAmountState>
+  bestError?: BestError
+  value?: string
+}
+type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
+  convertValueInternal: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<ConvertValueInternalResult>
+}
+
+const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
 
 const DEFAULT_FIAT_AMOUNT = '500'
+const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
+
+/**
+ * Amount that we will attempt to get a quote for if the user presses the MAX button
+ * This is an arbitrary large number that should be larger than any reasonable quote
+ * in either fiat or crypto
+ */
+const MAX_QUOTE_VALUE = '10000000000'
+
+const NO_PROVIDER_TOAST_DURATION_MS = 10000
+
+/** Pick a default fiat amount in the foreign fiat amount that is roughly equal
+ to the default USD fiat amount. Prioritizes rounding up/down to a nice looking
+ whole number. */
+async function getInitialFiatValue(date: string, startingFiatAmount: string, isoFiatCurrencyCode: string) {
+  let initialValue1: string | undefined
+  if (isoFiatCurrencyCode !== 'iso:USD') {
+    const ratePair = `${isoFiatCurrencyCode}_iso:USD`
+    const rate = await getHistoricalRate(ratePair, date)
+    initialValue1 = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
+
+    // Round out all decimals
+    initialValue1 = round(initialValue1, 0)
+
+    // Keep only the first decimal place
+    initialValue1 = round(initialValue1, initialValue1.length - 1)
+  } else {
+    initialValue1 = startingFiatAmount
+  }
+  return initialValue1
+}
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const { account, guiPlugin, longPress = false, showUi } = params
+  const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
   const { pluginId } = guiPlugin
+  const isLightAccount = account.username == null
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
 
@@ -80,7 +128,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
+      const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotion, providerId } = params
+      const { countryCode } = await getFirstOpenInfo()
+
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -103,8 +153,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         throw new Error('Multiple paymentTypes not implemented')
       }
 
-      const paymentProviderPriority = providerPriority[paymentTypes[0]]
+      const paymentProviderPriority = providerPriority[paymentTypes[0]] ?? {}
       const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
+
+      if (priorityProviders.length === 0) {
+        const msg = direction === 'buy' ? lstrings.fiat_plugin_no_buy_providers : lstrings.fiat_plugin_no_sell_providers
+        await showUi.showToast(msg, NO_PROVIDER_TOAST_DURATION_MS)
+        return
+      }
 
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
@@ -112,9 +168,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         assetPromises.push(provider.getSupportedAssets({ direction, regionCode, paymentTypes }))
       }
 
-      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {
-        console.error('amountQuotePlugin error fetching assets: ', String(e))
-      })
+      const ps = fuzzyTimeout(assetPromises, 5000)
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
@@ -124,7 +178,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       const allowedProviders: { [providerId: string]: boolean } = {}
-      for (const assetMap of assetArray ?? []) {
+      for (const assetMap of assetArray) {
         if (assetMap == null) continue
         allowedProviders[assetMap.providerId] = true
         requireAmountCrypto[assetMap.providerId] = false
@@ -183,9 +237,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       })
 
       if (walletListResult == null) return
-      const { walletId, currencyCode, tokenId } = walletListResult
-
+      const { walletId, tokenId } = walletListResult
       const coreWallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
       if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
@@ -194,21 +248,21 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       let goodQuotes: FiatProviderQuote[] = []
       let lastSourceFieldNum: number
 
-      // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
-      // wallet fiat selection regardless of region.
-      // TODO: Remove when Fiat selection is designed.
-      const fiatCurrencyCode = forceFiatCurrencyCode ?? coreWallet.fiatCurrencyCode
-      const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+      const isoFiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
+      const displayFiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
+      const startingFiatAmount = isLightAccount ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+      const isoNow = new Date().toISOString()
+      const initialValue1 = requireCrypto ? undefined : await getInitialFiatValue(isoNow, startingFiatAmount, isoFiatCurrencyCode)
+
       // Navigate to scene to have user enter amount
-      const initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
-      showUi.enterAmount({
+      const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
-        headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
+        headerTitle: isBuy ? getUkCompliantString(countryCode, 'buy_1s', currencyCode) : getUkCompliantString(countryCode, 'sell_1s', currencyCode),
         initState: {
           value1: initialValue1,
           statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }
@@ -217,21 +271,106 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         swapInputLocations: requireCrypto,
         async onChangeText() {},
+        async onMax(sourceFieldNum, stateManager) {
+          /** Helper function to get a quote or error for the value specified */
+          const getMaxQuoteOrError = async (
+            fieldNum: number,
+            quoteValue: string
+          ): Promise<{ value1: string; value2: string } | ConvertValueInternalResult | undefined> => {
+            // First try getting a quote using the requested value
+            const result = await enterAmount.convertValueInternal(fieldNum, quoteValue, stateManager)
+            if (result.bestError?.quoteError != null) {
+              const { quoteError } = result.bestError
+              // We're only interested in overLimit errors to help find the max value
+              if (quoteError.errorType === 'overLimit' && quoteError.errorAmount != null) {
+                const { errorAmount, displayCurrencyCode } = quoteError
+
+                // We can only get a new quote if the displayCurrencyCode is specified since
+                // we have to know what type of quote to query
+                if (displayCurrencyCode != null) {
+                  if (displayCurrencyCode === displayFiatCurrencyCode) {
+                    // Re-query for a quote using the error amount as a fiat value which is fieldNum=1.
+                    // This 'should' succeed since the API told us this is the max value.
+                    const value1 = String(errorAmount)
+                    const value2 = await enterAmount.convertValue(1, value1, stateManager)
+                    if (value2 == null) return
+                    return { value1, value2 }
+                  } else if (displayCurrencyCode === currencyCode) {
+                    // Re-query for a quote using the error amount as a crypto value which is fieldNum=2.
+                    // This 'should' succeed since the API told us this is the max value.
+                    const value2 = String(errorAmount)
+                    const value1 = await enterAmount.convertValue(2, value2, stateManager)
+                    if (value1 == null) return
+                    return { value1, value2 }
+                  }
+                }
+              }
+              // We could not get a quote for the max value so return undefined. This happens as some APIs
+              // do not return a max value in their error, or they return a value without telling us which
+              // asset the amount is denominated in.
+            } else {
+              // If there was no error, then return the result which includes the opposite value needed
+              return result
+            }
+          }
+
+          if (direction === 'buy') {
+            // Try to get an error by requesting a massive quote
+            const result = await getMaxQuoteOrError(1, MAX_QUOTE_VALUE)
+            if (result == null) {
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_buy_quote_error, textType: 'error' } })
+            } else if ('value1' in result) {
+              // We got a max quote for both fiat and crypto fields, update the UI to show it
+              stateManager.update(result)
+            } else {
+              // Wow. Can we really buy this much?
+              stateManager.update({ value1: MAX_QUOTE_VALUE, value2: result.value })
+            }
+          } else {
+            // Get the max amount of the wallet's currency
+            const publicAddress = dummyAddressMap[currencyPluginId]
+            if (publicAddress == null) {
+              stateManager.update({ statusText: { content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode), textType: 'error' } })
+            }
+            const maxAmount = await coreWallet.getMaxSpendable({ tokenId, spendTargets: [{ publicAddress }] })
+            const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
+
+            const result = await getMaxQuoteOrError(2, exchangeAmount)
+            if (result == null) {
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_sell_quote_error, textType: 'error' } })
+            } else if ('value1' in result) {
+              // We got a max quote for both fiat and crypto fields, update the UI to show it
+              stateManager.update(result)
+            } else {
+              // The amount in the user's wallet is within the range of what the provider can
+              // support.
+              stateManager.update({ value1: result.value, value2: exchangeAmount })
+            }
+          }
+        },
+
         async convertValue(sourceFieldNum, value, stateManager) {
+          const out = await enterAmount.convertValueInternal(sourceFieldNum, value, stateManager)
+          if (out.stateManagerUpdate != null) stateManager.update(out.stateManagerUpdate)
+          return out.value
+        },
+
+        async convertValueInternal(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
-            stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })
-            return
+            return { stateManagerUpdate: { statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } } }
           }
           bestQuote = undefined
           goodQuotes = []
           lastSourceFieldNum = sourceFieldNum
 
           if (eq(value, '0')) {
-            stateManager.update({
-              statusText: { content: lstrings.enter_amount_label },
-              poweredBy: undefined
-            })
-            return ''
+            return {
+              stateManagerUpdate: {
+                statusText: { content: lstrings.enter_amount_label },
+                poweredBy: undefined
+              },
+              value: ''
+            }
           }
 
           const myCounter = ++counter
@@ -248,9 +387,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              pluginUtils,
               tokenId,
               exchangeAmount: value,
-              fiatCurrencyCode,
+              fiatCurrencyCode: isoFiatCurrencyCode,
               amountType: 'fiat',
               direction,
               paymentTypes,
@@ -263,9 +403,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              pluginUtils,
               tokenId,
               exchangeAmount: value,
-              fiatCurrencyCode,
+              fiatCurrencyCode: isoFiatCurrencyCode,
               amountType: 'crypto',
               direction,
               paymentTypes,
@@ -275,7 +416,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           const quotePromises = finalProvidersArray
             .filter(p => (providerId == null ? true : providerId === p.providerId))
-            .map(async p => await p.getQuote(quoteParams))
+            .map(async p => {
+              const providerIds = pluginPromotion?.providerIds ?? []
+              const promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+              return await p.getQuote({ ...quoteParams, promoCode })
+            })
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
@@ -284,7 +429,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           })
 
           // Only update with the latest call to convertValue
-          if (myCounter !== counter) return
+          if (myCounter !== counter) return {}
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
@@ -295,28 +440,29 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode, direction) ?? noQuoteText
-            stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
-            return
+            const bestError = getBestError(errors as any, sourceFieldCurrencyCode, direction)
+            return { bestError, stateManagerUpdate: { statusText: { content: bestError.errorText ?? noQuoteText, textType: 'error' } } }
           }
 
           // Find best quote factoring in pluginPriorities
-          bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
+          bestQuote = getBestQuote(direction, goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            stateManager.update({ statusText: { content: noQuoteText, textType: 'error' } })
-            return
+            return { stateManagerUpdate: { statusText: { content: noQuoteText, textType: 'error' } } }
           }
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
-          stateManager.update({
-            statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
-            poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
-          })
+
+          const out: ConvertValueInternalResult = {
+            stateManagerUpdate: {
+              statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
+              poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+            }
+          }
 
           if (sourceFieldNum === 1) {
-            return toFixed(bestQuote.cryptoAmount, 0, 6)
+            return { ...out, value: toFixed(bestQuote.cryptoAmount, 0, 6) }
           } else {
-            return toFixed(bestQuote.fiatAmount, 0, 2)
+            return { ...out, value: toFixed(bestQuote.fiatAmount, 0, 2) }
           }
         },
         async onPoweredByClick(stateManager) {
@@ -330,7 +476,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             } else {
               // User entered a crypto value. Show the fiat value per partner
               const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
-              text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+              text = `(${localeAmount} ${removeIsoPrefix(quote.fiatCurrencyCode)})`
             }
             const out = {
               text,
@@ -367,15 +513,31 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
         },
-        async onSubmit() {
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-
+        async onSubmit(_event, stateManager) {
           if (bestQuote == null) {
             return
           }
+
+          // Restrict light accounts from buying more than $50 at a time
+          if (isLightAccount && isBuy) {
+            const quoteFiatCurrencyCode = bestQuote.fiatCurrencyCode
+
+            if (initialValue1 != null && gt(bestQuote.fiatAmount, initialValue1)) {
+              stateManager.update({
+                statusText: {
+                  content: sprintf(lstrings.fiat_plugin_purchase_limit_error_2s, initialValue1, removeIsoPrefix(quoteFiatCurrencyCode)),
+                  textType: 'error'
+                }
+              })
+              return
+            }
+          }
+
+          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
-      })
+      }
+      showUi.enterAmount(enterAmount)
     }
   }
   return fiatPlugin
@@ -407,13 +569,18 @@ export const createPriorityArray = (providerPriority: ProviderPriorityMap): Prio
   return priorityArray
 }
 
-export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | undefined => {
+export const getBestQuote = (direction: 'buy' | 'sell', quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | undefined => {
   let bestQuote
   let bestQuoteRatio = '0'
   for (const p of priorityArray) {
     for (const quote of quotes) {
       if (!p[quote.providerId]) continue
-      const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
+      let quoteRatio: string
+      if (direction === 'buy') {
+        quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
+      } else {
+        quoteRatio = div(quote.fiatAmount, quote.cryptoAmount, 16)
+      }
 
       if (gt(quoteRatio, bestQuoteRatio)) {
         bestQuoteRatio = quoteRatio
@@ -422,4 +589,38 @@ export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: Priorit
     }
     if (bestQuote != null) return bestQuote
   }
+}
+
+const evm = '0x0d73358506663d484945BA85D0cd435ad610B0A0'
+
+/**
+ * Dummy addresses from Edge internal account used for creating a dummy
+ * EdgeSpendInfo only for calculating the max spendable amount
+ */
+const dummyAddressMap: { [pluginId: string]: string } = {
+  arbitrum: evm,
+  avalanche: evm,
+  binancesmartchain: evm,
+  celo: evm,
+  fantom: evm,
+  filecoinfevm: evm,
+  ethereum: evm,
+  polygon: evm,
+  pulsechain: evm,
+  optimism: evm,
+  zksync: evm,
+  rsk: evm,
+
+  bitcoin: 'bc1qk4crv4cuahw3k5c07pjnt5ld6wqd3mfdarxegk',
+  bitcoincash: 'qpqhtl4prfwtzr3nh6u6tc9pmspdnwx7c5g8zuy9l6',
+  ripple: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
+  dogecoin: 'D9NYBLA3pviqwZxEtK9CAmWNMgKN9CxFak',
+  litecoin: 'ltc1q6myyx2h0zm6784ycnads54l2zqx6f9m84w0v4f',
+  dash: 'XeLLbGLQWQfvpqMrhozfYkFhZsQP65nvJY',
+  hedera: '0.0.498055',
+  polkadot: '1oUs7ZvTs1mVrtsz25D4c8kQBzvUAtptcEKAnFwWkUrMXzE',
+  tron: 'TVNi7wRX7zPVxKmKzTJFEfVxEb3aNRdGbY',
+  tezos: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+  cosmos: 'cosmos17vjuuz0qjh5ga3ckk272lna63g9r47hgduvgrz',
+  coreum: 'core13vct004glmk7empapqqw0vlh2n88el2apkq35l'
 }

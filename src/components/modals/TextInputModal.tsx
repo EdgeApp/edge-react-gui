@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
+import { ModalButtons } from '../buttons/ModalButtons'
+import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
-import { FilledTextInput } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { Paragraph } from '../themed/EdgeText'
+import { FilledTextInputReturnKeyType, ModalFilledTextInput } from '../themed/FilledTextInput'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -26,6 +27,7 @@ interface Props {
   inputLabel?: string
   submitLabel?: string
   warningMessage?: string
+  textSizeRem?: number
 
   // Adds a border:
   warning?: boolean
@@ -37,7 +39,7 @@ interface Props {
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
   multiline?: boolean
   maxLength?: number
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  returnKeyType?: FilledTextInputReturnKeyType
   secureTextEntry?: boolean
 }
 
@@ -56,6 +58,7 @@ export function TextInputModal(props: Props) {
     secureTextEntry,
     multiline = false,
     submitLabel = lstrings.submit,
+    textSizeRem,
     title,
     maxLength,
     warning,
@@ -63,7 +66,6 @@ export function TextInputModal(props: Props) {
   } = props
 
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
-  const [spinning, setSpinning] = React.useState(false)
   const [text, setText] = React.useState(initialValue)
 
   const handleChangeText = (text: string) => {
@@ -73,10 +75,8 @@ export function TextInputModal(props: Props) {
 
   const handleSubmit = () => {
     if (onSubmit == null) return bridge.resolve(text)
-    setSpinning(true)
     onSubmit(text).then(
       result => {
-        setSpinning(false)
         if (typeof result === 'string') {
           setErrorMessage(result)
         } else if (result) {
@@ -84,47 +84,42 @@ export function TextInputModal(props: Props) {
         }
       },
       error => {
-        setSpinning(false)
         showError(error)
       }
     )
   }
 
-  const isAndroid = Platform.OS === 'android'
-  // TODO: Address this in ButtonsViewUi4
-  const androidButtonMargin = isAndroid ? [1, 1, 2, 1] : 1
-
   return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
-      {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
-      {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <FilledTextInput
-        top={1}
-        horizontal={0.5}
-        bottom={1.5}
-        expand
-        // Text input props:
-        autoCapitalize={autoCapitalize}
-        autoFocus={autoFocus}
-        autoCorrect={autoCorrect}
-        keyboardType={keyboardType}
-        placeholder={inputLabel}
-        returnKeyType={returnKeyType}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        // Our props:
-        error={errorMessage}
-        onChangeText={handleChangeText}
-        onSubmitEditing={handleSubmit}
-        value={text}
-        maxLength={maxLength}
-      />
-      {/* TODO: Style ButtonsViewUi4 for Modals */}
-      {spinning ? (
-        <MainButton disabled marginRem={androidButtonMargin} type="primary" spinner />
-      ) : (
-        <MainButton label={submitLabel} marginRem={androidButtonMargin} onPress={handleSubmit} type="primary" />
-      )}
-    </ModalUi4>
+    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
+      <StyledInnerView fullHeight={multiline}>
+        {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
+        {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
+        <ModalFilledTextInput
+          // Text input props:
+          autoCapitalize={autoCapitalize}
+          autoFocus={autoFocus}
+          autoCorrect={autoCorrect}
+          keyboardType={keyboardType}
+          placeholder={inputLabel}
+          returnKeyType={multiline ? (Platform.OS === 'ios' ? undefined : 'none') : returnKeyType}
+          secureTextEntry={secureTextEntry}
+          multiline={multiline}
+          // Our props:
+          error={errorMessage}
+          onChangeText={handleChangeText}
+          onSubmitEditing={multiline ? undefined : handleSubmit}
+          textsizeRem={textSizeRem}
+          value={text}
+          maxLength={maxLength}
+          blurOnSubmit={multiline ? false : undefined}
+        />
+        <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
+      </StyledInnerView>
+    </EdgeModal>
   )
 }
+
+const StyledInnerView = styled(View)<{ fullHeight: boolean }>(() => props => ({
+  flexShrink: 1,
+  flexGrow: props.fullHeight ? 1 : undefined
+}))

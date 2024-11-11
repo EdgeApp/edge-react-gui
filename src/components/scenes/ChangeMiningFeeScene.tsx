@@ -8,9 +8,10 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
+import { AccentColors } from '../common/DotsBackground'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -19,7 +20,6 @@ import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { AccentColors } from '../ui4/DotsBackground'
 
 export interface ChangeMiningFeeParams {
   maxSpendSet: boolean
@@ -29,7 +29,7 @@ export interface ChangeMiningFeeParams {
   onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {
+interface OwnProps extends EdgeAppSceneProps<'changeMiningFee2'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -166,7 +166,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
       <>
         {customFormat.map(key => (
           <FilledTextInput
-            around={1}
+            aroundRem={1}
             key={key}
             autoFocus={false}
             autoCorrect={false}

@@ -3,7 +3,6 @@ import { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
-import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
@@ -38,12 +37,6 @@ export function Providers(props: Props) {
     const middleware = [loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
-    if (__DEV__) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const createDebugger = require('redux-flipper').default
-      middleware.push(createDebugger())
-    }
-
     const enhancer = applyMiddleware<Dispatch, RootState>(...middleware)
     const store = createStore(rootReducer, undefined, enhancer)
 
@@ -70,11 +63,9 @@ export function Providers(props: Props) {
       >
         <KeyboardProvider statusBarTranslucent>
           {renderStateProviders(
-            <MenuProvider>
-              <Airship>
-                <Main />
-              </Airship>
-            </MenuProvider>
+            <Airship>
+              <Main />
+            </Airship>
           )}
         </KeyboardProvider>
       </LoginUiProvider>

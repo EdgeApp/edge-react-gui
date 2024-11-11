@@ -43,6 +43,9 @@ coverage/
 /maestro/env.js
 testerConfig.json
 
+# Temporary compiled contract files during `typechain` generation
+src/plugins/.contracts/*
+
 # ----------------------------------------------------------------------
 # Everything below comes from React Native.
 # Do not edit this section except during React Native version upgrades.

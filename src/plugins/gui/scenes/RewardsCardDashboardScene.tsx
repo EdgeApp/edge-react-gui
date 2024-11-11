@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
+import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
@@ -18,7 +19,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
@@ -31,7 +32,7 @@ export interface RewardsCardDashboardParams {
   showLoading?: boolean
 }
 
-interface Props extends EdgeSceneProps<'rewardsCardDashboard'> {}
+interface Props extends BuyTabSceneProps<'rewardsCardDashboard'> {}
 
 export const RewardsCardDashboardScene = (props: Props) => {
   const { route } = props
@@ -47,8 +48,14 @@ export const RewardsCardDashboardScene = (props: Props) => {
   })
   const handleQuestionPress = useHandler(() => {
     Airship.show<string | number | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={lstrings.rewards_card_loading} message={lstrings.rewards_card_purchase_disclaimer} closeArrow buttons={{}} />
-    )).catch(showError)
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.rewards_card_loading}
+        message={lstrings.rewards_card_purchase_disclaimer}
+        closeArrow
+        buttons={{ ok: { label: lstrings.string_ok_cap } }}
+      />
+    )).catch(error => showError(error))
   })
 
   return (
@@ -57,9 +64,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
         <SceneHeader
           title={lstrings.rewards_card_dashboard_title}
           tertiary={
-            <TouchableOpacity onPress={handleHelpPress}>
+            <EdgeTouchableOpacity onPress={handleHelpPress}>
               <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           }
           underline
           withTopMargin
@@ -83,7 +90,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
-        <Space around={1}>
+        <Space aroundRem={1}>
           <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
         </Space>
       </BottomFloat>
@@ -109,7 +116,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
   return (
     <CardContainer>
       <CardBackground />
-      <TouchableOpacity
+      <EdgeTouchableOpacity
         onPress={onPress}
         onLongPress={onLongPress}
         // Disable opacity effect if no onPress handler
@@ -117,23 +124,23 @@ export const RewardsCard = (props: RewardsCardProps) => {
       >
         <CardInner shouldStack={shouldStack}>
           <CardHeader>
-            <Space sideways>
+            <Space row>
               <VisaBrandImage source={visaBrandImage} />
               {onPress == null ? null : <Ionicon name="chevron-forward-outline" size={theme.rem(1.5)} color={theme.iconTappable} />}
             </Space>
             {onRemovePress == null ? null : (
-              <TouchableOpacity onPress={onRemovePress}>
+              <EdgeTouchableOpacity onPress={onRemovePress}>
                 <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
-              </TouchableOpacity>
+              </EdgeTouchableOpacity>
             )}
             {onQuestionPress == null ? null : (
-              <TouchableOpacity onPress={onQuestionPress}>
+              <EdgeTouchableOpacity onPress={onQuestionPress}>
                 <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
+              </EdgeTouchableOpacity>
             )}
           </CardHeader>
           <Space expand>
-            <Space bottom={0.5} sideways expand>
+            <Space bottomRem={0.5} row expand>
               <Space>
                 <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
                 <Space>
@@ -149,7 +156,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 </Space>
               </Space>
             </Space>
-            <Space sideways expand>
+            <Space row expand>
               <Space>
                 <CardFieldLabel>{lstrings.string_expires}</CardFieldLabel>
                 <Space>
@@ -167,7 +174,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
             </Space>
           </Space>
         </CardInner>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     </CardContainer>
   )
 }

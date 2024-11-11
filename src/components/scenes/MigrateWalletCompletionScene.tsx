@@ -13,7 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -27,7 +27,7 @@ export interface MigrateWalletCompletionParams {
   migrateWalletList: MigrateWalletItem[]
 }
 
-interface Props extends EdgeSceneProps<'migrateWalletCompletion'> {}
+interface Props extends EdgeAppSceneProps<'migrateWalletCompletion'> {}
 
 interface MigrateWalletTokenItem extends MigrateWalletItem {
   tokenId: string
@@ -41,6 +41,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const sortedMigrateWalletListBundles = React.useMemo(() => {
@@ -105,8 +106,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
         const oldWallet = currencyWallets[oldWalletId]
         const {
-          currencyInfo: { walletType },
-          fiatCurrencyCode
+          currencyInfo: { walletType }
         } = oldWallet
         const oldWalletName = getWalletName(oldWallet)
         const newWalletName = `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`
@@ -122,7 +122,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           if (newWallet == null) {
             newWallet = await account.createCurrencyWallet(walletType, {
               name: newWalletName,
-              fiatCurrencyCode,
+              fiatCurrencyCode: defaultIsoFiat,
               migratedFromWalletId: oldWalletId
             })
             createdNewWallet = true
@@ -239,7 +239,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
           marginRem={[0, 0, 1]}
-          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          onPress={() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })}
         />
       </View>
     )
@@ -255,7 +255,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           <FlatList
             automaticallyAdjustContentInsets={false}
             data={sortedMigrateWalletList}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
             extraData={itemStatus}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

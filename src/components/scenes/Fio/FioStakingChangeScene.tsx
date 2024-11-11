@@ -1,5 +1,5 @@
 import { add, eq, gt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeAssetActionType, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -14,27 +14,33 @@ import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/i
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { EdgeModal } from '../../modals/EdgeModal'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { EdgeText } from '../../themed/EdgeText'
+import { EdgeText, Paragraph } from '../../themed/EdgeText'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
-import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
+import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { ModalUi4 } from '../../ui4/ModalUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 
-interface Props extends EdgeSceneProps<'fioStakingChange'> {
+interface Props extends EdgeAppSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
+}
+
+export interface FioStakingChangeParams {
+  assetActionType: Extract<EdgeAssetActionType, 'stake' | 'unstake'>
+  tokenId: EdgeTokenId
+  walletId: string
 }
 
 type PartialAmounts = Pick<ExchangedFlipInputAmounts, 'nativeAmount' | 'exchangeAmount'>
@@ -44,7 +50,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const {
     wallet: currencyWallet,
     route: {
-      params: { change, tokenId, walletId }
+      params: { assetActionType, tokenId, walletId }
     },
     navigation
   } = props
@@ -70,6 +76,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const defaultDenomination = getExchangeDenom(currencyConfig, tokenId)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   interface StakingDisplay {
     native: string
@@ -98,7 +105,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
       const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
+      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
       const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
       stakingBalances[stakedType] = {
@@ -115,8 +122,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }
 
   const onMaxSet = async () => {
-    switch (change) {
-      case 'add': {
+    switch (assetActionType) {
+      case 'stake': {
         await currencyWallet
           .getMaxSpendable({
             tokenId,
@@ -135,7 +142,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           })
         break
       }
-      case 'remove': {
+      case 'unstake': {
         const nativeAmt = stakingBalances.staked.native
         currencyWallet
           .nativeToDenomination(nativeAmt, 'FIO')
@@ -158,11 +165,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const signedTx = await currencyWallet.signTx(tx)
       const broadcastedTx = await currencyWallet.broadcastTx(signedTx)
       await currencyWallet.saveTx(broadcastedTx)
-      const messages = {
-        add: lstrings.staking_success,
-        remove: lstrings.staking_unstake_success
-      }
-      showToast(messages[change])
+
+      showToast(assetActionType === 'stake' ? lstrings.staking_success : lstrings.staking_unstake_success)
       navigation.goBack()
     } catch (e: any) {
       setError(e.message)
@@ -188,7 +192,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const handleUnlockDate = async () => {
     await Airship.show(bridge => {
       return (
-        <ModalUi4
+        <EdgeModal
           bridge={bridge}
           onCancel={bridge.resolve}
           title={
@@ -197,9 +201,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
             </ModalTitle>
           }
         >
-          <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
-          <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
-        </ModalUi4>
+          <Paragraph>{lstrings.staking_change_unlock_explainer1}</Paragraph>
+          <Paragraph>{lstrings.staking_change_unlock_explainer2}</Paragraph>
+        </EdgeModal>
       )
     })
   }
@@ -252,7 +256,6 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       return
     }
 
-    const { [change]: actionName } = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? { [change]: '' }
     currencyWallet
       .makeSpend({
         tokenId: null,
@@ -264,11 +267,23 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         ],
         otherParams: {
           action: {
-            name: actionName,
+            name: assetActionType === 'stake' ? 'stakeFioTokens' : 'unStakeFioTokens',
             params: {
               fioAddress: selectedFioAddress
             }
           }
+        },
+        assetAction: { assetActionType },
+        savedAction: {
+          actionType: 'stake',
+          pluginId: 'fio',
+          stakeAssets: [
+            {
+              pluginId,
+              tokenId: null,
+              nativeAmount
+            }
+          ]
         }
       })
       .then(tx => {
@@ -294,14 +309,14 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <View style={styles.explainer}>
-          <ModalMessage>{lstrings.staking_change_explaner1}</ModalMessage>
-          <ModalMessage>{lstrings.staking_change_explaner2}</ModalMessage>
+          <Paragraph>{lstrings.staking_change_explaner1}</Paragraph>
+          <Paragraph>{lstrings.staking_change_explaner2}</Paragraph>
         </View>
-        <CardUi4 marginRem={1}>
-          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
+        <EdgeCard marginRem={1}>
+          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-          </RowUi4>
-        </CardUi4>
+          </EdgeRow>
+        </EdgeCard>
         {apy != null && apy !== 0 && (
           <View style={styles.estReturn}>
             <EdgeText>{apyValue}</EdgeText>
@@ -323,19 +338,19 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_remove_header, currencyCode)} underline withTopMargin>
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
-        <CardUi4 sections>
-          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
+        <EdgeCard sections>
+          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
           {estReward !== '0' && (
-            <RowUi4 title={lstrings.staking_estimated_rewards}>
+            <EdgeRow title={lstrings.staking_estimated_rewards}>
               <EdgeText style={styles.amountText}>{estReward}</EdgeText>
-            </RowUi4>
+            </EdgeRow>
           )}
-          <RowUi4 rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
+          <EdgeRow rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
             <EdgeText>{unlockDateFormat}</EdgeText>
-          </RowUi4>
-        </CardUi4>
+          </EdgeRow>
+        </EdgeCard>
       </>
     )
   }
@@ -349,10 +364,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   return (
     <SceneWrapper scroll>
       {(() => {
-        switch (change) {
-          case 'add':
+        switch (assetActionType) {
+          case 'stake':
             return renderAdd()
-          case 'remove':
+          case 'unstake':
             return renderRemove()
           default:
             return null

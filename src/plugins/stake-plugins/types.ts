@@ -44,7 +44,10 @@ export class StakePoolFullError extends Error {
   }
 }
 
-export interface AssetId {
+/**
+ * Defines asset information within the context of staking, specifically.
+ */
+export interface StakeAssetInfo {
   pluginId: string
   currencyCode: string
   internalCurrencyCode?: string
@@ -76,15 +79,18 @@ export interface StakePolicy {
   yieldType?: 'stable' | 'variable'
 
   // The assets which can be earned
-  rewardAssets: AssetId[]
+  rewardAssets: StakeAssetInfo[]
 
   // Actions
   hideClaimAction?: boolean
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
 
+  // Staking policy properties
+  isLiquidStaking?: boolean
+
   // The assets which must be staked
-  stakeAssets: AssetId[]
+  stakeAssets: StakeAssetInfo[]
 
   // Warnings
   // string => show string as warning

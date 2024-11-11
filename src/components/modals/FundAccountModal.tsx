@@ -6,18 +6,17 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
+import { EdgeModal } from './EdgeModal'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -34,9 +33,6 @@ export const FundAccountModal = (props: Props) => {
   const style = styles(theme)
   const dispatch = useDispatch()
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
-
   const handleBuy = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     Airship.clear()
@@ -44,27 +40,24 @@ export const FundAccountModal = (props: Props) => {
 
   const handleReceive = useHandler(async () => {
     Airship.clear()
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-    } else {
-      const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+    ))
+
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+      navigation.navigate('request', { tokenId, walletId })
+
+      await Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.fund_account_modal_receive_title}
+          message={lstrings.fund_account_modal_receive_message}
+          buttons={{ ok: { label: lstrings.string_ok } }}
+        />
       ))
-
-      if (result?.type === 'wallet') {
-        const { walletId, tokenId } = result
-        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-        navigation.navigate('request', { tokenId, walletId })
-
-        await Airship.show<'ok' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.fund_account_modal_receive_title}
-            message={lstrings.fund_account_modal_receive_message}
-            buttons={{ ok: { label: lstrings.string_ok } }}
-          />
-        ))
-      }
     }
   })
 
@@ -75,7 +68,7 @@ export const FundAccountModal = (props: Props) => {
   const iconProps = React.useMemo(() => ({ size: theme.rem(1.25), color: theme.iconTappable }), [theme])
 
   return (
-    <ModalUi4 bridge={bridge} title={lstrings.fund_account_modal_title} onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} title={lstrings.fund_account_modal_title} onCancel={handleCancel}>
       <SelectableRow
         marginRem={0.5}
         minimumFontScale={0.5}
@@ -102,7 +95,7 @@ export const FundAccountModal = (props: Props) => {
           </View>
         }
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

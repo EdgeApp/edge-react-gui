@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -72,7 +72,7 @@ describe('TransactionDetailsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
-          {...fakeSceneProps('transactionDetails', {
+          {...fakeEdgeAppSceneProps('transactionDetails', {
             edgeTransaction: {
               blockHeight: 0,
               currencyCode: 'BTC',
@@ -103,7 +103,7 @@ describe('TransactionDetailsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
-          {...fakeSceneProps('transactionDetails', {
+          {...fakeEdgeAppSceneProps('transactionDetails', {
             edgeTransaction: {
               blockHeight: 0,
               currencyCode: 'BTC',

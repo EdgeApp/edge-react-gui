@@ -1,7 +1,7 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -25,18 +25,20 @@ import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/type
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
-import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix, truncateDecimals, zeroString } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
@@ -44,14 +46,13 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
-import { CardUi4 } from '../../ui4/CardUi4'
 
 export interface LoanCreateParams {
   borrowEngine: BorrowEngine
   borrowPlugin: BorrowPlugin
 }
 
-interface Props extends EdgeSceneProps<'loanCreate'> {}
+interface Props extends EdgeAppSceneProps<'loanCreate'> {}
 
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
@@ -83,11 +84,13 @@ export const LoanCreateScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const fiatCode = removeIsoPrefix(defaultIsoFiat)
+
   const wallets = useWatch(account, 'currencyWallets')
   const allTokens = useAllTokens(account)
 
-  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const { currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
 
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
@@ -116,7 +119,7 @@ export const LoanCreateScene = (props: Props) => {
 
   const borrowEngineWalletPluginId = borrowEngineWallet.currencyInfo.pluginId
 
-  const collateralTokenId = getTokenId(account, borrowEngineWalletPluginId, hardCollateralCurrencyCode)
+  const collateralTokenId = getTokenId(borrowEngineWallet.currencyConfig, hardCollateralCurrencyCode)
   const collateralToken = collateralTokenId != null ? allTokens[borrowEngineWalletPluginId][collateralTokenId] : null
   const collateralDenoms = collateralToken != null ? collateralToken.denominations : borrowEngineWallet.currencyInfo.denominations
   const collateralExchangeMultiplier = collateralDenoms[0].multiplier
@@ -198,7 +201,7 @@ export const LoanCreateScene = (props: Props) => {
   // We want to use the same isoFiatCurrencyCode throughout the scene,
   // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
   // conversions have the same quote asset.
-  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode })
+  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode: defaultIsoFiat })
 
   const isUserInputComplete =
     srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
@@ -262,7 +265,7 @@ export const LoanCreateScene = (props: Props) => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
-        navigation={navigation}
+        navigation={navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}
@@ -288,12 +291,12 @@ export const LoanCreateScene = (props: Props) => {
           setDestWallet(borrowEngineWallet)
           setDestTokenId(hardDestTokenAddr)
         } else if (result?.type === 'wallet') {
-          const { walletId, currencyCode, tokenId } = result
+          const { walletId, tokenId } = result
           const selectedWallet = wallets[walletId]
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)
-            setSrcCurrencyCode(currencyCode)
+            setSrcCurrencyCode(getCurrencyCode(selectedWallet, tokenId))
           } else {
             setDestBankId(undefined)
             setDestWallet(selectedWallet)
@@ -349,22 +352,22 @@ export const LoanCreateScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_create_title}
         underline
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <Space horizontal={0.5} bottom={1} top={0.5}>
+        <Space horizontalRem={0.5} bottomRem={1} topRem={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
             iconUri={iconUri}
             inputModalMessage={sprintf(lstrings.loan_loan_amount_input_message_s, displayLtvLimit)}
-            title={sprintf(lstrings.loan_enter_s_amount_s, lstrings.loan_fragment_loan, fiatCurrencyCode)}
+            title={sprintf(lstrings.loan_enter_s_amount_s, lstrings.loan_fragment_loan, fiatCode)}
             tokenId={destTokenId}
             onAmountChanged={handleBorrowAmountChanged}
           />
@@ -373,7 +376,7 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <Space around>
+            <Space alignCenter>
               <AprCard apr={apr} />
             </Space>
           )}
@@ -400,7 +403,7 @@ export const LoanCreateScene = (props: Props) => {
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{lstrings.loan_collateral_required}</EdgeText>
-          <CardUi4 marginRem={[0, 0.5, 0.5, 0.5]}>
+          <EdgeCard marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? lstrings.loan_select_source_collateral : lstrings.loan_select_receiving_wallet}
@@ -408,13 +411,13 @@ export const LoanCreateScene = (props: Props) => {
             ) : (
               <CryptoFiatAmountRow nativeAmount={totalRequiredCollateralNativeAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
-          </CardUi4>
+          </EdgeCard>
 
           {/* Insufficient Collateral Warning Card */}
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <Space around={1}>
+            <Space aroundRem={1}>
               <MainButton
                 label={lstrings.string_next_capitalized}
                 disabled={isInsufficientCollateral || !isUserInputComplete}

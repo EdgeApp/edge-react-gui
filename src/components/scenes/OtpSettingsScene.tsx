@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -10,15 +10,16 @@ import { lstrings } from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'otpSetup'> {}
+interface OwnProps extends EdgeAppSceneProps<'otpSetup'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -72,7 +73,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           cancel: { label: lstrings.string_cancel_cap }
         }}
       />
-    )).catch(showError)
+    )).catch(error => showError(error))
   }
 
   handleEnable = async (): Promise<void> => {
@@ -127,14 +128,14 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.keyArea}>
-        <TouchableOpacity style={styles.keyToggle} onPress={this.handleToggleKey}>
+        <EdgeTouchableOpacity style={styles.keyToggle} onPress={this.handleToggleKey}>
           <Text style={styles.keyToggleText}>{showKey ? lstrings.otp_hide_code : lstrings.otp_show_code}</Text>
           <AntDesignIcon name={showKey ? 'up' : 'down'} style={styles.keyToggleIcon} />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
         {showKey ? (
-          <TouchableOpacity onPress={this.handleCopyKey}>
+          <EdgeTouchableOpacity onPress={this.handleCopyKey}>
             <Text style={styles.keyText}>{otpKey}</Text>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         ) : null}
       </View>
     )

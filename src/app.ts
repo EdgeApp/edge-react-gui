@@ -5,8 +5,8 @@
  * rerenders
  */
 // import './wdyr'
-import Bugsnag from '@bugsnag/react-native'
-import BugsnagPerformance from '@bugsnag/react-native-performance'
+import * as Sentry from '@sentry/react-native'
+import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
 import { getVersion } from 'react-native-device-info'
@@ -19,15 +19,70 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initInfoServer } from './util/network'
 
+export type Environment = 'development' | 'testing' | 'production'
+
+const appVersion = getVersion()
+const environment: Environment = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+
+if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
+  console.log('Sentry keys not set. Sentry disabled.')
+} else {
+  Sentry.init({
+    dsn: ENV.SENTRY_DSN_URL,
+    tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
+    maxBreadcrumbs: 25,
+    environment,
+
+    // Initialize Sentry within native iOS and Android code so we can catch crashes at
+    // early app startup.
+    autoInitializeNativeSdk: false,
+
+    integrations: [
+      Sentry.breadcrumbsIntegration({
+        console: false
+      })
+    ]
+  })
+}
+
 // Uncomment the next line to remove popup warning/error boxes.
 // LogBox.ignoreAllLogs()
-LogBox.ignoreLogs(['Require cycle:'])
+LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
 
-Bugsnag.start({
-  onError: event => {
-    log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
+// Mute specific console output types.
+// Useful for debugging using console output, i.e. mute everything but `debug`
+for (const consoleOutputType of ENV.MUTE_CONSOLE_OUTPUT) {
+  switch (consoleOutputType) {
+    case 'log':
+      console.log = () => {}
+      break
+    case 'info':
+      console.info = () => {}
+      break
+    case 'warn':
+      console.warn = () => {}
+      break
+    case 'error':
+      console.error = () => {}
+      break
+    case 'debug':
+      console.debug = () => {}
+      break
+    case 'trace':
+      console.trace = () => {}
+      break
+    case 'group':
+      console.group = () => {}
+      break
+    case 'groupCollapsed':
+      console.groupCollapsed = () => {}
+      break
+    case 'groupEnd':
+      console.groupEnd = () => {}
+      break
   }
-})
+}
+
 const asServerDetails = asObject({
   host: asString,
   port: asString
@@ -70,29 +125,6 @@ if (!__DEV__) {
   console.warn = log
   console.error = log
 }
-
-const appVersion = getVersion()
-const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
-
-BugsnagPerformance.start({
-  apiKey: ENV.BUGSNAG_API_KEY,
-  appVersion,
-  releaseStage,
-  logger: {
-    debug(message: string) {
-      console.log(message)
-    },
-    info(message: string) {
-      console.log(message)
-    },
-    warn(message: string) {
-      console.warn(message)
-    },
-    error(message: string) {
-      console.error(message)
-    }
-  }
-})
 
 if (ENV.LOG_SERVER) {
   console.log = function () {
@@ -191,12 +223,11 @@ const realFetch = fetch
 fetch = async (...args: any) => {
   // @ts-expect-error
   return await realFetch(...args).catch(e => {
-    Bugsnag.leaveBreadcrumb('realFetchError', {
-      url: args[0],
-      errorName: e.name,
-      errorMsg: e.message
+    Sentry.addBreadcrumb({
+      event_id: e.name,
+      message: e.message,
+      data: args[0]
     })
-    console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
     throw e
   })
 }
@@ -247,3 +278,5 @@ if (ENV.DEBUG_THEME) {
 
 initDeviceSettings().catch(err => console.log(err))
 initInfoServer().catch(err => console.log(err))
+
+if (global.Buffer == null) global.Buffer = Buffer

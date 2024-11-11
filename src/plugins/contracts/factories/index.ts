@@ -5,6 +5,7 @@ export { GlifInfinityPool__factory } from "./GlifInfinityPool__factory";
 export { GlifPoolToken__factory } from "./GlifPoolToken__factory";
 export { GlifRouter__factory } from "./GlifRouter__factory";
 export { GlifSimpleRamp__factory } from "./GlifSimpleRamp__factory";
+export { KilnLiquid20A__factory } from "./KilnLiquid20A__factory";
 export { OptimismFeeOracle__factory } from "./OptimismFeeOracle__factory";
 export { TarotBorrowable__factory } from "./TarotBorrowable__factory";
 export { TarotCollateral__factory } from "./TarotCollateral__factory";

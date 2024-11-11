@@ -3,12 +3,17 @@ import { Image, Text, View } from 'react-native'
 
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSuccess'> {}
+export interface FioAddressRegisterSuccessParams {
+  fioName: string
+  expiration?: string
+}
+
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSuccess'> {}
 
 type Props = OwnProps & ThemeProps
 
@@ -46,7 +51,7 @@ export class FioAddressRegistered extends React.Component<Props> {
             <Text style={styles.title}>{fioName}</Text>
             {this.renderExpDate()}
           </View>
-          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList', {})} label={lstrings.title_fio_names} />
+          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList')} label={lstrings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

@@ -19,7 +19,9 @@ touch node_modules/usb/index.js
 mkdir -p node_modules/node-hid
 touch node_modules/node-hid/index.js
 
-# Fix Android dependencies:
+# Fix Android dependency import statments: 
+# Old native Android dependencies use outdated package names for their imports
+# that were later renamed by Google.
 npx jetify
 
 # Copy the API key to native code:

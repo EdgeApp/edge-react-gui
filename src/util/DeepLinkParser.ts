@@ -5,7 +5,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
-import { RouteParamList } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -43,8 +43,6 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
   if (betterUrl.query.r != null && betterUrl.query.r.includes('http')) {
     // If the URI started with 'bitcoin:', etc.
     uri = betterUrl.query.r
-    return { type: 'paymentProto', uri }
-  } else if (betterUrl.hostname.includes('bitpay.com')) {
     return { type: 'paymentProto', uri }
   }
 
@@ -102,6 +100,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return { type: 'other', uri, protocol }
     }
 
+    case 'fiatprovider': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'fiatProvider',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
+      }
+    }
+
     case 'plugin': {
       const [pluginId, ...deepPath] = pathParts
 
@@ -127,12 +139,6 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       }
     }
 
-    case 'price-change': {
-      const { body, pluginId } = parseQuery(url.query)
-      if (body == null || pluginId == null) throw new SyntaxError('Missing body or pluginId')
-      return { type: 'price-change', body, pluginId }
-    }
-
     case 'promotion': {
       const [installerId] = pathParts
       return { type: 'promotion', installerId }
@@ -154,7 +160,7 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'scene': {
       const sceneName = url.pathname.replace('/', '')
-      return { type: 'scene', sceneName: sceneName as keyof RouteParamList, query: parseQuery(url.query) }
+      return { type: 'scene', sceneName: sceneName as keyof AppParamList, query: parseQuery(url.query) }
     }
 
     case 'swap': {
@@ -182,6 +188,15 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'https': {
       if (url.href.includes('bitpay')) return { type: 'other', uri: 'https:' + url.pathname, protocol: 'bitpay' }
+      break
+    }
+
+    case '': {
+      // If we're a blank edge:// link, just do nothing since we
+      // were probably just deep linked into the app.
+      if (url.href === 'edge://' && url.pathname === '' && url.query === '') {
+        return { type: 'noop' }
+      }
     }
   }
 
@@ -229,17 +244,14 @@ function parseRequestAddress(url: URL<string>): DeepLink {
 }
 
 const prefixes: Array<[string, string]> = [
-  // Alternative HTTPS links:
-  ['https://recovery.edgesecure.co', 'edge://recovery'],
-
   // Legacy links:
-  ['https://www.edge.app/edgelogin?address=', 'edge://edge/'],
   ['edge-ret://plugins/simplex/', 'edge://plugin/simplex/'],
   ['edge-ret://x-callback-url/', 'edge://x-callback-url/'],
   ['airbitz-ret://x-callback-url/', 'edge://x-callback-url/'],
 
   // Alternative schemes:
   ['https://deep.edge.app/', 'edge://'],
+  ['https://return.edge.app/', 'edge://'],
   ['airbitz://', 'edge://'],
   ['reqaddr://', 'edge://reqaddr']
 ]

@@ -17,8 +17,10 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
+import paymentTypeLogoPaypal from '../../assets/images/paymentTypes/paymentTypeLogoPaypal.png'
 import paymentTypeLogoPix from '../../assets/images/paymentTypes/paymentTypeLogoPix.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentTypeLogoRevolut-light.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
@@ -71,6 +73,7 @@ const palette = {
   grayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
+  greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
@@ -402,8 +405,10 @@ export const testLight: Theme = {
   paymentTypeLogoInterac,
   paymentTypeLogoPayid,
   paymentTypeLogoPaynow,
+  paymentTypeLogoPaypal,
   paymentTypeLogoPix,
   paymentTypeLogoPoli,
+  paymentTypeLogoRevolut,
   paymentTypeLogoSofort,
   paymentTypeLogoUpi,
   paymentTypeVisa,
@@ -424,6 +429,30 @@ export const testLight: Theme = {
     },
     shadowOpacity: 0.6,
     shadowRadius: 4,
+    elevation: 0
+  },
+
+  notifcationCardShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    // Disable Android shadow
+    elevation: 0
+  },
+
+  dropdownListShadow: {
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 10,
+      height: 10
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 64,
+    // Disable Android shadow
     elevation: 0
   },
 
@@ -457,8 +486,8 @@ export const testLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  fioCardGradient: {
-    colors: [palette.purpleOp24, palette.transparent],
+  earnCardGradient: {
+    colors: [palette.greenOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },

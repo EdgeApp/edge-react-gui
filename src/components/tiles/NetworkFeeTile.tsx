@@ -8,7 +8,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
-import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeRow } from '../rows/EdgeRow'
 
 interface Props {
   wallet: EdgeCurrencyWallet
@@ -20,12 +20,13 @@ export const NetworkFeeTile = (props: Props) => {
   const { wallet, nativeAmount } = props
   const {
     currencyConfig,
-    currencyInfo: { currencyCode },
-    fiatCurrencyCode: isoFiatCurrencyCode
+    currencyInfo: { currencyCode }
   } = wallet
 
-  const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+
+  const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
+  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${defaultIsoFiat}`])
 
   const exchangeDenominationMultiplier = getExchangeDenom(currencyConfig, null).multiplier
   const exchangeDenominationName = getExchangeDenom(currencyConfig, null).name
@@ -57,12 +58,12 @@ export const NetworkFeeTile = (props: Props) => {
     cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: exchangeDenominationMultiplier,
     fiatSymbolSpace: true,
-    isoFiatCurrencyCode,
+    isoFiatCurrencyCode: defaultIsoFiat,
     nativeCryptoAmount: nativeAmount
   })
 
   const title = lstrings.loan_estimate_fee
   const body = `${feeCryptoAmount} (${feeFiatAmount})`
 
-  return <RowUi4 title={title} body={body} />
+  return <EdgeRow title={title} body={body} />
 }

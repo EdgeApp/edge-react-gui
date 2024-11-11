@@ -67,6 +67,7 @@ exports[`MenuTabs should render with loading props 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -78,8 +79,8 @@ exports[`MenuTabs should render with loading props 1`] = `
     <BVLinearGradient
       colors={
         [
-          436207616,
-          3003121664,
+          16777215,
+          16777215,
         ]
       }
       endPoint={
@@ -93,6 +94,11 @@ exports[`MenuTabs should render with loading props 1`] = `
         {
           "x": 0,
           "y": 0.5,
+        }
+      }
+      style={
+        {
+          "flex": 1,
         }
       }
     />

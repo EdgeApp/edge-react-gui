@@ -9,19 +9,19 @@ import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { Alert } from '../components/themed/Alert'
-import { ModalMessage } from '../components/themed/ModalParts'
+import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationProp } from '../types/routerTypes'
+import { WalletsTabSceneProps } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
+import { showScamWarningModal } from './ScamWarningActions'
 import { toggleUserPausedWallet } from './SettingsActions'
-import { showSplitWalletModal } from './SplitWalletModalActions'
 
 export type WalletListMenuKey =
   | 'rename'
@@ -31,16 +31,18 @@ export type WalletListMenuKey =
   | 'getSeed'
   | 'manageTokens'
   | 'viewXPub'
+  | 'goToParent'
   | 'getRawKeys'
   | 'rawDelete'
   | 'togglePause'
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
-  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
+  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation'],
   walletId: string,
   option: WalletListMenuKey,
-  tokenId: EdgeTokenId
+  tokenId: EdgeTokenId,
+  splitPluginIds: string[]
 ): ThunkAction<Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
@@ -57,7 +59,7 @@ export function walletListMenuAction(
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
-        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
+        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(error => showError(error))
       }
     }
     case 'delete': {
@@ -68,10 +70,10 @@ export function walletListMenuAction(
         const wallet = currencyWallets[walletId]
 
         if (Object.values(currencyWallets).length === 1) {
-          await Airship.show(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
-              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
-              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
+          await Airship.show<'ok' | undefined>(bridge => (
+            <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
+              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</Paragraph>
+              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</Paragraph>
             </ButtonsModal>
           ))
           return
@@ -115,7 +117,7 @@ export function walletListMenuAction(
               .then(r => {
                 logActivity(`Archived Wallet ${account.username} -- ${getWalletName(wallet)} ${wallet.type} ${wallet.id}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
 
             // Remove loan accounts associated with the wallet
             if (state.loanManager.loanAccounts[walletId] != null) {
@@ -128,7 +130,7 @@ export function walletListMenuAction(
               .then(() => {
                 logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
           }
         }
       }
@@ -141,8 +143,12 @@ export function walletListMenuAction(
     }
 
     case 'split': {
-      return async dispatch => {
-        await dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
+      return async () => {
+        navigation.navigate('createWalletSelectCrypto', {
+          disableLegacy: true,
+          splitPluginIds,
+          splitSourceWalletId: walletId
+        })
       }
     }
     case 'viewPrivateViewKey':
@@ -153,15 +159,16 @@ export function walletListMenuAction(
         const wallet = account.currencyWallets[walletId]
         const { xpubExplorer } = wallet.currencyInfo
 
+        // Show the scam warning modal if needed
+        await showScamWarningModal('firstPrivateKeyView')
+
         const displayPublicSeed = await account.getDisplayPublicKey(wallet.id)
 
         const copy: ButtonInfo = {
-          label: lstrings.fragment_request_copy_title,
-          type: 'secondary'
+          label: lstrings.fragment_request_copy_title
         }
         const link: ButtonInfo = {
-          label: lstrings.transaction_details_show_advanced_block_explorer,
-          type: 'secondary'
+          label: lstrings.transaction_details_show_advanced_block_explorer
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 
@@ -216,6 +223,9 @@ export function walletListMenuAction(
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
 
+        // Show the scam warning modal if needed
+        await showScamWarningModal('firstPrivateKeyView')
+
         const passwordValid = await dispatch(
           validatePassword({
             title: lstrings.fragment_wallets_get_seed_title,
@@ -269,6 +279,21 @@ export function walletListMenuAction(
           const keys = JSON.stringify(rawKeys, null, 2)
           await Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
         }
+      }
+    }
+
+    case 'goToParent': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { account } = state.core
+        const { currencyWallets } = account
+        const wallet = currencyWallets[walletId]
+
+        navigation.navigate('transactionList', {
+          walletId,
+          tokenId: null,
+          walletName: getWalletName(wallet)
+        })
       }
     }
 

@@ -1,21 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
-<View
-  style={
+<StyledComponent(View)
+  marginRemStyle={
     {
-      "alignItems": undefined,
-      "flex": undefined,
-      "flexDirection": "column",
-      "justifyContent": undefined,
       "marginBottom": 0,
       "marginLeft": 0,
       "marginRight": 0,
       "marginTop": 0,
     }
   }
+  multiline={true}
 >
-  <TouchableWithoutFeedback
+  <ExtendedTouchable
     accessible={false}
     onPress={[Function]}
     testID="string"
@@ -109,7 +106,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           autoCapitalize="none"
           autoCorrect={true}
           autoFocus={true}
-          blurOnSubmit={true}
+          blurOnSubmit={false}
           disableAnimation={
             {
               "value": 0,
@@ -125,6 +122,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           keyboardType="default"
           maxLength={11}
           multiline={true}
+          numberOfLines={20}
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
@@ -135,7 +133,6 @@ exports[`FilledTextInput should render with some props 1`] = `
               "value": 1,
             }
           }
-          secureTextEntry={false}
           selectionColor="#FFFFFF"
           testID="string.textInput"
           textAlignVertical="top"
@@ -144,6 +141,7 @@ exports[`FilledTextInput should render with some props 1`] = `
       </StyledComponent(View)>
       <StyledComponent(TouchableOpacity)
         accessible={true}
+        extendTappable="full"
         onPress={[Function]}
         testID="string.clearIcon"
       >
@@ -169,7 +167,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         </StyledComponent(View)>
       </StyledComponent(TouchableOpacity)>
     </StyledComponent(View)>
-  </TouchableWithoutFeedback>
+  </ExtendedTouchable>
   <StyledComponent(View)
     noLayoutFlow={false}
   >
@@ -182,5 +180,5 @@ exports[`FilledTextInput should render with some props 1`] = `
       5
     </StyledComponent(Text)>
   </StyledComponent(View)>
-</View>
+</StyledComponent(View)>
 `;

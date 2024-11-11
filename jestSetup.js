@@ -1,28 +1,22 @@
 import './node_modules/react-native-gesture-handler/jestSetup.js'
 
 import { jest } from '@jest/globals'
+import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
-require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
+require('react-native-reanimated').setUpTests()
 
 const mockReanimated = jest.requireMock('react-native-reanimated')
 
-jest.mock('@bugsnag/react-native', () => {
+jest.mock('@sentry/react-native', () => {
   return {
-    isStarted: () => false,
-    leaveBreadcrumb: () => {},
-    notify: () => {},
-    start: () => false,
-    getPlugin: () => {
-      return {
-        createErrorBoundary:
-          () =>
-          ({ children }) =>
-            children
-      }
-    }
+    captureException: () => false,
+    addBreadcrumb: () => {},
+    wrap: x => x
   }
 })
+
+jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 
 jest.mock('disklet', () => {
   const originalModule = jest.requireActual('disklet')
@@ -78,7 +72,7 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('@react-navigation/elements', () => ({
-  getDefaultHeaderHeight: () => 44
+  useHeaderHeight: () => 64
 }))
 
 jest.mock('rn-qr-generator', () => ({
@@ -89,17 +83,6 @@ jest.mock('rn-qr-generator', () => ({
 
 // force timezone to UTC
 jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
-
-jest.mock('@react-native-firebase/analytics', () => () => ({
-  logEvent() {},
-  setUserId() {}
-}))
-
-jest.mock('@react-native-firebase/messaging', () => () => ({
-  requestPermission() {
-    return Promise.resolve()
-  }
-}))
 
 jest.mock('react-native-device-info', () => ({
   getBrand() {
@@ -260,5 +243,14 @@ jest.mock('use-context-selector', () => {
       const selected = selector(currentValue)
       return selected
     }
+  }
+})
+
+jest.mock('react-native-device-info', () => {
+  return {
+    getDeviceType: jest.fn(),
+    hasNotch: jest.fn(),
+    getBuildNumber: jest.fn(),
+    getVersion: jest.fn()
   }
 })

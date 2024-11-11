@@ -5,20 +5,30 @@ import { View } from 'react-native'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { ButtonsView } from '../../buttons/ButtonsView'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
+
+export interface FioAddressSettingsParams {
+  fioAddressName: string
+  walletId: string
+  bundledTxs?: number
+  showAddBundledTxs?: boolean
+  refreshAfterAddBundledTxs?: boolean
+}
 
 interface LocalState {
   showAddBundledTxs: boolean
@@ -34,7 +44,9 @@ interface DispatchProps {
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressSettings'> {
+  wallet: EdgeCurrencyWallet
+}
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -77,7 +89,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList', {})
+    return navigation.navigate('fioAddressList')
   }
 
   onTransferPress = () => {
@@ -104,13 +116,17 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     }
     await addBundledTxs(fioWallet, fioAddressName, fee)
 
-    const { currencyCode, pluginId } = fioWallet.currencyInfo
-    onLogEvent('Fio_Handle_Bundled_Tx', { nativeAmount: String(fee), pluginId, currencyCode })
+    onLogEvent('Fio_Handle_Bundled_Tx', {
+      conversionValues: {
+        conversionType: 'crypto',
+        cryptoAmount: new CryptoAmount({ nativeAmount: String(fee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
+      }
+    })
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { isConnected, navigation, route } = this.props
-    const { fioWallet, fioAddressName } = route.params
+    const { isConnected, navigation, route, wallet: fioWallet } = this.props
+    const { fioAddressName } = route.params
 
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -125,7 +141,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       tokenId: null,
       spendInfo: {
         tokenId: null,
-        spendTargets: [{ nativeAmount: '', publicAddress: '' }],
+        spendTargets: [{ nativeAmount: '' }],
         otherParams: {
           action: {
             name: 'transferFioAddress',
@@ -153,8 +169,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 
   render() {
-    const { route, theme } = this.props
-    const { fioAddressName, fioWallet, bundledTxs } = route.params
+    const { route, theme, wallet: fioWallet } = this.props
+    const { fioAddressName, bundledTxs } = route.params
     const { showTransfer, showAddBundledTxs } = this.state
     const styles = getStyles(theme)
 
@@ -162,10 +178,10 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
-            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-            {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
-          </CardUi4>
+          <EdgeCard sections>
+            <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {bundledTxs != null ? <EdgeRow title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+          </EdgeCard>
           {showAddBundledTxs && (
             <FioActionSubmit
               onSubmit={this.onAddBundledTxsSubmit}
@@ -176,7 +192,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
               fioWallet={fioWallet}
               addressTitles
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showTransfer && (
@@ -185,11 +201,11 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
               getOperationFee={this.getTransferFee}
               fioWallet={fioWallet}
               addressTitles
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {!showAddBundledTxs && !showTransfer && (
-            <ButtonsViewUi4
+            <ButtonsView
               secondary={{
                 label: lstrings.title_fio_add_bundled_txs,
                 onPress: this.onAddBundledTxsPress
@@ -206,7 +222,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 }
 
-export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioAddressSettingsConnected = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     isConnected: state.network.isConnected
   }),
@@ -225,3 +241,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   }
 }))
+
+export const FioAddressSettingsScene = withWallet(FioAddressSettingsConnected)

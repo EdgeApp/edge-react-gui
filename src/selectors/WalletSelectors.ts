@@ -3,7 +3,6 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-cor
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, zeroString } from '../util/utils'
 
 export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet {
@@ -44,35 +43,18 @@ export function convertCurrencyFromState(fromCurrencyCode: string, toCurrencyCod
   }
 }
 
-export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [pair: string]: string }): string => {
+export const calculateFiatBalance = (
+  wallet: EdgeCurrencyWallet,
+  isoFiatCurrencyCode: string,
+  exchangeDenomination: EdgeDenomination,
+  exchangeRates: { [pair: string]: string }
+): string => {
   const currencyCode = exchangeDenomination.name
   const tokenId = getWalletTokenId(wallet, currencyCode)
   const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
   if (zeroString(nativeBalance)) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  const { isoFiatCurrencyCode } = getWalletFiat(wallet)
   const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return fiatValue
-}
-
-export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-
-  if (fioWallets && fioWallets.length) {
-    for (const wallet of fioWallets) {
-      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
-      if (fioAddresses.length > 0) {
-        for (const address of fioAddresses) {
-          if (address.toLowerCase() === fioAddress.toLowerCase()) {
-            return wallet
-          }
-        }
-      }
-    }
-
-    return null
-  } else {
-    return null
-  }
 }

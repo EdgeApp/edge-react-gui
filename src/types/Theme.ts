@@ -1,6 +1,6 @@
 import { asNumber, asObject } from 'cleaners'
 
-import { AccentColors } from '../components/ui4/DotsBackground'
+import { AccentColors } from '../components/common/DotsBackground'
 
 export type ImageProp = { uri: string } | number
 
@@ -424,8 +424,10 @@ export interface Theme {
   paymentTypeLogoInterac: ImageProp
   paymentTypeLogoPayid: ImageProp
   paymentTypeLogoPaynow: ImageProp
+  paymentTypeLogoPaypal: ImageProp
   paymentTypeLogoPix: ImageProp
   paymentTypeLogoPoli: ImageProp
+  paymentTypeLogoRevolut: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
   paymentTypeVisa: ImageProp
@@ -440,6 +442,8 @@ export interface Theme {
 
   // Shadows
   iconShadow: ThemeShadowParams
+  dropdownListShadow: ThemeShadowParams
+  notifcationCardShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string
@@ -451,7 +455,7 @@ export interface Theme {
   // Special Home Scene Tiled Cards
   buyCardGradient: ThemeGradientParams
   sellCardGradient: ThemeGradientParams
-  fioCardGradient: ThemeGradientParams
+  earnCardGradient: ThemeGradientParams
   swapCardGradient: ThemeGradientParams
 
   txDirBgReceive: string

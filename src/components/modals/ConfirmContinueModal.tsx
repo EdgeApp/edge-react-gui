@@ -1,16 +1,17 @@
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { ModalTitle } from '../themed/ModalParts'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -48,7 +49,7 @@ export function ConfirmContinueModal(props: Props) {
   }
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       warning={warning}
       title={
@@ -61,20 +62,20 @@ export function ConfirmContinueModal(props: Props) {
       onCancel={isSkippable ? handleClose : undefined}
     >
       {children}
-      {body != null ? <ModalMessage>{body}</ModalMessage> : null}
-      <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
-      <TouchableWithoutFeedback onPress={handleTogggle}>
+      {body != null ? <Paragraph>{body}</Paragraph> : null}
+      <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
+      <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
           <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
           <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
             {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} accessibilityHint={lstrings.check_icon_hint} />}
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       <Fade visible={isAgreed}>
         <MainButton label={lstrings.confirm_finish} marginRem={1} type="primary" onPress={handleAgreed} />
       </Fade>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

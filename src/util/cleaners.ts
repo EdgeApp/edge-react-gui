@@ -1,4 +1,4 @@
-import { asString } from 'cleaners'
+import { asMaybe, asObject, asString } from 'cleaners'
 
 /**
  * Accepts strings that are valid numbers according to biggystring.
@@ -15,3 +15,14 @@ export function asBiggystring(raw: unknown): string {
 
   throw new TypeError(`"${clean}" is not a valid number`)
 }
+
+/**
+ * Interprets a token location as a contract address.
+ * In the future this scene may need to handle other weird networks
+ * where the networkLocation has other contents.
+ */
+export const asMaybeContractLocation = asMaybe(
+  asObject({
+    contractAddress: asString
+  })
+)

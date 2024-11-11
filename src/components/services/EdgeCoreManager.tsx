@@ -1,11 +1,11 @@
-import Bugsnag from '@bugsnag/react-native'
+import { addBreadcrumb, captureException } from '@sentry/react-native'
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
+import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
 import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
 import * as React from 'react'
-import { Alert } from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 
@@ -13,11 +13,14 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
+import { lstrings } from '../../locales/strings'
+import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { isMaestro } from '../../util/maestro'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { showError } from './AirshipInstance'
+import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
 const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
@@ -27,7 +30,8 @@ const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 interface Props {}
 
 const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.AIRBITZ_API_KEY,
+  apiKey: ENV.EDGE_API_KEY,
+  apiSecret: ENV.EDGE_API_SECRET,
   appId: '',
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
 
@@ -46,18 +50,38 @@ const contextOptions: EdgeContextOptions = {
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
+      'edge-currency-plugins': makeCurrencyPluginsIo({
+        memletConfig: {
+          maxMemoryUsage: 50 * 1024 * 1024 // 50MB
+        }
+      }),
       'edge-currency-monero': makeMoneroIo()
     }
   : {}
 
 const crashReporter: EdgeCrashReporter = {
   logBreadcrumb(event) {
-    return Bugsnag.leaveBreadcrumb(event.message, event.metadata)
+    addBreadcrumb({
+      type: event.source,
+      message: event.message,
+      data: event.metadata,
+      timestamp: event.time.getTime() / 1000
+    })
   },
   logCrash(event) {
-    // @ts-expect-error
-    return Bugsnag.notify(event.error, report => {
-      report.addMetadata(event.source, event.metadata)
+    // Index the crash error by the source and original error name:
+    const error = new Error(`${event.source}: ${String(event.error)}`)
+    // All of these crash errors are grouped together using this error name:
+    error.name = 'EdgeCrashLog'
+
+    captureException(error, scope => {
+      scope.setLevel('fatal')
+
+      const context: Record<string, unknown> = {}
+      addMetadataToContext(context, event.metadata)
+      scope.setContext('Edge Crash Metadata', context)
+
+      return scope
     })
   }
 }
@@ -109,7 +133,9 @@ export function EdgeCoreManager(props: Props) {
   const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
-    Alert.alert('Edge core failed to load', String(error))
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} title="Edge core failed to load" message={String(error)} />
+    )).catch(() => {})
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
@@ -118,7 +144,9 @@ export function EdgeCoreManager(props: Props) {
 
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
     ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri,
+    // For remaining Monero plugin:
     ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
   ]
 
@@ -150,7 +178,7 @@ export function EdgeCoreManager(props: Props) {
           {...contextOptions}
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
+          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_CURRENCY_PLUGINS || ENV.DEBUG_PLUGINS}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}

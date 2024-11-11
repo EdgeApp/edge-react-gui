@@ -18,6 +18,18 @@ type Props = StateProps & DispatchProps
 
 const merchantPartners = [
   {
+    givenName: '0x Gasless Swap',
+    hasThumbnail: true,
+    thumbnailPath: '0xgasless.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Bitrefill',
     hasThumbnail: true,
     thumbnailPath: 'bitrefill.png',
@@ -69,6 +81,18 @@ const merchantPartners = [
     givenName: 'Changelly',
     hasThumbnail: true,
     thumbnailPath: 'changelly.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'IBC Transfer',
+    hasThumbnail: true,
+    thumbnailPath: 'cosmosibc.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -210,6 +234,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Maya Protocol',
+    hasThumbnail: true,
+    thumbnailPath: 'mayaprotocol.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Thorchain',
     hasThumbnail: true,
     thumbnailPath: 'thorchain.png',
@@ -285,6 +321,18 @@ const merchantPartners = [
     givenName: 'XRP DEX',
     hasThumbnail: true,
     thumbnailPath: 'xrpdex.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Rango Exchange',
+    hasThumbnail: true,
+    thumbnailPath: 'rango.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',

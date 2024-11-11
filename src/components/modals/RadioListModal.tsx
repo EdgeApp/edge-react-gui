@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
@@ -32,7 +33,7 @@ export function RadioListModal(props: Props) {
     const { name, icon, text } = item
 
     const isSelected = selected === name
-    const radio = isSelected ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
+    const radio = isSelected ? { icon: 'radio-button-on', color: theme.iconTappable } : { icon: 'radio-button-off', color: theme.iconTappable }
     const accessibilityState = isSelected ? { checked: true } : { checked: false }
     const accessibilityHint = `${isSelected ? lstrings.on_hint : lstrings.off_hint} ${name}`
 
@@ -46,7 +47,7 @@ export function RadioListModal(props: Props) {
       )
 
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(name)}>
+      <EdgeTouchableOpacity onPress={() => bridge.resolve(name)}>
         <View style={styles.row}>
           <View style={styles.iconContainer}>{iconElement}</View>
           <EdgeText style={styles.rowText}>{name}</EdgeText>
@@ -61,7 +62,7 @@ export function RadioListModal(props: Props) {
             size={theme.rem(1.25)}
           />
         </View>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   })
 

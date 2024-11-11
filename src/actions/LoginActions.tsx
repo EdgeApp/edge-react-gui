@@ -1,13 +1,15 @@
 import { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
-import { hasSecurityAlerts } from 'edge-login-ui-rn'
+import { getSupportedBiometryType, hasSecurityAlerts, isTouchEnabled, refreshTouchId, showNotificationPermissionReminder } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
+import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
 import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
+import { SurveyModal } from '../components/modals/SurveyModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
@@ -16,17 +18,20 @@ import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsRed
 import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase, NavigationProp } from '../types/routerTypes'
-import { GuiTouchIdInfo } from '../types/types'
+import { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
-import { logEvent } from '../util/tracking'
+import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
-import { expiredFioNamesCheckDates } from './FioActions'
-import { readLocalSettings } from './LocalSettingsActions'
-import { registerNotificationsV2 } from './NotificationActions'
+import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
+import { readLocalAccountSettings } from './LocalSettingsActions'
+import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
+import { showScamWarningModal } from './ScamWarningActions'
+
+const PER_WALLET_TIMEOUT = 5000
+const MIN_CREATE_WALLET_TIMEOUT = 20000
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -47,8 +52,10 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   return { walletId: '', currencyCode: '' }
 }
 
-export function initializeAccount(navigation: NavigationBase, account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
+export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const rootNavigation = getRootNavigation(navigation)
+
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
@@ -56,9 +63,14 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const { newAccount } = account
     const referralPromise = dispatch(loadAccountReferral(account))
 
+    // Track whether we showed a non-survey modal or some other interrupting UX.
+    // We don't want to pester the user with too many interrupting flows.
+    let hideSurvey = false
+
     if (newAccount) {
       await referralPromise
       let { defaultFiat } = syncedSettings
+
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
         defaultFiat = phoneCurrency
@@ -68,18 +80,22 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const defaultSelection = accountReferralCurrencyCodes != null ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes) : config.defaultWallets
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
-      const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        navigation.replace('edgeTabs', {
-          screen: 'homeTab',
-          params: {
-            screen: 'home'
-          }
-        })
+      // Ensure we have initialized the account settings first so we can begin
+      // keeping track of token warnings shown from the initial selected assets
+      // during account creation
+      await readLocalAccountSettings(account)
+
+      const newAccountFlow = async (
+        navigation: EdgeAppSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>['navigation'],
+        items: WalletCreateItem[]
+      ) => {
+        navigation.replace('edgeTabs', { screen: 'home' })
         const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
         const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
         if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+          hideSurvey = true
           const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
           if (isCreateHandle) {
             navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
@@ -90,16 +106,30 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         dispatch(logEvent('Signup_Complete'))
       }
 
-      navigation.navigate('edgeApp', {
+      rootNavigation.replace('edgeApp', {
         screen: 'edgeAppStack',
         params: {
           screen: 'createWalletSelectCryptoNewAccount',
-          params: { newAccountFlow, defaultSelection }
+          params: {
+            newAccountFlow,
+            defaultSelection,
+            disableLegacy: true
+          }
         }
       })
+
+      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
-      navigation.push('edgeApp', {})
+      rootNavigation.replace('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'edgeTabs',
+          params: { screen: 'home' }
+        }
+      })
       referralPromise.catch(() => console.log(`Failed to load account referral info`))
+
+      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     }
 
     // Show a notice for deprecated electrum server settings
@@ -116,6 +146,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       }
     }
     if (pluginIdsNeedingUserAction.length > 0) {
+      hideSurvey = true
       await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
@@ -133,9 +164,13 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         .catch(err => showError(err))
     }
 
+    // Show the scam warning modal if needed
+    if (await showScamWarningModal('firstLogin')) hideSurvey = true
+
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
-      navigation.push('securityAlerts', {})
+      navigation.push('securityAlerts')
+      hideSurvey = true
     }
 
     const state = getState()
@@ -154,7 +189,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       account,
       currencyCode: '',
       pinLoginEnabled: false,
-      touchIdInfo,
+      isTouchEnabled: await isTouchEnabled(account),
+      isTouchSupported: (await getSupportedBiometryType()) !== false,
       walletId: '',
       walletsSort: 'manual'
     }
@@ -165,15 +201,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         accountInitObject.walletId = walletId
         accountInitObject.currencyCode = currencyCode
       }
-      const activeWalletIds = account.activeWalletIds
-      dispatch({
-        type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-        data: { activeWalletIds }
-      })
 
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
-      const loadedLocalSettings = await readLocalSettings(account)
+      const loadedLocalSettings = await readLocalAccountSettings(account)
       accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
 
       for (const userInfo of context.localUsers) {
@@ -207,22 +238,70 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       })
 
       await dispatch(refreshAccountReferral())
-      await dispatch(expiredFioNamesCheckDates(navigation))
+
+      refreshTouchId(account).catch(() => {
+        // We have always failed silently here
+      })
+      if (
+        await showNotificationPermissionReminder({
+          appName: config.appName,
+          onLogEvent(event, values) {
+            dispatch(logEvent(event, values))
+          },
+          onNotificationPermit(info) {
+            dispatch(updateNotificationSettings(info.notificationOptIns)).catch(error => {
+              trackError(error, 'LoginScene:onLogin:setDeviceSettings')
+              console.error(error)
+            })
+          }
+        })
+      ) {
+        hideSurvey = true
+      }
     } catch (error: any) {
       showError(error)
+    }
+
+    // Post login stuff:
+    if (!newAccount && !hideSurvey && !getDeviceSettings().isSurveyDiscoverShown && config.disableSurveyModal !== true) {
+      // Show the survey modal once per app install, only if this isn't the
+      // first login of a newly created account and the user didn't get any
+      // other modals or scene changes immediately after login.
+      await Airship.show(bridge => <SurveyModal bridge={bridge} />)
+      await writeIsSurveyDiscoverShown(true)
     }
   }
 }
 
-export function logoutRequest(navigation: NavigationBase, nextLoginId?: string): ThunkAction<Promise<void>> {
+export function getRootNavigation(navigation: NavigationBase): NavigationBase {
+  while (true) {
+    const parent: NavigationBase = navigation.getParent()
+    if (parent == null) return navigation
+    navigation = parent
+  }
+}
+
+export function logoutRequest(
+  navigation: NavigationBase,
+  opts: {
+    nextLoginId?: string
+    passwordRecoveryKey?: string
+  } = {}
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const { nextLoginId, passwordRecoveryKey } = opts
     const state = getState()
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
-    dispatch({ type: 'LOGOUT', data: { nextLoginId } })
+    dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
-    navigation.navigate('login', { experimentConfig: await getExperimentConfig() })
+    const rootNavigation = getRootNavigation(navigation)
+    rootNavigation.replace('login', {
+      experimentConfig: await getExperimentConfig(),
+      nextLoginId,
+      passwordRecoveryKey
+    })
   }
 }
 
@@ -236,28 +315,29 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     const { keyOptions, pluginId, tokenId } = item
 
     // Ensure we create the wallet:
-    let row = optionsMap.get(pluginId)
-    if (row == null) {
+    let createWallet = optionsMap.get(pluginId)
+    if (createWallet == null) {
       const { walletType } = account.currencyConfig[pluginId].currencyInfo
-      row = {
+      createWallet = {
         fiatCurrencyCode,
         keyOptions,
         name: getUniqueWalletName(account, pluginId),
         walletType
       }
-      optionsMap.set(pluginId, row)
+      optionsMap.set(pluginId, createWallet)
     }
 
     // If this is a token, add it:
     if (tokenId != null) {
-      row.enabledTokenIds ??= []
-      row.enabledTokenIds.push(tokenId)
+      createWallet.enabledTokenIds ??= []
+      createWallet.enabledTokenIds.push(tokenId)
     }
   }
 
   // Actually create the wallets:
   const options = [...optionsMap.values()]
-  const results = await runWithTimeout(account.createCurrencyWallets(options), 20000, new Error(lstrings.error_creating_wallets)).catch(error => {
+  const timeoutMs = Math.max(options.length * PER_WALLET_TIMEOUT, MIN_CREATE_WALLET_TIMEOUT)
+  const results = await runWithTimeout(account.createCurrencyWallets(options), timeoutMs, new Error(lstrings.error_creating_wallets)).catch(error => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })

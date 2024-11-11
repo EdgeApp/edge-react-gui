@@ -1,14 +1,15 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { useAsyncValue } from '../../hooks/useAsyncValue'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'
 
 interface Props {
   address: string
-  currencyCode: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   nativeAmount?: string
@@ -18,16 +19,16 @@ interface Props {
 export const AddressQr = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { address, currencyCode, wallet, nativeAmount, onPress = () => {} } = props
+  const { address, tokenId, wallet, nativeAmount, onPress = () => {} } = props
 
   const [encodedUri] = useAsyncValue(
-    async () => await wallet.encodeUri({ publicAddress: address, currencyCode, nativeAmount }),
-    [address, currencyCode, nativeAmount, wallet]
+    async () => await wallet.encodeUri({ publicAddress: address, currencyCode: getCurrencyCode(wallet, tokenId), nativeAmount }),
+    [address, tokenId, nativeAmount, wallet]
   )
 
   return (
     <View style={styles.container}>
-      <QrCode data={encodedUri} onPress={() => onPress(encodedUri)} marginRem={0} />
+      <QrCode data={encodedUri} tokenId={tokenId} wallet={wallet} onPress={() => onPress(encodedUri)} marginRem={0} />
     </View>
   )
 }

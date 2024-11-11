@@ -3,10 +3,11 @@ import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { EdgeAsset, WalletListItem } from '../types/types'
 import { checkAssetFilter, hasAsset, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
-import { assetOverrides } from '../util/serverState'
+import { infoServerData } from '../util/network'
 import { normalizeForSearch } from '../util/utils'
 
 export interface WalletCreateItem {
+  type: 'create'
   key: string
   currencyCode: string
   displayName: string
@@ -55,10 +56,12 @@ interface CreateWalletListOpts {
   filterActivation?: boolean
   allowedAssets?: EdgeAsset[]
   excludeAssets?: EdgeAsset[]
+  /** Don't return "(no Segwit)" create items */
+  disableLegacy?: boolean
 }
 
 export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
-  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets } = opts
+  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets, disableLegacy = false } = opts
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
@@ -72,8 +75,9 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && requiresActivation(pluginId)) continue
 
-    if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
+    if (!disableLegacy && ['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-bip49-${pluginId}`,
         currencyCode,
         displayName: `${displayName} (Segwit)`,
@@ -83,6 +87,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
         walletType
       })
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-bip44-${pluginId}`,
         currencyCode,
         displayName: `${displayName} (no Segwit)`,
@@ -93,6 +98,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       })
     } else {
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-${pluginId}`,
         currencyCode,
         displayName,
@@ -132,6 +138,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       if (currencyCode === currencyInfo.currencyCode) continue
 
       const item: TokenWalletCreateItem = {
+        type: 'create',
         key: `create-${currencyInfo.pluginId}-${tokenId}`,
         currencyCode,
         displayName,
@@ -145,14 +152,16 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
 
   // Filter this list:
   const existingWallets: EdgeAsset[] = []
-  for (const { wallet, tokenId } of filteredWalletList) {
-    if (wallet == null) continue
+  for (const item of filteredWalletList) {
+    if (item.type !== 'asset') continue
+    const { wallet, tokenId } = item
     existingWallets.push({
       pluginId: wallet.currencyInfo.pluginId,
       tokenId
     })
   }
   const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
+  const assetOverrides = infoServerData.rollup?.assetOverrides ?? { disable: {} }
   return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 
@@ -160,13 +169,18 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
   const out: WalletCreateItem[] = []
   const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
-    const { currencyCode, displayName, pluginId, walletType } = item
+    const { currencyCode, displayName, pluginId, tokenId, walletType } = item
     if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
       out.push(item)
       continue
     }
     // Do an additional search for pluginId for mainnet create items
     if (walletType != null && normalizeForSearch(pluginId).includes(searchTarget)) {
+      out.push(item)
+      continue
+    }
+    // See if the search term contains the tokenId because we don't have contract addresses in scope. The tokenId is, in most cases, close enough to a contract address to be useful.
+    if (tokenId !== null && normalizeForSearch(searchTarget).includes(normalizeForSearch(tokenId))) {
       out.push(item)
     }
   }

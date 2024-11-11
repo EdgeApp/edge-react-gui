@@ -8,15 +8,18 @@
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
-#import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTLinkingManager.h>
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
+#import <Sentry.h>
 
-@implementation AppDelegate
+@implementation AppDelegate {
+  // Edge addition:
+  UIView *securityView;
+}
 
 // From https://reactnative.dev/docs/0.71/linking#enabling-deep-links
 - (BOOL)application:(UIApplication *)application
@@ -38,20 +41,51 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *dsnUrl = @"SENTRY_DSN_URL";
+  if ([dsnUrl containsString:@"SENTRY_DSN"]) {
+    NSLog(@"Please set the SENTRY_DSN_URL in env.json. Sentry disabbled");
+  } else {
+    [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+        options.dsn = @"SENTRY_DSN_URL";
+        options.debug = YES; // Enabled debug when first installing is always helpful
+
+        // Check if the version string is equal to "99.99.99" or contains a "-"
+        if ([versionString isEqualToString:@"99.99.99"]) {
+          options.environment = @"development";
+        } else if ([versionString containsString:@"-"]) {
+          options.environment = @"testing";
+        } else {
+          options.environment = @"production";
+        }
+        options.beforeBreadcrumb = ^SentryBreadcrumb * _Nullable(SentryBreadcrumb * _Nonnull breadcrumb) {
+          // Check the type of breadcrumb
+          if ([breadcrumb.category isEqualToString:@"http"] ||
+              [breadcrumb.category isEqualToString:@"console"] ||
+              [breadcrumb.category isEqualToString:@"navigation"] ||
+              [breadcrumb.category isEqualToString:@"ui.lifecycle"] ||
+              [breadcrumb.category isEqualToString:@"xhr"]
+          ) {
+            // Discard automatic breadcrumbs
+            return nil;
+          }
+          // Allow manual breadcrumbs to be recorded
+          return breadcrumb;
+        };
+        // Enable tracing to capture 100% of transactions for performance monitoring.
+        // Use 'options.tracesSampleRate' to set the sampling rate.
+        // We recommend setting a sample rate in production.
+        // options.enableTracing = YES;
+        options.tracesSampleRate = @0.2;
+        options.enableCaptureFailedRequests = NO;
+    }];
+  }
+
   // React template code:
   self.moduleName = @"edge";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  // Native Bugsnag integration:
-  BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
-  config.enabledBreadcrumbTypes =
-    BSGEnabledBreadcrumbTypeError &
-    BSGEnabledBreadcrumbTypeNavigation &
-    BSGEnabledBreadcrumbTypeState &
-    BSGEnabledBreadcrumbTypeUser;
-  [Bugsnag startWithConfiguration:config];
 
   // Native Firebase integration:
   if ([FIRApp defaultApp] == nil) {
@@ -146,6 +180,36 @@
       }];
     }
   }];
+}
+
+/**
+ * Hides the app when we go into the background.
+ * Edge addition.
+ */
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
+  UIViewController *launchScreen = [storyboard instantiateInitialViewController];
+  if (launchScreen == nil) return;
+  UIView *launchView = launchScreen.view;
+  if (launchView == nil) return;
+  
+  launchView.frame = self.window.bounds;
+  [self.window addSubview:launchView];
+  [self.window makeKeyAndVisible];
+  securityView = launchView;
+}
+
+/**
+ * Shows the app when we come into the foreground.
+ * Edge addition.
+ */
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+  if (securityView != nil) {
+    [securityView removeFromSuperview];
+    securityView = nil;
+  }
 }
 
 @end

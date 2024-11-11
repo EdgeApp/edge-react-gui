@@ -7,20 +7,30 @@ import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConst
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
+
+export interface FioDomainSettingsParams {
+  expiration: string
+  fioDomainName: string
+  isPublic: boolean
+  walletId: string
+  showRenew?: boolean
+}
 
 interface State {
   showRenew: boolean
@@ -36,7 +46,9 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
-interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioDomainSettings'> {
+  wallet: EdgeCurrencyWallet
+}
 
 type Props = StateProps & ThemeProps & DispatchProps & OwnProps
 
@@ -74,7 +86,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList', {})
+    return navigation.navigate('fioAddressList')
   }
 
   onVisibilityPress = () => {
@@ -118,21 +130,21 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     await renewFioDomain(fioWallet, fioDomainName, renewalFee)
 
-    const { currencyCode, pluginId } = fioWallet.currencyInfo
     onLogEvent('Fio_Domain_Renew', {
-      nativeAmount: String(renewalFee),
-      currencyCode,
-      pluginId
+      conversionValues: {
+        conversionType: 'crypto',
+        cryptoAmount: new CryptoAmount({ nativeAmount: String(renewalFee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
+      }
     })
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { navigation } = this.props
+    const { navigation, wallet: fioWallet } = this.props
     const { fee: transferFee } = params
     if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
     this.cancelOperation()
     const { route } = this.props
-    const { fioDomainName, fioWallet } = route.params
+    const { fioDomainName } = route.params
 
     const sendParams: SendScene2Params = {
       tokenId: null,
@@ -166,8 +178,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, theme } = this.props
-    const { fioWallet, fioDomainName, expiration, isPublic } = route.params
+    const { route, theme, wallet: fioWallet } = this.props
+    const { fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
     const styles = getStyles(theme)
@@ -176,12 +188,12 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_domain_settings} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4>
-            <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
-          </CardUi4>
-          <CardUi4>
-            <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
-          </CardUi4>
+          <EdgeCard>
+            <EdgeRow title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+          </EdgeCard>
+          <EdgeCard>
+            <EdgeRow title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+          </EdgeCard>
           {showVisibility && (
             <FioActionSubmit
               title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
@@ -192,7 +204,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
               successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
               fioWallet={fioWallet}
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showRenew && (
@@ -204,21 +216,26 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
               successMessage={lstrings.fio_request_renew_domain_ok_text}
               fioWallet={fioWallet}
               showPaymentWalletPicker
-              navigation={this.props.navigation}
+              navigation={this.props.navigation as NavigationBase}
             />
           )}
           {showTransfer && (
-            <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
+            <FioActionSubmit
+              goTo={this.goToTransfer}
+              getOperationFee={this.getTransferFee}
+              fioWallet={fioWallet}
+              navigation={this.props.navigation as NavigationBase}
+            />
           )}
           {!showRenew && !showVisibility && !showTransfer && (
-            <CardUi4 sections>
+            <EdgeCard sections>
               <SettingsTappableRow label={lstrings.title_fio_renew_domain} onPress={this.onRenewPress} />
               <SettingsTappableRow label={lstrings.title_fio_transfer_domain} onPress={this.onTransferPress} />
               <SettingsTappableRow
                 label={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
                 onPress={this.onVisibilityPress}
               />
-            </CardUi4>
+            </EdgeCard>
           )}
         </View>
       </SceneWrapper>
@@ -244,7 +261,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioDomainSettingsConnected = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     isConnected: state.network.isConnected
   }),
@@ -257,3 +274,5 @@ export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProp
     }
   })
 )(withTheme(FioDomainSettingsComponent))
+
+export const FioDomainSettingsScene = withWallet(FioDomainSettingsConnected)

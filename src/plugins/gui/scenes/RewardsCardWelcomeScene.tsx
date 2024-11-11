@@ -8,14 +8,14 @@ import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
 import { MainButton } from '../../../components/themed/MainButton'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 
 export interface RewardsCardWelcomeParams {
   onMoreInfo: () => void
   onNewCard: () => void
 }
 
-interface Props extends EdgeSceneProps<'rewardsCardWelcome'> {}
+interface Props extends BuyTabSceneProps<'rewardsCardWelcome'> {}
 
 export const RewardsCardWelcomeScene = (props: Props) => {
   const { onMoreInfo, onNewCard } = props.route.params
@@ -31,7 +31,7 @@ export const RewardsCardWelcomeScene = (props: Props) => {
           </WelcomeInto>
         </WelcomeContainer>
         <MainButton onPress={onNewCard} label={lstrings.buy_new_card_button} />
-        <Space vertical={1}>
+        <Space verticalRem={1}>
           <MainButton type="secondary" label={lstrings.learn_more_button} onPress={onMoreInfo} />
         </Space>
       </SceneContainer>

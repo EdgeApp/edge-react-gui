@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import { Theme } from '../../types/Theme'
+import { removeIsoPrefix } from '../../util/utils'
 import { Peek } from '../layout/Peek'
 import { Space } from '../layout/Space'
 import { Shimmer } from '../progress-indicators/Shimmer'
@@ -21,7 +22,7 @@ import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
 import { TappableCard } from './TappableCard'
 
-const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine; iconUri: string; onPress: (() => void) | undefined }) => {
+const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine; iconUri: string; onPress: () => void }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -31,9 +32,9 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const syncRatio = useWatch(borrowEngine, 'syncRatio')
   const isLoading = syncRatio < 1
 
-  const isoFiatCurrencyCode = currencyWallet.fiatCurrencyCode
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   const collateralTotal = useFiatTotal(currencyWallet, collaterals)
   const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal })}`
@@ -54,7 +55,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
     return (
-      <Space around={0.5}>
+      <Space aroundRem={0.5}>
         <Shimmer isShown={isLoading} />
         <Peek isShown={!isLoading}>
           <TappableCard onPress={onPress}>

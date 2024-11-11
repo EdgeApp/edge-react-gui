@@ -114,6 +114,40 @@ exports[`GuiPlugins tools filter ios + US as expected 1`] = `
 exports[`Production plugin data Buy plugins match snapshot on android + IL 1`] = `
 [
   {
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+    ],
+    "deepPath": "/order/buy",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0",
+    },
+    "description": "Fee: 5.95%
+Settlement: 1 - 48 hours",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "bank",
+    ],
+    "pluginId": "bitsofgold",
+    "title": "Israeli Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
+  },
+  {
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
@@ -141,26 +175,6 @@ Settlement: 10 - 30 minutes",
     "pluginId": "creditcard",
     "title": "Credit and Debit Card",
   },
-  {
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-    ],
-    "deepPath": "/order/buy",
-    "deepQuery": {
-      "order_id": "null",
-      "page": "0",
-    },
-    "description": "Fee: 5.95%
-Settlement: 1 - 48 hours",
-    "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": [
-      "bank",
-    ],
-    "pluginId": "bitsofgold",
-    "title": "Israeli Bank Transfer",
-  },
 ]
 `;
 
@@ -171,7 +185,8 @@ exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
     "deepPath": "",
     "deepQuery": {},
     "description": "Fee: ~2%
-Settlement: ~5 minutes",
+Settlement: ~5 minutes
+Limit $1000",
     "paymentType": "iach",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": [
@@ -184,6 +199,21 @@ Settlement: ~5 minutes",
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
+  },
+  {
+    "cryptoCodes": [],
+    "customTitleKey": "applepay",
+    "deepPath": "",
+    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "applepay",
@@ -192,7 +222,7 @@ Settlement: 10 - 30 minutes",
       "credit",
     ],
     "pluginId": "creditcard",
-    "title": "Apple Pay",
+    "title": "",
   },
   {
     "cryptoCodes": [],
@@ -207,6 +237,35 @@ Settlement: 10 - 30 minutes",
     ],
     "pluginId": "creditcard",
     "title": "Credit and Debit Card",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "revolut",
+    "paymentTypeLogoKey": "revolut",
+    "paymentTypes": [
+      "revolut",
+    ],
+    "pluginId": "revolut",
+    "title": "Revolut",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~2%
+Settlement: ~5 minutes
+Limit $10000",
+    "paymentType": "wire",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "wire",
+    ],
+    "pluginId": "wire",
+    "title": "Bank Wire Transfer",
   },
   {
     "cryptoCodes": [
@@ -243,6 +302,20 @@ Settlement: 2 - 3 days",
     ],
     "pluginId": "ach",
     "title": "ACH Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
   },
   {
     "cryptoCodes": [],

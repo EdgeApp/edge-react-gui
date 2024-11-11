@@ -14,7 +14,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
 import { logEvent } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -29,7 +29,7 @@ export interface FioCreateHandleParams {
   freeRegRefCode: string
 }
 
-interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
+interface Props extends EdgeAppSceneProps<'fioCreateHandle'> {}
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,
@@ -130,7 +130,14 @@ export const FioCreateHandleScene = (props: Props) => {
         await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
 
-        await dispatch(logEvent('Fio_Handle_Register', { dollarValue: 3 }))
+        await dispatch(
+          logEvent('Fio_Handle_Register', {
+            conversionValues: {
+              conversionType: 'dollar',
+              dollarRevenue: 3
+            }
+          })
+        )
 
         navigation.pop()
       } catch (e: any) {
@@ -154,15 +161,13 @@ export const FioCreateHandleScene = (props: Props) => {
   // Create the new FIO wallet, default the handle to a cleaned version of the username
   useAsyncEffect(
     async () => {
-      const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
-      if (domains.length === 1) {
-        if (!mounted.current) return
-        try {
-          setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
-        } catch (e) {
-          setErrorText(lstrings.fio_register_handle_error)
-          return
-        }
+      try {
+        const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
+        if (domains.length !== 1 || !mounted.current) return
+        setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
+      } catch (e) {
+        setErrorText(lstrings.fio_register_handle_error)
+        return
       }
       handleChangeFioHandle(account.username ?? '')
 

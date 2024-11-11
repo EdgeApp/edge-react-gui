@@ -1,11 +1,13 @@
-import { gt, lt } from 'biggystring'
-import { asArray, asBoolean, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { gt, lt, round } from 'biggystring'
+import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
-import { isHex } from '../../../util/utils'
+import { CryptoAmount } from '../../../util/CryptoAmount'
+import { datelog, isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -13,13 +15,13 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
-import { validateRegion } from './common'
+import { validateExactRegion } from './common'
 const providerId = 'kado'
 const storeId = 'money.kado'
 const partnerIcon = 'kado.png'
@@ -38,7 +40,7 @@ const urls = {
   }
 }
 
-const MODE = 'prod'
+const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 // https://api.kado.money/v1/ramp/blockchains
 
@@ -65,9 +67,9 @@ const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLU
   {}
 )
 
-const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+const SUPPORTED_REGIONS: FiatProviderExactRegions = {
   US: {
-    notStateProvinces: ['NY', 'TX']
+    notStateProvinces: ['FL', 'LA', 'NY', 'TX']
   }
 }
 
@@ -75,15 +77,16 @@ type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
-    iach: true
+    iach: true,
+    wire: true
   },
   sell: {
     ach: true
   }
 }
 
-const allowedBuyCurrencyCodes: FiatProviderAssetMap = { providerId, requiredAmountType: 'fiat', crypto: {}, fiat: {} }
-const allowedSellCurrencyCodes: FiatProviderAssetMap = { providerId, requiredAmountType: 'crypto', crypto: {}, fiat: {} }
+const allowedBuyCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
+const allowedSellCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = { US: true }
 
 /**
@@ -187,10 +190,10 @@ const asBlockchains = asObject({
  */
 
 // Define cleaners for nested objects and properties
-// const asAmountCurrency = asObject({
-//   amount: asNumber,
-//   currency: asString
-// })
+const asAmountCurrency = asObject({
+  amount: asNumber,
+  currency: asString
+})
 
 // const asRequest = asObject({
 //   transactionType: asValue('buy', 'sell'),
@@ -216,14 +219,14 @@ const asMinMaxValue = asObject({
 
 const asQuote = asObject({
   // asset: asString,
-  // baseAmount: asAmountCurrency,
+  baseAmount: asAmountCurrency,
   // pricePerUnit: asNumber,
   // price: asPrice,
   // processingFee: asAmountCurrency,
   // bridgeFee: asAmountCurrency,
   // networkFee: asAmountCurrency,
   // smartContractFee: asAmountCurrency,
-  // totalFee: asAmountCurrency,
+  totalFee: asAmountCurrency,
   // receiveAmountAfterFees: asAmountCurrency,
   // receiveUnitCountAfterFees: asAmountCurrency,
   receive: asObject({
@@ -380,6 +383,13 @@ const asOrderData = asObject({
   // settlementTimeInSeconds: asNumber
 })
 
+const asWebviewMessage = asObject({
+  // We also see "RAMP_ORDER_ID" here, so we should eventually add
+  // some `asEither` logic to switch between various valid message types:
+  type: asValue('PLAID_NEW_ACH_LINK' as const),
+  payload: asObject({ link: asString })
+})
+
 const asOrderInfo = asObject({
   success: asBoolean,
   message: asString,
@@ -388,18 +398,22 @@ const asOrderInfo = asObject({
 
 interface GetQuoteParams {
   transactionType: 'buy' | 'sell'
-  fiatMethod: 'ach' | 'card'
+  fiatMethod: 'ach' | 'card' | 'wire'
   amount: number
   blockchain: string
   currency: string
+  reverse: boolean
   asset: string
 }
 
 interface WidgetParams {
   apiKey: string
+  hideDepositDetails: boolean
+  isMobileWebview: true
   mode: 'minimal'
   network: string
   networkList: string
+  fiatMethodList: string
 }
 
 interface WidgetParamsBuy extends WidgetParams {
@@ -431,7 +445,7 @@ export const kadoProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -493,17 +507,11 @@ export const kadoProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
 
         const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
-        if (direction === 'buy' && amountType !== 'fiat') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
-        if (direction === 'sell' && amountType !== 'crypto') {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
-        }
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
@@ -514,12 +522,27 @@ export const kadoProvider: FiatProviderFactory = {
         const blockchain = PLUGIN_TO_CHAIN_ID_MAP[pluginId]
 
         // Query for a quote
+        let fiatMethodList: string
+        let fiatMethod: GetQuoteParams['fiatMethod']
+        if (paymentTypes[0] === 'wire') {
+          fiatMethod = 'wire'
+          fiatMethodList = 'wire'
+        } else if (paymentTypes[0] === 'ach' || paymentTypes[0] === 'iach') {
+          fiatMethod = 'ach'
+          fiatMethodList = 'ach,wire'
+        } else {
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        }
+
+        const reverse = (direction === 'sell' && amountType === 'fiat') || (direction === 'buy' && amountType === 'crypto')
+
         const queryParams: GetQuoteParams = {
           transactionType: direction,
-          fiatMethod: 'ach',
+          fiatMethod,
           amount: Number(exchangeAmount),
           blockchain,
           currency: 'USD',
+          reverse,
           asset
         }
 
@@ -542,17 +565,31 @@ export const kadoProvider: FiatProviderFactory = {
 
         const { amount: minAmount, unit: minUnit } = quote.data.quote.minValue
         const { amount: maxAmount, unit: maxUnit } = quote.data.quote.maxValue
+        const { baseAmount } = quote.data.quote
 
         let fiatAmount: string
         let cryptoAmount: string
+        const { totalFee } = quote.data.quote
+        const { amount, unitCount } = quote.data.quote.receive
         if (direction === 'buy') {
-          const { unitCount } = quote.data.quote.receive
-          cryptoAmount = unitCount.toString()
-          fiatAmount = exchangeAmount
+          if (amountType === 'fiat') {
+            cryptoAmount = unitCount.toString()
+            fiatAmount = exchangeAmount
+          } else {
+            // For some reason, the totalFee is not included in the fiatAmount on buy reverse quotes
+            fiatAmount = (amount + totalFee.amount).toString()
+            cryptoAmount = exchangeAmount
+          }
         } else {
-          const { amount } = quote.data.quote.receive
-          cryptoAmount = exchangeAmount
-          fiatAmount = amount.toString()
+          if (amountType === 'crypto') {
+            cryptoAmount = exchangeAmount
+            fiatAmount = amount.toString()
+          } else {
+            fiatAmount = exchangeAmount
+            // The unitCount is 0 for sell reverse quotes but seems to be in
+            // the baseAmount.amount so use that
+            cryptoAmount = baseAmount.amount.toString()
+          }
         }
         if (lt(fiatAmount, minAmount.toString()))
           throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minAmount, displayCurrencyCode: minUnit })
@@ -580,6 +617,9 @@ export const kadoProvider: FiatProviderFactory = {
             if (direction === 'buy') {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
+                fiatMethodList,
+                hideDepositDetails: true,
+                isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
                 onPayAmount: fiatAmount,
@@ -594,6 +634,9 @@ export const kadoProvider: FiatProviderFactory = {
             } else {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
+                fiatMethodList,
+                hideDepositDetails: true,
+                isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
                 offPayAmount: cryptoAmount,
@@ -608,10 +651,24 @@ export const kadoProvider: FiatProviderFactory = {
             }
             console.log('Launching Kado webview url=' + url.href)
 
+            // If Kado needs to launch the Plaid bank linking widget, it needs it in an external
+            // webview to prevent some glitchiness. When needed, Kado will send an onMessage
+            // trigger with the url to open. The below code is derived from Kado's sample code
+            const onMessage = (data: string) => {
+              datelog(`**** Kado onMessage ${data}`)
+              const message = asMaybe(asWebviewMessage)(JSON.parse(data))
+              if (message?.type === 'PLAID_NEW_ACH_LINK') {
+                showUi.openExternalWebView({ url: message.payload.link, redirectExternal: true }).catch(async error => await showUi.showError(error))
+              }
+            }
+
             // Only open standard webview of ACH and sells.
             // Use showUi.openExternalWebView for Apple Pay/Google Pay
             if (direction === 'buy') {
-              await showUi.openWebView({ url: url.href })
+              await showUi.openWebView({
+                url: url.href,
+                onMessage
+              })
               return
             }
 
@@ -620,6 +677,7 @@ export const kadoProvider: FiatProviderFactory = {
             const openWebView = async () => {
               await showUi.openWebView({
                 url: url.href,
+                onMessage,
                 onUrlChange: async newUrl => {
                   console.log(`*** onUrlChange: ${newUrl}`)
 
@@ -704,7 +762,7 @@ export const kadoProvider: FiatProviderFactory = {
                       console.log(`  blockchain: ${blockchain}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode)
+                      const nativeAmount = round(await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode), 0)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
@@ -759,13 +817,18 @@ export const kadoProvider: FiatProviderFactory = {
                       }
                       const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
-                        destCurrencyCode: 'USD',
-                        destExchangeAmount: fiatAmount,
-                        sourceCurrencyCode: displayCurrencyCode,
-                        sourceExchangeAmount: paymentExchangeAmount,
-                        sourcePluginId: coreWallet.currencyInfo.pluginId,
-                        pluginId: providerId,
-                        orderId
+                        conversionValues: {
+                          conversionType: 'sell',
+                          destFiatCurrencyCode: 'USD',
+                          destFiatAmount: fiatAmount,
+                          sourceAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: paymentExchangeAmount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId
+                        }
                       })
 
                       // Save separate metadata/action for token transaction fee
@@ -779,10 +842,10 @@ export const kadoProvider: FiatProviderFactory = {
                         }
                         await showUi.saveTxAction(params)
                       }
-                    } catch (e: any) {
-                      if (e.message === SendErrorNoTransaction) {
+                    } catch (e: unknown) {
+                      if (e instanceof Error && e.message === SendErrorNoTransaction) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
-                      } else if (e.message === SendErrorBackPressed) {
+                      } else if (e instanceof Error && e.message === SendErrorBackPressed) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_cancelled)
                         await showUi.exitScene()
                       } else {

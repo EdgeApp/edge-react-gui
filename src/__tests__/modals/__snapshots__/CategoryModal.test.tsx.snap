@@ -7,7 +7,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -76,6 +76,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -141,71 +142,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       >
         Choose a Category
       </Text>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "flex-end",
-            "alignSelf": "flex-start",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
-            "marginBottom": -17,
-            "marginRight": -22,
-            "marginTop": -22,
-            "opacity": 1,
-            "paddingBottom": 17,
-            "paddingRight": 28,
-            "paddingTop": 26,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
-              undefined,
-              {
-                "fontFamily": "anticon",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
-        </Text>
-      </View>
     </View>
     <View
       style={
@@ -467,12 +403,19 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       </View>
     </View>
     <View
+      marginRemStyle={
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
+      multiline={false}
       style={
         {
-          "alignItems": undefined,
-          "flex": undefined,
-          "flexDirection": "column",
-          "justifyContent": undefined,
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -485,7 +428,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -521,8 +464,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "alignItems": "center",
               "borderRadius": 11,
               "borderWidth": 1,
-              "flex": undefined,
               "flexDirection": "row",
+              "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {
@@ -678,7 +622,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": 1,
               }
             }
-            secureTextEntry={false}
             selectionColor="#FFFFFF"
             style={
               [
@@ -868,6 +811,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1007,6 +955,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1146,6 +1099,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1285,6 +1243,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1432,7 +1395,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -1501,6 +1464,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       style={
         {
           "backgroundColor": undefined,
+          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -1566,71 +1530,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       >
         Choose a Category
       </Text>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "flex-end",
-            "alignSelf": "flex-start",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
-            "marginBottom": -17,
-            "marginRight": -22,
-            "marginTop": -22,
-            "opacity": 1,
-            "paddingBottom": 17,
-            "paddingRight": 28,
-            "paddingTop": 26,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
-              undefined,
-              {
-                "fontFamily": "anticon",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
-        </Text>
-      </View>
     </View>
     <View
       style={
@@ -1892,12 +1791,19 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       </View>
     </View>
     <View
+      marginRemStyle={
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
+      multiline={false}
       style={
         {
-          "alignItems": undefined,
-          "flex": undefined,
-          "flexDirection": "column",
-          "justifyContent": undefined,
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -1910,7 +1816,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -1946,8 +1852,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "alignItems": "center",
               "borderRadius": 11,
               "borderWidth": 1,
-              "flex": undefined,
               "flexDirection": "row",
+              "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {
@@ -2103,7 +2010,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "value": 1,
               }
             }
-            secureTextEntry={false}
             selectionColor="#FFFFFF"
             style={
               [
@@ -2293,6 +2199,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2403,6 +2314,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2513,6 +2429,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2623,6 +2544,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,

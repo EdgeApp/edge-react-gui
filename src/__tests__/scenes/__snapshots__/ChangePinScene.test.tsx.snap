@@ -59,30 +59,19 @@ exports[`ChangePinComponent should render with loading props 1`] = `
             <ChangePinScene
               navigation={
                 {
-                  "addListener": [Function],
-                  "canGoBack": [Function],
-                  "dispatch": [Function],
-                  "getId": [Function],
-                  "getParent": [Function],
-                  "getState": [Function],
-                  "goBack": [Function],
-                  "isFocused": [Function],
-                  "navigate": [Function],
-                  "pop": [Function],
-                  "popToTop": [Function],
-                  "push": [Function],
-                  "removeListener": [Function],
-                  "replace": [Function],
-                  "reset": [Function],
-                  "setOptions": [Function],
-                  "setParams": [Function],
+                  "addListener": [MockFunction],
+                  "goBack": [MockFunction],
+                  "navigate": [MockFunction],
+                  "pop": [MockFunction],
+                  "push": [MockFunction],
+                  "replace": [MockFunction],
                 }
               }
               route={
                 {
                   "key": "changePin-0",
                   "name": "changePin",
-                  "params": {},
+                  "params": undefined,
                 }
               }
             />

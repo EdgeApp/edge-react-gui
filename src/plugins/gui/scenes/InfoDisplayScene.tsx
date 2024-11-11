@@ -1,23 +1,33 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Fontello } from '../../../assets/vector/index'
+import { SceneButtons } from '../../../components/buttons/SceneButtons'
+import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { MainButton } from '../../../components/themed/MainButton'
-import { SceneHeader } from '../../../components/themed/SceneHeader'
+import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
+import { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
+
+export interface FiatPluginSepaTransferParams {
+  headerTitle: string
+  promptMessage: string
+  transferInfo: FiatPluginSepaTransferInfo
+  headerIconUri?: string
+  onDone: () => Promise<void>
+}
 
 interface InfoDisplayGroup {
   groupTitle: string
   items: Array<{ label: string; value?: string }>
 }
 
-interface Props extends EdgeSceneProps<'guiPluginInfoDisplay'> {}
+interface Props extends BuyTabSceneProps<'guiPluginInfoDisplay'> {}
 
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
@@ -97,9 +107,9 @@ export const InfoDisplayScene = React.memo((props: Props) => {
 
   const renderCopyButton = (value: string) => {
     return (
-      <TouchableOpacity onPress={() => handleCopyPress(value)}>
+      <EdgeTouchableOpacity onPress={() => handleCopyPress(value)}>
         <Fontello name="Copy-icon" size={theme.rem(1)} color={theme.iconTappable} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 
@@ -122,13 +132,13 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     ))
 
   return (
-    <SceneWrapper scroll hasNotifications>
-      <SceneHeader title={headerTitle} underline withTopMargin />
+    <SceneWrapper hasTabs scroll hasNotifications padding={theme.rem(0.5)}>
+      <SceneHeaderUi4 title={headerTitle} />
       <View style={styles.promptContainer}>
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>
       </View>
       {renderGroups()}
-      <MainButton label={lstrings.string_done_cap} marginRem={[4, 0, 1]} type="secondary" onPress={handleDone} />
+      <SceneButtons primary={{ label: lstrings.string_done_cap, onPress: handleDone }} />
     </SceneWrapper>
   )
 })
@@ -136,7 +146,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   groupContainer: {
     marginTop: theme.rem(1),
-    marginHorizontal: theme.rem(1),
+    marginHorizontal: theme.rem(0.5),
     borderWidth: theme.thinLineWidth,
     borderColor: theme.cardBorderColor,
     borderRadius: theme.rem(0.5)
@@ -173,6 +183,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexWrap: 'wrap'
   },
   promptContainer: {
-    margin: theme.rem(1)
+    margin: theme.rem(0.5)
   }
 }))

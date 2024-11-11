@@ -2,18 +2,19 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Text, TextStyle, View } from 'react-native'
 
+import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp30, fadeInUp60, fadeInUp90 } from '../../../components/common/EdgeAnim'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { SectionView } from '../../../components/layout/SectionView'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
-import { SectionView } from '../../../components/ui4/SectionView'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { StateManager, useStateManager } from '../hooks/useStateManager'
@@ -25,6 +26,7 @@ export interface FiatPluginEnterAmountParams {
   label2: string
   onChangeText?: (event: { fieldNum: number; value: string }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   convertValue: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<string | undefined>
+  onMax?: (sourceFieldNum: number, stateManager: StateManager<EnterAmountState>) => Promise<void>
   onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
   onSubmit: (event: { response: FiatPluginEnterAmountResponse }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   headerIconUri?: string
@@ -49,7 +51,7 @@ export interface EnterAmountPoweredBy {
   poweredByText: string
 }
 
-interface Props extends EdgeSceneProps<'guiPluginEnterAmount'> {}
+interface Props extends BuyTabSceneProps<'guiPluginEnterAmount'> {}
 
 const defaultEnterAmountState: EnterAmountState = {
   spinner1: false,
@@ -70,6 +72,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     initState,
     headerIconUri,
     headerTitle,
+    onMax,
     onSubmit,
     convertValue,
     onPoweredByClick,
@@ -136,7 +139,15 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   })
   const handlePoweredByPress = useHandler(async () => await onPoweredByClick(stateManager))
   const handleSubmit = useHandler(async () => {
-    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(showError)
+    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(error => showError(error))
+  })
+
+  const handleMax = useHandler(async () => {
+    if (onMax != null) {
+      stateManager.update({ spinner1: true, spinner2: true })
+      await onMax(lastUsed.current, stateManager).catch(error => showError(error))
+      stateManager.update({ spinner1: false, spinner2: false })
+    }
   })
 
   let statusTextStyle = styles.text
@@ -149,7 +160,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
 
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications>
+    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications hasTabs>
       <EdgeAnim enter={fadeInUp90}>
         <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
           {headerIcon}
@@ -175,7 +186,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner2}
                   textsizeRem={1.5}
                   value={value2 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               <EdgeAnim enter={fadeInUp30}>
@@ -194,9 +205,19 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner1}
                   textsizeRem={1.5}
                   value={value1 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
+              {onMax != null ? (
+                <View style={styles.maxButton}>
+                  <ButtonsView
+                    tertiary={{
+                      label: lstrings.string_max_cap,
+                      onPress: handleMax
+                    }}
+                  />
+                </View>
+              ) : null}
             </View>
           ) : (
             <View style={styles.textFields}>
@@ -216,7 +237,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner1}
                   textsizeRem={1.5}
                   value={value1 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               <EdgeAnim enter={fadeInUp30}>
@@ -235,9 +256,19 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner2}
                   textsizeRem={1.5}
                   value={value2 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
+              {onMax != null ? (
+                <View style={styles.maxButton}>
+                  <ButtonsView
+                    tertiary={{
+                      label: lstrings.string_max_cap,
+                      onPress: handleMax
+                    }}
+                  />
+                </View>
+              ) : null}
             </View>
           )}
           <>
@@ -275,9 +306,13 @@ const getStyles = cacheStyles((theme: Theme) => {
       paddingTop: theme.rem(0.5),
       width: '100%'
     },
+    maxButton: {
+      alignItems: 'flex-end',
+      marginTop: theme.rem(-0.75)
+    },
     textFields: {
       flexDirection: 'column',
-      width: theme.rem(15)
+      width: theme.rem(14)
     },
     text: {
       ...textCommon,

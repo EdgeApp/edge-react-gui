@@ -2,18 +2,12 @@ import type { ActionRequestDto, TransactionDto } from '@stakekit/api-hooks'
 import { add, div, eq, floor, gt, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
+import { infoServerData } from '../../../../util/network'
 import { DECIMAL_PRECISION } from '../../../../util/utils'
-import { AssetId, ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
+import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
-import {
-  actionEnter,
-  actionExit,
-  actionPending,
-  transactionConstruct,
-  transactionSubmitHash,
-  yieldGetSingleYieldBalances,
-  yieldYieldOpportunity
-} from '../util/stakeKitUtils'
+import { actionEnter, actionExit, actionPending, transactionConstruct, transactionSubmitHash, yieldGetSingleYieldBalances } from '../util/stakeKitUtils'
 import { StakePolicyAdapter } from './types'
 
 export interface CoreumNativeSkateKitAdapterConfig {
@@ -98,7 +92,7 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: AssetId, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
       const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
 
       const yieldBalanceRes = await yieldGetSingleYieldBalances(adapterConfig.integrationId, {
@@ -392,11 +386,9 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
     },
 
     async fetchYieldInfo() {
-      const yieldRes = await yieldYieldOpportunity(adapterConfig.integrationId)
-      const validatorApr = yieldRes.validators.find(validator => validator.address === adapterConfig.preferredValidatorAddress)
-      if (validatorApr == null) return { apy: 0 }
-
-      return { apy: validatorApr.apr * 100 }
+      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const apy = infoServerResponse.policies[stakePolicyId] ?? 0
+      return { apy }
     }
   }
 

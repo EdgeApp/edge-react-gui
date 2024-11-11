@@ -1,22 +1,31 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../util/FioAddressUtils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
+
+export interface FioConnectWalletConfirmParams {
+  fioAddressName: string
+  walletId: string
+  walletsToConnect: FioConnectionWalletItem[]
+  walletsToDisconnect: FioConnectionWalletItem[]
+}
 
 interface State {
   acknowledge: boolean
@@ -29,7 +38,9 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioConnectToWalletsConfirm'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
+  wallet: EdgeCurrencyWallet
+}
 
 interface DispatchProps {
   updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
@@ -45,8 +56,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { updateConnectedWallets, ccWalletMap, isConnected, navigation, route } = this.props
-    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
+    const { updateConnectedWallets, ccWalletMap, isConnected, navigation, route, wallet: fioWallet } = this.props
+    const { fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
@@ -117,7 +128,12 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             }
           }
           if (walletsToConnectLeft.length || walletsToDisconnectLeft.length) {
-            navigation.setParams({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
+            navigation.setParams({
+              walletId: fioWallet.id,
+              fioAddressName,
+              walletsToConnect: walletsToConnectLeft,
+              walletsToDisconnect: walletsToDisconnectLeft
+            })
             this.resetSlider()
           }
           throw eitherError
@@ -145,7 +161,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           if (answer === 'ok') {
             navigation.navigate('fioAddressSettings', {
               showAddBundledTxs: true,
-              fioWallet,
+              walletId: fioWallet.id,
               fioAddressName: fioAddressName
             })
           }
@@ -190,14 +206,14 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_connect_to_wallet} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
-            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-            {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
+          <EdgeCard sections>
+            <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {walletsToConnect.length ? <EdgeRow title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</EdgeRow> : null}
 
             {walletsToDisconnect.length ? (
-              <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4>
+              <EdgeRow title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</EdgeRow>
             ) : null}
-          </CardUi4>
+          </EdgeCard>
 
           <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
             <EdgeText style={styles.checkTitle} numberOfLines={4}>
@@ -239,7 +255,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioConnectWalletConfirmConnected = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[params.fioAddressName],
     isConnected: state.network.isConnected
@@ -253,3 +269,5 @@ export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, O
     }
   })
 )(withTheme(FioConnectWalletConfirm))
+
+export const FioConnectWalletConfirmScene = withWallet(FioConnectWalletConfirmConnected)

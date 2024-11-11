@@ -6,12 +6,13 @@ import Share, { ShareOptions } from 'react-native-share'
 
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { Paragraph } from '../themed/EdgeText'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 interface Props {
   bridge: AirshipBridge<void>
   logs: MultiLogOutput
@@ -71,11 +72,11 @@ export const LogsModal = (props: Props) => {
   }
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
+    <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
-      {isDangerous ? null : <ModalMessage>{lstrings.settings_modal_export_logs_message}</ModalMessage>}
-      <FilledTextInput
-        around={1}
+      {isDangerous ? null : <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>}
+      <AlertCardUi4 title={lstrings.settings_modal_export_logs_warning} type="warning" />
+      <ModalFilledTextInput
         autoCorrect
         autoFocus={false}
         placeholder={lstrings.settings_modal_send_logs_label}
@@ -88,6 +89,6 @@ export const LogsModal = (props: Props) => {
         <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
       )}
       <MainButton label={lstrings.settings_button_export_logs} marginRem={[0.5, 0, 1]} type="secondary" onPress={handleShare} />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

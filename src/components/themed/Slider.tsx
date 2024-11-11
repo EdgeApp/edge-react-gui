@@ -43,6 +43,7 @@ export const SliderComponent = (props: Props) => {
     width = props.theme.confirmationSliderWidth
   } = props
   const styles = getStyles(theme)
+  const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
 
   const upperBound = width - theme.confirmationSliderThumbWidth
@@ -67,7 +68,7 @@ export const SliderComponent = (props: Props) => {
   }
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
+    onStart: (_, ctx: { offsetX: number }) => {
       if (!sliderDisabled) ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {
@@ -98,7 +99,7 @@ export const SliderComponent = (props: Props) => {
 
   const progressStyle = useAnimatedStyle(() => {
     return {
-      width: translateX.value + theme.confirmationSliderThumbWidth
+      width: translateX.value + confirmationSliderThumbWidth
     }
   })
 

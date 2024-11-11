@@ -12,17 +12,16 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
-import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { SettingsRow } from '../settings/SettingsRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { MainButton } from '../themed/MainButton'
@@ -38,12 +37,13 @@ interface File {
   fileName: string // wallet-btc-2020.csv
 }
 
-interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
+interface OwnProps extends EdgeAppSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   account: EdgeAccount
-  multiplier: string
+  defaultIsoFiat: string
   exchangeMultiplier: string
+  multiplier: string
   parentMultiplier: string
   tokenId: EdgeTokenId
 }
@@ -118,6 +118,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
       const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenCurrencyCode]
+
       this.setState({
         isExportBitwave,
         isExportCsv,
@@ -148,24 +149,13 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
         <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
         <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
-        {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
+        {this.renderSwitches()}
         {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={[3, 0, 1]} onPress={this.handleSubmit} type="secondary" />}
       </SceneWrapper>
     )
   }
 
-  renderAndroidSwitches() {
-    const { isExportBitwave, isExportCsv, isExportQbo } = this.state
-    return (
-      <>
-        <SettingsRadioRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
-        <SettingsRadioRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
-        <SettingsRadioRow label={lstrings.export_transaction_bitwave_csv} value={isExportBitwave} onPress={this.handleBitwaveToggle} />
-      </>
-    )
-  }
-
-  renderIosSwitches() {
+  renderSwitches() {
     const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
@@ -189,31 +179,19 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   handleQboToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportQbo: true, isExportCsv: false, isExportBitwave: false })
-    } else {
-      this.setState(state => ({ isExportQbo: !state.isExportQbo }))
-    }
+    this.setState(state => ({ isExportQbo: !state.isExportQbo }))
   }
 
   handleCsvToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportCsv: true, isExportBitwave: false, isExportQbo: false })
-    } else {
-      this.setState(state => ({ isExportCsv: !state.isExportCsv }))
-    }
+    this.setState(state => ({ isExportCsv: !state.isExportCsv }))
   }
 
   handleBitwaveToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportBitwave: true, isExportCsv: false, isExportQbo: false })
-    } else {
-      this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
-    }
+    this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
   }
 
   handleSubmit = async (): Promise<void> => {
-    const { account, exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
+    const { account, defaultIsoFiat, exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
     const { tokenId } = this.props
@@ -312,9 +290,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await exportTransactionsToCSV(sourceWallet, txs, currencyCode, multiplier)
+    const csvFile = await exportTransactionsToCSV(sourceWallet, defaultIsoFiat, txs, currencyCode, multiplier)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
-      showError(lstrings.export_transaction_export_error)
+      showToast(lstrings.export_transaction_export_error)
       return
     }
 
@@ -328,7 +306,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await exportTransactionsToQBO(sourceWallet, txs, currencyCode, multiplier)
+      const qboFile = await exportTransactionsToQBO(txs, defaultIsoFiat, multiplier)
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',
@@ -349,23 +327,27 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     const title = 'Share Transactions ' + formats.join(', ')
     if (Platform.OS === 'android') {
-      await this.shareAndroid(title, files[0])
+      await this.shareAndroid(title, files)
     } else {
       await this.shareIos(title, files)
     }
   }
 
-  async shareAndroid(title: string, file: File): Promise<void> {
+  async shareAndroid(title: string, files: File[]): Promise<void> {
     try {
       const directory = RNFS.ExternalCachesDirectoryPath
-      const url = `file://${directory}/${file.fileName}`
-      await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+      const urls: string[] = []
+      for (const file of files) {
+        const url = `file://${directory}/${file.fileName}`
+        urls.push(url)
+        await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+      }
 
       await Share.open({
         title,
         message: '',
-        url,
-        filename: file.fileName,
+        urls,
+        failOnCancel: false,
         subject: title
       }).catch(error => console.log('Share error', error))
     } catch (error: any) {
@@ -384,18 +366,20 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     await Share.open({
+      failOnCancel: false,
       title,
       urls,
       subject: title
-    }).catch(error => console.log(error))
+    }).catch(error => showError(error))
   }
 }
 
 export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     account: state.core.account,
-    multiplier: selectDisplayDenomByCurrencyCode(state, params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
+    defaultIsoFiat: state.ui.settings.defaultIsoFiat,
     exchangeMultiplier: getExchangeDenomByCurrencyCode(params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
+    multiplier: selectDisplayDenomByCurrencyCode(state, params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
     parentMultiplier: getExchangeDenom(params.sourceWallet.currencyConfig, null).multiplier,
     tokenId: getTokenIdForced(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
   }),

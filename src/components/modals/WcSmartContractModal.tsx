@@ -17,6 +17,8 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
@@ -24,9 +26,7 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { CardUi4 } from '../ui4/CardUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
-import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
@@ -65,12 +65,14 @@ export const WcSmartContractModal = (props: Props) => {
       .then(() => {
         Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />).catch(() => {})
       })
-      .catch(showError)
+      .catch(error => showError(error))
       .finally(props.bridge.resolve)
   }
 
   const handleClose = () => {
-    wcRequestResponse(false).catch(showError).finally(props.bridge.resolve)
+    wcRequestResponse(false)
+      .catch(error => showError(error))
+      .finally(props.bridge.resolve)
   }
 
   const renderWarning = () => {
@@ -111,6 +113,7 @@ export const WcSmartContractModal = (props: Props) => {
           const tx = await wallet.makeSpend(spendInfo)
           const signTx = await wallet.signTx(tx)
           await walletConnect.approveRequest(topic, requestId, signTx.signedTx)
+          await wallet.saveTx(signTx)
           break
         }
         case 'eth_sendTransaction':
@@ -121,6 +124,7 @@ export const WcSmartContractModal = (props: Props) => {
           const signedTx = await wallet.signTx(tx)
           const sentTx = await wallet.broadcastTx(signedTx)
           await walletConnect.approveRequest(topic, requestId, sentTx.txid)
+          await wallet.saveTx(sentTx)
           break
         }
         case 'algo_signTxn': {
@@ -149,7 +153,7 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       onCancel={handleClose}
       title={
@@ -170,12 +174,12 @@ export const WcSmartContractModal = (props: Props) => {
             tokenId={tokenId}
           />
         )}
-        <CardUi4 icon={walletImageUri}>
-          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
-        </CardUi4>
-        <CardUi4 icon={iconUri}>
-          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
-        </CardUi4>
+        <EdgeCard icon={walletImageUri}>
+          <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} />
+        </EdgeCard>
+        <EdgeCard icon={iconUri}>
+          <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
+        </EdgeCard>
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.wc_smartcontract_network_fee}
@@ -191,7 +195,7 @@ export const WcSmartContractModal = (props: Props) => {
         {slider}
       </ScrollView>
       {/* <ModalFooterFade /> */}
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

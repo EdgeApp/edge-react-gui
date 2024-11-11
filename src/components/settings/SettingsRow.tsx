@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TextStyle, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Text, TextStyle, View } from 'react-native'
 import Animated, { useAnimatedStyle, withDelay, withTiming } from 'react-native-reanimated'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
+import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -42,7 +43,7 @@ const SettingsRowComponent = (props: Props) => {
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableHighlight accessible={false} underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
+    <EdgeTouchableHighlight accessible={false} underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
         <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>
@@ -53,11 +54,12 @@ const SettingsRowComponent = (props: Props) => {
           <RightContainer pending={pending}>{right}</RightContainer>
         </View>
       </>
-    </TouchableHighlight>
+    </EdgeTouchableHighlight>
   )
 }
 
 const ActivityContainer = styled(Animated.View)<{ pending: boolean }>(_theme => props => {
+  const { pending } = props
   return [
     {
       position: 'absolute',
@@ -67,22 +69,26 @@ const ActivityContainer = styled(Animated.View)<{ pending: boolean }>(_theme => 
     },
     useAnimatedStyle(() => ({
       opacity: withDelay(
-        props.pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
-        withTiming(props.pending ? 1 : 0, { duration: ACTIVITY_INDICATOR_FADE_IN_DURATION })
+        pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
+        withTiming(pending ? 1 : 0, {
+          duration: ACTIVITY_INDICATOR_FADE_IN_DURATION
+        })
       )
     }))
   ]
 })
 
-const RightContainer = styled(Animated.View)<{ pending: boolean }>(
-  _theme => props =>
-    useAnimatedStyle(() => ({
-      opacity: withDelay(
-        props.pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
-        withTiming(props.pending ? 0 : 1, { duration: ACTIVITY_INDICATOR_FADE_IN_DURATION })
-      )
-    }))
-)
+const RightContainer = styled(Animated.View)<{ pending: boolean }>(_theme => props => {
+  const { pending } = props
+  return useAnimatedStyle(() => ({
+    opacity: withDelay(
+      pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
+      withTiming(pending ? 0 : 1, {
+        duration: ACTIVITY_INDICATOR_FADE_IN_DURATION
+      })
+    )
+  }))
+})
 
 const getStyles = cacheStyles((theme: Theme) => {
   const commonText: TextStyle = {

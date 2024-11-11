@@ -10,14 +10,40 @@ import { lstrings } from '../locales/strings'
 import { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
 import { asMostRecentWallet, MostRecentWallet } from '../types/types'
-import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
 import { writeSpendingLimits } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
+
+export function checkEnabledExchanges(): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    // make sure exchanges are enabled
+    let isAnyExchangeEnabled = false
+    const exchanges = account.swapConfig
+    if (exchanges == null) return
+    for (const exchange of Object.keys(exchanges)) {
+      if (exchange === 'transfer') continue
+      if (exchanges[exchange].enabled) {
+        isAnyExchangeEnabled = true
+      }
+    }
+
+    if (!isAnyExchangeEnabled) {
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          buttons={{ ok: { label: lstrings.string_ok_cap } }}
+          title={lstrings.no_exchanges_available}
+          message={lstrings.check_exchange_settings}
+        />
+      )).catch(() => {})
+    }
+  }
+}
 
 export function updateOneSetting(setting: Partial<SettingsState>): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -104,7 +130,7 @@ export function setPreferredSwapPluginId(pluginId: string | undefined): ThunkAct
           data: undefined
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -123,7 +149,7 @@ export function setPreferredSwapPluginType(swapPluginType: EdgeSwapPluginType | 
           data: undefined
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -140,7 +166,7 @@ export function setDenominationKeyRequest(pluginId: string, currencyCode: string
           data: { pluginId, currencyCode, denomination }
         })
       )
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -187,32 +213,23 @@ export function togglePinLoginEnabled(pinLoginEnabled: boolean): ThunkAction<Pro
   }
 }
 
-export function showReEnableOtpModal(): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const otpResetDate = account.otpResetDate
-    if (!otpResetDate) return
+export async function showReEnableOtpModal(account: EdgeAccount): Promise<void> {
+  const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={lstrings.title_otp_keep_modal}
+      message={lstrings.otp_modal_reset_description}
+      buttons={{
+        confirm: { label: lstrings.otp_keep },
+        cancel: { label: lstrings.otp_disable }
+      }}
+    />
+  ))
 
-    const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.title_otp_keep_modal}
-        message={lstrings.otp_modal_reset_description}
-        buttons={{
-          confirm: { label: lstrings.otp_keep },
-          cancel: { label: lstrings.otp_disable }
-        }}
-      />
-    ))
-
-    if (resolveValue === 'confirm') {
-      // true on positive, false on negative
-      // let 2FA expire
-      await account.cancelOtpReset()
-    } else {
-      await account.disableOtp()
-    } // if default of null (press backdrop) do not change anything and keep reminding
+  if (resolveValue === 'confirm') {
+    await account.cancelOtpReset()
+  } else {
+    await account.disableOtp()
   }
 }
 
@@ -224,40 +241,6 @@ export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: false
       })
-    }
-  }
-}
-
-export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const response = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.restore_wallets_modal_title}
-        message={lstrings.restore_wallets_modal_description}
-        buttons={{
-          confirm: { label: lstrings.restore_wallets_modal_confirm },
-          cancel: { label: lstrings.restore_wallets_modal_cancel }
-        }}
-      />
-    ))
-    if (response === 'confirm') {
-      const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
-      await Promise.all(
-        restoreKeys
-          .map(key => key.id)
-          .map(
-            async walletId =>
-              await account.changeWalletStates({
-                [walletId]: { archived: false, deleted: false }
-              })
-          )
-      )
-      logActivity(`Restore Wallets: ${account.username}`)
-
-      navigation.navigate('homeTab', { screen: 'home' })
     }
   }
 }

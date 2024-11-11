@@ -28,14 +28,14 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return
 
-    const { fiatCurrencyCode } = wallet
+    const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
 
     // Never stack dropdowns:
     if (receiveDropdownShowing) return
 
     // Check the spam limits:
     const { spamFilterOn } = state.ui.settings
-    const exchangeRate = state.exchangeRates[`${currencyCode}_${fiatCurrencyCode}`]
+    const exchangeRate = state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`]
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
     const spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
     if (spamFilterOn && (zeroString(exchangeRate) || lt(nativeAmount, spamThreshold))) {
@@ -65,7 +65,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
               walletId,
               tokenId
             })
-          ).catch(showError)
+          ).catch(error => showError(error))
 
           navigation.navigate('transactionDetails', {
             edgeTransaction: transaction,

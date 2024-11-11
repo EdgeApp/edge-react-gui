@@ -15,7 +15,7 @@ import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
 import { fetchPush } from '../util/network'
-import { getDenomFromIsoCode } from '../util/utils'
+import { getDenomFromIsoCode, removeIsoPrefix } from '../util/utils'
 
 export interface NotificationSettings {
   ignoreMarketing: boolean
@@ -46,7 +46,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         .catch(() => '')
 
       const body = {
-        apiKey: ENV.AIRBITZ_API_KEY,
+        apiKey: ENV.EDGE_API_KEY,
         deviceId: state.core.context.clientId,
         deviceToken,
         loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
@@ -193,7 +193,7 @@ async function updateServerSettings(context: EdgeContext, data: DeviceUpdatePayl
     .catch(() => '')
 
   const body = {
-    apiKey: ENV.AIRBITZ_API_KEY,
+    apiKey: ENV.EDGE_API_KEY,
     deviceId,
     deviceToken,
     data: { ...data, loginIds }
@@ -219,7 +219,7 @@ export const newPriceChangeEvent = (
 ): NewPushEvent => {
   const { currencyCode, displayName, pluginId } = currencyInfo
 
-  const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode.replace('iso:', ''))
+  const fiatDenomination = getDenomFromIsoCode(removeIsoPrefix(isoFiatCurrencyCode))
   const fiatSymbol = fiatDenomination.symbol ?? ''
 
   const fiatSymbolString = `${fiatSymbol}#to_price#`
@@ -279,7 +279,7 @@ async function legacyGet(path: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Api-Key': ENV.AIRBITZ_API_KEY
+      'X-Api-Key': ENV.EDGE_API_KEY
     }
   })
   if (response != null && response.ok) {

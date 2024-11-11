@@ -5,7 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { ChangePasswordScene } from '../../components/scenes/ChangePasswordScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('ChangePasswordScene', () => {
   it('should render with loading props', () => {
@@ -14,7 +14,7 @@ describe('ChangePasswordScene', () => {
 
     const actual = renderer.render(
       <FakeProviders initialState={rootState}>
-        <ChangePasswordScene {...fakeSceneProps('changePassword', {})} />
+        <ChangePasswordScene {...fakeEdgeAppSceneProps('changePassword', undefined)} />
       </FakeProviders>
     )
 

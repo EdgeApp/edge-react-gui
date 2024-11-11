@@ -1,7 +1,6 @@
 import { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
@@ -15,9 +14,10 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
@@ -127,8 +127,8 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   })
 
   return (
-    <TouchableOpacity style={styles.row} onPress={handlePress}>
-      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+    <EdgeTouchableOpacity style={styles.row} onPress={handlePress}>
+      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.nameColumn}>
         <EdgeText style={styles.currencyText}>{`${currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>
@@ -136,7 +136,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
       <View style={styles.labelColumn}>
         <EdgeText style={styles.labelText}>{walletType != null ? lstrings.fragment_create_wallet_create_wallet : lstrings.wallet_list_add_token}</EdgeText>
       </View>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
@@ -179,7 +179,7 @@ function createAndSelectToken({
             )
 
       // Show the user the token terms modal only once
-      await approveTokenTerms(wallet)
+      await approveTokenTerms(account, wallet.currencyInfo.pluginId)
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)

@@ -1,4 +1,4 @@
-import { AssetId, StakeProviderInfo } from '../types'
+import { StakeAssetInfo, StakeProviderInfo } from '../types'
 import { StakeAdapterConfig } from './policyAdapters/types'
 
 export interface StakePluginInfo {
@@ -23,6 +23,7 @@ export interface StakePolicyConfig<AdapterConfig> {
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
   isStablePool?: boolean
+  isLiquidStaking?: boolean
   mustMaxUnstake?: boolean
   deprecated?: boolean
   claimWarning?: string | null
@@ -30,6 +31,6 @@ export interface StakePolicyConfig<AdapterConfig> {
   unstakeWarning?: string | null
 
   // Assets:
-  stakeAssets: AssetId[]
-  rewardAssets: AssetId[]
+  stakeAssets: StakeAssetInfo[]
+  rewardAssets: StakeAssetInfo[]
 }

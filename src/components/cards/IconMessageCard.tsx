@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonBox } from '../themed/ThemedButtons'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   message: string
@@ -28,7 +29,7 @@ export function IconMessageCard(props: Props) {
 
   return (
     <ButtonBox marginRem={0.5} onPress={onPress}>
-      <CardUi4>
+      <EdgeCard>
         <View style={styles.cardContainer}>
           {typeof iconOrUri === 'string' && imageSrc != null ? <FastImage resizeMode="contain" source={imageSrc} style={styles.icon} /> : iconOrUri}
           <View style={styles.textContainer}>
@@ -42,7 +43,7 @@ export function IconMessageCard(props: Props) {
             </EdgeText>
           </View>
           {onClose == null ? null : (
-            <TouchableOpacity accessible={false} onPress={onClose}>
+            <EdgeTouchableOpacity accessible={false} onPress={onClose}>
               <AntDesignIcon
                 testID={testIds.close}
                 name="close"
@@ -51,10 +52,10 @@ export function IconMessageCard(props: Props) {
                 style={styles.close}
                 accessibilityHint={lstrings.close_hint}
               />
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           )}
         </View>
-      </CardUi4>
+      </EdgeCard>
     </ButtonBox>
   )
 }

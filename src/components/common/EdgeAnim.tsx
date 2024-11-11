@@ -19,6 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
+import { matchJson } from '../../util/matchJson'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
@@ -53,6 +54,8 @@ export const fadeInDown110: Anim = { type: 'fadeInDown', distance: 110 }
 export const fadeInDown120: Anim = { type: 'fadeInDown', distance: 120 }
 export const fadeInDown140: Anim = { type: 'fadeInDown', distance: 140 }
 export const fadeInLeft: Anim = { type: 'fadeInLeft' }
+export const fadeInRight: Anim = { type: 'fadeInRight' }
+
 export const fadeOut: Anim = { type: 'fadeOut' }
 
 type AnimBuilder = typeof ComplexAnimationBuilder
@@ -62,19 +65,23 @@ type AnimTypeStretchIns = 'stretchInY'
 type AnimTypeStretchOuts = 'stretchOutY'
 type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts | AnimTypeStretchIns | AnimTypeStretchOuts
 
-interface Anim {
+export interface Anim {
   type: AnimType
   delay?: number
   duration?: number
   distance?: number
 }
 
-interface Props extends ViewProps {
+interface Props {
   disableAnimation?: boolean
   enter?: Anim
   exit?: Anim
 
   visible?: boolean
+
+  children?: ViewProps['children']
+  style?: ViewProps['style']
+  accessible?: ViewProps['accessible']
 }
 
 const builderMap: Record<AnimType, AnimBuilder> = {
@@ -135,4 +142,20 @@ const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true
   )
 }
 
-export const EdgeAnim = React.memo(EdgeAnimInner)
+const edgeAnimPropsAreEqual = (prevProps: Props, nextProps: Props): boolean => {
+  const { children: prevChildren, ...prevRest } = prevProps
+  const { children: nextChildren, ...nextRest } = nextProps
+  if (
+    prevRest.accessible !== nextRest.accessible ||
+    prevRest.visible !== nextRest.visible ||
+    prevRest.disableAnimation !== nextRest.disableAnimation ||
+    prevChildren !== nextChildren
+  ) {
+    return false
+  }
+  if (prevRest.style !== nextRest.style || prevRest.enter !== nextRest.enter || prevRest.exit !== nextRest.exit) {
+    return matchJson(prevRest, nextRest)
+  }
+  return true
+}
+export const EdgeAnim = React.memo(EdgeAnimInner, edgeAnimPropsAreEqual)

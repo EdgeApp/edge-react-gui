@@ -10,17 +10,9 @@ import { DECIMAL_PRECISION } from '../util/utils'
 
 const UPDATE_TXS_MAX_PROMISES = 10
 
-export async function exportTransactionsToQBO(
-  wallet: EdgeCurrencyWallet,
-  txs: EdgeTransaction[],
-  currencyCode: string,
-  denomination?: string
-): Promise<string> {
-  return exportTransactionsToQBOInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, Date.now())
-}
-
 export async function exportTransactionsToCSV(
   wallet: EdgeCurrencyWallet,
+  defaultIsoFiat: string,
   txs: EdgeTransaction[],
   currencyCode: string,
   denomination?: string
@@ -30,28 +22,30 @@ export async function exportTransactionsToCSV(
     const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
     if (denomObj != null) denomName = denomObj.name
   }
-  return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
+  return exportTransactionsToCSVInner(txs, currencyCode, defaultIsoFiat, denomination, denomName)
 }
 
 export function updateTxsFiat(wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const state = getState()
+    const defaultIsoFiat = state.ui.settings.defaultIsoFiat
+
     const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
-    const { fiatCurrencyCode } = wallet
 
     let promises: Array<Promise<void>> = []
     for (const tx of txs) {
-      const amountFiat = tx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+      const amountFiat = tx.metadata?.exchangeAmount?.[defaultIsoFiat] ?? 0
 
       if (amountFiat === 0) {
         const date = new Date(tx.date * 1000).toISOString()
         promises.push(
-          getHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, date)
+          getHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, date)
             .then(rate => {
               tx.metadata = {
                 ...tx.metadata,
                 exchangeAmount: {
                   ...tx.metadata?.exchangeAmount,
-                  [fiatCurrencyCode]: rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
+                  [defaultIsoFiat]: rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
                 }
               }
             })
@@ -220,15 +214,15 @@ export function getTransferTx(oldEdgeTransaction: EdgeTransaction, fiatCurrencyC
   return [edgeTransaction, newEdgeTransaction]
 }
 
-export function exportTransactionsToQBOInner(
+export function exportTransactionsToQBO(
   edgeTransactions: EdgeTransaction[],
-  currencyCode: string,
   fiatCurrencyCode: string,
   denom: string | undefined,
-  dateNow: number
+  /** For unit testing */
+  testDateNow?: number
 ): string {
   const STMTTRN: any[] = []
-  const now = makeOfxDate(dateNow / 1000)
+  const now = makeOfxDate((testDateNow ?? Date.now()) / 1000)
 
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx, fiatCurrencyCode)

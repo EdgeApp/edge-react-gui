@@ -7,15 +7,13 @@ import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useS
 import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
 import { sprintf } from 'sprintf-js'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -24,17 +22,23 @@ import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
 
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
+type CoinGeckoDataPair = number[]
 
+interface Props {
+  assetId: string // The asset's 'id' as defined by CoinGecko
+  currencyCode: string
+  fiatCurrencyCode: string
+}
 interface ChartDataPoint {
   x: Date
   y: number
 }
-type CoinGeckoDataPair = number[]
 interface CoinGeckoMarketChartRange {
   prices: CoinGeckoDataPair[]
   market_caps: CoinGeckoDataPair[]
   total_volumes: CoinGeckoDataPair[]
 }
+
 const asCoinGeckoDataPair = asTuple(asNumber, asNumber)
 const asCoinGeckoError = asObject({
   status: asObject({
@@ -49,14 +53,11 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
 })
 
 const asCoinGeckoMarketApi = asEither(asCoinGeckoMarketChartRange, asCoinGeckoError)
-interface Props {
-  currencyCode: string
-  assetId: string // The asset's 'id' as defined by CoinGecko
-}
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
-const DATASET_URL_4S = '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
+const MARKET_CHART_ENDPOINT_4S = '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
+
 const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
 const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
 const UNIX_SECONDS_WEEK_OFFSET = 7 * UNIX_SECONDS_DAY_OFFSET
@@ -128,11 +129,9 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode } = params
+  const { assetId, currencyCode, fiatCurrencyCode } = params
 
   // #region Chart setup
-
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
 
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
@@ -150,7 +149,7 @@ const SwipeChartComponent = (params: Props) => {
   const chartWidth = React.useRef(0)
   const chartHeight = React.useRef(0)
 
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
@@ -201,7 +200,8 @@ const SwipeChartComponent = (params: Props) => {
           } else {
             const unixNow = Math.trunc(new Date().getTime() / 1000)
             const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
+            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
+            // Start with the free base URL
             let fetchUrl = `${COINGECKO_URL}${fetchPath}`
             do {
               // Construct the dataset query
@@ -210,13 +210,14 @@ const SwipeChartComponent = (params: Props) => {
               const marketChartRange = asCoinGeckoMarketApi(result)
               if ('status' in marketChartRange) {
                 if (marketChartRange.status.error_code === 429) {
-                  // Rate limit error
+                  // Rate limit error, use our API key as a fallback
                   if (!fetchUrl.includes('x_cg_pro_api_key')) {
                     fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                     continue
                   }
+                } else {
+                  throw new Error(JSON.stringify(marketChartRange))
                 }
-                throw new Error(String(marketChartRange))
               } else {
                 const rawChartData = marketChartRange.prices.map(rawDataPoint => {
                   return {
@@ -237,7 +238,7 @@ const SwipeChartComponent = (params: Props) => {
           }
         } catch (e: any) {
           showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-          console.error(e)
+          console.error(JSON.stringify(e))
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -248,7 +249,8 @@ const SwipeChartComponent = (params: Props) => {
 
   React.useEffect(() => {
     if (chartData.length > 0) {
-      rCachedWidths.current = {}
+      rPriceCursorWidth.current = 0
+      rXTooltipWidth.current = 0
       sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
       sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
     }
@@ -263,8 +265,9 @@ const SwipeChartComponent = (params: Props) => {
 
   const rIsShowCursor = React.useRef<boolean>(false)
   const rXTooltipView = React.useRef<View>(null)
+  const rXTooltipWidth = React.useRef<number>(0)
   const rPriceCursorView = React.useRef<View>(null)
-  const rCachedWidths = React.useRef<{ [target: number]: number }>({})
+  const rPriceCursorWidth = React.useRef<number>(0)
 
   const rMinPriceView = React.useRef<Animated.View>(null)
   const rMaxPriceView = React.useRef<Animated.View>(null)
@@ -400,24 +403,6 @@ const SwipeChartComponent = (params: Props) => {
   })
 
   /**
-   * Natively center align a component across the Y axis origin
-   */
-  const nativeCenterAlignLayout = (ref: React.RefObject<View | Animated.View | undefined>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
-    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
-      const target = layoutChangeEvent.target
-
-      // Store measurements and avoid over-updating if the size of the component
-      // doesn't change significantly
-      const currentWidth = rCachedWidths.current[target]
-      const newWidth = layoutChangeEvent.nativeEvent.layout.width
-      if (currentWidth == null || Math.abs(currentWidth - newWidth) > 1) {
-        rCachedWidths.current[target] = newWidth
-        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
-      }
-    }
-  }
-
-  /**
    * Set the X axis position of the min/max labels. Left or right justify the
    * label according to its horizontal position on the chart
    */
@@ -432,8 +417,8 @@ const SwipeChartComponent = (params: Props) => {
     }
   }
 
-  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
-  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipView))
+  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorWidth, rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
+  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipWidth, rXTooltipView))
 
   const handleAlignMinPriceLabelLayout = useHandler(setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint))
   const handleAlignMaxPriceLabelLayout = useHandler(setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint))
@@ -668,5 +653,22 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+
+/**
+ * Natively center align a component across the Y axis origin
+ */
+const nativeCenterAlignLayout =
+  (widthRef: React.MutableRefObject<number>, ref: React.RefObject<View | Animated.View | undefined>, offset?: number) =>
+  (layoutChangeEvent: LayoutChangeEvent) => {
+    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
+      // Store measurements and avoid over-updating if the size of the component
+      // doesn't change significantly
+      const newWidth = layoutChangeEvent.nativeEvent.layout.width
+      if (Math.abs(widthRef.current - newWidth) > 1) {
+        widthRef.current = newWidth
+        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
+      }
+    }
+  }
 
 export const SwipeChart = React.memo(SwipeChartComponent)

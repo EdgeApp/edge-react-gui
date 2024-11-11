@@ -5,7 +5,7 @@ import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates, WalletListItem } from '../../types/types'
+import { GuiExchangeRates, WalletListAssetItem, WalletListItem } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { normalizeForSearch } from '../../util/utils'
@@ -45,6 +45,7 @@ export function SortedWalletList(props: Props) {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const enabledTokenIds = useEnabledWalletIds(account)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
 
   // Phase 1: Gather the active wallets and tokens.
@@ -53,12 +54,20 @@ export function SortedWalletList(props: Props) {
     const wallet = currencyWallets[walletId]
 
     // Add the wallet itself:
-    wallets.push({
-      key: wallet == null ? `${walletId}-loading` : walletId,
-      tokenId: null,
-      wallet,
-      walletId
-    })
+    if (wallet == null) {
+      wallets.push({
+        type: 'loading',
+        key: `${walletId}-loading`,
+        walletId
+      })
+    } else {
+      wallets.push({
+        type: 'asset',
+        key: walletId,
+        tokenId: null,
+        wallet
+      })
+    }
 
     // Add the tokens:
     if (wallet == null) continue
@@ -67,11 +76,11 @@ export function SortedWalletList(props: Props) {
       const token = allTokens[pluginId][tokenId]
       if (token == null) continue
       wallets.push({
+        type: 'asset',
         key: `${walletId} ${tokenId}`,
         token,
         tokenId,
-        wallet,
-        walletId
+        wallet
       })
     }
   }
@@ -84,7 +93,7 @@ export function SortedWalletList(props: Props) {
         wallets,
         alphabeticalSort(({ token, wallet }) => {
           if (token != null) return token.currencyCode
-          if (wallet != null) return wallet.currencyInfo.currencyCode
+          return wallet.currencyInfo.currencyCode
         })
       )
       break
@@ -94,7 +103,7 @@ export function SortedWalletList(props: Props) {
         wallets,
         alphabeticalSort(({ token, wallet }) => {
           if (token != null) return token.displayName
-          if (wallet != null) return wallet.currencyInfo.displayName
+          return wallet.currencyInfo.displayName
         })
       )
       break
@@ -102,17 +111,14 @@ export function SortedWalletList(props: Props) {
     case 'highest':
       sorted = stableSort(
         wallets,
-        numericSort(item => {
-          const value = getFiat(item, exchangeRates)
-          if (value != null) return -value
-        })
+        numericSort(item => -getFiat(item, defaultIsoFiat, exchangeRates))
       )
       break
 
     case 'lowest':
       sorted = stableSort(
         wallets,
-        numericSort(item => getFiat(item, exchangeRates))
+        numericSort(item => getFiat(item, defaultIsoFiat, exchangeRates))
       )
       break
 
@@ -122,10 +128,7 @@ export function SortedWalletList(props: Props) {
     case 'name':
       sorted = stableSort(
         wallets,
-        alphabeticalSort(({ wallet }) => {
-          if (wallet == null) return
-          return getWalletName(wallet)
-        })
+        alphabeticalSort(item => getWalletName(item.wallet))
       )
       break
   }
@@ -171,10 +174,10 @@ function useEnabledWalletIds(account: EdgeAccount): EnabledTokenIds {
  * putting `undefined` items at the end.
  */
 const alphabeticalSort =
-  (getText: (item: WalletListItem) => string | undefined) =>
+  (getText: (item: WalletListAssetItem) => string) =>
   (a: WalletListItem, b: WalletListItem): number => {
-    const textA = getText(a)
-    const textB = getText(b)
+    const textA = a.type === 'asset' ? getText(a) : undefined
+    const textB = b.type === 'asset' ? getText(b) : undefined
     if (textA != null && textB != null) return textA.localeCompare(textB)
     if (textA == null) return 1
     if (textB == null) return -1
@@ -186,10 +189,10 @@ const alphabeticalSort =
  * putting `undefined` values at the end.
  */
 const numericSort =
-  (getNumber: (item: WalletListItem) => number | undefined) =>
+  (getNumber: (item: WalletListAssetItem) => number) =>
   (a: WalletListItem, b: WalletListItem): number => {
-    const numberA = getNumber(a)
-    const numberB = getNumber(b)
+    const numberA = a.type === 'asset' ? getNumber(a) : undefined
+    const numberB = b.type === 'asset' ? getNumber(b) : undefined
     if (numberA != null && numberB != null) return numberA - numberB
     if (numberA == null) return 1
     if (numberB == null) return -1
@@ -217,9 +220,8 @@ function stableSort<T>(items: T[], compare: (a: T, b: T) => number): T[] {
  * This uses floating-point math for speed,
  * since rates are approximate and big math is super-expensive.
  */
-function getFiat(item: WalletListItem, exchangeRates: GuiExchangeRates): number | undefined {
+function getFiat(item: WalletListAssetItem, isoFiatCurrencyCode: string, exchangeRates: GuiExchangeRates): number {
   const { token, wallet } = item
-  if (wallet == null) return
 
   // The core does not yet report balances by tokenId, just by currencyCode:
   const {
@@ -230,7 +232,7 @@ function getFiat(item: WalletListItem, exchangeRates: GuiExchangeRates): number 
   const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   // Find the rate:
-  const rate = exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`] ?? '0'
+  const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
 
   // Do the conversion:
   return parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
@@ -251,20 +253,26 @@ function matchWalletList(a: WalletListItem[], b: WalletListItem[]): boolean {
 /**
  * Filters a wallet list using a search string.
  */
-export function searchWalletList(list: WalletListItem[], isSearching: boolean, searchText: string): WalletListItem[] {
-  if (!isSearching) return list
+export function searchWalletList(list: WalletListItem[], searchText: string): WalletListItem[] {
+  if (searchText === '') return list
 
   const target = normalizeForSearch(searchText)
   return list.filter(item => {
-    const { token, wallet } = item
-
     // Eliminate loading wallets in search mode:
-    if (wallet == null) return false
+    if (item.type !== 'asset') return false
+    const { token, wallet } = item
 
     // Grab wallet and token information:
     const { currencyCode, displayName } = token == null ? wallet.currencyInfo : token
     const name = getWalletName(wallet)
 
-    return normalizeForSearch(currencyCode).includes(target) || normalizeForSearch(displayName).includes(target) || normalizeForSearch(name).includes(target)
+    const contractAddress = token?.networkLocation?.contractAddress ?? ''
+
+    return (
+      normalizeForSearch(currencyCode).includes(target) ||
+      normalizeForSearch(displayName).includes(target) ||
+      normalizeForSearch(name).includes(target) ||
+      normalizeForSearch(contractAddress).includes(target)
+    )
   })
 }

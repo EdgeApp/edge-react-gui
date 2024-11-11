@@ -1,0 +1,547 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
+[
+  <View
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
+        {
+          "padding": 0,
+        },
+      ]
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4279900698,
+          4279900698,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      onLayout={[Function]}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={0}
+        bbWidth={0}
+        focusable={false}
+        height={0}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        style={
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          }
+        }
+        vbHeight={0}
+        vbWidth={0}
+        width={0}
+      >
+        <RNSVGGroup
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+        >
+          <RNSVGDefs>
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -1,
+                  0.125,
+                  -167772161,
+                  0.25,
+                  -637534209,
+                  0.75,
+                  654311423,
+                  0.875,
+                  184549375,
+                  1,
+                  16777215,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad0"
+              rx="50%"
+              ry="50%"
+            />
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -216279,
+                  0.0588,
+                  -216279,
+                  0.1765,
+                  -167988439,
+                  0.29410000000000003,
+                  -637750487,
+                  0.7646999999999999,
+                  654095145,
+                  0.8824,
+                  184333097,
+                  1,
+                  16560937,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad1"
+              rx="50%"
+              ry="50%"
+            />
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -16719740,
+                  0.4667,
+                  -16719740,
+                  0.5333,
+                  -184491900,
+                  0.6,
+                  -654253948,
+                  0.8667,
+                  637591684,
+                  0.9333,
+                  167829636,
+                  1,
+                  57476,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad2"
+              rx="50%"
+              ry="50%"
+            />
+          </RNSVGDefs>
+          <RNSVGGroup
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            opacity={0.1}
+          >
+            <RNSVGCircle
+              cx="10%"
+              cy="10%"
+              fill={
+                {
+                  "brushRef": "grad0",
+                  "type": 1,
+                }
+              }
+              propList={
+                [
+                  "fill",
+                ]
+              }
+              r={224.73239436619718}
+            />
+            <RNSVGCircle
+              cx="95%"
+              cy="30%"
+              fill={
+                {
+                  "brushRef": "grad1",
+                  "type": 1,
+                }
+              }
+              propList={
+                [
+                  "fill",
+                ]
+              }
+              r={238.7781690140845}
+            />
+            <RNSVGCircle
+              cx="-15%"
+              cy="100%"
+              fill={
+                {
+                  "brushRef": "grad2",
+                  "type": 1,
+                }
+              }
+              propList={
+                [
+                  "fill",
+                ]
+              }
+              r={421.37323943661977}
+            />
+          </RNSVGGroup>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </BVLinearGradient>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexGrow": 1,
+          "flexShrink": 0,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontSize": 28,
+              "fontWeight": "600",
+              "marginBottom": 28,
+              "textAlign": "center",
+              "width": "100%",
+            },
+            null,
+          ]
+        }
+      >
+        Congratulations!
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontSize": 17,
+              "fontWeight": "600",
+              "marginBottom": 34,
+              "maxWidth": 225,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Your exchange is being processed!
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "fontSize": 17,
+                "fontWeight": "600",
+                "marginBottom": 34,
+                "maxWidth": 225,
+                "textAlign": "center",
+              },
+              {
+                "maxWidth": 213,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Processing may take up to 24 hours to complete.
+      </Text>
+    </View>
+  </View>,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
+        },
+      ]
+    }
+  >
+    <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
+      layout={BaseAnimationMock {}}
+    >
+      <View
+        style={
+          {
+            "borderRadius": 16,
+            "elevation": 0,
+            "marginVertical": 6,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 3,
+              "width": 3,
+            },
+            "shadowOpacity": 0.6,
+            "shadowRadius": 4,
+          }
+        }
+      >
+        <BlurView
+          blurAmount={10}
+          blurType="dark"
+          overlayColor="rgba(0, 0, 0, 0)"
+          style={
+            {
+              "backgroundColor": undefined,
+              "borderRadius": 16,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginTop": 0,
+                "padding": 11,
+              },
+              {
+                "opacity": 1,
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexShrink": 1,
+                "justifyContent": "center",
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "height": 79,
+                    "marginRight": 6,
+                    "width": 79,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/notifications/icon-warning.png",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "flexShrink": 1,
+                  "width": "100%",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#F1AA19",
+                      "fontFamily": "Quicksand-Bold",
+                      "fontSize": 17,
+                      "marginBottom": 6,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="warning"
+              >
+                Create Username & Password
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={3}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#F1AA19",
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="warning"
+              >
+                Funds will be lost if your device is lost or Edge is uninstalled.
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>,
+]
+`;

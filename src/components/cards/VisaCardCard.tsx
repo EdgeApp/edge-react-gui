@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { executePluginAction } from '../../actions/PluginActions'
@@ -10,13 +9,14 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 export const IONIA_SUPPORTED_FIATS = ['USD']
 
@@ -25,7 +25,7 @@ export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId
 interface Props {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
-  navigation: NavigationProp<'transactionList'>
+  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
 }
 
 export const VisaCardCard = (props: Props) => {
@@ -36,7 +36,7 @@ export const VisaCardCard = (props: Props) => {
 
   const handlePress = useHandler(() => {
     dispatch(logEvent('Visa_Card_Launch'))
-    dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
+    dispatch(executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')).catch(err => showError(err))
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
@@ -52,14 +52,14 @@ export const VisaCardCard = (props: Props) => {
   return (
     <>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
-        <CardUi4 paddingRem={0}>
-          <TouchableOpacity onPress={handlePress} style={styles.container}>
+        <EdgeCard paddingRem={0}>
+          <EdgeTouchableOpacity onPress={handlePress} style={styles.container}>
             <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>
               {lstrings.rewards_card_call_to_action}
             </EdgeText>
-          </TouchableOpacity>
-        </CardUi4>
+          </EdgeTouchableOpacity>
+        </EdgeCard>
       )}
     </>
   )

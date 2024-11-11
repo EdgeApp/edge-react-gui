@@ -1,12 +1,15 @@
 import { div } from 'biggystring'
+import { asMaybe, asNumber, asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
-import { BooleanMap, EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, MapObject, StringMap } from '../types/types'
+import { EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../types/types'
+import { asIntegerString } from './cleaners/asIntegerString'
 import { getWalletName } from './CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from './utils'
 
@@ -22,22 +25,6 @@ interface DiskletConnectedWallets {
   [fullCurrencyCode: string]: {
     walletId: string
     publicAddress: string
-  }
-}
-
-interface BuyAddressResponse {
-  success: {
-    charge: {
-      pricing: {
-        [currencyCode: string]: {
-          amount: string
-          currency: string
-        }
-      }
-      addresses: {
-        [currencyCode: string]: string
-      }
-    }
   }
 }
 
@@ -302,9 +289,7 @@ export const updatePubAddressesForFioAddress = async (
     })
     if (iteration.publicAddresses.length === limitPerCall) {
       try {
-        isConnection
-          ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
-          : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+        await updatePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses, isConnection ? 'addPublicAddresses' : 'removePublicAddresses')
         await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
         updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
         iteration.publicAddresses = []
@@ -317,9 +302,7 @@ export const updatePubAddressesForFioAddress = async (
 
   if (iteration.publicAddresses.length) {
     try {
-      isConnection
-        ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
-        : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+      await updatePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses, isConnection ? 'addPublicAddresses' : 'removePublicAddresses')
       await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
       updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
     } catch (e: any) {
@@ -331,51 +314,24 @@ export const updatePubAddressesForFioAddress = async (
 }
 
 /**
- * Add public addresses for FIO Address API call method
+ * Update public addresses for FIO Address API call method
  *
  * @param fioWallet
  * @param fioAddress
  * @param publicAddresses
+ * @param action - addPublicAddresses or removePublicAddresses
  * @returns {Promise<void>}
  */
-export const addPublicAddresses = async (
+const updatePublicAddresses = async (
   fioWallet: EdgeCurrencyWallet,
   fioAddress: string,
-  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
+  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>,
+  action: 'addPublicAddresses' | 'removePublicAddresses'
 ) => {
   let fee: string
   let edgeTx: EdgeTransaction
   try {
-    edgeTx = await fioMakeSpend(fioWallet, 'addPublicAddresses', { fioAddress, publicAddresses })
-    fee = edgeTx.networkFee
-  } catch (e: any) {
-    throw new Error(lstrings.fio_get_fee_err_msg)
-  }
-  if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
-  try {
-    await fioSignAndBroadcast(fioWallet, edgeTx)
-  } catch (e: any) {
-    throw new Error(lstrings.fio_connect_wallets_err)
-  }
-}
-
-/**
- * Remove public addresses for FIO Address API call method
- *
- * @param fioWallet
- * @param fioAddress
- * @param publicAddresses
- * @returns {Promise<void>}
- */
-export const removePublicAddresses = async (
-  fioWallet: EdgeCurrencyWallet,
-  fioAddress: string,
-  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
-) => {
-  let fee: string
-  let edgeTx: EdgeTransaction
-  try {
-    edgeTx = await fioMakeSpend(fioWallet, 'removePublicAddresses', { fioAddress, publicAddresses })
+    edgeTx = await fioMakeSpend(fioWallet, action, { fioAddress, publicAddresses })
     fee = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(lstrings.fio_get_fee_err_msg)
@@ -587,10 +543,11 @@ export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<F
   let obtDataRecords: FioObtRecord[] = []
   for (const fioWallet of fioWallets) {
     try {
-      const { obt_data_records: lastRecords } = await fioWallet.otherMethods.getObtData()
-      obtDataRecords = [...obtDataRecords, ...lastRecords]
+      const lastRecords = await fioWallet.otherMethods.fetchObtData()
+
+      obtDataRecords = [...obtDataRecords, ...(lastRecords ?? [])]
     } catch (e: any) {
-      //
+      console.error('getFioObtData error: ', String(e))
     }
   }
 
@@ -613,21 +570,23 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
   return ''
 }
 
-export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain: string): Promise<void> => {
+export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain: string): Promise<string | true> => {
   let isDomainPublic = false
   try {
     isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
   } catch (e: any) {
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
-      throw new Error(lstrings.fio_get_reg_info_domain_err_msg)
+      return lstrings.fio_get_reg_info_domain_err_msg
     }
 
-    throw new Error(lstrings.fio_connect_wallets_err)
+    return lstrings.fio_connect_wallets_err
   }
 
   if (!isDomainPublic) {
-    throw new Error(lstrings.fio_address_register_domain_is_not_public)
+    return lstrings.fio_address_register_domain_is_not_public
   }
+
+  return true
 }
 
 /**
@@ -638,7 +597,7 @@ export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain:
  * @param selectedDomain
  * @param displayDenomination
  * @param isFallback
- * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[key: string]: boolean}, paymentInfo: {[key: string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, paymentInfo: PaymentInfo}>}
  */
 export const getRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -649,10 +608,10 @@ export const getRegInfo = async (
   isFallback: boolean = false
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
   paymentInfo: PaymentInfo
+  bitpayUrl: string
 }> => {
   let activationCost = 0
   let feeValue = 0
@@ -670,14 +629,15 @@ export const getRegInfo = async (
       activationCost,
       feeValue,
       supportedAssets: [{ pluginId: 'fio', tokenId: null }],
-      supportedCurrencies: { [FIO_STR]: true },
       paymentInfo: {
         [FIO_STR]: {
-          amount: `${activationCost}`,
-          nativeAmount: '',
-          address: ''
+          '': {
+            amount: `${activationCost}`,
+            nativeAmount: ''
+          }
         }
-      }
+      },
+      bitpayUrl: ''
     }
   }
   // todo: temporary commented to use fallback referral code by default.
@@ -704,10 +664,10 @@ export const getDomainRegInfo = async (
   displayDenomination: EdgeDenomination
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
-  paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
+  paymentInfo: PaymentInfo
+  bitpayUrl: string
 }> => {
   let activationCost = 0
   let feeValue = 0
@@ -727,8 +687,8 @@ export const getDomainRegInfo = async (
   }
 }
 
-interface PaymentInfo {
-  [currencyCode: string]: { amount: string; address: string; nativeAmount?: string }
+export interface PaymentInfo {
+  [pluginId: string]: { [tokenIdString: string]: { amount: string; nativeAmount: string } }
 }
 
 const buyAddressRequest = async (
@@ -739,48 +699,56 @@ const buyAddressRequest = async (
   activationCost: number
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   paymentInfo: PaymentInfo
+  bitpayUrl: string
 }> => {
   try {
-    const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
-      address,
-      referralCode,
-      publicKey: selectedWallet.publicWalletInfo.keys.publicKey
-    })
+    const buyAddressResponse = asBitpayResponse(
+      await fioPlugin.otherMethods.buyAddressRequest({
+        address,
+        referralCode,
+        publicKey: selectedWallet.publicWalletInfo.keys.publicKey
+      })
+    )
 
-    if (buyAddressResponse.success) {
-      const supportedCurrencies: BooleanMap = { [FIO_STR]: true }
-      const paymentInfo: PaymentInfo = {
-        [FIO_STR]: {
+    const paymentInfo: PaymentInfo = {
+      [FIO_STR]: {
+        '': {
           amount: `${activationCost}`,
-          nativeAmount: '',
-          address: ''
+          nativeAmount: ''
         }
       }
+    }
 
-      const supportedAssets: EdgeAsset[] = []
-      for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
-        const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
-        supportedCurrencies[currencyCode] = true
-        const asset = fioToEdgeMap[currencyKey]
-        if (asset != null) {
-          supportedAssets.push(asset)
-        }
+    const supportedAssets: EdgeAsset[] = []
+    const { id, paymentCodes, paymentSubtotals, paymentDisplaySubTotals } = buyAddressResponse.success.charge
+    for (const currencyKey of Object.keys(paymentCodes)) {
+      // const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
+      const asset = PAYMENT_PROTOCOL_MAP[currencyKey]
+      const amount = asMaybe(asIntegerString)(paymentSubtotals[currencyKey].toString())
 
-        paymentInfo[currencyCode] = {
-          amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
-          address: buyAddressResponse.success.charge.addresses[currencyKey]
-        }
+      if (asset == null || amount == null) {
+        continue
       }
 
-      return {
-        activationCost,
-        supportedAssets,
-        supportedCurrencies,
-        paymentInfo
+      supportedAssets.push(asset)
+      const { pluginId, tokenId } = asset
+
+      if (paymentInfo[pluginId] == null) {
+        paymentInfo[pluginId] = {}
       }
+      paymentInfo[pluginId][tokenId ?? ''] = {
+        amount: paymentDisplaySubTotals[currencyKey].toString(),
+        nativeAmount: paymentSubtotals[currencyKey].toString()
+      }
+    }
+
+    return {
+      activationCost,
+      supportedAssets,
+      paymentInfo,
+      bitpayUrl: `https://bitpay.com/i/${id}`
     }
   } catch (e: any) {
     const errorMessages = {
@@ -947,7 +915,7 @@ export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioN
       lastCheck.setMonth(new Date().getMonth() - 1)
     }
     const now = new Date()
-    return now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()
+    return now.getDate() !== lastCheck.getDate() || now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()
   } catch (e: any) {
     //
   }
@@ -1000,14 +968,13 @@ export const convertEdgeToFIOCodes = (pluginId: string, edgeChainCode: string, e
   return { fioChainCode, fioTokenCode }
 }
 
-export const fioToEdgeMap: MapObject<EdgeAsset> = {
-  bitcoin: { pluginId: 'bitcoin', tokenId: null },
-  bitcoincash: { pluginId: 'bitcoincash', tokenId: null },
-  dai: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
-  dogecoin: { pluginId: 'dogecoin', tokenId: null },
-  ethereum: { pluginId: 'ethereum', tokenId: null },
-  litecoin: { pluginId: 'litecoin', tokenId: null },
-  polygon: { pluginId: 'polygon', tokenId: null },
-  tether: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
-  usdc: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
-}
+const asBitpayResponse = asObject({
+  success: asObject({
+    charge: asObject({
+      id: asString,
+      paymentSubtotals: asObject(asNumber),
+      paymentDisplaySubTotals: asObject(asString),
+      paymentCodes: asObject(asObject(asString))
+    })
+  })
+})

@@ -1,16 +1,17 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { Text } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -18,7 +19,7 @@ import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 interface Props {
-  navigation: NavigationProp<'walletList'>
+  navigation: WalletsTabSceneProps<'walletList'>['navigation']
 
   token?: EdgeToken
   tokenId: EdgeTokenId
@@ -37,8 +38,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
+  const account = useSelector(state => state.core.account)
 
   // callbacks -----------------------------------------------------------
 
@@ -55,18 +55,8 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    if (isLightAccount) {
-      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-        return <BackupForTransferModal bridge={bridge} />
-      })
-        .then((userSel?: BackupForTransferModalResult) => {
-          if (userSel === 'upgrade') {
-            navigation.navigate('upgradeUsername', {})
-          }
-        })
-        .catch(error => showError(error))
-    } else {
-      dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+    if (!checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
+      dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
         .then(activated => {
           if (activated) {
             navigation.navigate('request', { tokenId, walletId: wallet.id })
@@ -78,10 +68,11 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
       .then(async activated => {
+        const { countryCode } = await getFirstOpenInfo()
         if (activated) {
-          navigation.navigate('transactionList', { tokenId, walletId: wallet.id })
+          navigation.navigate('transactionList', { tokenId, walletId: wallet.id, walletName: wallet.name ?? wallet.currencyInfo.displayName, countryCode })
         }
       })
       .catch(err => showError(err))
@@ -89,7 +80,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
       .then(activated => {
         if (activated) {
           navigation.navigate('send2', {
@@ -111,27 +102,27 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+      <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
+      </EdgeTouchableOpacity>
+      <EdgeTouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
         </SwipeableRowIcon>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     </>
   )
 
   const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
     <>
-      <TouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
+      <EdgeTouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
         </SwipeableRowIcon>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+      </EdgeTouchableOpacity>
+      <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     </>
   )
 

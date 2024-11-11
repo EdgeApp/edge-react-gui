@@ -2,7 +2,7 @@ import { div, log10, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -15,14 +15,15 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { DECIMAL_PRECISION } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { MiniButton } from '../themed/MiniButton'
-import { CardUi4 } from '../ui4/CardUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 export interface FlipInputModalResult {
   nativeAmount: string
@@ -187,7 +188,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderFlipInput = () => {
     return (
-      <CardUi4 marginRem={[0, 0.5, 0.5]}>
+      <EdgeCard marginRem={[0, 0.5, 0.5]}>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
           wallet={wallet}
@@ -202,7 +203,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
           <MiniButton label={lstrings.string_max_cap} marginRem={[1, 0, 1]} alignSelf="center" onPress={handleSendMaxAmount} />
         ) : null}
-      </CardUi4>
+      </EdgeCard>
     )
   }
 
@@ -216,17 +217,17 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   }))
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
+    <EdgeModal bridge={bridge} onCancel={handleCloseModal}>
       <View style={styles.flipInput}>{renderFlipInput()}</View>
-      <TouchableWithoutFeedback onPress={handleFeesChange}>
+      <EdgeTouchableWithoutFeedback onPress={handleFeesChange}>
         <View style={styles.fees}>
           {renderFees()}
           {renderExchangeRates()}
           {renderBalance()}
           {renderErrorMessage()}
         </View>
-      </TouchableWithoutFeedback>
-    </ModalUi4>
+      </EdgeTouchableWithoutFeedback>
+    </EdgeModal>
   )
 })
 

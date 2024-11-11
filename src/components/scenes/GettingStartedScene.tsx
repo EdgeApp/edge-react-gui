@@ -1,8 +1,6 @@
-import { InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -22,22 +20,22 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ExperimentConfig } from '../../experimentConfig'
+import { ExperimentConfig, UspSigninCtaType } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { RootSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 const ANIM_DURATION = 1000
 
@@ -45,7 +43,7 @@ export interface GettingStartedParams {
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
 }
 
-interface Props extends EdgeSceneProps<'gettingStarted'> {}
+interface Props extends RootSceneProps<'gettingStarted'> {}
 
 interface SectionData {
   image: ImageProp
@@ -55,55 +53,40 @@ interface SectionData {
   title: string
 }
 
-const slide1 = {
-  image: uspImage0,
-  key: 'slide1',
-  message: lstrings.getting_started_slide_1_message,
-  title: lstrings.getting_started_slide_1_title,
-  footnote: lstrings.getting_started_slide_1_footnote
-}
-const slide1Alt = {
-  image: uspImage0,
-  key: 'slide1Alt',
-  message: lstrings.getting_started_slide_1_message_alt,
-  title: lstrings.getting_started_slide_1_title
-}
-const slide2 = {
-  image: uspImage1,
-  key: 'slide2',
-  message: lstrings.getting_started_slide_2_message,
-  title: lstrings.getting_started_slide_2_title
-}
-const slide3 = {
-  image: uspImage2,
-  key: 'slide3',
-  message: lstrings.getting_started_slide_3_message,
-  title: lstrings.getting_started_slide_3_title
-}
-const slide4 = {
-  image: uspImage3,
-  key: 'slide4',
-  message: lstrings.getting_started_slide_4_message,
-  title: lstrings.getting_started_slide_4_title
-}
-
-const sectionsVariantMap: { [key: string]: SectionData[] } = {
-  default: [slide1, slide2, slide3, slide4],
-  C_UspsMinusWGYC: [slide2, slide3, slide4],
-  D_UspsAltWGYC: [slide1Alt, slide2, slide3, slide4]
-}
+const sections: SectionData[] = [
+  {
+    image: uspImage0,
+    key: 'slide1',
+    message: lstrings.getting_started_slide_1_message,
+    title: lstrings.getting_started_slide_1_title,
+    footnote: lstrings.getting_started_slide_1_footnote
+  },
+  {
+    image: uspImage1,
+    key: 'slide2',
+    message: lstrings.getting_started_slide_2_message,
+    title: lstrings.getting_started_slide_2_title
+  },
+  {
+    image: uspImage2,
+    key: 'slide3',
+    message: lstrings.getting_started_slide_3_message,
+    title: lstrings.getting_started_slide_3_title
+  },
+  {
+    image: uspImage3,
+    key: 'slide4',
+    message: lstrings.getting_started_slide_4_message,
+    title: lstrings.getting_started_slide_4_title
+  }
+]
 
 export const GettingStartedScene = (props: Props) => {
   const { navigation, route } = props
   const dispatch = useDispatch()
   const { experimentConfig } = route.params
-  const { createAccountType, landingType } = experimentConfig
   const context = useSelector(state => state.core.context)
-  const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
-  const localUsers = useWatch(context, 'localUsers')
-  const hasLocalUsers = localUsers.length > 0
-
-  const sections: SectionData[] = sectionsVariantMap[landingType] ?? sectionsVariantMap.default
+  const hasLocalUsers = context.localUsers.length > 0
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -112,9 +95,20 @@ export const GettingStartedScene = (props: Props) => {
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
-  const newAccountRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'new-account' : 'new-light-account'
+  const visitPasswordScene = (): void =>
+    navigation.replace('login', {
+      loginUiInitialRoute: 'login-password',
+      experimentConfig
+    })
 
-  const passwordLoginRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'login-password' : 'login-password-light'
+  const visitNewAccountScene = (): void =>
+    // Android needs replace instead of navigate or the loginUiInitialRoute
+    // doesn't work...
+    navigation.replace('login', {
+      // Only create light accounts if no other accounts exist
+      loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account',
+      experimentConfig
+    })
 
   const handleFinalSwipe = useHandler(() => {
     // This delay is necessary to properly reset the scene since it remains on
@@ -127,9 +121,9 @@ export const GettingStartedScene = (props: Props) => {
 
     // Either route to password login or account creation
     if (hasLocalUsers) {
-      navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
+      visitPasswordScene()
     } else {
-      navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
+      visitNewAccountScene()
     }
   })
 
@@ -139,16 +133,16 @@ export const GettingStartedScene = (props: Props) => {
 
   const handlePressSignIn = useHandler(() => {
     dispatch(logEvent('Welcome_Signin'))
-    navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
+    visitPasswordScene()
   })
 
   const handlePressSignUp = useHandler(() => {
     dispatch(logEvent('Signup_Welcome'))
-    navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
+    visitNewAccountScene()
   })
 
   const handlePressSkip = useHandler(() => {
-    navigation.navigate('login', { experimentConfig })
+    navigation.replace('login', { experimentConfig })
   })
 
   // Redirect to login or new account screen if the user swipes past the last
@@ -162,23 +156,44 @@ export const GettingStartedScene = (props: Props) => {
     }
   )
 
-  // Redirect to login screen if device has memory of accounts
-  // HACK: It's unknown how the localUsers dependency makes the routing work
-  // properly, but use isLoggedIn explicitly to address the bug where this
-  // effect would cause an unwanted navigation while logged in.
-  useEffect(() => {
-    if (localUsers.length > 0 && !isLoggedIn) {
-      navigation.navigate('login', { experimentConfig })
-    }
-  }, [experimentConfig, isLoggedIn, localUsers, navigation])
+  const footerButtons =
+    experimentConfig.uspSigninCta === 'alreadyHaveAccount' ? (
+      <>
+        <ButtonsView
+          layout="column"
+          primary={{
+            label: lstrings.account_get_started,
+            onPress: handlePressSignUp
+          }}
+        />
+        <TertiaryTouchable onPress={handlePressSignIn}>
+          <TertiaryText>
+            {/* eslint-disable-next-line react-native/no-raw-text */}
+            {`${lstrings.getting_started_already_have_an_account} `}
+            <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+          </TertiaryText>
+        </TertiaryTouchable>
+      </>
+    ) : (
+      <ButtonsView
+        primary={{
+          label: lstrings.account_get_started,
+          onPress: handlePressSignUp
+        }}
+        secondary={{
+          label: lstrings.getting_started_sign_in,
+          onPress: handlePressSignIn
+        }}
+      />
+    )
 
   return (
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
-        <Space left horizontal={1} vertical={0.5}>
-          <TouchableOpacity onPress={handlePressSkip}>
+        <Space alignRight horizontalRem={1} verticalRem={0.5}>
+          <EdgeTouchableOpacity onPress={handlePressSkip}>
             <EdgeText>{lstrings.skip}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </Space>
       </SkipButton>
       <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={paginationCount}>
@@ -220,7 +235,7 @@ export const GettingStartedScene = (props: Props) => {
             ))}
           </Pagination>
           <SectionCoverAnimated swipeOffset={swipeOffset}>
-            <Sections swipeOffset={swipeOffset}>
+            <Sections swipeOffset={swipeOffset} uspSigninCta={experimentConfig.uspSigninCta}>
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
@@ -233,17 +248,7 @@ export const GettingStartedScene = (props: Props) => {
                 )
               })}
             </Sections>
-            <ButtonsViewUi4
-              animDistanceStart={40}
-              primary={{
-                label: lstrings.account_get_started,
-                onPress: handlePressSignUp
-              }}
-              tertiary={{
-                label: lstrings.getting_started_button_sign_in,
-                onPress: handlePressSignIn
-              }}
-            />
+            {footerButtons}
           </SectionCoverAnimated>
         </Container>
       </SwipeOffsetDetector>
@@ -255,6 +260,19 @@ export const GettingStartedScene = (props: Props) => {
 // Local Components
 // -----------------------------------------------------------------------------
 
+const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => props => ({
+  marginVertical: theme.rem(0.5),
+  alignItems: 'center'
+}))
+
+const TertiaryText = styled(EdgeText)(theme => props => ({
+  color: theme.textInputTextColorDisabled
+}))
+
+const TappableText = styled(EdgeText)(theme => props => ({
+  color: theme.iconTappable
+}))
+
 const Container = styled(View)({
   flex: 1
 })
@@ -263,14 +281,14 @@ const Container = styled(View)({
 // Skip Button
 //
 
-const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
-  _theme => props =>
-    useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(props.swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
-      }
-    })
-)
+const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
+  const { swipeOffset } = props
+  return useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
+    }
+  })
+})
 
 //
 // Hero
@@ -281,17 +299,20 @@ const HeroContainer = styled(View)({
   alignItems: 'center'
 })
 
-const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => [
-  {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-  useAnimatedStyle(() => ({
-    opacity: interpolate(props.swipeOffset.value, [0, 0.5], [1, 0]),
-    transform: [{ scale: interpolate(props.swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
-  }))
-])
+const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
+  const { swipeOffset } = props
+  return [
+    {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1
+    },
+    useAnimatedStyle(() => ({
+      opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
+      transform: [{ scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
+    }))
+  ]
+})
 
 const WelcomeHeroTitle = styled(Text)(theme => ({
   color: theme.primaryText,
@@ -364,44 +385,52 @@ const Pagination = styled(View)(theme => ({
   marginVertical: theme.rem(0.7)
 }))
 
-const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => [
-  {
-    borderRadius: 10,
-    margin: theme.rem(0.3),
-    height: theme.rem(0.6),
-    width: theme.rem(0.6)
-  },
-  useAnimatedStyle(() => {
-    const delta = 1 - Math.max(0, Math.min(1, Math.abs(props.itemIndex - props.swipeOffset.value)))
-    const opacity = interpolate(delta, [0, 1], [0.5, 1])
-    const backgroundColor = interpolateColor(delta, [0, 1], [theme.icon, theme.iconTappable])
-    return {
-      backgroundColor,
-      opacity
-    }
-  })
-])
+const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+  const themeIcon = theme.icon
+  const themeIconTappable = theme.iconTappable
+  const { itemIndex, swipeOffset } = props
+  return [
+    {
+      borderRadius: 10,
+      margin: theme.rem(0.3),
+      height: theme.rem(0.6),
+      width: theme.rem(0.6)
+    },
+    useAnimatedStyle(() => {
+      const delta = 1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
+      const opacity = interpolate(delta, [0, 1], [0.5, 1])
+      const backgroundColor = interpolateColor(delta, [0, 1], [themeIcon, themeIconTappable])
+      return {
+        backgroundColor,
+        opacity
+      }
+    })
+  ]
+})
 
 //
 // Sections
 //
 
 const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
+  const { swipeOffset } = props
   const themeRem = theme.rem(1)
+  const themeModal = theme.modal
+  const themeModalLikeBackground = theme.modalLikeBackground
   const insets = useSafeAreaInsets()
 
   return [
     {
       alignItems: 'stretch',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       paddingVertical: theme.rem(1),
       paddingBottom: insets.bottom + theme.rem(1),
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
-      const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
-      const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
+      const backgroundColor = interpolateColor(swipeOffset.value, [0, 1], [`${themeModal}00`, themeModalLikeBackground])
+      const paddingVertical = interpolate(swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
+      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {
         backgroundColor,
         paddingVertical,
@@ -411,20 +440,23 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   ]
 })
 
-const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => [
-  {
-    paddingBottom: theme.rem(1)
-  },
-  useAnimatedStyle(() => {
-    const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.5])
-    return {
-      flexGrow
-    }
-  })
-])
+const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number>; uspSigninCta: UspSigninCtaType }>(theme => props => {
+  const { swipeOffset, uspSigninCta } = props
+  return [
+    {
+      paddingBottom: uspSigninCta === 'alreadyHaveAccount' ? theme.rem(1) : theme.rem(-0.5)
+    },
+    useAnimatedStyle(() => {
+      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.5])
+      return {
+        flexGrow
+      }
+    })
+  ]
+})
 
 const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
-  const { swipeOffset, itemIndex } = props
+  const { itemIndex, swipeOffset } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
   const translateWidth = screenWidth / 2

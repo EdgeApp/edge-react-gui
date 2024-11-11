@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -47,14 +48,14 @@ export function MiniButton(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={[styles.button, dynamicStyles]} onPress={handlePress}>
+    <EdgeTouchableOpacity disabled={disabled || pending} style={[styles.button, dynamicStyles]} onPress={handlePress}>
       {pending ? null : (
         <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={styles.label}>
           {label}
         </Text>
       )}
       {!pending ? null : <ActivityIndicator color={theme.secondaryButtonText} style={styles.spinner} />}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

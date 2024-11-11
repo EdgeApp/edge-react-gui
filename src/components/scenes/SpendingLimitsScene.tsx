@@ -1,24 +1,24 @@
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 
-interface Props extends EdgeSceneProps<'spendingLimits'> {}
+interface Props extends EdgeAppSceneProps<'spendingLimits'> {}
 
 export const SpendingLimitsScene = (props: Props) => {
   const { navigation } = props
@@ -27,7 +27,7 @@ export const SpendingLimitsScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const currencySymbol = useSelector(state => getSymbolFromCurrency(state.ui.settings.defaultFiat))
+  const currencySymbol = useSelector(state => getFiatSymbol(state.ui.settings.defaultFiat))
   const transactionSpendingLimit = useSelector(state => state.ui.settings.spendingLimits.transaction)
 
   const [password, setPassword] = React.useState('')
@@ -40,12 +40,12 @@ export const SpendingLimitsScene = (props: Props) => {
 
   const handleSubmitAsync = async () => {
     const isAuthorized = await account.checkPassword(password)
-    if (!isAuthorized) return Alert.alert(lstrings.password_check_incorrect_password_title)
+    if (!isAuthorized) return showToast(lstrings.password_check_incorrect_password_title)
 
     const spendingLimits = {
       transaction: {
         isEnabled: transactionIsEnabled,
-        amount: parseFloat(transactionAmount)
+        amount: zeroString(transactionAmount) ? 0 : parseFloat(transactionAmount)
       }
     }
     await writeSpendingLimits(account, spendingLimits)
@@ -61,8 +61,7 @@ export const SpendingLimitsScene = (props: Props) => {
     handleSubmitAsync().catch(err => showError(err))
   })
 
-  const amount = parseFloat(transactionAmount)
-  const enableSlider = password.length > 8 && !isNaN(amount) && amount > 0
+  const enableSlider = password.length > 8
   return (
     <SceneWrapper>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>

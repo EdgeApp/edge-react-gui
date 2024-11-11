@@ -6,7 +6,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -21,7 +21,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
   }
   accessible={true}
   collapsable={false}
-  focusable={false}
+  focusable={true}
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
@@ -59,6 +59,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -75,7 +76,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           ]
         }
       >
-        
+        
       </Text>
     </View>
     <View
@@ -268,7 +269,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             ]
           }
         >
-          0.00
+          $0.00
         </Text>
       </View>
     </View>
@@ -282,7 +283,7 @@ exports[`WalletListSortableRow should render with loading wallet 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -297,7 +298,7 @@ exports[`WalletListSortableRow should render with loading wallet 1`] = `
   }
   accessible={true}
   collapsable={false}
-  focusable={false}
+  focusable={true}
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}

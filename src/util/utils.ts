@@ -1,14 +1,5 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import {
-  EdgeCurrencyConfig,
-  EdgeCurrencyInfo,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgePluginMap,
-  EdgeToken,
-  EdgeTokenMap,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeDenomination, EdgePluginMap, EdgeToken, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
@@ -20,14 +11,13 @@ import {
   FEE_COLOR_THRESHOLD,
   FIAT_CODES_SYMBOLS,
   FIAT_PRECISION,
-  getSymbolFromCurrency,
+  getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -187,7 +177,7 @@ export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
       multiplier: '0'
     }
   }
-  const symbol = getSymbolFromCurrency(currencyCode)
+  const symbol = getFiatSymbol(currencyCode)
   const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,
@@ -244,6 +234,7 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
   const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
+  if (isNaN(exchangeRateOrderOfMagnitude)) return 0
 
   // Get the exchange rate in tenth of pennies
   const exchangeRateString = mul(exchangeRateOrderOfMagnitude.toString(), mul(params.secondaryExchangeMultiplier, '10'))
@@ -267,6 +258,18 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
   const daysBetween = msBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
+export const monthsBetween = (startDate: Date, endDate: Date): number => {
+  let months
+  months = (endDate.getFullYear() - startDate.getFullYear()) * 12
+  months += endDate.getMonth() - startDate.getMonth()
+
+  // Adjust for days in the month
+  if (endDate.getDate() < startDate.getDate()) {
+    months--
+  }
+
+  return months <= 0 ? 0 : months
+}
 
 export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout: Promise<T> = new Promise((resolve, reject) => {
@@ -282,7 +285,7 @@ export async function snooze(ms: number): Promise<void> {
 }
 
 let prevTotal = '0'
-export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
+export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): string => {
   const log: string[] = ['', '']
   let total = '0'
   const { exchangeRates } = state
@@ -298,7 +301,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
       if (currencyCode !== wallet.currencyInfo.currencyCode) {
-        const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
+        const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
         if (tokenId == null) {
           log.push(`LogTot: No tokenId for ${currencyCode}`)
           continue
@@ -323,10 +326,10 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   if (total !== prevTotal) {
     // Use for troubleshooting incorrect balance issues. Disable for now as it's pretty noisy
-    // console.log(log.join('\n'))
+    // console.warn(log.join('\n'))
   }
   prevTotal = total
-  return Number(total)
+  return total
 }
 
 export const getYesterdayDateRoundDownHour = () => {
@@ -412,14 +415,14 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-  const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
@@ -433,7 +436,6 @@ export const convertTransactionFeeToDisplayFee = (
     const cryptoFeeExchangeDenomAmount = feeNativeAmount ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount) : ''
     const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
     const cryptoAmount = mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-    const { currencyCode } = wallet.currencyInfo
     const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
@@ -588,9 +590,9 @@ export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: nu
 export const formatLargeNumberString = (num: number): string => {
   const absNum = Math.abs(num)
   if (absNum >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + ' Bn'
+    return (num / 1000000000).toFixed(2) + ' Bn'
   } else if (absNum >= 1000000) {
-    return (num / 1000000).toFixed(1) + ' M'
+    return (num / 1000000).toFixed(2) + ' M'
   } else {
     return num.toString()
   }
@@ -598,9 +600,6 @@ export const formatLargeNumberString = (num: number): string => {
 
 export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
 export const datelog = (...args: any) => console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
-export const makeUuid = () => {
-  return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
-}
 
 export const base58ToUuid = (base58String: string): string => {
   const bytes = base58.parse(base58String)
@@ -651,4 +650,12 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
 export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
   return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
+}
+
+export const removeIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.replace('iso:', '')
+}
+
+export const getDisplayUsername = (loginId: string, username?: string) => {
+  return username == null ? sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3)) : username
 }

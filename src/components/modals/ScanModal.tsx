@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, TouchableOpacity, View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 import { launchImageLibrary } from 'react-native-image-picker'
@@ -13,14 +13,15 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { logActivity } from '../../util/logger'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showDevError, showError, showToast } from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
@@ -75,7 +76,14 @@ export const ScanModal = (props: Props) => {
   const handleTextInput = async () => {
     triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
-      <TextInputModal autoFocus={textModalAutoFocus} bridge={bridge} inputLabel={textModalHint} message={textModalBody} title={textModalTitle} />
+      <TextInputModal
+        autoFocus={textModalAutoFocus}
+        bridge={bridge}
+        inputLabel={textModalHint}
+        message={textModalBody}
+        title={textModalTitle}
+        autoCapitalize="none"
+      />
     ))
 
     if (uri != null) {
@@ -93,14 +101,14 @@ export const ScanModal = (props: Props) => {
         if (result.didCancel) return
 
         if (result.errorMessage) {
-          showError(result.errorMessage)
+          showDevError(result.errorMessage)
           return
         }
 
         const asset = result.assets != null ? result.assets[0] : undefined
 
         if (asset == null) {
-          showWarning(lstrings.scan_camera_missing_qrcode)
+          showToast(lstrings.scan_camera_missing_qrcode)
           return
         }
 
@@ -109,7 +117,7 @@ export const ScanModal = (props: Props) => {
         })
           .then(response => {
             if (response.values.length === 0) {
-              showWarning(lstrings.scan_camera_missing_qrcode)
+              showToast(lstrings.scan_camera_missing_qrcode)
               return
             }
 
@@ -117,7 +125,7 @@ export const ScanModal = (props: Props) => {
             bridge.resolve(response.values[0])
           })
           .catch(error => {
-            showError(error)
+            showDevError(error)
           })
       }
     ).catch(err => showError(err))
@@ -174,18 +182,18 @@ export const ScanModal = (props: Props) => {
             <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
-                <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
+                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleFlash}>
                   <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
                   <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+                </EdgeTouchableOpacity>
+                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
                   <Ionicon style={styles.icon} name="albums-outline" />
                   <EdgeText>{lstrings.fragment_send_album}</EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+                </EdgeTouchableOpacity>
+                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
                   <Ionicon style={styles.icon} name="pencil-outline" />
                   <EdgeText>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-                </TouchableOpacity>
+                </EdgeTouchableOpacity>
               </View>
             </View>
           </View>
@@ -195,7 +203,7 @@ export const ScanModal = (props: Props) => {
 
     return (
       <View style={styles.cameraPermissionContainer}>
-        <ModalMessage>{lstrings.scan_camera_permission_denied}</ModalMessage>
+        <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
         <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={1} />
       </View>
     )

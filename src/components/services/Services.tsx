@@ -1,33 +1,35 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { Platform } from 'react-native'
+import { BatteryOptEnabled, RequestDisableOptimization } from 'react-native-battery-optimization-check'
+import { usePowerState } from 'react-native-device-info'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
-import { checkCompromisedKeys, updateWalletsRequest } from '../../actions/WalletActions'
+import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
-import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
+import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { isMaestro } from '../../util/maestro'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
-import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
-import { PasswordReminderModal } from '../modals/PasswordReminderModal'
+import { AlertDropdown } from '../navigation/AlertDropdown'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
-import { Airship } from './AirshipInstance'
+import { Airship, showDevError } from './AirshipInstance'
 import { AutoLogout } from './AutoLogout'
 import { ContactsLoader } from './ContactsLoader'
-import { DeepLinkingManager } from './DeepLinkingManager'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager'
+import { FioService } from './FioService'
 import { LoanManagerService } from './LoanManagerService'
 import { NetworkActivity } from './NetworkActivity'
 import { PasswordReminderService } from './PasswordReminderService'
@@ -41,7 +43,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-const REFRESH_INFO_SERVER_MS = 60000
+const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
 
 const FIO_CREATE_HANDLE_ITEM_ID = 'fioCreateHandleRecord'
 const asFioCreateHandleRecord = asJSON(
@@ -50,6 +52,8 @@ const asFioCreateHandleRecord = asJSON(
   })
 )
 
+let isFioModalShown = false
+
 /**
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
@@ -57,11 +61,15 @@ const asFioCreateHandleRecord = asJSON(
 export function Services(props: Props) {
   const dispatch = useDispatch()
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
-  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+  const powerState = usePowerState()
   const { navigation } = props
 
   // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
   const maybeShowFioHandleModal = useHandler(async (account: EdgeAccount) => {
+    // HACK: Latest React Navigation causes multiple mounts
+    if (isFioModalShown) return
+    isFioModalShown = true
+
     const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
     const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
 
@@ -90,14 +98,11 @@ export function Services(props: Props) {
   // Methods to call immediately after login:
   useAsyncEffect(
     async () => {
-      // Show the password reminder on mount if required:
-      if (needsPasswordCheck && !isMaestro()) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
-      } else if (account != null) {
+      if (account != null) {
         await maybeShowFioHandleModal(account)
       }
     },
-    [account, maybeShowFioHandleModal, needsPasswordCheck],
+    [account, maybeShowFioHandleModal],
     'Services 1'
   )
 
@@ -111,7 +116,7 @@ export function Services(props: Props) {
         console.warn('registerNotificationsV2 error:', e)
       })
 
-      await dispatch(updateWalletsRequest()).catch(err => console.warn(err))
+      await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
       await dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
@@ -124,11 +129,32 @@ export function Services(props: Props) {
     'Services 2'
   )
 
+  useAsyncEffect(
+    async () => {
+      if (Platform.OS !== 'android' || !powerState.lowPowerMode) {
+        return
+      }
+
+      const batteryOptEnabled = await BatteryOptEnabled()
+      if (!batteryOptEnabled) {
+        return
+      }
+      console.warn('Battery saver mode enabled and battery optimization is disabled')
+      await Airship.show(bridge => {
+        const onPress = async () => {
+          await RequestDisableOptimization()
+          bridge.resolve()
+        }
+        return <AlertDropdown bridge={bridge} onPress={onPress} message={lstrings.warning_battery_saver} warning persistent />
+      }).catch(e => showDevError(e))
+    },
+    [powerState],
+    'Services 3'
+  )
+
   // Methods to call periodically
   useRefresher(
     async () => {
-      makeStakePlugins().catch(err => console.warn(err))
-      updateAssetOverrides().catch(err => console.warn(err))
       dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
@@ -142,10 +168,10 @@ export function Services(props: Props) {
       {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
       <AutoLogout />
       <ContactsLoader />
-      <DeepLinkingManager navigation={navigation} />
       {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
+      {account == null ? null : <FioService account={account} navigation={navigation} />}
       <PermissionsManager />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />

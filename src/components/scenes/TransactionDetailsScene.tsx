@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
@@ -19,11 +19,17 @@ import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
-import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor } from '../../util/utils'
-import { getMemoTitle } from '../../util/validateMemos'
+import { getMemoTitle } from '../../util/memoUtils'
+import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor, removeIsoPrefix } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
+import { EdgeCard } from '../cards/EdgeCard'
+import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
+import { SwapDetailsCard } from '../cards/SwapDetailsCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -31,30 +37,25 @@ import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
+import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
-import { AccentColors } from '../ui4/DotsBackground'
-import { FiatExchangeDetailsCard } from '../ui4/FiatExchangeDetailsCard'
-import { RowUi4 } from '../ui4/RowUi4'
-import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
-import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
 
-interface Props extends EdgeSceneProps<'transactionDetails'> {
+interface Props extends EdgeAppSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
 }
 
 export interface TransactionDetailsParams {
   edgeTransaction: EdgeTransaction
   walletId: string
+  onDone?: () => void
 }
 
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { edgeTransaction: transaction, walletId } = route.params
+  const { edgeTransaction: transaction, walletId, onDone } = route.params
   const { currencyCode, metadata, nativeAmount, date, txid, tokenId } = transaction
   const { currencyInfo } = wallet
 
@@ -83,9 +84,10 @@ const TransactionDetailsComponent = (props: Props) => {
   // #region Crypto Fiat Rows
 
   // Look up wallet stuff:
-  const isoFiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
-  const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
+  const walletName = useWatch(wallet, 'name')
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   // Look up transaction stuff:
   const absoluteAmount = abs(nativeAmount)
@@ -93,17 +95,17 @@ const TransactionDetailsComponent = (props: Props) => {
   // Look up the current price:
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const absExchangeAmount = convertNativeToExchange(exchangeDenom.multiplier)(absoluteAmount)
-  const currentFiat = useSelector(state =>
-    parseFloat(convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, absExchangeAmount))
-  )
+  const currentFiat = useSelector(state => parseFloat(convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, defaultIsoFiat, absExchangeAmount)))
 
   // Look up the historical price:
-  const isoDate = new Date(date * 1000).toISOString()
-  const historicRate = useHistoricalRate(`${currencyCode}_${isoFiatCurrencyCode}`, isoDate)
+  const dateObj = new Date(date * 1000)
+  const dateString = dateObj.toLocaleString()
+  const isoDate = dateObj.toISOString()
+  const historicRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
-  const metadataFiat = localMetadata.exchangeAmount?.[wallet.fiatCurrencyCode]
+  const metadataFiat = localMetadata.exchangeAmount?.[defaultIsoFiat]
   const originalFiat = metadataFiat == null || metadataFiat === 0 ? historicFiat : Math.abs(metadataFiat)
 
   // Percent difference:
@@ -119,11 +121,12 @@ const TransactionDetailsComponent = (props: Props) => {
       <TextInputModal
         bridge={bridge}
         initialValue={originalFiatText}
-        inputLabel={fiatCurrencyCode}
+        inputLabel={defaultFiat}
         returnKeyType="done"
         keyboardType="numeric"
         submitLabel={lstrings.string_save}
-        title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
+        textSizeRem={1.5}
+        title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)}
       />
     ))
       .then(async inputText => {
@@ -137,10 +140,12 @@ const TransactionDetailsComponent = (props: Props) => {
         // Check for NaN, Infinity, and 0:
         if (JSON.stringify(amountFiat) === 'null') return
 
-        await onSaveTxDetails({ exchangeAmount: { [wallet.fiatCurrencyCode]: amountFiat } })
+        await onSaveTxDetails({ exchangeAmount: { [defaultIsoFiat]: amountFiat } })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   })
+
+  const handleDone = useHandler(() => (onDone == null ? navigation.pop() : onDone()))
 
   // #endregion Crypto Fiat Rows
 
@@ -325,8 +330,8 @@ const TransactionDetailsComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-        <CardUi4>
-          <RowUi4
+        <EdgeCard>
+          <EdgeRow
             rightButtonType="editable"
             icon={
               thumbnailPath ? (
@@ -339,20 +344,20 @@ const TransactionDetailsComponent = (props: Props) => {
             onPress={openPersonInput}
           >
             <EdgeText>{personName}</EdgeText>
-          </RowUi4>
-        </CardUi4>
+          </EdgeRow>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-        <CardUi4 sections>
+        <EdgeCard sections>
           <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-          <RowUi4 rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
+          <EdgeRow rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)} onPress={handleEdit}>
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{originalFiatText}</EdgeText>
             </View>
-          </RowUi4>
-          <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
+          </EdgeRow>
+          <EdgeRow rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{currentFiatText}</EdgeText>
@@ -360,52 +365,58 @@ const TransactionDetailsComponent = (props: Props) => {
                 <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
               )}
             </View>
-          </RowUi4>
-          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          </EdgeRow>
+          <EdgeRow title={lstrings.fio_date_label} body={dateString} />
+          {walletName != null ? <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} /> : null}
+
           {acceleratedTx == null ? null : (
-            <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
+            <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
           )}
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-        <CardUi4 sections>
-          <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
-          <RowUi4
+        <EdgeCard sections>
+          <EdgeRow rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
+          <EdgeRow
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
             body={localMetadata.notes == null || localMetadata.notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : localMetadata.notes}
             onPress={openNotesInput}
           />
           {transaction.memos?.map((memo, i) =>
-            memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
+            memo.hidden === true ? null : <EdgeRow body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
           )}
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
-      {recipientsAddresses === '' ? null : (
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
-          <CardUi4>
-            <RowUi4 maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
-          </CardUi4>
-        </EdgeAnim>
-      )}
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
       </EdgeAnim>
+
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {fiatAction == null || assetAction == null ? null : (
           <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
         )}
       </EdgeAnim>
+
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+        <EdgeCard sections>
+          <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          {recipientsAddresses === '' ? null : (
+            <EdgeRow maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+          )}
+        </EdgeCard>
+      </EdgeAnim>
+
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
       </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-        <ButtonsViewUi4
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
+        <ButtonsView
           layout="column"
           primary={{
-            onPress: navigation.pop,
+            onPress: handleDone,
             label: lstrings.string_done_cap
           }}
           parentType="scene"

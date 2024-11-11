@@ -4,13 +4,14 @@ import { useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
@@ -23,7 +24,8 @@ import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 interface Props {
   footer?: React.ComponentType<{}> | React.ReactElement
   header?: React.ComponentType<{}> | React.ReactElement
-  navigation: NavigationProp<'walletList'>
+  navigation: WalletsTabSceneProps<'walletList'>['navigation']
+
   searching: boolean
   searchText: string
   insetStyle: InsetStyle
@@ -65,13 +67,24 @@ function WalletListSwipeableComponent(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
-    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      .then(() => navigation.navigate('transactionList', { walletId, tokenId }))
+    const wallet = account.currencyWallets[walletId]
+    const { countryCode } = await getFirstOpenInfo()
+    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
+      .then(
+        activationNotRequired =>
+          activationNotRequired &&
+          navigation.navigate('transactionList', {
+            walletId,
+            tokenId,
+            walletName: wallet.name ?? wallet.currencyInfo.displayName,
+            countryCode
+          })
+      )
       .finally(onReset)
   })
 
   // Filter based on the search text:
-  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
+  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searchText), [sortedWalletList, searchText])
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {

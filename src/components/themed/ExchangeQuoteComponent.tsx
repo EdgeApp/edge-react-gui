@@ -9,11 +9,13 @@ import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { DECIMAL_PRECISION } from '../../util/utils'
-import { CurrencyRow } from '../data/row/CurrencyRow'
+import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
+import { FiatText } from '../text/FiatText'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -35,14 +37,11 @@ export const ExchangeQuote = (props: Props) => {
 
   // Fees are assumed to be denominated in the native currency
   const feeNativeAmount = networkFee.nativeAmount
-  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: null, withSymbol: false })
-  const {
-    currencyCode: parentCurrencyCode,
-    denomination: parentDenomination,
-    isoFiatCurrencyCode
-  } = useTokenDisplayData({
+  const feeTokenId = getWalletTokenId(fromWallet, networkFee.currencyCode)
+  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: feeTokenId, withSymbol: false })
+  const { denomination: feeDenomination, isoFiatCurrencyCode } = useTokenDisplayData({
     wallet: fromWallet,
-    tokenId: null
+    tokenId: feeTokenId
   })
 
   const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({
@@ -52,8 +51,8 @@ export const ExchangeQuote = (props: Props) => {
 
   const feeFiatText = useFiatText({
     autoPrecision: true,
-    cryptoCurrencyCode: parentCurrencyCode,
-    cryptoExchangeMultiplier: parentDenomination.multiplier,
+    cryptoCurrencyCode: networkFee.currencyCode,
+    cryptoExchangeMultiplier: feeDenomination.multiplier,
     isoFiatCurrencyCode,
     nativeCryptoAmount: feeNativeAmount,
     hideFiatSymbol: true,
@@ -61,8 +60,8 @@ export const ExchangeQuote = (props: Props) => {
   })
 
   const feeFiatAmount = useSelector(state => {
-    const cryptoAmount = div(feeNativeAmount, parentDenomination.multiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, parentCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const cryptoAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, networkFee.currencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
   const fromFiatAmount = useSelector(state => {
@@ -70,8 +69,13 @@ export const ExchangeQuote = (props: Props) => {
     return convertCurrency(state, fromCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
   const totalFiatText = `${formatFiatString({ fiatAmount: add(feeFiatAmount, fromFiatAmount) })} ${fiatCurrencyCode}`
+
+  const minCryptoAmountText = useCryptoText({ wallet: toWallet, tokenId: toTokenId, nativeAmount: quote.minReceiveAmount ?? '0', withSymbol: false })
+  const minFiatAmountText = (
+    <FiatText wallet={toWallet} tokenId={toTokenId} nativeCryptoAmount={quote.minReceiveAmount ?? '0'} hideFiatSymbol appendFiatCurrencyCode />
+  )
 
   const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {
     return (
@@ -101,15 +105,33 @@ export const ExchangeQuote = (props: Props) => {
           )}
         </View>
       )
+    } else if (quote.minReceiveAmount != null) {
+      // Show the minimum receive amount
+      return (
+        <View style={styles.bottomContainer}>
+          {renderRow(
+            <EdgeText style={styles.bottomText}>{lstrings.swap_minimum_receive_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>{minCryptoAmountText}</EdgeText>
+          )}
+          {renderRow(<></>, <EdgeText style={styles.bottomText}>({minFiatAmountText})</EdgeText>)}
+        </View>
+      )
+    } else {
+      return null
     }
-    return null
   }
 
   return (
-    <CardUi4>
-      <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0.5} nativeAmount={nativeAmount} />
+    <EdgeCard>
+      <CurrencyRow
+        wallet={isFrom ? fromWallet : toWallet}
+        tokenId={isFrom ? fromTokenId : toTokenId}
+        marginRem={0.5}
+        nativeAmount={nativeAmount}
+        hideBalance={false}
+      />
       {renderBottom()}
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

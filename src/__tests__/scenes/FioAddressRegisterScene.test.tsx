@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressRegister } from '../../components/scenes/Fio/FioAddressRegisterScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressRegister', () => {
   it('should render with loading props', () => {
@@ -23,7 +23,7 @@ describe('FioAddressRegister', () => {
 
     const actual = renderer.render(
       <FioAddressRegister
-        {...fakeSceneProps('fioAddressRegister', {})}
+        {...fakeEdgeAppSceneProps('fioAddressRegister', undefined)}
         fioWallets={[fakeWallet]}
         fioPlugin={
           {

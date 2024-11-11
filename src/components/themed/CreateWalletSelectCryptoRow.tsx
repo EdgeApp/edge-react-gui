@@ -1,13 +1,14 @@
 import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -48,14 +49,14 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   })
 
   return (
-    <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
-      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+    <EdgeTouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
+      <CryptoIcon marginRem={0.5} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
       <View style={styles.childrenContainer}>{rightSide}</View>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
@@ -65,7 +66,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: theme.rem(4.25)
+    minHeight: theme.rem(4.25),
+    paddingHorizontal: theme.rem(0.5),
+    marginHorizontal: -theme.rem(0.5)
   },
   // Data containers //
   // Details Container
@@ -73,7 +76,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    marginRight: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   // Children (Right part) Container
   childrenContainer: {

@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
@@ -13,6 +14,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { SceneButtons } from '../../buttons/SceneButtons'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -20,10 +22,8 @@ import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { MainButton } from '../../themed/MainButton'
-import { SceneHeader } from '../../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
-import { StyledButtonContainer } from '../../ui4/ButtonsViewUi4'
 
 interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
@@ -57,6 +57,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
+
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
@@ -74,6 +76,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   useAsyncEffect(
     async () => {
+      setCountryCode((await getFirstOpenInfo()).countryCode)
+
       let sp: StakePosition
       try {
         if (stakePosition == null) {
@@ -98,7 +102,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
     const sceneTitleMap = {
-      stake: getPolicyTitleName(stakePolicy),
+      stake: getPolicyTitleName(stakePolicy, countryCode),
       claim: lstrings.stake_claim_rewards,
       unstake: lstrings.stake_unstake,
       unstakeAndClaim: lstrings.stake_unstake_claim,
@@ -126,14 +130,14 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : allocationType === 'earned' ? lstrings.stake_s_earned : lstrings.stake_s_unstaked
-    const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
+    const title = `${sprintf(titleBase, currencyCode)}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
-  const title = React.useMemo(() => getPolicyTitleName(stakePolicy), [stakePolicy])
+  const title = React.useMemo(() => getPolicyTitleName(stakePolicy, countryCode), [stakePolicy, countryCode])
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
@@ -146,15 +150,13 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
-      <SceneHeader title={title} withTopMargin />
-      <View style={styles.card}>
-        <StakingReturnsCard
-          fromCurrencyLogos={policyIcons.stakeAssetUris}
-          toCurrencyLogos={policyIcons.rewardAssetUris}
-          apy={stakePolicy.apy}
-          stakeProviderInfo={stakePolicy.stakeProviderInfo}
-        />
-      </View>
+      <SceneHeaderUi4 title={title} />
+      <StakingReturnsCard
+        fromCurrencyLogos={policyIcons.stakeAssetUris}
+        toCurrencyLogos={policyIcons.rewardAssetUris}
+        apy={stakePolicy.apy}
+        stakeProviderInfo={stakePolicy.stakeProviderInfo}
+      />
       {stakePosition == null ? (
         <>
           <View style={styles.shimmer}>
@@ -173,34 +175,42 @@ const StakeOverviewSceneComponent = (props: Props) => {
         }
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
-      <StyledButtonContainer layout="column">
-        <MainButton label={lstrings.stake_stake_more_funds} disabled={!canStake} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
-        {stakePolicy.hideClaimAction ? null : (
-          <MainButton label={lstrings.stake_claim_rewards} disabled={!canClaim} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-        )}
-        {stakePolicy.hideUnstakeAndClaimAction ? null : (
-          <MainButton
-            label={lstrings.stake_unstake_claim}
-            disabled={!canUnstakeAndClaim}
-            type="escape"
-            onPress={handleModifyPress('unstakeAndClaim')}
-            marginRem={0.5}
-          />
-        )}
-        {stakePolicy.hideUnstakeAction ? null : (
-          <MainButton label={lstrings.stake_unstake} disabled={!canUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
-        )}
-      </StyledButtonContainer>
+      <SceneButtons
+        primary={{
+          label: lstrings.fragment_stake_label,
+          disabled: !canStake,
+          onPress: handleModifyPress('stake')
+        }}
+        secondary={
+          stakePolicy.hideClaimAction
+            ? undefined
+            : {
+                label: lstrings.stake_claim_rewards,
+                disabled: !canClaim,
+                onPress: handleModifyPress('claim')
+              }
+        }
+        tertiary={
+          stakePolicy.hideUnstakeAndClaimAction
+            ? stakePolicy.hideUnstakeAction
+              ? undefined
+              : {
+                  label: lstrings.stake_unstake,
+                  disabled: !canUnstake,
+                  onPress: handleModifyPress('unstake')
+                }
+            : {
+                label: lstrings.stake_unstake_claim,
+                disabled: !canUnstakeAndClaim,
+                onPress: handleModifyPress('unstakeAndClaim')
+              }
+        }
+      />
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  card: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: theme.rem(0.5)
-  },
   shimmer: {
     height: theme.rem(3),
     marginLeft: theme.rem(1),

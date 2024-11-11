@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { useMemo } from 'react'
-import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Platform, Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -19,7 +19,8 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -28,9 +29,9 @@ import { NumericInput } from './NumericInput'
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
 
-export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' | 'none' // Defaults to 'done'
 
-export interface FilledTextInputProps extends SpaceProps {
+export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
   value: string
   error?: string
@@ -43,11 +44,14 @@ export interface FilledTextInputProps extends SpaceProps {
   // Appearance:
   clearIcon?: boolean
   iconComponent?: AnimatedIconComponent | null
-  multiline?: boolean // Defaults to 'false'
+  /** Defaults to 'false' */
+  multiline?: boolean
   scale?: SharedValue<number>
   showSpinner?: boolean
-  prefix?: string // Text input is left-left justified with a persistent prefix
-  suffix?: string // Text input is right-right justified with a persistent suffix
+  /** Text input is left-left justified with a persistent prefix */
+  prefix?: string
+  /** Text input is right-right justified with a persistent suffix */
+  suffix?: string
   textsizeRem?: number
 
   // Callbacks:
@@ -57,26 +61,51 @@ export interface FilledTextInputProps extends SpaceProps {
   onFocus?: () => void
 
   // Other React Native TextInput properties:
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
-  autoCorrect?: boolean // Defaults to 'true'
-  blurOnSubmit?: boolean // Defaults to 'true'
+  /**  Defaults to 'sentences' */
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
+  autoComplete?: TextInputProps['autoComplete']
+  /** Defaults to 'true' */
+  autoCorrect?: boolean
+  /** Defaults to 'true' */
+  blurOnSubmit?: boolean
   inputAccessoryViewID?: string
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'visible-password' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
-  returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
-  secureTextEntry?: boolean // Defaults to 'false'
-  testID?: string
+  /** Defaults to 'done' */
+  returnKeyType?: FilledTextInputReturnKeyType
 
-  // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
+  secureTextEntry?: boolean
+  testID?: string
+  /** Unless 'autoFocus' is passed explicitly in the props, Search Bars
+   * 'autoFocus' and 'regular' text inputs don't. */
   autoFocus?: boolean // Defaults to 'true'
 
-  // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
-  blurOnClear?: boolean // Defaults to 'false'
+  /** Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls
+   * 'blur' when cleared and text inputs don't call 'blur' when cleared.
+   * Defaults to 'false' */
+  blurOnClear?: boolean
 
-  // Whether the text input is disabled. If 'true', the component will be grayed out.
-  disabled?: boolean // Defaults to 'false'
+  /** Whether the text input is disabled. If 'true', the component will be
+   * grayed out.
+   * Defaults to 'false' */
+  disabled?: boolean
+
+  /** Number of lines in multiline configuration. Useful for scrolling
+   * containers that won't cause this component to shrink.
+   * Defaults to 20.
+   */
+  numberOfLines?: number
 }
+
+export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof MarginRemStyle>
+
+/**
+ * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
+ */
+export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props, ref) => (
+  <FilledTextInput ref={ref} {...props} aroundRem={0.5} />
+))
 
 /**
  * Type definitions for our static methods.
@@ -91,7 +120,12 @@ export interface FilledTextInputRef {
   setNativeProps: (nativeProps: Object) => void
 }
 
-export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputProps>((props: FilledTextInputProps, ref) => {
+/**
+ * Raw FilledTextInput that includes no built-in margins. Not meant to be used
+ * by top-level parents, but rather as a raw building block to build a child
+ * component with some fixed margins according to the child use case.
+ */
+export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputBaseProps>((props: FilledTextInputBaseProps, ref) => {
   const {
     // Contents:
     error,
@@ -110,6 +144,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     showSpinner = false,
     prefix,
     suffix,
+    numberOfLines = 20,
 
     // Callbacks:
     onBlur,
@@ -120,17 +155,20 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
     // TextInput:
     autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
+    autoComplete,
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
     inputAccessoryViewID,
+    keyboardType,
     maxLength,
+    returnKeyType,
     secureTextEntry,
     testID,
     textsizeRem,
-    ...spaceProps
+    ...marginRemProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -139,7 +177,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
 
-  const spaceStyle = useSpaceStyle(spaceProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
@@ -200,15 +238,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
-  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0), [clearIcon, hasValue])
+  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value))
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
@@ -217,12 +255,17 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
-  const { keyboardType } = props
-  const hackKeyboardType = isAndroid && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
+  const hackKeyboardType =
+    isAndroid &&
+    !secureTextEntry && // Don't apply this hack if we are intentionally doing a secure text entry
+    !hidePassword &&
+    (keyboardType == null || keyboardType === 'default')
+      ? 'visible-password'
+      : keyboardType
 
   return (
-    <View style={spaceStyle}>
-      <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
+    <OuterContainer multiline={multiline} marginRemStyle={marginRemStyle}>
+      <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
@@ -242,7 +285,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               editable={!disabled}
               ref={inputRef}
               keyboardType={hackKeyboardType}
-              returnKeyType={props.returnKeyType}
+              returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
@@ -265,38 +308,46 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               // Other Props:
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
-              blurOnSubmit={blurOnSubmit}
+              autoComplete={autoComplete}
+              blurOnSubmit={multiline ? false : blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
-              secureTextEntry={hidePassword}
+              secureTextEntry={secureTextEntry === true ? hidePassword : undefined}
+              numberOfLines={multiline ? numberOfLines : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>
 
           {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
-            <TouchContainer testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+            <TouchContainer extendTappable="leftOnly" testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
                 <EyeIconAnimated accessible color={iconColor} off={!hidePassword} />
               </IconContainer>
             </TouchContainer>
           ) : null}
 
-          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer extendTappable={secureTextEntry ? 'rightOnly' : 'full'} accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer scale={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
           </TouchContainer>
         </Container>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
           <Message danger={error != null}>{valid ?? error ?? null}</Message>
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
-    </View>
+    </OuterContainer>
   )
 })
+
+const OuterContainer = styled(View)<{ multiline: boolean; marginRemStyle: MarginRemStyle }>(theme => ({ multiline, marginRemStyle }) => ({
+  ...marginRemStyle,
+  flexGrow: multiline ? 1 : undefined,
+  flexShrink: multiline ? 1 : undefined
+}))
 
 const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
@@ -318,7 +369,8 @@ const Container = styled(Animated.View)<{
 
   return [
     {
-      flex: multiline ? 1 : undefined,
+      flexGrow: multiline ? 1 : undefined,
+      flexShrink: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
@@ -335,13 +387,36 @@ const Container = styled(Animated.View)<{
   ]
 })
 
-const TouchContainer = styled(TouchableOpacity)(theme => ({
-  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
-  paddingHorizontal: theme.rem(1),
-  paddingVertical: theme.rem(1.25),
-  marginHorizontal: -theme.rem(1),
-  marginVertical: -theme.rem(1.25)
-}))
+/**
+ * extendTappable: Which horizontal side of the icon do we want to increase
+ * tappable area? 'full' means both left and right sides.
+ */
+const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | 'rightOnly' | 'full' }>(theme => ({ extendTappable }) => {
+  // Increase tappable area with padding, while net 0 with negative margin to
+  // visually appear as if 0 margins/padding
+  const tapArea =
+    extendTappable === 'leftOnly'
+      ? {
+          paddingLeft: theme.rem(1),
+          marginLeft: -theme.rem(1)
+        }
+      : extendTappable === 'rightOnly'
+      ? {
+          paddingRight: theme.rem(1),
+          marginRight: -theme.rem(1)
+        }
+      : // extendTappable === 'full'
+        {
+          marginHorizontal: -theme.rem(1),
+          paddingHorizontal: theme.rem(1)
+        }
+
+  return {
+    paddingVertical: theme.rem(1.25),
+    marginVertical: -theme.rem(1.25),
+    ...tapArea
+  }
+})
 
 const IconContainer = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.25)

@@ -2,7 +2,6 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -20,13 +19,14 @@ import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { EdgeRow } from '../rows/EdgeRow'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 export interface ChangeAddressResult {
   fioAddress?: string
@@ -74,7 +74,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const account = useSelector(state => state.core.account)
   const fioPlugin = account.currencyConfig.fio
 
-  const tokenId = getTokenId(account, coreWallet.currencyInfo.pluginId, currencyCode)
+  const tokenId = getTokenId(coreWallet.currencyConfig, currencyCode)
 
   const { currencyWallets } = account
   const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
@@ -131,10 +131,10 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
         await launchPaymentProto(navigation, account, parsedUri.paymentProtocolUrl, {
-          currencyCode,
+          tokenId,
           navigateReplace: true,
           wallet: coreWallet
-        }).catch(showError)
+        }).catch(error => showError(error))
 
         return
       }
@@ -153,10 +153,14 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         if (ercTokenStandard === 'ERC20') {
           showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchPaymentProto(navigation, account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
+          await launchPaymentProto(navigation, account, parsedLink.uri, {
+            tokenId,
+            navigateReplace: true,
+            wallet: coreWallet
+          }).catch(error => showError(error))
         }
       } else {
-        showError(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
+        showToast(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
       }
 
       setLoading(false)
@@ -170,7 +174,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       await coreWallet.parseUri(clipboard, currencyCode)
       await changeAddress(clipboard)
     } catch (error) {
-      showError(error)
+      showError(error, { trackError: false })
     }
   })
 
@@ -236,9 +240,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   })
 
   const handleTilePress = useHandler(async () => {
-    if (!lockInputs && !!recipientAddress) {
-      resetSendTransaction()
-    }
+    resetSendTransaction()
   })
 
   // ---------------------------------------------------------------------------
@@ -262,27 +264,27 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
-    <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
+    <EdgeRow rightButtonType={tileType} loading={loading} title={title} onPress={!lockInputs && !!recipientAddress ? handleTilePress : undefined}>
       {!recipientAddress && (
         <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
             <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
           {canSelfTransfer ? (
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
+            <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
               <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
               <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           ) : null}
-          <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
             <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+          </EdgeTouchableOpacity>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
             <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </EdgeAnim>
       )}
       {recipientAddress == null || recipientAddress === '' ? null : (
@@ -291,7 +293,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
         </EdgeAnim>
       )}
-    </RowUi4>
+    </EdgeRow>
   )
 })
 

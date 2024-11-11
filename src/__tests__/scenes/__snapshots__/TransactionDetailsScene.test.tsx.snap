@@ -35,8 +35,8 @@ exports[`TransactionDetailsScene should render 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -141,7 +141,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -157,7 +157,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -239,6 +239,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
+                  "flexShrink": 1,
                 },
                 {
                   "marginBottom": 11,
@@ -249,39 +250,30 @@ exports[`TransactionDetailsScene should render 1`] = `
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
-                    "overflow": "hidden",
+                    "color": undefined,
+                    "fontSize": 45,
                   },
                   {
-                    "borderRadius": 22,
-                    "height": 45,
+                    "color": "#FFFFFF",
                     "marginRight": 11,
-                    "width": 45,
                   },
+                  {
+                    "fontFamily": "Ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
                 ]
               }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              
+            </Text>
             <View
               style={
                 [
@@ -381,6 +373,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -470,6 +463,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -564,6 +558,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -701,6 +696,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -747,6 +743,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -886,6 +883,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -904,7 +902,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -931,7 +929,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     ]
                   }
                 >
-                  Transaction ID
+                  Date
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
@@ -954,72 +952,102 @@ exports[`TransactionDetailsScene should render 1`] = `
                     ]
                   }
                 >
-                  this is the txid
+                  8/31/2018, 2:59:40 PM
                 </Text>
               </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "flexGrow": 1,
+                    },
+                  ]
                 }
               >
                 <Text
-                  allowFontScaling={false}
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
                   style={
                     [
                       {
-                        "color": undefined,
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
+                        "includeFontPadding": false,
                       },
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
                       },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
+                      null,
                     ]
                   }
                 >
-                  
+                  Wallet
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  wallet name
                 </Text>
               </View>
             </View>
@@ -1089,6 +1117,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1202,6 +1231,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1248,6 +1278,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1361,6 +1392,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1459,6 +1491,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1477,7 +1510,212 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "flexGrow": 1,
+                      "marginRight": 34,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Transaction ID
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  this is the txid
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+      >
+        <View
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+              },
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              },
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              [
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginRight": 34,
                     },
                   ]
                 }
@@ -1530,6 +1768,72 @@ exports[`TransactionDetailsScene should render 1`] = `
                   this is an address
                 </Text>
               </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
             </View>
             <View
               style={
@@ -1553,6 +1857,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1666,6 +1971,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1699,17 +2005,18 @@ exports[`TransactionDetailsScene should render 1`] = `
       >
         <View
           absolute={false}
-          layout="solo"
+          layout="column"
           parentType="scene"
           style={
             {
-              "alignItems": "center",
+              "alignItems": "stretch",
+              "alignSelf": "center",
+              "flexDirection": "column",
               "flexGrow": 1,
-              "flexShrink": 1,
-              "justifyContent": "center",
+              "flexShrink": 0,
+              "justifyContent": "flex-end",
               "margin": 11,
               "marginBottom": 67,
-              "marginHorizontal": 11,
               "marginTop": 22,
             }
           }
@@ -1745,7 +2052,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "alignItems": "center",
-                "alignSelf": "center",
+                "alignSelf": "stretch",
                 "flexBasis": "auto",
                 "flexGrow": 0,
                 "flexShrink": 0,
@@ -1787,7 +2094,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "center",
+                    "alignSelf": "stretch",
                   },
                   {
                     "height": 67,
@@ -1840,13 +2147,14 @@ exports[`TransactionDetailsScene should render 1`] = `
     }
     hasTabs={true}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
-          "bottom": 0,
+          "bottom": 11,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -1858,7 +2166,254 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       ]
     }
-  />,
+  >
+    <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
+      layout={BaseAnimationMock {}}
+    >
+      <View
+        style={
+          {
+            "borderRadius": 16,
+            "elevation": 0,
+            "marginVertical": 6,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 3,
+              "width": 3,
+            },
+            "shadowOpacity": 0.6,
+            "shadowRadius": 4,
+          }
+        }
+      >
+        <BlurView
+          blurAmount={10}
+          blurType="dark"
+          overlayColor="rgba(0, 0, 0, 0)"
+          style={
+            {
+              "backgroundColor": undefined,
+              "borderRadius": 16,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginTop": 0,
+                "padding": 11,
+              },
+              {
+                "opacity": 1,
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexShrink": 1,
+                "justifyContent": "center",
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "height": 79,
+                    "marginRight": 6,
+                    "width": 79,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/notifications/icon-lock.png",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "flexShrink": 1,
+                  "width": "100%",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Bold",
+                      "fontSize": 17,
+                      "marginBottom": 6,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                IP Validation Protection
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={3}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              </Text>
+            </View>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#00f1a2",
+                    "fontSize": 28,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>,
 ]
 `;
 
@@ -1897,8 +2452,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -2003,7 +2558,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -2019,7 +2574,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -2101,6 +2656,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
+                  "flexShrink": 1,
                 },
                 {
                   "marginBottom": 11,
@@ -2111,39 +2667,30 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
-                    "overflow": "hidden",
+                    "color": undefined,
+                    "fontSize": 45,
                   },
                   {
-                    "borderRadius": 22,
-                    "height": 45,
+                    "color": "#FFFFFF",
                     "marginRight": 11,
-                    "width": 45,
                   },
+                  {
+                    "fontFamily": "Ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
                 ]
               }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              
+            </Text>
             <View
               style={
                 [
@@ -2243,6 +2790,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -2332,6 +2880,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2426,6 +2975,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2563,6 +3113,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -2609,6 +3160,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2748,6 +3300,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -2766,7 +3319,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -2793,7 +3346,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     ]
                   }
                 >
-                  Transaction ID
+                  Date
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
@@ -2816,72 +3369,102 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     ]
                   }
                 >
-                  this is the txid
+                  8/31/2018, 2:59:40 PM
                 </Text>
               </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "flexGrow": 1,
+                    },
+                  ]
                 }
               >
                 <Text
-                  allowFontScaling={false}
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
                   style={
                     [
                       {
-                        "color": undefined,
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
+                        "includeFontPadding": false,
                       },
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
                       },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
+                      null,
                     ]
                   }
                 >
-                  
+                  Wallet
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  wallet name
                 </Text>
               </View>
             </View>
@@ -2951,6 +3534,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3064,6 +3648,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3110,6 +3695,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3223,6 +3809,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3321,6 +3908,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3339,7 +3927,212 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "flexShrink": 1,
                     },
                     {
-                      "flexGrow": 1,
+                      "marginRight": 34,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Transaction ID
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  this is the txid
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+      >
+        <View
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+              },
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              },
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              [
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginRight": 34,
                     },
                   ]
                 }
@@ -3392,6 +4185,72 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   this is an address
                 </Text>
               </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
             </View>
             <View
               style={
@@ -3415,6 +4274,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "alignSelf": "stretch",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
                     "flexDirection": "row",
+                    "flexShrink": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -3528,6 +4388,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3561,17 +4422,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       >
         <View
           absolute={false}
-          layout="solo"
+          layout="column"
           parentType="scene"
           style={
             {
-              "alignItems": "center",
+              "alignItems": "stretch",
+              "alignSelf": "center",
+              "flexDirection": "column",
               "flexGrow": 1,
-              "flexShrink": 1,
-              "justifyContent": "center",
+              "flexShrink": 0,
+              "justifyContent": "flex-end",
               "margin": 11,
               "marginBottom": 67,
-              "marginHorizontal": 11,
               "marginTop": 22,
             }
           }
@@ -3607,7 +4469,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "alignItems": "center",
-                "alignSelf": "center",
+                "alignSelf": "stretch",
                 "flexBasis": "auto",
                 "flexGrow": 0,
                 "flexShrink": 0,
@@ -3649,7 +4511,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "center",
+                    "alignSelf": "stretch",
                   },
                   {
                     "height": 67,
@@ -3702,13 +4564,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     }
     hasTabs={true}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
-          "bottom": 0,
+          "bottom": 11,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -3720,6 +4583,253 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       ]
     }
-  />,
+  >
+    <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
+      layout={BaseAnimationMock {}}
+    >
+      <View
+        style={
+          {
+            "borderRadius": 16,
+            "elevation": 0,
+            "marginVertical": 6,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 3,
+              "width": 3,
+            },
+            "shadowOpacity": 0.6,
+            "shadowRadius": 4,
+          }
+        }
+      >
+        <BlurView
+          blurAmount={10}
+          blurType="dark"
+          overlayColor="rgba(0, 0, 0, 0)"
+          style={
+            {
+              "backgroundColor": undefined,
+              "borderRadius": 16,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginTop": 0,
+                "padding": 11,
+              },
+              {
+                "opacity": 1,
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexShrink": 1,
+                "justifyContent": "center",
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "height": 79,
+                    "marginRight": 6,
+                    "width": 79,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/notifications/icon-lock.png",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "flexShrink": 1,
+                  "width": "100%",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Bold",
+                      "fontSize": 17,
+                      "marginBottom": 6,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                IP Validation Protection
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={3}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                    },
+                    null,
+                  ]
+                }
+                type="info"
+              >
+                Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              </Text>
+            </View>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "margin": 6,
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#00f1a2",
+                    "fontSize": 28,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>,
 ]
 `;

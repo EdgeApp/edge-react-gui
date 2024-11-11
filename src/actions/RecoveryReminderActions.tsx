@@ -1,3 +1,4 @@
+import { lt } from 'biggystring'
 import * as React from 'react'
 
 import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
@@ -28,12 +29,12 @@ export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<v
     // Loop towards the highest non-shown level less than our balance:
     for (const level of levels) {
       if (passwordRecoveryRemindersShown[level]) continue
-      if (totalDollars < parseInt(level)) return
+      if (lt(totalDollars, level)) return
 
       // Mark this level as shown:
       dispatch({ type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: level })
-      writePasswordRecoveryReminders(account, level).catch(showError)
-      showReminderModal(navigation).catch(showError)
+      writePasswordRecoveryReminders(account, level).catch(error => showError(error))
+      showReminderModal(navigation).catch(error => showError(error))
       return
     }
   }
@@ -53,5 +54,5 @@ async function showReminderModal(navigation: NavigationBase) {
       }}
     />
   ))
-  if (reply === 'ok') navigation.push('passwordRecovery', {})
+  if (reply === 'ok') navigation.push('passwordRecovery')
 }

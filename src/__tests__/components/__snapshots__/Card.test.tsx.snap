@@ -1,0 +1,681 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card should allow child elements to expand within the card 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "backgroundColor": "#4c669f",
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          undefined,
+          null,
+        ]
+      }
+    >
+      Expanding Child
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Card should expand both the card and its children to fill available space 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "alignSelf": "stretch",
+          "borderRadius": 16,
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        {
+          "paddingBottom": 11,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 11,
+        },
+        {
+          "flex": 1,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "rgba(255, 255, 255, .1)",
+          "borderRadius": 16,
+          "bottom": 0,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "backgroundColor": "#4c669f",
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            undefined,
+            null,
+          ]
+        }
+      >
+        Expanding Child in Expanding Card
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Card should expand to fill its parent container 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "alignSelf": "stretch",
+          "borderRadius": 16,
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        {
+          "paddingBottom": 11,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 11,
+        },
+        undefined,
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "rgba(255, 255, 255, .1)",
+          "borderRadius": 16,
+          "bottom": 0,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          undefined,
+          null,
+        ]
+      }
+    >
+      Child Content
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Card should handle press and long press events 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={false}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignSelf": "stretch",
+      "borderRadius": 16,
+      "marginBottom": 11,
+      "marginLeft": 11,
+      "marginRight": 11,
+      "marginTop": 11,
+      "opacity": 1,
+      "paddingBottom": 11,
+      "paddingLeft": 11,
+      "paddingRight": 11,
+      "paddingTop": 11,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 22,
+          "includeFontPadding": false,
+        },
+        undefined,
+        null,
+      ]
+    }
+  >
+    Press Me
+  </Text>
+</View>
+`;
+
+exports[`Card should render sections correctly with multiple children 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      [
+        {
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "flexShrink": 1,
+        },
+        {
+          "marginVertical": 0,
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          undefined,
+          null,
+        ]
+      }
+    >
+      Section 1
+    </Text>
+    <View
+      style={
+        [
+          {
+            "borderBottomColor": "rgba(255, 255, 255, .1)",
+            "borderBottomWidth": 1,
+            "height": 1,
+          },
+          {
+            "margin": 11,
+          },
+        ]
+      }
+    />
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          undefined,
+          null,
+        ]
+      }
+    >
+      Section 2
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Card should render with gradient background 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4283197087,
+          4282079640,
+          4279840618,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 22,
+          "includeFontPadding": false,
+        },
+        undefined,
+        null,
+      ]
+    }
+  >
+    Gradient Background
+  </Text>
+</View>
+`;
+
+exports[`Card should render with icon URI 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "flexGrow": 1,
+        "flexShrink": 1,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignContent": "center",
+          "justifyContent": "center",
+          "margin": 6,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            {
+              "height": 34,
+              "resizeMode": "contain",
+              "width": 34,
+            },
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+    </View>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          undefined,
+          null,
+        ]
+      }
+    >
+      Icon
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Card should render with node background 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#4c669f",
+          "height": 100,
+          "width": 100,
+        }
+      }
+    />
+  </View>
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 22,
+          "includeFontPadding": false,
+        },
+        undefined,
+        null,
+      ]
+    }
+  >
+    Node Background
+  </Text>
+</View>
+`;

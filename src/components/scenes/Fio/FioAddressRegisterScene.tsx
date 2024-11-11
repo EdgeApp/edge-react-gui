@@ -7,24 +7,24 @@ import { createFioWallet } from '../../../actions/FioAddressActions'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
+import { ButtonsView } from '../../buttons/ButtonsView'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
-import { Airship, showError, showToast } from '../../services/AirshipInstance'
+import { EdgeRow } from '../../rows/EdgeRow'
+import { Airship, showError, showToast, showWarning } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   selectedWallet: EdgeCurrencyWallet | null
@@ -42,7 +42,7 @@ interface State {
   errorMessage: string
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressRegister'> {}
+interface OwnProps extends EdgeAppSceneProps<'fioAddressRegister'> {}
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
@@ -167,14 +167,14 @@ export class FioAddressRegister extends React.Component<Props, State> {
         if (selectedDomain.isFree) {
           navigation.navigate('fioNameConfirm', {
             fioName: fullAddress,
-            paymentWallet: selectedWallet,
+            walletId: selectedWallet.id,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
           navigation.navigate('fioAddressRegisterSelectWallet', {
             fioAddress: fullAddress,
-            selectedWallet,
+            walletId: selectedWallet.id,
             selectedDomain
           })
         }
@@ -198,10 +198,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       const { fioPlugin } = this.props
       if (isCustomDomain) {
-        try {
-          await checkIsDomainPublic(fioPlugin, domain)
-        } catch (e: any) {
-          showError(e.message)
+        const result = await checkIsDomainPublic(fioPlugin, domain)
+        if (result !== true) {
+          showWarning(result, { trackError: false })
           return this.setState({
             isAvailable: false,
             loading: false
@@ -270,6 +269,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
         initialValue={this.state.fioAddress}
         inputLabel={lstrings.fio_address_register_form_field_label}
         title={lstrings.fio_address_choose_label}
+        autoCorrect={false}
       />
     )).then((response: string | undefined) => {
       if (response) {
@@ -289,7 +289,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={this.props.navigation}
+        navigation={this.props.navigation as NavigationBase}
         headerTitle={lstrings.select_wallet}
         allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
       />
@@ -306,7 +306,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { domainsLoading } = this.state
     if (domainsLoading) return
     const response = await Airship.show<FioDomain | undefined>(bridge => (
-      <DomainListModal bridge={bridge} navigation={navigation} publicDomains={this.state.publicDomains} />
+      <DomainListModal bridge={bridge} navigation={navigation as NavigationBase} publicDomains={this.state.publicDomains} />
     ))
     if (response) {
       this.setState({ selectedDomain: response })
@@ -335,7 +335,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     return (
       <View style={styles.buttons}>
-        <ButtonsViewUi4 primary={primary} tertiary={tertiary} />
+        <ButtonsView primary={primary} tertiary={tertiary} />
       </View>
     )
   }
@@ -355,7 +355,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     if (fioWallets && fioWallets.length > 1) {
       const title = `${selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}`
-      return <RowUi4 rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
+      return <EdgeRow rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }
 
@@ -415,8 +415,8 @@ export class FioAddressRegister extends React.Component<Props, State> {
           </View>
 
           <View onLayout={this.fieldViewOnLayout}>
-            <CardUi4 sections>
-              <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
+            <EdgeCard sections>
+              <EdgeRow rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
                 <View style={styles.addressTileBody}>
                   {fioAddress ? (
                     <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
@@ -425,15 +425,15 @@ export class FioAddressRegister extends React.Component<Props, State> {
                   )}
                   {this.renderLoader()}
                 </View>
-              </RowUi4>
-              <RowUi4
+              </EdgeRow>
+              <EdgeRow
                 rightButtonType="touchable"
                 title={lstrings.fio_address_choose_domain_label}
                 onPress={this.selectFioDomain}
                 body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
               />
               {this.renderFioWallets()}
-            </CardUi4>
+            </EdgeCard>
           </View>
           {this.renderButton()}
           {this.renderErrorMessage()}

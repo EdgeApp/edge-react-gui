@@ -1,26 +1,28 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { sprintf } from 'sprintf-js'
 
+import { lstrings } from '../../locales/strings'
 import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export function StakingOptionCard({
-  currencyLogos,
-  primaryText,
-  secondaryText,
-  stakeProviderInfo
-}: {
+interface StakingOptionCardProps {
+  apy?: number
   currencyLogos: string[]
   primaryText: string
   secondaryText: string
   stakeProviderInfo?: StakeProviderInfo
-}) {
+}
+
+export function StakingOptionCard({ apy, currencyLogos, primaryText, secondaryText, stakeProviderInfo }: StakingOptionCardProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const aprText: string | undefined = apy != null ? apy.toFixed(2) + '%' : undefined
 
   const renderStakeProvider = () => {
     if (stakeProviderInfo == null) return null
@@ -49,6 +51,7 @@ export function StakingOptionCard({
           <EdgeText style={styles.primaryText}>{primaryText}</EdgeText>
           {renderStakeProvider()}
           <EdgeText style={styles.secondaryText}>{secondaryText}</EdgeText>
+          {aprText == null ? null : <EdgeText style={styles.secondaryText}>{sprintf(lstrings.stake_estimated_apr_s, aprText)}</EdgeText>}
         </View>
       </View>
       <View style={styles.rightCap} />

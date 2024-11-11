@@ -2,47 +2,50 @@ import { ProposalTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { showScamWarningModal } from '../../actions/ScamWarningActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
-import { useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
+import { UNSUPPORTED_WC_VERSION, useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, WcConnectionInfo } from '../../types/types'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props extends EdgeSceneProps<'wcConnections'> {}
+interface Props extends EdgeAppSceneProps<'wcConnections'> {}
 
+const NO_WALLETS_DAPP_REQUIREMENTS = 'NO_WALLETS_DAPP_REQUIREMENTS'
 export interface WcConnectionsParams {
   uri?: string
 }
 
 export const WcConnectionsScene = (props: Props) => {
-  const { navigation } = props
-  const { uri } = props.route.params
+  const { navigation, route } = props
+  const { uri } = route.params ?? {}
   const theme = useTheme()
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
   const [connecting, setConnecting] = React.useState(false)
+  const [sessionProposal, setSessionProposal] = React.useState<Map<string, Web3WalletTypes.SessionProposal>>(new Map())
 
   const account = useSelector(state => state.core.account)
-  const activeUsername = useSelector(state => state.core.account.username)
   const walletConnect = useWalletConnect()
-  const isLightAccount = activeUsername == null
 
   useMount(() => {
     if (uri != null) onScanSuccess(uri).catch(err => showError(err))
@@ -61,11 +64,39 @@ export const WcConnectionsScene = (props: Props) => {
   const onScanSuccess = async (qrResult: string) => {
     setConnecting(true)
     try {
-      const proposal = await walletConnect.initSession(qrResult)
+      let proposal = sessionProposal.get(qrResult)
+
+      if (proposal == null) {
+        const newProposal = await walletConnect.initSession(qrResult)
+        setSessionProposal(proposals => {
+          const out = new Map(proposals)
+          out.set(qrResult, newProposal)
+          return out
+        })
+        proposal = newProposal
+      }
       const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, account.currencyConfig)
-      navigation.navigate('wcConnect', { proposal, edgeTokenIds })
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={lstrings.select_wallet}
+          allowedAssets={edgeTokenIds}
+          showCreateWallet
+          navigation={navigation as NavigationBase}
+        />
+      ))
+
+      if (result?.type === 'wallet') {
+        navigation.navigate('wcConnect', { proposal, edgeTokenIds, walletId: result.walletId })
+      }
     } catch (error: any) {
-      showError(error)
+      if (error?.message === UNSUPPORTED_WC_VERSION) {
+        showToast(lstrings.wc_unsupported_version)
+      } else if (error?.message === NO_WALLETS_DAPP_REQUIREMENTS) {
+        showToast(lstrings.wc_no_wallets_dapp_requirements)
+      } else {
+        showError(error)
+      }
     }
     setConnecting(false)
   }
@@ -75,8 +106,11 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = async () => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    // Show the scam warning modal if needed
+    await showScamWarningModal('firstWalletConnect')
+
+    if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
+      return await Promise.resolve()
     } else {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
@@ -112,7 +146,7 @@ export const WcConnectionsScene = (props: Props) => {
         )}
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
-            <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
+            <EdgeTouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
               <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
@@ -122,7 +156,7 @@ export const WcConnectionsScene = (props: Props) => {
               <View style={styles.arrow}>
                 <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
               </View>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           ))}
         </View>
       </ScrollView>
@@ -225,8 +259,8 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.Se
     }
   }
 
-  if (!hasWalletForRequiredNamespace) {
-    throw new Error('No wallets meet dapp requirements')
+  if (requiredChainIds.size > 0 && !hasWalletForRequiredNamespace) {
+    throw new Error(NO_WALLETS_DAPP_REQUIREMENTS)
   }
 
   return [...edgeTokenIdMap.values()]

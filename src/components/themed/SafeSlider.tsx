@@ -29,6 +29,7 @@ export const SafeSlider = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
 
   const { width = theme.confirmationSliderWidth } = props
@@ -54,7 +55,7 @@ export const SafeSlider = (props: Props) => {
   }
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
+    onStart: (_, ctx: { offsetX: number }) => {
       if (!sliderDisabled) ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {
@@ -85,7 +86,7 @@ export const SafeSlider = (props: Props) => {
 
   const progressStyle = useAnimatedStyle(() => {
     return {
-      width: translateX.value + theme.confirmationSliderThumbWidth
+      width: translateX.value + confirmationSliderThumbWidth
     }
   })
 

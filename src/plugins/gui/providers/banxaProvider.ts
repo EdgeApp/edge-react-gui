@@ -7,8 +7,9 @@ import URL from 'url-parse'
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
-import { consify, makeUuid } from '../../../util/utils'
+import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -16,15 +17,23 @@ import {
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
+  FiatProviderExactRegions,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderGetTokenId,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS, validateRegion } from './common'
+import {
+  addExactRegion,
+  isDailyCheckDue,
+  NOT_SUCCESS_TOAST_HIDE_MS,
+  RETURN_URL_CANCEL,
+  RETURN_URL_FAIL,
+  RETURN_URL_SUCCESS,
+  validateExactRegion
+} from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
@@ -35,11 +44,11 @@ let testnet = false
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
+const allowedCountryCodes: FiatProviderExactRegions = {}
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     applepay: true,
     credit: true,
-    fasterpayments: true,
     googlepay: true,
     ideal: true,
     interac: true,
@@ -50,7 +59,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     directtobank: true,
-    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
@@ -217,16 +225,16 @@ const asBanxaOrderResponse = asObject({
       // tx_confirms: asMaybe(asNumber), // null,
       // created_date: asString, // "20-Sep-2023",
       // created_at: asString, // "20-Sep-2023 23:01:19",
-      status: asBanxaOrderStatus, // "pendingPayment",
+      status: asBanxaOrderStatus // "pendingPayment",
       // completed_at: asString, // null,
       // merchant_fee: asMaybe(asNumber), // null,
       // merchant_commission: asMaybe(asNumber), // null,
       // meta_data: asString, // null,
-      blockchain: asObject({
-        id: asNumber, // 1,
-        code: asString, // "BTC",
-        description: asString // "Bitcoin"
-      })
+      // blockchain: asObject({
+      //   id: asNumber, // 1,
+      //   code: asString, // "BTC",
+      //   description: asString // "Bitcoin"
+      // })
       // network_fee: asMaybe(asNumber) // null
     })
   })
@@ -235,6 +243,28 @@ const asBanxaOrderResponse = asObject({
 const asBanxaPaymentMethods = asObject({
   data: asObject({
     payment_methods: asArray(asBanxaPaymentMethod)
+  })
+})
+
+const asBanxaCountry = asObject({
+  country_code: asString
+  // country_name: asString
+})
+
+const asBanxaCountries = asObject({
+  data: asObject({
+    countries: asArray(asBanxaCountry)
+  })
+})
+
+const asBanxaState = asObject({
+  state_code: asString
+  // state_name: asString
+})
+
+const asBanxaStates = asObject({
+  data: asObject({
+    states: asArray(asBanxaState)
   })
 })
 
@@ -277,68 +307,14 @@ const CURRENCY_PLUGINID_MAP = {
   MATIC: 'polygon',
   QTUM: 'qtum',
   RVN: 'ravencoin',
+  SOL: 'solana',
+  TON: 'ton',
   XLM: 'stellar',
   XRP: 'ripple',
   XTZ: 'tezos'
 }
 
 const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
-
-const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
-  US: {
-    forStateProvinces: [
-      'AL', // Alabama
-      'AK', // Alaska
-      'AZ', // Arizona
-      'AR', // Arkansas
-      'CA', // California
-      'CO', // Colorado
-      'CT', // Connecticut
-      'DE', // Delaware
-      'DC', // District of Columbia
-      'FL', // Florida
-      'GA', // Georgia
-      'ID', // Idaho
-      'IL', // Illinois
-      'IN', // Indiana
-      'IA', // Iowa
-      'KS', // Kansas
-      'KY', // Kentucky
-      'MD', // Maryland
-      'MA', // Massachusetts
-      'MI', // Michigan
-      'MN', // Minnesota
-      'MS', // Mississippi
-      'MO', // Missouri
-      'MT', // Montana
-      'NE', // Nebraska
-      'NH', // New Hampshire
-      'NJ', // New Jersey
-      'NM', // New Mexico
-      'NC', // North Carolina
-      'ND', // North Dakota
-      'OH', // Ohio
-      'OK', // Oklahoma
-      'OR', // Oregon
-      'PA', // Pennsylvania
-      'PR', // Puerto Rico
-      'RI', // Rhode Island
-      'SC', // South Carolina
-      'SD', // South Dakota
-      'TN', // Tennessee
-      'TX', // Texas
-      'UT', // Utah
-      'VT', // Vermont
-      'VA', // Virginia
-      'WA', // Washington
-      'WV', // West Virginia
-      'WI', // Wisconsin
-      'WY', // Wyoming
-      'NV', // Nevada
-      'ME' // Maine
-    ]
-  }
-}
 
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
@@ -347,6 +323,7 @@ const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   sell: { providerId, fiat: {}, crypto: {} }
 }
 const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
+let lastChecked = 0
 
 export const banxaProvider: FiatProviderFactory = {
   providerId,
@@ -355,7 +332,7 @@ export const banxaProvider: FiatProviderFactory = {
     const {
       apiKeys,
       getTokenId,
-      io: { store }
+      io: { makeUuid, store }
     } = params
     const { apiKey, hmacUser, partnerUrl: url } = asBanxaApiKeys(apiKeys)
     if (url.includes('sandbox')) {
@@ -366,7 +343,7 @@ export const banxaProvider: FiatProviderFactory = {
 
     let banxaUsername = await store.getItem('username').catch(e => undefined)
     if (banxaUsername == null || banxaUsername === '') {
-      banxaUsername = makeUuid()
+      banxaUsername = await makeUuid()
       await store.setItem('username', banxaUsername)
     }
 
@@ -375,18 +352,11 @@ export const banxaProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
-
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const fiats = allowedCurrencyCodes[direction].fiat
-        const cryptos = allowedCurrencyCodes[direction].fiat
         const paymentsMap = banxaPaymentsMap[direction]
-        if (Object.keys(fiats).length > 0 && Object.keys(cryptos).length > 0 && Object.keys(paymentsMap).length > 0) {
-          return allowedCurrencyCodes[direction]
-        }
 
         // XXX Hack. Banxa doesn't return any payment methods for sell unless the source asset is
         // specified. BTC is most supported so we add that for the query of sell payment methods
@@ -397,46 +367,87 @@ export const banxaProvider: FiatProviderFactory = {
           paymentMethodsPath = 'api/payment-methods?source=BTC'
         }
 
-        const promises = [
-          banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/${direction}`, apiKey }).then(response => {
-            const cryptoCurrencies = asBanxaCryptoCoins(response)
-            for (const coin of cryptoCurrencies.data.coins) {
-              for (const chain of coin.blockchains) {
-                // @ts-expect-error
-                const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
-                if (currencyPluginId != null) {
-                  const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
-                  addToAllowedCurrencies(getTokenId, currencyPluginId, direction, edgeCurrencyCode, coin)
+        if (isDailyCheckDue(lastChecked)) {
+          const promises = [
+            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries', apiKey }).then(response => {
+              const countries = asBanxaCountries(response)
+              for (const { country_code: countryCode } of countries.data.countries) {
+                if (countryCode !== 'US') {
+                  addExactRegion(allowedCountryCodes, countryCode)
                 }
               }
-            }
-          }),
+            }),
 
-          banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/${direction}`, apiKey }).then(response => {
-            const fiatCurrencies = asBanxaFiats(response)
-            for (const fiat of fiatCurrencies.data.fiats) {
-              allowedCurrencyCodes[direction].fiat['iso:' + fiat.fiat_code] = true
-            }
-          }),
+            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries/us/states', apiKey }).then(response => {
+              const states = asBanxaStates(response)
+              for (const { state_code: stateCode } of states.data.states) {
+                addExactRegion(allowedCountryCodes, 'US', stateCode)
+              }
+            }),
 
-          banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
-            const banxaPayments = asBanxaPaymentMethods(response)
-            buildPaymentsMap(banxaPayments, paymentsMap)
-          })
-        ]
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/sell`, apiKey }).then(response => {
+              const cryptoCurrencies = asBanxaCryptoCoins(response)
+              for (const coin of cryptoCurrencies.data.coins) {
+                for (const chain of coin.blockchains) {
+                  // @ts-expect-error
+                  const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+                  if (currencyPluginId != null) {
+                    const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                    addToAllowedCurrencies(getTokenId, currencyPluginId, 'sell', edgeCurrencyCode, coin)
+                  }
+                }
+              }
+            }),
 
-        await Promise.all(promises)
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/sell`, apiKey }).then(response => {
+              const fiatCurrencies = asBanxaFiats(response)
+              for (const fiat of fiatCurrencies.data.fiats) {
+                allowedCurrencyCodes.sell.fiat['iso:' + fiat.fiat_code] = true
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/buy`, apiKey }).then(response => {
+              const cryptoCurrencies = asBanxaCryptoCoins(response)
+              for (const coin of cryptoCurrencies.data.coins) {
+                for (const chain of coin.blockchains) {
+                  // @ts-expect-error
+                  const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+                  if (currencyPluginId != null) {
+                    const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                    addToAllowedCurrencies(getTokenId, currencyPluginId, 'buy', edgeCurrencyCode, coin)
+                  }
+                }
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/buy`, apiKey }).then(response => {
+              const fiatCurrencies = asBanxaFiats(response)
+              for (const fiat of fiatCurrencies.data.fiats) {
+                allowedCurrencyCodes.buy.fiat['iso:' + fiat.fiat_code] = true
+              }
+            }),
+
+            banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
+              const banxaPayments = asBanxaPaymentMethods(response)
+              buildPaymentsMap(banxaPayments, paymentsMap)
+            })
+          ]
+          await Promise.all(promises)
+          lastChecked = Date.now()
+        }
+
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
         return allowedCurrencyCodes[direction]
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction, tokenId } = params
-        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+        validateExactRegion(providerId, regionCode, allowedCountryCodes)
 
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         // Check if the region, payment type, and fiat/crypto codes are supported
-        const fiat = fiatCurrencyCode.replace('iso:', '')
+        const fiatCode = removeIsoPrefix(fiatCurrencyCode)
 
         let banxaCrypto
         try {
@@ -455,7 +466,7 @@ export const banxaProvider: FiatProviderFactory = {
         let hasFetched = false
         while (true) {
           for (const pt of paymentTypes) {
-            paymentObj = getPaymentIdLimit(direction, fiat, banxaCoin, pt)
+            paymentObj = getPaymentIdLimit(direction, fiatCode, banxaCoin, pt)
             if (paymentObj != null) {
               paymentType = pt
               break
@@ -493,20 +504,20 @@ export const banxaProvider: FiatProviderFactory = {
         }
 
         if (direction === 'buy') {
-          queryParams.source = fiat
+          queryParams.source = fiatCode
           queryParams.target = banxaCoin
           if (amountType === 'fiat') {
             queryParams.source_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj)
+            checkMinMax(exchangeAmount, paymentObj, fiatCode)
           } else {
             queryParams.target_amount = exchangeAmount
           }
         } else {
           queryParams.source = banxaCoin
-          queryParams.target = fiat
+          queryParams.target = fiatCode
           if (amountType === 'fiat') {
             queryParams.target_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj)
+            checkMinMax(exchangeAmount, paymentObj, fiatCode)
           } else {
             queryParams.source_amount = exchangeAmount
           }
@@ -518,7 +529,7 @@ export const banxaProvider: FiatProviderFactory = {
         console.log('Got Banxa Quote:')
         consify(priceQuote)
 
-        checkMinMax(priceQuote.fiat_amount, paymentObj, fiat)
+        checkMinMax(priceQuote.fiat_amount, paymentObj, fiatCode)
         const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)
 
@@ -539,7 +550,7 @@ export const banxaProvider: FiatProviderFactory = {
             const { showUi, coreWallet } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
+              await showUi.showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
@@ -647,13 +658,18 @@ export const banxaProvider: FiatProviderFactory = {
                             interval = undefined
 
                             await showUi.trackConversion('Sell_Success', {
-                              destCurrencyCode: fiatCurrencyCode,
-                              destExchangeAmount: priceQuote.fiat_amount,
-                              sourceCurrencyCode: displayCurrencyCode,
-                              sourceExchangeAmount: coinAmount.toString(),
-                              sourcePluginId: coreWallet.currencyInfo.pluginId,
-                              pluginId: providerId,
-                              orderId: id
+                              conversionValues: {
+                                conversionType: 'sell',
+                                destFiatCurrencyCode: fiatCurrencyCode,
+                                destFiatAmount: priceQuote.fiat_amount,
+                                sourceAmount: new CryptoAmount({
+                                  currencyConfig: coreWallet.currencyConfig,
+                                  currencyCode: displayCurrencyCode,
+                                  exchangeAmount: coinAmount
+                                }),
+                                fiatProviderId: providerId,
+                                orderId: id
+                              }
                             })
 
                             // Below is an optional step
@@ -669,10 +685,10 @@ export const banxaProvider: FiatProviderFactory = {
                             )
                           }
                           insideInterval = false
-                        } catch (e: any) {
-                          if (e.message === SendErrorBackPressed) {
+                        } catch (e: unknown) {
+                          if (e instanceof Error && e.message === SendErrorBackPressed) {
                             await showUi.exitScene()
-                          } else if (e.message === SendErrorNoTransaction) {
+                          } else if (e instanceof Error && e.message === SendErrorNoTransaction) {
                             await showUi.exitScene()
                             await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
                           } else {

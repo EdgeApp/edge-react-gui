@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Pressable, Switch, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Pressable, Switch, View } from 'react-native'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
@@ -8,16 +8,18 @@ import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress'
 import { lstrings } from '../../locales/strings'
-import { NavigationProp } from '../../types/routerTypes'
+import { useSelector } from '../../types/reactRedux'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 export interface Props {
   // Scene properties:
-  navigation: NavigationProp<'manageTokens'>
+  navigation: EdgeAppSceneProps<'manageTokens'>['navigation']
   wallet: EdgeCurrencyWallet
 
   // Token information:
@@ -32,6 +34,7 @@ const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
 
 export const ManageTokensRowComponent = (props: Props) => {
   const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
+  const account = useSelector(state => state.core.account)
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -51,7 +54,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   // Handle toggling the token on or off:
   const [pending, handleToggle] = usePendingPressAnimation(async () => {
-    if (!isEnabled) await approveTokenTerms(wallet)
+    if (!isEnabled) await approveTokenTerms(account, wallet.currencyInfo.pluginId)
 
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)
@@ -72,8 +75,8 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   return (
     <Pressable style={styles.row} onPress={handleToggle}>
-      <CryptoIconUi4
-        marginRem={0.5}
+      <CryptoIcon
+        marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}
         // Use the pluginId to avoid showing the wallet loading spinner:
         pluginId={wallet.currencyInfo.pluginId}
@@ -84,9 +87,9 @@ export const ManageTokensRowComponent = (props: Props) => {
         <EdgeText style={styles.displayName}>{token.displayName}</EdgeText>
       </View>
       {!isCustom ? null : (
-        <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+        <EdgeTouchableOpacity style={styles.editIcon} onPress={handleEdit}>
           <FontAwesomeIcon color={theme.iconTappable} name="edit" size={theme.rem(1)} accessibilityHint={lstrings.edit_icon_hint} accessibilityRole="button" />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )}
       <View pointerEvents="none" style={styles.switchBox}>
         <AnimatedSpinner color={theme.iconTappable} style={[styles.spinner, spinnerStyle]} accessibilityHint={lstrings.spinner_hint} />
@@ -144,8 +147,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   switchBox: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: theme.rem(0.5)
+    justifyContent: 'center'
   }
 }))
 

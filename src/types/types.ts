@@ -1,5 +1,5 @@
-import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
+import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { EdgeCurrencyWallet, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
@@ -31,15 +31,6 @@ export interface StringMap {
 }
 export interface MapObject<T> {
   [key: string]: T
-}
-
-export interface GuiCurrencyInfo {
-  walletId: string
-  tokenId: EdgeTokenId
-  displayCurrencyCode: string
-  exchangeCurrencyCode: string
-  displayDenomination: EdgeDenomination
-  exchangeDenomination: EdgeDenomination
 }
 
 export interface GuiContact {
@@ -108,28 +99,8 @@ export interface GuiReceiveAddress {
   nativeAmount: string
 }
 
-export type FlipInputFieldInfo = GuiCurrencyInfo & {
-  nativeAmount?: string
-  displayAmount?: string
-}
-
 export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
-}
-
-export const emptyCurrencyInfo: GuiCurrencyInfo = {
-  walletId: '',
-  tokenId: null,
-  displayCurrencyCode: '',
-  exchangeCurrencyCode: '',
-  displayDenomination: {
-    name: '',
-    multiplier: '1'
-  },
-  exchangeDenomination: {
-    name: '',
-    multiplier: '1'
-  }
 }
 
 const asPasswordReminder = asObject({
@@ -151,23 +122,42 @@ export const asSpendingLimits = asObject({
   transaction: asMaybe(asTransaction, () => asTransaction({}))
 })
 
+const asAccountNotifDismissInfo = asObject({
+  ip2FaNotifShown: asMaybe(asBoolean, false)
+})
+export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
+
+const asTokenWarningsShown = asArray(asString)
+
 const asLocalAccountSettingsInner = asObject({
-  contactsPermissionOn: asMaybe(asBoolean, true),
+  contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
-  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
+  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
+  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({})),
+  tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
+
+const asDeviceNotifDismissInfo = asObject({})
+export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
+
+export const asDefaultScreen = asValue('home', 'assets')
+
 const asDeviceSettingsInner = asObject({
+  defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
+  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({})),
   disableAnimations: asMaybe(asBoolean, false),
-  hasInteractedWithBackupModal: asMaybe(asBoolean, false)
+  forceLightAccountCreate: asMaybe(asBoolean, false),
+  isSurveyDiscoverShown: asMaybe(asBoolean, false)
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
 export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () => asDeviceSettingsInner({}))
 
+export type DefaultScreen = ReturnType<typeof asDefaultScreen>
 export type PasswordReminder = ReturnType<typeof asPasswordReminder>
 export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
 export type DeviceSettings = ReturnType<typeof asDeviceSettings>
@@ -302,8 +292,8 @@ export interface AppConfig {
   configName: string
   darkTheme: Theme
   defaultWallets: EdgeAsset[]
-  forceCloseUrlIos: string
-  forceCloseUrlAndroid: string
+  forceCloseUrl: string
+  ip2faSite: string
   knowledgeBase: string
   lightTheme: Theme
   notificationServers: string[]
@@ -316,6 +306,7 @@ export interface AppConfig {
   termsOfServiceSite: string
   website: string
   disableSwaps?: boolean
+  disableSurveyModal?: boolean
   extraTab?: {
     webviewUrl: string
     tabType: 'edgeProvider' | 'webview'
@@ -326,20 +317,29 @@ export interface AppConfig {
 }
 
 /**
+ * A wallet or token to show in the wallet list.
+ *
  * We maintain a sorted wallet list in redux,
  * since it's quite expensive to calculate.
  */
-export interface WalletListItem {
+export interface WalletListAssetItem {
+  type: 'asset'
   key: string
-  tokenId: EdgeTokenId
-  walletId: string
-
-  // `token` will be set for token rows:
   token?: EdgeToken
-
-  // The wallet will be present once it loads:
-  wallet?: EdgeCurrencyWallet
+  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet
 }
+
+/**
+ * A wallet that hasn't booted yet, to show as a placeholder.
+ */
+export interface WalletListLoadingItem {
+  type: 'loading'
+  key: string
+  walletId: string
+}
+
+export type WalletListItem = WalletListAssetItem | WalletListLoadingItem
 
 export interface EdgeAsset {
   pluginId: string

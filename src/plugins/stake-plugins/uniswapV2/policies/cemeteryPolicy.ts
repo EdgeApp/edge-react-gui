@@ -4,9 +4,10 @@ import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
 import { BigNumber, ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
+import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
-import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
@@ -49,7 +50,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: AssetId) => `${assetId.pluginId}:${assetId.currencyCode}`
+  const serializeAssetId = (assetId: StakeAssetInfo) => `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
@@ -93,7 +94,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     return reservesMap
   }
 
-  function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: AssetId): string {
+  function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: StakeAssetInfo): string {
     const contractInfo = eco.getContractInfo(assetId.currencyCode)
     const { address } = contractInfo
     return address.toLowerCase()
@@ -427,7 +428,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
-          throw new Error(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode))
+          showWarning(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode), { trackError: false })
         }
 
         // 3. Withdraw LP-token from Pool Contract
