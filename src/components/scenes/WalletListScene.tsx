@@ -13,6 +13,7 @@ import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -85,6 +86,33 @@ export function WalletListScene(props: Props) {
     navigation.navigate('walletRestore')
   })
 
+  const tokenSupportingWalletIds = React.useMemo(() => {
+    const walletIds: string[] = []
+    for (const wallet of Object.values(account.currencyWallets)) {
+      if (Object.keys(wallet.currencyConfig.builtinTokens).length > 0) {
+        walletIds.push(wallet.id)
+      }
+    }
+    return walletIds
+  }, [account])
+
+  const handlePressAddEditToken = useHandler(async () => {
+    const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={props.navigation as NavigationBase}
+        headerTitle={lstrings.choose_custom_token_wallet}
+        allowedWalletIds={tokenSupportingWalletIds}
+      />
+    ))
+    if (walletListResult?.type === 'wallet') {
+      const { walletId } = walletListResult
+      navigation.navigate('editToken', {
+        walletId
+      })
+    }
+  })
+
   const handleFooterLayoutHeight = useHandler((height: number) => {
     setFooterHeight(height)
   })
@@ -98,8 +126,11 @@ export function WalletListScene(props: Props) {
   }, [handleSort, navigation, isSearching, sorting])
 
   const renderListFooter = React.useMemo(() => {
+    if (isSearching && tokenSupportingWalletIds.length > 0) {
+      return <SceneButtons secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }} />
+    }
     return <SceneButtons secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }} />
-  }, [handlePressRestoreWallets])
+  }, [handlePressAddEditToken, handlePressRestoreWallets, tokenSupportingWalletIds, isSearching])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
