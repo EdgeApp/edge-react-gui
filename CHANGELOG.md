@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
+- fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
 
 ## 4.17.0
 

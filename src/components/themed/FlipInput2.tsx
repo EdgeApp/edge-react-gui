@@ -31,6 +31,7 @@ import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
   setAmounts: (value: string[]) => void
+  triggerConvertValue: () => void
 }
 
 export type FieldNum = 0 | 1
@@ -232,6 +233,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   React.useImperativeHandle(ref, () => ({
     setAmounts: amounts => {
       setAmounts([amounts[0], amounts[1]])
+    },
+    triggerConvertValue: () => {
+      onNumericInputChange(amounts[primaryField])
     }
   }))
 
