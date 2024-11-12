@@ -254,3 +254,8 @@ jest.mock('react-native-device-info', () => {
     getVersion: jest.fn()
   }
 })
+
+jest.mock('react-native-reorderable-list', () => ({
+  ...jest.requireActual('react-native-reorderable-list'),
+  useReorderableDrag: () => jest.fn()
+}))
