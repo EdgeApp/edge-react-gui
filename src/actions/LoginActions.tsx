@@ -18,7 +18,7 @@ import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsRed
 import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase, NavigationProp } from '../types/routerTypes'
+import { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
@@ -86,7 +86,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await readLocalAccountSettings(account)
 
       const newAccountFlow = async (
-        navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>,
+        navigation: EdgeAppSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>['navigation'],
         items: WalletCreateItem[]
       ) => {
         navigation.replace('edgeTabs', { screen: 'home' })
@@ -110,7 +110,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         screen: 'edgeAppStack',
         params: {
           screen: 'createWalletSelectCryptoNewAccount',
-          params: { newAccountFlow, defaultSelection, disableLegacy: true }
+          params: {
+            newAccountFlow,
+            defaultSelection,
+            disableLegacy: true
+          }
         }
       })
 

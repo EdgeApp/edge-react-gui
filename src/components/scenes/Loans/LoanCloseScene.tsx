@@ -17,7 +17,7 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { makeAaveCloseAction } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { filterNull } from '../../../util/safeFilters'
@@ -40,7 +40,7 @@ export interface LoanCloseParams {
   loanAccountId: string
 }
 
-export interface Props extends EdgeSceneProps<'loanClose'> {
+export interface Props extends EdgeAppSceneProps<'loanClose'> {
   loanAccount: LoanAccount
 }
 

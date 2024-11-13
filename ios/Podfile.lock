@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.19.1):
+  - edge-core-js (2.20.1):
     - React-Core
-  - edge-currency-accountbased (4.26.2):
+  - edge-currency-accountbased (4.27.1):
     - React-Core
-  - edge-currency-plugins (3.4.3):
+  - edge-currency-plugins (3.4.4):
     - React-Core
-  - edge-exchange-plugins (2.12.0):
+  - edge-exchange-plugins (2.13.0):
     - React-Core
-  - edge-login-ui-rn (3.22.5):
+  - edge-login-ui-rn (3.23.0):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -430,7 +430,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.9.1):
+  - react-native-zcash (0.9.2):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1080,11 +1080,11 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 09206fe34acb8f4eebafe61e8c2eda6cbe81ba69
-  edge-currency-accountbased: d4ac6411e4d3070606a3d07e0aacfd1e87220030
-  edge-currency-plugins: 38eaf53c2d9fdbdd30ade3ad09fd698f428f208f
-  edge-exchange-plugins: 5037e196e652d1dca42afacd86b2395bd0d7f298
-  edge-login-ui-rn: 33f78f4089a63314ca3d652b0ed235f1e1a1bd4c
+  edge-core-js: 9264309f29f398da3b714dc5e80702f102f9db2d
+  edge-currency-accountbased: 3ed33409d304a969392c9e205d115521aab49b8a
+  edge-currency-plugins: 95577a282061148263207fad9befe11bb07a57c1
+  edge-exchange-plugins: 896eb55d2a03140bae7b45321efa9e9ac3d3bbe6
+  edge-login-ui-rn: 58ee453724222a7feac090500587db8cbf2dd083
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1141,7 +1141,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: c6f228ef34d408d14f38fbd2cf008b9d09b80a78
+  react-native-zcash: 8d6da0be327896cd68c623e4d261aab0e497276e
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

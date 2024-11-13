@@ -10,7 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -19,7 +19,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'otpSetup'> {}
+interface OwnProps extends EdgeAppSceneProps<'otpSetup'> {}
 
 interface StateProps {
   account: EdgeAccount

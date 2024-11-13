@@ -9,7 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
@@ -25,7 +25,7 @@ export interface CoinRankingDetailsParams {
   fiatCurrencyCode: string
 }
 
-interface Props extends EdgeSceneProps<'coinRankingDetails'> {}
+interface Props extends EdgeAppSceneProps<'coinRankingDetails'> {}
 
 const COINRANKINGDATA_TITLE_MAP: { [key: string]: string } = {
   currencyCode: '',

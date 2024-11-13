@@ -383,9 +383,9 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           ]
         }
       >
-        This application would like to create or access its wallet in your Edge account.
+        You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.
 
- It will not have access to any other wallets.
+DO NOT accept this login unless you trust the application and person who provided the QR code
       </Text>
     </View>
   </View>

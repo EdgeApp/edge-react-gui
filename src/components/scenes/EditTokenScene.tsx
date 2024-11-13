@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -33,7 +33,7 @@ export interface EditTokenParams {
   walletId: string
 }
 
-interface Props extends EdgeSceneProps<'editToken'> {
+interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 

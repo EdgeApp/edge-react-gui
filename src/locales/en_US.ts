@@ -147,10 +147,8 @@ const strings = {
 
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  access_wallet_description:
-    'This application would like to create or access its wallet in your %1$s account.\n\n It will not have access to any other wallets.',
-  edge_description_warning:
-    'The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
+  access_wallet_description: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
+  edge_description_warning: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_success: 'Your exchange is being processed!',
@@ -574,6 +572,7 @@ const strings = {
   string_first_coreum_wallet_name: 'My Coreum',
   string_first_cosmoshub_wallet_name: 'My Cosmos Hub',
   string_first_osmosis_wallet_name: 'My Osmosis',
+  string_first_ton_wallet_name: 'My Toncoin',
   string_first_thorchainrune_wallet_name: 'My Thorchain',
   string_first_rsk_wallet_name: 'My Rootstock',
   string_first_bnb_wallet_name: 'My BNB',
@@ -1557,10 +1556,10 @@ const strings = {
   backup_web3_handle_warning_message: 'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
-    'To buy, sell, and receive funds, please create a full account. Edge full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
+    'To buy, sell, and receive funds, please create a full account. %1$s full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
-  guest_account: 'Guest Account',
-  tap_to_create_username_password: 'Tap to create a username and password',
+  backup_notification_title: 'Create Username & Password',
+  backup_notification_body: 'Funds will be lost if your device is lost or %1$s is uninstalled.',
 
   // Backup Message Variants
   backup_title: 'Create Full Account',
@@ -1596,6 +1595,7 @@ const strings = {
   survey_opt_in_person_event: 'In-person Event',
   survey_opt_personal_referral: 'Personal Referral',
   survey_opt_article: 'Article',
+  survey_opt_BTCTKVR_magazine: 'BTCTKVR Magazine',
   survey_opt_submit: 'Submit',
   survey_opt_dismiss: 'Dismiss',
   survey_opt_other_specify: 'Other (Specify)',

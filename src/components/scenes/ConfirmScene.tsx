@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -14,7 +14,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
-interface Props extends EdgeSceneProps<'confirmScene'> {}
+interface Props extends EdgeAppSceneProps<'confirmScene'> {}
 
 export interface ConfirmSceneParams {
   titleText: string

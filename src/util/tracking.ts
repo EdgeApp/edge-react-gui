@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/react-native'
+import { captureException, withScope } from '@sentry/react-native'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
@@ -8,8 +8,10 @@ import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { ThunkAction } from '../types/reduxTypes'
+import { addMetadataToContext } from './addMetadataToContext'
 import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
+import { AggregateErrorFix, normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
@@ -143,28 +145,41 @@ if (ENV.POSTHOG_INIT) {
 }
 
 /**
- * Track error to external reporting service (ie. Bugsnag)
+ * Track error to external reporting service (ie. Sentry).
+ *
+ * It will take an exception of `unknown` type and normalize it into an error
+ * for reporting.
+ *
+ * All normalization rules should be isolated to `normalizeError` utility.
  */
 export function trackError(
   error: unknown,
-  tag?: string,
+  nameTag?: string,
   metadata?: {
     [key: string]: any
   }
 ): void {
-  let err: Error | string
-  if (error instanceof Error || typeof error === 'string') {
-    err = error
-  } else {
-    // At least send an error which should give us the callstack
-    err = 'Unknown error occurred'
+  const err = normalizeError(error)
+
+  if (err instanceof AggregateErrorFix) {
+    // Track each error individually using a common group tag:
+    const aggregateId = Date.now().toString(16)
+    withScope(scope => {
+      scope.setTag('aggregate.id', aggregateId)
+      err.errors.forEach(e => trackError(e, nameTag, metadata))
+    })
+    return
   }
 
-  if (tag == null) {
-    captureException(err)
-  } else {
-    captureException(err, { event_id: tag, data: metadata })
-  }
+  captureException(err, scope => {
+    scope.setTag('event.name', nameTag)
+    if (metadata) {
+      const context: Record<string, unknown> = {}
+      addMetadataToContext(context, metadata)
+      scope.setContext('Metadata', context)
+    }
+    return scope
+  })
 }
 
 /**

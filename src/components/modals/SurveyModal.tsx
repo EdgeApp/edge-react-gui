@@ -26,6 +26,7 @@ const SURVEY_OPTS = [
   { label: lstrings.survey_opt_in_person_event, selected: false },
   { label: lstrings.survey_opt_personal_referral, selected: false },
   { label: lstrings.survey_opt_article, selected: false },
+  { label: lstrings.survey_opt_BTCTKVR_magazine, selected: false },
   // Show names intentionally left untranslated:
   { label: 'Free Talk Live', selected: false },
   { label: 'Crypto Canal', selected: false },

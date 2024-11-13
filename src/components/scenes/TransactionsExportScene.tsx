@@ -12,7 +12,7 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -22,7 +22,6 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
-import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { SettingsRow } from '../settings/SettingsRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { MainButton } from '../themed/MainButton'
@@ -38,7 +37,7 @@ interface File {
   fileName: string // wallet-btc-2020.csv
 }
 
-interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
+interface OwnProps extends EdgeAppSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -119,6 +118,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
       const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenCurrencyCode]
+
       this.setState({
         isExportBitwave,
         isExportCsv,
@@ -149,24 +149,13 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
         <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
         <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
-        {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
+        {this.renderSwitches()}
         {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={[3, 0, 1]} onPress={this.handleSubmit} type="secondary" />}
       </SceneWrapper>
     )
   }
 
-  renderAndroidSwitches() {
-    const { isExportBitwave, isExportCsv, isExportQbo } = this.state
-    return (
-      <>
-        <SettingsRadioRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
-        <SettingsRadioRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
-        <SettingsRadioRow label={lstrings.export_transaction_bitwave_csv} value={isExportBitwave} onPress={this.handleBitwaveToggle} />
-      </>
-    )
-  }
-
-  renderIosSwitches() {
+  renderSwitches() {
     const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
@@ -190,27 +179,15 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   handleQboToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportQbo: true, isExportCsv: false, isExportBitwave: false })
-    } else {
-      this.setState(state => ({ isExportQbo: !state.isExportQbo }))
-    }
+    this.setState(state => ({ isExportQbo: !state.isExportQbo }))
   }
 
   handleCsvToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportCsv: true, isExportBitwave: false, isExportQbo: false })
-    } else {
-      this.setState(state => ({ isExportCsv: !state.isExportCsv }))
-    }
+    this.setState(state => ({ isExportCsv: !state.isExportCsv }))
   }
 
   handleBitwaveToggle = () => {
-    if (Platform.OS === 'android') {
-      this.setState({ isExportBitwave: true, isExportCsv: false, isExportQbo: false })
-    } else {
-      this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
-    }
+    this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
   }
 
   handleSubmit = async (): Promise<void> => {
@@ -350,24 +327,27 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     const title = 'Share Transactions ' + formats.join(', ')
     if (Platform.OS === 'android') {
-      await this.shareAndroid(title, files[0])
+      await this.shareAndroid(title, files)
     } else {
       await this.shareIos(title, files)
     }
   }
 
-  async shareAndroid(title: string, file: File): Promise<void> {
+  async shareAndroid(title: string, files: File[]): Promise<void> {
     try {
       const directory = RNFS.ExternalCachesDirectoryPath
-      const url = `file://${directory}/${file.fileName}`
-      await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+      const urls: string[] = []
+      for (const file of files) {
+        const url = `file://${directory}/${file.fileName}`
+        urls.push(url)
+        await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+      }
 
       await Share.open({
         title,
         message: '',
-        url,
+        urls,
         failOnCancel: false,
-        filename: file.fileName,
         subject: title
       }).catch(error => console.log('Share error', error))
     } catch (error: any) {

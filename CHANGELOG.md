@@ -2,7 +2,34 @@
 
 ## Unreleased
 
-## 4.16.0
+## 4.17.0
+
+- added: Add TON
+- added: Log swap errors to Sentry.
+- added: Tracking for unexpected fiat provider errors.
+- added: Add TON support to Banxa, Moonpay, Paybis, and Simplex fiat plugins
+- added: Add OSMO support to Moonpay fiat plugin
+- added: New post-install survey option for "BTCTKVR Magazine".
+- changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
+- changed: Add explicit gas limit for Kiln staking.
+- changed: Various strings updated to UK compliance spec
+- changed: Track array of errors or AggregateErrors separately with a common tag
+- changed: Use stack-specific scene navigation props instead of `NavigationProp`
+- changed: Verbiage for login request scene for QR login has been updated to remove ambiguity.
+- changed: Wording in light account persistent notification
+- changed: (Android) Allow exporting multiple files
+- fixed: Correctly report ETH Kiln balances
+- fixed: Fix error massaging in trackError
+- fixed: Normalized error messages for tracking; removing localization from error messages.
+- fixed: Remove Kado deposit details for "Sell" orders.
+- fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
+- fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
+- removed: Bank Wire Transfer Buy for Florida
+- removed: Paypal Sell for Canada
+- removed: Moonpay, Simplex, and Paybis for UK
+- removed: UK persistent investment risk banner
+
+## 4.16.0 (2024-10-30)
 
 - added: "Transaction Details" button to `SwapSuccessScene`
 - added: `WalletRestoreScene`
@@ -10,9 +37,7 @@
 - added: "Go to Parent Wallet" `WalletListMenuModal` option
 - added: Earn Scene
 - added: Include wallet creation date in wallet data in log output
-- changed: Add explicit gas limit for Kiln staking.
 - changed: Allow 0 amount entry in `SpendingLimitsScene`
-- changed: Various strings updated to UK compliance spec
 - changed: Wording on `SwapSuccessScene`
 - changed: `SettingsScene` disables "Restore Wallets" option if there are no wallets to restore
 - changed: FIO Home Scene tile replaced with Earn
@@ -24,16 +49,11 @@
 - changed: Navigate to wallet list after restoring wallets
 - changed: Update `NotificationCard` to UI4 styling
 - changed: Remove legacy non-segwit wallets from new account wallet selection scene
-- fixed: Correctly report ETH Kiln balances
 - fixed: Deeplinking to `SendScene` may not retain memo information in the resulting broadcast
 - fixed: Use account default fiat for transaction fee display in `SweepPrivateKeyCalculateFeeScene`
 - fixed: Crash when archiving a wallet that recently accessed the trade modal
 - fixed: ACH sell option for Florida visible with no accepted currencies
 - fixed: Slow `TransactionDetailsScene` navigation on slow networks
-- removed: Moonpay, Simplex, and Paybis for UK
-- removed: UK persistent investment risk banner
-- removed: Bank Wire Transfer Buy for Florida
-- removed: Paypal Sell for Canada
 
 ## 4.15.1 (2024-10-18)
 

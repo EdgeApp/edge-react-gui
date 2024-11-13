@@ -13,7 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
 import { BalanceCard } from '../cards/BalanceCard'
@@ -29,7 +29,7 @@ import { SectionView } from '../layout/SectionView'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-interface Props extends EdgeSceneProps<'home'> {}
+interface Props extends EdgeTabsSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
@@ -88,7 +88,7 @@ export const HomeScene = (props: Props) => {
     navigation.navigate('swapTab')
   })
   const handleViewAssetsPress = useHandler(() => {
-    navigation.navigate('walletsTab', { screen: 'walletList' })
+    navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
   })
   const handleScroll = useSceneScrollHandler()
 
@@ -138,14 +138,14 @@ export const HomeScene = (props: Props) => {
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={fadeInUp140}>
-                  <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
+                  <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation as NavigationBase} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
                 <InfoCardCarousel
                   enterAnim={fadeInUp110}
                   cards={infoServerData.rollup?.promoCards2}
                   countryCode={countryCode}
-                  navigation={navigation}
+                  navigation={navigation as NavigationBase}
                   screenWidth={screenWidth}
                 />
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
@@ -210,9 +210,13 @@ export const HomeScene = (props: Props) => {
                 </>
               )}
               <>
-                <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking')} />
+                <SectionHeader
+                  leftTitle={lstrings.title_markets}
+                  rightNode={lstrings.see_all}
+                  onRightPress={() => navigation.navigate('edgeAppStack', { screen: 'coinRanking' })}
+                />
                 <EdgeAnim enter={fadeInUp30}>
-                  <MarketsCard navigation={navigation} numRows={5} />
+                  <MarketsCard navigation={navigation as NavigationBase} numRows={5} />
                 </EdgeAnim>
               </>
               {videoPosts == null || videoPosts.length === 0 ? null : (

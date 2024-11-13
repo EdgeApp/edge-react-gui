@@ -5,14 +5,14 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface Props extends EdgeSceneProps<'assetSettings'> {}
+interface Props extends EdgeAppSceneProps<'assetSettings'> {}
 
 export function AssetSettingsScene(props: Props) {
   const { navigation } = props

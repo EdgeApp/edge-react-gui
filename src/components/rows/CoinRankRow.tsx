@@ -8,7 +8,7 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { toPercentString } from '../../locales/intl'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../types/coinrankTypes'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../util/logger'
 import { DECIMAL_PRECISION } from '../../util/utils'
@@ -21,7 +21,7 @@ interface Props {
   coinRanking: CoinRanking
   index: number
   fiatCurrencyCode: string
-  navigation: NavigationProp<'coinRanking'>
+  navigation: EdgeAppSceneProps<'coinRanking'>['navigation']
   percentChangeTimeFrame: PercentChangeTimeFrame
 }
 

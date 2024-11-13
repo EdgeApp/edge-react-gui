@@ -3,12 +3,12 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface Props extends EdgeSceneProps<'changePin'> {}
+interface Props extends EdgeAppSceneProps<'changePin'> {}
 
 export const ChangePinScene = (props: Props) => {
   const { navigation } = props
