@@ -76,7 +76,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
       style={
         {
           "backgroundColor": undefined,
-          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -638,7 +637,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
       style={
         {
           "backgroundColor": undefined,
-          "borderRadius": 16,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
