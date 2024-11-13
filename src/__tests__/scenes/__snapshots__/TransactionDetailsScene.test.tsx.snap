@@ -2195,7 +2195,6 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -4612,7 +4611,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",

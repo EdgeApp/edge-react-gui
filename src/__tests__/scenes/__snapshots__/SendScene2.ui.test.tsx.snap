@@ -1383,7 +1383,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -3178,7 +3177,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -4950,7 +4948,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -6419,7 +6416,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -7864,7 +7860,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -9146,7 +9141,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -10712,7 +10706,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -12236,7 +12229,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -13694,7 +13686,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -15135,7 +15126,6 @@ exports[`SendScene2 Render SendScene 1`] = `
           style={
             {
               "backgroundColor": undefined,
-              "borderRadius": 16,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
