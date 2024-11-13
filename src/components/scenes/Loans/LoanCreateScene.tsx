@@ -29,7 +29,7 @@ import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { enableToken } from '../../../util/CurrencyWalletHelpers'
+import { enableTokenCurrencyCode } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, removeIsoPrefix, truncateDecimals, zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -67,8 +67,8 @@ export const LoanCreateScene = (props: Props) => {
   // Force enable tokens required for loan
   useAsyncEffect(
     async () => {
-      await enableToken('WBTC', borrowEngineWallet)
-      await enableToken('USDC', borrowEngineWallet)
+      await enableTokenCurrencyCode('WBTC', borrowEngineWallet)
+      await enableTokenCurrencyCode('USDC', borrowEngineWallet)
     },
     [],
     'LoanCreateScene:1'
