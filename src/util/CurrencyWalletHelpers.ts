@@ -43,13 +43,29 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenId: EdgeTok
   return balance
 }
 
-// TODO: Update to use tokenId. Integrate into the rest of the code base where the deprecated enableTokens is used.
-export const enableToken = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
+/** @deprecated - Use `enableTokens()` instead */
+export const enableTokenCurrencyCode = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
   const allTokens = wallet.currencyConfig.allTokens
   const newTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode.toUpperCase() === currencyCode.toUpperCase())
   if (newTokenId == null) throw Error(`Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`)
 
-  const enabledTokenIds = wallet.enabledTokenIds
-  if (enabledTokenIds.find(enabledTokenId => enabledTokenId === newTokenId) == null)
-    await showFullScreenSpinner(lstrings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, newTokenId]))
+  await enableTokens([newTokenId], wallet)
+}
+
+/**
+ * Enables tokens in a wallet, if not already enabled.
+ * - If some tokens are not yet enabled, shows a full screen spinner while they
+ * get enabled.
+ * - If the tokens are all already enabled, this function call is a noop.
+ */
+export const enableTokens = async (newTokenIds: EdgeTokenId[], wallet: EdgeCurrencyWallet) => {
+  const { enabledTokenIds, currencyConfig } = wallet
+  const { allTokens } = currencyConfig
+
+  const tokensToEnable = Object.keys(allTokens).filter(
+    tokenId => newTokenIds.filter(newTokenId => newTokenId != null).includes(tokenId) && !enabledTokenIds.includes(tokenId)
+  )
+
+  if (tokensToEnable.length > 0)
+    await showFullScreenSpinner(lstrings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable]))
 }
