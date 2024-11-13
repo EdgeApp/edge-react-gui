@@ -106,3 +106,33 @@ export const isDailyCheckDue = (lastCheck: number): boolean => {
   const last = new Date(lastCheck).getTime()
   return now - last > DAILY_INTERVAL_MS
 }
+
+/**
+ * Checks if a interval has passed based on the last check time. If the check
+ * is due, the last check time is updated to the current time.
+ *
+ * @param interval the interval in milliseconds
+ * @returns a "check-due" function which will return `true` if the check interval
+ * has elapsed since the last check, `false` otherwise. Also allows for an override
+ * to reset the last check time.
+ */
+export const makeCheckDue = (interval: number) => {
+  let last: number = 0
+  /**
+   * Checks if a interval has passed based on the last check time. If the check
+   * is due, the last check time is updated to the current time.
+   * Also allows for an override to reset the last check time.
+   */
+  return function checkDue(override?: boolean): boolean {
+    if (override != null) {
+      last = override ? last : 0
+      return override
+    }
+    const now = Date.now()
+    if (now - last > interval) {
+      last = now
+      return true
+    }
+    return false
+  }
+}
