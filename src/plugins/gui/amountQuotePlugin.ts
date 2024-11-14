@@ -153,6 +153,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         throw new Error('Multiple paymentTypes not implemented')
       }
 
+      providerPriority.sepa.mtpelerin = 100
       const paymentProviderPriority = providerPriority[paymentTypes[0]] ?? {}
       const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
 
