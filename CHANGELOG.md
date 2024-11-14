@@ -2,10 +2,12 @@
 
 ## Unreleased
 
+## 4.18.0
+
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
 - fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
 
-## 4.17.0
+## 4.17.0 (2024-11-12)
 
 - added: Add TON
 - added: Log swap errors to Sentry.
