@@ -11,10 +11,10 @@ import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
-import { StyledButtonContainer } from '../../buttons/ButtonsView'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { SceneButtons } from '../../buttons/SceneButtons'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -22,11 +22,10 @@ import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { MainButton } from '../../themed/MainButton'
-import { SceneHeader } from '../../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
-interface Props extends EdgeAppSceneProps<'stakeOverview'> {
+interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -55,13 +54,15 @@ const StakeOverviewSceneComponent = (props: Props) => {
     denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
     return denomMap
   }, {})
+  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
+
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
   const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -149,8 +150,13 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
-      <SceneHeader title={title} withTopMargin />
-      <StakingReturnsCard countryCode={countryCode} wallet={wallet} stakePolicy={stakePolicy} />
+      <SceneHeaderUi4 title={title} />
+      <StakingReturnsCard
+        fromCurrencyLogos={policyIcons.stakeAssetUris}
+        toCurrencyLogos={policyIcons.rewardAssetUris}
+        apy={stakePolicy.apy}
+        stakeProviderInfo={stakePolicy.stakeProviderInfo}
+      />
       {stakePosition == null ? (
         <>
           <View style={styles.shimmer}>
@@ -169,34 +175,42 @@ const StakeOverviewSceneComponent = (props: Props) => {
         }
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
-      <StyledButtonContainer layout="column">
-        <MainButton label={lstrings.stake_stake_more_funds} disabled={!canStake} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
-        {stakePolicy.hideClaimAction ? null : (
-          <MainButton label={lstrings.stake_claim_rewards} disabled={!canClaim} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-        )}
-        {stakePolicy.hideUnstakeAndClaimAction ? null : (
-          <MainButton
-            label={lstrings.stake_unstake_claim}
-            disabled={!canUnstakeAndClaim}
-            type="escape"
-            onPress={handleModifyPress('unstakeAndClaim')}
-            marginRem={0.5}
-          />
-        )}
-        {stakePolicy.hideUnstakeAction ? null : (
-          <MainButton label={lstrings.stake_unstake} disabled={!canUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
-        )}
-      </StyledButtonContainer>
+      <SceneButtons
+        primary={{
+          label: lstrings.fragment_stake_label,
+          disabled: !canStake,
+          onPress: handleModifyPress('stake')
+        }}
+        secondary={
+          stakePolicy.hideClaimAction
+            ? undefined
+            : {
+                label: lstrings.stake_claim_rewards,
+                disabled: !canClaim,
+                onPress: handleModifyPress('claim')
+              }
+        }
+        tertiary={
+          stakePolicy.hideUnstakeAndClaimAction
+            ? stakePolicy.hideUnstakeAction
+              ? undefined
+              : {
+                  label: lstrings.stake_unstake,
+                  disabled: !canUnstake,
+                  onPress: handleModifyPress('unstake')
+                }
+            : {
+                label: lstrings.stake_unstake_claim,
+                disabled: !canUnstakeAndClaim,
+                onPress: handleModifyPress('unstakeAndClaim')
+              }
+        }
+      />
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  card: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: theme.rem(0.5)
-  },
   shimmer: {
     height: theme.rem(3),
     marginLeft: theme.rem(1),

@@ -64,7 +64,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
     const { stakePolicyId } = stakePolicy
-    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
+    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, { pluginId })
     // Transition to next scene immediately
     const stakePosition = stakePositionMap[stakePolicyId]
     if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })

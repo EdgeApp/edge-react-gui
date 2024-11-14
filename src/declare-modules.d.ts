@@ -30,11 +30,9 @@ declare module 'csv-stringify/lib/browser/sync' {
   export default function stringify(input: any[], options?: any): string
 }
 
-declare module 'react-native-power-saving-mode' {
-  import { EmitterSubscription } from 'react-native'
-
-  export const powerSavingOn: (() => Promise<boolean>) | null
-  export const powerSavingModeChanged: ((callback: (state: boolean) => void) => EmitterSubscription) | null
+declare module 'react-native-battery-optimization-check' {
+  export function BatteryOptEnabled(): Promise<boolean>
+  export function RequestDisableOptimization(): Promise<void>
 }
 
 declare module 'edge-currency-monero/lib/react-native-io'

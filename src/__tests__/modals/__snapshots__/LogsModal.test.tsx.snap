@@ -191,8 +191,142 @@ exports[`LogsModal should render with a logs modal 1`] = `
             ]
           }
         >
-          You may add any additional notes here, and select whether to share logs with Edge, or export logs to your device.
+          Select whether to share logs with Edge or export logs to your device.
         </Text>
+        <View
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+              },
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              },
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          >
+            <BVLinearGradient
+              colors={
+                [
+                  1886857999,
+                  1887591201,
+                  1887591201,
+                  1886857999,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 0.9,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.9,
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+          <View
+            style={
+              {
+                "margin": 11,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 28,
+                    },
+                    {
+                      "marginRight": 4,
+                    },
+                    {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Medium",
+                      "marginLeft": 4,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Do not enter seeds, private keys, password or other sensitive information
+              </Text>
+            </View>
+          </View>
+        </View>
         <View
           marginRemStyle={
             {

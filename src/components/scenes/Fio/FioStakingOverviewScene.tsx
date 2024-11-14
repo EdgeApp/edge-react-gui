@@ -140,7 +140,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
 
       <ButtonsView
         parentType="scene"
-        primary={{ label: lstrings.staking_stake_funds_button, onPress: handlePressStake }}
+        primary={{ label: lstrings.fragment_stake_label, onPress: handlePressStake }}
         tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}
       />
     </>

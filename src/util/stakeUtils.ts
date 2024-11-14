@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
 import { getUkCompliantString } from './ukComplianceUtils'
 
@@ -88,8 +88,8 @@ export const getPolicyIconUris = (
   return { stakeAssetUris, rewardAssetUris }
 }
 
-export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
-  return stakePlugins.find(plugin => plugin.getPolicies().find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
+export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy, filter?: StakePolicyFilter): StakePlugin | undefined => {
+  return stakePlugins.find(plugin => plugin.getPolicies(filter).find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
 }
 
 /**

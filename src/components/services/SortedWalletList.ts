@@ -266,6 +266,13 @@ export function searchWalletList(list: WalletListItem[], searchText: string): Wa
     const { currencyCode, displayName } = token == null ? wallet.currencyInfo : token
     const name = getWalletName(wallet)
 
-    return normalizeForSearch(currencyCode).includes(target) || normalizeForSearch(displayName).includes(target) || normalizeForSearch(name).includes(target)
+    const contractAddress = token?.networkLocation?.contractAddress ?? ''
+
+    return (
+      normalizeForSearch(currencyCode).includes(target) ||
+      normalizeForSearch(displayName).includes(target) ||
+      normalizeForSearch(name).includes(target) ||
+      normalizeForSearch(contractAddress).includes(target)
+    )
   })
 }

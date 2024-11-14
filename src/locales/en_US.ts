@@ -125,7 +125,7 @@ const strings = {
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
-  warning_battery_saver: `Battery Saver mode detected. Balances and transactions may be inaccurate`,
+  warning_battery_saver: `Battery Saver Detected! Balances may not update. For the best experience, please turn off battery saver mode.`,
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -456,7 +456,8 @@ const strings = {
     'Edge uses Monero light wallet servers provided by MyMonero. These servers hold the private view key, which they use to scan for transactions. For enhanced privacy, you can run your own Monero light wallet server.',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
-  settings_modal_export_logs_message: 'You may add any additional notes here, and select whether to share logs with Edge, or export logs to your device.',
+  settings_modal_export_logs_warning: 'Do not enter seeds, private keys, password or other sensitive information',
+  settings_modal_export_logs_directions: 'Select whether to share logs with Edge or export logs to your device.',
   settings_modal_clear_logs_message: 'Are you sure you want to clear all logs on this device?',
   settings_modal_clear_logs_success: 'Logs have been cleared',
   settings_modal_send_logs_success: 'Logs have been sent',
@@ -830,9 +831,12 @@ const strings = {
 
   buy_crypto_modal_title: 'Wallet Empty',
   buy_crypto_modal_message: 'Your %s wallet is empty. Would you like to buy %s or exchange another crypto into %s?',
+  buy_crypto_modal_message_no_exchange_s: 'Your %s wallet is empty. Would you like to buy %s?',
   buy_parent_crypto_modal_message_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
   buy_parent_crypto_modal_message_3s:
     '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
+  buy_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s?',
+  buy_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s?',
   buy_crypto_decline: 'Not at this time',
   buy_1s: 'Buy %1$s',
   sell_1s: 'Sell %1$s',

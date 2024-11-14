@@ -18,6 +18,7 @@ export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
 export interface SwapInputCardInputRef {
   setAmount: (field: ExchangeFlipInputFields, value: string) => void
+  triggerConvertValue: () => void
 }
 
 export interface SwapInputCardAmounts {
@@ -184,6 +185,9 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         const { displayAmount } = convertFromFiat(value)
         flipInputRef.current?.setAmounts([displayAmount, value])
       }
+    },
+    triggerConvertValue: () => {
+      flipInputRef.current?.triggerConvertValue()
     }
   }))
 

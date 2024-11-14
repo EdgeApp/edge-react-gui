@@ -1,4 +1,14 @@
-import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePluginFactory, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  filterStakePolicies,
+  StakePlugin,
+  StakePluginFactory,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition,
+  StakePositionRequest
+} from '../types'
 import { CardanoPooledKilnAdapterConfig, makeCardanoKilnAdapter } from './policyAdapters/CardanoKilnAdaptor'
 import { CoreumNativeSkateKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
@@ -22,21 +32,7 @@ export const makeGenericStakePlugin =
 
     const instance: StakePlugin = {
       getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
-        const { currencyCode, wallet } = filter ?? {}
-        let filteredPolicies: StakePolicy[] = policies
-
-        if (wallet != null) {
-          filteredPolicies = filteredPolicies.filter(policy =>
-            [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId)
-          )
-        }
-        if (currencyCode != null) {
-          filteredPolicies = filteredPolicies.filter(policy =>
-            [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode)
-          )
-        }
-
-        return filteredPolicies
+        return filterStakePolicies(policies, filter)
       },
 
       async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {

@@ -42,13 +42,15 @@ export function AlertDropdown(props: Props) {
   })
 
   return (
-    <AirshipDropdown autoHideMs={persistent ? 0 : undefined} bridge={bridge} backgroundColor={color} onPress={handleOnPress}>
+    <AirshipDropdown autoHideMs={persistent ? 0 : undefined} bridge={bridge} backgroundColor={color}>
       <View style={styles.container}>
-        <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
-        <Text style={styles.text}>
-          <Text style={styles.textBold}>{warning ? lstrings.alert_dropdown_warning : lstrings.alert_dropdown_alert}</Text>
-          {message}
-        </Text>
+        <EdgeTouchableOpacity style={styles.content} onPress={handleOnPress}>
+          <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
+          <Text style={styles.text}>
+            <Text style={styles.textBold}>{warning ? lstrings.alert_dropdown_warning : lstrings.alert_dropdown_alert}</Text>
+            {message}
+          </Text>
+        </EdgeTouchableOpacity>
         <EdgeTouchableOpacity onPress={handleClose}>
           <AntDesignIcon name="closecircle" size={theme.rem(1)} style={styles.icon} />
         </EdgeTouchableOpacity>
@@ -64,6 +66,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
     justifyContent: 'space-between',
     padding: theme.rem(0.5)
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1
   },
   text: {
     ...textStyle(theme, 'row-center', 'small'),

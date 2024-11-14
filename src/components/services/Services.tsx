@@ -1,9 +1,9 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { EmitterSubscription } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
-import { powerSavingModeChanged, powerSavingOn } from 'react-native-power-saving-mode'
+import { Platform } from 'react-native'
+import { BatteryOptEnabled, RequestDisableOptimization } from 'react-native-battery-optimization-check'
+import { usePowerState } from 'react-native-device-info'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
@@ -25,7 +25,7 @@ import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
-import { Airship } from './AirshipInstance'
+import { Airship, showDevError } from './AirshipInstance'
 import { AutoLogout } from './AutoLogout'
 import { ContactsLoader } from './ContactsLoader'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager'
@@ -61,6 +61,7 @@ let isFioModalShown = false
 export function Services(props: Props) {
   const dispatch = useDispatch()
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
+  const powerState = usePowerState()
   const { navigation } = props
 
   // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
@@ -128,49 +129,26 @@ export function Services(props: Props) {
     'Services 2'
   )
 
-  // Subscribe to Android Power Saver state, and show a warning only if it
-  // changes from off to on:
   useAsyncEffect(
     async () => {
-      // This method is only available for Android
-      if (powerSavingOn == null) return
-
-      let airshipBridge: AirshipBridge<void> | undefined
-      const handlePowerSavingModeChanged = async (isPowerSavingModeOn: boolean) => {
-        if (isPowerSavingModeOn && airshipBridge == null) {
-          await Airship.show(bridge => {
-            airshipBridge = bridge // Capture the bridge here
-            return <AlertDropdown bridge={bridge} message={lstrings.warning_battery_saver} warning persistent />
-          }).then(() => {
-            airshipBridge = undefined
-          })
-        } else if (!isPowerSavingModeOn && airshipBridge != null) {
-          // Dismiss the alert when power-saving mode turns off and there's an
-          // active warning that wasn't dismissed
-          airshipBridge.resolve()
-        }
+      if (Platform.OS !== 'android' || !powerState.lowPowerMode) {
+        return
       }
 
-      // Show warning if Power Saver mode is on initially on app boot
-      await handlePowerSavingModeChanged(await powerSavingOn())
-
-      // Subscribe to Power Saver mode changes
-      let subscription: EmitterSubscription | undefined
-      if (powerSavingModeChanged != null) {
-        subscription = powerSavingModeChanged(handlePowerSavingModeChanged)
+      const batteryOptEnabled = await BatteryOptEnabled()
+      if (!batteryOptEnabled) {
+        return
       }
-
-      // Cleanup
-      return () => {
-        if (subscription != null) {
-          subscription.remove()
+      console.warn('Battery saver mode enabled and battery optimization is disabled')
+      await Airship.show(bridge => {
+        const onPress = async () => {
+          await RequestDisableOptimization()
+          bridge.resolve()
         }
-        if (airshipBridge != null) {
-          airshipBridge.resolve()
-        }
-      }
+        return <AlertDropdown bridge={bridge} onPress={onPress} message={lstrings.warning_battery_saver} warning persistent />
+      }).catch(e => showDevError(e))
     },
-    [],
+    [powerState],
     'Services 3'
   )
 
