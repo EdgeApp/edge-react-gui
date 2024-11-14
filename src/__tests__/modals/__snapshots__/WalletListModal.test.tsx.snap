@@ -74,14 +74,19 @@ exports[`WalletListModal should render with loading props 1`] = `
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
-        {
-          "backgroundColor": undefined,
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
+        [
+          {
+            "backgroundColor": undefined,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "borderRadius": 16,
+          },
+        ]
       }
     />
     <View
