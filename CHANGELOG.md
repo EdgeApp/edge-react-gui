@@ -7,6 +7,7 @@
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
 - changed: Auto-enable required tokens when navigating to `Stake*` scenes
 - fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
+- fixed: Backing up a light account while on the `FiatPluginEnterAmountScene` retains light account-related quote errors
 - fixed: Various `EarnScene` display bugs
 - fixed: `EarnScene` missing wallet creation option in "Discover" view
 
