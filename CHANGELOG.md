@@ -5,7 +5,10 @@
 ## 4.18.0
 
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
+- changed: Auto-enable required tokens when navigating to `Stake*` scenes
 - fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
+- fixed: Various `EarnScene` display bugs
+- fixed: `EarnScene` missing wallet creation option in "Discover" view
 
 ## 4.17.0 (2024-11-12)
 
