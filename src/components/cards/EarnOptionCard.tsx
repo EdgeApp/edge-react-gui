@@ -33,8 +33,8 @@ export function EarnOptionCard(props: Props) {
   const { apy, yieldType, stakeProviderInfo } = stakePolicy
 
   const { stakeAssets, rewardAssets } = stakePolicy
-  const stakeCurrencyCodes = stakeAssets.map(asset => asset.currencyCode).join(' + ')
-  const rewardCurrencyCodes = rewardAssets.map(asset => asset.currencyCode).join(', ')
+  const stakeCurrencyCodes = stakeAssets.map(asset => asset.displayName ?? asset.currencyCode).join(' + ')
+  const rewardCurrencyCodes = rewardAssets.map(asset => asset.displayName ?? asset.currencyCode).join(', ')
 
   const stakeText = sprintf(isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s, stakeCurrencyCodes)
   const rewardText = isOpenPosition
@@ -43,7 +43,7 @@ export function EarnOptionCard(props: Props) {
 
   const policyIcons = getPolicyIconUris(currencyInfo, stakePolicy)
 
-  let apyText = yieldType === 'variable' ? lstrings.stake_variable_apy : lstrings.stake_stable_apy
+  let apyText: string = yieldType === 'variable' ? lstrings.stake_variable_apy : lstrings.stake_stable_apy
 
   // Fill in the actual numeric apy values, if they exist
   if (apy != null && apy > 0) {
