@@ -143,7 +143,7 @@ export const EarnScene = (props: Props) => {
 
         // Filter for wallets that have an open position if "Portfolio" is
         // selected
-        const allowedWalletIds = isPortfolioSelected
+        const allowedPortfolioWalletIds = isPortfolioSelected
           ? walletStakeInfos.filter(walletStakeInfo => walletStakeInfo.isPositionOpen).map(walletStakePosition => walletStakePosition.wallet.id)
           : undefined
 
@@ -151,10 +151,10 @@ export const EarnScene = (props: Props) => {
           <WalletListModal
             bridge={bridge}
             allowedAssets={allowedAssets}
-            allowedWalletIds={allowedWalletIds}
+            allowedWalletIds={!isPortfolioSelected ? undefined : allowedPortfolioWalletIds}
             headerTitle={lstrings.select_wallet}
             // Only allow wallet creation on the Discover tab
-            showCreateWallet={isPortfolioSelected}
+            showCreateWallet={!isPortfolioSelected}
             navigation={navigation as NavigationBase}
           />
         ))
