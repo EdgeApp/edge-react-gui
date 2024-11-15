@@ -43,8 +43,13 @@ export function EarnOptionCard(props: Props) {
 
   const policyIcons = getPolicyIconUris(currencyInfo, stakePolicy)
 
-  const variablePrefix = yieldType === 'stable' ? '' : '~ '
-  const apyText = apy == null || apy <= 0 ? lstrings.stake_variable_apy : variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+  let apyText = yieldType === 'variable' ? lstrings.stake_variable_apy : lstrings.stake_stable_apy
+
+  // Fill in the actual numeric apy values, if they exist
+  if (apy != null && apy > 0) {
+    const variablePrefix = yieldType === 'stable' ? '' : '~ '
+    apyText = variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+  }
 
   return (
     <EdgeCard onPress={onPress}>
