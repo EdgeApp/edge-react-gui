@@ -13,7 +13,7 @@ import { selectDisplayDenomByCurrencyCode } from '../../../selectors/Denominatio
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -97,6 +97,15 @@ const StakeOverviewSceneComponent = (props: Props) => {
     },
     [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet],
     'StakeOverviewSceneComponent'
+  )
+
+  // Ensure required tokens are enabled
+  useAsyncEffect(
+    async () => {
+      await enableStakeTokens(account, wallet, stakePolicy)
+    },
+    [],
+    'StakeOverviewSceneComponent 1'
   )
 
   // Handlers
