@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
 import {
@@ -23,7 +24,7 @@ import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
+import { enableStakeTokens, getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -57,8 +58,6 @@ export interface StakeModifyParams {
 interface Props extends EdgeAppSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
-
-// TODO: Check contentPadding
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
@@ -103,6 +102,15 @@ const StakeModifySceneComponent = (props: Props) => {
 
   // Error message tile contents
   const [errorMessage, setErrorMessage] = React.useState('')
+
+  // Ensure required tokens are enabled
+  useAsyncEffect(
+    async () => {
+      await enableStakeTokens(account, wallet, stakePolicy)
+    },
+    [],
+    'StakeModifyScene'
+  )
 
   React.useEffect(() => {
     // Initialize the claim row since the user would never modify the amount
