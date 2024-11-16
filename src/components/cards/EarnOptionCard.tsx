@@ -33,8 +33,8 @@ export function EarnOptionCard(props: Props) {
   const { apy, yieldType, stakeProviderInfo } = stakePolicy
 
   const { stakeAssets, rewardAssets } = stakePolicy
-  const stakeCurrencyCodes = stakeAssets.map(asset => asset.currencyCode).join(' + ')
-  const rewardCurrencyCodes = rewardAssets.map(asset => asset.currencyCode).join(', ')
+  const stakeCurrencyCodes = stakeAssets.map(asset => asset.displayName ?? asset.currencyCode).join(' + ')
+  const rewardCurrencyCodes = rewardAssets.map(asset => asset.displayName ?? asset.currencyCode).join(', ')
 
   const stakeText = sprintf(isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s, stakeCurrencyCodes)
   const rewardText = isOpenPosition
@@ -43,8 +43,13 @@ export function EarnOptionCard(props: Props) {
 
   const policyIcons = getPolicyIconUris(currencyInfo, stakePolicy)
 
-  const variablePrefix = yieldType === 'stable' ? '' : '~ '
-  const apyText = apy == null || apy <= 0 ? lstrings.stake_variable_apy : variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+  let apyText: string = yieldType === 'variable' ? lstrings.stake_variable_apy : lstrings.stake_stable_apy
+
+  // Fill in the actual numeric apy values, if they exist
+  if (apy != null && apy > 0) {
+    const variablePrefix = yieldType === 'stable' ? '' : '~ '
+    apyText = variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+  }
 
   return (
     <EdgeCard onPress={onPress}>

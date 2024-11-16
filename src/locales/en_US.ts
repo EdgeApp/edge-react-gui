@@ -1386,6 +1386,7 @@ const strings = {
   stake_earning_1s: 'Earning: %1$s',
 
   stake_apy_1s: '%1$s APY',
+  stake_stable_apy: 'Stable APY',
   stake_variable_apy: 'Variable APY',
 
   stake_s_staked: '%s Staked',
