@@ -1225,7 +1225,7 @@
   "stake_earn_1s": "Guadagna: %1$s",
   "stake_earning_1s": "Stai guadagnando: %1$s",
   "stake_apy_1s": "APY %1$s",
-  "stake_stable_apy": "Stable APY",
+  "stake_stable_apy": "APY stabile",
   "stake_variable_apy": "APY variabile",
   "stake_s_staked": "%s in Stake",
   "stake_s_earned": "%s Guadagnato",
