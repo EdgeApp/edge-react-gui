@@ -191,7 +191,7 @@ exports[`Request should render with loaded props 1`] = `
         marginRem={0}
       >
         <Memo
-          forceField="crypto"
+          forceField="fiat"
           headerCallback={[Function]}
           headerText="Receive to My Bitcoin"
           keyboardVisible={false}
