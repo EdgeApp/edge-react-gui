@@ -256,6 +256,17 @@
     }
   },
   {
+    "id": "venmo",
+    "pluginId": "venmo",
+    "paymentType": "venmo",
+    "paymentTypes": ["venmo"],
+    "title": "Venmo",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "venmo"
+  },
+  {
     "id": "xanpool",
     "pluginId": "xanpool",
     "paymentTypes": [
@@ -319,6 +330,10 @@
   {
     "id": "bitrefill",
     "sortIndex": 70
+  },
+  {
+    "id": "venmo",
+    "sortIndex": 15
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----"

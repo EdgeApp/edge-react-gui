@@ -213,6 +213,17 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "venmo",
+    "pluginId": "venmo",
+    "paymentType": "venmo",
+    "paymentTypes": ["venmo"],
+    "title": "Venmo",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "venmo"
+  },
+  {
     "id": "wire",
     "pluginId": "wire",
     "paymentType": "wire",
@@ -306,6 +317,10 @@
   {
     "id": "libertyx",
     "sortIndex": 50
+  },
+  {
+    "id": "venmo",
+    "sortIndex": 15
   },
   {
     "id": "wire",

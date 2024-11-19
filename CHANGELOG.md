@@ -20,6 +20,7 @@
 
 - added: Support for LLD & LLM transaction history
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
+- added: Venmo GUI plugin via Moonpay.
 - changed: Auto-enable required tokens when navigating to `Stake*` scenes
 - fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
 - fixed: Backing up a light account while on the `FiatPluginEnterAmountScene` retains light account-related quote errors
