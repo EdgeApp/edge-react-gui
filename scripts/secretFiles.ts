@@ -14,9 +14,10 @@ const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
 
 const filePaths = [
   { file: 'deploy-config.json', path: './' },
+  { file: 'env.json', path: './' },
+  { file: 'fastlane.json', path: './' },
   { file: 'GoogleService-Info.plist', path: './ios/edge/' },
-  { file: 'google-services.json', path: './android/app/' },
-  { file: 'env.json', path: './' }
+  { file: 'google-services.json', path: './android/app/' }
 ]
 
 async function main() {

@@ -184,8 +184,6 @@ function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
   if (
     process.env.BUILD_REPO_URL &&
-    process.env.FASTLANE_USER != null &&
-    process.env.FASTLANE_PASSWORD != null &&
     // process.env.GITHUB_SSH_KEY != null &&
     process.env.HOME != null &&
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
@@ -202,13 +200,13 @@ function buildIos(buildObj: BuildObj) {
     const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
     call(`rm -rf ${escapePath(profileDir)}`)
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
     )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
