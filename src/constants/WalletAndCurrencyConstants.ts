@@ -728,7 +728,7 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isTransactionListUnsupported: true,
+    isTransactionListUnsupported: false,
     isImportKeySupported: true
   },
   liberlandtestnet: {
