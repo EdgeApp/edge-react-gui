@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.17.1
+
+- added: (Zcash) Add NU6 support
+
 ## 4.18.0
 
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
