@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
@@ -64,12 +65,49 @@ export const EarnScene = (props: Props) => {
   const wallets = Object.values(currencyWallets)
 
   const [isPortfolioSelected, setIsPortfolioSelected] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
-
-  const [updateCounter, setUpdateCounter] = React.useState(0)
+  const [isLoadingDiscover, setIsLoadingDiscover] = React.useState(true)
+  const [isLoadingPortfolio, setIsLoadingPortfolio] = React.useState(true)
+  const [isPrevFocused, setIsPrevFocused] = React.useState(true)
 
   const handleSelectEarn = useHandler(() => setIsPortfolioSelected(false))
   const handleSelectPortfolio = useHandler(() => setIsPortfolioSelected(true))
+
+  const isFocused = useIsFocused()
+
+  const refreshStakePositions = async (pluginId: string): Promise<DisplayStakeInfo[]> => {
+    const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING
+    if (!isStakingSupported || STAKE_POLICY_MAP[pluginId] == null) return []
+
+    const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
+    const updatedDisplayStakeInfos = []
+    for (const displayStakeInfo of STAKE_POLICY_MAP[pluginId]) {
+      const { stakePlugin, stakePolicy } = displayStakeInfo
+
+      const walletStakePositions = []
+      for (const wallet of matchingWallets) {
+        try {
+          // Determine if a wallet matching this policy has an open position
+          const stakePosition = await stakePlugin.fetchStakePosition({ stakePolicyId: stakePolicy.stakePolicyId, wallet, account })
+          const allocations = getPositionAllocations(stakePosition)
+          const { staked, earned, unstaked } = allocations
+          const isPositionOpen = [...staked, ...earned, ...unstaked].some(positionAllocation => !zeroString(positionAllocation.nativeAmount))
+
+          walletStakePositions.push({ wallet, isPositionOpen, stakePosition })
+        } catch (e) {
+          showDevError(e)
+        }
+      }
+
+      // Create a new displayStakeInfo object
+      updatedDisplayStakeInfos.push({
+        stakePlugin,
+        stakePolicy,
+        walletStakeInfos: walletStakePositions
+      })
+    }
+
+    return updatedDisplayStakeInfos
+  }
 
   useAsyncEffect(
     async () => {
@@ -106,15 +144,34 @@ export const EarnScene = (props: Props) => {
               stakePolicy,
               walletStakeInfos: walletStakePositions
             })
-            // Trigger re-render
-            setUpdateCounter(prevCounter => prevCounter + 1)
           }
         }
       }
-      setIsLoading(false)
+      setIsLoadingPortfolio(false)
+      setIsLoadingDiscover(false)
     },
-    [updateCounter],
-    'EarnScene'
+    [],
+    'EarnScene Initialize STAKE_POLICY_MAP'
+  )
+
+  // Refresh stake positions when re-entering the scene
+  useAsyncEffect(
+    async () => {
+      if (isFocused && !isPrevFocused) {
+        setIsLoadingPortfolio(true)
+
+        for (const pluginId of Object.keys(currencyConfigMap)) {
+          const newDisplayStakeInfos = await refreshStakePositions(pluginId)
+          STAKE_POLICY_MAP[pluginId] = newDisplayStakeInfos
+        }
+
+        setIsLoadingPortfolio(false)
+      }
+
+      setIsPrevFocused(isFocused)
+    },
+    [isFocused],
+    'EarnScene Refresh Stake Positions'
   )
 
   const renderStakeItems = (displayStakeInfo: DisplayStakeInfo, currencyInfo: EdgeCurrencyInfo) => {
@@ -130,10 +187,18 @@ export const EarnScene = (props: Props) => {
       let walletId: string | undefined
       let stakePosition
 
-      if (walletStakeInfos.length === 1 || (isPortfolioSelected && openStakePositions.length === 1)) {
+      const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === currencyInfo.pluginId)
+      if (matchingWallets.length === 1) {
         // Only one compatible wallet if on "Discover", or only one open
         // position on "Portfolio." Auto-select the wallet.
-        const { wallet, stakePosition: existingStakePosition } = walletStakeInfos[0]
+        const { wallet, stakePosition: existingStakePosition } = walletStakeInfos[0] ?? {
+          // It's possible that the wallet was created on this scene previously,
+          // and when re-navigating back here, the STAKE_POLICY_MAP has not
+          // finished updating. The `StakeOverviewScene` will handle refreshing
+          // the position, if any.
+          wallet: matchingWallets[0],
+          stakePosition: undefined
+        }
 
         walletId = wallet.id
         stakePosition = existingStakePosition
@@ -190,7 +255,9 @@ export const EarnScene = (props: Props) => {
       {Object.keys(STAKE_POLICY_MAP).map(pluginId =>
         STAKE_POLICY_MAP[pluginId].map(displayStakeInfo => renderStakeItems(displayStakeInfo, currencyConfigMap[pluginId].currencyInfo))
       )}
-      {isLoading && <ActivityIndicator style={styles.loader} size="large" color={theme.primaryText} />}
+      {((isLoadingDiscover && !isPortfolioSelected) || (isLoadingPortfolio && isPortfolioSelected)) && (
+        <ActivityIndicator style={styles.loader} size="large" color={theme.primaryText} />
+      )}
     </SceneWrapper>
   )
 }
