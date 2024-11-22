@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
+
 ## 4.17.2
 
 - fixed: (Zcash/Pirate) Fixed android build issues
