@@ -121,7 +121,7 @@ export const EarnScene = (props: Props) => {
 
         const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
         for (const stakePlugin of stakePlugins) {
-          const stakePolicies = stakePlugin.getPolicies({ pluginId })
+          const stakePolicies = stakePlugin.getPolicies({ pluginId }).filter(stakePolicy => !stakePolicy.deprecated)
 
           for (const stakePolicy of stakePolicies) {
             const walletStakePositions = []
