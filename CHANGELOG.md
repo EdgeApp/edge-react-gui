@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.17.2
+
+- fixed: (Zcash/Pirate) Fixed android build issues
+
 ## 4.17.1
 
 - added: (Zcash) Add NU6 support
