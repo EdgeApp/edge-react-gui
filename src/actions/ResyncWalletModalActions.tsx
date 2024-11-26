@@ -5,6 +5,7 @@ import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { checkFioObtData } from './FioActions'
 
 export function showResyncWalletModal(walletId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
@@ -25,7 +26,9 @@ export function showResyncWalletModal(walletId: string): ThunkAction<Promise<voi
     ))
 
     if (resolveValue === 'confirm') {
-      await wallet.resyncBlockchain()
+      const txs = await wallet.getTransactions({ tokenId: null })
+      await dispatch(checkFioObtData(wallet, txs))
+      // await wallet.resyncBlockchain()
     }
   }
 }

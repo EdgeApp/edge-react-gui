@@ -132,7 +132,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('transactionsChanged', transactions => {
-        console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
+        console.debug(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
       }),
 
       wallet.on('enabledDetectedTokens', enablingTokenIds => {
