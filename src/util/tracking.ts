@@ -81,6 +81,20 @@ export interface CryptoConversionValues {
 }
 
 /**
+ * Analytics: Swap
+ */
+export interface SwapConversionValues {
+  conversionType: 'swap'
+  isBuiltInAsset: boolean
+
+  destAmount: CryptoAmount
+  sourceAmount: CryptoAmount
+
+  swapProviderId?: string
+  orderId?: string
+}
+
+/**
  * Analytics: Sell to fiat
  */
 export interface SellConversionValues {
@@ -125,7 +139,7 @@ export interface TrackingValues extends LoginTrackingValues {
   surveyResponse?: string // User's answer to a survey
 
   // Conversion values
-  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues
+  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues | SwapConversionValues
 }
 
 // Set up the global Posthog analytics instance at boot
@@ -254,6 +268,21 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
             params.currency = cryptoAmount.currencyCode
 
             params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(exchangeRates)))
+
+            if (orderId != null) params.orderId = orderId
+            if (swapProviderId != null) params.swapProviderId = swapProviderId
+          } else if (conversionType === 'swap') {
+            const { destAmount, sourceAmount, swapProviderId, orderId, isBuiltInAsset } = conversionValues
+
+            params.isBuiltInAsset = isBuiltInAsset
+
+            params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
+            params.sourceCurrencyCode = sourceAmount.currencyCode
+            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
+
+            params.destCryptoAmount = Math.abs(Number(destAmount.exchangeAmount))
+            params.destCurrencyCode = destAmount.currencyCode
+            params.destDollarValue = Math.abs(Number(destAmount.displayDollarValue(exchangeRates)))
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
