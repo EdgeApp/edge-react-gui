@@ -86,6 +86,10 @@ export function WalletListScene(props: Props) {
     navigation.navigate('walletRestore')
   })
 
+  const handlePressAddWallets = useHandler(() => {
+    navigation.navigate('createWalletSelectCrypto', {})
+  })
+
   const tokenSupportingWalletIds = React.useMemo(() => {
     const walletIds: string[] = []
     for (const wallet of Object.values(account.currencyWallets)) {
@@ -129,8 +133,13 @@ export function WalletListScene(props: Props) {
     if (isSearching && tokenSupportingWalletIds.length > 0) {
       return <SceneButtons secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }} />
     }
-    return <SceneButtons secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }} />
-  }, [handlePressAddEditToken, handlePressRestoreWallets, tokenSupportingWalletIds, isSearching])
+    return (
+      <SceneButtons
+        primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
+        secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
+      />
+    )
+  }, [isSearching, tokenSupportingWalletIds.length, handlePressAddWallets, handlePressRestoreWallets, handlePressAddEditToken])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {

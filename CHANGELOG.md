@@ -6,7 +6,11 @@
 
 ## 4.17.2
 
+- added: "Add Wallet" button to bottom of `WalletListScene`
 - fixed: (Zcash/Pirate) Fixed android build issues
+- fixed: Default home/assets scene post-login based on last visited scene
+- fixed: Receive flip input default currency selection
+- removed: Keyboard autofocus from `WalletListModal`
 
 ## 4.17.1
 

@@ -384,7 +384,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeAnim enter={fadeInUp25}>
             <EdgeCard marginRem={0}>
               <ExchangedFlipInput2
-                forceField="crypto"
+                forceField="fiat"
                 headerCallback={this.handleOpenWalletListModal}
                 headerText={flipInputHeaderText}
                 inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
