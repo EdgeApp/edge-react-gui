@@ -72,6 +72,12 @@ export const asEnvConfig = asObject({
           apiKey: asString
         })
       ),
+      kadoOtc: asOptional(
+        asObject({
+          apiKey: asString,
+          apiUserEmail: asString
+        })
+      ),
       moonpay: asOptional(asString),
       mtpelerin: asOptional(asString),
       paybis: asOptional(
@@ -102,6 +108,7 @@ export const asEnvConfig = asObject({
       banxa: undefined,
       Bitrefill: undefined,
       kado: undefined,
+      kadoOtc: undefined,
       moonpay: undefined,
       mtpelerin: undefined,
       paybis: undefined,
