@@ -11,7 +11,6 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
@@ -57,7 +56,8 @@ export const filterContentPosts = (contentPosts?: ContentPost[], countryCode?: s
   })
 }
 
-export const HomeScene = (props: Props) => {
+export const HomeSceneComponent = (props: Props) => {
+  console.log('HomeScene')
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -90,7 +90,7 @@ export const HomeScene = (props: Props) => {
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
   })
-  const handleScroll = useSceneScrollHandler()
+  // const handleScroll = useSceneScrollHandler()
 
   // Set countryCode once
   useAsyncEffect(
@@ -130,7 +130,6 @@ export const HomeScene = (props: Props) => {
         <>
           <AccountSyncBar />
           <Animated.ScrollView
-            onScroll={handleScroll}
             style={undoInsetStyle}
             contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom }]}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
@@ -232,6 +231,12 @@ export const HomeScene = (props: Props) => {
       )}
     </SceneWrapper>
   )
+}
+
+const MemoizedHomeScene = React.memo(HomeSceneComponent)
+
+export const HomeScene = (props: Props) => {
+  return <MemoizedHomeScene {...props} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -583,12 +583,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const GuiPluginListScene = React.memo((props: OwnProps) => {
+  console.log('Rendering GuiPluginListScene')
   const { navigation, route } = props
   const { params = { forcedWalletResult: undefined } } = route
   const dispatch = useDispatch()
   const theme = useTheme()
 
-  const handleScroll = useSceneScrollHandler()
+  // const handleScroll = useSceneScrollHandler()
   const account = useSelector(state => state.core.account)
   const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
   const accountReferral = useSelector(state => state.account.accountReferral)
@@ -597,7 +598,6 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
-  const isFocused = useIsFocused()
 
   const debouncedNavigation = useAsyncNavigation(navigation)
 
@@ -631,7 +631,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
 
   React.useEffect(() => {
     // HACK: Latest React Navigation causes multiple mounts
-    if (!isFocused) return
+    if (!navigation.isFocused) return
 
     dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -657,7 +657,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               deviceId={deviceId}
               disablePlugins={disablePlugins}
               forcedWalletResult={forcedWalletResultLocal}
-              onScroll={handleScroll}
+              // onScroll={handleScroll}
               insetStyle={insetStyle}
               navigation={debouncedNavigation}
               route={route}

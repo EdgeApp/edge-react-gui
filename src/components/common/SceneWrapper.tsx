@@ -319,6 +319,7 @@ interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'keyboardS
 }
 
 function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
+  console.log('SceneWrapperScrollViewComponent')
   const { children, keyboardAwareStyle, insetStyle, layoutStyle } = props
   const { keyboardShouldPersistTaps, padding = 0 } = props
 

@@ -252,6 +252,8 @@ const firstSceneScreenOptions: StackNavigationOptions & BottomTabNavigationOptio
   headerTitleAlign: 'center'
 }
 
+const homeSceneOptions: StackNavigationOptions & BottomTabNavigationOptions = { ...defaultScreenOptions, ...firstSceneScreenOptions }
+
 // -------------------------------------------------------------------------
 // Tab router
 // -------------------------------------------------------------------------
@@ -408,7 +410,7 @@ const EdgeTabs = () => {
         headerShown: false
       }}
     >
-      <Tabs.Screen name="home" component={HomeScene} options={{ ...defaultScreenOptions, ...firstSceneScreenOptions }} />
+      <Tabs.Screen name="home" component={HomeScene} options={homeSceneOptions} />
       <Tabs.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tabs.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tabs.Screen name="sellTab" component={EdgeSellTabScreen} />
@@ -792,7 +794,7 @@ const EdgeAppStack = () => {
 const EdgeApp = () => {
   return (
     <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
+      drawerContent={SideMenu}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',
