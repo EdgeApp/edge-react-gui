@@ -126,6 +126,7 @@ exports[`WalletListModal should render with loading props 1`] = `
         style={
           {
             "flexGrow": 1,
+            "flexShrink": 1,
           }
         }
       >
@@ -161,10 +162,25 @@ exports[`WalletListModal should render with loading props 1`] = `
           </Text>
         </View>
         <View
-          style={
+          marginRemProps={
             {
-              "flexDirection": "row",
+              "aroundRem": 0.5,
             }
+          }
+          style={
+            [
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
+            ]
           }
         >
           <View
@@ -189,11 +205,6 @@ exports[`WalletListModal should render with loading props 1`] = `
               }
             }
             focusable={true}
-            marginRemProps={
-              {
-                "aroundRem": 0.5,
-              }
-            }
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -209,17 +220,12 @@ exports[`WalletListModal should render with loading props 1`] = `
             style={
               [
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                },
-                {
                   "alignItems": "center",
                   "borderRadius": 2247,
                   "borderWidth": 1,
                   "flexDirection": "row",
                   "flexGrow": 1,
+                  "flexShrink": 1,
                   "paddingHorizontal": 22,
                   "paddingVertical": 17,
                 },
@@ -308,7 +314,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               <View
                 size={
                   {
-                    "value": undefined,
+                    "value": 0,
                   }
                 }
                 style={
@@ -318,8 +324,8 @@ exports[`WalletListModal should render with loading props 1`] = `
                       "aspectRatio": 1,
                     },
                     {
-                      "opacity": undefined,
-                      "width": undefined,
+                      "opacity": 0,
+                      "width": 0,
                     },
                   ]
                 }
@@ -329,7 +335,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Material Icons",
-                      "fontSize": 22,
+                      "fontSize": 0,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     }
