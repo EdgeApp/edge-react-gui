@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: `WalletListScene` filter mode remains active on empty text
 - changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
 - added: New Kado OTC provider integration.
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
