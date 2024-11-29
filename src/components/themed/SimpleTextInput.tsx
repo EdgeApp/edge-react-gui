@@ -112,6 +112,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const hasIcon = Icon != null
   const hasValue = value !== ''
+  const isIos = Platform.OS === 'ios'
 
   const [isFocused, setIsFocused] = React.useState(false)
 
@@ -173,7 +174,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const backIconSize = useDerivedValue(() => (Platform.OS === 'ios' ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
+  const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
   const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
   const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem))
 
@@ -235,7 +236,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           </TouchContainer>
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
-      {Platform.OS === 'ios' && (
+      {isIos && (
         <CancelButton isFocused={isFocused}>
           <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
             <CancelText numberOfLines={1} ellipsizeMode="clip">
@@ -251,7 +252,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 const ContainerView = styled(View)({
   flexDirection: 'row',
   alignItems: 'center',
-  flex: 1
+  flexGrow: 1,
+  flexShrink: 1
 })
 
 const InputContainerView = styled(Animated.View)<{
