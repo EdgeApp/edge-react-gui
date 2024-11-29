@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
 - added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
 
 ## 4.17.2
