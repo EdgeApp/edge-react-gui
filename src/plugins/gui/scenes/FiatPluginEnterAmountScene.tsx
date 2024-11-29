@@ -1,3 +1,4 @@
+import pDebounce from 'p-debounce'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Text, TextStyle, View } from 'react-native'
@@ -93,11 +94,14 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
   const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
+  const convertValueDebounced = React.useMemo(() => {
+    return pDebounce(convertValue, 500)
+  }, [convertValue])
 
   useEffect(() => {
     if (initState?.value1 != null) {
       stateManager.update({ value2: ' ', spinner2: true })
-      convertValue(1, initState?.value1, stateManager)
+      convertValueDebounced(1, initState?.value1, stateManager)
         .then(otherValue => {
           if (typeof otherValue === 'string') {
             stateManager.update({ value2: otherValue, spinner2: false })
@@ -105,7 +109,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         })
         .catch(err => showError(err))
     }
-  }, [initState?.value1, convertValue, stateManager])
+  }, [initState?.value1, convertValueDebounced, stateManager])
 
   // Handle light account backups initiated from this scene
   useEffect(() => {
@@ -130,7 +134,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     lastUsed.current = 1
     onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => showError(err))
     stateManager.update({ value1: value, spinner2: true })
-    convertValue(1, value, stateManager)
+    convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
         if (typeof otherValue === 'string') {
           stateManager.update({ value2: otherValue })
@@ -145,7 +149,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     lastUsed.current = 2
     onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => showError(err))
     stateManager.update({ value2: value, spinner1: true })
-    convertValue(2, value, stateManager)
+    convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
         if (typeof otherValue === 'string') {
           stateManager.update({ value1: otherValue, spinner1: false })

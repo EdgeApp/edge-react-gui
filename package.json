@@ -108,6 +108,7 @@
     "ethers": "^5.7.2",
     "expo": "^48.0.0",
     "jsrsasign": "^11.1.0",
+    "p-debounce": "^4.0.0",
     "paraswap": "^5.2.0",
     "posthog-js": "^1.88.1",
     "posthog-react-native": "^2.8.1",
