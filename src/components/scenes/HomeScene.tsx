@@ -57,7 +57,7 @@ export const filterContentPosts = (contentPosts?: ContentPost[], countryCode?: s
   })
 }
 
-export const HomeScene = (props: Props) => {
+const HomeSceneComponent = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -232,6 +232,11 @@ export const HomeScene = (props: Props) => {
       )}
     </SceneWrapper>
   )
+}
+const MemoizedHomeScene = React.memo(HomeSceneComponent)
+
+export const HomeScene = (props: Props) => {
+  return <MemoizedHomeScene {...props} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -236,24 +236,15 @@ function TransactionListComponent(props: Props) {
     }
   }, [isTransactionListUnsupported, isSearching, wallet, tokenId, route.params.countryCode, navigation])
 
-  const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
+  const renderItem = useHandler(({ item }: ListRenderItemInfo<ListItem>) => {
     if (item == null) {
       return <EmptyLoader />
     }
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (typeof item === 'string') {
-      return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-          <SectionHeader title={item} />
-        </EdgeAnim>
-      )
+      return <SectionHeader title={item} />
     }
-    return (
-      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
-      </EdgeAnim>
-    )
+    return <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
   })
 
   const keyExtractor = useHandler((item: ListItem) => {

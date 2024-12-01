@@ -235,11 +235,19 @@ const WalletsStack = createStackNavigator<WalletsTabParamList>()
 
 const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefined
 
+const backButtonFunc = () => <BackButton />
+const sideMenuButtonFunc = () => <SideMenuButton />
+const nullFunction = () => null
+const headerRightNullOption = { headerRight: nullFunction }
+const headerExitButton = () => <HeaderTextButton type="exit" />
+const headerBackButton = () => <PluginBackButton />
+const headerHelpButton = () => <HeaderTextButton type="help" />
+
 const defaultScreenOptions: StackNavigationOptions & BottomTabNavigationOptions = {
   title: '',
   headerTitle: EdgeHeader,
-  headerLeft: () => <BackButton />,
-  headerRight: () => <SideMenuButton />,
+  headerLeft: backButtonFunc,
+  headerRight: sideMenuButtonFunc,
   headerShown: true,
   headerMode,
   headerTitleAlign: 'center',
@@ -247,76 +255,47 @@ const defaultScreenOptions: StackNavigationOptions & BottomTabNavigationOptions 
   headerTransparent: true
 }
 const firstSceneScreenOptions: StackNavigationOptions & BottomTabNavigationOptions = {
-  headerLeft: () => <HeaderTextButton type="help" />,
+  headerLeft: headerHelpButton,
   headerTitle: EdgeHeader,
   headerTitleAlign: 'center'
 }
+
+const homeSceneOptions: StackNavigationOptions & BottomTabNavigationOptions = { ...defaultScreenOptions, ...firstSceneScreenOptions }
 
 // -------------------------------------------------------------------------
 // Tab router
 // -------------------------------------------------------------------------
 
+const getWalletNameParam = (params: WalletsTabParamList['transactionList']) => params.walletName
+const txListOptions = { headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={getWalletNameParam} /> }
+const txDetailsOptions = { headerTitle: () => <TransactionDetailsTitle /> }
+
 const EdgeWalletsTabScreen = () => {
   return (
     <WalletsStack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
-      <WalletsStack.Screen
-        name="transactionDetails"
-        component={TransactionDetailsScene}
-        options={{
-          headerTitle: () => <TransactionDetailsTitle />
-        }}
-      />
+      <WalletsStack.Screen name="transactionDetails" component={TransactionDetailsScene} options={txDetailsOptions} />
       <WalletsStack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
-      <WalletsStack.Screen
-        name="transactionList"
-        component={TransactionList}
-        options={{ headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} /> }}
-      />
+      <WalletsStack.Screen name="transactionList" component={TransactionList} options={txListOptions} />
     </WalletsStack.Navigator>
   )
 }
 
+const getDisplayNameParam = (params: BuyTabParamList['pluginViewBuy']) => params.plugin.displayName
+const buyTabHeaderTitle = () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={getDisplayNameParam} />
+const buyTabOptions = {
+  headerTitle: buyTabHeaderTitle,
+  headerRight: headerExitButton,
+  headerLeft: headerBackButton
+}
 const EdgeBuyTabScreen = () => {
   return (
     <BuyStack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
       <BuyStack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <BuyStack.Screen
-        name="pluginViewBuy"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
+      <BuyStack.Screen name="pluginViewBuy" component={GuiPluginViewScene} options={buyTabOptions} />
+      <BuyStack.Screen name="guiPluginAddressForm" component={AddressFormScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginInfoDisplay" component={InfoDisplayScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginSepaForm" component={SepaFormScene} options={headerRightNullOption} />
       <BuyStack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
       <BuyStack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
       <BuyStack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
@@ -324,47 +303,21 @@ const EdgeBuyTabScreen = () => {
   )
 }
 
+const sellTabHeaderTitle = () => <ParamHeaderTitle<'pluginViewSell'> fromParams={getDisplayNameParam} />
+const sellTabOptions = {
+  headerTitle: sellTabHeaderTitle,
+  headerRight: headerExitButton,
+  headerLeft: headerBackButton
+}
 const EdgeSellTabScreen = () => {
   return (
     <BuyStack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
       <BuyStack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <BuyStack.Screen
-        name="pluginViewSell"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <BuyStack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
+      <BuyStack.Screen name="pluginViewSell" component={GuiPluginViewScene} options={sellTabOptions} />
+      <BuyStack.Screen name="guiPluginAddressForm" component={AddressFormScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginInfoDisplay" component={InfoDisplayScene} options={headerRightNullOption} />
+      <BuyStack.Screen name="guiPluginSepaForm" component={SepaFormScene} options={headerRightNullOption} />
       <BuyStack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
       <BuyStack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
       <BuyStack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
@@ -372,43 +325,28 @@ const EdgeSellTabScreen = () => {
   )
 }
 
+const swapSceneOptions = { ...firstSceneScreenOptions, title: lstrings.title_exchange }
+const headerLeftRightNull = { headerLeft: nullFunction, headerRight: nullFunction }
 const EdgeSwapTabScreen = () => {
   return (
     <SwapStack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
-      <SwapStack.Screen
-        name="swapCreate"
-        component={SwapCreateScene}
-        options={{
-          ...firstSceneScreenOptions,
-          title: lstrings.title_exchange
-        }}
-      />
+      <SwapStack.Screen name="swapCreate" component={SwapCreateScene} options={swapSceneOptions} />
       <SwapStack.Screen name="swapConfirmation" component={SwapConfirmationScene} />
-      <SwapStack.Screen
-        name="swapProcessing"
-        component={SwapProcessingScene}
-        options={{
-          headerLeft: () => null,
-          headerRight: () => null
-        }}
-      />
+      <SwapStack.Screen name="swapProcessing" component={SwapProcessingScene} options={headerLeftRightNull} />
     </SwapStack.Navigator>
   )
 }
+
+const tabbarComponent = (props: any) => <MenuTabs {...props} />
+const screenOptionsHeaderFalse = { headerShown: false }
 
 const EdgeTabs = () => {
   const { defaultScreen } = getDeviceSettings()
   const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'home'
 
   return (
-    <Tabs.Navigator
-      initialRouteName={initialRouteName}
-      tabBar={props => <MenuTabs {...props} />}
-      screenOptions={{
-        headerShown: false
-      }}
-    >
-      <Tabs.Screen name="home" component={HomeScene} options={{ ...defaultScreenOptions, ...firstSceneScreenOptions }} />
+    <Tabs.Navigator initialRouteName={initialRouteName} tabBar={tabbarComponent} screenOptions={screenOptionsHeaderFalse}>
+      <Tabs.Screen name="home" component={HomeScene} options={homeSceneOptions} />
       <Tabs.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tabs.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tabs.Screen name="sellTab" component={EdgeSellTabScreen} />
@@ -417,6 +355,16 @@ const EdgeTabs = () => {
       <Tabs.Screen name="devTab" component={DevTestScene} />
     </Tabs.Navigator>
   )
+}
+
+const headerRightHelpOption = { headerRight: headerHelpButton }
+const changePasswordOption = {
+  title: lstrings.title_change_password,
+  headerRight: nullFunction
+}
+const changePinOption = {
+  title: lstrings.title_change_pin,
+  headerRight: nullFunction
 }
 
 // -------------------------------------------------------------------------
@@ -437,37 +385,11 @@ const EdgeAppStack = () => {
 
   return (
     <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
-      <AppStack.Screen
-        name="edgeTabs"
-        component={EdgeTabs}
-        options={{
-          headerShown: false
-        }}
-      />
+      <AppStack.Screen name="edgeTabs" component={EdgeTabs} options={screenOptionsHeaderFalse} />
 
-      <AppStack.Screen
-        name="changeMiningFee2"
-        component={ChangeMiningFeeScene}
-        options={{
-          headerRight: () => <HeaderTextButton type="help" />
-        }}
-      />
-      <AppStack.Screen
-        name="changePassword"
-        component={ChangePasswordScene}
-        options={{
-          title: lstrings.title_change_password,
-          headerRight: () => null
-        }}
-      />
-      <AppStack.Screen
-        name="changePin"
-        component={ChangePinScene}
-        options={{
-          title: lstrings.title_change_pin,
-          headerRight: () => null
-        }}
-      />
+      <AppStack.Screen name="changeMiningFee2" component={ChangeMiningFeeScene} options={headerRightHelpOption} />
+      <AppStack.Screen name="changePassword" component={ChangePasswordScene} options={changePasswordOption} />
+      <AppStack.Screen name="changePin" component={ChangePinScene} options={changePinOption} />
       <AppStack.Screen name="coinRanking" component={CoinRankingScene} />
       <AppStack.Screen name="coinRankingDetails" component={CoinRankingDetailsScene} />
       <AppStack.Screen name="confirmScene" component={ConfirmScene} />
@@ -792,7 +714,7 @@ const EdgeAppStack = () => {
 const EdgeApp = () => {
   return (
     <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
+      drawerContent={SideMenu}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',
