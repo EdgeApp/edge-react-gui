@@ -18,16 +18,88 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "directtobank",
-    "pluginId": "directtobank",
-    "paymentType": "directtobank",
+    "id": "bitsofgold",
+    "pluginId": "bitsofgold",
     "paymentTypes": [
-      "directtobank"
+      "bank"
     ],
-    "title": "Bank Transfer",
-    "description": "Fee: 1.5%\nSettlement: 5 min - 24 hours",
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
     "forCountries": [
-      "AU"
+      "IL"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepPath": "/order/sell",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0",
+      "utm_source": "Edge",
+      "utm_medium": "mobile_app",
+      "utm_campaign": "co",
+      "etag": "true"
+    }
+  },
+  {
+    "id": "bitrefill",
+    "pluginId": "bitrefill",
+    "paymentTypes": [
+      "giftcard"
+    ],
+    "description": "Buy gift cards and reload phones with crypto",
+    "title": "Gift Cards",
+    "partnerIconPath": "bitrefill-2.png",
+    "forCountries": [
+      "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR",
+      "AS", "AT", "AU", "AW", "AZ", "BA", "BB", "BD", "BE", "BF",
+      "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR",
+      "BS", "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF",
+      "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU",
+      "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO",
+      "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ",
+      "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF", "GG",
+      "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT",
+      "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID",
+      "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE",
+      "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP",
+      "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI", "LK", "LR",
+      "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF",
+      "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR",
+      "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA", "NC",
+      "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ",
+      "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN",
+      "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU",
+      "RW", "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ",
+      "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX",
+      "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL",
+      "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG",
+      "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN",
+      "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "DASH",
+      "DOGE",
+      "ETH",
+      "LTC"
+    ],
+    "paymentTypeLogoKey": "giftcard"
+  },
+  {
+    "id": "colombiabank",
+    "pluginId": "colombiabank",
+    "paymentType": "colombiabank",
+    "paymentTypes": [
+      "colombiabank"
+    ],
+    "title": "Colombia Bank Transfer ",
+    "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
+    "forCountries": [
+      "CO"
     ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -52,16 +124,16 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "colombiabank",
-    "pluginId": "colombiabank",
-    "paymentType": "colombiabank",
+    "id": "directtobank",
+    "pluginId": "directtobank",
+    "paymentType": "directtobank",
     "paymentTypes": [
-      "colombiabank"
+      "directtobank"
     ],
-    "title": "Colombia Bank Transfer ",
-    "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
+    "title": "Bank Transfer",
+    "description": "Fee: 1.5%\nSettlement: 5 min - 24 hours",
     "forCountries": [
-      "CO"
+      "AU"
     ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -143,76 +215,23 @@
     "paymentTypeLogoKey": "pix"
   },
   {
-    "id": "bitsofgold",
-    "pluginId": "bitsofgold",
-    "paymentTypes": [
-      "bank"
+    "##": "Disabled for now",
+    "id": "revolut",
+    "pluginId": "revolut",
+    "paymentType": "revolut",
+    "paymentTypes": ["revolut"],
+    "title": "Revolut",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": [],
+    "-forCountries": [
+      "AU", "BR", "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI",
+      "FR", "GR", "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV",
+      "MT", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK", "JP", "NZ",
+      "SG", "CH", "GB", "US", "IO", "IM", "JE", "GG", "GF", "GP", "YT",
+      "MQ", "RE", "MF"
     ],
-    "title": "Israeli Bank Transfer",
-    "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
-    "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "forCountries": [
-      "IL"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH"
-    ],
-    "paymentTypeLogoKey": "bank",
-    "deepPath": "/order/sell",
-    "deepQuery": {
-      "order_id": "null",
-      "page": "0",
-      "utm_source": "Edge",
-      "utm_medium": "mobile_app",
-      "utm_campaign": "co",
-      "etag": "true"
-    }
-  },
-  {
-    "id": "bitrefill",
-    "pluginId": "bitrefill",
-    "paymentTypes": [
-      "giftcard"
-    ],
-    "description": "Buy gift cards and reload phones with crypto",
-    "title": "Gift Cards",
-    "partnerIconPath": "bitrefill-2.png",
-    "forCountries": [
-      "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR",
-      "AS", "AT", "AU", "AW", "AZ", "BA", "BB", "BD", "BE", "BF",
-      "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR",
-      "BS", "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF",
-      "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU",
-      "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO",
-      "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ",
-      "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF", "GG",
-      "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT",
-      "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID",
-      "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE",
-      "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP",
-      "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI", "LK", "LR",
-      "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF",
-      "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR",
-      "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA", "NC",
-      "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ",
-      "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN",
-      "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU",
-      "RW", "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ",
-      "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX",
-      "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL",
-      "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG",
-      "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN",
-      "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "DASH",
-      "DOGE",
-      "ETH",
-      "LTC"
-    ],
-    "paymentTypeLogoKey": "giftcard"
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "revolut"
   },
   {
     "id": "sepa",
@@ -237,23 +256,15 @@
     }
   },
   {
-    "##": "Disabled for now",
-    "id": "revolut",
-    "pluginId": "revolut",
-    "paymentType": "revolut",
-    "paymentTypes": ["revolut"],
-    "title": "Revolut",
+    "id": "venmo",
+    "pluginId": "venmo",
+    "paymentType": "venmo",
+    "paymentTypes": ["venmo"],
+    "title": "Venmo",
     "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
-    "forCountries": [],
-    "-forCountries": [
-      "AU", "BR", "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI",
-      "FR", "GR", "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV",
-      "MT", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK", "JP", "NZ",
-      "SG", "CH", "GB", "US", "IO", "IM", "JE", "GG", "GF", "GP", "YT",
-      "MQ", "RE", "MF"
-    ],
+    "forCountries": ["US"],
     "cryptoCodes": [],
-    "paymentTypeLogoKey": "revolut"
+    "paymentTypeLogoKey": "venmo"
   },
   {
     "id": "xanpool",
@@ -319,6 +330,10 @@
   {
     "id": "bitrefill",
     "sortIndex": 70
+  },
+  {
+    "id": "venmo",
+    "sortIndex": 15
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----"
