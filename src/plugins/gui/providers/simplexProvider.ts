@@ -2,6 +2,8 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
+import { lstrings } from '../../../locales/strings'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -16,7 +18,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, isDailyCheckDue, validateExactRegion } from './common'
+import { addExactRegion, isDailyCheckDue, NOT_SUCCESS_TOAST_HIDE_MS, validateExactRegion } from './common'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
@@ -313,6 +315,8 @@ export const simplexProvider: FiatProviderFactory = {
           throw new Error('Simplex unknown error')
         }
         const goodQuote = asSimplexQuoteSuccess(quote)
+        const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
+        const quoteCryptAmount = goodQuote.digital_money.amount.toString()
 
         const paymentQuote: FiatProviderQuote = {
           providerId,
@@ -323,8 +327,8 @@ export const simplexProvider: FiatProviderFactory = {
           displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
-          fiatAmount: goodQuote.fiat_money.amount.toString(),
-          cryptoAmount: goodQuote.digital_money.amount.toString(),
+          fiatAmount: quoteFiatAmount,
+          cryptoAmount: quoteCryptAmount,
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
@@ -355,7 +359,46 @@ export const simplexProvider: FiatProviderFactory = {
             const url = `https://partners.simplex.com/?partner=${partner}&t=${token}`
 
             console.log('Approving simplex quote url=' + url)
-            await showUi.openExternalWebView({ url })
+            await showUi.openExternalWebView({
+              url,
+              providerId,
+              deeplinkHandler: async link => {
+                if (link.direction !== 'buy') return
+
+                const orderId = link.query.orderId ?? 'unknown'
+
+                switch (link.query.status) {
+                  case 'success': {
+                    await showUi.trackConversion('Buy_Success', {
+                      conversionValues: {
+                        conversionType: 'buy',
+                        sourceFiatCurrencyCode: params.fiatCurrencyCode,
+                        sourceFiatAmount: quoteFiatAmount,
+                        destAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: quoteCryptAmount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId
+                      }
+                    })
+                    await showUi.exitScene()
+                    break
+                  }
+                  case 'failure': {
+                    console.log('Simplex WebView launch buy failure: ' + link.uri)
+                    await showUi.showToast(lstrings.fiat_plugin_buy_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                    break
+                  }
+                  default: {
+                    await showUi.showToast(lstrings.fiat_plugin_buy_unknown_status, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                  }
+                }
+              }
+            })
           },
           closeQuote: async (): Promise<void> => {}
         }
