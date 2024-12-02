@@ -12,7 +12,7 @@
       "US"
     ],
     "notStateProvinces": {
-      "US": ["AK", "AR", "CT", "NC", "NY", "TX", "FL"]
+      "US": ["AK", "AR", "CT", "LA", "NC", "NY", "TX", "FL"]
     },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -42,7 +42,7 @@
     "title": "Bank Transfer via Debit Card",
     "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
     "forCountries": [
-      "AT", "AU", "BE", "BG", "CH", "CZ", "DE", "DK", "EE", "ES",
+      "AT", "AU", "BG", "CH", "CZ", "DE", "DK", "EE", "ES",
       "FI", "FR", "GB", "GR", "HR", "HU", "IE", "IT", "LI", "LT",
       "LU", "LV", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK",
       "SM", "US"

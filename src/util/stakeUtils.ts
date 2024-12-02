@@ -1,11 +1,13 @@
 import { add } from 'biggystring'
-import { EdgeCurrencyInfo, EdgeStakingStatus } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
+import { getTokenIdForced } from './CurrencyInfoHelpers'
+import { enableTokens } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
 
 /**
@@ -88,8 +90,8 @@ export const getPolicyIconUris = (
   return { stakeAssetUris, rewardAssetUris }
 }
 
-export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
-  return stakePlugins.find(plugin => plugin.getPolicies().find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
+export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy, filter?: StakePolicyFilter): StakePlugin | undefined => {
+  return stakePlugins.find(plugin => plugin.getPolicies(filter).find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
 }
 
 /**
@@ -121,4 +123,15 @@ export const getFioStakingBalances = (stakingStatus?: EdgeStakingStatus): FioSta
     }
   }
   return stakingBalances
+}
+
+export const enableStakeTokens = async (account: EdgeAccount, wallet: EdgeCurrencyWallet, stakePolicy: StakePolicy) => {
+  const requiredTokenIds: EdgeTokenId[] = []
+  for (const stakeAssetInfo of [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets]) {
+    const pluginId = wallet.currencyInfo.pluginId
+    const tokenId = getTokenIdForced(account, pluginId, stakeAssetInfo.currencyCode)
+    requiredTokenIds.push(tokenId)
+  }
+
+  await enableTokens(requiredTokenIds, wallet)
 }

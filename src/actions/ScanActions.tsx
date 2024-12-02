@@ -7,7 +7,7 @@ import URL from 'url-parse'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
-import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
+import { Airship, showDevError, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeRate } from '../selectors/WalletSelectors'
@@ -351,19 +351,34 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       let threeButtonModal
       const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
       if (displayBuyCrypto) {
-        const messageSyntax = sprintf(lstrings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-        threeButtonModal = await Airship.show<'buy' | 'exchange' | 'decline' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.buy_crypto_modal_title}
-            message={messageSyntax}
-            buttons={{
-              buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
-              exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
-              decline: { label: lstrings.buy_crypto_decline }
-            }}
-          />
-        ))
+        if (config.disableSwaps === true) {
+          const messageSyntax = sprintf(lstrings.buy_crypto_modal_message_no_exchange_s, currencyCode, currencyCode)
+          threeButtonModal = await Airship.show<'buy' | 'decline' | undefined>(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.buy_crypto_modal_title}
+              message={messageSyntax}
+              buttons={{
+                buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
+                decline: { label: lstrings.buy_crypto_decline }
+              }}
+            />
+          ))
+        } else {
+          const messageSyntax = sprintf(lstrings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+          threeButtonModal = await Airship.show<'buy' | 'exchange' | 'decline' | undefined>(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.buy_crypto_modal_title}
+              message={messageSyntax}
+              buttons={{
+                buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
+                exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
+                decline: { label: lstrings.buy_crypto_decline }
+              }}
+            />
+          ))
+        }
       } else {
         // if we're not targetting for buying, but rather exchange
         const messageSyntax = sprintf(lstrings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
@@ -382,7 +397,11 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       if (threeButtonModal === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
-        navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+        if (config.disableSwaps === true) {
+          showDevError('Swaps are disabled. Cannot navigate to exchange.')
+        } else {
+          navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+        }
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

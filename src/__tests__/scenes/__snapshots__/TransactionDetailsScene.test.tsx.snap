@@ -2193,15 +2193,19 @@ exports[`TransactionDetailsScene should render 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -4610,15 +4614,19 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View

@@ -2,6 +2,7 @@ import { div, gt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { useReorderableDrag } from 'react-native-reorderable-list'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { FIAT_PRECISION, getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -19,11 +20,12 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   wallet?: EdgeCurrencyWallet
-  onDrag: () => void
 }
 
 function WalletListSortableRowComponent(props: Props) {
-  const { wallet, onDrag } = props
+  const { wallet } = props
+
+  const handleDrag = useReorderableDrag()
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -36,7 +38,7 @@ function WalletListSortableRowComponent(props: Props) {
 
   if (wallet == null || exchangeDenomination == null) {
     return (
-      <EdgeTouchableOpacity style={styles.container} activeOpacity={0.95} onLongPress={onDrag}>
+      <EdgeTouchableOpacity style={styles.container} activeOpacity={0.95}>
         <View style={[styles.rowContainer, styles.loaderContainer]}>
           <ActivityIndicator color={theme.primaryText} size="small" />
         </View>
@@ -62,32 +64,36 @@ function WalletListSortableRowComponent(props: Props) {
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
   return (
-    <EdgeTouchableOpacity style={styles.container} onLongPress={onDrag}>
-      <View style={styles.rowContainer}>
+    <View style={[styles.container, styles.rowContainer]}>
+      <EdgeTouchableOpacity delayLongPress={1} style={styles.handleContainer} onLongPress={handleDrag}>
         <View style={styles.iconContainer}>
           <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
-        <View style={styles.iconContainer}>
-          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
+      </EdgeTouchableOpacity>
+      <View style={styles.iconContainer}>
+        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
+      </View>
+      <View style={styles.detailsContainer}>
+        <View style={styles.detailsRow}>
+          <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+          <EdgeText style={styles.detailsValue}>{finalCryptoAmountString}</EdgeText>
         </View>
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailsRow}>
-            <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-            <EdgeText style={styles.detailsValue}>{finalCryptoAmountString}</EdgeText>
-          </View>
-          <View style={styles.detailsRow}>
-            <EdgeText style={styles.detailsName}>{name}</EdgeText>
-            <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalanceString}</EdgeText>
-          </View>
+        <View style={styles.detailsRow}>
+          <EdgeText style={styles.detailsName}>{name}</EdgeText>
+          <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalanceString}</EdgeText>
         </View>
       </View>
-    </EdgeTouchableOpacity>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     paddingHorizontal: theme.rem(1)
+  },
+  handleContainer: {
+    margin: -theme.rem(0.5),
+    padding: theme.rem(0.5)
   },
   rowContainer: {
     flexDirection: 'row',

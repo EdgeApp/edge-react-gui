@@ -2,48 +2,54 @@
 
 exports[`WalletListSortableRow should render with fake wallet 1`] = `
 <View
-  accessibilityState={
-    {
-      "busy": undefined,
-      "checked": undefined,
-      "disabled": false,
-      "expanded": undefined,
-      "selected": undefined,
-    }
-  }
-  accessibilityValue={
-    {
-      "max": undefined,
-      "min": undefined,
-      "now": undefined,
-      "text": undefined,
-    }
-  }
-  accessible={true}
-  collapsable={false}
-  focusable={true}
-  onClick={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-      "paddingHorizontal": 22,
-    }
-  }
->
-  <View
-    style={
+    [
+      {
+        "paddingHorizontal": 22,
+      },
       {
         "alignItems": "center",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
         "height": 96,
         "justifyContent": "center",
+      },
+    ]
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
       }
     }
   >
@@ -79,199 +85,199 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
         
       </Text>
     </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "marginRight": 22,
+        "width": 28,
+      }
+    }
+  >
     <View
       style={
         {
-          "alignItems": "center",
-          "justifyContent": "center",
-          "marginRight": 22,
-          "width": 28,
+          "height": 45,
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+          "width": 45,
         }
       }
     >
       <View
         style={
           {
+            "backgroundColor": "#000000",
+            "borderRadius": 22.5,
+            "elevation": 0,
             "height": 45,
-            "marginBottom": 0,
-            "marginLeft": 0,
-            "marginRight": 0,
-            "marginTop": 0,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 3,
+              "width": -3,
+            },
+            "shadowOpacity": 0.6,
+            "shadowRadius": 4,
             "width": 45,
           }
         }
       >
         <View
           style={
-            {
-              "backgroundColor": "#000000",
-              "borderRadius": 22.5,
-              "elevation": 0,
-              "height": 45,
-              "shadowColor": "#000000",
-              "shadowOffset": {
-                "height": 3,
-                "width": -3,
+            [
+              {
+                "overflow": "hidden",
               },
-              "shadowOpacity": 0.6,
-              "shadowRadius": 4,
-              "width": 45,
-            }
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+            ]
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-              ]
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/fake/fake.png",
+              }
             }
-          >
-            <FastImageView
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/fake/fake.png",
-                }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+            }
+          />
         </View>
       </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "column",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flex": 1,
+            },
+            null,
+          ]
+        }
+      >
+        FAKE
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "textAlign": "right",
+            },
+            null,
+          ]
+        }
+      >
+         0
+      </Text>
     </View>
     <View
       style={
         {
-          "flex": 1,
-          "flexDirection": "column",
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
         }
       }
     >
-      <View
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
         style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
-          }
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "flex": 1,
+              "fontSize": 17,
+            },
+            null,
+          ]
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "flex": 1,
-              },
-              null,
-            ]
-          }
-        >
-          FAKE
-        </Text>
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "textAlign": "right",
-              },
-              null,
-            ]
-          }
-        >
-           0
-        </Text>
-      </View>
-      <View
+        Test wallet
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
         style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
-          }
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "textAlign": "right",
+            },
+            null,
+          ]
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#3dd9f4",
-                "flex": 1,
-                "fontSize": 17,
-              },
-              null,
-            ]
-          }
-        >
-          Test wallet
-        </Text>
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#3dd9f4",
-                "fontSize": 17,
-                "textAlign": "right",
-              },
-              null,
-            ]
-          }
-        >
-          $0.00
-        </Text>
-      </View>
+        $0.00
+      </Text>
     </View>
   </View>
 </View>

@@ -10,7 +10,17 @@
 
 - added: (Zcash) Add NU6 support
 
-## 4.17.0
+## 4.18.0
+
+- added: Support for LLD & LLM transaction history
+- added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
+- changed: Auto-enable required tokens when navigating to `Stake*` scenes
+- fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
+- fixed: Backing up a light account while on the `FiatPluginEnterAmountScene` retains light account-related quote errors
+- fixed: Various `EarnScene` display bugs
+- fixed: `EarnScene` missing wallet creation option in "Discover" view
+
+## 4.17.0 (2024-11-12)
 
 - added: Add TON
 - added: Log swap errors to Sentry.
@@ -18,7 +28,12 @@
 - added: Add TON support to Banxa, Moonpay, Paybis, and Simplex fiat plugins
 - added: Add OSMO support to Moonpay fiat plugin
 - added: New post-install survey option for "BTCTKVR Magazine".
+- changed: Redesign `StakingReturnsCard,` specifically for `StakeOverviewScene`
+- changed: `EarnScene` shows all possible stake options, instead of only those for enabled wallets
+- changed: `EarnScene` shows one card per stake option if multiple wallets have stake positions on that stake option
+- changed: `EarnScene` only intializes stake options once, regardless of re-navigation to the scene
 - changed: `FiatProviderError` messages now include `FiatProviderQuoteError` info.
+- changed: (Android) Add prompt for user to change battery optimization setting
 - changed: Add explicit gas limit for Kiln staking.
 - changed: Various strings updated to UK compliance spec
 - changed: Track array of errors or AggregateErrors separately with a common tag
@@ -26,12 +41,14 @@
 - changed: Verbiage for login request scene for QR login has been updated to remove ambiguity.
 - changed: Wording in light account persistent notification
 - changed: (Android) Allow exporting multiple files
+- fixed: Replace deprecated Unstoppable Domains fetch call with SDK
 - fixed: Correctly report ETH Kiln balances
 - fixed: Fix error massaging in trackError
 - fixed: Normalized error messages for tracking; removing localization from error messages.
 - fixed: Remove Kado deposit details for "Sell" orders.
 - fixed: Sentry tagging and metadata data wasn't formed properly and caused some loss of tracked errors.
 - fixed: Use Sentry context for logging metadata in `EdgeCrashEvent`
+- fixed: Fix `currencyWallets` object reference in deep link paths that support wallet creation
 - removed: Bank Wire Transfer Buy for Florida
 - removed: Paypal Sell for Canada
 - removed: Moonpay, Simplex, and Paybis for UK
@@ -63,7 +80,7 @@
 - fixed: ACH sell option for Florida visible with no accepted currencies
 - fixed: Slow `TransactionDetailsScene` navigation on slow networks
 
-## 4.15.1 (2024-10-18)
+## 4.15.1 (2024-10-21)
 
 - fixed: "Apple Pay" title per latest branding requirements
 

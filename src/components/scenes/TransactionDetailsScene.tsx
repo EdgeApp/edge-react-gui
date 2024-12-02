@@ -410,7 +410,15 @@ const TransactionDetailsComponent = (props: Props) => {
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-        <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
+        <AdvancedDetailsCard
+          transaction={transaction}
+          url={sprintf(
+            wallet.currencyInfo.transactionExplorer,
+            // HACK: Liberland explorer (and maybe others in the future)  can't
+            // search by hashed txid, so use the plugin provided url path
+            transaction.otherParams?.explorerPath ?? transaction.txid
+          )}
+        />
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
         <ButtonsView

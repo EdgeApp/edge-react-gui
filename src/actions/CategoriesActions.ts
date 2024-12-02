@@ -542,7 +542,7 @@ export const pluginIdIcons: Record<string, string> = {
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
-  thorchainda: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  swapkit: EDGE_CONTENT_SERVER_URI + '/swapkit.png',
   tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'

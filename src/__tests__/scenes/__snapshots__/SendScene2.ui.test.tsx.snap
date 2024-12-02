@@ -1381,15 +1381,19 @@ exports[`SendScene2 1 spendTarget 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -3176,15 +3180,19 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -4948,15 +4956,19 @@ exports[`SendScene2 2 spendTargets 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -6417,15 +6429,19 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -7862,15 +7878,19 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -9144,15 +9164,19 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -10710,15 +10734,19 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -12234,15 +12262,19 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -13692,15 +13724,19 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View
@@ -15133,15 +15169,19 @@ exports[`SendScene2 Render SendScene 1`] = `
           blurType="dark"
           overlayColor="rgba(0, 0, 0, 0)"
           style={
-            {
-              "backgroundColor": undefined,
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            [
+              {
+                "backgroundColor": undefined,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 16,
+              },
+            ]
           }
         />
         <View

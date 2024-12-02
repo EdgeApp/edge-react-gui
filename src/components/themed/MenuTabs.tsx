@@ -20,7 +20,7 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { scale } from '../../util/scaling'
-import { BlurBackground } from '../common/BlurBackground'
+import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { VectorIcon } from './VectorIcon'
@@ -89,7 +89,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   return (
     <Container shiftY={shiftY} pointerEvents="box-none">
       <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
-        <BlurBackground />
+        <BlurBackgroundNoRoundedCorners />
         <BackgroundLinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
       </Background>
       {renderFooter()}

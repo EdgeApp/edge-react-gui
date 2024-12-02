@@ -6,6 +6,7 @@ import Share, { ShareOptions } from 'react-native-share'
 
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
@@ -73,7 +74,8 @@ export const LogsModal = (props: Props) => {
   return (
     <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
-      {isDangerous ? null : <Paragraph>{lstrings.settings_modal_export_logs_message}</Paragraph>}
+      {isDangerous ? null : <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>}
+      <AlertCardUi4 title={lstrings.settings_modal_export_logs_warning} type="warning" />
       <ModalFilledTextInput
         autoCorrect
         autoFocus={false}
