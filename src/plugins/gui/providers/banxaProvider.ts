@@ -560,9 +560,9 @@ export const banxaProvider: FiatProviderFactory = {
               source: queryParams.source,
               target: queryParams.target,
               blockchain: banxaChain,
-              return_url_on_success: RETURN_URL_SUCCESS,
-              return_url_on_cancelled: RETURN_URL_CANCEL,
-              return_url_on_failure: RETURN_URL_FAIL
+              return_url_on_success: direction === 'buy' ? `https://deep.edge.app/fiatprovider/buy/banxa?status=success` : RETURN_URL_SUCCESS,
+              return_url_on_cancelled: direction === 'buy' ? `https://deep.edge.app/fiatprovider/buy/banxa?status=cancelled` : RETURN_URL_CANCEL,
+              return_url_on_failure: direction === 'buy' ? `https://deep.edge.app/fiatprovider/buy/banxa?status=failure` : RETURN_URL_FAIL
             }
             if (direction === 'buy') {
               if (testnet && banxaChain === 'BTC') {
@@ -594,7 +594,53 @@ export const banxaProvider: FiatProviderFactory = {
             let insideInterval = false
 
             if (direction === 'buy') {
-              await showUi.openExternalWebView({ url: banxaQuote.data.order.checkout_url })
+              await showUi.openExternalWebView({
+                providerId,
+                url: banxaQuote.data.order.checkout_url,
+                deeplinkHandler: async link => {
+                  if (link.direction !== 'buy') return
+
+                  const orderResponse = await banxaFetch({ method: 'GET', url, hmacUser, path: `api/orders/${banxaQuote.data.order.id}`, apiKey })
+                  const order = asBanxaOrderResponse(orderResponse)
+
+                  switch (link.query.status) {
+                    case 'success': {
+                      await showUi.trackConversion('Buy_Success', {
+                        conversionValues: {
+                          conversionType: 'buy',
+                          sourceFiatCurrencyCode: fiatCurrencyCode,
+                          sourceFiatAmount: priceQuote.fiat_amount,
+                          destAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: order.data.order.coin_amount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId: banxaQuote.data.order.id
+                        }
+                      })
+                      await showUi.exitScene()
+                      break
+                    }
+                    case 'cancelled': {
+                      console.log('Banxa WebView launch buy cancelled: ' + link.uri)
+                      await showUi.showToast(lstrings.fiat_plugin_buy_cancelled, NOT_SUCCESS_TOAST_HIDE_MS)
+                      await showUi.exitScene()
+                      break
+                    }
+                    case 'failure': {
+                      console.log('Banxa WebView launch buy failure: ' + link.uri)
+                      await showUi.showToast(lstrings.fiat_plugin_buy_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                      await showUi.exitScene()
+                      break
+                    }
+                    default: {
+                      await showUi.showToast(lstrings.fiat_plugin_buy_unknown_status, NOT_SUCCESS_TOAST_HIDE_MS)
+                      await showUi.exitScene()
+                    }
+                  }
+                }
+              })
             } else {
               const { checkout_url: checkoutUrl, id } = banxaQuote.data.order
               const banxaUrl = new URL(checkoutUrl)
