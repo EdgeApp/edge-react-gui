@@ -19,6 +19,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import { StringMap } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -143,28 +144,32 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     if (wallet == null) return
     if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) return
 
-    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
-    const addresses: AddressInfo[] = []
+    const addressTypeLabelMap: StringMap = {
+      segwitAddress: lstrings.request_qr_your_segwit_address,
+      legacyAddress: lstrings.request_qr_your_legacy_address,
 
-    // Handle segwitAddress
-    if (receiveAddress.segwitAddress != null) {
-      addresses.push({
-        addressString: receiveAddress.segwitAddress,
-        label: lstrings.request_qr_your_segwit_address
-      })
+      // Zcash
+      saplingAddress: lstrings.request_qr_your_sapling_address,
+      transparentAddress: lstrings.request_qr_your_transparent_address,
+      unifiedAddress: lstrings.request_qr_your_unified_address
     }
-    // Handle publicAddress
-    addresses.push({
-      addressString: receiveAddress.publicAddress,
-      label: receiveAddress.segwitAddress != null ? lstrings.request_qr_your_wrapped_segwit_address : lstrings.request_qr_your_wallet_address
+
+    const allAddresses = await wallet.getAddresses({ tokenId: null })
+    const hasSegwitAddress = allAddresses.some(address => address.addressType === 'segwitAddress')
+    const addresses: AddressInfo[] = allAddresses.map(edgeAddress => {
+      let label: string = lstrings.request_qr_your_wallet_address
+
+      if (hasSegwitAddress && edgeAddress.addressType === 'publicAddress') {
+        label = lstrings.request_qr_your_wrapped_segwit_address
+      } else if (addressTypeLabelMap[edgeAddress.addressType] != null) {
+        label = addressTypeLabelMap[edgeAddress.addressType]
+      }
+
+      return {
+        addressString: edgeAddress.publicAddress,
+        label
+      }
     })
-    // Handle legacyAddress
-    if (receiveAddress.legacyAddress != null) {
-      addresses.push({
-        addressString: receiveAddress.legacyAddress,
-        label: lstrings.request_qr_your_legacy_address
-      })
-    }
 
     this.setState({ addresses, selectedAddress: addresses[0] })
   }
