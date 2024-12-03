@@ -20,6 +20,9 @@ export interface WalletCreateItem {
   // Used for creating wallets:
   keyOptions?: JsonObject
   walletType?: string
+
+  // Used for filtering
+  networkLocation?: JsonObject
 }
 
 export interface MainWalletCreateItem extends WalletCreateItem {
@@ -132,7 +135,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
 
     for (const tokenId of Object.keys(builtinTokens)) {
-      const { currencyCode, displayName } = builtinTokens[tokenId]
+      const { currencyCode, displayName, networkLocation } = builtinTokens[tokenId]
 
       // Fix for when the token code and chain code are the same (like EOS/TLOS)
       if (currencyCode === currencyInfo.currencyCode) continue
@@ -142,6 +145,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
         key: `create-${currencyInfo.pluginId}-${tokenId}`,
         currencyCode,
         displayName,
+        networkLocation,
         pluginId,
         tokenId,
         createWalletIds
@@ -169,7 +173,7 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
   const out: WalletCreateItem[] = []
   const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
-    const { currencyCode, displayName, pluginId, tokenId, walletType } = item
+    const { currencyCode, displayName, networkLocation = {}, pluginId, walletType } = item
     if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
       out.push(item)
       continue
@@ -179,9 +183,12 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
       out.push(item)
       continue
     }
-    // See if the search term contains the tokenId because we don't have contract addresses in scope. The tokenId is, in most cases, close enough to a contract address to be useful.
-    if (tokenId !== null && normalizeForSearch(searchTarget).includes(normalizeForSearch(tokenId))) {
-      out.push(item)
+    // See if the search term can be found in the networkLocation object ie. contractAddress
+    for (const value of Object.values(networkLocation)) {
+      if (typeof value === 'string' && normalizeForSearch(value).includes(searchTarget)) {
+        out.push(item)
+        break
+      }
     }
   }
   return out
