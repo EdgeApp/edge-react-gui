@@ -16553,10 +16553,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.5.tgz#73ba08a04f45b133184b6efea70a2ed5c5cf5160"
-  integrity sha512-oMntk1SrUWR9BkQeA22onSU8m6VurtHkpXocQSBiqXhX7ZUG/94rbwPuV/OdfzrhXQRYjD71Vfj31T5qS0wZ1A==
+react-native-piratechain@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.6.tgz#24883f3c7093871babf0bc487d6fb0cbefce109d"
+  integrity sha512-9sTssIhfXJEv6dQUO/jStefBJmqS2K5mLLiJktebUcDe3tYuqntRx502vc7DvDyPJEpP8UNe0y1bNyd1ocE57g==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16675,12 +16675,12 @@ react-native-wheel-picker-android@^2.0.6:
   dependencies:
     moment "^2.22.0"
 
-react-native-zcash@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.4.tgz#f02f789e3b21548d436cee7633fe321fa4804f7b"
-  integrity sha512-N6RbuzwshEiZqIdiYbBAcI9+e7MEL8+dhErpJDSMLmbPGYEJAprVUPL/B9HP/lo4PsD5nXv5ll9Q16Zu0J0Uag==
+react-native-zcash@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.5.tgz#38991a9d83641d9c69fba01cdddbb23b5cec73c9"
+  integrity sha512-yzuDbNvBUgt2sVXtkipzVYBzzvgB/dAUMyjVBBerZe9MQ/Ihm3ivNlJYlnlflAm2PDAWNwQjhrwzZ3oxYYZbnw==
   dependencies:
-    biggystring "^4.1.3"
+    biggystring "^4.2.3"
     rfc4648 "^1.3.0"
 
 react-native@0.71.15:
