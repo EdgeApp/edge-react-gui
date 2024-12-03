@@ -97,6 +97,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         isSend: true,
         nativeAmount: '0',
         networkFee: fee,
+        networkFees: [],
         ourReceiveAddresses: [],
         signedTx: '',
         tokenId: null,

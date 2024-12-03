@@ -74,6 +74,7 @@ describe('SwapSuccessSceneComponent', () => {
               metadata: { name: 'timmy' },
               nativeAmount: '12300000',
               networkFee: '1',
+              networkFees: [],
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',

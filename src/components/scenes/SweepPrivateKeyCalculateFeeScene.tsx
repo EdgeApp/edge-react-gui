@@ -147,6 +147,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           isSend: true,
           nativeAmount: '0',
           networkFee: '0',
+          networkFees: [],
           ourReceiveAddresses: [],
           signedTx: '',
           tokenId: null,

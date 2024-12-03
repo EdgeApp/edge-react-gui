@@ -128,6 +128,7 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
           },
           nativeAmount: sub(nativeAmount, networkFee),
           networkFee,
+          networkFees: [],
           ourReceiveAddresses: [],
           signedTx: '',
           tokenId: null,
@@ -180,6 +181,7 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
           },
           nativeAmount: `-${networkFee}`,
           networkFee,
+          networkFees: [],
           ourReceiveAddresses: [],
           savedAction: {
             actionType: 'stake',
@@ -244,6 +246,7 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
           },
           nativeAmount: `-${networkFee}`,
           networkFee,
+          networkFees: [],
           ourReceiveAddresses: [],
           savedAction: {
             actionType: 'stake',
