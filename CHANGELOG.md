@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+- added: Venmo GUI plugin via Moonpay.
 - added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
+- added: Show all Zcash addresses on Request scene
+- changed: Support optional Sideshift private key
+- changed: Upgrade edge-core-js to v2.21.0
 
-## 4.17.2
+## 4.17.2 (2024-11-22)
 
 - added: "Add Wallet" button to bottom of `WalletListScene`
 - fixed: (Zcash/Pirate) Fixed android build issues
@@ -12,15 +16,14 @@
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`
 
-## 4.17.1
+## 4.17.1 (2024-11-20)
 
 - added: (Zcash) Add NU6 support
 
-## 4.18.0
+## 4.18.0 (2024-12-02)
 
 - added: Support for LLD & LLM transaction history
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
-- added: Venmo GUI plugin via Moonpay.
 - changed: Auto-enable required tokens when navigating to `Stake*` scenes
 - fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
 - fixed: Backing up a light account while on the `FiatPluginEnterAmountScene` retains light account-related quote errors
