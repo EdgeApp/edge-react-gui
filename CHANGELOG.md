@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.19.0
+
 - added: Venmo GUI plugin via Moonpay.
 - added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
 - added: Show all Zcash addresses on Request scene
