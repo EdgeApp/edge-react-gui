@@ -5,18 +5,18 @@
 ## 4.19.0
 
 - added: Venmo GUI plugin via Moonpay.
+- added: "Add Wallet" button to bottom of `WalletListScene`
 - added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
 - added: Show all Zcash addresses on Request scene
 - changed: Support optional Sideshift private key
 - changed: Upgrade edge-core-js to v2.21.0
-
-## 4.17.2 (2024-11-22)
-
-- added: "Add Wallet" button to bottom of `WalletListScene`
-- fixed: (Zcash/Pirate) Fixed android build issues
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`
+
+## 4.17.2 (2024-11-22)
+
+- fixed: (Zcash/Pirate) Fixed android build issues
 
 ## 4.17.1 (2024-11-20)
 
