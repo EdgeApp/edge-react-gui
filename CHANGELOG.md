@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: New Kado OTC provider integration.
+
 ## 4.19.0
 
 - added: Venmo GUI plugin via Moonpay.

@@ -1538,6 +1538,7 @@ const strings = {
   form_field_title_address_line_2: 'Address Line 2 (optional)',
   form_field_title_address_state_province_region: 'Province',
   form_field_title_address_zip_postal_code: 'Postal Code/Zip',
+  form_field_title_email_address: 'Email Address',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
 
@@ -1552,6 +1553,11 @@ const strings = {
   sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
+
+  otc_enter_email_to_buy: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) purchase.',
+  otc_enter_email_to_sell: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
+  otc_confirmation_title: 'Request Sent',
+  otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
 
   // #endregion GuiPlugins
 

@@ -14,6 +14,8 @@ import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
+import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
+import { EmailFormScene } from '../plugins/gui/scenes/EmailFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -292,6 +294,21 @@ const EdgeBuyTabScreen = () => {
       <BuyStack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <BuyStack.Screen
+        name="guiPluginConfirmation"
+        component={ConfirmationScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+      <BuyStack.Screen
+        name="guiPluginEmailForm"
+        component={EmailFormScene}
         options={{
           headerRight: () => null
         }}
