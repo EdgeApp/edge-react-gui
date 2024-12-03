@@ -9417,13 +9417,13 @@ edge-currency-plugins@^3.4.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.14.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.14.0.tgz#a9c1609f7f6f6930f36bdaa1f1941befa4ed840a"
-  integrity sha512-JXJK21gFoyAqKjLRmYOFU29NG3fQfirCH7Ot7OKN6Oa2/xp4IJI9QLUeyGbMehCR8fqTIY9iI3J1Tg72zlWO2w==
+edge-exchange-plugins@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.15.0.tgz#e222fb160e9ff0680b5b8e570233b72506c0979a"
+  integrity sha512-z6PiEI3eUS/2oOb/lH/07LM1BosZRjAV11pWDun403wW6xkBMApPNPf2ks93ksuJk5tTLNU+tKJLBI06f2NP5w==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
-    biggystring "^4.1.3"
+    biggystring "^4.2.3"
     cleaners "^0.3.13"
     ethers "^5.7.0"
     regenerator-runtime "0.13.11"
