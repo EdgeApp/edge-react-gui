@@ -232,6 +232,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Bitrefill'
   },
+  venmo: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    displayName: ''
+  },
   wire: {
     pluginId: 'amountquote',
     storeId: '',

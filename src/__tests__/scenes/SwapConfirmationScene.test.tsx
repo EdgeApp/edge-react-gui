@@ -99,7 +99,8 @@ describe('SwapConfirmationScene', () => {
       toNativeAmount: '10000',
       networkFee: {
         currencyCode: 'BTC',
-        nativeAmount: '1'
+        nativeAmount: '1',
+        tokenId: null
       },
       pluginId: 'bitcoin',
       approve: async () => {
@@ -119,6 +120,7 @@ describe('SwapConfirmationScene', () => {
             },
             nativeAmount: '123000000',
             networkFee: '1000',
+            networkFees: [],
             ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
             parentNetworkFee: '10002',
             signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',

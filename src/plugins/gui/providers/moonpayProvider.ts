@@ -31,10 +31,15 @@ const pluginDisplayName = 'Moonpay'
 const supportEmail = 'support@moonpay.com'
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
-  buy: { credit: { providerId, fiat: {}, crypto: {} }, paypal: { providerId, fiat: {}, crypto: {} } },
+  buy: {
+    credit: { providerId, fiat: {}, crypto: {} },
+    paypal: { providerId, fiat: {}, crypto: {} },
+    venmo: { providerId, fiat: {}, crypto: {} }
+  },
   sell: {
     credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
+    paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
+    venmo: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
   }
 }
 const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = { buy: {}, sell: {} }
@@ -108,7 +113,7 @@ const asApiKeys = asString
 
 const asMoonpayCountries = asArray(asMoonpayCountry)
 
-type MoonpayPaymentMethod = 'ach_bank_transfer' | 'credit_debit_card' | 'paypal'
+type MoonpayPaymentMethod = 'ach_bank_transfer' | 'credit_debit_card' | 'paypal' | 'venmo'
 
 interface MoonpayWidgetQueryParams {
   apiKey: string
@@ -154,7 +159,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, MoonpayPaymentMe
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
   iach: 'ach_bank_transfer',
-  paypal: 'paypal'
+  paypal: 'paypal',
+  venmo: 'venmo'
 }
 
 const NETWORK_CODE_PLUGINID_MAP: StringMap = {
@@ -184,7 +190,8 @@ const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefi
   applepay: 'credit',
   credit: 'credit',
   googlepay: 'credit',
-  paypal: 'paypal'
+  paypal: 'paypal',
+  venmo: 'venmo'
 }
 
 let lastChecked = 0

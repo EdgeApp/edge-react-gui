@@ -120,11 +120,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
+      const { defaultScreen } = getDeviceSettings()
       rootNavigation.replace('edgeApp', {
         screen: 'edgeAppStack',
         params: {
           screen: 'edgeTabs',
-          params: { screen: 'home' }
+          params: defaultScreen === 'home' ? { screen: 'home' } : { screen: 'walletsTab', params: { screen: 'walletList' } }
         }
       })
       referralPromise.catch(() => console.log(`Failed to load account referral info`))

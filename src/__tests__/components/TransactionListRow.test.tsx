@@ -58,6 +58,7 @@ describe('TransactionListRow', () => {
             isSend: true,
             memos: [],
             networkFee: '100000',
+            networkFees: [],
             ourReceiveAddresses: [],
             signedTx: '0x12897491827459823745',
             tokenId: null,

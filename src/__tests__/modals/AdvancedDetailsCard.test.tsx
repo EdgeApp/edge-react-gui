@@ -18,6 +18,7 @@ describe('AdvancedDetailsCard', () => {
             memos: [],
             nativeAmount: '-681',
             networkFee: '681',
+            networkFees: [],
             otherParams: {},
             ourReceiveAddresses: ['123123123'],
             signedTx: '',

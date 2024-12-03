@@ -1,5 +1,21 @@
 [
   {
+    "id": "bitsofgold",
+    "pluginId": "bitsofgold",
+    "paymentTypes": ["bank"],
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 5.95%\nSettlement: 1 - 48 hours",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
+    "forCountries": ["IL"],
+    "cryptoCodes": ["BTC", "ETH"],
+    "paymentTypeLogoKey": "bank",
+    "deepPath": "/order/buy",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0"
+    }
+  },
+  {
     "id": "creditcard",
     "pluginId": "creditcard",
     "description": "Fee: 5-7%\nSettlement: 10 - 30 minutes",
@@ -59,44 +75,6 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "wire",
-    "pluginId": "wire",
-    "paymentType": "wire",
-    "paymentTypes": ["wire"],
-    "title": "Bank Wire Transfer",
-    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $10000",
-    "forCountries": ["US"],
-    "notStateProvinces": { "US": ["AK", "AR", "CT", "NC", "NY", "TX", "FL"] },
-    "cryptoCodes": [],
-    "paymentTypeLogoKey": "bank"
-  },
-  {
-    "id": "sepa",
-    "pluginId": "sepa",
-    "forCountries": [
-      "AT", "BE", "BG", "CH", "CZ", "DE", "DK", "EE", "ES", "FI",
-      "FR", "GB", "GR", "HR", "HU", "IE", "IT", "LI", "LT", "LU",
-      "LV", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK", "SM"
-    ],
-    "paymentType": "sepa",
-    "paymentTypes": ["sepa"],
-    "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
-    "title": "SEPA Bank Transfer",
-    "paymentTypeLogoKey": "bank"
-  },
-  {
-    "id": "libertyx",
-    "pluginId": "libertyx",
-    "paymentTypes": ["cash", "credit"],
-    "description": "Fee: 3-8%\nSettlement: Instant",
-    "title": "In-person Cash and Debit Card",
-    "partnerIconPath": "libertyXlogo.png",
-    "forCountries": ["US"],
-    "cryptoCodes": ["BTC"],
-    "paymentTypeLogoKey": "cash",
-    "deepPath": "/"
-  },
-  {
     "id": "ideal",
     "pluginId": "ideal",
     "paymentType": "ideal",
@@ -117,6 +95,18 @@
     "forCountries": ["CA"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "interac"
+  },
+  {
+    "id": "libertyx",
+    "pluginId": "libertyx",
+    "paymentTypes": ["cash", "credit"],
+    "description": "Fee: 3-8%\nSettlement: Instant",
+    "title": "In-person Cash and Debit Card",
+    "partnerIconPath": "libertyXlogo.png",
+    "forCountries": ["US"],
+    "cryptoCodes": ["BTC"],
+    "paymentTypeLogoKey": "cash",
+    "deepPath": "/"
   },
   {
     "id": "payid",
@@ -187,14 +177,17 @@
     "paymentTypeLogoKey": "revolut"
   },
   {
-    "id": "turkishbank",
-    "pluginId": "turkishbank",
-    "paymentType": "turkishbank",
-    "paymentTypes": ["turkishbank"],
-    "title": "Turkish Bank Transfer",
-    "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
-    "forCountries": [],
-    "cryptoCodes": [],
+    "id": "sepa",
+    "pluginId": "sepa",
+    "forCountries": [
+      "AT", "BE", "BG", "CH", "CZ", "DE", "DK", "EE", "ES", "FI",
+      "FR", "GB", "GR", "HR", "HU", "IE", "IT", "LI", "LT", "LU",
+      "LV", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK", "SM"
+    ],
+    "paymentType": "sepa",
+    "paymentTypes": ["sepa"],
+    "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
+    "title": "SEPA Bank Transfer",
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -209,20 +202,38 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "bitsofgold",
-    "pluginId": "bitsofgold",
-    "paymentTypes": ["bank"],
-    "title": "Israeli Bank Transfer",
-    "description": "Fee: 5.95%\nSettlement: 1 - 48 hours",
-    "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "forCountries": ["IL"],
-    "cryptoCodes": ["BTC", "ETH"],
-    "paymentTypeLogoKey": "bank",
-    "deepPath": "/order/buy",
-    "deepQuery": {
-      "order_id": "null",
-      "page": "0"
-    }
+    "id": "turkishbank",
+    "pluginId": "turkishbank",
+    "paymentType": "turkishbank",
+    "paymentTypes": ["turkishbank"],
+    "title": "Turkish Bank Transfer",
+    "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
+    "forCountries": [],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "venmo",
+    "pluginId": "venmo",
+    "paymentType": "venmo",
+    "paymentTypes": ["venmo"],
+    "title": "Venmo",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "venmo"
+  },
+  {
+    "id": "wire",
+    "pluginId": "wire",
+    "paymentType": "wire",
+    "paymentTypes": ["wire"],
+    "title": "Bank Wire Transfer",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $10000",
+    "forCountries": ["US"],
+    "notStateProvinces": { "US": ["AK", "AR", "CT", "NC", "NY", "TX", "FL"] },
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
   },
   {
     "id": "xanpool",
@@ -306,6 +317,10 @@
   {
     "id": "libertyx",
     "sortIndex": 50
+  },
+  {
+    "id": "venmo",
+    "sortIndex": 15
   },
   {
     "id": "wire",

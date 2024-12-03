@@ -211,6 +211,20 @@ Settlement: 5 min - 24 hours",
   },
   {
     "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "venmo",
+    "paymentTypeLogoKey": "venmo",
+    "paymentTypes": [
+      "venmo",
+    ],
+    "pluginId": "venmo",
+    "title": "Venmo",
+  },
+  {
+    "cryptoCodes": [],
     "customTitleKey": "applepay",
     "deepPath": "",
     "deepQuery": {},
@@ -316,6 +330,20 @@ Settlement: 5 min - 24 hours",
     ],
     "pluginId": "paypal",
     "title": "Paypal",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "venmo",
+    "paymentTypeLogoKey": "venmo",
+    "paymentTypes": [
+      "venmo",
+    ],
+    "pluginId": "venmo",
+    "title": "Venmo",
   },
   {
     "cryptoCodes": [],

@@ -578,6 +578,7 @@ function cleanTx(tx: EdgeTransaction): EdgeTransaction {
     metadata: tx.metadata,
     nativeAmount: tx.nativeAmount,
     networkFee: tx.networkFee,
+    networkFees: [],
     // networkFeeOption: tx.networkFeeOption,
     ourReceiveAddresses: tx.ourReceiveAddresses,
     parentNetworkFee: tx.parentNetworkFee,

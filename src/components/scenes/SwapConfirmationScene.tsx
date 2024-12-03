@@ -162,7 +162,7 @@ export const SwapConfirmationScene = (props: Props) => {
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await dispatch(getSwapInfo(selectedQuote))
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { toWallet, toTokenId } = request
+    const { toWallet, toTokenId, fromWallet, fromTokenId } = request
     try {
       dispatch(logEvent('Exchange_Shift_Start'))
       const result: EdgeSwapResult = await selectedQuote.approve()
@@ -199,12 +199,20 @@ export const SwapConfirmationScene = (props: Props) => {
       dispatch(
         logEvent('Exchange_Shift_Success', {
           conversionValues: {
-            conversionType: 'crypto',
-            cryptoAmount: new CryptoAmount({
+            conversionType: 'swap',
+            destAmount: new CryptoAmount({
               nativeAmount: toNativeAmount,
               tokenId: toTokenId,
               currencyConfig: toWallet.currencyConfig
             }),
+            sourceAmount: new CryptoAmount({
+              nativeAmount: fromNativeAmount,
+              tokenId: fromTokenId,
+              currencyConfig: fromWallet.currencyConfig
+            }),
+            isBuiltInAsset:
+              (toTokenId == null || toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
+              (fromTokenId == null || fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
             orderId: result.orderId,
             swapProviderId: pluginId
           }
