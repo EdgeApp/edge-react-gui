@@ -10,6 +10,7 @@
 - added: Show all Zcash addresses on Request scene
 - changed: Support optional Sideshift private key
 - changed: Upgrade edge-core-js to v2.21.0
+- changed: Filter CreateWalletItem list by networkLocation instead of tokenId
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`
