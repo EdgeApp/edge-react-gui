@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Always show Add Wallet button at bottom of asset list
+- changed: Use chain icon for staking cards
 
 ## 4.19.0
 
