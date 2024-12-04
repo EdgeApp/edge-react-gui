@@ -1235,7 +1235,6 @@
   "stake_s_unstaked": "%s Unstaked",
   "stake_lock_message": "locked until %s",
   "stake_select_options": "Select staking options:",
-  "stake_stake_more_funds": "Stake More Funds",
   "stake_claim_rewards": "Claim Rewards",
   "stake_unstake_claim": "Unstake and Claim Rewards",
   "stake_unstake": "Unstake",
