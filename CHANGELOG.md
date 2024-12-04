@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: New Kado OTC provider integration.
+- changed: Integrate `installSurvey` endpoint for post-install survey options
 
 ## 4.19.0
 
