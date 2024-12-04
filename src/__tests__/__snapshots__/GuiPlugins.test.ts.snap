@@ -201,20 +201,6 @@ Limit $1000",
     "deepQuery": {},
     "description": "Fee: ~5%
 Settlement: 5 min - 24 hours",
-    "paymentType": "paypal",
-    "paymentTypeLogoKey": "paypal",
-    "paymentTypes": [
-      "paypal",
-    ],
-    "pluginId": "paypal",
-    "title": "Paypal",
-  },
-  {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Fee: ~5%
-Settlement: 5 min - 24 hours",
     "paymentType": "venmo",
     "paymentTypeLogoKey": "venmo",
     "paymentTypes": [
@@ -222,6 +208,20 @@ Settlement: 5 min - 24 hours",
     ],
     "pluginId": "venmo",
     "title": "Venmo",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
   },
   {
     "cryptoCodes": [],
@@ -323,20 +323,6 @@ Settlement: 2 - 3 days",
     "deepQuery": {},
     "description": "Fee: ~5%
 Settlement: 5 min - 24 hours",
-    "paymentType": "paypal",
-    "paymentTypeLogoKey": "paypal",
-    "paymentTypes": [
-      "paypal",
-    ],
-    "pluginId": "paypal",
-    "title": "Paypal",
-  },
-  {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Fee: ~5%
-Settlement: 5 min - 24 hours",
     "paymentType": "venmo",
     "paymentTypeLogoKey": "venmo",
     "paymentTypes": [
@@ -344,6 +330,20 @@ Settlement: 5 min - 24 hours",
     ],
     "pluginId": "venmo",
     "title": "Venmo",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "paypal",
+    "paymentTypeLogoKey": "paypal",
+    "paymentTypes": [
+      "paypal",
+    ],
+    "pluginId": "paypal",
+    "title": "Paypal",
   },
   {
     "cryptoCodes": [],
