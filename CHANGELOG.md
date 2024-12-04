@@ -11,6 +11,7 @@
 - changed: Support optional Sideshift private key
 - changed: Upgrade edge-core-js to v2.21.0
 - changed: Filter CreateWalletItem list by networkLocation instead of tokenId
+- changed: Update Ripple base reserve text strings
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`

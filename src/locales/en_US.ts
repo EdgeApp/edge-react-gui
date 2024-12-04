@@ -179,9 +179,9 @@ const strings = {
   fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
-  request_xrp_minimum_notification_body:
-    'Ripple (XRP) wallets require a 10 XRP minimum balance. You must deposit at least 10 XRP to this address before this wallet will show a balance or transactions. 10 XRP will be unspendable for the lifetime of this wallet address.',
-  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 10 XRP minimum',
+  request_xrp_minimum_notification_body_1xrp:
+    'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
+  request_xrp_minimum_notification_alert_body_1xrp: 'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
@@ -324,7 +324,7 @@ const strings = {
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
     'To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.',
-  activate_wallet_token_scene_body_xrp_extra: 'Token activation will increase the XRP reserve requirement by 2 XRP per token activated.',
+  activate_wallet_token_scene_body_xrp_extra_point2xrp: 'Token activation will increase the XRP reserve requirement by 0.2 XRP per token activated.',
   activate_wallet_token_scene_body_algo_extra: 'Token activation will increase the ALGO reserve requirement by 0.1 ALGO per token activated.',
   activate_wallet_tokens_scene_body:
     'To send and receive the selected tokens you will first need to activate them with one or more blockchain transactions. The transactions in total will cost the following fee shown below. Please confirm using the slider below.',
