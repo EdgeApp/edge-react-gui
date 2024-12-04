@@ -268,6 +268,7 @@ export const asEnvConfig = asObject({
   SOLANA_INIT: asCorePluginInit(
     asObject({
       alchemyApiKey: asOptional(asString, ''),
+      heliusApiKey: asOptional(asString),
       poktPortalApiKey: asOptional(asString, '')
     }).withRest
   ),
