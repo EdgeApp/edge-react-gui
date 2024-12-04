@@ -40,6 +40,7 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const allKeys = useWatch(account, 'allKeys')
   const hasRestoreWallets = allKeys.filter(key => key.archived || key.deleted).length > 0
 
@@ -92,13 +93,13 @@ export function WalletListScene(props: Props) {
 
   const tokenSupportingWalletIds = React.useMemo(() => {
     const walletIds: string[] = []
-    for (const wallet of Object.values(account.currencyWallets)) {
+    for (const wallet of Object.values(currencyWallets)) {
       if (Object.keys(wallet.currencyConfig.builtinTokens).length > 0) {
         walletIds.push(wallet.id)
       }
     }
     return walletIds
-  }, [account])
+  }, [currencyWallets])
 
   const handlePressAddEditToken = useHandler(async () => {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
