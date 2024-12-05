@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
@@ -841,7 +842,7 @@ export function TransactionListTop(props: OwnProps) {
       defaultFiat={defaultFiat}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
-      exchangeRate={exchangeRate}
+      exchangeRate={isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? '0' : exchangeRate}
       isAccountBalanceVisible={isAccountBalanceVisible}
       exchangeRates={exchangeRates}
       toggleBalanceVisibility={handleBalanceVisibility}
