@@ -551,6 +551,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
     chainCode: 'BNB',
     isImportKeySupported: true,
+    keysOnlyMode: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   binancesmartchain: {

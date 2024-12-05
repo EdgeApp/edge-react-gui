@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 
 interface Props {
   // Display options:
@@ -53,7 +54,7 @@ export const FiatText = ({
     isoFiatCurrencyCode,
     maxPrecision,
     minPrecision,
-    nativeCryptoAmount,
+    nativeCryptoAmount: isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? '0' : nativeCryptoAmount,
     subCentTruncation,
     hideBalance
   })
