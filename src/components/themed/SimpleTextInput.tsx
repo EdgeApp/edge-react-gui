@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -15,6 +15,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { MarginRemProps, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
+import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, ChevronBackAnimated, CloseIconAnimated } from '../icons/ThemedIcons'
@@ -111,6 +112,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const hasIcon = Icon != null
   const hasValue = value !== ''
+  const isIos = Platform.OS === 'ios'
 
   const [isFocused, setIsFocused] = React.useState(false)
 
@@ -172,7 +174,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const backIconSize = useDerivedValue(() => interpolate(focusAnimation.value, [0, 1], [0, themeRem]))
+  const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
   const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
   const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem))
 
@@ -186,9 +188,9 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
 
   return (
-    <ContainerView>
+    <ContainerView marginRemProps={marginRemProps}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} marginRemProps={marginRemProps}>
+        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
           <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
           <TouchableOpacity hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
             <SideContainer size={backIconSize}>
@@ -234,20 +236,38 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           </TouchContainer>
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
+      {isIos && isFocused && (
+        <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
+          <CancelButton>
+            <CancelText numberOfLines={1} ellipsizeMode="clip">
+              {lstrings.string_cancel_cap}
+            </CancelText>
+          </CancelButton>
+        </TouchContainer>
+      )}
     </ContainerView>
   )
 })
 
-const ContainerView = styled(View)({
-  flexDirection: 'row'
+const ContainerView = styled(View)<{
+  marginRemProps: MarginRemProps
+}>(theme => ({ marginRemProps }) => {
+  const marginRemStyle = useMarginRemStyle(marginRemProps)
+  return [
+    marginRemStyle,
+    {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  ]
 })
 
 const InputContainerView = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
-  marginRemProps: MarginRemProps
-}>(theme => ({ disableAnimation, focusAnimation, scale, marginRemProps }) => {
+}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
     theme.textInputBackgroundColorFocused,
@@ -258,29 +278,31 @@ const InputContainerView = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
-  const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   return [
-    marginRemStyle,
     {
       alignItems: 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(theme.textInputBorderRadius),
       flexDirection: 'row',
       flexGrow: 1,
+      flexShrink: 1,
       paddingHorizontal: theme.rem(1),
       paddingVertical: theme.rem(0.75)
     },
-    useAnimatedStyle(() => ({
-      backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
-      borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
-      opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
-      transform: [
-        {
-          scale: interpolate(scale.value, [1, 0], [1, 0.75])
-        }
-      ]
-    }))
+    useAnimatedStyle(() => {
+      'worklet'
+      return {
+        backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
+        borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
+        opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
+        transform: [
+          {
+            scale: interpolate(scale.value, [1, 0], [1, 0.75])
+          }
+        ]
+      }
+    })
   ]
 })
 
@@ -324,10 +346,32 @@ const InputField = styledWithRef(AnimatedTextInput)<{
 })
 
 const TouchContainer = styled(TouchableOpacity)(theme => ({
-  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
+  // Increase tappable area with padding, while net 0 with negative margin to
+  // visually appear as if 0 margins/padding
   padding: theme.rem(1),
   margin: -theme.rem(1)
 }))
+
+const CancelButton = styled(View)(theme => () => {
+  return {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: theme.rem(0.5)
+  }
+})
+
+const CancelText = styled(Text)(theme => {
+  return {
+    color: theme.textInputIconColorFocused,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    includeFontPadding: false,
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    marginHorizontal: theme.rem(0.5),
+    flexShrink: 0
+  }
+})
 
 function useAnimatedColorInterpolateFn(fromColor: string, toColor: string, disabledColor: string) {
   const interpolateFn = useMemo(() => {
