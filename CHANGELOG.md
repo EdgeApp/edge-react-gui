@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Transaction id for swap details
+- added: 'numAccounts' to 'Signup_Complete' event
 - added: New Kado OTC provider integration.
 - changed: `WalletListScene` filter mode remains active on empty text
 - changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
