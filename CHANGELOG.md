@@ -16,6 +16,8 @@
 - changed: Filter CreateWalletItem list by networkLocation instead of tokenId
 - changed: Update Ripple base reserve text strings
 - changed: Enable `keysOnlyMode` for Binance Beacon Chain
+- changed: Always show Add Wallet button at bottom of asset list
+- changed: Use chain icon for staking cards
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`
