@@ -6,6 +6,7 @@
 - added: New Kado OTC provider integration.
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
+- changed: Always show Add Wallet button at bottom of asset list
 
 ## 4.19.0
 

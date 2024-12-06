@@ -40,6 +40,7 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const allKeys = useWatch(account, 'allKeys')
   const hasRestoreWallets = allKeys.filter(key => key.archived || key.deleted).length > 0
 
@@ -92,13 +93,13 @@ export function WalletListScene(props: Props) {
 
   const tokenSupportingWalletIds = React.useMemo(() => {
     const walletIds: string[] = []
-    for (const wallet of Object.values(account.currencyWallets)) {
+    for (const wallet of Object.values(currencyWallets)) {
       if (Object.keys(wallet.currencyConfig.builtinTokens).length > 0) {
         walletIds.push(wallet.id)
       }
     }
     return walletIds
-  }, [account])
+  }, [currencyWallets])
 
   const handlePressAddEditToken = useHandler(async () => {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
@@ -131,15 +132,23 @@ export function WalletListScene(props: Props) {
 
   const renderListFooter = React.useMemo(() => {
     if (isSearching && tokenSupportingWalletIds.length > 0) {
-      return <SceneButtons secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }} />
+      return (
+        <SceneButtons
+          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
+          secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }}
+        />
+      )
     }
-    return (
-      <SceneButtons
-        primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
-        secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
-      />
-    )
-  }, [isSearching, tokenSupportingWalletIds.length, handlePressAddWallets, handlePressRestoreWallets, handlePressAddEditToken])
+    if (!isSearching && hasRestoreWallets) {
+      return (
+        <SceneButtons
+          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
+          secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
+        />
+      )
+    }
+    return <SceneButtons secondary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }} />
+  }, [isSearching, tokenSupportingWalletIds.length, hasRestoreWallets, handlePressAddWallets, handlePressAddEditToken, handlePressRestoreWallets])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
@@ -188,7 +197,7 @@ export function WalletListScene(props: Props) {
               <WalletListSwipeable
                 key="fullList"
                 header={renderHeader}
-                footer={hasRestoreWallets ? renderListFooter : undefined}
+                footer={renderListFooter}
                 navigation={navigation}
                 insetStyle={insetStyle}
                 searching={isSearching}
