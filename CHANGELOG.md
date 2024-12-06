@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Always show Add Wallet button at bottom of asset list
+
 ## 4.19.0
 
 - added: Venmo GUI plugin via Moonpay.

@@ -132,15 +132,23 @@ export function WalletListScene(props: Props) {
 
   const renderListFooter = React.useMemo(() => {
     if (isSearching && tokenSupportingWalletIds.length > 0) {
-      return <SceneButtons secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }} />
+      return (
+        <SceneButtons
+          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
+          secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }}
+        />
+      )
     }
-    return (
-      <SceneButtons
-        primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
-        secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
-      />
-    )
-  }, [isSearching, tokenSupportingWalletIds.length, handlePressAddWallets, handlePressRestoreWallets, handlePressAddEditToken])
+    if (!isSearching && hasRestoreWallets) {
+      return (
+        <SceneButtons
+          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
+          secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
+        />
+      )
+    }
+    return <SceneButtons secondary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }} />
+  }, [isSearching, tokenSupportingWalletIds.length, hasRestoreWallets, handlePressAddWallets, handlePressAddEditToken, handlePressRestoreWallets])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
@@ -189,7 +197,7 @@ export function WalletListScene(props: Props) {
               <WalletListSwipeable
                 key="fullList"
                 header={renderHeader}
-                footer={hasRestoreWallets ? renderListFooter : undefined}
+                footer={renderListFooter}
                 navigation={navigation}
                 insetStyle={insetStyle}
                 searching={isSearching}
