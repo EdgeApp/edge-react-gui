@@ -6,8 +6,6 @@
 - added: New Kado OTC provider integration.
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
-- changed: Always show Add Wallet button at bottom of asset list
-- changed: Use chain icon for staking cards
 
 ## 4.19.0
 
@@ -20,6 +18,8 @@
 - changed: Filter CreateWalletItem list by networkLocation instead of tokenId
 - changed: Update Ripple base reserve text strings
 - changed: Enable `keysOnlyMode` for Binance Beacon Chain
+- changed: Always show Add Wallet button at bottom of asset list
+- changed: Use chain icon for staking cards
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
 - removed: Keyboard autofocus from `WalletListModal`
