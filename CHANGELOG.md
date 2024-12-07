@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
+- added: 'numAccounts' to 'Signup_Complete' event
 - added: New Kado OTC provider integration.
+- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
 
