@@ -6763,6 +6763,59 @@ const currencyConfig: { [pluginId: string]: any } = {
     builtinTokens: {},
     customTokens: {}
   },
+  bitcointestnet4: {
+    otherMethods: {},
+    currencyInfo: {
+      pluginId: 'bitcointestnet4',
+      walletType: 'wallet:bitcointestnet4',
+      currencyCode: 'TESTBTC4',
+      displayName: 'Bitcoin Testnet4',
+      denominations: [
+        {
+          name: 'TESTBTC4',
+          multiplier: '100000000',
+          symbol: '₿'
+        },
+        {
+          name: 'mTESTBTC4',
+          multiplier: '100000',
+          symbol: 'm₿'
+        },
+        {
+          name: 'bits',
+          multiplier: '100',
+          symbol: 'ƀ'
+        },
+        {
+          name: 'sats',
+          multiplier: '1',
+          symbol: 's'
+        }
+      ],
+      defaultSettings: {
+        customFeeSettings: ['satPerByte'],
+        blockbookServers: ['wss://testnet4-explorer.wakiyamap.dev'],
+        enableCustomServers: false
+      },
+      customFeeTemplate: [
+        {
+          type: 'nativeAmount',
+          key: 'satPerByte',
+          displayName: 'Satoshis Per Byte',
+          displayMultiplier: '0'
+        }
+      ],
+      metaTokens: [],
+     blockExplorer: 'https://mempool.space/testnet4/block/%s',
+     addressExplorer: 'https://mempool.space/testnet4/address/%s',
+     transactionExplorer: 'https://mempool.space/testnet4/tx/%s',
+      symbolImage: 'https://content.edge.app/bitcoin-logo-solo-64.png',
+      symbolImageDarkMono: 'https://content.edge.app/bitcoin-logo-solo-64.png'
+    },
+    allTokens: {},
+    builtinTokens: {},
+    customTokens: {}
+  },
   dash: {
     otherMethods: {},
     currencyInfo: {
