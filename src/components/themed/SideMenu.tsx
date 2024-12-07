@@ -44,7 +44,8 @@ import { EdgeText } from './EdgeText'
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenu(props: DrawerContentComponentProps) {
+const SideMenuComponent = (props: DrawerContentComponentProps) => {
+  console.log('SideMenu')
   // Fix this type assertion (seems like DrawerContentComponentProps works just
   // fine as NavigationBase?)
   const { navigation } = props as any as DrawerSceneProps<'edgeAppStack'>
@@ -383,6 +384,15 @@ export function SideMenu(props: DrawerContentComponentProps) {
       <Services navigation={rootNavigation} />
     </OuterView>
   )
+}
+
+// Only check navigation prop for changes since we don't use state or descriptors and those ALWAYS change
+const checkProps = (prevProps: DrawerContentComponentProps, nextProps: DrawerContentComponentProps) => nextProps.navigation === prevProps.navigation
+
+const MemoizedSideMenu = React.memo(SideMenuComponent, checkProps)
+
+export const SideMenu = (props: DrawerContentComponentProps) => {
+  return <MemoizedSideMenu {...props} />
 }
 
 /**

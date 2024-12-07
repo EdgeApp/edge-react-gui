@@ -53,6 +53,7 @@ function WalletListSwipeableComponent(props: Props) {
     onRefresh,
     onReset
   } = props
+  console.log('WalletListSwipeableComponent')
 
   // Subscriptions:
   const theme = useTheme()
@@ -129,7 +130,7 @@ function WalletListSwipeableComponent(props: Props) {
 
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
-  const handleScroll = useSceneScrollHandler()
+  // const handleScroll = useSceneScrollHandler()
 
   const contentContainerStyle = useMemo(() => {
     return {
@@ -150,7 +151,7 @@ function WalletListSwipeableComponent(props: Props) {
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
-      onScroll={handleScroll}
+      // onScroll={handleScroll}
       scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
     />
   )

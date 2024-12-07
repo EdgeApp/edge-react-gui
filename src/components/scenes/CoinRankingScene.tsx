@@ -93,6 +93,7 @@ const assetSubTextStrings: { [pc: string]: string } = {
 
 type Timeout = ReturnType<typeof setTimeout>
 const CoinRankingComponent = (props: Props) => {
+  console.log('CoinRankingComponent')
   const theme = useTheme()
   const styles = getStyles(theme)
   const { navigation } = props
