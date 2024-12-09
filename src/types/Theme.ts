@@ -430,6 +430,7 @@ export interface Theme {
   paymentTypeLogoRevolut: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
+  paymentTypeLogoVenmo: ImageProp
   paymentTypeVisa: ImageProp
 
   primaryLogo: ImageProp
