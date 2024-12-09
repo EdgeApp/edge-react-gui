@@ -22,6 +22,7 @@
 - changed: Use chain icon for staking cards
 - fixed: Default home/assets scene post-login based on last visited scene
 - fixed: Receive flip input default currency selection
+- removed: Credit and apply pay payment types removed from Banxa provider.
 - removed: Keyboard autofocus from `WalletListModal`
 
 ## 4.17.2 (2024-11-22)
