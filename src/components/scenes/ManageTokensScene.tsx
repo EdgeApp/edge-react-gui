@@ -196,19 +196,17 @@ function ManageTokensSceneComponent(props: Props) {
           style={styles.sectionList}
         />
       )}
-      {wallet.currencyInfo.customTokenTemplate == null ? null : (
-        <>
-          <DividerLine marginRem={[0, 1]} />
-          {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
-          <View style={styles.buttonsContainer}>
-            <ButtonsView
-              primary={{ label: lstrings.string_done_cap, onPress: navigation.goBack }}
-              secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
-              layout="column"
-            />
-          </View>
-        </>
-      )}
+      <>
+        <DividerLine marginRem={[0, 1]} />
+        {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
+        <View style={styles.buttonsContainer}>
+          <ButtonsView
+            primary={{ label: lstrings.string_done_cap, onPress: navigation.goBack }}
+            secondary={wallet.currencyInfo.customTokenTemplate == null ? undefined : { label: lstrings.addtoken_add, onPress: handleAdd }}
+            layout="column"
+          />
+        </View>
+      </>
     </SceneWrapper>
   )
 }
