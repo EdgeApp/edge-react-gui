@@ -122,8 +122,8 @@ export function SwapDetailsCard(props: Props) {
     }: ${sourceAmount} ${sourceAssetName}${newline}${lstrings.string_to_capitalize}: ${destinationAmount} ${destinationAssetName}${newline}${
       lstrings.transaction_details_exchange_destination_wallet
     }: ${destinationWalletName}${newline}${isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}${newline}${newline}${
-      lstrings.transaction_details_exchange_exchange_address
-    }:${newline}${exchangeAddresses}${newline}${newline}${
+      lstrings.transaction_details_tx_id_modal_title
+    }: ${transaction.txid}${newline}${newline}${lstrings.transaction_details_exchange_exchange_address}:${newline}${exchangeAddresses}${newline}${newline}${
       lstrings.transaction_details_exchange_exchange_unique_id
     }:${newline}${uniqueIdentifier}${newline}${newline}${lstrings.transaction_details_exchange_payout_address}:${newline}${payoutAddress}${newline}${newline}${
       lstrings.transaction_details_exchange_refund_address
