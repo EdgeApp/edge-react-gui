@@ -79,7 +79,6 @@ export function WalletListScene(props: Props) {
   })
 
   const handlePressDone = useHandler(() => {
-    setKeepOpen(true)
     setSorting(false)
   })
 
