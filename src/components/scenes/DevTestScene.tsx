@@ -135,6 +135,10 @@ export function DevTestScene(props: Props) {
     })
   }
 
+  const handleNotificationCenterPress = () => {
+    navigation2.navigate('notificationCenter')
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -158,6 +162,7 @@ export function DevTestScene(props: Props) {
         <>
           <SectionHeader leftTitle="Scenes" />
           <EdgeButton label="AddressFormScene" onPress={handleAddressFormPress} marginRem={0.5} />
+          <EdgeButton label="NotificationCenterScene" onPress={handleNotificationCenterPress} marginRem={0.5} />
         </>
         <>
           <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
