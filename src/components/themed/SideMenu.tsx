@@ -26,7 +26,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { DrawerSceneProps, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
@@ -44,11 +44,13 @@ import { EdgeText } from './EdgeText'
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenu(props: DrawerContentComponentProps) {
-  // Fix this type assertion (seems like DrawerContentComponentProps works just
-  // fine as NavigationBase?)
-  const { navigation } = props as any as DrawerSceneProps<'edgeAppStack'>
-  const navigationBase = props.navigation as any as NavigationBase
+interface Props {
+  navigation: DrawerContentComponentProps['navigation']
+}
+
+export function SideMenuComponent(props: Props) {
+  const { navigation } = props
+  const navigationBase = navigation as any as NavigationBase
   const isDrawerOpen = useDrawerStatus() === 'open'
 
   const dispatch = useDispatch()
@@ -384,6 +386,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
     </OuterView>
   )
 }
+
+export const SideMenu = React.memo(SideMenuComponent)
 
 /**
  * Given a list of users from the core,
