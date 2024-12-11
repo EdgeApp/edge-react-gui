@@ -255,13 +255,13 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
       {isIos && (isFocused || active === true) && (
-        <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
+        <TouchableOpacity accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
           <CancelButton>
             <CancelText numberOfLines={1} ellipsizeMode="clip">
               {lstrings.string_cancel_cap}
             </CancelText>
           </CancelButton>
-        </TouchContainer>
+        </TouchableOpacity>
       )}
     </ContainerView>
   )
