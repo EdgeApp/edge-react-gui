@@ -52,11 +52,17 @@ export interface SimpleTextInputProps extends MarginRemProps {
   secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
 
-  // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
+  /** Unless 'autoFocus' is passed explicitly in the props, Search Bars
+  'autoFocus' and 'regular' text inputs don't. */
   autoFocus?: boolean // Defaults to 'true'
 
-  // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
+  /** Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls
+   * 'blur' when cleared and text inputs don't call 'blur' when cleared. */
   blurOnClear?: boolean // Defaults to 'false'
+
+  /** Manually control the whether the input appears selected. Visual only,
+   * mutually exclusive with the text input's true blur/focus state. */
+  selected?: boolean
 
   // Whether the text input is disabled. If 'true', the component will be grayed out.
   disabled?: boolean // Defaults to 'false'
@@ -104,6 +110,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     maxLength,
     returnKeyType,
     secureTextEntry,
+    selected,
     testID,
     ...marginRemProps
   } = props
@@ -154,7 +161,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const animationDelay = 0.4 * baseDuration
 
   const handleBlur = useHandler(() => {
-    focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+    if (selected == null) focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+
     if (onBlur != null) onBlur()
     setIsFocused(false)
   })
@@ -166,7 +174,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     blur()
   })
   const handleFocus = useHandler(() => {
-    focusAnimation.value = withTiming(1, { duration: baseDuration })
+    if (selected == null) focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (onFocus != null) onFocus()
     setIsFocused(true)
   })
@@ -175,7 +183,9 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   })
 
   const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
-  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const leftIconSize = useDerivedValue(() =>
+    hasIcon ? (hasValue && (selected == null || !selected) ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
+  )
   const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
@@ -186,6 +196,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const placeholderTextColor = useMemo(() => {
     return disabled ? theme.textInputPlaceholderColorDisabled : isFocused ? theme.textInputPlaceholderColorFocused : theme.textInputPlaceholderColor
   }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
+
+  React.useEffect(() => {
+    if (selected == null) return
+    focusAnimation.value = selected ? withTiming(1, { duration: baseDuration }) : withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+  }, [selected, focusAnimation, baseDuration, animationDelay])
 
   return (
     <ContainerView marginRemProps={marginRemProps}>
@@ -236,7 +251,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           </TouchContainer>
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
-      {isIos && isFocused && (
+      {isIos && (isFocused || selected) && (
         <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
           <CancelButton>
             <CancelText numberOfLines={1} ellipsizeMode="clip">
