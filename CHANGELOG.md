@@ -2,10 +2,13 @@
 
 ## Unreleased
 
-- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
+- added: Transaction id for swap details
 - added: New Kado OTC provider integration.
+- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
+- changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
+- fixed: Missing "Done" button when managing tokens for certain assets
 
 ## 4.19.0
 

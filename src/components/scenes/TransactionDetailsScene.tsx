@@ -69,6 +69,8 @@ const TransactionDetailsComponent = (props: Props) => {
 
   const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
+  console.debug(swapData)
+
   const thumbnailPath = useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
   const iconSource = React.useMemo(() => ({ uri: thumbnailPath }), [thumbnailPath])
 
