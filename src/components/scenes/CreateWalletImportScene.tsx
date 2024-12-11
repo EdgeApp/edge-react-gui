@@ -123,10 +123,10 @@ const CreateWalletImportComponent = (props: Props) => {
     }
 
     if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
-      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, importText: cleanImportText })
+      navigation.navigate('createWalletImportOptions', { createWalletList: successItems, walletNames, importText: cleanImportText })
       return
     }
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, importText: cleanImportText })
+    navigation.navigate('createWalletCompletion', { createWalletList: successItems, walletNames, importText: cleanImportText })
   })
 
   // Scale the icon
