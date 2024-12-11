@@ -6,6 +6,7 @@
 - added: New Kado OTC provider integration.
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
+- fixed: Only send successful import items to completion scene
 
 ## 4.19.0
 
