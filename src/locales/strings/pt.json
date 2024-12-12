@@ -65,6 +65,7 @@
   "error_spend_amount_less_then_min_s": "O valor gasto é menor que o mínimo de %s",
   "error_amount_too_low_to_stake_s": "The amount %s is too low to stake successfully",
   "error_balance_below_minimum_to_stake_2s": "Your balance of %1$s does not meet the minimum %2$s required to stake.",
+  "error_inactive_validator": "The selected validator is inactive. Please select a different validator or try again later.",
   "warning_low_fee_selected": "Taxa baixa selecionada",
   "warning_custom_fee_selected": "Taxa personalizada selecionada",
   "warning_low_or_custom_fee": "Usar uma taxa baixa pode aumentar o tempo necessário para a confirmação da sua transação. Em casos raros, sua transação pode falhar.",
