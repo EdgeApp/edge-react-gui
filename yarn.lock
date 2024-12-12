@@ -9408,16 +9408,16 @@ edge-currency-monero@^1.3.2:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.4.4:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.4.4.tgz#075635df788bcfd5bee46c76f5a2373a07c17e13"
-  integrity sha512-TMqkhZdx92UMUnotwf6rsB0Z90PU931SHRXZ7tMaUdBhSwr84PT4mx15BEGRF5OUXRTcsKe+evpLz2LTmlpHHg==
+edge-currency-plugins@^3.4.5:
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.4.5.tgz#ac056c8abcf6c8257b7470dd9778ce0f3a2f9476"
+  integrity sha512-UNb7ekaKR/KdO2bDWQ2mE0U1c7q+tWefQX51Zz7/0u7JLrRPbAZIADBkcLOFu6yL85hYHDWe30u6DUgRJ5uFzg==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
     async-mutex "^0.2.6"
     baselet "^0.3.0"
-    biggystring "^4.1.3"
+    biggystring "^4.2.3"
     bip32 "^2.0.5"
     bip32grs "^2.0.5"
     bip39 "^3.0.2"

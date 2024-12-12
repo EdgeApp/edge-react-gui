@@ -101,7 +101,7 @@
     "edge-core-js": "^2.21.0",
     "edge-currency-accountbased": "^4.31.3",
     "edge-currency-monero": "^1.3.2",
-    "edge-currency-plugins": "^3.4.4",
+    "edge-currency-plugins": "^3.4.5",
     "edge-exchange-plugins": "^2.15.1",
     "edge-info-server": "^3.2.0",
     "edge-login-ui-rn": "^3.24.0",
