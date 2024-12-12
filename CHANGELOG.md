@@ -14,6 +14,7 @@
 - added: "Add Wallet" button to bottom of `WalletListScene`
 - added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
 - added: Show all Zcash addresses on Request scene
+- changed: Credit and apply pay payment types changed from Banxa provider.
 - changed: Support optional Sideshift private key
 - changed: Upgrade edge-core-js to v2.21.0
 - changed: Filter CreateWalletItem list by networkLocation instead of tokenId

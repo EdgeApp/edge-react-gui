@@ -105,7 +105,6 @@ const asBanxaTxLimit = asObject({
 })
 
 const asBanxaPaymentType = asValue(
-  'CHECKOUTCREDIT',
   'CLEARJCNSELLFP',
   'CLEARJCNSELLSEPA',
   'CLEARJUNCTION',
@@ -118,8 +117,8 @@ const asBanxaPaymentType = asValue(
   'IDEAL',
   'MANUALPAYMENT',
   'MONOOVAPAYID',
-  'WORLDPAYAPPLE',
-  'WORLDPAYCREDIT',
+  'PRIMERAP',
+  'PRIMERCC',
   'WORLDPAYGOOGLE'
 )
 
@@ -828,7 +827,6 @@ const addToAllowedCurrencies = (
 }
 
 const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
-  CHECKOUTCREDIT: 'credit',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -841,8 +839,8 @@ const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
   IDEAL: 'ideal',
   MANUALPAYMENT: 'turkishbank',
   MONOOVAPAYID: 'payid',
-  WORLDPAYAPPLE: 'applepay',
-  WORLDPAYCREDIT: 'credit',
+  PRIMERAP: 'applepay',
+  PRIMERCC: 'credit',
   WORLDPAYGOOGLE: 'googlepay'
 }
 
