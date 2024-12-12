@@ -10,7 +10,7 @@ import {
   StakePositionRequest
 } from '../types'
 import { CardanoPooledKilnAdapterConfig, makeCardanoKilnAdapter } from './policyAdapters/CardanoKilnAdaptor'
-import { CoreumNativeSkateKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
+import { CoreumNativeStakeKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
@@ -71,7 +71,7 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
     case 'cardano-pooled-kiln':
       return makeCardanoKilnAdapter(policyInfo as StakePolicyConfig<CardanoPooledKilnAdapterConfig>)
     case 'coreum-native-stake-kit':
-      return makeSkateKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeSkateKitAdapterConfig>)
+      return makeSkateKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>)
     case 'ethereum-pooled-kiln':
       return makeEthereumKilnAdapter(policyInfo as StakePolicyConfig<EthereumPooledKilnAdapterConfig>)
     case 'glif-infinity-pool':

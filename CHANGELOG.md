@@ -6,6 +6,7 @@
 - added: New Kado OTC provider integration.
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
+- changed: StakeKit staking plugin to check validator status before getting quote
 
 ## 4.19.0
 
