@@ -182,7 +182,7 @@
     "@react-native/babel-preset": "0.73.21",
     "@react-native/typescript-config": "0.73.1",
     "@rollup/plugin-babel": "^6.0.3",
-    "@stakekit/api-hooks": "^0.0.52",
+    "@stakekit/api-hooks": "^0.0.93",
     "@sucrase/webpack-loader": "^2.0.0",
     "@typechain/ethers-v5": "^11.1.2",
     "@types/async-lock": "^1.1.5",

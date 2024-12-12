@@ -102,6 +102,7 @@ const strings = {
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
   error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
   error_balance_below_minimum_to_stake_2s: 'Your balance of %1$s does not meet the minimum %2$s required to stake.',
+  error_inactive_validator: 'The selected validator is inactive. Please select a different validator or try again later.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',

@@ -5,6 +5,7 @@ import type {
   PendingActionRequestDto,
   SubmitHashRequestDto,
   TransactionDto,
+  ValidatorDto,
   YieldBalanceDto,
   YieldBalanceRequestDto
 } from '@stakekit/api-hooks'
@@ -12,6 +13,8 @@ import { asMaybe, asObject, asValue } from 'cleaners'
 import { InsufficientFundsError } from 'edge-core-js'
 
 import { ENV } from '../../../../env'
+import { lstrings } from '../../../../locales/strings'
+import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 
 const baseUrl = 'https://api.stakek.it'
 const headers = { 'Content-Type': 'application/json', 'X-API-KEY': ENV.STAKEKIT_API_KEY ?? '' }
@@ -34,6 +37,18 @@ const fetchPost = async <Body, Res>(path: string, body: Body): Promise<Res> => {
 }
 
 export const actionEnter = async (actionRequestDto: ActionRequestDto): Promise<ActionDto> => {
+  // Check validator status, if provided
+  if (actionRequestDto.args.validatorAddress != null) {
+    const validators = await fetch(`${baseUrl}/v1/yields/${actionRequestDto.integrationId}/validators`)
+    const json: ValidatorDto[] = await validators.json()
+    const validator = json.find(validator => validator.address === actionRequestDto.args.validatorAddress)
+    if (validator == null) throw new Error('Validator not found')
+
+    if (validator.status !== 'active') {
+      throw new HumanFriendlyError(lstrings.error_inactive_validator)
+    }
+  }
+
   const out = await fetchPost<ActionRequestDto, ActionDto>('/v1/actions/enter', actionRequestDto)
   checkInsufficientFunds(out)
   return out
