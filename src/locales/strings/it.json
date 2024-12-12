@@ -65,6 +65,7 @@
   "error_spend_amount_less_then_min_s": "L'importo che vuoi spendere è inferiore al minimo di %s",
   "error_amount_too_low_to_stake_s": "L'importo %s è troppo basso per lo stake",
   "error_balance_below_minimum_to_stake_2s": "Il tuo saldo di %1$s non soddisfa il minimo %2$s richiesto per lo stake.",
+  "error_inactive_validator": "The selected validator is inactive. Please select a different validator or try again later.",
   "warning_low_fee_selected": "Commissione bassa selezionata",
   "warning_custom_fee_selected": "Hai selezionato Personalizzata",
   "warning_low_or_custom_fee": "L'utilizzo di una commissione bassa può aumentare il tempo necessario per la conferma della transazione. In rari casi la transazione può fallire.",
