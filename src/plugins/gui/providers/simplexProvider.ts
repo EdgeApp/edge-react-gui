@@ -366,8 +366,12 @@ export const simplexProvider: FiatProviderFactory = {
                 if (link.direction !== 'buy') return
 
                 const orderId = link.query.orderId ?? 'unknown'
+                // Simplex _may_ incorrectly add their query string parameters
+                // to the url with a simple concatenation of '?orderId=...'
+                // (like Banxa), and this will break our query string.
+                const status = link.query.status?.replace('?', '')
 
-                switch (link.query.status) {
+                switch (status) {
                   case 'success': {
                     await showUi.trackConversion('Buy_Success', {
                       conversionValues: {
