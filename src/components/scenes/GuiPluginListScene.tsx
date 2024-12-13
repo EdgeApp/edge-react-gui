@@ -88,6 +88,7 @@ const paymentTypeLogosById = {
   revolut: 'paymentTypeLogoRevolut',
   sofort: 'paymentTypeLogoSofort',
   upi: 'paymentTypeLogoUpi',
+  venmo: 'paymentTypeLogoVenmo',
   visa: 'paymentTypeVisa'
 }
 const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {

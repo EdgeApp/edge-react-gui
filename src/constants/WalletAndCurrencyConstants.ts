@@ -277,12 +277,12 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     minimumPopupModals: {
-      minimumNativeBalance: '10000000',
-      modalMessage: lstrings.request_xrp_minimum_notification_body,
-      alertMessage: lstrings.request_xrp_minimum_notification_alert_body
+      minimumNativeBalance: '1000000',
+      modalMessage: lstrings.request_xrp_minimum_notification_body_1xrp,
+      alertMessage: lstrings.request_xrp_minimum_notification_alert_body_1xrp
     },
     displayBuyCrypto: false,
-    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra_point2xrp,
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'XRP'
   },
@@ -551,6 +551,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
     chainCode: 'BNB',
     isImportKeySupported: true,
+    keysOnlyMode: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   binancesmartchain: {

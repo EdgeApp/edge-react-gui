@@ -2,6 +2,7 @@ import { add } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
@@ -84,8 +85,12 @@ export const getPolicyIconUris = (
     (rewardAssetName, i) => stakePolicy.rewardAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
   )
 
-  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress ?? null).symbolImage)
-  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress ?? null).symbolImage)
+  const stakeAssetUris = stakeContractAddresses.map(
+    stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress ?? null, SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false).symbolImage
+  )
+  const rewardAssetUris = rewardContractAddresses.map(
+    rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress ?? null, SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false).symbolImage
+  )
 
   return { stakeAssetUris, rewardAssetUris }
 }
