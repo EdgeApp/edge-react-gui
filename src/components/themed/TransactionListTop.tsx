@@ -485,7 +485,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         <IconButton label={lstrings.fragment_send_subtitle} onPress={this.handleSend}>
           <Ionicons name="arrow-up" size={theme.rem(2)} color={theme.primaryText} />
         </IconButton>
-        {!this.props.walletStakingState.isLoaded ? (
+        {this.props.walletStakingState.isLoading ? (
           <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
         ) : (
           isStakingAvailable && (

@@ -45,6 +45,7 @@ interface DenomMap {
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { stakePlugin, stakePolicyId } = route.params
+  const isStakeStakeLoading = useSelector(state => state.staking.walletStakingMap[wallet.id].isLoading)
   const stakePolicy = useSelector<StakePolicy | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePolicies[stakePolicyId])
   const stakePosition = useSelector<StakePosition | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePositionMap[stakePolicyId])
   const dispatch = useDispatch()
@@ -52,6 +53,12 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+
+  // We wait for state only when liquid staking is enabled
+  // This is because liquid staking actions are dependent on the position state.
+  // If the position state is not loaded and update-to-date, then the buttons
+  // will not be enabled/disabled properly. So we must wait for the state to load.
+  const waitingOnStateLoading = isStakeStakeLoading && stakePolicy?.isLiquidStaking === true
 
   const displayDenomMap: DenomMap =
     stakePolicy == null
@@ -171,7 +178,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         apy={stakePolicy.apy}
         stakeProviderInfo={stakePolicy.stakeProviderInfo}
       />
-      {stakePosition == null ? (
+      {stakePosition == null || waitingOnStateLoading ? (
         <>
           <View style={styles.shimmer}>
             <Shimmer isShown />
@@ -180,46 +187,49 @@ const StakeOverviewSceneComponent = (props: Props) => {
             <Shimmer isShown />
           </View>
         </>
-      ) : null}
-      <FlatList
-        data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
-        renderItem={renderCFAT}
-        keyExtractor={(allocation: PositionAllocation) =>
-          `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
-        }
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      />
-      <SceneButtons
-        primary={{
-          label: lstrings.fragment_stake_label,
-          disabled: !canStake,
-          onPress: handleModifyPress('stake')
-        }}
-        secondary={
-          stakePolicy.hideClaimAction
-            ? undefined
-            : {
-                label: lstrings.stake_claim_rewards,
-                disabled: !canClaim,
-                onPress: handleModifyPress('claim')
-              }
-        }
-        tertiary={
-          stakePolicy.hideUnstakeAndClaimAction
-            ? stakePolicy.hideUnstakeAction
+      ) : (
+        <FlatList
+          data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
+          renderItem={renderCFAT}
+          keyExtractor={(allocation: PositionAllocation) =>
+            `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
+          }
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        />
+      )}
+      {waitingOnStateLoading ? null : (
+        <SceneButtons
+          primary={{
+            label: lstrings.fragment_stake_label,
+            disabled: !canStake,
+            onPress: handleModifyPress('stake')
+          }}
+          secondary={
+            stakePolicy.hideClaimAction
               ? undefined
               : {
-                  label: lstrings.stake_unstake,
-                  disabled: !canUnstake,
-                  onPress: handleModifyPress('unstake')
+                  label: lstrings.stake_claim_rewards,
+                  disabled: !canClaim,
+                  onPress: handleModifyPress('claim')
                 }
-            : {
-                label: lstrings.stake_unstake_claim,
-                disabled: !canUnstakeAndClaim,
-                onPress: handleModifyPress('unstakeAndClaim')
-              }
-        }
-      />
+          }
+          tertiary={
+            stakePolicy.hideUnstakeAndClaimAction
+              ? stakePolicy.hideUnstakeAction
+                ? undefined
+                : {
+                    label: lstrings.stake_unstake,
+                    disabled: !canUnstake,
+                    onPress: handleModifyPress('unstake')
+                  }
+              : {
+                  label: lstrings.stake_unstake_claim,
+                  disabled: !canUnstakeAndClaim,
+                  onPress: handleModifyPress('unstakeAndClaim')
+                }
+          }
+        />
+      )}
     </SceneWrapper>
   )
 }

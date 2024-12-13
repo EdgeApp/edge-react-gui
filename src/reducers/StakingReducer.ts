@@ -14,6 +14,10 @@ export type StakingAction =
       walletId: string
     }
   | {
+      type: 'STAKING/START_LOADING'
+      walletId: string
+    }
+  | {
       type: 'STAKING/UPDATE'
       walletId: string
       stakePolicy: StakePolicy
@@ -63,7 +67,7 @@ export interface WalletStakingStateMap {
 }
 
 export interface WalletStakingState {
-  isLoaded: boolean
+  isLoading: boolean
   lockedNativeAmount: string
   stakePlugins: StakePlugin[]
   stakePolicies: StakePolicyMap
@@ -92,11 +96,13 @@ export const staking: Reducer<StakingState, Action> = combineReducers({
 })
 
 export const walletStakingStateReducer: Reducer<WalletStakingState, Action> = combineReducers({
-  isLoaded: (state = false, action: Action) => {
+  isLoading: (state = true, action: Action) => {
     // Persist the loading state if it's true
     switch (action.type) {
       case 'STAKING/FINISH_LOADING':
       case 'STAKING/SETUP':
+        return false
+      case 'STAKING/START_LOADING':
         return true
       default:
         return state
