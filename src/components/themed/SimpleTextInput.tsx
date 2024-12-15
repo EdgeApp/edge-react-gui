@@ -39,6 +39,7 @@ export interface SimpleTextInputProps extends MarginRemProps {
   onChangeText?: (text: string) => void
   onClear?: () => void
   onFocus?: () => void
+  onCancel?: () => void
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
@@ -172,9 +173,10 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const handleClearPress = useHandler(() => {
     clear()
   })
-  const handleDonePress = useHandler(() => {
+  const handleCancelPress = useHandler(() => {
     clear()
     blur()
+    if (props.onCancel != null) props.onCancel()
   })
   const handleFocus = useHandler(() => {
     if (active == null) focusAnimation.value = withTiming(1, { duration: baseDuration })
@@ -210,7 +212,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
           <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
-          <TouchableOpacity hitSlop={theme.rem(0.75)} accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
+          <TouchableOpacity hitSlop={theme.rem(0.75)} accessible onPress={handleCancelPress} testID={`${testID}.doneButton`}>
             <SideContainer size={backIconSize}>
               <ChevronBackAnimated color={iconColor} size={backIconSize} />
             </SideContainer>
@@ -255,7 +257,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
       {isIos && (isFocused || active === true) && (
-        <TouchableOpacity accessible onPress={handleDonePress} testID={`${testID}.cancelButton`}>
+        <TouchableOpacity accessible onPress={handleCancelPress} testID={`${testID}.cancelButton`}>
           <CancelButton>
             <CancelText numberOfLines={1} ellipsizeMode="clip">
               {lstrings.string_cancel_cap}
