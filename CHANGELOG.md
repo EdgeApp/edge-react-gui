@@ -8,6 +8,7 @@
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
 - changed: StakeKit staking plugin to check validator status before getting quote
+- fixed: Only send successful import items to completion scene
 
 ## 4.19.0
 
