@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -14,6 +15,7 @@ import { selectDisplayDenomByCurrencyCode } from '../../../selectors/Denominatio
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
@@ -67,35 +69,35 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
 
-  // Background loop to force fetchStakePosition updates
-  const [updateCounter, setUpdateCounter] = React.useState<number>(0)
-
+  // Update the position on scene focus
+  const isFocused = useIsFocused()
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setUpdateCounter(updateCounter => updateCounter + 1)
-    }, 10 * 1000) // ten seconds
-    return () => clearInterval(interval)
-  }, [])
+    if (isFocused) {
+      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+    }
+  }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
+
+  // Update the position every minute
+  React.useEffect(() => {
+    const task = makePeriodicTask(() => {
+      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+    }, 60 * 1000)
+    task.start()
+    return () => task.stop()
+  }, [account, dispatch, stakePlugin, stakePolicyId, wallet])
 
   useAsyncEffect(
     async () => {
       setCountryCode((await getFirstOpenInfo()).countryCode)
 
-      try {
-        if (stakePosition == null) {
-          await dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account))
-        } else {
-          const guiAllocations = getPositionAllocations(stakePosition)
-          setStakeAllocations(guiAllocations.staked)
-          setRewardAllocations(guiAllocations.earned)
-          setUnstakedAllocations(guiAllocations.unstaked)
-        }
-      } catch (err) {
-        showError(err)
-        console.error(err)
+      if (stakePosition != null) {
+        const guiAllocations = getPositionAllocations(stakePosition)
+        setStakeAllocations(guiAllocations.staked)
+        setRewardAllocations(guiAllocations.earned)
+        setUnstakedAllocations(guiAllocations.unstaked)
       }
     },
-    [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet],
+    [stakePosition],
     'StakeOverviewSceneComponent'
   )
 
