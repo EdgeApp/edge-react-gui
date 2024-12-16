@@ -100,7 +100,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
           onChangeText={handleSearchChangeText}
           value={searchText}
           active={isSearching}
-          onBlur={handleSearchDone}
+          onCancel={handleSearchDone}
           onFocus={handleSearchFocus}
           ref={textInputRef}
           iconComponent={SearchIconAnimated}
