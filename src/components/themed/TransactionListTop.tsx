@@ -178,9 +178,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const stakePositionMap: StakePositionMap = {}
     for (const stakePlugin of stakePlugins) {
       for (const stakePolicy of stakePolicies) {
-        // Don't show liquid staking positions as locked amount
-        if (stakePolicy.isLiquidStaking === true) continue
-
         let total: string | undefined
         try {
           const stakePosition = await stakePlugin.fetchStakePosition({
@@ -199,7 +196,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           continue
         }
 
-        lockedNativeAmount = add(lockedNativeAmount, total)
+        // Don't show liquid staking positions as locked amount
+        if (stakePolicy.isLiquidStaking !== true) {
+          lockedNativeAmount = add(lockedNativeAmount, total)
+        }
       }
     }
     this.setState({ stakePositionMap })

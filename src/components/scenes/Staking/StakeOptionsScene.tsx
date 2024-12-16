@@ -1,6 +1,6 @@
+import { gt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
@@ -20,10 +20,11 @@ import { AccentColors } from '../../common/DotsBackground'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
-import { CryptoIcon } from '../../icons/CryptoIcon'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { SceneContainer } from '../../layout/SceneContainer'
+import { Space } from '../../layout/Space'
+import { useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { SceneHeader } from '../../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 
 interface Props extends EdgeAppSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
@@ -39,9 +40,8 @@ export interface StakeOptionsParams {
 
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePlugins, walletId, currencyCode, stakePolicies, stakePositionMap } = route.params
+  const { stakePlugins, currencyCode, stakePolicies, stakePositionMap } = route.params
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const pluginId = wallet?.currencyInfo.pluginId
@@ -74,23 +74,24 @@ const StakeOptionsSceneComponent = (props: Props) => {
   // Renders
   //
 
-  const renderOptions = ({ item }: { item: StakePolicy }) => {
-    const primaryText = getPolicyAssetName(item, 'stakeAssets')
-    const secondaryText = getPolicyTitleName(item, countryCode)
+  const renderOptions = ({ item: stakePolicy }: { item: StakePolicy }) => {
+    const primaryText = getPolicyAssetName(stakePolicy, 'stakeAssets')
+    const secondaryText = getPolicyTitleName(stakePolicy, countryCode)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
+    const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+    const stakePosition = stakePositionMap[stakePolicy.stakePolicyId]
+    const isStaked = stakePosition?.allocations.some(allocation => allocation.allocationType === 'staked' && gt(allocation.nativeAmount, '0'))
     return (
-      <View key={key} style={styles.optionContainer}>
-        <EdgeTouchableOpacity onPress={() => handleStakeOptionPress(item)}>
-          <StakingOptionCard
-            apy={item.apy}
-            currencyLogos={policyIcons.stakeAssetUris}
-            primaryText={primaryText}
-            secondaryText={secondaryText}
-            stakeProviderInfo={item.stakeProviderInfo}
-          />
-        </EdgeTouchableOpacity>
-      </View>
+      <EdgeTouchableOpacity key={key} onPress={() => handleStakeOptionPress(stakePolicy)}>
+        <StakingOptionCard
+          apy={stakePolicy.apy}
+          currencyLogos={policyIcons.stakeAssetUris}
+          isStaked={isStaked}
+          primaryText={primaryText}
+          secondaryText={secondaryText}
+          stakeProviderInfo={stakePolicy.stakeProviderInfo}
+        />
+      </EdgeTouchableOpacity>
     )
   }
 
@@ -108,44 +109,32 @@ const StakeOptionsSceneComponent = (props: Props) => {
   return (
     <SceneWrapper
       accentColors={accentColors}
-      scroll
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        <CryptoIcon marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
-      </SceneHeader>
-      <View style={styles.optionsContainer}>
-        <EdgeText>{lstrings.stake_select_options}</EdgeText>
-        <FlatList
-          data={stakePolicies}
-          renderItem={renderOptions}
-          keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
-          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-        />
-      </View>
+      {({ undoInsetStyle, insetStyle }) => (
+        <SceneContainer undoBottom undoInsetStyle={undoInsetStyle}>
+          <FlatList
+            data={stakePolicies}
+            renderItem={renderOptions}
+            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
+            ListHeaderComponent={
+              <>
+                <SceneHeaderUi4 title={sprintf(lstrings.staking_change_add_header, currencyCode)} />
+                <Space horizontalRem={0.5} bottomRem={0.5}>
+                  <EdgeText>{lstrings.stake_select_options}</EdgeText>
+                </Space>
+              </>
+            }
+            keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          />
+        </SceneContainer>
+      )}
     </SceneWrapper>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  optionsContainer: {
-    alignItems: 'stretch',
-    marginBottom: theme.rem(6),
-    marginHorizontal: theme.rem(1),
-    marginTop: theme.rem(0.5)
-  },
-  optionContainer: {
-    margin: theme.rem(1),
-    marginBottom: 0
-  },
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  }
-}))
 
 export const StakeOptionsScene = withWallet(StakeOptionsSceneComponent)
