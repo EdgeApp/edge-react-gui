@@ -7,16 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
-import {
-  ChangeQuote,
-  ChangeQuoteRequest,
-  QuoteAllocation,
-  StakeBelowLimitError,
-  StakePlugin,
-  StakePolicy,
-  StakePoolFullError,
-  StakePosition
-} from '../../../plugins/stake-plugins/types'
+import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePlugin, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useSelector } from '../../../types/reactRedux'
@@ -49,9 +40,8 @@ import { ErrorTile } from '../../tiles/ErrorTile'
 export interface StakeModifyParams {
   title: string
   stakePlugin: StakePlugin
+  stakePolicyId: string
   walletId: string
-  stakePolicy: StakePolicy
-  stakePosition: StakePosition
   modification: ChangeQuoteRequest['action']
 }
 
@@ -61,7 +51,9 @@ interface Props extends EdgeAppSceneProps<'stakeModify'> {
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { modification, title, stakePlugin, stakePolicy, stakePosition } = route.params
+  const { modification, title, stakePlugin, stakePolicyId } = route.params
+  const stakePolicy = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePolicies[stakePolicyId])
+  const stakePosition = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePositionMap[stakePolicyId])
   const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake, mustMaxUnstake } = stakePolicy
   const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 

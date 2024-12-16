@@ -109,10 +109,6 @@ export interface StakePolicy {
   deprecated?: boolean
 }
 
-export interface StakePositionMap {
-  [policyId: string]: StakePosition
-}
-
 // -----------------------------------------------------------------------------
 // Change Quote
 // -----------------------------------------------------------------------------

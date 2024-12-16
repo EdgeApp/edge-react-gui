@@ -9,7 +9,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
-import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
+import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -31,16 +31,16 @@ interface Props extends EdgeAppSceneProps<'stakeOptions'> {
 }
 
 export interface StakeOptionsParams {
-  stakePlugins: StakePlugin[]
   currencyCode: string
-  stakePolicies: StakePolicy[]
-  stakePositionMap: StakePositionMap
   walletId: string
 }
 
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePlugins, currencyCode, stakePolicies, stakePositionMap } = route.params
+  const { currencyCode } = route.params
+  const stakePlugins = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePlugins ?? [])
+  const stakePolicies = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePolicies ?? [])
+  const stakePositionMap = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePositionMap)
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
@@ -49,6 +49,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const iconColor = useIconColor({ pluginId, tokenId })
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+  const stakePolicyArray = React.useMemo(() => Object.values(stakePolicies), [stakePolicies])
 
   useAsyncEffect(
     async () => {
@@ -65,9 +66,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
     const { stakePolicyId } = stakePolicy
     const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, { pluginId })
-    // Transition to next scene immediately
-    const stakePosition = stakePositionMap[stakePolicyId]
-    if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })
+    if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicyId })
   }
 
   //
@@ -117,7 +116,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       {({ undoInsetStyle, insetStyle }) => (
         <SceneContainer undoBottom undoInsetStyle={undoInsetStyle}>
           <FlatList
-            data={stakePolicies}
+            data={stakePolicyArray}
             renderItem={renderOptions}
             contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             ListHeaderComponent={
