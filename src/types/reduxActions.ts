@@ -10,6 +10,7 @@ import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
 import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsReducer'
+import { StakingAction } from '../reducers/StakingReducer'
 import { TweakSource } from '../util/ReferralHelpers'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
 import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
@@ -106,3 +107,4 @@ export type Action =
    */
   | ActionQueueAction
   | LoanManagerActions
+  | StakingAction

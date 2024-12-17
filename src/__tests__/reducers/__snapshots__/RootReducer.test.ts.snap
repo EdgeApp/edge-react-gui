@@ -58,6 +58,9 @@ exports[`initialState 1`] = `
     "location": "denied",
   },
   "sortedWalletList": [],
+  "staking": {
+    "walletStakingMap": {},
+  },
   "ui": {
     "exchangeInfo": {
       "buy": {
