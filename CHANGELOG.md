@@ -10,6 +10,7 @@
 - changed: Integrate `installSurvey` endpoint for post-install survey options
 - changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
 - changed: StakeKit staking plugin to check validator status before getting quote
+- changed: Auto select text in tx details payee field when focused
 - fixed: Missing "Done" button when managing tokens for certain assets
 - fixed: Only send successful import items to completion scene
 

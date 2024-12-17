@@ -81,6 +81,11 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
    * 'autoFocus' and 'regular' text inputs don't. */
   autoFocus?: boolean // Defaults to 'true'
 
+  /**
+   * autoSelect: If true, the text input will be selected when focused.
+   */
+  autoSelect?: boolean
+
   /** Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls
    * 'blur' when cleared and text inputs don't call 'blur' when cleared.
    * Defaults to 'false' */
@@ -158,6 +163,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     autoComplete,
     autoCorrect,
     autoFocus = false,
+    autoSelect = false,
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
@@ -232,6 +238,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   })
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
+    if (autoSelect) {
+      setNativeProps({ selection: { start: 0, end: value.length } })
+    }
     if (onFocus != null) onFocus()
   })
   const handleSubmitEditing = useHandler(() => {
