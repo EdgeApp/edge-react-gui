@@ -1,5 +1,0 @@
-{
-  "name": "@ledgerhq/hw-transport-node-hid",
-  "version": "4.63.2",
-  "main": "./index.js"
-}
