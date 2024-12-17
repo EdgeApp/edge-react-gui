@@ -1296,6 +1296,7 @@
   "fiat_plugin_buy_no_quote": "購入見積もりを取得できません",
   "fiat_plugin_sell_region_restricted": "Region restricted from selling %s",
   "fiat_plugin_sell_no_quote": "Unable to get sell quote",
+  "fiat_plugin_no_provider_1s": "There is currently no provider available in your region that supports %1$s. Please try again later or select another payment method.",
   "fiat_plugin_fetching_assets": "サポートされている資産を取得中",
   "fiat_plugin_sell_cancelled": "Sell order cancelled",
   "fiat_plugin_finalizing_quote": "Finalizing your exchange quote. Please wait as this may take up to a minute",
