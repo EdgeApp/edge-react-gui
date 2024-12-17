@@ -14,6 +14,7 @@
 - changed: Handle errors in StakeKit API responses
 - fixed: Missing "Done" button when managing tokens for certain assets
 - fixed: Only send successful import items to completion scene
+- fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
 
 ## 4.19.0
