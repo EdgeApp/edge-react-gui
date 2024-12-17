@@ -1296,6 +1296,7 @@
   "fiat_plugin_buy_no_quote": "Impossibile ottenere il preventivo di acquisto",
   "fiat_plugin_sell_region_restricted": "Località limitata per la vendita di %s",
   "fiat_plugin_sell_no_quote": "Impossibile ottenere la stima di vendita",
+  "fiat_plugin_no_provider_1s": "There is currently no provider available in your region that supports %1$s. Please try again later or select another payment method.",
   "fiat_plugin_fetching_assets": "Recupero degli asset supportati",
   "fiat_plugin_sell_cancelled": "Ordine di vendita annullato",
   "fiat_plugin_finalizing_quote": "Finalizzazione della quota di scambio. Potrebbe richiedere fino a un minuto",
