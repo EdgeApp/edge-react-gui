@@ -239,6 +239,8 @@ export const EarnScene = (props: Props) => {
       // User backed out of the WalletListModal
       if (walletId == null) return
 
+      dispatch({ type: 'STAKING/ADD_POLICY', walletId, stakePolicy })
+
       navigation.push('stakeOverview', {
         walletId,
         stakePlugin,
