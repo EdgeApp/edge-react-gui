@@ -9,7 +9,7 @@ import type {
   YieldBalanceDto,
   YieldBalanceRequestDto
 } from '@stakekit/api-hooks'
-import { asMaybe, asObject, asValue } from 'cleaners'
+import { asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import { InsufficientFundsError } from 'edge-core-js'
 
 import { ENV } from '../../../../env'
@@ -25,7 +25,9 @@ const fetchPatch = async <Body, Res>(path: string, body: Body): Promise<Res> => 
     headers,
     body: JSON.stringify(body)
   })
-  return await response.json()
+  const out = await response.json()
+  checkForError(out)
+  return out
 }
 const fetchPost = async <Body, Res>(path: string, body: Body): Promise<Res> => {
   const response = await fetch(baseUrl + path, {
@@ -33,7 +35,9 @@ const fetchPost = async <Body, Res>(path: string, body: Body): Promise<Res> => {
     headers,
     body: JSON.stringify(body)
   })
-  return await response.json()
+  const out = await response.json()
+  checkForError(out)
+  return out
 }
 
 export const actionEnter = async (actionRequestDto: ActionRequestDto): Promise<ActionDto> => {
@@ -81,5 +85,12 @@ const checkInsufficientFunds = (res: unknown): void => {
   const maybeStakeKitInsufficientFundsError = asMaybe(asObject({ message: asValue('InsufficientFundsError') }))(res)
   if (maybeStakeKitInsufficientFundsError != null) {
     throw new InsufficientFundsError({ tokenId: null })
+  }
+}
+
+const checkForError = (res: unknown): void => {
+  const error = asMaybe(asObject({ message: asString, type: asString, code: asNumber }))(res)
+  if (error != null) {
+    throw new Error(`${error.code} ${error.type} ${error.message}`)
   }
 }
