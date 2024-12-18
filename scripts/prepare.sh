@@ -13,12 +13,6 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 yarn patch-package
 
-# The `usb` and 'node-hid' modules doesn't properly install on some boxes:
-mkdir -p node_modules/usb
-touch node_modules/usb/index.js
-mkdir -p node_modules/node-hid
-touch node_modules/node-hid/index.js
-
 # Fix Android dependency import statments: 
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
