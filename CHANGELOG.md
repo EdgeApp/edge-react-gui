@@ -2,10 +2,12 @@
 
 ## Unreleased
 
-- changed: Always show Add Wallet button at bottom of asset list
-- changed: Use chain icon for staking cards
+## 4.19.1 (staging)
 
-## 4.19.0
+- fixed: Fixed Solana syncing issues with Helius node connections.
+- fixed: Patched conversion tracking return URL detection for Banxa and Simplex.
+
+## 4.19.0 (2024-12-13)
 
 - added: Venmo GUI plugin via Moonpay.
 - added: "Add Wallet" button to bottom of `WalletListScene`
