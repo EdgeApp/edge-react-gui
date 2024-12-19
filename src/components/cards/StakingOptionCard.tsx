@@ -7,18 +7,21 @@ import { lstrings } from '../../locales/strings'
 import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
+import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { EdgeCard } from './EdgeCard'
 
 interface StakingOptionCardProps {
   apy?: number
   currencyLogos: string[]
+  isStaked: boolean
   primaryText: string
   secondaryText: string
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingOptionCard({ apy, currencyLogos, primaryText, secondaryText, stakeProviderInfo }: StakingOptionCardProps) {
+export function StakingOptionCard({ apy, currencyLogos, isStaked, primaryText, secondaryText, stakeProviderInfo }: StakingOptionCardProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -37,15 +40,12 @@ export function StakingOptionCard({ apy, currencyLogos, primaryText, secondaryTe
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.leftCap} />
-      <View style={styles.center}>
+    <Space topRem={1.5}>
+      <EdgeCard gradientBackground={isStaked ? theme.cardGradientLearn : undefined}>
         <View style={styles.iconsContainer}>
-          <View style={styles.middleLine} />
           <View style={styles.icon}>
             <PairIcons icons={currencyLogos} />
           </View>
-          <View style={styles.middleLine} />
         </View>
         <View style={styles.textContainer}>
           <EdgeText style={styles.primaryText}>{primaryText}</EdgeText>
@@ -53,60 +53,25 @@ export function StakingOptionCard({ apy, currencyLogos, primaryText, secondaryTe
           <EdgeText style={styles.secondaryText}>{secondaryText}</EdgeText>
           {aprText == null ? null : <EdgeText style={styles.secondaryText}>{sprintf(lstrings.stake_estimated_apr_s, aprText)}</EdgeText>}
         </View>
-      </View>
-      <View style={styles.rightCap} />
-    </View>
+      </EdgeCard>
+    </Space>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonCap = {
-    borderColor: theme.lineDivider,
-    borderBottomWidth: theme.thinLineWidth,
-    borderTopWidth: theme.thinLineWidth
-  }
   return {
-    container: {
-      flexDirection: 'row',
-      minWidth: theme.rem(10),
-      marginTop: theme.rem(1.5)
-    },
     iconsContainer: {
       flexDirection: 'row',
-      position: 'absolute'
+      justifyContent: 'center',
+      marginBottom: theme.rem(-1)
     },
     textContainer: {
       alignItems: 'center',
-      paddingHorizontal: theme.rem(1),
-      paddingTop: theme.rem(2),
-      paddingBottom: theme.rem(1),
-      borderBottomWidth: theme.thinLineWidth,
-      borderColor: theme.lineDivider
+      paddingHorizontal: theme.rem(0.5),
+      paddingBottom: theme.rem(0.5)
     },
     icon: {
-      top: theme.rem(-1.5)
-    },
-    middleLine: {
-      flex: 1,
-      borderTopWidth: theme.thinLineWidth,
-      borderColor: theme.lineDivider
-    },
-    center: {
-      flex: 1
-    },
-    leftCap: {
-      ...commonCap,
-      borderLeftWidth: theme.thinLineWidth,
-      borderRightWidth: 0,
-      borderBottomLeftRadius: theme.rem(0.2),
-      borderTopLeftRadius: theme.rem(0.2)
-    },
-    rightCap: {
-      ...commonCap,
-      borderLeftWidth: 0,
-      borderRightWidth: theme.thinLineWidth,
-      borderBottomRightRadius: theme.rem(0.2),
-      borderTopRightRadius: theme.rem(0.2)
+      top: theme.rem(-2)
     },
     primaryText: {
       marginBottom: theme.rem(0.5)
@@ -121,8 +86,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     swapProviderIcon: {
       width: theme.rem(0.625),
-      height: theme.rem(0.625),
-      marginRight: theme.rem(0.5)
+      height: theme.rem(0.625)
     },
     swapProviderText: {
       fontSize: theme.rem(0.75),

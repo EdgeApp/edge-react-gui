@@ -102,6 +102,7 @@ const strings = {
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
   error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
   error_balance_below_minimum_to_stake_2s: 'Your balance of %1$s does not meet the minimum %2$s required to stake.',
+  error_inactive_validator: 'The selected validator is inactive. Please select a different validator or try again later.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -509,7 +510,6 @@ const strings = {
   staking_overview_explainer: 'You have the following funds staked:',
   staking_portfolio: 'Portfolio',
   staking_locked_title: 'Unstaked and locked until %1$s',
-  staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
   staking_status: '%1$s locked (%2$s)',
   staking_success: 'Successfully staked',
@@ -1397,7 +1397,6 @@ const strings = {
   stake_s_unstaked: '%s Unstaked',
   stake_lock_message: 'locked until %s',
   stake_select_options: 'Select staking options:',
-  stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
   stake_unstake: 'Unstake',
@@ -1464,6 +1463,8 @@ const strings = {
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_sell_region_restricted: 'Region restricted from selling %s',
   fiat_plugin_sell_no_quote: 'Unable to get sell quote',
+  fiat_plugin_no_provider_1s:
+    'There is currently no provider available in your region that supports %1$s. Please try again later or select another payment method.',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
   fiat_plugin_sell_cancelled: 'Sell order cancelled',
   fiat_plugin_finalizing_quote: 'Finalizing your exchange quote. Please wait as this may take up to a minute',
@@ -1538,6 +1539,7 @@ const strings = {
   form_field_title_address_line_2: 'Address Line 2 (optional)',
   form_field_title_address_state_province_region: 'Province',
   form_field_title_address_zip_postal_code: 'Postal Code/Zip',
+  form_field_title_email_address: 'Email Address',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
 
@@ -1552,6 +1554,11 @@ const strings = {
   sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
+
+  otc_enter_email_to_buy: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) purchase.',
+  otc_enter_email_to_sell: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
+  otc_confirmation_title: 'Request Sent',
+  otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
 
   // #endregion GuiPlugins
 

@@ -4,22 +4,14 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
-import {
-  ChangeQuote,
-  ChangeQuoteRequest,
-  QuoteAllocation,
-  StakeBelowLimitError,
-  StakePlugin,
-  StakePolicy,
-  StakePoolFullError,
-  StakePosition
-} from '../../../plugins/stake-plugins/types'
+import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePlugin, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
-import { useSelector } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
@@ -49,9 +41,8 @@ import { ErrorTile } from '../../tiles/ErrorTile'
 export interface StakeModifyParams {
   title: string
   stakePlugin: StakePlugin
+  stakePolicyId: string
   walletId: string
-  stakePolicy: StakePolicy
-  stakePosition: StakePosition
   modification: ChangeQuoteRequest['action']
 }
 
@@ -61,7 +52,10 @@ interface Props extends EdgeAppSceneProps<'stakeModify'> {
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { modification, title, stakePlugin, stakePolicy, stakePosition } = route.params
+  const { modification, title, stakePlugin, stakePolicyId } = route.params
+  const dispatch = useDispatch()
+  const stakePolicy = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePolicies[stakePolicyId])
+  const stakePosition = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePositionMap[stakePolicyId])
   const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake, mustMaxUnstake } = stakePolicy
   const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 
@@ -226,9 +220,21 @@ const StakeModifySceneComponent = (props: Props) => {
       setSliderLocked(true)
       changeQuote
         .approve()
-        .then(async () => {
-          await Airship.show(bridge => <FlashNotification bridge={bridge} message={message[modification]} onPress={() => {}} />)
+        .then(() => {
+          Airship.show(bridge => <FlashNotification bridge={bridge} message={message[modification]} onPress={() => {}} />).catch(err => showError(err))
           navigation.pop()
+
+          // Update staking position:
+          dispatch({ type: 'STAKING/START_LOADING', walletId: wallet.id })
+          // Set a timeout to let Kiln API update before fetching new position
+          setTimeout(() => {
+            // Get the new position
+            dispatch(updateStakingPosition(stakePlugin, stakePolicy.stakePolicyId, wallet, account))
+              .catch(err => showError(err))
+              .finally(() => {
+                dispatch({ type: 'STAKING/FINISH_LOADING', walletId: wallet.id })
+              })
+          }, 10000)
         })
         .catch(err => {
           reset()

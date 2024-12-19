@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -5,6 +6,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
+import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
@@ -13,6 +15,7 @@ import { selectDisplayDenomByCurrencyCode } from '../../../selectors/Denominatio
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
@@ -31,8 +34,7 @@ interface Props extends EdgeSceneProps<'stakeOverview'> {
 
 export interface StakeOverviewParams {
   stakePlugin: StakePlugin
-  stakePolicy: StakePolicy
-  stakePosition?: StakePosition
+  stakePolicyId: string
   walletId: string
 }
 
@@ -42,19 +44,30 @@ interface DenomMap {
 
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePolicy, stakePosition: startingStakePosition, stakePlugin } = route.params
-  const { stakePolicyId } = stakePolicy
+  const { stakePlugin, stakePolicyId } = route.params
+  const isStakeStakeLoading = useSelector(state => state.staking.walletStakingMap[wallet.id].isLoading)
+  const stakePolicy = useSelector<StakePolicy | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePolicies[stakePolicyId])
+  const stakePosition = useSelector<StakePosition | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePositionMap[stakePolicyId])
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
 
-  const displayDenomMap: DenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
-    denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
-    return denomMap
-  }, {})
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  // We wait for state only when liquid staking is enabled
+  // This is because liquid staking actions are dependent on the position state.
+  // If the position state is not loaded and update-to-date, then the buttons
+  // will not be enabled/disabled properly. So we must wait for the state to load.
+  const waitingOnStateLoading = isStakeStakeLoading && stakePolicy?.isLiquidStaking === true
+
+  const displayDenomMap: DenomMap =
+    stakePolicy == null
+      ? {}
+      : [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
+          denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
+          return denomMap
+        }, {})
+  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
 
@@ -62,54 +75,52 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
-  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
 
-  // Background loop to force fetchStakePosition updates
-  const [updateCounter, setUpdateCounter] = React.useState<number>(0)
-
+  // Update the position on scene focus
+  const isFocused = useIsFocused()
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setUpdateCounter(updateCounter => updateCounter + 1)
-    }, 10 * 1000) // ten seconds
-    return () => clearInterval(interval)
-  }, [])
+    if (isFocused) {
+      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+    }
+  }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
+
+  // Update the position every minute
+  React.useEffect(() => {
+    const task = makePeriodicTask(() => {
+      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+    }, 60 * 1000)
+    task.start()
+    return () => task.stop()
+  }, [account, dispatch, stakePlugin, stakePolicyId, wallet])
 
   useAsyncEffect(
     async () => {
       setCountryCode((await getFirstOpenInfo()).countryCode)
 
-      let sp: StakePosition
-      try {
-        if (stakePosition == null) {
-          sp = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
-          setStakePosition(sp)
-        } else {
-          const guiAllocations = getPositionAllocations(stakePosition)
-          setStakeAllocations(guiAllocations.staked)
-          setRewardAllocations(guiAllocations.earned)
-          setUnstakedAllocations(guiAllocations.unstaked)
-          setStakePosition(stakePosition)
-        }
-      } catch (err) {
-        showError(err)
-        console.error(err)
+      if (stakePosition != null) {
+        const guiAllocations = getPositionAllocations(stakePosition)
+        setStakeAllocations(guiAllocations.staked)
+        setRewardAllocations(guiAllocations.earned)
+        setUnstakedAllocations(guiAllocations.unstaked)
       }
     },
-    [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet],
+    [stakePosition],
     'StakeOverviewSceneComponent'
   )
 
   // Ensure required tokens are enabled
   useAsyncEffect(
     async () => {
+      if (stakePolicy == null) return
       await enableStakeTokens(account, wallet, stakePolicy)
     },
-    [],
+    [stakePolicy],
     'StakeOverviewSceneComponent 1'
   )
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
+    if (stakePolicy == null) return
     const sceneTitleMap = {
       stake: getPolicyTitleName(stakePolicy, countryCode),
       claim: lstrings.stake_claim_rewards,
@@ -127,8 +138,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       navigation.navigate('stakeModify', {
         modification,
         stakePlugin,
-        stakePolicy,
-        stakePosition,
+        stakePolicyId,
         title,
         walletId: wallet.id
       })
@@ -146,7 +156,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
-  const title = React.useMemo(() => getPolicyTitleName(stakePolicy, countryCode), [stakePolicy, countryCode])
+  const title = React.useMemo(() => (stakePolicy == null ? '' : getPolicyTitleName(stakePolicy, countryCode)), [stakePolicy, countryCode])
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
@@ -157,6 +167,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   const { canStake = false, canClaim = false, canUnstakeAndClaim = false, canUnstake = false } = stakePosition ?? {}
 
+  if (stakePolicy == null) return null
+
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeaderUi4 title={title} />
@@ -166,7 +178,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         apy={stakePolicy.apy}
         stakeProviderInfo={stakePolicy.stakeProviderInfo}
       />
-      {stakePosition == null ? (
+      {stakePosition == null || waitingOnStateLoading ? (
         <>
           <View style={styles.shimmer}>
             <Shimmer isShown />
@@ -175,46 +187,49 @@ const StakeOverviewSceneComponent = (props: Props) => {
             <Shimmer isShown />
           </View>
         </>
-      ) : null}
-      <FlatList
-        data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
-        renderItem={renderCFAT}
-        keyExtractor={(allocation: PositionAllocation) =>
-          `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
-        }
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      />
-      <SceneButtons
-        primary={{
-          label: lstrings.fragment_stake_label,
-          disabled: !canStake,
-          onPress: handleModifyPress('stake')
-        }}
-        secondary={
-          stakePolicy.hideClaimAction
-            ? undefined
-            : {
-                label: lstrings.stake_claim_rewards,
-                disabled: !canClaim,
-                onPress: handleModifyPress('claim')
-              }
-        }
-        tertiary={
-          stakePolicy.hideUnstakeAndClaimAction
-            ? stakePolicy.hideUnstakeAction
+      ) : (
+        <FlatList
+          data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
+          renderItem={renderCFAT}
+          keyExtractor={(allocation: PositionAllocation) =>
+            `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
+          }
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        />
+      )}
+      {waitingOnStateLoading ? null : (
+        <SceneButtons
+          primary={{
+            label: lstrings.fragment_stake_label,
+            disabled: !canStake,
+            onPress: handleModifyPress('stake')
+          }}
+          secondary={
+            stakePolicy.hideClaimAction
               ? undefined
               : {
-                  label: lstrings.stake_unstake,
-                  disabled: !canUnstake,
-                  onPress: handleModifyPress('unstake')
+                  label: lstrings.stake_claim_rewards,
+                  disabled: !canClaim,
+                  onPress: handleModifyPress('claim')
                 }
-            : {
-                label: lstrings.stake_unstake_claim,
-                disabled: !canUnstakeAndClaim,
-                onPress: handleModifyPress('unstakeAndClaim')
-              }
-        }
-      />
+          }
+          tertiary={
+            stakePolicy.hideUnstakeAndClaimAction
+              ? stakePolicy.hideUnstakeAction
+                ? undefined
+                : {
+                    label: lstrings.stake_unstake,
+                    disabled: !canUnstake,
+                    onPress: handleModifyPress('unstake')
+                  }
+              : {
+                  label: lstrings.stake_unstake_claim,
+                  disabled: !canUnstakeAndClaim,
+                  onPress: handleModifyPress('unstakeAndClaim')
+                }
+          }
+        />
+      )}
     </SceneWrapper>
   )
 }

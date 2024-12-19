@@ -19,6 +19,7 @@ import { StateManager } from './hooks/useStateManager'
 import { BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
+import { kadoOtcProvider } from './providers/kadoOtcProvider'
 import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { mtpelerinProvider } from './providers/mtpelerinProvider'
@@ -49,7 +50,7 @@ type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
   convertValueInternal: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<ConvertValueInternalResult>
 }
 
-const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
+const providerFactories = [banxaProvider, bityProvider, kadoProvider, kadoOtcProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
 
 const DEFAULT_FIAT_AMOUNT = '500'
 const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
@@ -547,7 +548,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 // showing the quotes.
 // TODO: conflict: also defines whether or not to accept a quote from the
 // provider
-export const createPriorityArray = (providerPriority: ProviderPriorityMap): PriorityArray => {
+export const createPriorityArray = (providerPriority: ProviderPriorityMap | undefined): PriorityArray => {
   const priorityArray: PriorityArray = []
   if (providerPriority != null) {
     const temp: Array<{ pluginId: string; priority: number }> = []

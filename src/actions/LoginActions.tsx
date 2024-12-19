@@ -103,7 +103,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         }
 
         await createWalletsPromise
-        dispatch(logEvent('Signup_Complete'))
+        dispatch(logEvent('Signup_Complete', { numAccounts: getState().core.context.localUsers.length }))
       }
 
       rootNavigation.replace('edgeApp', {

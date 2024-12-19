@@ -3,21 +3,21 @@ import { add, div, eq, floor, gt, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { infoServerData } from '../../../../util/network'
-import { DECIMAL_PRECISION } from '../../../../util/utils'
+import { DECIMAL_PRECISION, snooze } from '../../../../util/utils'
 import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { actionEnter, actionExit, actionPending, transactionConstruct, transactionSubmitHash, yieldGetSingleYieldBalances } from '../util/stakeKitUtils'
 import { StakePolicyAdapter } from './types'
 
-export interface CoreumNativeSkateKitAdapterConfig {
+export interface CoreumNativeStakeKitAdapterConfig {
   type: 'coreum-native-stake-kit'
   integrationId: string
   preferredValidatorAddress: string
   preferredValidatorName: string
 }
 
-export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNativeSkateKitAdapterConfig>): StakePolicyAdapter => {
+export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>): StakePolicyAdapter => {
   if (policyConfig.stakeAssets.length > 1) throw new Error(`Staking more than one assets is not supported for CoreumSkateKitAdapter`)
   if (policyConfig.rewardAssets.length > 1) throw new Error(`Claim of more than one assets is not supported for CoreumSkateKitAdapter`)
 
@@ -69,8 +69,21 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
   async function getUnsignedTransactions(transactions: TransactionDto[]): Promise<TransactionDto[]> {
     const unsignedTxs: TransactionDto[] = []
     for (const txFromStakeKit of transactions) {
-      const txResponse = await transactionConstruct(txFromStakeKit.id, {})
-      unsignedTxs.push(txResponse)
+      // The transactions aren't always ready immediately so we need to retry a few times before giving up
+      let attempt = 0
+      while (true) {
+        try {
+          const rawTxResponse = await transactionConstruct(txFromStakeKit.id, {})
+          unsignedTxs.push(rawTxResponse)
+          break
+        } catch (e) {
+          if (attempt >= 5) {
+            throw e
+          }
+          await snooze(1000)
+          attempt++
+        }
+      }
     }
     return unsignedTxs.filter(tx => tx.status === 'WAITING_FOR_SIGNATURE')
   }

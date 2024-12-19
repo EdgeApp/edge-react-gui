@@ -121,6 +121,18 @@ export const executePlugin = async (params: {
     buttonModal: async params => {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },
+    confirmation: async params => {
+      return await new Promise(resolve => {
+        maybeNavigateToCorrectTabScene()
+        navigation.navigate('guiPluginConfirmation', {
+          title: params.title,
+          message: params.message,
+          onClose: async () => {
+            resolve()
+          }
+        })
+      })
+    },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       maybeNavigateToCorrectTabScene()
@@ -169,6 +181,20 @@ export const executePlugin = async (params: {
     enterAmount(params: FiatPluginEnterAmountParams) {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
+    },
+    async emailForm(params) {
+      return await new Promise((resolve, reject) => {
+        maybeNavigateToCorrectTabScene()
+        navigation.navigate('guiPluginEmailForm', {
+          message: params.message,
+          onSubmit: async (email: string) => {
+            resolve(email)
+          },
+          onClose: async () => {
+            resolve(undefined)
+          }
+        })
+      })
     },
     addressForm: async params => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
