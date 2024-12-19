@@ -1,11 +1,29 @@
 # edge-react-gui
 
-## Unreleased
+## Unreleased (develop)
 
-- changed: Always show Add Wallet button at bottom of asset list
-- changed: Use chain icon for staking cards
+- added: Tron id for swap details
+- added: 'numAccounts' to 'Signup_Complete' event
+- added: New Kado OTC provider integration.
+- changed: `WalletListScene` filter mode remains active on empty text
+- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
+- changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
+- changed: Integrate `installSurvey` endpoint for post-install survey options
+- changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
+- changed: StakeKit staking plugin to check validator status before getting quote
+- changed: Auto select text in tx details payee field when focused
+- changed: Handle errors in StakeKit API responses
+- fixed: Missing "Done" button when managing tokens for certain assets
+- fixed: Only send successful import items to completion scene
+- fixed: WalletConnect `eth_sendRawTransaction` event handling
+- removed: Removed patch for usb and node-hid
 
-## 4.19.0
+## 4.19.1 (2024-12-19)
+
+- fixed: Fixed Solana syncing issues with Helius node connections.
+- fixed: Patched conversion tracking return URL detection for Banxa and Simplex.
+
+## 4.19.0 (2024-12-13)
 
 - added: Venmo GUI plugin via Moonpay.
 - added: "Add Wallet" button to bottom of `WalletListScene`
