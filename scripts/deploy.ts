@@ -3,6 +3,9 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
+import { deleteOldDirsSync } from './cleanDirectories'
+
+const BUILD_ARCHIVE_MONTHS = 6
 const LATEST_TEST_FILE = 'latestTestFile.json'
 const argv = process.argv
 const mylog = console.log
@@ -12,6 +15,10 @@ const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_git
 
 let _currentPath = __dirname
 const baseDir = join(_currentPath, '..')
+
+const now = new Date()
+const cutoffDate = new Date()
+cutoffDate.setMonth(now.getMonth() - BUILD_ARCHIVE_MONTHS)
 
 /**
  * Things we expect to be set in the config file:
@@ -231,6 +238,10 @@ function buildIos(buildObj: BuildObj) {
   // chdir(buildObj.guiDir)
   // call('react-native bundle --dev false --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios')
 
+  const xcodeArchiveDir = `${process.env.HOME || ''}/Library/Developer/Xcode/Archives/`
+  // Delete old archive directories
+  deleteOldDirsSync(xcodeArchiveDir, cutoffDate)
+
   chdir(buildObj.guiPlatformDir)
 
   let cmdStr
@@ -246,7 +257,7 @@ function buildIos(buildObj: BuildObj) {
   call(cmdStr)
 
   const buildDate = builddate()
-  const buildDir = `${process.env.HOME || ''}/Library/Developer/Xcode/Archives/${buildDate}`
+  const buildDir = `${xcodeArchiveDir}${buildDate}`
 
   chdir(buildDir)
   let archiveDir = cmd('ls -t')
@@ -366,6 +377,11 @@ function buildAndroid(buildObj: BuildObj) {
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
   process.env.ORG_GRADLE_PROJECT_keyPassword = buildObj.androidKeyStorePassword
 
+  const archivePlatformDir = join(buildArchivesDir, repoBranch, platformType)
+
+  // Delete old archive directories
+  deleteOldDirsSync(archivePlatformDir, cutoffDate)
+
   chdir(buildObj.guiPlatformDir)
   call('./gradlew clean')
   call('./gradlew signingReport')
@@ -375,7 +391,8 @@ function buildAndroid(buildObj: BuildObj) {
 
   // Process the AAB files created into APK format and place in archive directory
   const outfile = `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}${testBuild}`
-  const archiveDir = join(buildArchivesDir, repoBranch, platformType, String(buildNum))
+
+  const archiveDir = join(archivePlatformDir, String(buildNum))
   fs.mkdirSync(archiveDir, { recursive: true })
   const aabPath = join(archiveDir, `${outfile}.aab`)
   const apksPath = join(archiveDir, `${outfile}.apks`)
