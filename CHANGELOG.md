@@ -1,6 +1,6 @@
 # edge-react-gui
 
-## Unreleased
+## Unreleased (develop)
 
 - added: Transaction id for swap details
 - added: 'numAccounts' to 'Signup_Complete' event
@@ -18,7 +18,7 @@
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
 
-## 4.19.0
+## 4.19.0 (staging)
 
 - added: Venmo GUI plugin via Moonpay.
 - added: "Add Wallet" button to bottom of `WalletListScene`
