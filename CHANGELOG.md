@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-- added: Transaction id for swap details
+- added: Tron id for swap details
 - added: 'numAccounts' to 'Signup_Complete' event
 - added: New Kado OTC provider integration.
 - changed: `WalletListScene` filter mode remains active on empty text
@@ -18,7 +18,7 @@
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
 
-## 4.19.1 (staging)
+## 4.19.1 (2024-12-19)
 
 - fixed: Fixed Solana syncing issues with Helius node connections.
 - fixed: Patched conversion tracking return URL detection for Banxa and Simplex.
