@@ -140,15 +140,58 @@ const asLocalAccountSettingsInner = asObject({
   tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
 
-const asDeviceNotifDismissInfo = asObject({})
-export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
+export const asDeviceNotifInfo = asObject({
+  dateReceived: asMaybe(asNumber, Date.now()),
+  isBannerHidden: asMaybe(asBoolean, false),
+  isCompleted: asMaybe(asBoolean, false),
+  isPriority: asMaybe(asBoolean, false),
+  isShown: asMaybe(asBoolean, true)
+})
+const asDeviceNotifState = asObject(asDeviceNotifInfo)
+/**
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on. Incomplete notifications are represented
+ *   with a red dot in the `NotificationCenterScene`
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ * - isShown: False if hidden from *both* the `NotificationCenterScene` and the
+ *   `NotificationView`
+ */
+export interface DeviceNotifInfo {
+  dateReceived?: number
+  isBannerHidden?: boolean
+  isCompleted?: boolean
+  isPriority?: boolean
+  isShown?: boolean
+}
+
+/**
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on. Incomplete notifications are represented
+ *   with a red dot in the `NotificationCenterScene`
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ * - isShown: False if hidden from *both* the `NotificationCenterScene` and the
+ *   `NotificationView`
+ */
+export type DeviceNotifState = ReturnType<typeof asDeviceNotifState>
 
 export const asDefaultScreen = asValue('home', 'assets')
 
 const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
-  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({})),
+  deviceNotifState: asMaybe(asDeviceNotifState, asDeviceNotifState({})),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
   isSurveyDiscoverShown: asMaybe(asBoolean, false)
