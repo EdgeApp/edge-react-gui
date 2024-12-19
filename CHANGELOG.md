@@ -15,6 +15,7 @@
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
 - changed: StakeKit staking plugin to check validator status before getting quote
+- changed: Clean build archive directories from deploy script
 - fixed: Missing "Done" button when managing tokens for certain assets
 - fixed: Only send successful import items to completion scene
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
