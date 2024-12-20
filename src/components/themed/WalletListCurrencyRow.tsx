@@ -62,26 +62,29 @@ const WalletListCurrencyRowComponent = (props: Props) => {
     if (onLongPress != null) onLongPress()
   })
 
+  const gradientBackground = React.useMemo(
+    () => ({
+      colors: [primaryColor, '#00000000'],
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 0 }
+    }),
+    [primaryColor]
+  )
+  const overlayComponent = React.useMemo(
+    () =>
+      isPaused || isDisabled ? (
+        <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
+      ) : null,
+    [isPaused, isDisabled, styles.overlayLabel]
+  )
+
   return customAsset != null ? (
     // TODO: Update to UI4
     <EdgeTouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
       <CustomAssetRow customAsset={customAsset} />
     </EdgeTouchableOpacity>
   ) : (
-    <EdgeCard
-      overlay={
-        isPaused || isDisabled ? (
-          <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
-        ) : null
-      }
-      onLongPress={handleLongPress}
-      onPress={handlePress}
-      gradientBackground={{
-        colors: [primaryColor, '#00000000'],
-        start: { x: 0, y: 0 },
-        end: { x: 1, y: 0 }
-      }}
-    >
+    <EdgeCard overlay={overlayComponent} onLongPress={handleLongPress} onPress={handlePress} gradientBackground={gradientBackground}>
       <CurrencyView token={token} tokenId={tokenId} wallet={wallet} />
     </EdgeCard>
   )
