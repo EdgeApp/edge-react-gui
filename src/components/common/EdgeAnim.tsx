@@ -23,7 +23,6 @@ import { matchJson } from '../../util/matchJson'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
-export const MAX_LIST_ITEMS_ANIM = 10
 
 // Commonly used enter/exit animations. Use these to prevent
 // dynamically created objects as params that cause a re-render
