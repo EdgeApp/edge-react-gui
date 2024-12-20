@@ -393,7 +393,6 @@ const CancelText = styled(Text)(theme => {
     fontSize: theme.rem(1),
     includeFontPadding: false,
     textAlign: 'center',
-    whiteSpace: 'nowrap',
     marginHorizontal: theme.rem(0.5),
     flexShrink: 0
   }
