@@ -49,6 +49,7 @@ export const fadeInDown60: Anim = { type: 'fadeInDown', distance: 60 }
 export const fadeInDown75: Anim = { type: 'fadeInDown', distance: 75 }
 export const fadeInDown80: Anim = { type: 'fadeInDown', distance: 80 }
 export const fadeInDown90: Anim = { type: 'fadeInDown', distance: 90 }
+export const fadeInDown100: Anim = { type: 'fadeInDown', distance: 100 }
 export const fadeInDown110: Anim = { type: 'fadeInDown', distance: 110 }
 export const fadeInDown120: Anim = { type: 'fadeInDown', distance: 120 }
 export const fadeInDown140: Anim = { type: 'fadeInDown', distance: 140 }

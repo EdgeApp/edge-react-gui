@@ -30,7 +30,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
 import { AccentColors } from '../common/DotsBackground'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown40, fadeInDown80, fadeInDown100, fadeInDown120, fadeInDown140, fadeInUp40, fadeInUp80 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -341,7 +341,7 @@ const TransactionDetailsComponent = (props: Props) => {
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+      <EdgeAnim enter={fadeInUp80}>
         <EdgeCard>
           <EdgeRow
             rightButtonType="editable"
@@ -360,7 +360,7 @@ const TransactionDetailsComponent = (props: Props) => {
         </EdgeCard>
       </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+      <EdgeAnim enter={fadeInUp40}>
         <EdgeCard sections>
           <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
           <EdgeRow rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)} onPress={handleEdit}>
@@ -387,7 +387,7 @@ const TransactionDetailsComponent = (props: Props) => {
         </EdgeCard>
       </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+      <EdgeAnim enter={fadeInDown40}>
         <EdgeCard sections>
           <EdgeRow rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
           <EdgeRow
@@ -402,17 +402,15 @@ const TransactionDetailsComponent = (props: Props) => {
         </EdgeCard>
       </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
-      </EdgeAnim>
+      <EdgeAnim enter={fadeInDown80}>{swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}</EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+      <EdgeAnim enter={fadeInDown80}>
         {fiatAction == null || assetAction == null ? null : (
           <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
         )}
       </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+      <EdgeAnim enter={fadeInDown100}>
         <EdgeCard sections>
           <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
           {recipientsAddresses === '' ? null : (
@@ -421,7 +419,7 @@ const TransactionDetailsComponent = (props: Props) => {
         </EdgeCard>
       </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+      <EdgeAnim enter={fadeInDown120}>
         <AdvancedDetailsCard
           transaction={transaction}
           url={sprintf(
@@ -432,7 +430,7 @@ const TransactionDetailsComponent = (props: Props) => {
           )}
         />
       </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
+      <EdgeAnim enter={fadeInDown140}>
         <ButtonsView
           layout="column"
           primary={{
