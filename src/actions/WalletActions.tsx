@@ -14,7 +14,7 @@ import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelec
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -41,7 +41,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(error => showError(error))
+    // if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(error => showError(error))
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)

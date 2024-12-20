@@ -163,7 +163,7 @@ function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot 
 
   // Start the wallet, then wait for it to sync or time out:
   wallet
-    .changePaused(false)
+    .changePaused(true)
     .then(() => {
       // Check the already-closed and already-synced cases:
       if (out.complete) return
