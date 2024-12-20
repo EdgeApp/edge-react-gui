@@ -90,39 +90,51 @@ export function TransactionListRow(props: Props) {
   const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   const fiatAmountString = `${fiatSymbol}${fiatAmount}`
-
-  // Transaction Text and Icon
-  let arrowContainerStyle: StyleProp<ViewStyle> = []
-  let arrowIconName, arrowIconColor, arrowIconSize
-
-  // Assign defaults if transaction is just basic send/recv
-  if (isSentTransaction) {
-    arrowIconName = 'arrow-up'
-    arrowIconColor = theme.txDirFgSend
-    arrowContainerStyle = [styles.arrowIconContainerSend]
-  } else {
-    arrowIconName = 'arrow-down'
-    arrowIconColor = theme.txDirFgReceive
-    arrowContainerStyle = [styles.arrowIconContainerReceive]
-  }
-
+  const thumbnailPath = useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
   const edgeCategory = splitCategory(category ?? '')
 
-  if (edgeCategory.category === 'exchange') {
-    arrowIconName = 'swap-horizontal'
-    arrowIconColor = theme.txDirFgSwap
-    arrowContainerStyle = [styles.arrowIconContainerSwap]
-  }
+  // Transaction Text and Icon
+  const { arrowIconName, arrowIconColor, arrowIconSize, arrowContainerStyle } = React.useMemo(() => {
+    let arrowContainerStyle: StyleProp<ViewStyle> = []
+    let arrowIconName, arrowIconColor, arrowIconSize
 
-  // Icon & Thumbnail
-  const thumbnailPath = useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
-  if (thumbnailPath != null) {
-    arrowIconSize = theme.rem(1)
-    arrowContainerStyle.push(styles.arrowIconOverlayContainer)
-  } else {
-    arrowIconSize = theme.rem(1.25)
-    arrowContainerStyle.push(styles.arrowIconContainer)
-  }
+    // Assign defaults if transaction is just basic send/recv
+    if (isSentTransaction) {
+      arrowIconName = 'arrow-up'
+      arrowIconColor = theme.txDirFgSend
+      arrowContainerStyle = [styles.arrowIconContainerSend]
+    } else {
+      arrowIconName = 'arrow-down'
+      arrowIconColor = theme.txDirFgReceive
+      arrowContainerStyle = [styles.arrowIconContainerReceive]
+    }
+
+    if (edgeCategory.category === 'exchange') {
+      arrowIconName = 'swap-horizontal'
+      arrowIconColor = theme.txDirFgSwap
+      arrowContainerStyle = [styles.arrowIconContainerSwap]
+    }
+
+    // Icon & Thumbnail
+    if (thumbnailPath != null) {
+      arrowIconSize = theme.rem(1)
+      arrowContainerStyle.push(styles.arrowIconOverlayContainer)
+    } else {
+      arrowIconSize = theme.rem(1.25)
+      arrowContainerStyle.push(styles.arrowIconContainer)
+    }
+    return { arrowIconName, arrowIconColor, arrowIconSize, arrowContainerStyle }
+  }, [
+    edgeCategory.category,
+    isSentTransaction,
+    thumbnailPath,
+    theme,
+    styles.arrowIconContainerSend,
+    styles.arrowIconContainerReceive,
+    styles.arrowIconContainerSwap,
+    styles.arrowIconOverlayContainer,
+    styles.arrowIconContainer
+  ])
 
   const arrowIcon = (
     <ShadowedView style={arrowContainerStyle}>
