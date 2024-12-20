@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../rows/CoinRankRow'
@@ -135,16 +134,14 @@ const CoinRankingComponent = (props: Props) => {
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
-      <EdgeAnim key={key} disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
-        <CoinRankRow
-          navigation={navigation}
-          index={item}
-          coinRanking={coinRanking}
-          percentChangeTimeFrame={percentChangeTimeFrame}
-          assetSubText={assetSubText}
-          fiatCurrencyCode={supportedFiatSetting}
-        />
-      </EdgeAnim>
+      <CoinRankRow
+        navigation={navigation}
+        index={item}
+        coinRanking={coinRanking}
+        percentChangeTimeFrame={percentChangeTimeFrame}
+        assetSubText={assetSubText}
+        fiatCurrencyCode={supportedFiatSetting}
+      />
     )
   }
 

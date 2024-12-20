@@ -22,7 +22,7 @@ import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { AccentColors } from '../common/DotsBackground'
-import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
@@ -241,19 +241,10 @@ function TransactionListComponent(props: Props) {
       return <EmptyLoader />
     }
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (typeof item === 'string') {
-      return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-          <SectionHeader title={item} />
-        </EdgeAnim>
-      )
+      return <SectionHeader title={item} />
     }
-    return (
-      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
-      </EdgeAnim>
-    )
+    return <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
   })
 
   const keyExtractor = useHandler((item: ListItem) => {

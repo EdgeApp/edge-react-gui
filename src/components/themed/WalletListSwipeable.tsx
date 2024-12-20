@@ -13,7 +13,6 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -94,7 +93,6 @@ function WalletListSwipeableComponent(props: Props) {
 
   // Renders a single row:
   const renderRow = useHandler((item: FlatListItem<any>) => {
-    const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
       return (
@@ -109,20 +107,11 @@ function WalletListSwipeableComponent(props: Props) {
 
     const { token, tokenId, wallet, walletId } = item.item
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (wallet != null) {
-      return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
-          <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
-        </EdgeAnim>
-      )
+      return <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
     }
     if (walletId != null) {
-      return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
-          <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
-        </EdgeAnim>
-      )
+      return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
     }
     return null
   })
