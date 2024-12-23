@@ -239,7 +239,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
-      setNativeProps({ selection: { start: 0, end: value.length } })
+      setNativeProps({ selection: { start: 0, end: value.length }, selectTextOnFocus: true })
     }
     if (onFocus != null) onFocus()
   })
