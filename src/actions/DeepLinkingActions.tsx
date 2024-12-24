@@ -7,6 +7,7 @@ import { FundAccountModal } from '../components/modals/FundAccountModal'
 import { pickWallet } from '../components/modals/WalletListModal'
 import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
@@ -226,6 +227,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
+          // Ignore disabled wallets:
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO
+          if (keysOnlyMode) return
+
           const { pluginId } = wallet.currencyInfo
           const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
           if (parsedUri != null) {
