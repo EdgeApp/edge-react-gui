@@ -130,6 +130,15 @@ const tcChainCodePluginIdMap: StringMap = {
   LTC: 'litecoin'
 }
 
+const DUST_THRESHOLDS: StringMap = {
+  AVAX: '0',
+  BTC: '10000',
+  BCH: '10000',
+  DOGE: '100000000',
+  ETH: '0',
+  LTC: '10000'
+}
+
 const asThorNodePool = asObject({
   asset: asString, // "AVAX.AVAX",
   // short_code: asString, // "a",
@@ -452,6 +461,10 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   if (lt(walletBalance, nativeAmount)) {
     throw new InsufficientFundsError({ tokenId })
+  }
+
+  if (lt(nativeAmount, DUST_THRESHOLDS[currencyCode])) {
+    throw new StakeBelowLimitError(request, currencyCode)
   }
 
   await updateInboundAddresses(opts)

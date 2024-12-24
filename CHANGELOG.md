@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - fixed: Using deprecated wallets to handle links
+- fixed: Thorchain stake minimum amount requirements
 
 ## 4.20.0 (staging)
 
