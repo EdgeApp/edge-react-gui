@@ -308,6 +308,7 @@ const CURRENCY_PLUGINID_MAP = {
   QTUM: 'qtum',
   RVN: 'ravencoin',
   SOL: 'solana',
+  SUI: 'sui',
   TON: 'ton',
   XLM: 'stellar',
   XRP: 'ripple',

@@ -71,6 +71,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:polkadot',
   'wallet:optimism',
   'wallet:ton',
+  'wallet:sui',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -530,6 +531,14 @@ export const SPECIAL_CURRENCY_INFO: {
       namespace: 'cosmos',
       reference: 'osmosis-1'
     }
+  },
+  sui: {
+    initWalletName: lstrings.string_first_sui_wallet_name,
+    chainCode: 'SUI',
+    dummyPublicAddress: '0x9e58c463e1eed8294d1161d90093afa588236064edac6d78960249e834653805',
+    isImportKeySupported: true,
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'SUI'
   },
   ton: {
     initWalletName: lstrings.string_first_ton_wallet_name,

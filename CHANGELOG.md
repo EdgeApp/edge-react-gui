@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Add SUI
 - added: Add Unizen DEX
 - changed: Show KYC warning modal when trading with Swapuz
 - fixed: Using deprecated wallets to handle links
