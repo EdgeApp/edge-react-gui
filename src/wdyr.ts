@@ -6,5 +6,6 @@ whyDidYouRender(React, {
   titleColor: 'green',
   diffNameColor: 'aqua',
   logOnDifferentValues: false,
-  trackAllPureComponents: true
+  trackAllPureComponents: true,
+  trackHooks: true
 })
