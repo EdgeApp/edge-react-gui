@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Using deprecated wallets to handle links
+
 ## 4.20.0 (staging)
 
 - added: 'numAccounts' to 'Signup_Complete' event

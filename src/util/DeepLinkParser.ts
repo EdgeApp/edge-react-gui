@@ -75,7 +75,8 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     }
   }
 
-  // Assume anything else is a coin link of some kind:
+  // Assume anything else is a coin link of some kind (with the exception of
+  // deprecated currencies):
   const protocol = url.protocol.replace(/:$/, '')
   return { type: 'other', protocol, uri }
 }
