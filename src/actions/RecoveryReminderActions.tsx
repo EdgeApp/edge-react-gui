@@ -32,7 +32,10 @@ export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<v
       if (lt(totalDollars, level)) return
 
       // Mark this level as shown:
-      dispatch({ type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: level })
+      dispatch({
+        type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
+        data: level
+      })
       writePasswordRecoveryReminders(account, level).catch(error => showError(error))
       showReminderModal(navigation).catch(error => showError(error))
       return

@@ -174,13 +174,18 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
+        borrowPluginId
+      })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
-      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.borrow({
+        nativeAmount,
+        tokenId
+      })
 
       return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
@@ -190,13 +195,18 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
+        borrowPluginId
+      })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.deposit({
+        nativeAmount,
+        tokenId
+      })
 
       return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
@@ -206,13 +216,19 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
+        borrowPluginId
+      })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, fromTokenId })
+      const approvableAction = await borrowEngine.repay({
+        nativeAmount,
+        tokenId,
+        fromTokenId
+      })
 
       return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
@@ -222,13 +238,18 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
+        borrowPluginId
+      })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
-      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.withdraw({
+        nativeAmount,
+        tokenId
+      })
 
       return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }

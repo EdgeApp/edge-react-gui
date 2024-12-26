@@ -69,7 +69,10 @@ export function ListModal<T>({
   const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
-    return { paddingBottom: theme.rem(ModalFooter.bottomRem), marginTop: theme.rem(0.5) }
+    return {
+      paddingBottom: theme.rem(ModalFooter.bottomRem),
+      marginTop: theme.rem(0.5)
+    }
   }, [theme])
 
   return (

@@ -97,7 +97,12 @@ export const AutoLogoutModal = (props: Props) => {
                 initPosition={initPositionUnit}
                 itemTextFontFamily={theme.fontFaceDefault}
                 itemTextSize={theme.rem(1)}
-                onItemSelected={(index: number) => setDisplayTime({ ...displayTime, measurement: unitLabelValueList[index].value })}
+                onItemSelected={(index: number) =>
+                  setDisplayTime({
+                    ...displayTime,
+                    measurement: unitLabelValueList[index].value
+                  })
+                }
                 selectedItemTextColor={theme.pickerText}
                 style={styles.androidPicker}
               />

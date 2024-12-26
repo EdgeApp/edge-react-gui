@@ -23,20 +23,35 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'moonpay',
     storeId: 'io.moonpay.buy',
     baseUri: 'https://sell.moonpay.io',
-    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', paymentMethod: 'ach_bank_transfer' },
+    baseQuery: {
+      apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
+      paymentMethod: 'ach_bank_transfer'
+    },
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
     permissions: ['camera'],
     mandatoryPermissions: true,
     fixCurrencyCodes: {
-      BAT: { pluginId: 'ethereum', tokenId: '0d8775f648430679a709e98d2b0cb6250d2887ef' },
+      BAT: {
+        pluginId: 'ethereum',
+        tokenId: '0d8775f648430679a709e98d2b0cb6250d2887ef'
+      },
       BCH: { pluginId: 'bitcoincash', tokenId: null },
       BNB: { pluginId: 'binance', tokenId: null },
       BTC: { pluginId: 'bitcoin', tokenId: null },
       CELO: { pluginId: 'celo', tokenId: null },
-      CHZ: { pluginId: 'ethereum', tokenId: '3506424f91fd33084466f402d5d97f05f8e3b4af' },
-      COMP: { pluginId: 'ethereum', tokenId: 'c00e94cb662c3520282e6f5717214004a7f26888' },
-      DAI: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
+      CHZ: {
+        pluginId: 'ethereum',
+        tokenId: '3506424f91fd33084466f402d5d97f05f8e3b4af'
+      },
+      COMP: {
+        pluginId: 'ethereum',
+        tokenId: 'c00e94cb662c3520282e6f5717214004a7f26888'
+      },
+      DAI: {
+        pluginId: 'ethereum',
+        tokenId: '6b175474e89094c44da98b954eedeac495271d0f'
+      },
       DASH: { pluginId: 'dash', tokenId: null },
       DGB: { pluginId: 'digibyte', tokenId: null },
       DOGE: { pluginId: 'dogecoin', tokenId: null },
@@ -50,13 +65,25 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
       MATIC_POLYGON: { pluginId: 'polygon', tokenId: null },
       QTUM: { pluginId: 'qtum', tokenId: null },
       RVN: { pluginId: 'ravencoin', tokenId: null },
-      TUSD: { pluginId: 'ethereum', tokenId: '0000000000085d4780b73119b644ae5ecd22b376' },
-      USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
-      USDT: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
+      TUSD: {
+        pluginId: 'ethereum',
+        tokenId: '0000000000085d4780b73119b644ae5ecd22b376'
+      },
+      USDC: {
+        pluginId: 'ethereum',
+        tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+      },
+      USDT: {
+        pluginId: 'ethereum',
+        tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+      },
       XLM: { pluginId: 'stellar', tokenId: null },
       XRP: { pluginId: 'ripple', tokenId: null },
       XTZ: { pluginId: 'tezos', tokenId: null },
-      ZRX: { pluginId: 'ethereum', tokenId: 'e41d2489571d322189246dafa5ebde1f4699f498' }
+      ZRX: {
+        pluginId: 'ethereum',
+        tokenId: 'e41d2489571d322189246dafa5ebde1f4699f498'
+      }
     }
   },
   bitsofgold: {
@@ -253,7 +280,10 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'xanpool',
     storeId: 'xanpool',
     baseUri: 'https://widget.xanpool.com',
-    baseQuery: { apiKey: 'ae524a0144ccd8dc087af39eabb7a02a', isWebView: 'true' },
+    baseQuery: {
+      apiKey: 'ae524a0144ccd8dc087af39eabb7a02a',
+      isWebView: 'true'
+    },
     displayName: 'Xanpool',
     permissions: ['camera']
   },

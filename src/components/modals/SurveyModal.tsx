@@ -59,16 +59,26 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
     // TODO: Auto focus, but it's kind of buggy if using refs in this situation...
     if (index === options.length - 1) {
       // Handle "Other" response selection
-      inputHeight.value = withTiming(theme.rem(3.25), { duration: 300, easing: Easing.inOut(Easing.ease) })
+      inputHeight.value = withTiming(theme.rem(3.25), {
+        duration: 300,
+        easing: Easing.inOut(Easing.ease)
+      })
     } else {
-      inputHeight.value = withTiming(0, { duration: 300, easing: Easing.inOut(Easing.ease) })
+      inputHeight.value = withTiming(0, {
+        duration: 300,
+        easing: Easing.inOut(Easing.ease)
+      })
     }
   })
 
   const handleSubmitPress = useHandler(async () => {
     if (selectedIndex == null) return // Shouldn't happen, button is disabled if no selection
 
-    dispatch(logEvent('Survey_Discover', { surveyResponse: selectedIndex === options.length - 1 ? `Other: ${otherText}` : options[selectedIndex].label }))
+    dispatch(
+      logEvent('Survey_Discover', {
+        surveyResponse: selectedIndex === options.length - 1 ? `Other: ${otherText}` : options[selectedIndex].label
+      })
+    )
 
     bridge.resolve()
   })

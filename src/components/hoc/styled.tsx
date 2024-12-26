@@ -42,7 +42,10 @@ export function styled<BaseProps extends StyleProps>(Component: React.ComponentT
           const theme = useTheme()
           const style = stylerNarrowed(theme)(props)
 
-          const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = { ...props, style: style }
+          const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = {
+            ...props,
+            style: style
+          }
           return <Component {...allProps} />
         })
       } else {
@@ -55,7 +58,10 @@ export function styled<BaseProps extends StyleProps>(Component: React.ComponentT
           const theme = useTheme()
           const stylesheet = getStyles(theme)
 
-          const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = { ...props, style: stylesheet.style }
+          const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = {
+            ...props,
+            style: stylesheet.style
+          }
           return <Component {...allProps} />
         })
       }
@@ -63,7 +69,10 @@ export function styled<BaseProps extends StyleProps>(Component: React.ComponentT
       const stylesheet = StyleSheet.create({ style: styler })
 
       return addName(function StyledComponent(props) {
-        const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = { ...props, style: stylesheet.style }
+        const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = {
+          ...props,
+          style: stylesheet.style
+        }
         return <Component {...allProps} />
       })
     }
@@ -94,7 +103,10 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(Component: Reac
             const theme = useTheme()
             const style = stylerNarrowed(theme)(props)
 
-            const allProps: PropsWithoutStyle & BaseProps['style'] = { ...props, style }
+            const allProps: PropsWithoutStyle & BaseProps['style'] = {
+              ...props,
+              style
+            }
             return <Component {...allProps} ref={ref} />
           })
         )
@@ -109,7 +121,10 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(Component: Reac
             const theme = useTheme()
             const stylesheet = getStyles(theme)
 
-            const allProps: PropsWithoutStyle & BaseProps['style'] = { ...props, style: stylesheet.style }
+            const allProps: PropsWithoutStyle & BaseProps['style'] = {
+              ...props,
+              style: stylesheet.style
+            }
             return <Component {...allProps} ref={ref} />
           })
         )
@@ -119,7 +134,10 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(Component: Reac
 
       return addName(
         React.forwardRef<any, PropsWithoutStyle & Props>(function StyledComponent(props, ref) {
-          const allProps: PropsWithoutStyle & BaseProps['style'] = { ...props, style: stylesheet.style }
+          const allProps: PropsWithoutStyle & BaseProps['style'] = {
+            ...props,
+            style: stylesheet.style
+          }
 
           return <Component {...allProps} ref={ref} />
         })

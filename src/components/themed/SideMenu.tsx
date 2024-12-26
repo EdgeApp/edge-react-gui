@@ -94,7 +94,10 @@ export function SideMenuComponent(props: Props) {
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
     if (userInfo.username == null) {
-      showBackupModal({ navigation: navigationBase, forgetLoginId: userInfo.loginId })
+      showBackupModal({
+        navigation: navigationBase,
+        forgetLoginId: userInfo.loginId
+      })
     } else {
       Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
@@ -236,7 +239,10 @@ export function SideMenuComponent(props: Props) {
     },
     {
       pressHandler: () => {
-        navigation.navigate('edgeAppStack', { screen: 'wcConnections', params: {} })
+        navigation.navigate('edgeAppStack', {
+          screen: 'wcConnections',
+          params: {}
+        })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-wallet-connect',
@@ -252,8 +258,20 @@ export function SideMenuComponent(props: Props) {
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
-    ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
-    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
+    ...(ENV.BETA_FEATURES
+      ? [
+          {
+            pressHandler: handleBorrow,
+            iconName: 'control-panel-borrow',
+            title: lstrings.drawer_borrow_dollars
+          }
+        ]
+      : []),
+    {
+      pressHandler: handleShareApp,
+      iconName: 'control-panel-share',
+      title: lstrings.string_share + ' ' + config.appName
+    },
     {
       pressHandler: () => {
         navigation.navigate('edgeAppStack', { screen: 'settingsOverview' })

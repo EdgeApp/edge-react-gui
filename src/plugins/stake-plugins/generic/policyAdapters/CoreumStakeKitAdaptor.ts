@@ -88,7 +88,10 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
     return unsignedTxs.filter(tx => tx.status === 'WAITING_FOR_SIGNATURE')
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet): Promise<{ exchangeDenomMultiplier: string; stakeKitAddresses: ActionRequestDto['addresses'] }> {
+  async function workflowUtils(wallet: EdgeCurrencyWallet): Promise<{
+    exchangeDenomMultiplier: string
+    stakeKitAddresses: ActionRequestDto['addresses']
+  }> {
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
     const stakeKitAddresses: ActionRequestDto['addresses'] = {
       address: publicAddress,
@@ -120,7 +123,10 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         integrationId: adapterConfig.integrationId,
         passthrough: claimAction.passthrough,
         type: claimAction.type,
-        args: { amount: div(nativeAmount, exchangeDenomMultiplier, DECIMAL_PRECISION), validatorAddress: adapterConfig.preferredValidatorAddress }
+        args: {
+          amount: div(nativeAmount, exchangeDenomMultiplier, DECIMAL_PRECISION),
+          validatorAddress: adapterConfig.preferredValidatorAddress
+        }
       })
 
       const unsignedTransactions = await getUnsignedTransactions(actionPendingRes.transactions)
@@ -307,7 +313,9 @@ export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
 
       const yieldBalancesRes = await yieldGetSingleYieldBalances(adapterConfig.integrationId, {
         addresses: stakeKitAddresses,
-        args: { validatorAddresses: [adapterConfig.preferredValidatorAddress] }
+        args: {
+          validatorAddresses: [adapterConfig.preferredValidatorAddress]
+        }
       })
 
       const allocations: PositionAllocation[] = []

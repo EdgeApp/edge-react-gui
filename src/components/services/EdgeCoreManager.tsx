@@ -112,7 +112,9 @@ export function EdgeCoreManager(props: Props) {
   useAsyncEffect(
     async () => {
       if (context == null) return
-      await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
+      await context.changePaused(!isAppForeground, {
+        secondsDelay: !isAppForeground ? 20 : 0
+      })
     },
     [context, isAppForeground],
     'EdgeCoreManager'

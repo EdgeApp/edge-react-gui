@@ -97,7 +97,9 @@ export const ManageTokensRowComponent = (props: Props) => {
           ios_backgroundColor={theme.toggleButtonOff}
           accessibilityHint={lstrings.toggle_button_hint}
           accessibilityActions={[{ name: 'activate', label: lstrings.toggle_button_hint }]}
-          accessibilityValue={{ text: isEnabled ? lstrings.on_hint : lstrings.off_hint }}
+          accessibilityValue={{
+            text: isEnabled ? lstrings.on_hint : lstrings.off_hint
+          }}
           trackColor={{
             false: theme.toggleButtonOff,
             true: theme.toggleButton

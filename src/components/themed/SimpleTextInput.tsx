@@ -148,7 +148,13 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
-  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused: checkIsFocused, setNativeProps }))
+  React.useImperativeHandle(ref, () => ({
+    blur,
+    clear,
+    focus,
+    isFocused: checkIsFocused,
+    setNativeProps
+  }))
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)

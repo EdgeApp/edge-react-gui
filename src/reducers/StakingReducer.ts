@@ -130,7 +130,10 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> = co
     switch (action.type) {
       case 'STAKING/ADD_POLICY':
       case 'STAKING/UPDATE': {
-        return { ...state, [action.stakePolicy.stakePolicyId]: action.stakePolicy }
+        return {
+          ...state,
+          [action.stakePolicy.stakePolicyId]: action.stakePolicy
+        }
       }
       case 'STAKING/UPDATE_POLICIES':
       case 'STAKING/SETUP':
@@ -142,7 +145,10 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> = co
   stakePositionMap: (state = {}, action: Action) => {
     switch (action.type) {
       case 'STAKING/UPDATE':
-        return { ...state, [action.stakePolicy.stakePolicyId]: action.stakePosition }
+        return {
+          ...state,
+          [action.stakePolicy.stakePolicyId]: action.stakePosition
+        }
       case 'STAKING/UPDATE_POSITION':
         return { ...state, [action.stakePolicyId]: action.stakePosition }
       case 'STAKING/UPDATE_POSITIONS':
@@ -154,4 +160,6 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> = co
   }
 })
 
-export const defaultWalletStakingState = walletStakingStateReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+export const defaultWalletStakingState = walletStakingStateReducer(undefined, {
+  type: 'DUMMY_ACTION_PLEASE_IGNORE'
+})

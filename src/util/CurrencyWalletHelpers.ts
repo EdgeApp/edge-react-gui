@@ -23,9 +23,15 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
  * Takes any form of fiat currency code and returns a version with and without
  * the "iso:" prefix
  */
-export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
+export function cleanFiatCurrencyCode(fiatCurrencyCode: string): {
+  fiatCurrencyCode: string
+  isoFiatCurrencyCode: string
+} {
   if (fiatCurrencyCode.startsWith('iso:')) {
-    return { fiatCurrencyCode: removeIsoPrefix(fiatCurrencyCode), isoFiatCurrencyCode: fiatCurrencyCode }
+    return {
+      fiatCurrencyCode: removeIsoPrefix(fiatCurrencyCode),
+      isoFiatCurrencyCode: fiatCurrencyCode
+    }
   } else {
     return { fiatCurrencyCode, isoFiatCurrencyCode: `iso:${fiatCurrencyCode}` }
   }

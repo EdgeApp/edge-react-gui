@@ -47,7 +47,10 @@ export function InsufficientFeesModal(props: Props) {
   })
   const handleSwap = useHandler(async () => {
     if (onSwap) onSwap()
-    navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+    navigation.navigate('swapTab', {
+      screen: 'swapCreate',
+      params: { toWalletId: wallet.id, toTokenId: tokenId }
+    })
     bridge.resolve()
   })
 
@@ -62,7 +65,10 @@ export function InsufficientFeesModal(props: Props) {
         ? sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_3s, amountString, denomName, wallet.currencyInfo.displayName)
         : sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_2s, amountString, denomName)
   } else {
-    secondary = { label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }
+    secondary = {
+      label: lstrings.buy_crypto_modal_exchange,
+      onPress: handleSwap
+    }
     message =
       currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
         ? sprintf(lstrings.buy_parent_crypto_modal_message_3s, amountString, denomName, wallet.currencyInfo.displayName)
@@ -73,7 +79,10 @@ export function InsufficientFeesModal(props: Props) {
     <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <Paragraph>{message}</Paragraph>
       <ButtonsView
-        primary={{ label: getUkCompliantString(countryCode, 'buy_1s_quote', currencyCode), onPress: handleBuy }}
+        primary={{
+          label: getUkCompliantString(countryCode, 'buy_1s_quote', currencyCode),
+          onPress: handleBuy
+        }}
         secondary={secondary}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />

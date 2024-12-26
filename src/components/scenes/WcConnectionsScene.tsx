@@ -87,7 +87,11 @@ export const WcConnectionsScene = (props: Props) => {
       ))
 
       if (result?.type === 'wallet') {
-        navigation.navigate('wcConnect', { proposal, edgeTokenIds, walletId: result.walletId })
+        navigation.navigate('wcConnect', {
+          proposal,
+          edgeTokenIds,
+          walletId: result.walletId
+        })
       }
     } catch (error: any) {
       if (error?.message === UNSUPPORTED_WC_VERSION) {

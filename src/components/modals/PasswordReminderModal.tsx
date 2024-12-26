@@ -42,7 +42,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
   handleCancel = () => {
     if (!this.state.checkingPassword) {
-      this.props.dispatch({ type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED' })
+      this.props.dispatch({
+        type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
+      })
       this.props.bridge.resolve()
     }
   }
@@ -50,7 +52,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   handleRequestChangePassword = () => {
     if (!this.state.checkingPassword) {
       this.props.bridge.resolve()
-      this.props.dispatch({ type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD' })
+      this.props.dispatch({
+        type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
+      })
       setTimeout(() => this.props.navigation.navigate('changePassword'), 10)
     }
   }
@@ -61,12 +65,17 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
     const isValidPassword = await account.checkPassword(password).catch(err => showError(err))
     if (isValidPassword) {
-      this.props.dispatch({ type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS' })
+      this.props.dispatch({
+        type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
+      })
       this.setState({ checkingPassword: false })
       showToast(lstrings.password_reminder_great_job)
       setTimeout(() => bridge.resolve(), 10)
     } else {
-      this.setState({ errorMessage: lstrings.password_reminder_invalid, checkingPassword: false })
+      this.setState({
+        errorMessage: lstrings.password_reminder_invalid,
+        checkingPassword: false
+      })
     }
   }
 
@@ -89,8 +98,16 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           value={password}
         />
         <ModalButtons
-          primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
-          secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
+          primary={{
+            label: lstrings.password_reminder_check_password,
+            onPress: this.handleSubmit,
+            disabled: password.length === 0
+          }}
+          secondary={{
+            label: lstrings.password_reminder_forgot_password,
+            onPress: this.handleRequestChangePassword,
+            disabled: checkingPassword
+          }}
         />
       </EdgeModal>
     )

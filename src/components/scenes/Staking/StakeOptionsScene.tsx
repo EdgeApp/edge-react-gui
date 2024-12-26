@@ -65,8 +65,15 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
     const { stakePolicyId } = stakePolicy
-    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, { pluginId })
-    if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicyId })
+    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
+      pluginId
+    })
+    if (stakePlugin != null)
+      navigation.push('stakeOverview', {
+        stakePlugin,
+        walletId: wallet.id,
+        stakePolicyId
+      })
   }
 
   //

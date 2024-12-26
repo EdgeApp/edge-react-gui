@@ -327,7 +327,9 @@ const approveBityQuote = async (
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
     const signedMessage = isUtxoWallet(wallet)
       ? await wallet.signMessage(body, { otherParams: { publicAddress } })
-      : await wallet.signBytes(utf8.parse(body), { otherParams: { publicAddress } })
+      : await wallet.signBytes(utf8.parse(body), {
+          otherParams: { publicAddress }
+        })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
       method: 'POST',
@@ -392,11 +394,17 @@ export const bityProvider: FiatProviderFactory = {
 
         // Check region support
         if (!supportedAssets.is.direction('*').region(region).supported) {
-          throw new FiatProviderError({ providerId, errorType: 'regionRestricted' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted'
+          })
         }
         // Check payment type support
         if (!supportedAssets.is.direction('*').region(region).fiat('*').payment(payment).supported) {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
         if (isCheckDue()) {
@@ -454,7 +462,11 @@ export const bityProvider: FiatProviderFactory = {
           }
         }
 
-        const assetMap = supportedAssets.getFiatProviderAssetMap({ direction, region, payment })
+        const assetMap = supportedAssets.getFiatProviderAssetMap({
+          direction,
+          region,
+          payment
+        })
 
         return assetMap
       },
@@ -473,9 +485,17 @@ export const bityProvider: FiatProviderFactory = {
         const isBuy = direction === 'buy'
 
         if (!supportedAssets.is.direction(direction).region(regionCode.countryCode).supported)
-          throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
         if (!supportedAssets.is.direction(direction).region(regionCode.countryCode).fiat('*').payment(supportedPaymentType).supported)
-          throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
 
         const cryptoOtherInfo = supportedAssets.getCryptoInfo(`${pluginId}:${tokenId}`)
         const cryptoCurrencyObj = asBityCurrency(cryptoOtherInfo)
@@ -790,7 +810,14 @@ const executeSellOrderFetch = async (
   cryptoAddress: string,
   outputCurrencyCode: string,
   sepaInfo: { name: string; iban: string; swift: string },
-  homeAddress: { address: string; address2: string | undefined; city: string; country: string; state: string; postalCode: string },
+  homeAddress: {
+    address: string
+    address2: string | undefined
+    city: string
+    country: string
+    state: string
+    postalCode: string
+  },
   clientId: string
 ): Promise<BityApproveQuoteResponse | null> => {
   return await approveBityQuote(

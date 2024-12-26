@@ -48,7 +48,10 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     const currencyCode = wallet.currencyInfo.currencyCode
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
     exchangeRates.push({ currency_pair: `${currencyCode}_${accountIsoFiat}` })
-    exchangeRates.push({ currency_pair: `${currencyCode}_iso:USD`, date: `${yesterdayDate}` })
+    exchangeRates.push({
+      currency_pair: `${currencyCode}_iso:USD`,
+      date: `${yesterdayDate}`
+    })
     // now add tokens, if they exist
     if (accountIsoFiat !== 'iso:USD') {
       exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}` })
@@ -58,7 +61,10 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
       const { currencyCode: tokenCode } = wallet.currencyConfig.allTokens[tokenId]
       if (tokenCode !== currencyCode) {
         exchangeRates.push({ currency_pair: `${tokenCode}_${accountIsoFiat}` })
-        exchangeRates.push({ currency_pair: `${tokenCode}_iso:USD`, date: `${yesterdayDate}` })
+        exchangeRates.push({
+          currency_pair: `${tokenCode}_iso:USD`,
+          date: `${yesterdayDate}`
+        })
       }
     }
   }
@@ -87,7 +93,10 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
             const now = Date.now()
 
             const key = now - newDate > HOUR_MS ? `${currencyPair}_${date}` : currencyPair
-            const cachedRate = exchangeRateCache.get(key) ?? { expiration: 0, rate: '0' }
+            const cachedRate = exchangeRateCache.get(key) ?? {
+              expiration: 0,
+              rate: '0'
+            }
             if (exchangeRate != null) {
               serverRates[key] = exchangeRate
               cachedRate.rate = exchangeRate

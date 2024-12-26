@@ -175,7 +175,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       break
 
     case 'paymentProto':
-      await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
+      await launchPaymentProto(navigation, account, link.uri, {
+        hideScamWarning: false
+      })
       break
 
     case 'price-change': {
@@ -221,7 +223,11 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
+      const matchingWalletIdsAndUris: Array<{
+        walletId: string
+        parsedUri: EdgeParsedUri
+        tokenId: EdgeTokenId
+      }> = []
       const assets: EdgeAsset[] = []
 
       const parseWallets = async (): Promise<void> => {
@@ -235,7 +241,11 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
           const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
-            matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri, tokenId })
+            matchingWalletIdsAndUris.push({
+              walletId: wallet.id,
+              parsedUri,
+              tokenId
+            })
             assets.push({ pluginId, tokenId })
           }
         }

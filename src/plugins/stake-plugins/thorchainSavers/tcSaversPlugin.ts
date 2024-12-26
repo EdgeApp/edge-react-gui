@@ -328,8 +328,12 @@ const getStakePositionInner = async (
   let pools: Pools = []
   let savers: Savers = []
   const [saversResponse, poolsResponse] = await Promise.all([
-    fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } }),
-    fetchWaterfall(midgardServers, `v2/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
+    fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, {
+      headers: { 'x-client-id': ninerealmsClientId }
+    }),
+    fetchWaterfall(midgardServers, `v2/pools`, {
+      headers: { 'x-client-id': ninerealmsClientId }
+    })
   ])
 
   if (!saversResponse.ok) {
@@ -346,7 +350,15 @@ const getStakePositionInner = async (
   const poolsJson = await poolsResponse.json()
   pools = asPools(poolsJson)
 
-  return { asset, currencyCode, primaryAddress, pluginId, pools, savers, wallet }
+  return {
+    asset,
+    currencyCode,
+    primaryAddress,
+    pluginId,
+    pools,
+    savers,
+    wallet
+  }
 }
 
 const getStakePositionWithPools = async (params: StakePositionWithPoolsParams): Promise<StakePosition> => {
@@ -552,7 +564,12 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 1. Sort the outputs by how they are sent to makeSpend making the target output the 1st, change 2nd
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
-    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: {
+      enableRbf: false,
+      outputSort: 'targets',
+      utxoSourceAddress,
+      forceChangeAddress
+    },
     assetAction: { assetActionType: 'stake' },
     savedAction: {
       actionType: 'stake',
@@ -773,7 +790,12 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
   const { allocations } = await getStakePosition(opts, request)
   const { wallet, currencyCode, account } = request
   const { addressBalance, parentBalance, primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
-  return await unstakeRequestInner(opts, request, { addressBalance, allocations, parentBalance, primaryAddress })
+  return await unstakeRequestInner(opts, request, {
+    addressBalance,
+    allocations,
+    parentBalance,
+    primaryAddress
+  })
 }
 
 interface UnstakeRequestParams {
@@ -882,7 +904,12 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // to the Thorchain pool to withdraw the funds
     tokenId: null,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
-    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: {
+      enableRbf: false,
+      outputSort: 'targets',
+      utxoSourceAddress,
+      forceChangeAddress
+    },
     assetAction: { assetActionType: 'unstakeOrder' },
     savedAction: {
       actionType: 'stake',
@@ -1054,7 +1081,11 @@ const estimateUnstakeFee = async (
   const { currencyCode, nativeAmount, stakePolicyId, wallet, account } = request
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
 
-  const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet, account }
+  const stakePositionRequest: StakePositionRequest = {
+    stakePolicyId,
+    wallet,
+    account
+  }
   const params = await getStakePositionInner(opts, stakePositionRequest, 'dummyAddress')
   const { savers } = params
   if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
@@ -1066,7 +1097,11 @@ const estimateUnstakeFee = async (
   let bestNativeAmount = '0'
   for (const saver of savers) {
     primaryAddress = saver.asset_address
-    stakePosition = await getStakePositionWithPools({ ...params, saver, primaryAddress })
+    stakePosition = await getStakePositionWithPools({
+      ...params,
+      saver,
+      primaryAddress
+    })
     const { allocations } = stakePosition
     for (const alloc of allocations) {
       if (alloc.allocationType !== 'staked') continue

@@ -90,7 +90,14 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
     const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
     const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
 
-    return { maxFeePerGas, maxPriorityFeePerGas, nextNonce, txs, walletAddress, walletSigner }
+    return {
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+      nextNonce,
+      txs,
+      walletAddress,
+      walletSigner
+    }
   }
 
   const instance: StakePolicyAdapter = {

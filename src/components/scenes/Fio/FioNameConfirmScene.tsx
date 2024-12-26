@@ -123,7 +123,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
     } else {
       try {
         if (this.isFioAddress()) {
-          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioAddress', { fioAddress: fioName })
+          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioAddress', {
+            fioAddress: fioName
+          })
           edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
           await paymentWallet.saveTx(edgeTx)
 
@@ -145,7 +147,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
             })
           )
         } else {
-          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioDomain', { fioDomain: fioName })
+          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioDomain', {
+            fioDomain: fioName
+          })
           edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
           await paymentWallet.saveTx(edgeTx)
           const expiration = edgeTx.otherParams?.broadcastResult?.expiration

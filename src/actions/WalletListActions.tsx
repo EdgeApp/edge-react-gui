@@ -35,7 +35,10 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
     if (currencyCodeMatches != null) {
       for (const match of currencyCodeMatches) {
         const currencyCode = match.toUpperCase().replace(/%/g, '')
-        const address = await getFirstCurrencyAddress({ currencyCode, getState })
+        const address = await getFirstCurrencyAddress({
+          currencyCode,
+          getState
+        })
         if (address == null) return
         uri = uri.replace(match, address)
       }

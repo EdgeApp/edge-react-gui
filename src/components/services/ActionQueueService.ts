@@ -38,7 +38,10 @@ export const ActionQueueService = () => {
     const { programId } = state
     // Update service level state
     const serviceProgramStates = serviceProgramStatesRef.current
-    serviceProgramStates[programId] = { ...serviceProgramStates[programId], executing }
+    serviceProgramStates[programId] = {
+      ...serviceProgramStates[programId],
+      executing
+    }
     // Update action queue level state
     await dispatch(
       updateActionProgramState({

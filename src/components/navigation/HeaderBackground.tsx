@@ -24,7 +24,9 @@ export const HeaderBackground = (props: any) => {
   )
 }
 
-const HeaderBackgroundContainerView = styled(Animated.View)<{ scrollY: SharedValue<number> }>(() => ({ scrollY }) => [
+const HeaderBackgroundContainerView = styled(Animated.View)<{
+  scrollY: SharedValue<number>
+}>(() => ({ scrollY }) => [
   {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'stretch',

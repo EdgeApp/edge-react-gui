@@ -129,7 +129,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
         lockedNativeAmount = add(lockedNativeAmount, total)
       }
-      this.props.dispatch({ type: 'STAKING/UPDATE_LOCKED_AMOUNT', walletId: this.props.wallet.id, lockedNativeAmount })
+      this.props.dispatch({
+        type: 'STAKING/UPDATE_LOCKED_AMOUNT',
+        walletId: this.props.wallet.id,
+        lockedNativeAmount
+      })
     }
   }
 
@@ -179,7 +183,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { theme, wallet, tokenId } = this.props
     const styles = getStyles(theme)
 
-    const buySellIconProps = { size: theme.rem(1.25), color: theme.iconTappable }
+    const buySellIconProps = {
+      size: theme.rem(1.25),
+      color: theme.iconTappable
+    }
     const sceneCurrencyCode = tokenId == null ? wallet.currencyInfo.currencyCode : wallet.currencyConfig.allTokens[tokenId].currencyCode
 
     await Airship.show(bridge => (
@@ -236,7 +243,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       tokenId
     }
 
-    navigation.navigate('buyTab', { screen: 'pluginListBuy', params: { forcedWalletResult } })
+    navigation.navigate('buyTab', {
+      screen: 'pluginListBuy',
+      params: { forcedWalletResult }
+    })
     bridge.resolve()
   }
 
@@ -248,7 +258,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       tokenId
     }
 
-    navigation.navigate('sellTab', { screen: 'pluginListSell', params: { forcedWalletResult } })
+    navigation.navigate('sellTab', {
+      screen: 'pluginListSell',
+      params: { forcedWalletResult }
+    })
     bridge.resolve()
   }
 
@@ -268,7 +281,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     // 1. Are defined in the SWAP_ASSET_PRIORITY array
     // 2. Match wallets owned by the user
     // 3. Match the wallets' enabled tokens
-    const ownedAssets: Array<{ pluginId: string; tokenId: EdgeTokenId; walletId: string; dollarValue: number }> = []
+    const ownedAssets: Array<{
+      pluginId: string
+      tokenId: EdgeTokenId
+      walletId: string
+      dollarValue: number
+    }> = []
     SWAP_ASSET_PRIORITY.forEach(priorityAsset => {
       Object.values(currencyWallets).forEach(currencyWallet => {
         // Check if this wallet is the same asset as the one shown on the scene.
@@ -551,7 +569,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     triggerHaptic('impactLight')
     const { wallet, tokenId } = this.props
-    navigation.push('send2', { walletId: wallet.id, tokenId, hiddenFeaturesMap: { scamWarning: false } })
+    navigation.push('send2', {
+      walletId: wallet.id,
+      tokenId,
+      hiddenFeaturesMap: { scamWarning: false }
+    })
   }
 
   handleStakePress = () => {
@@ -578,8 +600,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       } else if (stakePolicies.length === 1) {
         const [stakePolicy] = stakePolicies
         const { stakePolicyId } = stakePolicy
-        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, { pluginId: wallet.currencyInfo.pluginId })
-        if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicyId })
+        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
+          pluginId: wallet.currencyInfo.pluginId
+        })
+        if (stakePlugin != null)
+          navigation.push('stakeOverview', {
+            stakePlugin,
+            walletId: wallet.id,
+            stakePolicyId
+          })
       }
     }
   }

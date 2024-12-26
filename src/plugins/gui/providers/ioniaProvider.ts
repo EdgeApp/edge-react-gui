@@ -276,7 +276,12 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     let hiddenCardIds: number[] = asStoreHiddenCards(await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined))
     let purchaseCardTimeoutId: NodeJS.Timeout
-    const ratesCache: { [currencyCode: string]: { expiry: number; rateQueryPromise: Promise<number> } } = {}
+    const ratesCache: {
+      [currencyCode: string]: {
+        expiry: number
+        rateQueryPromise: Promise<number>
+      }
+    } = {}
 
     //
     // Private methods:

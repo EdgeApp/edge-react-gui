@@ -46,7 +46,9 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
     const { account } = state.core
     const oldSubcats = state.ui.subcategories
     const newSubcategories = [...oldSubcats, newSubcategory]
-    return await writeSyncedSubcategories(account, { categories: newSubcategories.sort() })
+    return await writeSyncedSubcategories(account, {
+      categories: newSubcategories.sort()
+    })
       .then(() => {
         dispatch({
           type: 'SET_TRANSACTION_SUBCATEGORIES',
@@ -410,7 +412,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
               break
             }
 
-            edgeCategory = { category: 'expense', subcategory: lstrings.transaction_details_stake_order_subcat }
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.transaction_details_stake_order_subcat
+            }
             direction = 'send'
             break
           }
@@ -438,7 +443,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
               break
             }
 
-            edgeCategory = { category: 'expense', subcategory: lstrings.transaction_details_unstake_order }
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.transaction_details_unstake_order
+            }
             direction = 'send'
             break
           }
@@ -463,7 +471,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
-            edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode) }
+            edgeCategory = {
+              category: 'exchange',
+              subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode)
+            }
             direction = 'receive'
             break
           }
@@ -471,12 +482,18 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
-            edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode) }
+            edgeCategory = {
+              category: 'exchange',
+              subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode)
+            }
             direction = 'send'
             break
           }
           case 'sellNetworkFee': {
-            edgeCategory = { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee }
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
             direction = 'send'
             break
           }
@@ -488,7 +505,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
       case 'tokenApproval': {
         switch (assetActionType) {
           case 'tokenApproval': {
-            edgeCategory = { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee }
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
             break
           }
           default:

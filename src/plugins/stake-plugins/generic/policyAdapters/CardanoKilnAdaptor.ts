@@ -38,7 +38,9 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
     stakePolicyId,
 
     async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
-      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
+      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
+        tokenId: null
+      })
 
       const stakeTransaction = await kiln.adaWithdrawRewards(walletAddress, nativeAmount)
       const edgeTx: EdgeTransaction = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
@@ -69,7 +71,9 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
     },
 
     async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
-      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
+      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
+        tokenId: null
+      })
 
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
       if (eq(walletBalance, '0')) {
@@ -126,7 +130,9 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
     },
 
     async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
-      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({ tokenId: null })
+      const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
+        tokenId: null
+      })
 
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
       if (eq(walletBalance, '0')) {

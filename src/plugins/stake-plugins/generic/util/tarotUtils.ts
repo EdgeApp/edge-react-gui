@@ -239,9 +239,13 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       return Math.min(valueA, valueB) * 2 * Math.sqrt(SLIPPAGE_FACTOR)
     },
 
-    async getDeleverageAmounts(
-      changeCollateralValue: number
-    ): Promise<{ bAmountA: number; bAmountB: number; cAmount: number; bAmountAMin: number; bAmountBMin: number }> {
+    async getDeleverageAmounts(changeCollateralValue: number): Promise<{
+      bAmountA: number
+      bAmountB: number
+      cAmount: number
+      bAmountAMin: number
+      bAmountBMin: number
+    }> {
       const [[x, y], [priceA, priceB]] = await Promise.all([this.getReserves(), this.getMarketPriceDenomLP()])
       const lpStable = await lpTokenContract.stable()
       const x2 = x * x

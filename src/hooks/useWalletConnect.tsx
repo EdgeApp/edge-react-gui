@@ -148,9 +148,14 @@ export function useWalletConnect(): WalletConnect {
 
   const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
     const client = await getClient()
-    await client.rejectSession({ id: proposal.id, reason: getSdkError('USER_REJECTED') }).catch(e => {
-      console.log('walletConnect rejectSession error', String(e))
-    })
+    await client
+      .rejectSession({
+        id: proposal.id,
+        reason: getSdkError('USER_REJECTED')
+      })
+      .catch(e => {
+        console.log('walletConnect rejectSession error', String(e))
+      })
   })
 
   const disconnectSession = useHandler(async (topic: string): Promise<void> => {
@@ -160,7 +165,13 @@ export function useWalletConnect(): WalletConnect {
     const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
 
     // In testing, this method is pretty unreliable. May be worth replacing with something more manual.
-    await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
+    await runWithTimeout(
+      client.disconnectSession({
+        topic,
+        reason: getSdkError('USER_DISCONNECTED')
+      }),
+      10000
+    )
     Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
       console.log(e)
     )
@@ -168,9 +179,14 @@ export function useWalletConnect(): WalletConnect {
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
     const client = await getClient()
-    await client.respondSessionRequest({ topic, response: { id, jsonrpc: '2.0', result } }).catch(e => {
-      console.log('walletConnect approveRequest error', String(e))
-    })
+    await client
+      .respondSessionRequest({
+        topic,
+        response: { id, jsonrpc: '2.0', result }
+      })
+      .catch(e => {
+        console.log('walletConnect approveRequest error', String(e))
+      })
   })
 
   const rejectRequest = useHandler(async (topic: string, id: number) => {
@@ -245,7 +261,9 @@ export const getAccounts = async (currencyWallets: { [walletId: string]: EdgeCur
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
-    const address = await currencyWallets[walletId].getReceiveAddress({ tokenId: null })
+    const address = await currencyWallets[walletId].getReceiveAddress({
+      tokenId: null
+    })
     const account = `${chainId.namespace}:${chainId.reference}:${address.publicAddress}`
     map.set(account, walletId)
   }

@@ -56,7 +56,11 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
     ))
     if (result?.type === 'wallet') {
       const { walletId, tokenId } = result
-      navigation.push('send2', { walletId, tokenId, hiddenFeaturesMap: { scamWarning: false } })
+      navigation.push('send2', {
+        walletId,
+        tokenId,
+        hiddenFeaturesMap: { scamWarning: false }
+      })
     }
     Airship.clear()
   })

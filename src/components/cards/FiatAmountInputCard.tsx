@@ -27,7 +27,10 @@ interface Props {
 const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, title, tokenId, onAmountChanged }: Props) => {
   const [sanitizedFiatAmount, setSanitizedFiatAmount] = React.useState('0')
 
-  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({ tokenId, wallet: wallet })
+  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
+    tokenId,
+    wallet: wallet
+  })
   const {
     currencyConfig: { allTokens }
   } = wallet
@@ -67,7 +70,12 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
   })
 
   const formattedFiatAmount = React.useMemo(
-    () => formatFiatString({ fiatAmount: sanitizedFiatAmount ?? '0', autoPrecision: true, maxPrecision: 2 }),
+    () =>
+      formatFiatString({
+        fiatAmount: sanitizedFiatAmount ?? '0',
+        autoPrecision: true,
+        maxPrecision: 2
+      }),
 
     [sanitizedFiatAmount]
   )

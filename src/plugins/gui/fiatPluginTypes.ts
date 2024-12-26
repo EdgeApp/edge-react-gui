@@ -73,7 +73,11 @@ export interface FiatPluginSepaTransferInfo {
 
 export interface FiatPluginListModalParams {
   title: string
-  items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
+  items: Array<{
+    icon: string | number | React.ReactNode
+    name: string
+    text?: string
+  }> // Icon strings are image uri, numbers are local files
   selected?: string // Must match one of the name param in the items array
 }
 

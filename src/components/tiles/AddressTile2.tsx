@@ -151,7 +151,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       const parsedLink = { ...parseDeepLink(address) }
       if (parsedLink.type === 'paymentProto') {
         if (ercTokenStandard === 'ERC20') {
-          showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
+          showError(
+            new PaymentProtoError('CurrencyNotSupported', {
+              text: currencyInfo.currencyCode
+            })
+          )
         } else {
           await launchPaymentProto(navigation, account, parsedLink.uri, {
             tokenId,
@@ -222,7 +226,12 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
         navigation={navigation}
-        allowedAssets={[{ pluginId, tokenId: getTokenIdForced(account, pluginId, currencyCode) }]}
+        allowedAssets={[
+          {
+            pluginId,
+            tokenId: getTokenIdForced(account, pluginId, currencyCode)
+          }
+        ]}
         excludeWalletIds={[coreWallet.id]}
       />
     ))

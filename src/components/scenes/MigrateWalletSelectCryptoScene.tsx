@@ -100,7 +100,9 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     }
 
     const filteredMigrateWalletList = migrateWalletList.filter(item => selectedItems.has(item.key))
-    navigation.push('migrateWalletCalculateFee', { migrateWalletList: filteredMigrateWalletList })
+    navigation.push('migrateWalletCalculateFee', {
+      migrateWalletList: filteredMigrateWalletList
+    })
   })
 
   const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<MigrateWalletItem>) => {
@@ -149,7 +151,12 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             data={migrateWalletList}
             extraData={selectedItems}
             keyboardShouldPersistTaps="handled"

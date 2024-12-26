@@ -81,7 +81,9 @@ export class SwapSettings extends React.Component<Props, State> {
     this.swapConfigUnsubscribeFns = []
     for (const pluginId of Object.keys(swapConfigs)) {
       const unsubscribe = swapConfigs[pluginId].watch('enabled', pluginEnabled => {
-        this.setState({ enabled: { ...this.state.enabled, [pluginId]: pluginEnabled } })
+        this.setState({
+          enabled: { ...this.state.enabled, [pluginId]: pluginEnabled }
+        })
       })
       this.swapConfigUnsubscribeFns.push(unsubscribe)
     }
@@ -199,7 +201,9 @@ export class SwapSettings extends React.Component<Props, State> {
         label={displayName}
         value={pluginEnabled}
         onPress={async () => {
-          this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
+          this.setState({
+            enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled }
+          })
           await swapConfigs[pluginId].changeEnabled(!pluginEnabled)
         }}
       >

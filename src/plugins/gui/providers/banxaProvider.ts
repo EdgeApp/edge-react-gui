@@ -321,7 +321,10 @@ const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   buy: { providerId, fiat: {}, crypto: {} },
   sell: { providerId, fiat: {}, crypto: {} }
 }
-const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
+const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = {
+  buy: {},
+  sell: {}
+}
 let lastChecked = 0
 
 export const banxaProvider: FiatProviderFactory = {
@@ -353,7 +356,10 @@ export const banxaProvider: FiatProviderFactory = {
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const paymentsMap = banxaPaymentsMap[direction]
 
@@ -368,7 +374,13 @@ export const banxaProvider: FiatProviderFactory = {
 
         if (isDailyCheckDue(lastChecked)) {
           const promises = [
-            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries', apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: 'api/countries',
+              apiKey
+            }).then(response => {
               const countries = asBanxaCountries(response)
               for (const { country_code: countryCode } of countries.data.countries) {
                 if (countryCode !== 'US') {
@@ -377,14 +389,26 @@ export const banxaProvider: FiatProviderFactory = {
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: 'api/countries/us/states', apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: 'api/countries/us/states',
+              apiKey
+            }).then(response => {
               const states = asBanxaStates(response)
               for (const { state_code: stateCode } of states.data.states) {
                 addExactRegion(allowedCountryCodes, 'US', stateCode)
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/sell`, apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: `api/coins/sell`,
+              apiKey
+            }).then(response => {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
@@ -398,14 +422,26 @@ export const banxaProvider: FiatProviderFactory = {
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/sell`, apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: `api/fiats/sell`,
+              apiKey
+            }).then(response => {
               const fiatCurrencies = asBanxaFiats(response)
               for (const fiat of fiatCurrencies.data.fiats) {
                 allowedCurrencyCodes.sell.fiat['iso:' + fiat.fiat_code] = true
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: `api/coins/buy`, apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: `api/coins/buy`,
+              apiKey
+            }).then(response => {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
@@ -419,14 +455,26 @@ export const banxaProvider: FiatProviderFactory = {
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: `api/fiats/buy`, apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: `api/fiats/buy`,
+              apiKey
+            }).then(response => {
               const fiatCurrencies = asBanxaFiats(response)
               for (const fiat of fiatCurrencies.data.fiats) {
                 allowedCurrencyCodes.buy.fiat['iso:' + fiat.fiat_code] = true
               }
             }),
 
-            banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
+            banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: paymentMethodsPath,
+              apiKey
+            }).then(response => {
               const banxaPayments = asBanxaPaymentMethods(response)
               buildPaymentsMap(banxaPayments, paymentsMap)
             })
@@ -443,7 +491,10 @@ export const banxaProvider: FiatProviderFactory = {
         validateExactRegion(providerId, regionCode, allowedCountryCodes)
 
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         // Check if the region, payment type, and fiat/crypto codes are supported
         const fiatCode = removeIsoPrefix(fiatCurrencyCode)
@@ -452,7 +503,10 @@ export const banxaProvider: FiatProviderFactory = {
         try {
           banxaCrypto = edgeToBanxaCrypto(pluginId, direction, tokenId)
         } catch (e: any) {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'assetUnsupported'
+          })
         }
 
         const { banxaChain, banxaCoin } = banxaCrypto
@@ -479,10 +533,19 @@ export const banxaProvider: FiatProviderFactory = {
 
           // If the user is buying, all the payment methods were already queried at getSupportedAssets
           if (direction === 'buy' || hasFetched) {
-            throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'paymentUnsupported'
+            })
           } else {
             // Fetch the payment methods for this specific source crypto asset
-            const pmResponse = await banxaFetch({ method: 'GET', url, hmacUser, path: `api/payment-methods?source=${banxaCoin}`, apiKey })
+            const pmResponse = await banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: `api/payment-methods?source=${banxaCoin}`,
+              apiKey
+            })
             const banxaPayments = asBanxaPaymentMethods(pmResponse)
             buildPaymentsMap(banxaPayments, banxaPaymentsMap.sell)
             hasFetched = true
@@ -491,9 +554,19 @@ export const banxaProvider: FiatProviderFactory = {
 
         const checkMinMax = (amount: string, paymentIdLimit: BanxaPaymentIdLimit, displayCurrencyCode?: string) => {
           if (gt(amount, paymentIdLimit.max)) {
-            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentIdLimit.max), displayCurrencyCode })
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'overLimit',
+              errorAmount: parseFloat(paymentIdLimit.max),
+              displayCurrencyCode
+            })
           } else if (lt(amount, paymentIdLimit.min)) {
-            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentIdLimit.min), displayCurrencyCode })
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'underLimit',
+              errorAmount: parseFloat(paymentIdLimit.min),
+              displayCurrencyCode
+            })
           }
         }
 
@@ -522,7 +595,14 @@ export const banxaProvider: FiatProviderFactory = {
           }
         }
 
-        const response = await banxaFetch({ method: 'GET', url, hmacUser, path: 'api/prices', apiKey, queryParams })
+        const response = await banxaFetch({
+          method: 'GET',
+          url,
+          hmacUser,
+          path: 'api/prices',
+          apiKey,
+          queryParams
+        })
         const banxaPrices = asBanxaPricesResponse(response)
         const priceQuote = banxaPrices.data.prices[0]
         console.log('Got Banxa Quote:')
@@ -551,7 +631,9 @@ export const banxaProvider: FiatProviderFactory = {
             if (!success) {
               await showUi.showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
+            const receiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -582,7 +664,14 @@ export const banxaProvider: FiatProviderFactory = {
             } else {
               bodyParams.target_amount = queryParams.target_amount
             }
-            const response = await banxaFetch({ method: 'POST', url, hmacUser, path: 'api/orders', apiKey, bodyParams })
+            const response = await banxaFetch({
+              method: 'POST',
+              url,
+              hmacUser,
+              path: 'api/orders',
+              apiKey,
+              bodyParams
+            })
             const banxaQuote = asBanxaQuoteResponse(response)
 
             if ('errors' in banxaQuote) {
@@ -599,7 +688,13 @@ export const banxaProvider: FiatProviderFactory = {
                 deeplinkHandler: async link => {
                   if (link.direction !== 'buy') return
 
-                  const orderResponse = await banxaFetch({ method: 'GET', url, hmacUser, path: `api/orders/${banxaQuote.data.order.id}`, apiKey })
+                  const orderResponse = await banxaFetch({
+                    method: 'GET',
+                    url,
+                    hmacUser,
+                    path: `api/orders/${banxaQuote.data.order.id}`,
+                    apiKey
+                  })
                   const order = asBanxaOrderResponse(orderResponse)
                   // Banxa will incorrectly add their query string parameters
                   // to the url with a simple concatenation of '?orderId=...',
@@ -673,7 +768,13 @@ export const banxaProvider: FiatProviderFactory = {
                         try {
                           if (insideInterval) return
                           insideInterval = true
-                          const orderResponse = await banxaFetch({ method: 'GET', url, hmacUser, path: `api/orders/${id}`, apiKey })
+                          const orderResponse = await banxaFetch({
+                            method: 'GET',
+                            url,
+                            hmacUser,
+                            path: `api/orders/${id}`,
+                            apiKey
+                          })
                           const order = asBanxaOrderResponse(orderResponse)
                           const { coin_amount: coinAmount, status, wallet_address: publicAddress } = order.data.order
                           const nativeAmount = await coreWallet.denominationToNative(coinAmount.toString(), displayCurrencyCode)
@@ -729,9 +830,14 @@ export const banxaProvider: FiatProviderFactory = {
                               source_address: receiveAddress.publicAddress,
                               destination_address: publicAddress
                             }
-                            await banxaFetch({ method: 'POST', url, hmacUser, path: `api/orders/${id}/confirm`, apiKey, bodyParams }).catch(e =>
-                              console.error(String(e))
-                            )
+                            await banxaFetch({
+                              method: 'POST',
+                              url,
+                              hmacUser,
+                              path: `api/orders/${id}/confirm`,
+                              apiKey,
+                              bodyParams
+                            }).catch(e => console.error(String(e)))
                           }
                           insideInterval = false
                         } catch (e: unknown) {

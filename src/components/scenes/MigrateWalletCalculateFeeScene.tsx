@@ -134,7 +134,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
   const handleSlidingComplete = useHandler(() => {
     const filteredMigrateWalletList = migrateWalletList.filter(asset => typeof feeState.get(asset.key) === 'string')
-    navigation.push('migrateWalletCompletion', { migrateWalletList: filteredMigrateWalletList })
+    navigation.push('migrateWalletCompletion', {
+      migrateWalletList: filteredMigrateWalletList
+    })
   })
 
   // Create getMaxSpendable/makeSpend promises for each selected asset. We'll group them by wallet first and then execute all of them while keeping
@@ -188,7 +190,10 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
               if (maxAmount === '0') {
                 throw new InsufficientFundsError({ tokenId: asset.tokenId })
               }
-              const maxSpendInfo = { ...spendInfo, spendTargets: [{ publicAddress, nativeAmount: maxAmount }] }
+              const maxSpendInfo = {
+                ...spendInfo,
+                spendTargets: [{ publicAddress, nativeAmount: maxAmount }]
+              }
               const edgeTransaction = await wallet.makeSpend(maxSpendInfo)
               const txFee = edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
               bundlesFeeTotals.set(asset.key, txFee)
@@ -196,7 +201,10 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
               // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
               if (i === bundle.length - 1 && lt(wallet.balanceMap.get(null) ?? '0', feeTotal)) {
-                throw new InsufficientFundsError({ tokenId: null, networkFee: feeTotal })
+                throw new InsufficientFundsError({
+                  tokenId: null,
+                  networkFee: feeTotal
+                })
               }
             } catch (e: any) {
               for (const key of bundlesFeeTotals.keys()) {
@@ -296,7 +304,10 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           contentContainerStyle={{ marginHorizontal: theme.rem(0.5) }}
         />
         <SafeSlider
-          parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}
+          parentStyle={{
+            marginTop: theme.rem(0.5),
+            marginBottom: theme.rem(1)
+          }}
           disabled={sliderDisabled}
           disabledText={lstrings.send_confirmation_slide_to_confirm}
           onSlidingComplete={handleSlidingComplete}

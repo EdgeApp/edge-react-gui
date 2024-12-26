@@ -119,7 +119,11 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     onLogEvent('Fio_Handle_Bundled_Tx', {
       conversionValues: {
         conversionType: 'crypto',
-        cryptoAmount: new CryptoAmount({ nativeAmount: String(fee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
+        cryptoAmount: new CryptoAmount({
+          nativeAmount: String(fee),
+          currencyConfig: fioWallet.currencyConfig,
+          tokenId: null
+        })
       }
     })
   }

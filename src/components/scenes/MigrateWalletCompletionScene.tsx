@@ -85,7 +85,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   const handleItemStatus = (item: MigrateWalletItem, status: 'complete' | 'error') => {
     setItemStatus(currentState => ({ ...currentState, [item.key]: status }))
     const index = sortedMigrateWalletList.findIndex(asset => asset.key === item.key)
-    flatListRef.current?.scrollToIndex({ animated: true, index, viewPosition: 0.5 })
+    flatListRef.current?.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 0.5
+    })
   }
 
   // Create the wallets and enable the tokens
@@ -101,7 +105,10 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         const oldWalletId = createWalletIds[0]
 
         if (securityCheckedWallets[oldWalletId] == null) {
-          securityCheckedWallets[oldWalletId] = { checked: false, modalShown: 0 }
+          securityCheckedWallets[oldWalletId] = {
+            checked: false,
+            modalShown: 0
+          }
         }
 
         const oldWallet = currencyWallets[oldWalletId]
@@ -131,7 +138,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           // Change old wallet name
           if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
 
-          const addressInfo = await newWallet.getReceiveAddress({ tokenId: null })
+          const addressInfo = await newWallet.getReceiveAddress({
+            tokenId: null
+          })
           const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
 
           const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
@@ -152,7 +161,10 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             }
             try {
               const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
-              tokenSpendInfo = { ...tokenSpendInfo, spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }] }
+              tokenSpendInfo = {
+                ...tokenSpendInfo,
+                spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }]
+              }
               const tx = await makeSpendSignAndBroadcast(oldWallet, tokenSpendInfo)
               successfullyTransferredTokenIds.push(item.tokenId)
               const txFee = tx.parentNetworkFee ?? tx.networkFee
@@ -181,14 +193,23 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             }
             try {
               const maxAmount = await oldWallet.getMaxSpendable(spendInfo)
-              spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: maxAmount }] }
+              spendInfo = {
+                ...spendInfo,
+                spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: maxAmount }]
+              }
               const amountToSend = sub(maxAmount, feeTotal)
-              spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }] }
+              spendInfo = {
+                ...spendInfo,
+                spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }]
+              }
               await makeSpendSignAndBroadcast(oldWallet, spendInfo)
               handleItemStatus(mainnetItem, 'complete')
 
               const { modalShown } = securityCheckedWallets[oldWalletId]
-              securityCheckedWallets[oldWalletId] = { checked: true, modalShown }
+              securityCheckedWallets[oldWalletId] = {
+                checked: true,
+                modalShown
+              }
             } catch (e) {
               showError(e)
               handleItemStatus(mainnetItem, 'error')
@@ -203,7 +224,10 @@ const MigrateWalletCompletionComponent = (props: Props) => {
       for (const migration of migrationPromises) {
         await migration()
       }
-      await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
+      await writeSyncedSettings(account, {
+        ...settings,
+        securityCheckedWallets
+      })
 
       setDone(true)
       return () => {}
@@ -239,7 +263,12 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
           marginRem={[0, 0, 1]}
-          onPress={() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })}
+          onPress={() =>
+            navigation.navigate('edgeTabs', {
+              screen: 'walletsTab',
+              params: { screen: 'walletList' }
+            })
+          }
         />
       </View>
     )
@@ -255,7 +284,12 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           <FlatList
             automaticallyAdjustContentInsets={false}
             data={sortedMigrateWalletList}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             extraData={itemStatus}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

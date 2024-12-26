@@ -152,7 +152,10 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
     const state = getState()
     const { account } = state.core
     const { defaultIsoFiat, defaultFiat } = state.ui.settings
-    const { assetOptions } = await account.getActivationAssets({ activateWalletId: wallet.id, activateTokenIds: tokenIds })
+    const { assetOptions } = await account.getActivationAssets({
+      activateWalletId: wallet.id,
+      activateTokenIds: tokenIds
+    })
     const { pluginId } = wallet.currencyInfo
 
     // See if there is only one wallet option for activation
@@ -332,10 +335,16 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       if (keyInfo?.exposed) {
         exposedWalletIds.push(walletId)
       } else {
-        securityCheckedWallets[walletId] = { ...securityCheckedWallets[walletId], checked: true }
+        securityCheckedWallets[walletId] = {
+          ...securityCheckedWallets[walletId],
+          checked: true
+        }
       }
     }
-    dispatch({ type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS', data: securityCheckedWallets })
+    dispatch({
+      type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS',
+      data: securityCheckedWallets
+    })
 
     const MigrateWalletsModal = async (walletNames: string[]): Promise<'yes' | 'no' | undefined> => {
       const message = sprintf(lstrings.migrate_wallets_modal_message, walletNames.join('\n'))
@@ -361,11 +370,16 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       const response = await MigrateWalletsModal(walletNames)
       exposedWalletIds.forEach(walletId => {
         const { checked, modalShown } = securityCheckedWallets[walletId]
-        securityCheckedWallets[walletId] = { checked, modalShown: modalShown + 1 }
+        securityCheckedWallets[walletId] = {
+          checked,
+          modalShown: modalShown + 1
+        }
       })
 
       if (response === 'yes') {
-        navigation.push('migrateWalletSelectCrypto', { preSelectedWalletIds: exposedWalletIds })
+        navigation.push('migrateWalletSelectCrypto', {
+          preSelectedWalletIds: exposedWalletIds
+        })
       }
     }
 

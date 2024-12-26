@@ -83,7 +83,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
               .map(tokenItem => tokenItem.tokenId),
             fiatCurrencyCode: defaultIsoFiat,
             importText,
-            keyOptions: { ...item.keyOptions, ...keyOptions.get(item.pluginId) },
+            keyOptions: {
+              ...item.keyOptions,
+              ...keyOptions.get(item.pluginId)
+            },
             name: walletNames[item.key],
             walletType: item.walletType
           })
@@ -95,21 +98,34 @@ const CreateWalletCompletionComponent = (props: Props) => {
         const result = walletResults[i]
         if (!result.ok) {
           showError(result.error)
-          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
+          setItemStatus(currentState => ({
+            ...currentState,
+            [filteredCreateItemsForDisplay[i].key]: 'error'
+          }))
         } else {
           // Wait for wallet creation
           await account.waitForCurrencyWallet(result.result.id)
-          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
+          setItemStatus(currentState => ({
+            ...currentState,
+            [filteredCreateItemsForDisplay[i].key]: 'complete'
+          }))
         }
       }
 
       // Create tokens on existing wallets:
       if (tokenKey != null) {
         await dispatch(enableTokensAcrossWallets(newTokenItems)).then(
-          () => setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'complete' })),
+          () =>
+            setItemStatus(currentState => ({
+              ...currentState,
+              [tokenKey]: 'complete'
+            })),
           error => {
             showError(error)
-            setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'error' }))
+            setItemStatus(currentState => ({
+              ...currentState,
+              [tokenKey]: 'error'
+            }))
           }
         )
       }
@@ -161,7 +177,12 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return null
   })
 
-  const handleNext = useHandler(() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } }))
+  const handleNext = useHandler(() =>
+    navigation.navigate('edgeTabs', {
+      screen: 'walletsTab',
+      params: { screen: 'walletList' }
+    })
+  )
 
   const handleMigrate = useHandler(() => {
     // Transform filtered items into the structure expected by the migration component
@@ -214,8 +235,20 @@ const CreateWalletCompletionComponent = (props: Props) => {
           />
 
           <SceneButtons
-            primary={{ label: lstrings.string_next_capitalized, disabled: !done, onPress: handleNext }}
-            secondary={importText == null ? undefined : { label: lstrings.migrate_label, disabled: !done, onPress: handleMigrate }}
+            primary={{
+              label: lstrings.string_next_capitalized,
+              disabled: !done,
+              onPress: handleNext
+            }}
+            secondary={
+              importText == null
+                ? undefined
+                : {
+                    label: lstrings.migrate_label,
+                    disabled: !done,
+                    onPress: handleMigrate
+                  }
+            }
           />
         </View>
       )}

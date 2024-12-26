@@ -110,5 +110,7 @@ export const displayFiatAmount = (fiatAmount?: number | string, precision: numbe
   const fiatAmountBns = fiatAmount != null ? toBigNumberString(fiatAmount) : undefined
   if (fiatAmountBns == null || fiatAmountBns === '0') return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const absoluteAmount = abs(fiatAmountBns)
-  return formatNumber(toFixed(absoluteAmount, precision, precision), { noGrouping })
+  return formatNumber(toFixed(absoluteAmount, precision, precision), {
+    noGrouping
+  })
 }

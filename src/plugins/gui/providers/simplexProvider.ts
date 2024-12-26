@@ -25,7 +25,9 @@ const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
 // https://integrations.simplex.com/docs/supported_currencies
-const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
+const SIMPLEX_ID_MAP: {
+  [pluginId: string]: { [currencyCode: string]: string }
+} = {
   algorand: { ALGO: 'ALGO' },
   avalanche: { AVAX: 'AVAX-C' },
   binance: { AVA: 'AVA', BNB: 'BNB' },
@@ -128,9 +130,17 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMap = {
+  providerId,
+  crypto: {},
+  fiat: {}
+}
 const allowedCountryCodes: FiatProviderExactRegions = {}
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = {
+  applepay: true,
+  credit: true,
+  googlepay: true
+}
 
 const asSimplexApiKeys = asObject({
   partner: asString,
@@ -204,12 +214,18 @@ export const simplexProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ direction, regionCode, paymentTypes }): Promise<FiatProviderAssetMap> => {
         if (direction !== 'buy' || regionCode.countryCode === 'GB') {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         if (isDailyCheckDue(lastChecked)) {
           const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
@@ -242,12 +258,23 @@ export const simplexProvider: FiatProviderFactory = {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
         validateExactRegion(providerId, regionCode, allowedCountryCodes)
         if (direction !== 'buy') {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!allowedCountryCodes[regionCode.countryCode])
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         let foundPaymentType = false
         for (const type of paymentTypes) {
@@ -257,7 +284,11 @@ export const simplexProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (!foundPaymentType)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const ts = Math.floor(Date.now() / 1000)
         const simplexCryptoCode = SIMPLEX_ID_MAP[params.pluginId][params.displayCurrencyCode]
@@ -277,7 +308,9 @@ export const simplexProvider: FiatProviderFactory = {
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: { euid: simplexUserId, ts, soam, socn, tacn } })
+            body: JSON.stringify({
+              data: { euid: simplexUserId, ts, soam, socn, tacn }
+            })
           },
           3000
         ).catch(e => {
@@ -304,10 +337,20 @@ export const simplexProvider: FiatProviderFactory = {
             const [fiatCode, minLimit, maxLimit] = result3.slice(1, 4)
 
             if (gt(params.exchangeAmount, maxLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(maxLimit), displayCurrencyCode: fiatCode })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'overLimit',
+                errorAmount: parseFloat(maxLimit),
+                displayCurrencyCode: fiatCode
+              })
             }
             if (lt(params.exchangeAmount, minLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit), displayCurrencyCode: fiatCode })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'underLimit',
+                errorAmount: parseFloat(minLimit),
+                displayCurrencyCode: fiatCode
+              })
             }
           } else if (quote.type === 'quote_error' && quote.error.includes('fees for this transaction exceed')) {
             throw new FiatProviderError({ providerId, errorType: 'underLimit' })
@@ -333,7 +376,9 @@ export const simplexProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
+            const receiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
 
             const data = {
               ts: Math.floor(Date.now() / 1000),

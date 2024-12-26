@@ -312,7 +312,10 @@ export const mtpelerinProvider: FiatProviderFactory = {
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         const allowedCurrencyCodes = allAllowedCurrencyCodes[direction]
 
         if (Object.keys(allowedCurrencyCodes.crypto).length > 0) {
@@ -352,7 +355,10 @@ export const mtpelerinProvider: FiatProviderFactory = {
               if (allowedCurrencyCodes.crypto.goerli == null) {
                 allowedCurrencyCodes.crypto.goerli = []
               }
-              allowedCurrencyCodes.crypto.goerli.push({ tokenId: null, otherInfo: { address, symbol } })
+              allowedCurrencyCodes.crypto.goerli.push({
+                tokenId: null,
+                otherInfo: { address, symbol }
+              })
             }
 
             continue
@@ -367,17 +373,33 @@ export const mtpelerinProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { amountType, direction, regionCode, exchangeAmount, fiatCurrencyCode, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
-        if (BUY_ONLY_PLUGIN_IDS[pluginId] && direction === 'sell') throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+        if (BUY_ONLY_PLUGIN_IDS[pluginId] && direction === 'sell')
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'assetUnsupported'
+          })
 
         const allowedCurrencyCodes = allAllowedCurrencyCodes[direction]
 
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!allowedCountryCodes[regionCode.countryCode])
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const tokens = allowedCurrencyCodes.crypto[pluginId]
         const token = tokens.find(t => t.tokenId === tokenId)
-        if (token == null) throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+        if (token == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'assetUnsupported'
+          })
         const { symbol } = asTokenOtherInfo(token.otherInfo)
         const network = PLUGIN_TO_CHAIN_ID_MAP[pluginId]
 
@@ -468,7 +490,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 60000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { coreWallet, showUi } = approveParams
-            const { publicAddress } = await coreWallet.getReceiveAddress({ tokenId })
+            const { publicAddress } = await coreWallet.getReceiveAddress({
+              tokenId
+            })
 
             const getAddress = async (): Promise<string> => {
               return publicAddress
@@ -620,7 +644,10 @@ export const mtpelerinProvider: FiatProviderFactory = {
                           tokenId,
                           txid: tx.txid,
                           savedAction,
-                          assetAction: { ...assetAction, assetActionType: 'sell' }
+                          assetAction: {
+                            ...assetAction,
+                            assetActionType: 'sell'
+                          }
                         }
                         await showUi.saveTxAction(params)
                       }
@@ -652,7 +679,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
               const signature = await coreWallet.signMessage(hexMessage)
               hash = Buffer.from(signature.replace('0x', ''), 'hex').toString('base64')
             } else {
-              hash = await coreWallet.signMessage(message, { otherParams: { publicAddress } })
+              hash = await coreWallet.signMessage(message, {
+                otherParams: { publicAddress }
+              })
             }
 
             let widgetParams: WidgetParams

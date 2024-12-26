@@ -207,7 +207,14 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
 
         const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
-        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...restValue }
+        const params: any = {
+          edgeVersion: getVersion(),
+          buildNumber: getBuildNumber(),
+          isFirstOpen,
+          deviceId,
+          firstOpenEpoch,
+          ...restValue
+        }
 
         // Populate referral params:
         const state = getState()

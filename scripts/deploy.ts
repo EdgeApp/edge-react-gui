@@ -518,7 +518,9 @@ function buildCommonPost(buildObj: BuildObj) {
         }
 
         const latestTestFileString = JSON.stringify(latestTestFileObj, null, 2)
-        fs.writeFileSync(testFilePath, latestTestFileString, { encoding: 'utf8' })
+        fs.writeFileSync(testFilePath, latestTestFileString, {
+          encoding: 'utf8'
+        })
 
         call(`git add ${LATEST_TEST_FILE}`)
         call(`git commit -m "latestTestFile. ${buildNum} ${version} ${guiHash} ${platformBranch}"`)

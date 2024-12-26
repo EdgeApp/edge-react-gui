@@ -64,7 +64,10 @@ const NotificationViewComponent = (props: Props) => {
   })
 
   const handle2FaEnabledDismiss = useHandler(async () => {
-    await writeNotifDismissInfo(account, { ...accountNotifDismissInfo, ip2FaNotifShown: true })
+    await writeNotifDismissInfo(account, {
+      ...accountNotifDismissInfo,
+      ip2FaNotifShown: true
+    })
   })
   const handle2FaEnabledPress = useHandler(async () => {
     await openBrowserUri(config.ip2faSite)
@@ -184,31 +187,33 @@ const NotificationViewComponent = (props: Props) => {
   )
 }
 
-const NotificationCardsContainer = styled(Animated.View)<{ hasTabs: boolean; insetBottom: number; footerHeight: number; footerOpenRatio: SharedValue<number> }>(
-  theme =>
-    ({ hasTabs, insetBottom, footerHeight, footerOpenRatio }) => {
-      return [
-        {
-          position: 'absolute',
-          paddingHorizontal: theme.rem(0.5),
-          alignSelf: 'center',
-          justifyContent: 'flex-end',
-          bottom: theme.rem(0.5)
-        },
-        useAnimatedStyle(() => {
-          const maybeMenuBarHeight = hasTabs ? interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) : 0
-          const offsetFooterHeight = footerOpenRatio.value * footerHeight
-          return {
-            transform: [
-              {
-                translateY: -(maybeMenuBarHeight + offsetFooterHeight + insetBottom)
-              }
-            ]
+const NotificationCardsContainer = styled(Animated.View)<{
+  hasTabs: boolean
+  insetBottom: number
+  footerHeight: number
+  footerOpenRatio: SharedValue<number>
+}>(theme => ({ hasTabs, insetBottom, footerHeight, footerOpenRatio }) => {
+  return [
+    {
+      position: 'absolute',
+      paddingHorizontal: theme.rem(0.5),
+      alignSelf: 'center',
+      justifyContent: 'flex-end',
+      bottom: theme.rem(0.5)
+    },
+    useAnimatedStyle(() => {
+      const maybeMenuBarHeight = hasTabs ? interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) : 0
+      const offsetFooterHeight = footerOpenRatio.value * footerHeight
+      return {
+        transform: [
+          {
+            translateY: -(maybeMenuBarHeight + offsetFooterHeight + insetBottom)
           }
-        })
-      ]
-    }
-)
+        ]
+      }
+    })
+  ]
+})
 
 /**
  * Manages which notification cards are shown in a persistent app-wide view.

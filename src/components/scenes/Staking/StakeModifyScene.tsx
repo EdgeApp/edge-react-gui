@@ -200,10 +200,18 @@ const StakeModifySceneComponent = (props: Props) => {
       if (modification === 'unstake') {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
         if (allocationToMod == null) throw new Error(`Existing stake not found for ${modCurrencyCode}`)
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod.nativeAmount })
+        setChangeQuoteRequest({
+          ...changeQuoteRequest,
+          currencyCode: modCurrencyCode,
+          nativeAmount: allocationToMod.nativeAmount
+        })
       } else if (modification === 'stake' && existingStaked.length === 1) {
         const tokenId = getWalletTokenId(wallet, modCurrencyCode)
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balanceMap.get(tokenId) ?? '0' })
+        setChangeQuoteRequest({
+          ...changeQuoteRequest,
+          currencyCode: modCurrencyCode,
+          nativeAmount: wallet.balanceMap.get(tokenId) ?? '0'
+        })
       }
     }
   }
@@ -232,7 +240,10 @@ const StakeModifySceneComponent = (props: Props) => {
             dispatch(updateStakingPosition(stakePlugin, stakePolicy.stakePolicyId, wallet, account))
               .catch(err => showError(err))
               .finally(() => {
-                dispatch({ type: 'STAKING/FINISH_LOADING', walletId: wallet.id })
+                dispatch({
+                  type: 'STAKING/FINISH_LOADING',
+                  walletId: wallet.id
+                })
               })
           }, 10000)
         })
@@ -272,7 +283,12 @@ const StakeModifySceneComponent = (props: Props) => {
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
         // set the modified amount
-        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode, nativeAmount })
+        if (nativeAmount !== '0')
+          setChangeQuoteRequest({
+            ...changeQuoteRequest,
+            currencyCode,
+            nativeAmount
+          })
       })
       .catch(error => showError(error))
   }
@@ -334,7 +350,12 @@ const StakeModifySceneComponent = (props: Props) => {
     const { currencyCode, pluginId, allocationType } = quoteAllocation
     quoteAllocation =
       allocationType === 'unstake' && mustMaxUnstake
-        ? { allocationType, pluginId, currencyCode, nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0' }
+        ? {
+            allocationType,
+            pluginId,
+            currencyCode,
+            nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0'
+          }
         : quoteAllocation
 
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)

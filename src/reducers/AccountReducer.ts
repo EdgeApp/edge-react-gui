@@ -42,12 +42,18 @@ const accountInner = combineReducers<AccountState, Action>({
         if (source.type === 'promotion') {
           const promotions = state.promotions.map(promo => {
             if (promo.installerId !== source.installerId) return promo
-            const hiddenMessages = { ...promo.hiddenMessages, [messageId]: true }
+            const hiddenMessages = {
+              ...promo.hiddenMessages,
+              [messageId]: true
+            }
             return { ...promo, hiddenMessages }
           })
           return { ...state, promotions }
         } else {
-          const hiddenAccountMessages = { ...state.hiddenAccountMessages, [messageId]: true }
+          const hiddenAccountMessages = {
+            ...state.hiddenAccountMessages,
+            [messageId]: true
+          }
           return { ...state, hiddenAccountMessages }
         }
       }

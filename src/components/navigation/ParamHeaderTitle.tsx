@@ -16,7 +16,10 @@ export function ParamHeaderTitle<RouteName extends keyof AppParamList>(props: Pr
 }
 
 interface CryptoIconProps<RouteName extends keyof AppParamList, Params = RouteProp<RouteName>['params']> {
-  fromCryptoIconParams: (params: Params) => { walletId: string; tokenId: EdgeTokenId }
+  fromCryptoIconParams: (params: Params) => {
+    walletId: string
+    tokenId: EdgeTokenId
+  }
 }
 
 export function ParamHeaderCryptoIconTitle<RouteName extends keyof AppParamList>(props: CryptoIconProps<RouteName>) {

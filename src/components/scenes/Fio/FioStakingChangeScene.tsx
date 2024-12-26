@@ -138,7 +138,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
             }
           })
           .then(nativeAmount => {
-            onAmountsChanged({ nativeAmount, exchangeAmount: add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0') })
+            onAmountsChanged({
+              nativeAmount,
+              exchangeAmount: add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0')
+            })
           })
         break
       }
@@ -146,7 +149,12 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         const nativeAmt = stakingBalances.staked.native
         currencyWallet
           .nativeToDenomination(nativeAmt, 'FIO')
-          .then(exchangeAmt => onAmountsChanged({ nativeAmount: nativeAmt, exchangeAmount: exchangeAmt }))
+          .then(exchangeAmt =>
+            onAmountsChanged({
+              nativeAmount: nativeAmt,
+              exchangeAmount: exchangeAmt
+            })
+          )
           .catch(e => console.error(e))
         break
       }

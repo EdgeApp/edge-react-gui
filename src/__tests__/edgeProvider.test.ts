@@ -33,18 +33,36 @@ describe('upgradeExtendedCurrencyCodes', () => {
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'USDC', 'REP', 'USDT'])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
-        { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
-        { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
-        { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }
+        {
+          pluginId: 'ethereum',
+          tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+        }
       ])
     })
     test('double code tokens', () => {
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'MATIC-USDC', 'ETH-REP', 'ETH-USDT'])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
-        { pluginId: 'polygon', tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174' },
-        { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
-        { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }
+        {
+          pluginId: 'polygon',
+          tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+        }
       ])
     })
     test('object list', () => {
@@ -57,23 +75,49 @@ describe('upgradeExtendedCurrencyCodes', () => {
       ])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
-        { pluginId: 'polygon', tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174' },
-        { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
-        { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
-        { pluginId: 'ethereum', tokenId: '7d1afa7b718fb893db30a3abc0cfc608aacfebb0' }
+        {
+          pluginId: 'polygon',
+          tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: '7d1afa7b718fb893db30a3abc0cfc608aacfebb0'
+        }
       ])
     })
     test('single code tokens with fixes', () => {
       const result = upgradeExtendedCurrencyCodes(
         currencyConfig,
-        { USDTERC20: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' } },
+        {
+          USDTERC20: {
+            pluginId: 'ethereum',
+            tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+          }
+        },
         ['BTC', 'USDC', 'REP', 'USDTERC20']
       )
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
-        { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
-        { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
-        { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }
+        {
+          pluginId: 'ethereum',
+          tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862'
+        },
+        {
+          pluginId: 'ethereum',
+          tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+        }
       ])
     })
   })

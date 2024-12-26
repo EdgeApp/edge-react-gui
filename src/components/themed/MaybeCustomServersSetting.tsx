@@ -41,7 +41,10 @@ function CustomServersSettingComponent(props: Props) {
 
   async function handleDeleteNode(server: string): Promise<void> {
     customServerSet.delete(server)
-    await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
+    await onUpdate({
+      enableCustomServers,
+      customServers: Array.from(customServerSet)
+    })
     logActivity(`Delete Custom Node: ${server}`)
   }
 
@@ -61,7 +64,10 @@ function CustomServersSettingComponent(props: Props) {
             server = text
           }
           customServerSet.add(text)
-          await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
+          await onUpdate({
+            enableCustomServers,
+            customServers: Array.from(customServerSet)
+          })
           logActivity(`Edit Custom Node: ${before} -> ${text}`)
           return true
         }}

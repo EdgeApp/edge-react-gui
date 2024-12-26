@@ -46,7 +46,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const provider = providers[0]
 
   // Get supported crypto assets:
-  const supportedAssetMap = await provider.getSupportedAssets({ direction: 'sell', paymentTypes: [], regionCode: { countryCode: 'US' } })
+  const supportedAssetMap = await provider.getSupportedAssets({
+    direction: 'sell',
+    paymentTypes: [],
+    regionCode: { countryCode: 'US' }
+  })
 
   // Only supporting mainnet currencies for now
   const allowedAssets: EdgeAsset[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId, tokenId: null }))
@@ -79,7 +83,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   //
 
   let redundantQuoteParams: Pick<FiatPluginStartParams, 'direction' | 'paymentTypes' | 'regionCode'>
-  let userRewardsCards: UserRewardsCards = { activeCards: [], archivedCards: [] }
+  let userRewardsCards: UserRewardsCards = {
+    activeCards: [],
+    archivedCards: []
+  }
   //
   // State Machine:
   //
@@ -195,7 +202,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         try {
           providerQuote = await provider.getQuote(quoteParams)
         } catch (error) {
-          stateManager.update({ statusText: { content: String(error), textType: 'error' } })
+          stateManager.update({
+            statusText: { content: String(error), textType: 'error' }
+          })
           console.error(error)
           return ''
         }
