@@ -145,8 +145,7 @@ const asThorNodePool = asObject({
 const asThorNodePools = asArray(asThorNodePool)
 
 type Saver = ReturnType<typeof asSaver>
-type Savers = ReturnType<typeof asSavers>
-type Pools = ReturnType<typeof asPools>
+type Pool = ReturnType<typeof asPool>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
 interface StakePositionWithPoolsParams {
@@ -154,8 +153,8 @@ interface StakePositionWithPoolsParams {
   currencyCode: string
   primaryAddress: string
   pluginId: string
-  pools: Pools
-  savers: Savers
+  pools: Pool[]
+  savers: Saver[]
   saver?: Saver // Don't bother looking to match from Savers if this is passed in
   wallet: EdgeCurrencyWallet
 }
@@ -325,8 +324,8 @@ const getStakePositionInner = async (
 
   const asset = edgeToTcAsset(account, wallet, currencyCode)
 
-  let pools: Pools = []
-  let savers: Savers = []
+  let pools: Pool[] = []
+  let savers: Saver[] = []
   const [saversResponse, poolsResponse] = await Promise.all([
     fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, {
       headers: { 'x-client-id': ninerealmsClientId }
