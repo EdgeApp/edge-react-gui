@@ -75,6 +75,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const { currencyWallets } = account
   const now = Date.now()
   const initialAssetPairs: AssetPair[] = []
+  let numCacheEntries = 0
 
   // Load exchange rate cache off disk
   try {
@@ -86,6 +87,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     for (const key of Object.keys(rates)) {
       if (rates[key].expiration > now) {
         exchangeRateCache[key] = rates[key]
+        numCacheEntries++
       }
     }
     for (const pair of assetPairs) {
@@ -104,7 +106,8 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   if (accountIsoFiat !== 'iso:USD') {
     initialAssetPairs.push({ currency_pair: `iso:USD_${accountIsoFiat}`, date: undefined, expiration })
   }
-  for (const id of Object.keys(currencyWallets)) {
+  const walletIds = Object.keys(currencyWallets)
+  for (const id of walletIds) {
     const wallet = currencyWallets[id]
     const currencyCode = wallet.currencyInfo.currencyCode
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
@@ -127,7 +130,15 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const filteredAssetPairs = filterAssetPairs(initialAssetPairs)
   const assetPairs = [...filteredAssetPairs]
 
+  /**
+   * On initial load, buildExchangeRates may get called before any wallets are
+   * loaded. In this case, we can skip the rates fetch and use the cache to
+   * save on the network delay.
+   */
+  const skipRatesFetch = walletIds.length === 0 && numCacheEntries > 0
+
   while (filteredAssetPairs.length > 0) {
+    if (skipRatesFetch) break
     const query = filteredAssetPairs.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
     let tries = 5
     do {
