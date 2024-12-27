@@ -74,7 +74,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const { account } = state.core
   const { currencyWallets } = account
   const now = Date.now()
-  const exchangeRates: AssetPair[] = []
+  const initialAssetPairs: AssetPair[] = []
 
   // Load exchange rate cache off disk
   try {
@@ -90,7 +90,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     }
     for (const pair of assetPairs) {
       if (pair.expiration > now) {
-        exchangeRates.push(pair)
+        initialAssetPairs.push(pair)
       }
     }
   } catch (e) {
@@ -102,33 +102,33 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const expiration = now + ONE_MONTH
   const yesterdayDate = getYesterdayDateRoundDownHour()
   if (accountIsoFiat !== 'iso:USD') {
-    exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}`, date: undefined, expiration })
+    initialAssetPairs.push({ currency_pair: `iso:USD_${accountIsoFiat}`, date: undefined, expiration })
   }
   for (const id of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[id]
     const currencyCode = wallet.currencyInfo.currencyCode
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
-    exchangeRates.push({ currency_pair: `${currencyCode}_${accountIsoFiat}`, date: undefined, expiration })
-    exchangeRates.push({ currency_pair: `${currencyCode}_iso:USD`, date: `${yesterdayDate}`, expiration })
+    initialAssetPairs.push({ currency_pair: `${currencyCode}_${accountIsoFiat}`, date: undefined, expiration })
+    initialAssetPairs.push({ currency_pair: `${currencyCode}_iso:USD`, date: `${yesterdayDate}`, expiration })
     // now add tokens, if they exist
     if (accountIsoFiat !== 'iso:USD') {
-      exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}`, date: undefined, expiration })
+      initialAssetPairs.push({ currency_pair: `iso:USD_${accountIsoFiat}`, date: undefined, expiration })
     }
     for (const tokenId of wallet.enabledTokenIds) {
       if (wallet.currencyConfig.allTokens[tokenId] == null) continue
       const { currencyCode: tokenCode } = wallet.currencyConfig.allTokens[tokenId]
       if (tokenCode !== currencyCode) {
-        exchangeRates.push({ currency_pair: `${tokenCode}_${accountIsoFiat}`, date: undefined, expiration })
-        exchangeRates.push({ currency_pair: `${tokenCode}_iso:USD`, date: `${yesterdayDate}`, expiration })
+        initialAssetPairs.push({ currency_pair: `${tokenCode}_${accountIsoFiat}`, date: undefined, expiration })
+        initialAssetPairs.push({ currency_pair: `${tokenCode}_iso:USD`, date: `${yesterdayDate}`, expiration })
       }
     }
   }
 
-  const filteredExchangeRates = filterAssetPairs(exchangeRates)
-  const assetPairs = [...filteredExchangeRates]
+  const filteredAssetPairs = filterAssetPairs(initialAssetPairs)
+  const assetPairs = [...filteredAssetPairs]
 
-  while (filteredExchangeRates.length > 0) {
-    const query = filteredExchangeRates.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
+  while (filteredAssetPairs.length > 0) {
+    const query = filteredAssetPairs.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
     let tries = 5
     do {
       const options = {
