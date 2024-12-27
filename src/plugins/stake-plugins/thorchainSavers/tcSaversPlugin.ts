@@ -1,6 +1,15 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet,
+  EdgeMemo,
+  EdgeSpendInfo,
+  EdgeTransaction,
+  InsufficientFundsError
+} from 'edge-core-js'
 
 import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
@@ -318,11 +327,11 @@ const getStakePositionInner = async (
   primaryAddress: string
 ): Promise<StakePositionWithPoolsParams> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const { account, stakePolicyId, wallet } = request
+  const { stakePolicyId, wallet } = request
   const policy = getPolicyFromId(stakePolicyId)
   const { pluginId, currencyCode } = policy.stakeAssets[0]
 
-  const asset = edgeToTcAsset(account, wallet, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   let pools: Pool[] = []
   let savers: Saver[] = []
@@ -458,7 +467,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   const { primaryAddress, parentBalance, addressBalance } = await getPrimaryAddress(account, wallet, currencyCode)
 
-  const asset = edgeToTcAsset(account, wallet, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
@@ -864,7 +873,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const totalUnstakeThorAmount = toFixed(mul(totalUnstakeExchangeAmount, THOR_LIMIT_UNITS), 0, 0)
 
   const withdrawBps = toFixed(mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS), 0, 0)
-  const asset = edgeToTcAsset(account, wallet, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
@@ -1225,24 +1234,24 @@ const getPrimaryAddress = async (
   }
 }
 
-const edgeToTcAsset = (account: EdgeAccount, wallet: EdgeCurrencyWallet, currencyCode: string): string => {
-  const { pluginId } = wallet.currencyInfo
+const edgeToTcAsset = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): string => {
+  const { pluginId } = currencyConfig.currencyInfo
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
-  let asset = `${mainnetCode}.${currencyCode}`
+  const asset = `${mainnetCode}.${currencyCode}`
 
-  if (wallet.currencyInfo.currencyCode !== currencyCode) {
+  if (currencyConfig.currencyInfo.currencyCode !== currencyCode) {
     const { type } = policyCurrencyInfos[pluginId]
 
     if (type !== 'evm') {
       throw new Error(
-        `Currency type ${type} does not support token savers and currencyCode ${currencyCode} mismatches wallet currency code ${wallet.currencyInfo.currencyCode}`
+        `Currency type ${type} does not support token savers and currencyCode ${currencyCode} mismatches wallet currency code ${currencyConfig.currencyInfo.currencyCode}`
       )
     }
-    const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
+    const tokenId = getTokenId(currencyConfig, currencyCode)
     if (tokenId == null) {
       throw new Error(`getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`)
     }
-    const edgeToken = account.currencyConfig[pluginId]?.allTokens[tokenId]
+    const edgeToken = currencyConfig.allTokens[tokenId]
     if (edgeToken == null) {
       throw new Error(`getStakePositionInner: Cannot find edgeToken for ${pluginId}:${tokenId}`)
     }
@@ -1252,7 +1261,7 @@ const edgeToTcAsset = (account: EdgeAccount, wallet: EdgeCurrencyWallet, currenc
       throw new Error(`getStakePositionInner: No contractAddress for ${pluginId}:${tokenId}`)
     }
 
-    asset = `${asset}-${contractAddress.toLocaleUpperCase()}`
+    return `${asset}-${contractAddress.toLocaleUpperCase()}`
   }
 
   return asset
