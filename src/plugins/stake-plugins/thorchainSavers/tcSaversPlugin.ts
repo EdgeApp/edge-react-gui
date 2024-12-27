@@ -91,7 +91,7 @@ const asThorchainExchangeInfo = asObject({
 const asSaver = asObject({
   asset: asString,
   asset_address: asString,
-  last_add_height: asNumber,
+  last_add_height: asOptional(asNumber),
   units: asString,
   asset_deposit_value: asString
 })
