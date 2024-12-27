@@ -14,8 +14,13 @@ const HOUR_MS = 1000 * 60 * 60
 const ONE_DAY = 1000 * 60 * 60 * 24
 
 const asExchangeRateCache = asObject(asObject({ expiration: asNumber, rate: asString }))
+const asExchangeRateCacheFile = asObject({
+  rates: asExchangeRateCache
+})
 
 type ExchangeRateCache = ReturnType<typeof asExchangeRateCache>
+type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
+
 const exchangeRateCache: ExchangeRateCache = {}
 
 const asRatesResponse = asObject({
@@ -48,11 +53,12 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   try {
     const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
     const json = JSON.parse(raw)
-    const newExchangeRateCache = asExchangeRateCache(json)
+    const exchangeRateCacheFile = asExchangeRateCacheFile(json)
+    const { rates } = exchangeRateCacheFile
     // Prune expired rates
-    for (const key of Object.keys(newExchangeRateCache)) {
-      if (newExchangeRateCache[key].expiration > now) {
-        exchangeRateCache[key] = newExchangeRateCache[key]
+    for (const key of Object.keys(rates)) {
+      if (rates[key].expiration > now) {
+        exchangeRateCache[key] = rates[key]
       }
     }
   } catch (e) {
@@ -140,7 +146,8 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
 
   // Save exchange rate cache to disk
   try {
-    await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache))
+    const exchangeRateCacheFile: ExchangeRateCacheFile = { rates: exchangeRateCache }
+    await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCacheFile))
   } catch (e) {
     datelog('Error saving exchange rate cache:', String(e))
   }
