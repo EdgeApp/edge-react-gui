@@ -1,14 +1,17 @@
 import { div, eq } from 'biggystring'
 import { asArray, asEither, asNull, asNumber, asObject, asString } from 'cleaners'
+import { makeReactNativeDisklet } from 'disklet'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { GuiExchangeRates } from '../types/types'
 import { fetchRates } from '../util/network'
-import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils'
+import { datelog, DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils'
 
+const disklet = makeReactNativeDisklet()
+const EXCHANGE_RATES_FILENAME = 'exchangeRates.json'
 const RATES_SERVER_MAX_QUERY_SIZE = 100
 const HOUR_MS = 1000 * 60 * 60
-const FIVE_MINUTES = 5 * 60 * 1000
+const ONE_DAY = 1000 * 60 * 60 * 24
 
 const asExchangeRateCache = asObject(asObject({ expiration: asNumber, rate: asString }))
 
@@ -39,8 +42,23 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
 async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const { account } = state.core
   const { currencyWallets } = account
-
   const now = Date.now()
+
+  // Load exchange rate cache off disk
+  try {
+    const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
+    const json = JSON.parse(raw)
+    const newExchangeRateCache = asExchangeRateCache(json)
+    // Prune expired rates
+    for (const key of Object.keys(newExchangeRateCache)) {
+      if (newExchangeRateCache[key].expiration > now) {
+        exchangeRateCache[key] = newExchangeRateCache[key]
+      }
+    }
+  } catch (e) {
+    datelog('Error loading exchange rate cache:', String(e))
+  }
+
   const accountIsoFiat = state.ui.settings.defaultIsoFiat
 
   const exchangeRates: Array<{ currency_pair: string; date?: string }> = []
@@ -99,7 +117,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
             const cachedRate = exchangeRateCache[key] ?? { expiration: 0, rate: '0' }
             if (exchangeRate != null) {
               cachedRate.rate = exchangeRate
-              cachedRate.expiration = now + FIVE_MINUTES
+              cachedRate.expiration = now + ONE_DAY
             }
             exchangeRateCache[key] = cachedRate
 
@@ -118,6 +136,13 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
         console.log(`buildExchangeRates error querying rates server ${e.message}`)
       }
     } while (--tries > 0)
+  }
+
+  // Save exchange rate cache to disk
+  try {
+    await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache))
+  } catch (e) {
+    datelog('Error saving exchange rate cache:', String(e))
   }
 
   const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': '1' }
