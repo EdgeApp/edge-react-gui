@@ -109,7 +109,6 @@ const asPool = asObject({
   runeDepth: asString
 })
 
-const asPools = asArray(asPool)
 const asQuoteDeposit = asEither(
   asObject({
     expected_amount_out: asString,
@@ -157,16 +156,6 @@ type Saver = ReturnType<typeof asSaver>
 type Pool = ReturnType<typeof asPool>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
-interface StakePositionWithPoolsParams {
-  asset: string
-  currencyCode: string
-  primaryAddress: string
-  pluginId: string
-  pools: Pool[]
-  savers: Saver[]
-  saver?: Saver // Don't bother looking to match from Savers if this is passed in
-  wallet: EdgeCurrencyWallet
-}
 
 const utxoInfo: PolicyCurrencyInfo = {
   type: 'utxo',
@@ -317,89 +306,91 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   const policy = getPolicyFromId(stakePolicyId)
   const { currencyCode } = policy.stakeAssets[0]
   const { primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
-  const params = await getStakePositionInner(opts, request, primaryAddress)
-  return await getStakePositionWithPools(params)
-}
-
-const getStakePositionInner = async (
-  opts: EdgeGuiPluginOptions,
-  request: StakePositionRequest,
-  primaryAddress: string
-): Promise<StakePositionWithPoolsParams> => {
-  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const { stakePolicyId, wallet } = request
-  const policy = getPolicyFromId(stakePolicyId)
-  const { pluginId, currencyCode } = policy.stakeAssets[0]
 
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const [pool, saver] = await Promise.all([fetchPool(opts, asset), fetchSaver(opts, asset, primaryAddress)])
 
-  let pools: Pool[] = []
-  let savers: Saver[] = []
-  const [saversResponse, poolsResponse] = await Promise.all([
-    fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, {
-      headers: { 'x-client-id': ninerealmsClientId }
-    }),
-    fetchWaterfall(midgardServers, `v2/pools`, {
-      headers: { 'x-client-id': ninerealmsClientId }
-    })
-  ])
-
-  if (!saversResponse.ok) {
-    const responseText = await saversResponse.text()
-    throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
+  if (saver == null || pool == null) {
+    // We got a 404 error, so return an empty position:
+    return {
+      allocations: [
+        {
+          pluginId: wallet.currencyInfo.pluginId,
+          currencyCode,
+          allocationType: 'staked',
+          nativeAmount: '0'
+        }
+      ],
+      canStake: pool != null,
+      canUnstake: false,
+      canUnstakeAndClaim: false,
+      canClaim: false
+    }
   }
-  const saversJson = await saversResponse.json()
-  savers = asSavers(saversJson)
 
-  if (!poolsResponse.ok) {
-    const responseText = await poolsResponse.text()
-    throw new Error(`Thorchain could not fetch /v2/pools: ${responseText}`)
-  }
-  const poolsJson = await poolsResponse.json()
-  pools = asPools(poolsJson)
-
-  return {
-    asset,
-    currencyCode,
-    primaryAddress,
-    pluginId,
-    pools,
-    savers,
-    wallet
-  }
+  return saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
 }
 
-const getStakePositionWithPools = async (params: StakePositionWithPoolsParams): Promise<StakePosition> => {
-  const { asset, currencyCode, primaryAddress, pluginId, pools, savers, wallet } = params
-  const saver = params.saver ?? savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
-  const pool = pools.find(p => p.asset === asset)
-  let stakedAmount = '0'
-  let earnedAmount = '0'
-  if (saver != null && pool != null) {
-    const { units, asset_deposit_value: assetDepositValue } = saver
-    const { saversDepth, saversUnits } = pool
-    stakedAmount = assetDepositValue
-    const redeemableValue = div(mul(units, saversDepth), saversUnits, DIVIDE_PRECISION)
-    earnedAmount = sub(redeemableValue, stakedAmount)
+async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Pool | undefined> {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+  const response = await fetchWaterfall(midgardServers, `v2/pool/${asset}`, {
+    headers: { 'x-client-id': ninerealmsClientId }
+  })
 
-    // Convert from Thor units to exchangeAmount
-    stakedAmount = div(stakedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
-    earnedAmount = div(earnedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+  if (response.status === 404) return undefined
+  if (!response.ok) {
+    const responseText = await response.text()
+    throw new Error(`Thorchain could not fetch /v2/pool/${asset}: ${responseText}`)
+  }
+  const poolsJson = await response.json()
+  return asPool(poolsJson)
+}
 
-    // Convert from exchangeAmount to nativeAmount
-    const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
-    stakedAmount = mul(stakedAmount, multiplier)
-    earnedAmount = mul(earnedAmount, multiplier)
+async function fetchSaver(opts: EdgeGuiPluginOptions, asset: string, address: string): Promise<Saver | undefined> {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+  const response = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/saver/${address}`, {
+    headers: { 'x-client-id': ninerealmsClientId }
+  })
 
-    // Truncate decimals
-    stakedAmount = toFixed(stakedAmount, 0, 0)
-    earnedAmount = toFixed(earnedAmount, 0, 0)
+  if (response.status === 404) return
+  if (!response.ok) {
+    const responseText = await response.text()
+    throw new Error(`Thorchain could not fetch /pool/saver/: ${responseText}`)
+  }
+  const saversJson = await response.json()
+  return asSaver(saversJson)
+}
 
-    // Cap negative value to 0
-    earnedAmount = max(earnedAmount, '0')
+async function fetchSavers(opts: EdgeGuiPluginOptions, asset: string): Promise<Saver[]> {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+  const response = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, {
+    headers: { 'x-client-id': ninerealmsClientId }
+  })
+
+  if (!response.ok) {
+    const responseText = await response.text()
+    throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
+  }
+  const saversJson = await response.json()
+  return asSavers(saversJson)
+}
+
+function saverToPosition(currencyConfig: EdgeCurrencyConfig, currencyCode: string, saver: Saver, pool: Pool): StakePosition {
+  const pluginId = currencyConfig.currencyInfo.pluginId
+
+  const multiplier = getCurrencyCodeMultiplier(currencyConfig, currencyCode)
+  function thorToNative(amount: string): string {
+    return toFixed(mul(div(amount, THOR_LIMIT_UNITS, DIVIDE_PRECISION), multiplier), 0, 0)
   }
 
+  const { units, asset_deposit_value: assetDepositValue } = saver
+  const stakedAmount = thorToNative(assetDepositValue)
   const canUnstake = gt(stakedAmount, '0')
+
+  const { saversDepth, saversUnits } = pool
+  const redeemableValue = div(mul(units, saversDepth), saversUnits, DIVIDE_PRECISION)
+  const earnedThorAmount = max(sub(redeemableValue, assetDepositValue), '0')
+  const earnedAmount = thorToNative(earnedThorAmount)
 
   return {
     allocations: [
@@ -726,7 +717,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     }
   ]
 
-  const futureUnstakeFee = await estimateUnstakeFee(opts, request, asset, ninerealmsClientId, parentToTokenRate, parentBalance).catch(e => {
+  const futureUnstakeFee = await estimateUnstakeFee(opts, request, asset, parentToTokenRate, parentBalance).catch(e => {
     console.error(e.message)
   })
 
@@ -1086,22 +1077,16 @@ const estimateUnstakeFee = async (
   opts: EdgeGuiPluginOptions,
   request: ChangeQuoteRequest,
   asset: string,
-  ninerealmsClientId: string,
   parentToTokenRate: number,
   parentBalance: string
 ): Promise<string> => {
-  const { currencyCode, nativeAmount, stakePolicyId, wallet, account } = request
+  const { currencyCode, nativeAmount, wallet } = request
   const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   const parentMultiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, parentCurrencyCode)
 
-  const stakePositionRequest: StakePositionRequest = {
-    stakePolicyId,
-    wallet,
-    account
-  }
-  const params = await getStakePositionInner(opts, stakePositionRequest, 'dummyAddress')
-  const { savers } = params
+  const [pool, savers] = await Promise.all([fetchPool(opts, asset), fetchSavers(opts, asset)])
+  if (pool == null) throw new Error('Cannot estimate unstake fee: No pool found')
   if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
 
   // Loop over all the Savers and find the one that has a position just higher
@@ -1111,11 +1096,7 @@ const estimateUnstakeFee = async (
   let bestNativeAmount = '0'
   for (const saver of savers) {
     primaryAddress = saver.asset_address
-    stakePosition = await getStakePositionWithPools({
-      ...params,
-      saver,
-      primaryAddress
-    })
+    stakePosition = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
     const { allocations } = stakePosition
     for (const alloc of allocations) {
       if (alloc.allocationType !== 'staked') continue
@@ -1140,7 +1121,17 @@ const estimateUnstakeFee = async (
   const { allocations } = stakePosition
 
   const addressBalance = nativeAmount
-  const unstakeQuote = await unstakeRequestInner(opts, { ...request, action: 'unstakeExact' }, { addressBalance, allocations, parentBalance, primaryAddress })
+  const unstakeQuote = await unstakeRequestInner(
+    opts,
+    { ...request, action: 'unstakeExact' },
+    {
+      addressBalance,
+      allocations,
+      parentBalance,
+      // This is the address of the example staker, NOT the customer wallet:
+      primaryAddress
+    }
+  )
 
   const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'networkFee')
   const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'deductedFee')
@@ -1215,7 +1206,6 @@ const getPrimaryAddress = async (
   addressBalance: string
   parentBalance: string
 }> => {
-  const displayPublicKey = await account.getDisplayPublicKey(wallet.id)
   const tokenId = getWalletTokenId(wallet, currencyCode)
   const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({
     forceIndex: 0,
@@ -1224,6 +1214,7 @@ const getPrimaryAddress = async (
 
   // If this is a single address chain (ie ETH, AVAX)
   // then the address balance is always the wallet balance
+  const displayPublicKey = await account.getDisplayPublicKey(wallet.id)
   const hasSingleAddress = displayPublicKey.toLowerCase() === publicAddress.toLowerCase()
   const assetBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
