@@ -1,4 +1,5 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
+import { mul } from 'biggystring'
 import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
@@ -8,6 +9,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -554,7 +556,7 @@ export const moonpayProvider: FiatProviderFactory = {
                           throw new Error('Moonpay missing parameters')
                         }
 
-                        const nativeAmount = await coreWallet.denominationToNative(baseCurrencyAmount, displayCurrencyCode)
+                        const nativeAmount = mul(baseCurrencyAmount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode))
 
                         const assetAction: EdgeAssetAction = {
                           assetActionType: 'sell'

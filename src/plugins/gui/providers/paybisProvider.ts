@@ -10,6 +10,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
@@ -783,7 +784,7 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  network: ${network}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
+                      const nativeAmount = mul(amount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode))
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'

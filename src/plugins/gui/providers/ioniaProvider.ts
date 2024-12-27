@@ -23,6 +23,7 @@ import URL from 'url-parse'
 import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
@@ -422,7 +423,8 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         if (quoteParams.wallet == null) throw new Error('missing wallet')
 
         const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
-        const rateExchangeAmount = await quoteParams.wallet.nativeToDenomination(toBigNumberString(rateAmount), quoteParams.displayCurrencyCode)
+        const multiplier = getCurrencyCodeMultiplier(quoteParams.wallet.currencyConfig, quoteParams.displayCurrencyCode)
+        const rateExchangeAmount = div(toBigNumberString(rateAmount), multiplier, multiplier.length)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
         const cryptoAmount =

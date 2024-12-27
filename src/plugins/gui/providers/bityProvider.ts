@@ -1,4 +1,4 @@
-import { gt, lt, toFixed } from 'biggystring'
+import { gt, lt, mul, toFixed } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
@@ -720,7 +721,7 @@ const completeSellOrder = async (
   const { amount: inputAmount, currency: inputCurrencyCode } = input
   const { amount: fiatAmount } = output
 
-  const nativeAmount = await coreWallet.denominationToNative(inputAmount, inputCurrencyCode)
+  const nativeAmount = mul(inputAmount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, inputCurrencyCode))
 
   if (nativeAmount == null) {
     // Should not happen - input currencies should be valid before

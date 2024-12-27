@@ -1,4 +1,4 @@
-import { eq, gt, toFixed } from 'biggystring'
+import { div, eq, gt, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -14,7 +14,7 @@ import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier, getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { enableStakeTokens, getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
@@ -28,7 +28,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputMod
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showDevError, showError } from '../../services/AirshipInstance'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -153,16 +153,10 @@ const StakeModifySceneComponent = (props: Props) => {
             const { currencyCode, nativeMin } = err
             let errMessage = changeQuoteRequest.action === 'stake' ? lstrings.stake_error_stake_below_minimum : lstrings.stake_error_unstake_below_minimum
             if (nativeMin != null) {
-              wallet
-                .nativeToDenomination(nativeMin, currencyCode)
-                .then(minExchangeAmount => {
-                  errMessage += `: ${minExchangeAmount} ${currencyCode}`
-                  setErrorMessage(errMessage)
-                })
-                .catch(err => {
-                  showDevError(err)
-                  setErrorMessage(errMessage)
-                })
+              const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+              const minExchangeAmount = div(nativeMin, multiplier, multiplier.length)
+              errMessage += `: ${minExchangeAmount} ${currencyCode}`
+              setErrorMessage(errMessage)
             } else {
               setErrorMessage(errMessage)
             }

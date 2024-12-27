@@ -1,4 +1,4 @@
-import { gt, lt, round } from 'biggystring'
+import { gt, lt, mul, round } from 'biggystring'
 import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import URL from 'url-parse'
@@ -7,6 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { datelog, isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -814,7 +815,7 @@ export const kadoProvider: FiatProviderFactory = {
                       console.log(`  blockchain: ${blockchain}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = round(await coreWallet.denominationToNative(paymentExchangeAmount, displayCurrencyCode), 0)
+                      const nativeAmount = round(mul(paymentExchangeAmount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode)), 0)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'

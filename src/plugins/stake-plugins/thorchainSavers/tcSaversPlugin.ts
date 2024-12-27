@@ -4,7 +4,7 @@ import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeMem
 
 import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
-import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier, getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
 import { cleanMultiFetch, fetchInfo, fetchWaterfall, infoServerData } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
@@ -379,8 +379,9 @@ const getStakePositionWithPools = async (params: StakePositionWithPoolsParams): 
     earnedAmount = div(earnedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
 
     // Convert from exchangeAmount to nativeAmount
-    stakedAmount = await wallet.denominationToNative(stakedAmount, currencyCode)
-    earnedAmount = await wallet.denominationToNative(earnedAmount, currencyCode)
+    const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+    stakedAmount = mul(stakedAmount, multiplier)
+    earnedAmount = mul(earnedAmount, multiplier)
 
     // Truncate decimals
     stakedAmount = toFixed(stakedAmount, 0, 0)
@@ -433,6 +434,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
   const { wallet, nativeAmount, currencyCode, stakePolicyId, account } = request
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
   const { pluginId } = wallet.currencyInfo
 
   const tokenId = getWalletTokenId(wallet, currencyCode)
@@ -440,13 +442,14 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const isEvm = EVM_PLUGINIDS[pluginId]
 
   const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
-  const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
+  const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
   const thorAmount = toFixed(mul(exchangeAmount, THOR_LIMIT_UNITS), 0, 0)
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   let parentToTokenRate: number = 1
   if (currencyCode !== parentCurrencyCode) {
     parentToTokenRate = await getHistoricalRate(`${parentCurrencyCode}_${currencyCode}`, new Date().toISOString())
   }
+  const parentMultiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, parentCurrencyCode)
 
   if (lt(walletBalance, nativeAmount)) {
     throw new InsufficientFundsError({ tokenId })
@@ -475,7 +478,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   const slippageThorAmount = sub(thorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
-  const slippageNativeAmount = await wallet.denominationToNative(slippageDisplayAmount, currencyCode)
+  const slippageNativeAmount = await mul(slippageDisplayAmount, multiplier)
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
   let needsFundingPrimary = false
@@ -729,9 +732,9 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
     // Calculate the amount of time needed to break even from just fees
 
-    const feeInParentExchangeAmount = await wallet.nativeToDenomination(fee, parentCurrencyCode)
+    const feeInParentExchangeAmount = div(fee, parentMultiplier, parentMultiplier.length)
     const feeInTokenExchangeAmount = mul(feeInParentExchangeAmount, parentToTokenRate.toString())
-    const feeInTokenNativeAmount = await wallet.denominationToNative(feeInTokenExchangeAmount, currencyCode)
+    const feeInTokenNativeAmount = mul(feeInTokenExchangeAmount, multiplier)
 
     const totalFee = add(add(feeInTokenNativeAmount, slippageNativeAmount), futureUnstakeFee)
     const policy = policies.find(policy => policy.stakePolicyId === stakePolicyId)
@@ -809,6 +812,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const { allocations, primaryAddress, parentBalance, addressBalance } = params
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
   const { pluginId } = wallet.currencyInfo
 
   const tokenId = getTokenId(wallet.currencyConfig, currencyCode) ?? null
@@ -857,7 +861,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     fractionToUnstake = '1'
   }
 
-  const totalUnstakeExchangeAmount = await wallet.nativeToDenomination(totalUnstakeNativeAmount, currencyCode)
+  const totalUnstakeExchangeAmount = div(totalUnstakeNativeAmount, multiplier, multiplier.length)
   const totalUnstakeThorAmount = toFixed(mul(totalUnstakeExchangeAmount, THOR_LIMIT_UNITS), 0, 0)
 
   const withdrawBps = toFixed(mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS), 0, 0)
@@ -876,7 +880,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
-  const slippageNativeAmount = await wallet.denominationToNative(slippageDisplayAmount, currencyCode)
+  const slippageNativeAmount = mul(slippageDisplayAmount, multiplier)
   const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   const forceChangeAddress = utxoSourceAddress
 
@@ -1079,7 +1083,9 @@ const estimateUnstakeFee = async (
   parentBalance: string
 ): Promise<string> => {
   const { currencyCode, nativeAmount, stakePolicyId, wallet, account } = request
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
+  const parentMultiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, parentCurrencyCode)
 
   const stakePositionRequest: StakePositionRequest = {
     stakePolicyId,
@@ -1135,9 +1141,9 @@ const estimateUnstakeFee = async (
 
   // If staking a token, convert the networkFree from the parent currency to the staked currency
   if (currencyCode !== parentCurrencyCode) {
-    const parentFeeExchangeAmount = await wallet.nativeToDenomination(networkFee.nativeAmount, parentCurrencyCode)
+    const parentFeeExchangeAmount = div(networkFee.nativeAmount, parentMultiplier, parentMultiplier.length)
     const feeInTokenExchangeAmount = mul(parentFeeExchangeAmount, parentToTokenRate.toString())
-    const feeInTokenNativeAmount = await wallet.denominationToNative(feeInTokenExchangeAmount, currencyCode)
+    const feeInTokenNativeAmount = mul(feeInTokenExchangeAmount, multiplier)
     return add(stakeFee.nativeAmount, feeInTokenNativeAmount)
   } else {
     return add(networkFee.nativeAmount, stakeFee.nativeAmount)

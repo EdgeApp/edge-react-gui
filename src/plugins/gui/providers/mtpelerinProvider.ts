@@ -7,6 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -552,7 +553,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       const orderId = 'mtpelerin_no_orderid'
                       const orderUri = 'https://mtpelerin.com'
 
-                      const exchangeAmount = await coreWallet.nativeToDenomination(nativeAmount, params.displayCurrencyCode)
+                      const multiplier = getCurrencyCodeMultiplier(coreWallet.currencyConfig, params.displayCurrencyCode)
+                      const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'

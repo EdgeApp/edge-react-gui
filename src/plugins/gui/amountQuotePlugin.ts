@@ -7,7 +7,7 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
@@ -350,7 +350,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               tokenId,
               spendTargets: [{ publicAddress }]
             })
-            const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
+            const multiplier = getCurrencyCodeMultiplier(coreWallet.currencyConfig, currencyCode)
+            const exchangeAmount = div(maxAmount, multiplier, multiplier.length)
 
             const result = await getMaxQuoteOrError(2, exchangeAmount)
             if (result == null) {

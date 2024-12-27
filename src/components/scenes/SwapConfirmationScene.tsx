@@ -21,7 +21,7 @@ import { SwapTabSceneProps } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
@@ -395,7 +395,8 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
     // Format fiat fee:
-    const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
+    const multiplier = getCurrencyCodeMultiplier(fromWallet.currencyConfig, fromWallet.currencyInfo.currencyCode)
+    const feeDenominatedAmount = div(feeNativeAmount, multiplier, multiplier.length)
     const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, defaultIsoFiat, feeDenominatedAmount))
     const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
     const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`
