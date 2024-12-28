@@ -99,25 +99,21 @@ export const HomeScene = (props: Props) => {
   useAsyncEffect(
     async () => {
       const { countryCode } = await getFirstOpenInfo()
+
+      const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
+        countryCodes: [],
+        excludeCountryCodes: [],
+        ...legacyBlogPost
+      }))
+      setBlogPosts([...nonGeoPosts, ...filterContentPosts(infoServerData.rollup?.blogPostsGeo, countryCode)])
+
+      // Get video posts
+      setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
       setCountryCode(countryCode)
     },
     [],
     'countryCode'
   )
-
-  // Check for content posts from info server:
-  React.useEffect(() => {
-    // Merge legacy non-geographic-specific blog posts with geo-specific ones:
-    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
-      countryCodes: [],
-      excludeCountryCodes: [],
-      ...legacyBlogPost
-    }))
-    setBlogPosts([...nonGeoPosts, ...filterContentPosts(infoServerData.rollup?.blogPostsGeo, countryCode)])
-
-    // Get video posts
-    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
-  }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
