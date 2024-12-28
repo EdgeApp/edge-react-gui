@@ -26,13 +26,13 @@ interface Props {
 
 // Tracks items that need a refresh:
 interface DirtyList {
-  rates: boolean
-  walletList: boolean
+  rates: number
+  walletList: number
 }
 
 const notDirty: DirtyList = {
-  rates: false,
-  walletList: false
+  rates: 0,
+  walletList: 0
 }
 
 export function AccountCallbackManager(props: Props) {
@@ -45,7 +45,7 @@ export function AccountCallbackManager(props: Props) {
   function setRatesDirty() {
     setDirty(dirty => ({
       ...dirty,
-      rates: true
+      rates: dirty.rates + 1
     }))
   }
 
@@ -61,8 +61,8 @@ export function AccountCallbackManager(props: Props) {
         }
         setDirty(dirty => ({
           ...dirty,
-          walletList: true,
-          rates: ratesDirty ?? dirty.rates
+          walletList: dirty.walletList + 1,
+          rates: ratesDirty ? dirty.rates + 1 : dirty.rates
         }))
       }),
 
@@ -153,18 +153,10 @@ export function AccountCallbackManager(props: Props) {
   // Do the expensive work with rate limiting:
   useAsyncEffect(
     async () => {
-      setDirty(dirty => ({
-        ...dirty,
-        walletList: false
-      }))
-
-      // Update wallets:
-      if (dirty.walletList) {
-        // Update all wallets (hammer mode):
-        datelog('Updating wallet list')
-        await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
-        await snooze(1000)
-      }
+      // Update all wallets (hammer mode):
+      datelog('Updating wallet list')
+      await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
+      await snooze(1000)
     },
     [dirty.walletList],
     'AccountCallbackManager:walletList'
@@ -172,16 +164,9 @@ export function AccountCallbackManager(props: Props) {
 
   useAsyncEffect(
     async () => {
-      setDirty(dirty => ({
-        ...dirty,
-        rates: false
-      }))
-      // Update exchange rates:
-      if (dirty.rates) {
-        datelog('Updating exchange rates')
-        await dispatch(updateExchangeRates())
-        await snooze(1000)
-      }
+      datelog('Updating exchange rates')
+      await dispatch(updateExchangeRates())
+      await snooze(1000)
     },
     [dirty.rates],
     'AccountCallbackManager:rates'
@@ -191,7 +176,7 @@ export function AccountCallbackManager(props: Props) {
     const task = makePeriodicTask(() => {
       setDirty(dirty => ({
         ...dirty,
-        rates: true
+        rates: dirty.rates + 1
       }))
     }, REFRESH_RATES_MS)
     task.start()
