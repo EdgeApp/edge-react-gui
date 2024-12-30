@@ -25,7 +25,6 @@ import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
-import { toBigNumberString } from '../../../util/toBigNumberString'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
 import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
@@ -424,12 +423,11 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
         const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
         const multiplier = getCurrencyCodeMultiplier(quoteParams.wallet.currencyConfig, quoteParams.displayCurrencyCode)
-        const rateExchangeAmount = div(toBigNumberString(rateAmount), multiplier, multiplier.length)
+        const rateExchangeAmount = div(rateAmount, multiplier, multiplier.length)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
-        const cryptoAmount =
-          quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
-        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, toBigNumberString(price))
+        const cryptoAmount = quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, price, HARD_CURRENCY_PRECISION)
+        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, price)
 
         // Concurrently get the latest purchase card promise
         const purchaseCardPromise = getPurchaseCard(quoteParams.displayCurrencyCode, parseFloat(fiatAmount))

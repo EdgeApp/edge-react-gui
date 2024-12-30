@@ -17,7 +17,6 @@ import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getCurrencyCodeMultiplier, getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { enableStakeTokens, getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
-import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { WarningCard } from '../../cards/WarningCard'
@@ -441,8 +440,8 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderBreakEvenDays = () => {
     const { breakEvenDays = 0 } = quoteInfo ?? {}
-    const months = toFixed(toBigNumberString(breakEvenDays / 30), 1, 1)
-    const days = toFixed(toBigNumberString(breakEvenDays), 0, 0)
+    const months = toFixed(breakEvenDays / 30, 1, 1)
+    const days = toFixed(breakEvenDays, 0, 0)
 
     let message: string
     if (breakEvenDays > 60) {
