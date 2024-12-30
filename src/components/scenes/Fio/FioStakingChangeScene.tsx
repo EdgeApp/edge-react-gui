@@ -1,4 +1,4 @@
-import { add, eq, gt } from 'biggystring'
+import { add, div, eq, gt } from 'biggystring'
 import { EdgeAssetActionType, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -15,7 +15,7 @@ import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
@@ -146,16 +146,13 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         break
       }
       case 'unstake': {
-        const nativeAmt = stakingBalances.staked.native
-        currencyWallet
-          .nativeToDenomination(nativeAmt, 'FIO')
-          .then(exchangeAmt =>
-            onAmountsChanged({
-              nativeAmount: nativeAmt,
-              exchangeAmount: exchangeAmt
-            })
-          )
-          .catch(e => console.error(e))
+        const nativeAmount = stakingBalances.staked.native
+        const multiplier = getCurrencyCodeMultiplier(currencyWallet.currencyConfig, 'FIO')
+        const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
+        onAmountsChanged({
+          nativeAmount,
+          exchangeAmount
+        })
         break
       }
       default:

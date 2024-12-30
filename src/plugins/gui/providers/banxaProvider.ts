@@ -1,5 +1,5 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
-import { gt, lt } from 'biggystring'
+import { gt, lt, mul } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
@@ -8,6 +8,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
 import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
@@ -777,7 +778,7 @@ export const banxaProvider: FiatProviderFactory = {
                           })
                           const order = asBanxaOrderResponse(orderResponse)
                           const { coin_amount: coinAmount, status, wallet_address: publicAddress } = order.data.order
-                          const nativeAmount = await coreWallet.denominationToNative(coinAmount.toString(), displayCurrencyCode)
+                          const nativeAmount = mul(coinAmount.toString(), getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode))
                           if (status === 'waitingPayment') {
                             // Launch the SendScene to make payment
                             const sendParams: SendScene2Params = {

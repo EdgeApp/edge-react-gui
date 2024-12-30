@@ -1,4 +1,4 @@
-import { abs, eq, gt, mul } from 'biggystring'
+import { abs, div, eq, gt, mul } from 'biggystring'
 import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,7 @@ import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
@@ -298,7 +298,8 @@ async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigati
 
     // Check for a $50 maximum sweep for light accounts:
     const sendNativeAmount = abs(unsignedTx.nativeAmount)
-    const sendExchangeAmount = await wallet.nativeToDenomination(sendNativeAmount, wallet.currencyInfo.currencyCode)
+    const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, wallet.currencyInfo.currencyCode)
+    const sendExchangeAmount = div(sendNativeAmount, multiplier, multiplier.length)
     const exchangeRate = getExchangeRate(state, wallet.currencyInfo.currencyCode, 'iso:USD')
     const sweepAmountFiat = mul(sendExchangeAmount, exchangeRate)
     if (eq(exchangeRate, '0') || gt(sweepAmountFiat, '50')) {

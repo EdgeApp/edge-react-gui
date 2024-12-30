@@ -14,7 +14,7 @@ import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelec
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -182,7 +182,8 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
 
       const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
 
-      const exchangeNetworkFee = await wallet.nativeToDenomination(nativeFee, paymentCurrencyCode)
+      const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, paymentCurrencyCode)
+      const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
       const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
       const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
       let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
