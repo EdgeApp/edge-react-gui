@@ -357,6 +357,7 @@ async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Poo
 
 async function fetchSaver(opts: EdgeGuiPluginOptions, asset: string, address: string): Promise<Saver | undefined> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+  console.log('tcSavers: ', `thorchain/pool/${asset}/saver/${address}`)
   const response = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/saver/${address}`, {
     headers: { 'x-client-id': ninerealmsClientId }
   })
