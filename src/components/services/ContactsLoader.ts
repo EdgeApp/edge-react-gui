@@ -282,6 +282,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Unizen',
+    hasThumbnail: true,
+    thumbnailPath: 'unizen.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Velodrome',
     hasThumbnail: true,
     thumbnailPath: 'velodrome.png',

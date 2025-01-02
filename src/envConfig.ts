@@ -289,6 +289,11 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  UNIZEN_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   MAYA_PROTOCOL_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
