@@ -1,5 +1,5 @@
-import { useIsFocused } from '@react-navigation/native'
-import { useMemo } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback, useMemo } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue, useWorkletCallback } from 'react-native-reanimated'
 
@@ -51,20 +51,28 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
   const scrollMomentumEndEvent = useSceneScrollContext(state => state.scrollMomentumEndEvent)
   const scrollY = useSceneScrollContext(state => state.scrollY)
 
+  const isFocused = useSharedValue(false)
+  useFocusEffect(
+    useCallback(() => {
+      isFocused.value = true
+      return () => {
+        isFocused.value = false
+      }
+    }, [isFocused])
+  )
+
   // This fixes a bug during scene transition where the scene that is being
   // left was the last to update the scrollY value.
-  const isFocused = useIsFocused()
   const localScrollY = useSharedValue(0)
   useAnimatedReaction(
     () => {
-      return isFocused
+      return isFocused.value
     },
     isFocused => {
       if (isFocused && localScrollY.value !== scrollY.value) {
         scrollY.value = localScrollY.value
       }
-    },
-    [isFocused]
+    }
   )
 
   // In each handler, we check `isFocused` to avoid mutating state if the
@@ -73,39 +81,39 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
     onScroll: (nativeEvent: NativeScrollEvent) => {
       'worklet'
       // Avoids unexpected triggers
-      if (!isFocused) return
+      if (!isFocused.value) return
 
       // Condition avoids thrashing
       if (scrollY.value !== nativeEvent.contentOffset.y) {
         localScrollY.value = nativeEvent.contentOffset.y
-        scrollY.value = localScrollY.value
+        scrollY.value = nativeEvent.contentOffset.y
       }
     },
     onBeginDrag: (nativeEvent: NativeScrollEvent) => {
       'worklet'
       // Avoids unexpected triggers
-      if (!isFocused) return
+      if (!isFocused.value) return
 
       scrollBeginEvent.value = nativeEvent
     },
     onEndDrag: nativeEvent => {
       'worklet'
       // Avoids unexpected triggers
-      if (!isFocused) return
+      if (!isFocused.value) return
 
       scrollEndEvent.value = nativeEvent
     },
     onMomentumBegin: nativeEvent => {
       'worklet'
       // Avoids unexpected triggers
-      if (!isFocused) return
+      if (!isFocused.value) return
 
       scrollMomentumBeginEvent.value = nativeEvent
     },
     onMomentumEnd: nativeEvent => {
       'worklet'
       // Avoids unexpected triggers
-      if (!isFocused) return
+      if (!isFocused.value) return
 
       scrollMomentumEndEvent.value = nativeEvent
     }
@@ -120,13 +128,21 @@ export const useSceneScrollWorkletHandler = () => {
   const scrollY = useSceneScrollContext(state => state.scrollY)
 
   // Create shared values for scroll position
-  const isFocused = useIsFocused()
+  const isFocused = useSharedValue(false)
+  useFocusEffect(
+    useCallback(() => {
+      isFocused.value = true
+      return () => {
+        isFocused.value = false
+      }
+    }, [isFocused])
+  )
 
   const localScrollY = useSharedValue(0)
 
   useAnimatedReaction(
     () => {
-      return isFocused
+      return isFocused.value
     },
     isFocusedResult => {
       if (isFocusedResult && localScrollY.value !== scrollY.value) {
