@@ -128,6 +128,10 @@ const strings = {
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
   warning_battery_saver: `Battery Saver Detected! Balances may not update. For the best experience, please turn off battery saver mode.`,
 
+  warning_sending_pix_to_email_title: 'Sending PIX payment to email address',
+  warning_sending_pix_to_email_body:
+    'You scanned or entered an email address which is a valid Brazil PIX payment address. Continuing will create a PIX payment of Tron USDT to the email address provided.',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
