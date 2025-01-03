@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useMemo } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue, useWorkletCallback } from 'react-native-reanimated'
+import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue, useWorkletCallback, withTiming } from 'react-native-reanimated'
 
 import { createStateProvider } from './createStateProvider'
 
@@ -70,7 +70,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
     },
     isFocused => {
       if (isFocused && localScrollY.value !== scrollY.value) {
-        scrollY.value = localScrollY.value
+        scrollY.value = withTiming(localScrollY.value, { duration: 300 })
       }
     }
   )
@@ -146,7 +146,7 @@ export const useSceneScrollWorkletHandler = () => {
     },
     isFocusedResult => {
       if (isFocusedResult && localScrollY.value !== scrollY.value) {
-        scrollY.value = localScrollY.value
+        scrollY.value = withTiming(localScrollY.value, { duration: 300 })
       }
     }
   )
