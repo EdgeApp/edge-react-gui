@@ -21,6 +21,7 @@ import { checkPubAddress } from '../../util/FioAddressUtils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -103,6 +104,28 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           setLoading(false)
           return showError(e)
         }
+      }
+    }
+
+    // Taken from pixkey.ts in edge-currency-accountbased
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    // Check if this is an email for Tron USDT and show warning for potential
+    // PIX send
+    if (re.test(String(address).toLowerCase()) && coreWallet.currencyInfo.pluginId === 'tron' && tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') {
+      const approved = await Airship.show<boolean>(bridge => (
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={lstrings.warning_sending_pix_to_email_title}
+          body={lstrings.warning_sending_pix_to_email_body}
+          warning
+          isSkippable
+        />
+      ))
+      if (!approved) {
+        setLoading(false)
+        return
       }
     }
 

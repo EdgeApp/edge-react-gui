@@ -6,6 +6,7 @@
 
 ## 4.20.0 (staging)
 
+- added: (Tron) PIX warning when sending USDT to a pasted email
 - added: 'numAccounts' to 'Signup_Complete' event
 - added: New Kado OTC provider integration.
 - added: Transaction id for swap details
