@@ -19,6 +19,7 @@
 - fixed: Only send successful import items to completion scene
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
+- removed: 'uspSigninCta' experiment in favor of the 'alreadyHaveAccount' variant
 
 ## 4.19.1 (2024-12-19)
 
