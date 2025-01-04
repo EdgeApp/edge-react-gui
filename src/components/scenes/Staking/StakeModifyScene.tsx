@@ -1,5 +1,5 @@
 import { div, eq, gt, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
+import { DustSpendError, EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -165,7 +165,7 @@ const StakeModifySceneComponent = (props: Props) => {
             setErrorMessage(errMessage)
           } else if (err instanceof InsufficientFundsError) {
             setErrorMessage(lstrings.exchange_insufficient_funds_title)
-          } else if (err instanceof HumanFriendlyError) {
+          } else if (err instanceof HumanFriendlyError || err instanceof DustSpendError) {
             setErrorMessage(err.message)
           } else {
             showError(err)
