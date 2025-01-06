@@ -18,6 +18,10 @@
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
 
+## 4.19.2 (2025-01-06)
+
+- fixed: Thorchain Savers would check for staked funds using the wrong address.
+
 ## 4.19.1 (2024-12-19)
 
 - fixed: Fixed Solana syncing issues with Helius node connections.
