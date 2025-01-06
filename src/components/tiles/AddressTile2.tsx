@@ -18,6 +18,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { isEmail } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
@@ -107,13 +108,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       }
     }
 
-    // Taken from pixkey.ts in edge-currency-accountbased
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
     // Check if this is an email for Tron USDT and show warning for potential
     // PIX send
-    if (re.test(String(address).toLowerCase()) && coreWallet.currencyInfo.pluginId === 'tron' && tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') {
+    if (isEmail(address) && coreWallet.currencyInfo.pluginId === 'tron' && tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') {
       const approved = await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
