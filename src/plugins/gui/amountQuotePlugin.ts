@@ -144,6 +144,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         try {
           if (infoServerData.rollup?.fiatPluginPriority != null) {
             providerPriority = infoServerData.rollup.fiatPluginPriority
+
+            // Hack to re-enable mtpelerin
+            providerPriority.fasterpayments.mtpelerin = 100
+            providerPriority.sepa.mtpelerin = 100
+
             priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
           }
         } catch (e: any) {
