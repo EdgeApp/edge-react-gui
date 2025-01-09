@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Show KYC warning modal when trading with Swapuz
 - fixed: Using deprecated wallets to handle links
 - fixed: Thorchain stake minimum amount requirements
 
