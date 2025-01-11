@@ -78,27 +78,28 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   let numCacheEntries = 0
 
   // Load exchange rate cache off disk
-  try {
-    const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
-    const json = JSON.parse(raw)
-    const exchangeRateCacheFile = asExchangeRateCacheFile(json)
-    const { assetPairs, rates } = exchangeRateCacheFile
-    // Prune expired rates
-    for (const key of Object.keys(rates)) {
-      if (rates[key].expiration > now) {
-        exchangeRateCache[key] = rates[key]
-        numCacheEntries++
+  if (Object.keys(exchangeRateCache).length === 0) {
+    try {
+      const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
+      const json = JSON.parse(raw)
+      const exchangeRateCacheFile = asExchangeRateCacheFile(json)
+      const { assetPairs, rates } = exchangeRateCacheFile
+      // Prune expired rates
+      for (const key of Object.keys(rates)) {
+        if (rates[key].expiration > now) {
+          exchangeRateCache[key] = rates[key]
+          numCacheEntries++
+        }
       }
-    }
-    for (const pair of assetPairs) {
-      if (pair.expiration > now) {
-        initialAssetPairs.push(pair)
+      for (const pair of assetPairs) {
+        if (pair.expiration > now) {
+          initialAssetPairs.push(pair)
+        }
       }
+    } catch (e) {
+      datelog('Error loading exchange rate cache:', String(e))
     }
-  } catch (e) {
-    datelog('Error loading exchange rate cache:', String(e))
   }
-
   const accountIsoFiat = state.ui.settings.defaultIsoFiat
 
   const expiration = now + ONE_MONTH
