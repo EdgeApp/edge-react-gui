@@ -246,7 +246,8 @@ export function WalletListModal(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   header: {
-    flexGrow: 1
+    flexGrow: 1,
+    flexShrink: 1
   },
   bankMargin: {
     flex: 1,

@@ -1,12 +1,6 @@
 import { StakeProviderInfo } from '../../types'
+import { CoreumNativeStakeKitAdapterConfig } from '../policyAdapters/CoreumStakeKitAdaptor'
 import { StakePluginInfo, StakePolicyConfig } from '../types'
-
-interface CoreumNativeSkateKitAdapterConfig {
-  type: string
-  integrationId: string
-  preferredValidatorAddress: string
-  preferredValidatorName: string
-}
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: 'Coreum Native Staking',
@@ -14,26 +8,23 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'coreum_native'
 }
 
-const commonAdaptorConfig = {
-  type: 'coreum-native-stake-kit',
-  integrationId: 'coreum-core-native-staking'
-}
-
-const adaptors: CoreumNativeSkateKitAdapterConfig[] = [
+const adaptors: CoreumNativeStakeKitAdapterConfig[] = [
   {
-    ...commonAdaptorConfig,
+    type: 'coreum-native-stake-kit',
+    integrationId: 'coreum-core-native-staking',
     preferredValidatorAddress: 'corevaloper1k0rllvenwr02gvm52fh5056g5m3hly2lpf63z5', // StakeLab
     preferredValidatorName: 'StakeLab'
   },
 
   {
-    ...commonAdaptorConfig,
+    type: 'coreum-native-stake-kit',
+    integrationId: 'coreum-core-native-staking',
     preferredValidatorAddress: 'corevaloper1puge9crcxvq02jguql4vp2dhglvjll3wzdcggq', // Bware Labs
     preferredValidatorName: 'Bware Labs'
   }
 ]
 
-const makePolicyConfig = (adapterConfig: CoreumNativeSkateKitAdapterConfig) => {
+const coreumPolicyConfig: Array<StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>> = adaptors.map(adapterConfig => {
   return {
     stakePolicyId: `coreum_native_${adapterConfig.preferredValidatorAddress}`,
     stakeProviderInfo: { ...stakeProviderInfo, displayName: `Coreum Native Staking - ${adapterConfig.preferredValidatorName}` },
@@ -44,9 +35,7 @@ const makePolicyConfig = (adapterConfig: CoreumNativeSkateKitAdapterConfig) => {
     stakeAssets: [{ pluginId: 'coreum', currencyCode: 'COREUM' }],
     rewardAssets: [{ pluginId: 'coreum', currencyCode: 'COREUM' }]
   }
-}
-
-const coreumPolicyConfig: Array<StakePolicyConfig<any>> = adaptors.map(adaptor => makePolicyConfig(adaptor))
+})
 
 export const coreumnative: StakePluginInfo = {
   pluginId: 'stake:coreum:native',

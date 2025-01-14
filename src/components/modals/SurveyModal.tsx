@@ -9,6 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch } from '../../types/reactRedux'
+import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { shuffleArray } from '../../util/utils'
 import { ModalButtons } from '../buttons/ModalButtons'
@@ -25,13 +26,7 @@ const SURVEY_OPTS = [
   { label: lstrings.survey_opt_x_twitter, selected: false },
   { label: lstrings.survey_opt_in_person_event, selected: false },
   { label: lstrings.survey_opt_personal_referral, selected: false },
-  { label: lstrings.survey_opt_article, selected: false },
-  { label: lstrings.survey_opt_BTCTKVR_magazine, selected: false },
-  // Show names intentionally left untranslated:
-  { label: 'Free Talk Live', selected: false },
-  { label: 'Crypto Canal', selected: false },
-  { label: 'Cris Cyborg', selected: false },
-  { label: lstrings.survey_opt_other_specify, selected: false }
+  { label: lstrings.survey_opt_article, selected: false }
 ]
 
 export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
@@ -41,7 +36,10 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   const styles = getStyles(theme)
 
   // Randomize response options, excluding "Other"
-  const randomizedSurveyOpts = [...shuffleArray(SURVEY_OPTS.slice(0, -1)), SURVEY_OPTS[SURVEY_OPTS.length - 1]]
+  const randomizedSurveyOpts = [
+    ...shuffleArray([...SURVEY_OPTS, ...(infoServerData.rollup?.installSurvey?.surveyOptions ?? []).map(option => ({ label: option, selected: false }))]),
+    { label: lstrings.survey_opt_other_specify, selected: false }
+  ]
   const [options, setOptions] = useState(randomizedSurveyOpts)
   const [selectedIndex, setSelectedIndex] = useState<number>()
 

@@ -2,7 +2,7 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { ChangeQuote, StakeAssetInfo, StakePolicy, StakePosition } from '../../types'
 import { CardanoPooledKilnAdapterConfig } from './CardanoKilnAdaptor'
-import { CoreumNativeSkateKitAdapterConfig } from './CoreumStakeKitAdaptor'
+import { CoreumNativeStakeKitAdapterConfig } from './CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig } from './EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig } from './GlifInfinityPoolAdapter'
 import { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
@@ -10,7 +10,7 @@ import { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
 // Union of all adapter configs
 export type StakeAdapterConfig =
   | CardanoPooledKilnAdapterConfig
-  | CoreumNativeSkateKitAdapterConfig
+  | CoreumNativeStakeKitAdapterConfig
   | EthereumPooledKilnAdapterConfig
   | GlifInfinityPoolAdapterConfig
   | TarotPoolAdapterConfig

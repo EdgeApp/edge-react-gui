@@ -52,6 +52,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
     const exchangeData = [
       [lstrings.fio_date_label, dateTime],
+      [lstrings.transaction_details_tx_id_modal_title, transaction.txid],
       [lstrings.transaction_details_exchange_service, providerDisplayName],
       [lstrings.transaction_details_exchange_order_id, orderId],
       [isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote, undefined]

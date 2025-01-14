@@ -11,7 +11,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import { StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
-import { useSelector } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
@@ -75,6 +75,7 @@ export const EarnScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const { discoverMap, portfolioMap, updateMaps } = useStakeMaps()
 
@@ -238,13 +239,12 @@ export const EarnScene = (props: Props) => {
       // User backed out of the WalletListModal
       if (walletId == null) return
 
+      dispatch({ type: 'STAKING/ADD_POLICY', walletId, stakePolicy })
+
       navigation.push('stakeOverview', {
         walletId,
         stakePlugin,
-        stakePolicy,
-        // 'stakeOverview' scene will fetch the position if one exists.
-        // No need to know if a position exists at this point.
-        stakePosition: undefined
+        stakePolicyId: stakePolicy.stakePolicyId
       })
     }
 
@@ -261,7 +261,7 @@ export const EarnScene = (props: Props) => {
 
     const handlePress = async () => {
       let walletId: string | undefined
-      let stakePosition
+      let stakePosition: StakePosition | undefined
 
       const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === currencyInfo.pluginId)
       if (matchingWallets.length === 1) {
@@ -290,13 +290,14 @@ export const EarnScene = (props: Props) => {
       }
 
       // User backed out of the WalletListModal
-      if (walletId == null) return
+      if (walletId == null || stakePosition == null) return
+
+      dispatch({ type: 'STAKING/UPDATE', walletId, stakePolicy, stakePosition })
 
       navigation.push('stakeOverview', {
         walletId,
         stakePlugin,
-        stakePolicy,
-        stakePosition
+        stakePolicyId: stakePolicy.stakePolicyId
       })
     }
 

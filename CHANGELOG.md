@@ -2,21 +2,25 @@
 
 ## Unreleased (develop)
 
-- added: Transaction id for swap details
+## 4.20.0 (staging)
+
+- added: (Tron) PIX warning when sending USDT to a pasted email
 - added: 'numAccounts' to 'Signup_Complete' event
 - added: New Kado OTC provider integration.
-- changed: `WalletListScene` filter mode remains active on empty text
+- added: Transaction id for swap details
 - changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
+- changed: `WalletListScene` filter mode remains active on empty text
+- changed: Auto select text in tx details payee field when focused
+- changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
+- changed: Handle errors in StakeKit API responses
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
-- changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
 - changed: StakeKit staking plugin to check validator status before getting quote
-- changed: Auto select text in tx details payee field when focused
-- changed: Handle errors in StakeKit API responses
 - fixed: Missing "Done" button when managing tokens for certain assets
 - fixed: Only send successful import items to completion scene
 - fixed: WalletConnect `eth_sendRawTransaction` event handling
 - removed: Removed patch for usb and node-hid
+- removed: 'uspSigninCta' experiment in favor of the 'alreadyHaveAccount' variant
 
 ## 4.19.2 (2025-01-06)
 

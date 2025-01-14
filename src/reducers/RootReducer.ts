@@ -10,6 +10,7 @@ import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
 import { network, NetworkState } from './NetworkReducer'
 import { permissions, PermissionsState } from './PermissionsReducer'
+import { staking, StakingState } from './StakingReducer'
 import { ui, UiState } from './uiReducer'
 
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
@@ -34,6 +35,7 @@ export interface RootState {
   readonly actionQueue: ActionQueueState
   readonly core: CoreState
   readonly loanManager: LoanManagerState
+  readonly staking: StakingState
   readonly permissions: PermissionsState
   readonly ui: UiState
   readonly network: NetworkState
@@ -94,6 +96,7 @@ export const rootReducer = combineReducers<RootState, Action>({
   core,
   loanManager,
   permissions,
+  staking,
   ui,
   network
 })

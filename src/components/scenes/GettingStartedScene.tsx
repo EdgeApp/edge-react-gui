@@ -20,7 +20,7 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ExperimentConfig, UspSigninCtaType } from '../../experimentConfig'
+import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -156,36 +156,24 @@ export const GettingStartedScene = (props: Props) => {
     }
   )
 
-  const footerButtons =
-    experimentConfig.uspSigninCta === 'alreadyHaveAccount' ? (
-      <>
-        <ButtonsView
-          layout="column"
-          primary={{
-            label: lstrings.account_get_started,
-            onPress: handlePressSignUp
-          }}
-        />
-        <TertiaryTouchable onPress={handlePressSignIn}>
-          <TertiaryText>
-            {/* eslint-disable-next-line react-native/no-raw-text */}
-            {`${lstrings.getting_started_already_have_an_account} `}
-            <TappableText>{lstrings.getting_started_sign_in}</TappableText>
-          </TertiaryText>
-        </TertiaryTouchable>
-      </>
-    ) : (
+  const footerButtons = (
+    <>
       <ButtonsView
+        layout="column"
         primary={{
           label: lstrings.account_get_started,
           onPress: handlePressSignUp
         }}
-        secondary={{
-          label: lstrings.getting_started_sign_in,
-          onPress: handlePressSignIn
-        }}
       />
-    )
+      <TertiaryTouchable onPress={handlePressSignIn}>
+        <TertiaryText>
+          {/* eslint-disable-next-line react-native/no-raw-text */}
+          {`${lstrings.getting_started_already_have_an_account} `}
+          <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+        </TertiaryText>
+      </TertiaryTouchable>
+    </>
+  )
 
   return (
     <SceneWrapper hasHeader={false}>
@@ -235,7 +223,7 @@ export const GettingStartedScene = (props: Props) => {
             ))}
           </Pagination>
           <SectionCoverAnimated swipeOffset={swipeOffset}>
-            <Sections swipeOffset={swipeOffset} uspSigninCta={experimentConfig.uspSigninCta}>
+            <Sections swipeOffset={swipeOffset}>
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
@@ -440,11 +428,13 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   ]
 })
 
-const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number>; uspSigninCta: UspSigninCtaType }>(theme => props => {
-  const { swipeOffset, uspSigninCta } = props
+const Sections = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+}>(theme => props => {
+  const { swipeOffset } = props
   return [
     {
-      paddingBottom: uspSigninCta === 'alreadyHaveAccount' ? theme.rem(1) : theme.rem(-0.5)
+      paddingBottom: theme.rem(1)
     },
     useAnimatedStyle(() => {
       const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.5])

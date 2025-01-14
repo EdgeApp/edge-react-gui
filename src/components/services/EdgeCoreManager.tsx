@@ -70,16 +70,24 @@ const crashReporter: EdgeCrashReporter = {
   },
   logCrash(event) {
     // Index the crash error by the source and original error name:
-    const error = new Error(`${event.source}: ${String(event.error)}`)
+    const error = new Error(String(event.error))
     // All of these crash errors are grouped together using this error name:
-    error.name = 'EdgeCrashLog'
+    error.name = 'EdgeCrashEvent'
 
     captureException(error, scope => {
       scope.setLevel('fatal')
+      scope.setTags({ crashSource: event.source })
 
-      const context: Record<string, unknown> = {}
-      addMetadataToContext(context, event.metadata)
-      scope.setContext('Edge Crash Metadata', context)
+      const metadataContext: Record<string, unknown> = {}
+      addMetadataToContext(metadataContext, event.metadata)
+      scope.setContext('EdgeCrashEvent Metadata', metadataContext)
+
+      const detailsContext: Record<string, unknown> = {}
+      addMetadataToContext(detailsContext, {
+        source: event.source,
+        time: event.time
+      })
+      scope.setContext('EdgeCrashEvent Details', detailsContext)
 
       return scope
     })

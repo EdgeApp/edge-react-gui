@@ -55,16 +55,8 @@ export const SearchFooter = (props: SearchFooterProps) => {
     onChangeText(text)
   })
 
-  const handleSearchBlur = useHandler(() => {
-    if (searchText === '') {
-      onDoneSearching()
-    }
-  })
-
-  const handleSearchClear = useHandler(() => {
-    if (!textInputRef.current?.isFocused()) {
-      onDoneSearching()
-    }
+  const handleSearchDone = useHandler(() => {
+    onDoneSearching()
   })
 
   const handleSearchFocus = useHandler(() => {
@@ -107,8 +99,8 @@ export const SearchFooter = (props: SearchFooterProps) => {
           placeholder={placeholder}
           onChangeText={handleSearchChangeText}
           value={searchText}
-          onBlur={handleSearchBlur}
-          onClear={handleSearchClear}
+          active={isSearching}
+          onCancel={handleSearchDone}
           onFocus={handleSearchFocus}
           ref={textInputRef}
           iconComponent={SearchIconAnimated}
