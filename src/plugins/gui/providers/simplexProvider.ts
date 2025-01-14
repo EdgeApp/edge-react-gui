@@ -118,6 +118,7 @@ const SIMPLEX_ID_MAP: {
   ripple: { XRP: 'XRP' },
   solana: { KIN: 'KIN', SOL: 'SOL' },
   stellar: { XLM: 'XLM' },
+  sui: { SUI: 'SUI' },
   tezos: { XTZ: 'XTZ' },
   ton: { TON: 'TON', USDT: 'USDT-TON' },
   tron: {

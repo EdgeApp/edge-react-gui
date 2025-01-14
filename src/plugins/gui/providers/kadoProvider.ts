@@ -56,6 +56,7 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   litecoin: 'litecoin',
   ethereum: 'ethereum',
   avalanche: 'avalanche',
+  sui: 'sui',
   // cosmos: 'cosmos hub',
   bitcoin: 'bitcoin'
 }

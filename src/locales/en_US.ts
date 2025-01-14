@@ -580,6 +580,7 @@ const strings = {
   string_first_coreum_wallet_name: 'My Coreum',
   string_first_cosmoshub_wallet_name: 'My Cosmos Hub',
   string_first_osmosis_wallet_name: 'My Osmosis',
+  string_first_sui_wallet_name: 'My Sui',
   string_first_ton_wallet_name: 'My Toncoin',
   string_first_thorchainrune_wallet_name: 'My Thorchain',
   string_first_rsk_wallet_name: 'My Rootstock',

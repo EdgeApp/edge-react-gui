@@ -186,6 +186,7 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
   ripple: 'ripple',
   solana: 'solana',
   stellar: 'stellar',
+  sui: 'sui',
   tron: 'tron',
   ton: 'ton',
   zksync: 'zksync'

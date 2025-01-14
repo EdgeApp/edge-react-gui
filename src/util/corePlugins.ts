@@ -42,6 +42,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   sepolia: ENV.SEPOLIA_INIT,
   solana: ENV.SOLANA_INIT,
   stellar: true,
+  sui: true,
   telos: true,
   tezos: true,
   thorchainrune: ENV.THORCHAIN_INIT,
