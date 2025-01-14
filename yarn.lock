@@ -5216,6 +5216,11 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@unizen-io/unizen-contract-addresses@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@unizen-io/unizen-contract-addresses/-/unizen-contract-addresses-0.0.15.tgz#b4f2029524d26f8b19e5663a8b8ca81e45b836c7"
+  integrity sha512-+CvUqwYZh8IkhdvmdYUAq9M2bb4U/MbazDrxLAdLtS1dMdj2EKtxm/2xtCt8XU3ChRjPeMxXWDR3QYwHFDdoDA==
+
 "@unstoppabledomains/resolution@^9.3.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@unstoppabledomains/resolution/-/resolution-9.3.0.tgz#2a446e8cbf569b81da83881f1ccd428c710d11bd"
@@ -9135,12 +9140,13 @@ edge-currency-plugins@^3.4.5:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.16.1.tgz#76d50cc11ce7fd14a82a63af9b66b71bc9bc4c30"
-  integrity sha512-35nNgJi07eA8AcizmOmSASlqDIm03axC9pba0ZVVvBvvaWW6vASkdYRJciCmeWrl6qsnTmAiLtiJOWjGAOl47Q==
+edge-exchange-plugins@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.17.0.tgz#5f876b99a18c1c4e8fac97f3df1022773ec3a474"
+  integrity sha512-96hC8SNekOSF1oabWIEBmkDo7eW8fIhlfB5fW5C5S8qQBiFPzvrmy1Vc7qZfn4dilCzlDLhAJTNQySSXFVYzBg==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
+    "@unizen-io/unizen-contract-addresses" "^0.0.15"
     biggystring "^4.2.3"
     cleaners "^0.3.13"
     ethers "^5.7.0"
