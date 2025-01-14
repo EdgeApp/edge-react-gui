@@ -1617,6 +1617,8 @@ const strings = {
   survey_opt_in_person_event: 'In-person Event',
   survey_opt_personal_referral: 'Personal Referral',
   survey_opt_article: 'Article',
+  survey_opt_ad: 'Advertisement',
+  survey_opt_app_store: 'App Store',
   survey_opt_BTCTKVR_magazine: 'BTCTKVR Magazine',
   survey_opt_submit: 'Submit',
   survey_opt_dismiss: 'Dismiss',

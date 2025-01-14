@@ -53,6 +53,7 @@ export type TrackingEventName =
   | 'Start_App_No_Accounts'
   | 'Start_App_With_Accounts'
   | 'Survey_Discover'
+  | 'Survey_Discover2'
   | 'purchase'
   | 'Visa_Card_Launch'
   | 'Earn_Spend_Launch' // No longer used
@@ -136,7 +137,8 @@ export interface TrackingValues extends LoginTrackingValues {
   createdWalletCurrencyCode?: string
   numSelectedWallets?: number // Number of wallets to be created
   numAccounts?: number // Number of full accounts saved on the device
-  surveyResponse?: string // User's answer to a survey
+  surveyCategory2?: string // User's answer to a survey (first tier response)
+  surveyResponse2?: string // User's answer to a survey
 
   // Conversion values
   conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues | SwapConversionValues
