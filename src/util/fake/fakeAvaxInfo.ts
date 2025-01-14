@@ -16,6 +16,8 @@ const defaultSettings: FakeSettings = {
 export const avaxCurrencyInfo: EdgeCurrencyInfo = {
   // Basic currency information:
   currencyCode: 'AVAX',
+  assetDisplayName: 'Avalanche',
+  chainDisplayName: 'Avalanche',
   displayName: 'Avalanche',
   pluginId: 'avalanche',
   walletType: 'wallet:avalanche',
