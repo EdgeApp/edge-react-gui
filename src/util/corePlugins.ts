@@ -93,6 +93,7 @@ export const swapPlugins = {
   thorchain: ENV.THORCHAIN_INIT,
   swapkit: ENV.SWAPKIT_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
+  unizen: ENV.UNIZEN_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
   '0xgasless': ENV['0XGASLESS_INIT'],
