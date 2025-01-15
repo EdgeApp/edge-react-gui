@@ -16,6 +16,7 @@ import { EdgeModal } from './EdgeModal'
 interface OwnProps {
   bridge: AirshipBridge<void>
   navigation: NavigationBase
+  postponeOnCancel?: boolean
 }
 
 interface StateProps {
@@ -42,9 +43,11 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
   handleCancel = () => {
     if (!this.state.checkingPassword) {
-      this.props.dispatch({
-        type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
-      })
+      if (this.props.postponeOnCancel) {
+        this.props.dispatch({
+          type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
+        })
+      }
       this.props.bridge.resolve()
     }
   }
