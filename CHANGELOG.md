@@ -8,6 +8,7 @@
 - added: Add Unizen DEX
 - changed: `SurveyModal` expanded to a category & subcategory response
 - changed: Show KYC warning modal when trading with Swapuz
+- fixed: Incorrect date entry bug in Password Recovery
 - fixed: Using deprecated wallets to handle links
 - fixed: Thorchain stake minimum amount requirements
 
