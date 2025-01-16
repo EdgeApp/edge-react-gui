@@ -2,7 +2,11 @@
 
 ## Unreleased (develop)
 
-## 4.20.0 (staging)
+## 4.20.1 (2025-01-16)
+
+- fixed: Thorchain Savers would check for staked funds using the wrong address (again).
+
+## 4.20.0 (2025-01-15)
 
 - added: (Tron) PIX warning when sending USDT to a pasted email
 - added: 'numAccounts' to 'Signup_Complete' event
