@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.21.0 (staging)
+
 - added: Add SUI
 - added: Add Unizen DEX
 - changed: `SurveyModal` expanded to a category & subcategory response
@@ -9,7 +11,7 @@
 - fixed: Using deprecated wallets to handle links
 - fixed: Thorchain stake minimum amount requirements
 
-## 4.20.0 (staging)
+## 4.20.0 (2025-01-14)
 
 - added: (Tron) PIX warning when sending USDT to a pasted email
 - added: 'numAccounts' to 'Signup_Complete' event
