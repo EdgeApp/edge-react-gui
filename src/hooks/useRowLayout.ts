@@ -6,5 +6,9 @@ type rowLayoutHandler<T> = (data: T[] | null | undefined, index: number) => { le
 export const useRowLayout = <T>(rowHeightRem: number = 4.25): rowLayoutHandler<T> => {
   const theme = useTheme()
 
-  return useHandler((data, index) => ({ length: theme.rem(rowHeightRem), offset: theme.rem(rowHeightRem) * index, index }))
+  return useHandler((data, index) => ({
+    length: theme.rem(rowHeightRem),
+    offset: theme.rem(rowHeightRem) * index,
+    index
+  }))
 }

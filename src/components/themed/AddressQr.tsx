@@ -22,7 +22,12 @@ export const AddressQr = (props: Props) => {
   const { address, tokenId, wallet, nativeAmount, onPress = () => {} } = props
 
   const [encodedUri] = useAsyncValue(
-    async () => await wallet.encodeUri({ publicAddress: address, currencyCode: getCurrencyCode(wallet, tokenId), nativeAmount }),
+    async () =>
+      await wallet.encodeUri({
+        publicAddress: address,
+        currencyCode: getCurrencyCode(wallet, tokenId),
+        nativeAmount
+      }),
     [address, tokenId, nativeAmount, wallet]
   )
 

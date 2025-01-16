@@ -38,7 +38,14 @@ export interface AaveNetwork {
     sToken: ethers.Contract
     vToken: ethers.Contract
   }>
-  getReserveTokenBalances: (address: string) => Promise<Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }>>
+  getReserveTokenBalances: (address: string) => Promise<
+    Array<{
+      address: string
+      aBalance: BigNumber
+      vBalance: BigNumber
+      variableApr: number
+    }>
+  >
   getReserveTokenAprRates: (tokenAddress: string) => Promise<{
     variableApr: number
     stableApr: number
@@ -51,7 +58,11 @@ export interface AaveNetwork {
 interface FunctionCache {
   getAllReservesTokens?: Array<{ symbol: string; address: string }>
   getReserveTokenContracts: {
-    [address: string]: { aToken: ethers.Contract; sToken: ethers.Contract; vToken: ethers.Contract }
+    [address: string]: {
+      aToken: ethers.Contract
+      sToken: ethers.Contract
+      vToken: ethers.Contract
+    }
   }
   getReserveTokenAprRates: {
     [tokenAddress: string]: {
@@ -127,9 +138,12 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         ])
         return { address: token.address, aBalance, vBalance, variableApr }
       })
-      const reserveTokenBalances: Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }> = await Promise.all(
-        whenReserveTokenBalances
-      )
+      const reserveTokenBalances: Array<{
+        address: string
+        aBalance: BigNumber
+        vBalance: BigNumber
+        variableApr: number
+      }> = await Promise.all(whenReserveTokenBalances)
       return reserveTokenBalances
     },
 

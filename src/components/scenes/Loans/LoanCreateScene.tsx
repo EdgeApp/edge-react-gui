@@ -201,7 +201,10 @@ export const LoanCreateScene = (props: Props) => {
   // We want to use the same isoFiatCurrencyCode throughout the scene,
   // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
   // conversions have the same quote asset.
-  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode: defaultIsoFiat })
+  const collateralToFiatRate = useCurrencyFiatRate({
+    currencyCode: srcCurrencyCode,
+    isoFiatCurrencyCode: defaultIsoFiat
+  })
 
   const isUserInputComplete =
     srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
@@ -397,7 +400,11 @@ export const LoanCreateScene = (props: Props) => {
           <TappableAccountCard
             emptyLabel={lstrings.loan_select_receiving_wallet}
             onPress={handleShowWalletPickerModal('destination')}
-            selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
+            selectedAsset={{
+              wallet: destWallet,
+              tokenId: destTokenId,
+              paymentMethod
+            }}
             marginRem={[0, 0.5, 0.5, 0.5]}
           />
 

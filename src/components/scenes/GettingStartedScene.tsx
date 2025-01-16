@@ -188,20 +188,44 @@ export const GettingStartedScene = (props: Props) => {
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 80 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 80
+                }}
+              >
                 <Image source={edgeLogoIcon} />
               </EdgeAnim>
 
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 60 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 60
+                }}
+              >
                 <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
                   {parseMarkedText(lstrings.getting_started_welcome_title)}
                 </WelcomeHeroTitle>
               </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 40 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 40
+                }}
+              >
                 <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
               </EdgeAnim>
 
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 20 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 20
+                }}
+              >
                 <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
               </EdgeAnim>
             </WelcomeHero>
@@ -297,7 +321,11 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
     },
     useAnimatedStyle(() => ({
       opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
-      transform: [{ scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
+      transform: [
+        {
+          scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP)
+        }
+      ]
     }))
   ]
 })
@@ -322,7 +350,10 @@ const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
   textAlign: 'center'
 }))
 
-const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const HeroItem = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const { swipeOffset, itemIndex } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
@@ -373,7 +404,10 @@ const Pagination = styled(View)(theme => ({
   marginVertical: theme.rem(0.7)
 }))
 
-const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const PageIndicator = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const themeIcon = theme.icon
   const themeIconTappable = theme.iconTappable
   const { itemIndex, swipeOffset } = props
@@ -400,7 +434,9 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 // Sections
 //
 
-const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
+const SectionCoverAnimated = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+}>(theme => props => {
   const { swipeOffset } = props
   const themeRem = theme.rem(1)
   const themeModal = theme.modal
@@ -445,7 +481,10 @@ const Sections = styled(Animated.View)<{
   ]
 })
 
-const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const Section = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const { itemIndex, swipeOffset } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()

@@ -242,7 +242,14 @@ function EditTokenSceneComponent(props: Props) {
         />
         <ButtonsView
           primary={{ label: lstrings.string_save, onPress: handleSave }}
-          secondary={tokenId == null ? undefined : { label: lstrings.edittoken_delete_token, onPress: handleDelete }}
+          secondary={
+            tokenId == null
+              ? undefined
+              : {
+                  label: lstrings.edittoken_delete_token,
+                  onPress: handleDelete
+                }
+          }
           layout="column"
           parentType="scene"
         />

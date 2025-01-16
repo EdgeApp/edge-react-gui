@@ -95,7 +95,13 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           fioDisplayDenomination,
           isFallback
         )
-        this.setState({ activationCost, bitpayUrl, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], paymentInfo })
+        this.setState({
+          activationCost,
+          bitpayUrl,
+          feeValue,
+          supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }],
+          paymentInfo
+        })
       } catch (e: any) {
         showDevError(String(e))
         this.setState({ errorMessage: String(e) })

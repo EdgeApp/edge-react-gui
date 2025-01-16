@@ -74,15 +74,33 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
     <SceneWrapper>
       <View style={styles.outerContainer}>
         <View style={styles.container}>
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 90, duration: animationDuration }}>
+          <EdgeAnim
+            enter={{
+              type: 'fadeInUp',
+              distance: 90,
+              duration: animationDuration
+            }}
+          >
             <EdgeText style={styles.title}>{lstrings.hang_tight}</EdgeText>
           </EdgeAnim>
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60, duration: animationDuration }}>
+          <EdgeAnim
+            enter={{
+              type: 'fadeInUp',
+              distance: 60,
+              duration: animationDuration
+            }}
+          >
             <EdgeText style={styles.findingText} numberOfLines={3}>
               {isLongWait ? longProcessingText : processingText}
             </EdgeText>
           </EdgeAnim>
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90, duration: animationDuration }}>
+          <EdgeAnim
+            enter={{
+              type: 'fadeInDown',
+              distance: 90,
+              duration: animationDuration
+            }}
+          >
             <ActivityIndicator size="large" style={styles.spinner} color={theme.iconTappable} />
           </EdgeAnim>
         </View>

@@ -240,7 +240,10 @@ export function walletListMenuAction(
           // Add a copy button only for development
           let devButtons = {}
           // @ts-expect-error
-          if (global.__DEV__) devButtons = { copy: { label: lstrings.fragment_wallets_copy_seed } }
+          if (global.__DEV__)
+            devButtons = {
+              copy: { label: lstrings.fragment_wallets_copy_seed }
+            }
 
           const privateKey = await account.getDisplayPrivateKey(wallet.id)
 

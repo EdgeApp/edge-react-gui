@@ -31,7 +31,10 @@ export const writeDisableAnimations = async (disableAnimations: boolean) => {
   } catch (e) {
     console.log(e)
   }
-  const updatedSettings: DeviceSettings = { ...deviceSettings, disableAnimations }
+  const updatedSettings: DeviceSettings = {
+    ...deviceSettings,
+    disableAnimations
+  }
   return await writeDeviceSettings(updatedSettings)
 }
 
@@ -55,7 +58,10 @@ export const writeForceLightAccountCreate = async (forceLightAccountCreate: bool
   } catch (e) {
     console.log(e)
   }
-  const updatedSettings: DeviceSettings = { ...deviceSettings, forceLightAccountCreate }
+  const updatedSettings: DeviceSettings = {
+    ...deviceSettings,
+    forceLightAccountCreate
+  }
   return await writeDeviceSettings(updatedSettings)
 }
 
@@ -64,7 +70,10 @@ export const writeForceLightAccountCreate = async (forceLightAccountCreate: bool
  * the device were interacted with or dismissed.
  **/
 export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: DeviceNotifDismissInfo) => {
-  const updatedSettings: DeviceSettings = { ...deviceSettings, deviceNotifDismissInfo }
+  const updatedSettings: DeviceSettings = {
+    ...deviceSettings,
+    deviceNotifDismissInfo
+  }
   return await writeDeviceSettings(updatedSettings)
 }
 

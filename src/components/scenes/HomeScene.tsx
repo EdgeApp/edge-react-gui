@@ -88,7 +88,10 @@ export const HomeScene = (props: Props) => {
     navigation.navigate('swapTab')
   })
   const handleViewAssetsPress = useHandler(() => {
-    navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+    navigation.navigate('edgeTabs', {
+      screen: 'walletsTab',
+      params: { screen: 'walletList' }
+    })
   })
   const handleScroll = useSceneScrollHandler()
 
@@ -213,7 +216,11 @@ export const HomeScene = (props: Props) => {
                 <SectionHeader
                   leftTitle={lstrings.title_markets}
                   rightNode={lstrings.see_all}
-                  onRightPress={() => navigation.navigate('edgeAppStack', { screen: 'coinRanking' })}
+                  onRightPress={() =>
+                    navigation.navigate('edgeAppStack', {
+                      screen: 'coinRanking'
+                    })
+                  }
                 />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCard navigation={navigation as NavigationBase} numRows={5} />

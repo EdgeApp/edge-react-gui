@@ -92,7 +92,11 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     const fiatText = `${fiatSymbol} ${fiatAmount}`
     let nativeAmount = mul(fioRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
-    const cryptoText = `${getCryptoText({ displayDenomination, exchangeDenomination, nativeAmount })}`
+    const cryptoText = `${getCryptoText({
+      displayDenomination,
+      exchangeDenomination,
+      nativeAmount
+    })}`
 
     // time_stamp is returned as UTC but doesn't always include the zulu
     const safeDate = fioRequest.time_stamp.includes('Z') ? fioRequest.time_stamp : `${fioRequest.time_stamp}Z`
@@ -224,7 +228,10 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
 
     const rateKey = `${tokenCode}_${defaultIsoFiat}`
     const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
-    const fiatAmount = formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
+    const fiatAmount =
+      formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), {
+        toFixed: 2
+      }) || '0'
 
     return {
       exchangeDenomination,

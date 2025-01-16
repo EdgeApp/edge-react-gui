@@ -45,7 +45,9 @@ export const WalletConnectService = (props: Props) => {
       const { nativeAmount, networkFee, tokenId } = payloadAmounts(parsedPayload)
       const iconUri = session.peer.metadata.icons[0] ?? '.svg'
       const icon = iconUri.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : iconUri
-      const dApp = { peerMeta: { name: session.peer.metadata.name, icons: [icon] } }
+      const dApp = {
+        peerMeta: { name: session.peer.metadata.name, icons: [icon] }
+      }
       await Airship.show(bridge => (
         <WcSmartContractModal
           bridge={bridge}
@@ -116,7 +118,11 @@ export const WalletConnectService = (props: Props) => {
 }
 
 // Cleaners
-const payloadAmounts = asObject({ nativeAmount: asString, networkFee: asString, tokenId: asLegacyTokenId })
+const payloadAmounts = asObject({
+  nativeAmount: asString,
+  networkFee: asString,
+  tokenId: asLegacyTokenId
+})
 const asSessionRequest = asObject({
   id: asNumber,
   topic: asString,

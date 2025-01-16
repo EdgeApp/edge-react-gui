@@ -90,7 +90,9 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
         async programId =>
           await instance.getActionQueueItem(programId).catch(err => {
             // Silently fail on reads
-            console.error(`Failed to get ActionQueueItem for '${programId}'`, { err })
+            console.error(`Failed to get ActionQueueItem for '${programId}'`, {
+              err
+            })
             return undefined
           })
       )

@@ -225,7 +225,10 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleTermsOfService = useHandler(() => {
-    navigation.navigate('webView', { title: lstrings.title_terms_of_service, uri: config.termsOfServiceSite })
+    navigation.navigate('webView', {
+      title: lstrings.title_terms_of_service,
+      uri: config.termsOfServiceSite
+    })
   })
 
   const handleToggleContactsPermission = useHandler(async () => {

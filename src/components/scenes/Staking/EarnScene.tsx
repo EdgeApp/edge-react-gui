@@ -219,7 +219,10 @@ export const EarnScene = (props: Props) => {
         walletId = wallet.id
       } else {
         // Select an existing wallet that matches this policy or create a new one
-        const allowedAssets = stakePolicy.stakeAssets.map(stakeAsset => ({ pluginId: stakeAsset.pluginId, tokenId: null }))
+        const allowedAssets = stakePolicy.stakeAssets.map(stakeAsset => ({
+          pluginId: stakeAsset.pluginId,
+          tokenId: null
+        }))
 
         const result = await Airship.show<WalletListResult>(bridge => (
           <WalletListModal

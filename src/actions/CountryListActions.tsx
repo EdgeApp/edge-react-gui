@@ -77,7 +77,12 @@ export const showCountrySelectionModal =
           countryCode: selectedCountryCode,
           stateProvinceCode: selectedStateProvince
         }
-        await dispatch(updateOneSetting({ countryCode: selectedCountryCode, stateProvinceCode: selectedStateProvince }))
+        await dispatch(
+          updateOneSetting({
+            countryCode: selectedCountryCode,
+            stateProvinceCode: selectedStateProvince
+          })
+        )
         await writeSyncedSettings(account, updatedSettings)
       } catch (error: any) {
         showError(error)

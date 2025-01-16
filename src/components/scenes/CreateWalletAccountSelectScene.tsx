@@ -188,7 +188,11 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
       <View style={styles.buttonArea}>
         {isRenderSelect ? (
           <ButtonsView
-            primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
+            primary={{
+              disabled: !activationCost || activationCost === '',
+              onPress: handleSelect,
+              label: lstrings.create_wallet_account_select_wallet
+            }}
             layout="column"
             parentType="scene"
           />
@@ -198,8 +202,16 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
               {lstrings.create_wallet_account_confirm}
             </EdgeText>
             <ButtonsView
-              primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
-              secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
+              primary={{
+                disabled: isCreatingWallet,
+                onPress: handleSubmit,
+                label: lstrings.legacy_address_modal_continue
+              }}
+              secondary={{
+                disabled: isCreatingWallet,
+                onPress: handleCancel,
+                label: lstrings.string_cancel_cap
+              }}
               layout="column"
               parentType="scene"
             />

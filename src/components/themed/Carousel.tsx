@@ -93,7 +93,11 @@ export function Carousel<T>(props: Props<T>) {
   const trackStyle = useAnimatedStyle(() => ({
     // We must negate the value because it is a positive number
     maxWidth: itemWidth,
-    transform: [{ translateX: itemCount < 1 ? 0 : -((offset.value / itemCount) * trackWidth) }]
+    transform: [
+      {
+        translateX: itemCount < 1 ? 0 : -((offset.value / itemCount) * trackWidth)
+      }
+    ]
   }))
 
   // Init/Reset:

@@ -76,7 +76,11 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       }
       onLongPress={handleLongPress}
       onPress={handlePress}
-      gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
+      gradientBackground={{
+        colors: [primaryColor, '#00000000'],
+        start: { x: 0, y: 0 },
+        end: { x: 1, y: 0 }
+      }}
     >
       <CurrencyView token={token} tokenId={tokenId} wallet={wallet} />
     </EdgeCard>

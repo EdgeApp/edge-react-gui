@@ -25,8 +25,12 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
   const betterUrl = new URL(uri, true)
 
   if (url.protocol === 'dev:') {
-    // @ts-expect-error
-    return { type: 'scene', sceneName: url.pathname.replace('/', ''), query: parseQuery(url.query) }
+    return {
+      type: 'scene',
+      // @ts-expect-error
+      sceneName: url.pathname.replace('/', ''),
+      query: parseQuery(url.query)
+    }
   }
 
   // Handle dl.edge.app links:
@@ -75,7 +79,8 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     }
   }
 
-  // Assume anything else is a coin link of some kind:
+  // Assume anything else is a coin link of some kind (with the exception of
+  // deprecated currencies):
   const protocol = url.protocol.replace(/:$/, '')
   return { type: 'other', protocol, uri }
 }
@@ -160,7 +165,11 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'scene': {
       const sceneName = url.pathname.replace('/', '')
-      return { type: 'scene', sceneName: sceneName as keyof AppParamList, query: parseQuery(url.query) }
+      return {
+        type: 'scene',
+        sceneName: sceneName as keyof AppParamList,
+        query: parseQuery(url.query)
+      }
     }
 
     case 'swap': {
@@ -187,7 +196,12 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     }
 
     case 'https': {
-      if (url.href.includes('bitpay')) return { type: 'other', uri: 'https:' + url.pathname, protocol: 'bitpay' }
+      if (url.href.includes('bitpay'))
+        return {
+          type: 'other',
+          uri: 'https:' + url.pathname,
+          protocol: 'bitpay'
+        }
       break
     }
 

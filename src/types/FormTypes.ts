@@ -8,7 +8,10 @@ export type FormFieldType = 'address' | 'address2' | 'text' | 'postalcode' | 'st
 // For each form field type, define the relevant display properties that will be
 // used to pass along to the FilledTextInput.
 export const FORM_FIELD_DISPLAY_PROPS: {
-  readonly [fieldType in FormFieldType]: { widthRem?: number; textInputProps?: Partial<FilledTextInputBaseProps> }
+  readonly [fieldType in FormFieldType]: {
+    widthRem?: number
+    textInputProps?: Partial<FilledTextInputBaseProps>
+  }
 } = {
   address: {
     widthRem: undefined,

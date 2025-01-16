@@ -119,7 +119,15 @@ export const WcConnectScene = withWallet((props: Props) => {
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
         {renderWalletSelect()}
-        {subTitleText === '' ? null : <ButtonsView parentType="scene" primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
+        {subTitleText === '' ? null : (
+          <ButtonsView
+            parentType="scene"
+            primary={{
+              label: lstrings.wc_confirm_connect_button,
+              onPress: handleConnect
+            }}
+          />
+        )}
       </ScrollView>
     </SceneWrapper>
   )

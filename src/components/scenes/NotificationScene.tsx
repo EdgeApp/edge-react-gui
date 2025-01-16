@@ -27,7 +27,11 @@ export const NotificationScene = (props: Props) => {
 
   const handlePressToggleSetting = async (toggleSetting: NotificationSettingToggleSetting) => {
     try {
-      await dispatch(updateNotificationSettings({ [toggleSetting]: !settings[toggleSetting] }))
+      await dispatch(
+        updateNotificationSettings({
+          [toggleSetting]: !settings[toggleSetting]
+        })
+      )
     } catch (e: any) {
       showError(`Failed to reach notification server: ${e}`)
     }

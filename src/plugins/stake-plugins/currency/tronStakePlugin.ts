@@ -40,7 +40,10 @@ const policyDefault = {
 const policies: StakePolicy[] = [
   {
     ...policyDefault,
-    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakeProviderInfo: {
+      ...stakeProviderInfo,
+      displayName: lstrings.stake_resource_display_name_v2
+    },
     stakePolicyId: 'currency:tron:BANDWIDTH_V2',
     rewardAssets: [
       {
@@ -60,7 +63,10 @@ const policies: StakePolicy[] = [
   },
   {
     ...policyDefault,
-    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakeProviderInfo: {
+      ...stakeProviderInfo,
+      displayName: lstrings.stake_resource_display_name_v2
+    },
     stakePolicyId: 'currency:tron:ENERGY_V2',
     rewardAssets: [
       {

@@ -14,7 +14,9 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
 
   if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
     try {
-      logActivity(`Starting action program dry-run`, { programId: program.programId })
+      logActivity(`Starting action program dry-run`, {
+        programId: program.programId
+      })
 
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
@@ -46,7 +48,10 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
         // Update the state for the next evaluation
         const nextState = { ...state, effect: nextEffect }
 
-        logActivity(`Completed dry-run`, { programId: program.programId, pushEventInfos })
+        logActivity(`Completed dry-run`, {
+          programId: program.programId,
+          pushEventInfos
+        })
 
         // Exit early with dryrun results:
         return { nextState }
@@ -96,7 +101,11 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   // Execution Phase
   //
 
-  logActivity(`Executing next action`, { programId: program.programId, program, state })
+  logActivity(`Executing next action`, {
+    programId: program.programId,
+    program,
+    state
+  })
 
   // Execute Action
   const executableAction = await context.evaluateAction(program, state)

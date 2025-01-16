@@ -427,7 +427,14 @@ export const convertTransactionFeeToDisplayFee = (
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
-): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
+): {
+  fiatSymbol?: string
+  fiatAmount: string
+  fiatStyle?: string
+  cryptoSymbol?: string
+  cryptoAmount: string
+  nativeCryptoAmount: string
+} => {
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
@@ -468,7 +475,11 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 
-export function unixToLocaleDateTime(unixDate: number): { date: string; time: string; dateTime: string } {
+export function unixToLocaleDateTime(unixDate: number): {
+  date: string
+  time: string
+  dateTime: string
+} {
   const date = new Date(unixDate * 1000)
   return {
     date: toLocaleDate(date),

@@ -124,7 +124,11 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       if (tx == null || tx instanceof Error) continue
       unsignedEdgeTransactions.push(tx)
     }
-    navigation.push('sweepPrivateKeyCompletion', { memoryWallet, receivingWallet, unsignedEdgeTransactions })
+    navigation.push('sweepPrivateKeyCompletion', {
+      memoryWallet,
+      receivingWallet,
+      unsignedEdgeTransactions
+    })
   })
 
   // Create getMaxSpendable/makeSpend promises for each selected asset. We'll group them by wallet first and then execute all of them while keeping
@@ -171,14 +175,20 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           if (asset.tokenId === null) {
             nativeAmount = sub(nativeAmount, feeTotal)
           }
-          const maxSpendInfo = { ...spendInfo, spendTargets: [{ publicAddress, nativeAmount }] }
+          const maxSpendInfo = {
+            ...spendInfo,
+            spendTargets: [{ publicAddress, nativeAmount }]
+          }
           const edgeTransaction = await memoryWallet.makeSpend(maxSpendInfo)
           const txFee = edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
           setTransactionState(prevState => new Map([...prevState, [asset.key, edgeTransaction]]))
           feeTotal = add(feeTotal, txFee)
           // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
           if (lt(memoryWallet.balanceMap.get(null) ?? '0', feeTotal)) {
-            throw new InsufficientFundsError({ tokenId: null, networkFee: feeTotal })
+            throw new InsufficientFundsError({
+              tokenId: null,
+              networkFee: feeTotal
+            })
           }
           enableSlider = true
         } catch (e) {
@@ -227,7 +237,10 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           contentContainerStyle={{ marginHorizontal: theme.rem(0.5) }}
         />
         <SafeSlider
-          parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}
+          parentStyle={{
+            marginTop: theme.rem(0.5),
+            marginBottom: theme.rem(1)
+          }}
           disabled={sliderDisabled}
           disabledText={lstrings.send_confirmation_slide_to_confirm}
           onSlidingComplete={handleSlidingComplete}

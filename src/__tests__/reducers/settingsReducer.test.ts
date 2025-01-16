@@ -4,7 +4,9 @@ import { initialState, settings as settingsReducer } from '../../reducers/scenes
 
 test('initialState', () => {
   const expected = initialState
-  const actual = settingsReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+  const actual = settingsReducer(undefined, {
+    type: 'DUMMY_ACTION_PLEASE_IGNORE'
+  })
 
   expect(actual).toEqual(expected)
 })

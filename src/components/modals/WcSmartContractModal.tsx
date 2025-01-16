@@ -103,7 +103,9 @@ export const WcSmartContractModal = (props: Props) => {
         case 'eth_signTypedData_v4': {
           const cleanPayload = asEvmSignPayload(payload)
           const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
-          const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
+          const result = await wallet.signMessage(cleanPayload.params[1], {
+            otherParams: { typedData }
+          })
           await walletConnect.approveRequest(topic, requestId, result)
           break
         }
@@ -157,7 +159,9 @@ export const WcSmartContractModal = (props: Props) => {
         case 'cosmos_signDirect':
         case 'cosmos_signAmino': {
           const cleanPayload = asEither(asCosmosGetAccountsPayload, asCosmosSignDirectPayload, asCosmosSignAminoPayload)(payload)
-          const result = await wallet.signMessage('', { otherParams: cleanPayload })
+          const result = await wallet.signMessage('', {
+            otherParams: cleanPayload
+          })
           await walletConnect.approveRequest(topic, requestId, JSON.parse(result))
         }
       }

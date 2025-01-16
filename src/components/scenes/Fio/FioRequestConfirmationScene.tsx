@@ -304,7 +304,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     const styles = getStyles(theme)
 
-    const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
+    const fiatAmount =
+      formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), {
+        toFixed: 2
+      }) || '0'
     const cryptoName = displayDenomination.name
     const fiatName = removeIsoPrefix(defaultIsoFiat)
 

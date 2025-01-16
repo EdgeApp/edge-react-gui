@@ -39,9 +39,15 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
   const walletItems = React.useMemo(() => makeConnectWallets(edgeWallets, ccWalletMap), [edgeWallets, ccWalletMap])
 
-  const [connectWalletsMap, setConnectWalletsMap] = React.useState<{ [walletId: string]: FioConnectionWalletItem }>({})
-  const [disconnectWalletsMap, setDisconnectWalletsMap] = React.useState<{ [walletId: string]: FioConnectionWalletItem }>({})
-  const [prevItemsConnected, setPrevItemsConnected] = React.useState<{ [key: string]: boolean }>({})
+  const [connectWalletsMap, setConnectWalletsMap] = React.useState<{
+    [walletId: string]: FioConnectionWalletItem
+  }>({})
+  const [disconnectWalletsMap, setDisconnectWalletsMap] = React.useState<{
+    [walletId: string]: FioConnectionWalletItem
+  }>({})
+  const [prevItemsConnected, setPrevItemsConnected] = React.useState<{
+    [key: string]: boolean
+  }>({})
 
   const continueDisabled = Object.keys(connectWalletsMap).length === 0 && Object.keys(disconnectWalletsMap).length === 0
 
@@ -70,7 +76,9 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
     }
 
     if (fioWallet != null) {
-      const prevItemsConnected = Object.keys(walletItems).reduce<{ [key: string]: boolean }>((acc, walletKey: string) => {
+      const prevItemsConnected = Object.keys(walletItems).reduce<{
+        [key: string]: boolean
+      }>((acc, walletKey: string) => {
         acc[walletKey] = walletItems[walletKey].isConnected
         return acc
       }, {})

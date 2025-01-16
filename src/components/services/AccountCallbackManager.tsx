@@ -137,7 +137,10 @@ export function AccountCallbackManager(props: Props) {
 
       wallet.on('enabledDetectedTokens', enablingTokenIds => {
         console.log(`${walletPrefix(wallet)}: onNewTokens: ${JSON.stringify(enablingTokenIds)}`)
-        dispatch({ type: 'CORE/NEW_TOKENS', data: { walletId: wallet.id, enablingTokenIds } })
+        dispatch({
+          type: 'CORE/NEW_TOKENS',
+          data: { walletId: wallet.id, enablingTokenIds }
+        })
       }),
 
       // This one defers their work until later:

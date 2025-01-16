@@ -110,7 +110,13 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   // Borrow and ACH steps
   //
   // HACK: par as top level ActionOp type not supported
-  const borrowAction = ((await makeAaveBorrowAction({ borrowEngineWallet, borrowPluginId, destination })) as SeqActionOp).actions[0] as ParActionOp
+  const borrowAction = (
+    (await makeAaveBorrowAction({
+      borrowEngineWallet,
+      borrowPluginId,
+      destination
+    })) as SeqActionOp
+  ).actions[0] as ParActionOp
   if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
 
   // Special complete message for withdraw to bank

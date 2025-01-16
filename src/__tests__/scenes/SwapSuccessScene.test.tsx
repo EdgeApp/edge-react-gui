@@ -10,6 +10,8 @@ import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
   currencyCode: 'BTC',
+  assetDisplayName: 'Bitcoin',
+  chainDisplayName: 'Bitcoin',
   displayName: 'Bitcoin',
   walletType: 'bitcoin',
 

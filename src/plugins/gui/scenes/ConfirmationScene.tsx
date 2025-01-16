@@ -29,7 +29,12 @@ export const ConfirmationScene = React.memo((props: Props) => {
       <SceneContainer>
         <SceneHeaderUi4 title={route.params.title} />
         <Paragraph>{route.params.message}</Paragraph>
-        <SceneButtons primary={{ label: lstrings.string_done_cap, onPress: handleDonePress }} />
+        <SceneButtons
+          primary={{
+            label: lstrings.string_done_cap,
+            onPress: handleDonePress
+          }}
+        />
       </SceneContainer>
     </SceneWrapper>
   )

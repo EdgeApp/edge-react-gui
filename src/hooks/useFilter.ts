@@ -4,7 +4,9 @@ const CACHE_MAX_SIZE = 10
 
 export function useFilter<T>(allData: T[], filterData: (filter: string, item: T, index: number) => boolean = () => true): [T[], (filter: string) => void] {
   const [filteredData, setFilteredData] = React.useState(allData)
-  const [filteredDataCache, setFilteredDataCache] = React.useState<{ [search: string]: T[] }>({ '': allData })
+  const [filteredDataCache, setFilteredDataCache] = React.useState<{
+    [search: string]: T[]
+  }>({ '': allData })
   const [fifoCache, setFifoCache] = React.useState([''])
 
   const setFilter = (filter: string) => {

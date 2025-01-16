@@ -37,7 +37,11 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const cryptoAmountDenom = div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
 
   // Default to 10 displayed chars for crypto amount
-  const fmtCryptoAmount = trimEnd(formatNumber(cryptoAmountDenom, { toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars }))
+  const fmtCryptoAmount = trimEnd(
+    formatNumber(cryptoAmountDenom, {
+      toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars
+    })
+  )
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `
 
   // Fiat amount is always positive for this specific tile
@@ -48,7 +52,8 @@ export const CryptoFiatAmountTile = (props: Props) => {
       <EdgeRow rightButtonType={type} title={title} onPress={onPress}>
         <EdgeText>
           {cryptoAmountText}
-          (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
+          (
+          <FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
         </EdgeText>
       </EdgeRow>
     </EdgeCard>

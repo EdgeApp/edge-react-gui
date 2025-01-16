@@ -34,7 +34,9 @@ export const FioService = (props: Props) => {
   const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
   const expireReminderShown = React.useRef(false)
   const expiredChecking = React.useRef(false)
-  const walletsCheckedForExpired = React.useRef<{ [walletId: string]: boolean }>({})
+  const walletsCheckedForExpired = React.useRef<{
+    [walletId: string]: boolean
+  }>({})
   const fioWallets = React.useRef<EdgeCurrencyWallet[]>([])
   const disklet = useSelector(state => state.core.disklet)
 

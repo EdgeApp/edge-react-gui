@@ -133,20 +133,39 @@ export function WalletListScene(props: Props) {
     if (isSearching && tokenSupportingWalletIds.length > 0) {
       return (
         <SceneButtons
-          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
-          secondary={{ label: lstrings.add_custom_token, onPress: handlePressAddEditToken }}
+          primary={{
+            label: lstrings.wallet_list_add_wallet,
+            onPress: handlePressAddWallets
+          }}
+          secondary={{
+            label: lstrings.add_custom_token,
+            onPress: handlePressAddEditToken
+          }}
         />
       )
     }
     if (!isSearching && hasRestoreWallets) {
       return (
         <SceneButtons
-          primary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }}
-          secondary={{ label: lstrings.restore_wallets_modal_title, onPress: handlePressRestoreWallets }}
+          primary={{
+            label: lstrings.wallet_list_add_wallet,
+            onPress: handlePressAddWallets
+          }}
+          secondary={{
+            label: lstrings.restore_wallets_modal_title,
+            onPress: handlePressRestoreWallets
+          }}
         />
       )
     }
-    return <SceneButtons secondary={{ label: lstrings.wallet_list_add_wallet, onPress: handlePressAddWallets }} />
+    return (
+      <SceneButtons
+        secondary={{
+          label: lstrings.wallet_list_add_wallet,
+          onPress: handlePressAddWallets
+        }}
+      />
+    )
   }, [isSearching, tokenSupportingWalletIds.length, hasRestoreWallets, handlePressAddWallets, handlePressAddEditToken, handlePressRestoreWallets])
 
   const renderFooter: FooterRender = React.useCallback(

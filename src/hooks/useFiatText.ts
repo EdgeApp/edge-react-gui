@@ -1,11 +1,10 @@
-import { abs, div, lt, toFixed } from 'biggystring'
+import { abs, add, div, lt, toFixed } from 'biggystring'
 
 import { getFiatSymbol, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
-import { toBigNumberString } from '../util/toBigNumberString'
 import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
@@ -107,8 +106,10 @@ export const formatFiatString = (props: {
  * Returns a localized fiat amount string
  * */
 export const displayFiatAmount = (fiatAmount?: number | string, precision: number = 2, noGrouping: boolean = true) => {
-  const fiatAmountBns = fiatAmount != null ? toBigNumberString(fiatAmount) : undefined
+  const fiatAmountBns = fiatAmount != null ? add(fiatAmount, '0') : undefined
   if (fiatAmountBns == null || fiatAmountBns === '0') return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const absoluteAmount = abs(fiatAmountBns)
-  return formatNumber(toFixed(absoluteAmount, precision, precision), { noGrouping })
+  return formatNumber(toFixed(absoluteAmount, precision, precision), {
+    noGrouping
+  })
 }

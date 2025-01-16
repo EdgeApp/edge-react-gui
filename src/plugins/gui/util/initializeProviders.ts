@@ -16,7 +16,11 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
   const getTokenIdProvider = (pluginId: string, currencyCode: string) => getTokenId(account.currencyConfig[pluginId], currencyCode)
   const getTokenIdFromContract = (params: { pluginId: string; contractAddress: string }) => {
     const { pluginId, contractAddress } = params
-    return findTokenIdByNetworkLocation({ account, pluginId, networkLocation: { contractAddress } })
+    return findTokenIdByNetworkLocation({
+      account,
+      pluginId,
+      networkLocation: { contractAddress }
+    })
   }
 
   for (const providerFactory of providerFactories) {
@@ -26,7 +30,15 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
     if (apiKeys == null) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, getTokenId: getTokenIdProvider, getTokenIdFromContract, io: { makeUuid, store } }))
+    providerPromises.push(
+      providerFactory.makeProvider({
+        deviceId,
+        apiKeys,
+        getTokenId: getTokenIdProvider,
+        getTokenIdFromContract,
+        io: { makeUuid, store }
+      })
+    )
   }
 
   return await Promise.all(providerPromises)

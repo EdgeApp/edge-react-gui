@@ -110,7 +110,11 @@ export const ExpandableList = (props: Props) => {
         // because we guarantee some amount of margin under correct UI design
         if (x <= 0 || y <= 0 || width <= 0) return
 
-        setDropdownLayoutStyle({ left: x, top: Platform.OS === 'android' ? y + 25 : y, width: widthRem == null ? width : theme.rem(widthRem) })
+        setDropdownLayoutStyle({
+          left: x,
+          top: Platform.OS === 'android' ? y + 25 : y,
+          width: widthRem == null ? width : theme.rem(widthRem)
+        })
       })
     }
   }, [dropdownLayoutStyle, anchorViewRef, theme, isExpanded, widthRem])

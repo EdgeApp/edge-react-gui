@@ -180,7 +180,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
 
     if (wallet == null || currencyCode == null || selectedAddress == null) return
 
-    return await wallet.encodeUri({ currencyCode, publicAddress: selectedAddress.addressString, nativeAmount: amounts?.nativeAmount })
+    return await wallet.encodeUri({
+      currencyCode,
+      publicAddress: selectedAddress.addressString,
+      nativeAmount: amounts?.nativeAmount
+    })
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -281,6 +285,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   handleKeysOnlyModePress = async () => await showWebViewModal(lstrings.help_support, config.supportSite)
+
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
@@ -304,7 +309,13 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeText numberOfLines={0} style={styles.backupText}>
             {sprintf(lstrings.backup_for_transfer_message, config.appName)}
           </EdgeText>
-          <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+          <ButtonsView
+            parentType="scene"
+            primary={{
+              label: lstrings.backup_account,
+              onPress: this.handleBackupPress
+            }}
+          />
         </View>
       </SceneWrapper>
     )
@@ -500,7 +511,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
       if (sharedAddress != null && !sharedAddress.includes('amount')) {
-        const edgeEncodeUri: EdgeEncodeUri = { publicAddress, currencyCode, nativeAmount: '0' }
+        const edgeEncodeUri: EdgeEncodeUri = {
+          publicAddress,
+          currencyCode,
+          nativeAmount: '0'
+        }
         const newUri = await wallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
@@ -655,7 +670,13 @@ export const RequestScene = withWallet((props: OwnProps) => {
       wallet={wallet}
       refreshAllFioAddresses={async () => await dispatch(refreshAllFioAddresses())}
       onSelectWallet={async (walletId: string, tokenId: EdgeTokenId) => {
-        await dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
+        await dispatch(
+          selectWalletToken({
+            navigation: navigation as NavigationBase,
+            walletId,
+            tokenId
+          })
+        )
       }}
       toggleAccountBalanceVisibility={() => dispatch(toggleAccountBalanceVisibility())}
     />

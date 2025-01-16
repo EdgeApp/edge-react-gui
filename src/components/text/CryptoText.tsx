@@ -22,7 +22,13 @@ interface Props {
  **/
 export const CryptoText = React.memo((props: Props) => {
   const { wallet, tokenId, nativeAmount, withSymbol, hideBalance = false } = props
-  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol, hideBalance })
+  const cryptoText = useCryptoText({
+    wallet,
+    tokenId,
+    nativeAmount,
+    withSymbol,
+    hideBalance
+  })
 
   return <EdgeText>{cryptoText}</EdgeText>
 })

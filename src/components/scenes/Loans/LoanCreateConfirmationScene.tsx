@@ -186,7 +186,10 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         // Further route to LoanStatusScene only if Action Program contains multiple ops
         const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
         if (seq != null && seq.actions.length > 1) {
-          navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
+          navigation.navigate('loanStatus', {
+            actionQueueId: actionProgram.programId,
+            loanAccountId: loanAccount.id
+          })
         }
       } catch (e: any) {
         showError(e)

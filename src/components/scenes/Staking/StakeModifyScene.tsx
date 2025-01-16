@@ -1,5 +1,5 @@
-import { eq, gt, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
+import { div, eq, gt, toFixed } from 'biggystring'
+import { DustSpendError, EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -14,10 +14,9 @@ import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier, getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { enableStakeTokens, getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
-import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { WarningCard } from '../../cards/WarningCard'
@@ -28,7 +27,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputMod
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showDevError, showError } from '../../services/AirshipInstance'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -153,16 +152,10 @@ const StakeModifySceneComponent = (props: Props) => {
             const { currencyCode, nativeMin } = err
             let errMessage = changeQuoteRequest.action === 'stake' ? lstrings.stake_error_stake_below_minimum : lstrings.stake_error_unstake_below_minimum
             if (nativeMin != null) {
-              wallet
-                .nativeToDenomination(nativeMin, currencyCode)
-                .then(minExchangeAmount => {
-                  errMessage += `: ${minExchangeAmount} ${currencyCode}`
-                  setErrorMessage(errMessage)
-                })
-                .catch(err => {
-                  showDevError(err)
-                  setErrorMessage(errMessage)
-                })
+              const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+              const minExchangeAmount = div(nativeMin, multiplier, multiplier.length)
+              errMessage += `: ${minExchangeAmount} ${currencyCode}`
+              setErrorMessage(errMessage)
             } else {
               setErrorMessage(errMessage)
             }
@@ -172,7 +165,7 @@ const StakeModifySceneComponent = (props: Props) => {
             setErrorMessage(errMessage)
           } else if (err instanceof InsufficientFundsError) {
             setErrorMessage(lstrings.exchange_insufficient_funds_title)
-          } else if (err instanceof HumanFriendlyError) {
+          } else if (err instanceof HumanFriendlyError || err instanceof DustSpendError) {
             setErrorMessage(err.message)
           } else {
             showError(err)
@@ -200,10 +193,18 @@ const StakeModifySceneComponent = (props: Props) => {
       if (modification === 'unstake') {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
         if (allocationToMod == null) throw new Error(`Existing stake not found for ${modCurrencyCode}`)
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod.nativeAmount })
+        setChangeQuoteRequest({
+          ...changeQuoteRequest,
+          currencyCode: modCurrencyCode,
+          nativeAmount: allocationToMod.nativeAmount
+        })
       } else if (modification === 'stake' && existingStaked.length === 1) {
         const tokenId = getWalletTokenId(wallet, modCurrencyCode)
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balanceMap.get(tokenId) ?? '0' })
+        setChangeQuoteRequest({
+          ...changeQuoteRequest,
+          currencyCode: modCurrencyCode,
+          nativeAmount: wallet.balanceMap.get(tokenId) ?? '0'
+        })
       }
     }
   }
@@ -232,7 +233,10 @@ const StakeModifySceneComponent = (props: Props) => {
             dispatch(updateStakingPosition(stakePlugin, stakePolicy.stakePolicyId, wallet, account))
               .catch(err => showError(err))
               .finally(() => {
-                dispatch({ type: 'STAKING/FINISH_LOADING', walletId: wallet.id })
+                dispatch({
+                  type: 'STAKING/FINISH_LOADING',
+                  walletId: wallet.id
+                })
               })
           }, 10000)
         })
@@ -272,7 +276,12 @@ const StakeModifySceneComponent = (props: Props) => {
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
         // set the modified amount
-        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode, nativeAmount })
+        if (nativeAmount !== '0')
+          setChangeQuoteRequest({
+            ...changeQuoteRequest,
+            currencyCode,
+            nativeAmount
+          })
       })
       .catch(error => showError(error))
   }
@@ -334,7 +343,12 @@ const StakeModifySceneComponent = (props: Props) => {
     const { currencyCode, pluginId, allocationType } = quoteAllocation
     quoteAllocation =
       allocationType === 'unstake' && mustMaxUnstake
-        ? { allocationType, pluginId, currencyCode, nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0' }
+        ? {
+            allocationType,
+            pluginId,
+            currencyCode,
+            nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0'
+          }
         : quoteAllocation
 
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
@@ -426,8 +440,8 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderBreakEvenDays = () => {
     const { breakEvenDays = 0 } = quoteInfo ?? {}
-    const months = toFixed(toBigNumberString(breakEvenDays / 30), 1, 1)
-    const days = toFixed(toBigNumberString(breakEvenDays), 0, 0)
+    const months = toFixed(breakEvenDays / 30, 1, 1)
+    const days = toFixed(breakEvenDays, 0, 0)
 
     let message: string
     if (breakEvenDays > 60) {

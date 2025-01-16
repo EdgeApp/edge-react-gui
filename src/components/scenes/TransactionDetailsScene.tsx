@@ -114,7 +114,10 @@ const TransactionDetailsComponent = (props: Props) => {
   // Convert to text:
   const originalFiatText = displayFiatAmount(originalFiat)
   const currentFiatText = displayFiatAmount(currentFiat)
-  const percentText = toPercentString(percentChange, { plusSign: true, maxPrecision: 2 })
+  const percentText = toPercentString(percentChange, {
+    plusSign: true,
+    maxPrecision: 2
+  })
 
   const handleEdit = useHandler(() => {
     Airship.show<string | undefined>(bridge => (
@@ -140,7 +143,9 @@ const TransactionDetailsComponent = (props: Props) => {
         // Check for NaN, Infinity, and 0:
         if (JSON.stringify(amountFiat) === 'null') return
 
-        await onSaveTxDetails({ exchangeAmount: { [defaultIsoFiat]: amountFiat } })
+        await onSaveTxDetails({
+          exchangeAmount: { [defaultIsoFiat]: amountFiat }
+        })
       })
       .catch(error => showError(error))
   })
@@ -221,7 +226,14 @@ const TransactionDetailsComponent = (props: Props) => {
   }
 
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const newValues: EdgeMetadata = { ...localMetadata, ...newDetails, exchangeAmount: { ...localMetadata.exchangeAmount, ...newDetails.exchangeAmount } }
+    const newValues: EdgeMetadata = {
+      ...localMetadata,
+      ...newDetails,
+      exchangeAmount: {
+        ...localMetadata.exchangeAmount,
+        ...newDetails.exchangeAmount
+      }
+    }
     const { name, notes, category, exchangeAmount } = newValues
 
     let newName, newCategory, newNotes, newExchangeAmount

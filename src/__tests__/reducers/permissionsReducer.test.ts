@@ -5,7 +5,9 @@ import { initialState, permissions as permissionsReducer } from '../../reducers/
 
 test('initialState', () => {
   const expected = initialState
-  const actual = permissionsReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+  const actual = permissionsReducer(undefined, {
+    type: 'DUMMY_ACTION_PLEASE_IGNORE'
+  })
 
   expect(actual).toEqual(expected)
 })

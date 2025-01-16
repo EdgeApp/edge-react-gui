@@ -2,7 +2,16 @@
 
 ## Unreleased (develop)
 
-## 4.20.0 (staging)
+## 4.21.0 (staging)
+
+- added: Add SUI
+- added: Add Unizen DEX
+- changed: `SurveyModal` expanded to a category & subcategory response
+- changed: Show KYC warning modal when trading with Swapuz
+- fixed: Using deprecated wallets to handle links
+- fixed: Thorchain stake minimum amount requirements
+
+## 4.20.0 (2025-01-14)
 
 - added: (Tron) PIX warning when sending USDT to a pasted email
 - added: 'numAccounts' to 'Signup_Complete' event
@@ -16,6 +25,7 @@
 - changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
 - changed: Integrate `installSurvey` endpoint for post-install survey options
 - changed: StakeKit staking plugin to check validator status before getting quote
+- changed: Clean build archive directories from deploy script
 - fixed: Missing "Done" button when managing tokens for certain assets
 - fixed: Only send successful import items to completion scene
 - fixed: WalletConnect `eth_sendRawTransaction` event handling

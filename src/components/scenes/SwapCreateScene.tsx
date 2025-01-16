@@ -295,14 +295,18 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`, { trackError: false })
+      showWarning(`${lstrings.exchange_select_receiving_wallet}`, {
+        trackError: false
+      })
       return
     }
 
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`, { trackError: false })
+      showWarning(`${lstrings.exchange_select_sending_wallet}`, {
+        trackError: false
+      })
       return
     }
 
@@ -456,7 +460,15 @@ export const SwapCreateScene = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
       <EdgeAnim enter={fadeInDown90}>
-        {isNextHidden ? null : <ButtonsView primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />}
+        {isNextHidden ? null : (
+          <ButtonsView
+            primary={{
+              label: lstrings.string_next_capitalized,
+              onPress: handleNext
+            }}
+            parentType="scene"
+          />
+        )}
       </EdgeAnim>
     </SceneWrapper>
   )

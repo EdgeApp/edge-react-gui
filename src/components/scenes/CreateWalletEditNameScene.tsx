@@ -85,11 +85,17 @@ const CreateWalletEditNameComponent = (props: Props) => {
         showError(error)
         dispatch(logEvent('Create_Wallet_Failed', { error: String(error) }))
       }
-      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+      navigation.navigate('edgeTabs', {
+        screen: 'walletsTab',
+        params: { screen: 'walletList' }
+      })
       return
     }
     // Any other combination goes to the completion scene
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames })
+    navigation.navigate('createWalletCompletion', {
+      createWalletList,
+      walletNames
+    })
   })
 
   const handleSplit = useHandler(async () => {
@@ -104,7 +110,10 @@ const CreateWalletEditNameComponent = (props: Props) => {
           break
         }
       }
-      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+      navigation.navigate('edgeTabs', {
+        screen: 'walletsTab',
+        params: { screen: 'walletList' }
+      })
     }
   })
 
@@ -161,11 +170,17 @@ const CreateWalletEditNameComponent = (props: Props) => {
     // If all remaining create items are tokens just go enable them and return home
     if (newWalletItemsCopy.length === 0 && newTokenItems.length > 0) {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+      navigation.navigate('edgeTabs', {
+        screen: 'walletsTab',
+        params: { screen: 'walletList' }
+      })
       return
     }
 
-    navigation.navigate('createWalletImport', { createWalletList: [...newWalletItemsCopy, ...newTokenItems], walletNames })
+    navigation.navigate('createWalletImport', {
+      createWalletList: [...newWalletItemsCopy, ...newTokenItems],
+      walletNames
+    })
   })
 
   const renderCurrencyRow = useHandler((data: ListRenderItemInfo<WalletCreateItem>) => {
@@ -219,11 +234,22 @@ const CreateWalletEditNameComponent = (props: Props) => {
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         {isSplit ? (
-          <ButtonsView primary={{ label: lstrings.fragment_wallets_split_wallet, onPress: handleSplit }} />
+          <ButtonsView
+            primary={{
+              label: lstrings.fragment_wallets_split_wallet,
+              onPress: handleSplit
+            }}
+          />
         ) : (
           <ButtonsView
-            primary={{ label: lstrings.title_create_wallets, onPress: handleCreate }}
-            secondary={{ label: lstrings.create_wallet_imports_title, onPress: handleImport }}
+            primary={{
+              label: lstrings.title_create_wallets,
+              onPress: handleCreate
+            }}
+            secondary={{
+              label: lstrings.create_wallet_imports_title,
+              onPress: handleImport
+            }}
           />
         )}
       </View>

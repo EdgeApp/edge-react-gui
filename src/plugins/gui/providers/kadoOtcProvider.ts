@@ -54,6 +54,7 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   litecoin: 'litecoin',
   ethereum: 'ethereum',
   avalanche: 'avalanche',
+  sui: 'sui',
   // cosmos: 'cosmos hub',
   bitcoin: 'bitcoin'
 }
@@ -120,8 +121,16 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   }
 }
 
-const allowedBuyCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
-const allowedSellCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
+const allowedBuyCurrencyCodes: FiatProviderAssetMap = {
+  providerId,
+  crypto: {},
+  fiat: {}
+}
+const allowedSellCurrencyCodes: FiatProviderAssetMap = {
+  providerId,
+  crypto: {},
+  fiat: {}
+}
 const allowedCountryCodes: { [code: string]: boolean } = { US: true }
 
 /**
@@ -225,7 +234,10 @@ export const kadoOtcProvider: FiatProviderFactory = {
         validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
         if (Object.keys(allowedCurrencyCodes.crypto).length > 0) {
@@ -247,7 +259,10 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
         const blockchains = asBlockchains(result)
         if (!blockchains.success) {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
         for (const blockchain of blockchains.data.blockchains) {
@@ -262,14 +277,23 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
             if (asset.rampProducts == null || !asset.rampProducts.includes(direction)) continue
             if (isNative) {
-              allowedCurrencyCodes.crypto[pluginId].push({ tokenId: null, otherInfo: { symbol: asset.symbol } })
+              allowedCurrencyCodes.crypto[pluginId].push({
+                tokenId: null,
+                otherInfo: { symbol: asset.symbol }
+              })
               continue
             }
 
             if (address != null && address !== '0x0000000000000000000000000000000000000000') {
-              const tokenId = await params.getTokenIdFromContract({ pluginId, contractAddress: address })
+              const tokenId = await params.getTokenIdFromContract({
+                pluginId,
+                contractAddress: address
+              })
               if (tokenId !== undefined) {
-                allowedCurrencyCodes.crypto[pluginId].push({ tokenId, otherInfo: { symbol: asset.symbol } })
+                allowedCurrencyCodes.crypto[pluginId].push({
+                  tokenId,
+                  otherInfo: { symbol: asset.symbol }
+                })
               }
             }
           }
@@ -283,16 +307,27 @@ export const kadoOtcProvider: FiatProviderFactory = {
         const allowedCurrencyCodes = params.direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
         if (!allowedCountryCodes[params.regionCode.countryCode])
-          throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode: params.displayCurrencyCode })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode: params.displayCurrencyCode
+          })
 
         if (!params.paymentTypes.some(paymentType => allowedPaymentTypes[params.direction][paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const paymentType = params.paymentTypes[0]
 
         const allowedTokens = allowedCurrencyCodes.crypto[params.pluginId]
         const allowedToken = allowedTokens.find(t => t.tokenId === params.tokenId)
-        if (allowedToken == null) throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+        if (allowedToken == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'assetUnsupported'
+          })
         const tokenOtherInfo = asTokenOtherInfo(allowedToken.otherInfo)
 
         const blockchain = PLUGIN_TO_CHAIN_ID_MAP[params.pluginId]
@@ -422,7 +457,10 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
             console.log('!@!', result)
 
-            await showUi.confirmation({ title: lstrings.otc_confirmation_title, message: lstrings.otc_confirmation_message })
+            await showUi.confirmation({
+              title: lstrings.otc_confirmation_title,
+              message: lstrings.otc_confirmation_message
+            })
 
             // Exit the confirmation scene
             showUi.exitScene()

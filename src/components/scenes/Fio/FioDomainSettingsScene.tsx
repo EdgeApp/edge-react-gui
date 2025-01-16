@@ -102,7 +102,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   cancelOperation = () => {
-    this.setState({ showRenew: false, showVisibility: false, showTransfer: false })
+    this.setState({
+      showRenew: false,
+      showVisibility: false,
+      showTransfer: false
+    })
   }
 
   getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => await getRenewalFee(fioWallet)
@@ -133,7 +137,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     onLogEvent('Fio_Domain_Renew', {
       conversionValues: {
         conversionType: 'crypto',
-        cryptoAmount: new CryptoAmount({ nativeAmount: String(renewalFee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
+        cryptoAmount: new CryptoAmount({
+          nativeAmount: String(renewalFee),
+          currencyConfig: fioWallet.currencyConfig,
+          tokenId: null
+        })
       }
     })
   }

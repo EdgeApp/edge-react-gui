@@ -4,8 +4,12 @@ import fs from 'fs'
 
 import { exportTransactionsToCSVInner, exportTransactionsToQBO } from '../../actions/TransactionExportActions'
 
-const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', { encoding: 'utf8' })
-const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encoding: 'utf8' })
+const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', {
+  encoding: 'utf8'
+})
+const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', {
+  encoding: 'utf8'
+})
 
 const edgeTxs: EdgeTransaction[] = [
   {
