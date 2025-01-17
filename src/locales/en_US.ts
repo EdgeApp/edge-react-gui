@@ -1673,6 +1673,9 @@ const strings = {
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
   choose_custom_token_wallet: 'Select Wallet for Custom Token',
+  notifications: 'Notifications',
+  notifications_pinned: 'Pinned',
+  notifications_recent: 'Recent',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

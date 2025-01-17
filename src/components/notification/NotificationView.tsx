@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, modifyDeviceNotifInfo } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDeviceNotifInfo } from '../../actions/DeviceSettingsActions'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -33,7 +33,7 @@ interface Props {
 }
 
 const hideBanner = async (deviceNotifStateKey: string) => {
-  await modifyDeviceNotifInfo(deviceNotifStateKey, { isBannerHidden: true })
+  await writeDeviceNotifInfo(deviceNotifStateKey, { isBannerHidden: true })
 }
 
 const NotificationViewComponent = (props: Props) => {
@@ -103,7 +103,7 @@ const NotificationViewComponent = (props: Props) => {
       const handleCloseNewToken = async () => {
         // Since this isn't a priority notification, we can just fully complete
         // it here
-        await modifyDeviceNotifInfo(newTokenKey, { isBannerHidden: true, isCompleted: true, isShown: false })
+        // await modifyDeviceNotifInfo(newTokenKey, { isBannerHidden: true, isCompleted: true, isSeen: false })
         dispatch({
           type: 'CORE/DISMISS_NEW_TOKENS',
           data: { walletId }

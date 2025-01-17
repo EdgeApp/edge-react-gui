@@ -76,30 +76,23 @@ const writeDeviceNotifState = async (deviceNotifState: DeviceNotifState) => {
 
 /**
  * Overwrite the values of local notifications or create new values per specific
- * `deviceNotifState` key *with default values* unioned with provided
- * `deviceNotifInfo.`
- * Used by both `NotificationView` and `NotificationCenterScene`
+ * `deviceNotifState` key
  **/
-export const createDeviceNotifInfo = async (deviceNotifStateKey: string, deviceNotifInfo: DeviceNotifInfo = {}) => {
-  return await writeDeviceNotifState({ ...deviceSettings.deviceNotifState, [deviceNotifStateKey]: { ...asDeviceNotifInfo(deviceNotifInfo) } })
+export const writeDeviceNotifInfo = async (deviceNotifStateKey: string, deviceNotifInfo: Partial<DeviceNotifInfo>) => {
+  return await writeDeviceNotifState({
+    ...deviceSettings.deviceNotifState,
+    [deviceNotifStateKey]: { ...(deviceSettings.deviceNotifState[deviceNotifStateKey] ?? {}), ...asDeviceNotifInfo(deviceNotifInfo) }
+  })
 }
 
-/**
- * Modify existing state of local notifications per specific `deviceNotifState`
- * key with *existing values* unioned with provided `deviceNotifInfo.`
- *
- * If the particular key does not exist, it is created with default values.
- *
- * Used by both `NotificationView` and `NotificationCenterScene`
- **/
-export const modifyDeviceNotifInfo = async (deviceNotifStateKey: string, deviceNotifInfo: Partial<DeviceNotifInfo> = {}) => {
-  if (deviceSettings.deviceNotifState[deviceNotifStateKey] == null) {
-    console.warn('modifyDeviceNotifInfo: deviceNotifStateKey does not exist. Creating with default values.')
-  }
-  return await createDeviceNotifInfo(deviceNotifStateKey, {
-    ...deviceSettings.deviceNotifState[deviceNotifStateKey],
-    ...asDeviceNotifInfo(deviceNotifInfo)
-  })
+/** Returns 0 if any priority notifications exist, number of incomplete
+ * notifications otherwise. */
+export const getNotifNumber = (): number | undefined => {
+  const { deviceNotifState } = getDeviceSettings()
+  const priorityNotifs = Object.values(deviceNotifState).filter(deviceNotifInfo => deviceNotifInfo.isPriority).length
+  const incompleteNotifs = Object.values(deviceNotifState).filter(deviceNotifInfo => !deviceNotifInfo.isCompleted).length
+
+  return priorityNotifs > 0 ? 0 : incompleteNotifs
 }
 
 /**

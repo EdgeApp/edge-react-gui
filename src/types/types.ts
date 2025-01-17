@@ -145,7 +145,7 @@ export const asDeviceNotifInfo = asObject({
   isBannerHidden: asMaybe(asBoolean, false),
   isCompleted: asMaybe(asBoolean, false),
   isPriority: asMaybe(asBoolean, false),
-  isShown: asMaybe(asBoolean, true)
+  params: asMaybe(asObject({ walletId: asString }))
 })
 const asDeviceNotifState = asObject(asDeviceNotifInfo)
 /**
@@ -155,20 +155,11 @@ const asDeviceNotifState = asObject(asDeviceNotifInfo)
  *   `NotificationView` banner
  * - isCompleted: True if user "completed" the requested action. This may be
  *   as simple as tapping and reading the notification, but may be more complex,
- *   such as requiring 2FA toggled on. Incomplete notifications are represented
- *   with a red dot in the `NotificationCenterScene`
+ *   such as requiring 2FA toggled on.
  * - isPriority: True to pin this notification to the top of the
  *   `NotificationCenterScene`
- * - isShown: False if hidden from *both* the `NotificationCenterScene` and the
- *   `NotificationView`
  */
-export interface DeviceNotifInfo {
-  dateReceived?: number
-  isBannerHidden?: boolean
-  isCompleted?: boolean
-  isPriority?: boolean
-  isShown?: boolean
-}
+export type DeviceNotifInfo = ReturnType<typeof asDeviceNotifInfo>
 
 /**
  * - dateReceived: Timestamp that this notification was detected locally. May
@@ -177,12 +168,14 @@ export interface DeviceNotifInfo {
  *   `NotificationView` banner
  * - isCompleted: True if user "completed" the requested action. This may be
  *   as simple as tapping and reading the notification, but may be more complex,
- *   such as requiring 2FA toggled on. Incomplete notifications are represented
- *   with a red dot in the `NotificationCenterScene`
+ *   such as requiring 2FA toggled on.
  * - isPriority: True to pin this notification to the top of the
  *   `NotificationCenterScene`
- * - isShown: False if hidden from *both* the `NotificationCenterScene` and the
- *   `NotificationView`
+ * - isNew: Represented with a red dot in the `NotificationCenterScene`.
+ *    True if the user tapped on either the `NotificationView` OR
+ *   `NotificationCenterScene` card. The card may or may not disappear from the
+ *   `NotificationCenter` if seen, depending on the notification, but will
+ *   ALWAYS no longer be visible as a `NotificationView` card.
  */
 export type DeviceNotifState = ReturnType<typeof asDeviceNotifState>
 

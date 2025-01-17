@@ -1,6 +1,4 @@
-// import * as React from 'react'
-
-import { createDeviceNotifInfo, getDeviceSettings } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDeviceNotifInfo } from '../../actions/DeviceSettingsActions'
 import { getLocalAccountSettings } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
@@ -33,9 +31,12 @@ export const NotificationServices = () => {
 
         if (newTokenIds != null && newTokenIds.length > 0 && deviceNotifState[newTokenKey] == null) {
           // Only happens once per notification info key.
-          // Don't need to update existing, only create new ones with the
-          // default props.
-          await createDeviceNotifInfo(newTokenKey)
+          await writeDeviceNotifInfo(newTokenKey, {
+            dateReceived: Date.now(),
+            isPriority: true,
+            isCompleted: false,
+            params: { walletId }
+          })
         }
       })
 
@@ -43,33 +44,39 @@ export const NotificationServices = () => {
       const isOtpReminder = (await getOtpReminderModal(account)) != null
       const isOtpReminderStale = deviceNotifState.otpReminder == null || deviceNotifState.otpReminder.isCompleted
       if (isOtpReminder && isOtpReminderStale) {
-        await createDeviceNotifInfo('otpReminder', {
-          isPriority: true
+        await writeDeviceNotifInfo('otpReminder', {
+          dateReceived: Date.now(),
+          isPriority: true,
+          isCompleted: false
         })
       }
 
       // PW Reminder
-      const isPwReminderStale = deviceNotifState.pwReminder == null || deviceNotifState.pwReminder.isCompleted
-      if (isPwReminder && isPwReminderStale) {
-        await createDeviceNotifInfo('pwReminder', {
-          isPriority: true
+      if (isPwReminder) {
+        await writeDeviceNotifInfo('pwReminder', {
+          dateReceived: Date.now(),
+          isPriority: true,
+          isCompleted: false
         })
       }
 
       // Light Account Backup
-      const isLightAccountStale = deviceNotifState.lightAccount == null || deviceNotifState.lightAccount.isCompleted
-      if (isLightAccountReminder && isLightAccountStale) {
-        await createDeviceNotifInfo('lightAccountReminder', {
-          isPriority: true
+      if (isLightAccountReminder) {
+        await writeDeviceNotifInfo('lightAccountReminder', {
+          dateReceived: Date.now(),
+          isBannerHidden: false, // Always show this in NotificationView on login
+          isPriority: true,
+          isCompleted: false
         })
       }
 
       // IP 2FA
       const isIp2FaReminder = !isLightAccountReminder && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown
-      const isIp2FaStale = deviceNotifState.ip2FaReminder == null || deviceNotifState.ip2FaReminder.isCompleted
-      if (isIp2FaReminder && isIp2FaStale) {
-        await createDeviceNotifInfo('ip2FaReminder', {
-          isPriority: true
+      if (isIp2FaReminder) {
+        await writeDeviceNotifInfo('ip2FaReminder', {
+          dateReceived: Date.now(),
+          isPriority: true,
+          isCompleted: false
         })
       }
 
