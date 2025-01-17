@@ -507,6 +507,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
               injecteJs(run)
             }
 
+            // This is the state of the user-journey through the quoting process
+            let userFlowStatus: 'preparing-quote' | 'submitted-quote' | 'navigating-back' = 'preparing-quote'
+
             const onMessage: FiatPluginOpenWebViewParams['onMessage'] = (eventMessage: string, injectJs) => {
               const message = asMessage(JSON.parse(eventMessage))
               try {
@@ -655,6 +658,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       }
 
                       sendResponse('onsenttransaction', tx.signedTx, injectJs)
+
+                      // The user has signed and sent the transaction
+                      userFlowStatus = 'submitted-quote'
                     }
                     send().catch((e: unknown) => {
                       if (!(e instanceof Error && e.message.includes(SendErrorBackPressed))) {
@@ -739,7 +745,23 @@ export const mtpelerinProvider: FiatProviderFactory = {
               url,
               injectedJs,
               onMessage,
-              onClose: () => {}
+              onClose: () => {
+                // Hi-jack the back navigation
+                switch (userFlowStatus) {
+                  case 'preparing-quote':
+                  case 'navigating-back':
+                    return true
+                  case 'submitted-quote': {
+                    // If the user has submitted a quote, then navigating back
+                    // will skip all the way back to the plugin list scene.
+                    showUi.exitScene()
+                    showUi.exitScene()
+                    userFlowStatus = 'navigating-back'
+                    // Prevent default navigation
+                    return false
+                  }
+                }
+              }
             })
           },
           closeQuote: async (): Promise<void> => {}
