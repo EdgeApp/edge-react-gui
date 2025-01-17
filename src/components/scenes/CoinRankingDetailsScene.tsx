@@ -3,13 +3,15 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
+import { asCoinRankingData, CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
+import { fetchRates } from '../../util/network'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
@@ -21,7 +23,8 @@ import { COINGECKO_SUPPORTED_FIATS } from './CoinRankingScene'
 type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
 
 export interface CoinRankingDetailsParams {
-  coinRankingData: CoinRankingData
+  assetId?: string
+  coinRankingData?: CoinRankingData
   fiatCurrencyCode: string
 }
 
@@ -79,9 +82,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route, navigation } = props
-  const { coinRankingData, fiatCurrencyCode } = route.params
-  const { currencyCode, currencyName } = coinRankingData
-  const currencyCodeUppercase = currencyCode.toUpperCase()
+  const { assetId, coinRankingData: initCoinRankingData, fiatCurrencyCode } = route.params
+  const [coinRankingData, setCoinRankingData] = React.useState<CoinRankingData | undefined>(initCoinRankingData)
+  const { currencyCode, currencyName } = coinRankingData ?? {}
+  const currencyCodeUppercase = currencyCode?.toUpperCase() ?? ''
 
   // In case the user changes their default fiat while viewing this scene, we
   // want to go back since the parent scene handles fetching data.
@@ -98,9 +102,30 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     }
   }, [supportedFiat, initFiat, isFocused, navigation])
 
+  useAsyncEffect(
+    async () => {
+      if (coinRankingData == null) {
+        if (assetId == null) {
+          throw new Error('No currencyCode or coinRankingData provided')
+        }
+        const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${supportedFiat}`)
+        if (!response.ok) {
+          const text = await response.text()
+          throw new Error(`Unable to fetch coin ranking data. ${text}`)
+        }
+
+        const json = await response.json()
+        const crData = asCoinRankingData(json.data)
+        setCoinRankingData(crData)
+      }
+    },
+    [currencyCode, supportedFiat],
+    'CoinRankingDetailsScene'
+  )
+
   const imageUrlObject = React.useMemo(
     () => ({
-      uri: coinRankingData.imageUrl ?? ''
+      uri: coinRankingData?.imageUrl ?? ''
     }),
     [coinRankingData]
   )
@@ -140,19 +165,19 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
-        extendedString = coinRankingData.marketCapChangePercent24h != null ? ` (${toPercentString(coinRankingData.marketCapChangePercent24h / 100)})` : ''
+        extendedString = coinRankingData?.marketCapChangePercent24h != null ? ` (${toPercentString(coinRankingData.marketCapChangePercent24h / 100)})` : ''
         break
       case 'allTimeHigh': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
         })} ${supportedFiat}`
-        return coinRankingData.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
+        return coinRankingData?.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
       }
       case 'allTimeLow': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
         })} ${supportedFiat}`
-        return coinRankingData.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
+        return coinRankingData?.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
       }
       default:
         // If no special modifications, just return simple data formatting
@@ -194,17 +219,21 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
-      <View style={styles.container}>
-        <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
-          <FastImage style={styles.icon} source={imageUrlObject} />
-          <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
-        </EdgeAnim>
-        <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} fiatCurrencyCode={initFiat} />
-        <View style={styles.columns}>
-          <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
-          <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
+      {coinRankingData != null ? (
+        <View style={styles.container}>
+          <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
+            <FastImage style={styles.icon} source={imageUrlObject} />
+            <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
+          </EdgeAnim>
+          <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} fiatCurrencyCode={initFiat} />
+          <View style={styles.columns}>
+            <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
+            <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
+          </View>
         </View>
-      </View>
+      ) : (
+        <EdgeText>Loading...</EdgeText>
+      )}
     </SceneWrapper>
   )
 }
