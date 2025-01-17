@@ -140,15 +140,51 @@ const asLocalAccountSettingsInner = asObject({
   tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
 
-const asDeviceNotifDismissInfo = asObject({})
-export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
+export const asDeviceNotifInfo = asObject({
+  dateReceived: asMaybe(asNumber, Date.now()),
+  isBannerHidden: asMaybe(asBoolean, false),
+  isCompleted: asMaybe(asBoolean, false),
+  isPriority: asMaybe(asBoolean, false),
+  params: asMaybe(asObject({ walletId: asString }))
+})
+const asDeviceNotifState = asObject(asDeviceNotifInfo)
+/**
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on.
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ */
+export type DeviceNotifInfo = ReturnType<typeof asDeviceNotifInfo>
+
+/**
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on.
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ * - isNew: Represented with a red dot in the `NotificationCenterScene`.
+ *    True if the user tapped on either the `NotificationView` OR
+ *   `NotificationCenterScene` card. The card may or may not disappear from the
+ *   `NotificationCenter` if seen, depending on the notification, but will
+ *   ALWAYS no longer be visible as a `NotificationView` card.
+ */
+export type DeviceNotifState = ReturnType<typeof asDeviceNotifState>
 
 export const asDefaultScreen = asValue('home', 'assets')
 
 const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
-  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({})),
+  deviceNotifState: asMaybe(asDeviceNotifState, asDeviceNotifState({})),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
   isSurveyDiscoverShown: asMaybe(asBoolean, false)

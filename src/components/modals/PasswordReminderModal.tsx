@@ -16,6 +16,7 @@ import { EdgeModal } from './EdgeModal'
 interface OwnProps {
   bridge: AirshipBridge<void>
   navigation: NavigationBase
+  postponeOnCancel?: boolean
 }
 
 interface StateProps {
@@ -42,9 +43,11 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
   handleCancel = () => {
     if (!this.state.checkingPassword) {
-      this.props.dispatch({
-        type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
-      })
+      if (this.props.postponeOnCancel) {
+        this.props.dispatch({
+          type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
+        })
+      }
       this.props.bridge.resolve()
     }
   }
@@ -68,6 +71,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
       this.props.dispatch({
         type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
       })
+      await modifyDeviceNotifInfo('pwReminder', { isBannerHidden: true, isCompleted: true, isSeen: false })
       this.setState({ checkingPassword: false })
       showToast(lstrings.password_reminder_great_job)
       setTimeout(() => bridge.resolve(), 10)

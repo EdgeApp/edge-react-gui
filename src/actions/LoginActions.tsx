@@ -273,6 +273,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       showError(error)
     }
 
+    await Airship.show(bridge => <SurveyModal bridge={bridge} />)
+
     // Post login stuff:
     if (!newAccount && !hideSurvey && !getDeviceSettings().isSurveyDiscoverShown && config.disableSurveyModal !== true) {
       // Show the survey modal once per app install, only if this isn't the
