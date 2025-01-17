@@ -35,7 +35,7 @@ const SURVEY_CATS: SurveyCategory[] = [
   { catKey: 'inPerson', label: lstrings.survey_opt_in_person_event },
   { catKey: 'referral', label: lstrings.survey_opt_personal_referral },
   { catKey: 'search', label: lstrings.survey_opt_search_engine },
-  { catKey: 'social', label: lstrings.survey_opt_youtube }
+  { catKey: 'social', label: lstrings.survey_opt_social }
 ]
 
 interface LocaleSubcategory {
