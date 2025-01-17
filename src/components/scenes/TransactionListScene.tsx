@@ -18,15 +18,18 @@ import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
-import { infoServerData } from '../../util/network'
+import { coinrankListData, infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
+import { SwipeChart } from '../charts/SwipeChart'
 import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
+import { EdgeText } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
@@ -66,6 +69,7 @@ function TransactionListComponent(props: Props) {
 
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+  const fiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat).replace('iso:', '')
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${state.ui.settings.defaultIsoFiat}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
@@ -202,6 +206,12 @@ function TransactionListComponent(props: Props) {
     )
   }, [])
 
+  const assetId = coinrankListData.coins[currencyCode]
+
+  const handlePressCoinRanking = useHandler(() => {
+    navigation.navigate('coinRankingDetails', { assetId, fiatCurrencyCode })
+  })
+
   const topArea = React.useMemo(() => {
     return (
       <>
@@ -222,9 +232,29 @@ function TransactionListComponent(props: Props) {
           countryCode={route.params.countryCode}
           screenWidth={screenWidth}
         />
+        {assetId != null && (
+          <EdgeTouchableOpacity onPress={handlePressCoinRanking}>
+            <EdgeText>See More</EdgeText>
+          </EdgeTouchableOpacity>
+        )}
+        {assetId != null && <SwipeChart assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />}
       </>
     )
-  }, [listItems.length, navigation, isSearching, tokenId, wallet, isLightAccount, pluginId, route.params.countryCode, screenWidth])
+  }, [
+    listItems.length,
+    navigation,
+    isSearching,
+    tokenId,
+    wallet,
+    isLightAccount,
+    pluginId,
+    route.params.countryCode,
+    screenWidth,
+    assetId,
+    currencyCode,
+    fiatCurrencyCode,
+    handlePressCoinRanking
+  ])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {
