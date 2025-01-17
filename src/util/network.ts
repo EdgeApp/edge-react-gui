@@ -1,9 +1,10 @@
-import { Cleaner } from 'cleaners'
+import { asArray, asEither, asNumber, asObject, asString, Cleaner } from 'cleaners'
 import { EdgeFetchFunction, EdgeFetchOptions, EdgeFetchResponse } from 'edge-core-js'
 import { asInfoRollup, InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
+import { ENV } from '../env'
 import { config } from '../theme/appConfig'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
@@ -95,4 +96,60 @@ export const initInfoServer = async () => {
 
   await queryInfo()
   setInterval(queryInfo, INFO_FETCH_INTERVAL)
+}
+
+const asCoinGeckoError = asObject({
+  status: asObject({
+    error_code: asNumber,
+    error_message: asString
+  })
+})
+
+const asCoinGeckoCoins = asArray(
+  asObject({
+    id: asString,
+    symbol: asString,
+    name: asString
+  })
+)
+
+const asCoinGeckoCoinsResponse = asEither(asCoinGeckoCoins, asCoinGeckoError)
+
+export type CoinGeckoCoins = ReturnType<typeof asCoinGeckoCoins>
+
+const COINGECKO_URL = 'https://api.coingecko.com'
+const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
+
+export const coingeckoListData: { coins: CoinGeckoCoins } = { coins: [] }
+export const initCoingeckoList = async () => {
+  let baseUrl = COINGECKO_URL
+  let apiKeyParam = ''
+  while (true) {
+    const url = baseUrl + '/api/v3/coins/list' + apiKeyParam
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        const text = await response.text()
+        throw new Error(`initCoingeckoList error ${response.status}: ${text}`)
+      }
+      const responseJson = await response.json()
+      const coins = asCoinGeckoCoinsResponse(responseJson)
+
+      if ('status' in coins) {
+        if (coins.status.error_code === 429 && baseUrl === COINGECKO_URL) {
+          // Rate limit error, use our API key as a fallback
+          baseUrl = COINGECKO_URL_PRO
+          apiKeyParam = '&x_cg_pro_api_key=' + ENV.COINGECKO_API_KEY
+          continue
+        }
+        throw new Error(`initCoingeckoList error ${coins.status.error_code}: ${coins.status.error_message}`)
+      } else {
+        coingeckoListData.coins = coins
+        console.log('initCoingeckoList: Successfully fetched coingecko list')
+      }
+    } catch (e) {
+      console.warn('initCoingeckoList: Failed to fetch coingecko list', String(e))
+    }
+    break
+  }
 }

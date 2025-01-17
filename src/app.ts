@@ -17,7 +17,7 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
-import { initInfoServer } from './util/network'
+import { initCoingeckoList, initInfoServer } from './util/network'
 
 export type Environment = 'development' | 'testing' | 'production'
 
@@ -278,5 +278,6 @@ if (ENV.DEBUG_THEME) {
 
 initDeviceSettings().catch(err => console.log(err))
 initInfoServer().catch(err => console.log(err))
+initCoingeckoList().catch(err => console.log(err))
 
 if (global.Buffer == null) global.Buffer = Buffer
