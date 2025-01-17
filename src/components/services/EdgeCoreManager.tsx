@@ -23,7 +23,7 @@ import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
-const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
+const LOGIN_TEST_SERVER = 'https://login-tester.edge.app'
 const INFO_TEST_SERVER = 'https://info-tester.edge.app'
 const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 
@@ -193,7 +193,7 @@ export function EdgeCoreManager(props: Props) {
           pluginUris={pluginUris}
           onLoad={handleContext}
           onError={handleError}
-          authServer={loginServer}
+          loginServer={loginServer}
           infoServer={infoServer}
           syncServer={syncServer}
         />
