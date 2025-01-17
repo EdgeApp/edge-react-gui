@@ -1611,7 +1611,7 @@ const strings = {
 
   survey_discover_title_1s: 'How Did You Discover %1$s?',
   survey_discover_subtitle: 'This survey is anonymous and your response will not be tied to your account.',
-  survey_opt_youtube: 'YouTube',
+  survey_opt_social: 'Social Media',
   survey_opt_search_engine: 'Search Engine',
   survey_opt_x_twitter: 'X/Twitter',
   survey_opt_in_person_event: 'In-person Event',
