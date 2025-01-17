@@ -1401,7 +1401,7 @@
   "notif_ip_validation_enabled_body_1s": "%1$s impedisce l'accesso a indirizzi IP non riconosciuti. Tocca per saperne di più.",
   "survey_discover_title_1s": "Come hai scoperto %1$s?",
   "survey_discover_subtitle": "Questo sondaggio è anonimo e la tua risposta non sarà legata al tuo account.",
-  "survey_opt_youtube": "YouTube",
+  "survey_opt_social": "Social Media",
   "survey_opt_search_engine": "Motori di Ricerca",
   "survey_opt_x_twitter": "X/Twitter",
   "survey_opt_in_person_event": "Evento di persona",
