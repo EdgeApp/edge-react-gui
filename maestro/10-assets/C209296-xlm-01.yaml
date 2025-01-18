@@ -1,0 +1,29 @@
+# Priority: Critical
+# Test ID: C209296
+# Title: XLM Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for XLM only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209296
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_XLM_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_XLM_PASSWORD}
+
+- extendedWaitUntil:
+    visible: XLM
+    timeout: 120000
+- tapOn: XLM
+- extendedWaitUntil:
+    visible: 4.2 XLM
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
