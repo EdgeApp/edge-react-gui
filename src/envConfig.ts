@@ -79,7 +79,12 @@ export const asEnvConfig = asObject({
         })
       ),
       moonpay: asOptional(asString),
-      mtpelerin: asOptional(asString),
+      mtpelerin: asOptional(
+        asObject({
+          apiKey: asString,
+          referralCode: asOptional(asString)
+        })
+      ),
       paybis: asOptional(
         asObject({
           partnerUrl: asString,

@@ -191,6 +191,11 @@ const allowedCountryCodes: { [code: string]: boolean } = {
   VA: true // Vatican City
 }
 
+const asApiKeys = asObject({
+  apiKey: asString,
+  referralCode: asOptional(asString, 'edgewallet')
+})
+
 /**
  * Cleaner for https://api.mtpelerin.com/currencies/tokens
  */
@@ -272,6 +277,7 @@ type WidgetParams = (WidgetBuyParams | WidgetSellParams) & {
   code: string /** Random 4 digit code from 1000-9999 */
   hash: string /** Hash of signature */
   net: string /** Default network */
+  rfr: string /* The referral account for rev share (e.g. edgewallet) */
   type: 'webview' /** Integration type ('web'|'popup'|'webview') */
 }
 
@@ -305,7 +311,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
   providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const apiKey = asString(params.apiKeys)
+    const { apiKey, referralCode } = asApiKeys(params.apiKeys)
     const out: FiatProvider = {
       providerId,
       partnerIcon,
@@ -693,13 +699,14 @@ export const mtpelerinProvider: FiatProviderFactory = {
             }
 
             let widgetParams: WidgetParams
-            const commonParams = {
+            const commonParams: Pick<WidgetParams, '_ctkn' | 'addr' | 'code' | 'hash' | 'net' | 'type' | 'rfr'> = {
               _ctkn: apiKey,
               addr: publicAddress,
               code,
               hash,
               net: network,
-              type: 'webview' as 'webview'
+              type: 'webview' as 'webview',
+              rfr: referralCode
             }
 
             if (direction === 'buy') {
