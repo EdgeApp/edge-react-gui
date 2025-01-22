@@ -80,3 +80,7 @@ export const asPluginTweak = asObject<PluginTweak>({
 export const asIpApi = asObject({
   countryCode: asString
 })
+
+export const asIp2LocationIo = asObject({
+  countryCode: asString
+})
