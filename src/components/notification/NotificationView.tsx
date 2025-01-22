@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getLocalAccountSettings, writeNotifDismissInfo } from '../../actions/LocalSettingsActions'
+import { useAccountSettings, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
@@ -35,6 +35,8 @@ interface Props {
 
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props
+  const accountSettings = useAccountSettings()
+  const { accountNotifDismissInfo } = accountSettings
   const navigationDebounced = useAsyncNavigation(navigation)
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -51,7 +53,6 @@ const NotificationViewComponent = (props: Props) => {
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
-  const accountNotifDismissInfo = getLocalAccountSettings().accountNotifDismissInfo
 
   const isLightAccount = account.id != null && account.username == null
 
@@ -63,15 +64,12 @@ const NotificationViewComponent = (props: Props) => {
     await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />)
   })
 
-  const handle2FaEnabledDismiss = useHandler(async () => {
-    await writeNotifDismissInfo(account, {
-      ...accountNotifDismissInfo,
-      ip2FaNotifShown: true
-    })
+  const handle2FaEnabledClose = useHandler(async () => {
+    await writeLocalAccountSettings(account, { ...accountSettings, accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true } })
   })
   const handle2FaEnabledPress = useHandler(async () => {
+    await handle2FaEnabledClose()
     await openBrowserUri(config.ip2faSite)
-    await handle2FaEnabledDismiss()
   })
 
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
@@ -180,7 +178,7 @@ const NotificationViewComponent = (props: Props) => {
           message={sprintf(lstrings.notif_ip_validation_enabled_body_1s, config.appName)}
           iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
           onPress={handle2FaEnabledPress}
-          onClose={handle2FaEnabledDismiss}
+          onClose={handle2FaEnabledClose}
         />
       </EdgeAnim>
     </NotificationCardsContainer>
