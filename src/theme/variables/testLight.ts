@@ -434,7 +434,7 @@ export const testLight: Theme = {
     elevation: 0
   },
 
-  notifcationCardShadow: {
+  notificationCardShadow: {
     shadowColor: palette.black,
     shadowOffset: {
       width: 3,

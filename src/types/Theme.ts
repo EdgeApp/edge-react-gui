@@ -444,7 +444,7 @@ export interface Theme {
   // Shadows
   iconShadow: ThemeShadowParams
   dropdownListShadow: ThemeShadowParams
-  notifcationCardShadow: ThemeShadowParams
+  notificationCardShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string

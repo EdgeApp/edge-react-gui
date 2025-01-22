@@ -120,7 +120,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
-    ...theme.notifcationCardShadow
+    ...theme.notificationCardShadow
   },
   shadowAndroid: {
     overflow: 'hidden',
@@ -129,7 +129,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
-    ...theme.notifcationCardShadow
+    ...theme.notificationCardShadow
   }
 }))
 
