@@ -2,10 +2,12 @@
 
 ## Unreleased (develop)
 
+- added: `NotificationCenterScene`
 - added: Search bar to `EarnScene`
 - added: Price chart to `TransactionListScene`
 - added: Add Unizen DEX
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `TransactionListScene2`
+- changed: All floating `NotificationCard`s are dismissible
 
 ## 4.21.1 (2025-01-28)
 

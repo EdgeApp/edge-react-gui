@@ -22,6 +22,22 @@ export function useAccountSettings() {
   return localAccountSettings
 }
 
+/**
+ * Returns a notification indicator number for the badge:
+ * - undefined: no badge (all notifications completed)
+ * - 0: show dot (has ANY priority notifications)
+ * - number: show count (has ONLY non-priority notifications)
+ */
+export function useNotifCount(): number | undefined {
+  const { notifState } = useAccountSettings()
+  return React.useMemo(() => {
+    const priorityCount = Object.values(notifState).filter(notifInfo => notifInfo.isPriority && !notifInfo.isCompleted).length
+    const incompleteCount = Object.values(notifState).filter(notifInfo => !notifInfo.isCompleted).length
+
+    return priorityCount === 0 && incompleteCount === 0 ? undefined : priorityCount > 0 ? 0 : incompleteCount
+  }, [notifState])
+}
+
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()

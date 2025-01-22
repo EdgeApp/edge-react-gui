@@ -131,24 +131,30 @@ const asTokenWarningsShown = asArray(asString)
 
 export interface NotifInfo {
   /**
-   *  Timestamp that this notification was detected locally. May accept
-   *  server-side date values in future iterations. */
+   * Timestamp that this notification was detected locally. May accept
+   * server-side date values in future iterations.
+   */
   dateReceived: Date
 
   /** Whether the user has dismissed the bottom `NotificationView` banner */
   isBannerHidden: boolean
+
   /**
-   *  True if user "completed" the requested action. This may be as simple as
-   *  tapping and reading the notification, but may be more complex, such as
-   *  requiring 2FA toggled on. */
+   * True if user "completed" the requested action. This may be as simple as
+   * tapping and reading the notification, but may be more complex, such as
+   * requiring 2FA toggled on.
+   */
   isCompleted: boolean
+
   /**
    * True to pin this notification to the top of the `NotificationCenterScene`
    */
   isPriority: boolean
+
   /**
-   *  Optional object that holds additional parameters that may be used to
-   *  customize the notification UI. */
+   * Optional object that holds additional parameters that may be used to
+   * customize the notification UI.
+   */
   params?: { walletId: string }
 }
 
