@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
@@ -5,8 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { useAccountSettings, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAccountSettings, writeAccountNotifInfo, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -28,48 +28,63 @@ import { NotificationCard } from './NotificationCard'
 
 interface Props {
   navigation: NavigationBase
-
   hasTabs: boolean
   footerHeight: number
+}
+
+const hideBanner = async (account: EdgeAccount, accountNotifStateKey: string) => {
+  await writeAccountNotifInfo(account, accountNotifStateKey, { isBannerHidden: true })
 }
 
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props
   const accountSettings = useAccountSettings()
-  const { accountNotifDismissInfo } = accountSettings
+  const { notifState, accountNotifDismissInfo } = useAccountSettings()
   const navigationDebounced = useAsyncNavigation(navigation)
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
-  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
-
   const wallets = useWatch(account, 'currencyWallets')
-  const otpKey = useWatch(account, 'otpKey')
 
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
-  const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
 
-  const isLightAccount = account.id != null && account.username == null
-
+  const handleBackupClose = useHandler(async () => {
+    await hideBanner(account, 'lightAccountReminder')
+  })
   const handleBackupPress = useHandler(async () => {
+    await handleBackupClose()
     await showBackupModal({ navigation: navigationDebounced })
   })
 
+  const handlePasswordReminderClose = useHandler(async () => {
+    await hideBanner(account, 'pwReminder')
+  })
   const handlePasswordReminderPress = useHandler(async () => {
+    await handlePasswordReminderClose()
     await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />)
   })
 
   const handle2FaEnabledClose = useHandler(async () => {
+    await hideBanner(account, 'ip2FaReminder')
     await writeLocalAccountSettings(account, { ...accountSettings, accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true } })
   })
   const handle2FaEnabledPress = useHandler(async () => {
     await handle2FaEnabledClose()
     await openBrowserUri(config.ip2faSite)
+  })
+
+  const handleOtpReminderClose = useHandler(async () => {
+    await hideBanner(account, 'otpReminder')
+  })
+  const handleOtpReminderPress = useHandler(async () => {
+    await handleOtpReminderClose()
+    const otpReminderModal = await getOtpReminderModal(account)
+    if (otpReminderModal != null) await otpReminderModal()
   })
 
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
@@ -81,16 +96,27 @@ const NotificationViewComponent = (props: Props) => {
   React.useEffect(() => {
     const newNotifs: React.JSX.Element[] = []
     Object.keys(wallets).forEach(walletId => {
+      const newTokenKey = `newToken-${walletId}`
       const newTokenIds = detectedTokensRedux[walletId]
 
-      const dismissNewTokens = (walletId: string) => {
+      const handleCloseNewToken = async () => {
+        // Since this isn't a priority notification, we can just fully complete
+        // it here
         dispatch({
           type: 'CORE/DISMISS_NEW_TOKENS',
           data: { walletId }
         })
       }
+      const handlePressNewToken = async () => {
+        await handleCloseNewToken()
+        navigationDebounced.navigate('manageTokens', {
+          walletId,
+          newTokenIds
+        })
+      }
 
-      if (newTokenIds != null && newTokenIds.length > 0) {
+      const isShowNewTokenNotif = notifState[newTokenKey] != null && !notifState[newTokenKey].isBannerHidden
+      if (isShowNewTokenNotif && newTokenIds != null && newTokenIds.length > 0) {
         const { name, currencyInfo } = wallets[walletId]
 
         newNotifs.push(
@@ -103,14 +129,8 @@ const NotificationViewComponent = (props: Props) => {
                 ? sprintf(lstrings.notif_tokens_detected_on_address_1s, currencyInfo.currencyCode)
                 : sprintf(lstrings.notif_tokens_detected_on_wallet_name_1s, name)
             }
-            onPress={() => {
-              dismissNewTokens(walletId)
-              navigationDebounced.navigate('manageTokens', {
-                walletId,
-                newTokenIds
-              })
-            }}
-            onClose={() => dismissNewTokens(walletId)}
+            onPress={handlePressNewToken}
+            onClose={handleCloseNewToken}
           />
         )
       }
@@ -118,23 +138,14 @@ const NotificationViewComponent = (props: Props) => {
       setAutoDetectTokenCards(newNotifs)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detectedTokensRedux, handleBackupPress, theme])
+  }, [detectedTokensRedux, notifState, handleBackupPress, theme])
 
-  // Check for 2FA/OTP reminder disabled notifications
-  // Periodically remind the user to enable 2FA/OTP
-  useAsyncEffect(
-    async () => {
-      const otpReminderModal = await getOtpReminderModal(account)
-
-      if (otpReminderModal != null) {
-        setOtpReminderCard(
-          <NotificationCard type="warning" title={lstrings.otp_reset_modal_header} message={lstrings.notif_otp_message} onPress={otpReminderModal} />
-        )
-      }
-    },
-    [account],
-    'otpNotificationCard'
-  )
+  const {
+    lightAccountReminder = { isBannerHidden: true },
+    otpReminder = { isBannerHidden: true },
+    pwReminder = { isBannerHidden: true },
+    ip2FaReminder = { isBannerHidden: true }
+  } = notifState
 
   return (
     <NotificationCardsContainer
@@ -144,34 +155,38 @@ const NotificationViewComponent = (props: Props) => {
       footerOpenRatio={footerOpenRatio}
       onLayout={handleLayout}
     >
-      <EdgeAnim visible={isLightAccount} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={!lightAccountReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
           title={lstrings.backup_notification_title}
           message={sprintf(lstrings.backup_notification_body, config.appName)}
           persistent
           onPress={handleBackupPress}
+          onClose={handleBackupClose}
         />
       </EdgeAnim>
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
         {autoDetectTokenCards}
       </EdgeAnim>
-      <EdgeAnim visible={otpReminderCard != null} enter={fadeIn} exit={fadeOut}>
-        {otpReminderCard}
+      <EdgeAnim visible={!otpReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
+        <NotificationCard
+          type="warning"
+          title={lstrings.otp_reset_modal_header}
+          message={lstrings.notif_otp_message}
+          onPress={handleOtpReminderPress}
+          onClose={handleOtpReminderClose}
+        />
       </EdgeAnim>
-      <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={!pwReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="info"
           title={lstrings.password_reminder_card_title}
           message={lstrings.password_reminder_card_body}
           onPress={handlePasswordReminderPress}
+          onClose={handlePasswordReminderClose}
         />
       </EdgeAnim>
-      <EdgeAnim
-        visible={!isLightAccount && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown}
-        enter={fadeIn}
-        exit={fadeOut}
-      >
+      <EdgeAnim visible={!ip2FaReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}
