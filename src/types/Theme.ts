@@ -441,6 +441,8 @@ export interface Theme {
 
   // UI 4.0:
 
+  badgeDot: string
+
   // Shadows
   iconShadow: ThemeShadowParams
   dropdownListShadow: ThemeShadowParams
