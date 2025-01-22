@@ -1,14 +1,35 @@
 import { EdgeAccount } from 'edge-core-js'
+import React from 'react'
+import { makeEvent } from 'yavent'
 
 import { showError } from '../components/services/AirshipInstance'
 import { ThunkAction } from '../types/reduxTypes'
-import { AccountNotifDismissInfo, asLocalAccountSettings, LocalAccountSettings, PasswordReminder, SpendingLimits } from '../types/types'
+import {
+  AccountNotifDismissInfo,
+  asLocalAccountSettings,
+  asNotifInfo,
+  LocalAccountSettings,
+  NotifInfo,
+  NotifState,
+  PasswordReminder,
+  SpendingLimits
+} from '../types/types'
 import { logActivity } from '../util/logger'
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
 
 export const getLocalAccountSettings = (): LocalAccountSettings => localAccountSettings
+
+const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
+
+export { watchAccountSettings }
+
+export function useAccountSettings() {
+  const [, setAccountSettings] = React.useState(getLocalAccountSettings())
+  React.useEffect(() => watchAccountSettings(setAccountSettings), [])
+  return localAccountSettings
+}
 
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -110,10 +131,42 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
 }
 
 /**
+ * Manage the state of account notifications, used by both `NotificationView` and
+ * `NotificationCenterScene`
+ **/
+const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState) => {
+  const updatedSettings: LocalAccountSettings = { ...localAccountSettings, notifState }
+  const newLocalAccountSettings = await writeLocalAccountSettings(account, updatedSettings)
+
+  return newLocalAccountSettings
+}
+
+/**
+ * Overwrite the values of account notifications or create new values per specific
+ * `deviceNotifState` key
+ **/
+export const writeAccountNotifInfo = async (account: EdgeAccount, accountNotifStateKey: string, deviceNotifInfo: Partial<NotifInfo>) => {
+  return await writeAccountNotifState(account, {
+    ...localAccountSettings.notifState,
+    [accountNotifStateKey]: { ...(localAccountSettings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...deviceNotifInfo }
+  })
+}
+
+/** Returns null if no notifications, 0 if any priority notifications exist,
+ * number of incomplete notifications otherwise. */
+export const getNotifNumber = (): number | undefined => {
+  const { notifState } = getLocalAccountSettings()
+  const priorityNotifs = Object.values(notifState).filter(deviceNotifInfo => deviceNotifInfo.isPriority && !deviceNotifInfo.isCompleted).length
+  const incompleteNotifs = Object.values(notifState).filter(deviceNotifInfo => !deviceNotifInfo.isCompleted).length
+
+  return priorityNotifs === 0 && incompleteNotifs === 0 ? undefined : priorityNotifs > 0 ? 0 : incompleteNotifs
+}
+
+/**
  * Track the state of whether particular one-time notifications associated with
  * the account were interacted with or dismissed.
  **/
-export const writeNotifDismissInfo = async (account: EdgeAccount, accountNotifDismissInfo: AccountNotifDismissInfo) => {
+export const writeAccountNotifDismissInfo = async (account: EdgeAccount, accountNotifDismissInfo: AccountNotifDismissInfo) => {
   const updatedSettings = { ...localAccountSettings, accountNotifDismissInfo }
   return await writeLocalAccountSettings(account, updatedSettings)
 }
@@ -147,7 +200,10 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
 }
 
 export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
+  // Refresh cache, notify callers
   localAccountSettings = asLocalAccountSettings(settings)
+  emitAccountSettings(localAccountSettings)
+
   const text = JSON.stringify(settings)
   return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }

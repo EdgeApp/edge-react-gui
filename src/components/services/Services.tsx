@@ -32,6 +32,7 @@ import { EdgeContextCallbackManager } from './EdgeContextCallbackManager'
 import { FioService } from './FioService'
 import { LoanManagerService } from './LoanManagerService'
 import { NetworkActivity } from './NetworkActivity'
+import { NotificationServices } from './NotificationServices'
 import { PasswordReminderService } from './PasswordReminderService'
 import { PermissionsManager } from './PermissionsManager'
 import { SortedWalletList } from './SortedWalletList'
@@ -169,6 +170,7 @@ export function Services(props: Props) {
   return (
     <>
       {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
+      <NotificationServices />
       <AutoLogout />
       <ContactsLoader />
       {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}

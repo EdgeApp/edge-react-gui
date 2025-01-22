@@ -102,6 +102,7 @@ import { ManageTokensScene as ManageTokensSceneComponent } from './scenes/Manage
 import { MigrateWalletCalculateFeeScene as MigrateWalletCalculateFeeSceneComponent } from './scenes/MigrateWalletCalculateFeeScene'
 import { MigrateWalletCompletionScene as MigrateWalletCompletionSceneComponent } from './scenes/MigrateWalletCompletionScene'
 import { MigrateWalletSelectCryptoScene as MigrateWalletSelectCryptoSceneComponent } from './scenes/MigrateWalletSelectCryptoScene'
+import { NotificationCenterScene as NotificationCenterSceneComponent } from './scenes/NotificationCenterScene'
 import { NotificationScene as NotificationSceneComponent } from './scenes/NotificationScene'
 import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
@@ -197,6 +198,7 @@ const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingScene
 const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
+const NotificationCenterScene = ifLoggedIn(NotificationCenterSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
@@ -704,6 +706,13 @@ const EdgeAppStack = () => {
         }}
       />
       <AppStack.Screen name="migrateWalletSelectCrypto" component={MigrateWalletSelectCryptoScene} />
+      <AppStack.Screen
+        name="notificationCenter"
+        component={NotificationCenterScene}
+        options={{
+          title: lstrings.notif_center_title
+        }}
+      />
       <AppStack.Screen
         name="notificationSettings"
         component={NotificationScene}

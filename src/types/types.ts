@@ -129,9 +129,53 @@ export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInf
 
 const asTokenWarningsShown = asArray(asString)
 
+export const asNotifInfo = asObject({
+  dateReceived: asMaybe(asNumber, Date.now()),
+  isBannerHidden: asOptional(asBoolean, false),
+  isCompleted: asMaybe(asBoolean, false),
+  isPriority: asMaybe(asBoolean, false),
+  params: asMaybe(asObject({ walletId: asString }))
+})
+const asNotifState = asObject(asNotifInfo)
+
+/**
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on.
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ * - params: Optional object that holds additional parameters that may be used
+ *   to customize the notification UI.
+ */
+export type NotifInfo = ReturnType<typeof asNotifInfo>
+
+/**
+ * An object that holds the state of a notification by notification key.
+ *
+ * [key]: Notification key
+ * Value: NotifInfo:
+ * - dateReceived: Timestamp that this notification was detected locally. May
+ *   accept server-side date values in future iterations.
+ * - isBannerHidden: Whether the user has dismissed the bottom
+ *   `NotificationView` banner
+ * - isCompleted: True if user "completed" the requested action. This may be
+ *   as simple as tapping and reading the notification, but may be more complex,
+ *   such as requiring 2FA toggled on.
+ * - isPriority: True to pin this notification to the top of the
+ *   `NotificationCenterScene`
+ * - params: Optional object that holds additional parameters that may be used
+ *   to customize the notification UI.
+ */
+export type NotifState = ReturnType<typeof asNotifState>
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
+  notifState: asMaybe(asNotifState, asNotifState({})),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
@@ -140,15 +184,11 @@ const asLocalAccountSettingsInner = asObject({
   tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
 
-const asDeviceNotifDismissInfo = asObject({})
-export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
-
 export const asDefaultScreen = asValue('home', 'assets')
 
 const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
-  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({})),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
   isSurveyDiscoverShown: asMaybe(asBoolean, false)

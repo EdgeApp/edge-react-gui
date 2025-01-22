@@ -1604,6 +1604,7 @@ const strings = {
   notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
   notif_ip_validation_enabled_title: 'IP Validation Protection',
   notif_ip_validation_enabled_body_1s: '%1$s prevents logins from unrecognized IP addresses. Tap to learn more.',
+  notif_center_title: 'Notifications',
 
   // #endregion Notifications
 
@@ -1673,6 +1674,9 @@ const strings = {
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
   choose_custom_token_wallet: 'Select Wallet for Custom Token',
+  notifications: 'Notifications',
+  notifications_pinned: 'Pinned',
+  notifications_recent: 'Recent',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

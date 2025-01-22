@@ -11,11 +11,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
+import { getNotifNumber } from '../../actions/LocalSettingsActions'
 import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
@@ -32,6 +34,7 @@ import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
+import { IconBadge } from '../icons/IconBadge'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -223,6 +226,14 @@ export function SideMenuComponent(props: Props) {
   }> = [
     {
       pressHandler: () => {
+        navigation.navigate('edgeAppStack', { screen: 'notificationCenter' })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconName: 'notifications',
+      title: lstrings.notifications
+    },
+    {
+      pressHandler: () => {
         navigation.navigate('edgeAppStack', { screen: 'fioAddressList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -377,7 +388,16 @@ export function SideMenuComponent(props: Props) {
           {rowDatas.map(rowData => (
             <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
               <View style={styles.leftIconContainer}>
-                {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
+                {
+                  // TODO: No red dot ever renders for some reason...
+                  rowData.iconName === 'notifications' ? (
+                    <IconBadge number={getNotifNumber()} offsetX={theme.rem(0.25)} offsetY={theme.rem(0.25)} sizeRem={1.5}>
+                      <Ionicons name="notifications-outline" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                    </IconBadge>
+                  ) : rowData.iconName != null ? (
+                    <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  ) : null
+                }
                 {rowData.iconNameFontAwesome != null ? (
                   <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
                 ) : null}

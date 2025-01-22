@@ -115,6 +115,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   shadowIos: {
     borderRadius: theme.cardBorderRadius,
     marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
     ...theme.notifcationCardShadow
