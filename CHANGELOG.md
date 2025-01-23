@@ -2,10 +2,11 @@
 
 ## Unreleased (develop)
 
-## 4.21.0 (staging)
+- added: Add Unizen DEX
+
+## 4.21.0 (2025-01-22)
 
 - added: Add SUI
-- added: Add Unizen DEX
 - changed: `SurveyModal` expanded to a category & subcategory response
 - changed: Show KYC warning modal when trading with Swapuz
 - fixed: Using deprecated wallets to handle links
