@@ -101,7 +101,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   )
 
   const summaryDetails = [
-    { label: lstrings.loan_collateral_value, value: displayFiatTotal(defaultIsoFiat, collateralTotal) },
+    {
+      label: lstrings.loan_collateral_value,
+      value: displayFiatTotal(defaultIsoFiat, collateralTotal)
+    },
     {
       label: lstrings.loan_available_equity,
       value: displayFiatTotal(defaultIsoFiat, availableEquity),
@@ -112,7 +115,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details'))
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
-    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
+    navigation.navigate('loanStatus', {
+      actionQueueId: programEdge.programId,
+      loanAccountId
+    })
   }
 
   const renderProgramStatusCard = () => {
@@ -150,7 +156,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         title: lstrings.loan_action_add_collateral,
         iconName: 'add-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { loanManageType: 'loan-manage-deposit', loanAccountId })
+          navigation.navigate('loanManage', {
+            loanManageType: 'loan-manage-deposit',
+            loanAccountId
+          })
         },
         isDisabled: isActionProgramRunning
       },
@@ -158,7 +167,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         title: lstrings.loan_action_withdraw_collateral,
         iconName: 'withdraw-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { loanManageType: 'loan-manage-withdraw', loanAccountId })
+          navigation.navigate('loanManage', {
+            loanManageType: 'loan-manage-withdraw',
+            loanAccountId
+          })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -166,7 +178,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         title: lstrings.loan_borrow_more,
         iconName: 'borrow-more',
         handlePress: () => {
-          navigation.navigate('loanManage', { loanManageType: 'loan-manage-borrow', loanAccountId })
+          navigation.navigate('loanManage', {
+            loanManageType: 'loan-manage-borrow',
+            loanAccountId
+          })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -174,7 +189,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         title: lstrings.loan_make_payment,
         iconName: 'make-payment',
         handlePress: () => {
-          navigation.navigate('loanManage', { loanManageType: 'loan-manage-repay', loanAccountId })
+          navigation.navigate('loanManage', {
+            loanManageType: 'loan-manage-repay',
+            loanAccountId
+          })
         },
         isDisabled: isActionProgramRunning || !isOpenDebts
       },

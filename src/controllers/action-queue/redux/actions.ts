@@ -69,7 +69,12 @@ export function cancelActionProgram(programId: string): ThunkAction<Promise<void
 
     const pushEventIds = getEffectPushEventIds(programState.effect)
     if (pushEventIds.length > 0) {
-      const executionContext = makeExecutionContext({ account, clientId, dispatch, getState })
+      const executionContext = makeExecutionContext({
+        account,
+        clientId,
+        dispatch,
+        getState
+      })
       await uploadPushEvents(executionContext, { removeEvents: pushEventIds })
     }
 

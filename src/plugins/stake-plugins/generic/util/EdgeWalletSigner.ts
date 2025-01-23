@@ -24,7 +24,9 @@ export class EdgeWalletSigner extends ethers.Signer {
   }
 
   async getAddress(): Promise<string> {
-    const { publicAddress } = await this.wallet.getReceiveAddress({ tokenId: null })
+    const { publicAddress } = await this.wallet.getReceiveAddress({
+      tokenId: null
+    })
     return publicAddress
   }
 

@@ -27,20 +27,38 @@ const LISTINGS_REFRESH_INTERVAL = 30000
 const COINGECKO_TO_EDGE_ASSET: Record<string, EdgeAsset> = {
   bitcoin: { pluginId: 'bitcoin', tokenId: null },
   ethereum: { pluginId: 'ethereum', tokenId: null },
-  tether: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
+  tether: {
+    pluginId: 'ethereum',
+    tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+  },
   binancecoin: { pluginId: 'binance', tokenId: null },
   solana: { pluginId: 'solana', tokenId: null },
   ripple: { pluginId: 'ripple', tokenId: null },
-  'usd-coin': { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
+  'usd-coin': {
+    pluginId: 'ethereum',
+    tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  },
   'avalanche-2': { pluginId: 'avalanche', tokenId: null },
   dogecoin: { pluginId: 'dogecoin', tokenId: null },
   polkadot: { pluginId: 'polkadot', tokenId: null },
   tron: { pluginId: 'tron', tokenId: null },
   'matic-network': { pluginId: 'polygon', tokenId: null },
-  chainlink: { pluginId: 'ethereum', tokenId: '514910771af9ca656af840dff83e8264ecf986ca' },
-  'wrapped-bitcoin': { pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599' },
-  'shiba-inu': { pluginId: 'ethereum', tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce' },
-  uniswap: { pluginId: 'ethereum', tokenId: '1f9840a85d5af5bf1d1762f925bdaddc4201f984' }
+  chainlink: {
+    pluginId: 'ethereum',
+    tokenId: '514910771af9ca656af840dff83e8264ecf986ca'
+  },
+  'wrapped-bitcoin': {
+    pluginId: 'ethereum',
+    tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
+  'shiba-inu': {
+    pluginId: 'ethereum',
+    tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'
+  },
+  uniswap: {
+    pluginId: 'ethereum',
+    tokenId: '1f9840a85d5af5bf1d1762f925bdaddc4201f984'
+  }
 }
 interface Props {
   navigation: NavigationBase
@@ -68,10 +86,15 @@ const CoinRow = (props: CoinRowProps) => {
   const percentChangeRaw = String(percentChange.hours24)
   const decimalChangeRaw = div(percentChangeRaw, '100', DECIMAL_PRECISION)
 
-  const percentString = toPercentString(decimalChangeRaw, { plusSign: true, intlOpts: { noGrouping: true } })
+  const percentString = toPercentString(decimalChangeRaw, {
+    plusSign: true,
+    intlOpts: { noGrouping: true }
+  })
   const percentStyle = lt(percentChangeRaw, '0') ? styles.negativeText : styles.positiveText
 
-  const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })} `
+  const priceString = `${fiatSymbol}${formatFiatString({
+    fiatAmount: price.toString()
+  })} `
 
   // See if we have an Edge custom icons from a small list of top assets
 
@@ -90,7 +113,12 @@ const CoinRow = (props: CoinRowProps) => {
     <EdgeRow
       key={key}
       icon={<FastImage style={styles.icon} source={imageSrc} />}
-      onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow, fiatCurrencyCode })}
+      onPress={() =>
+        navigation.navigate('coinRankingDetails', {
+          coinRankingData: coinRow,
+          fiatCurrencyCode
+        })
+      }
       rightButtonType="none"
     >
       <View style={styles.rowBody}>

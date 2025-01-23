@@ -93,8 +93,14 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
   const fieldInfos: FlipInputFieldInfos = [
-    { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
-    { currencyName: removeIsoPrefix(fiatDenom.name), maxEntryDecimals: log10(fiatDenom.multiplier) }
+    {
+      currencyName: cryptoDisplayDenom.name,
+      maxEntryDecimals: log10(cryptoDisplayDenom.multiplier)
+    },
+    {
+      currencyName: removeIsoPrefix(fiatDenom.name),
+      maxEntryDecimals: log10(fiatDenom.multiplier)
+    }
   ]
 
   const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {

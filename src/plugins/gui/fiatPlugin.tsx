@@ -43,7 +43,13 @@ import {
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
 export const SendErrorBackPressed = 'SendErrorBackPressed'
 
-const deeplinkListeners: { listener: { direction: FiatDirection; providerId: string; deeplinkHandler: LinkHandler } | null } = { listener: null }
+const deeplinkListeners: {
+  listener: {
+    direction: FiatDirection
+    providerId: string
+    deeplinkHandler: LinkHandler
+  } | null
+} = { listener: null }
 
 export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (deeplinkListeners.listener == null) {
@@ -305,7 +311,10 @@ export const executePlugin = async (params: {
     },
     sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
       // Always avoid the scam warning with plugins since we trust our plugins
-      await launchPaymentProto(navigation, account, params.uri, { ...params.params, hideScamWarning: true })
+      await launchPaymentProto(navigation, account, params.uri, {
+        ...params.params,
+        hideScamWarning: true
+      })
     },
     setClipboard: async (value: string) => {
       Clipboard.setString(value)

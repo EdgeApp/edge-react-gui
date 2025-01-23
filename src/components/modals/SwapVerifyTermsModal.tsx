@@ -24,6 +24,11 @@ const pluginData: { [pluginId: string]: TermsUri } = {
     termsUri: 'https://changenow.io/terms-of-use',
     privacyUri: 'https://changenow.io/privacy-policy',
     kycUri: 'https://changenow.io/faq/kyc'
+  },
+  swapuz: {
+    termsUri: 'https://swapuz.com/terms-of-use',
+    privacyUri: 'https://swapuz.com/privacy-policy',
+    kycUri: 'https://swapuz.com/terms-of-use#amlProcedure'
   }
 }
 

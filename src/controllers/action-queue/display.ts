@@ -235,7 +235,10 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
         const borrowPluginDisplayName = borrowPlugin.borrowInfo.displayName
 
         titleData = { stringKey: `action_display_title_create` }
-        messageData = { stringKey: `action_display_message_create_3s`, wildcards: [config.appName, borrowPluginDisplayName, collateralCurrencyCode] }
+        messageData = {
+          stringKey: `action_display_message_create_3s`,
+          wildcards: [config.appName, borrowPluginDisplayName, collateralCurrencyCode]
+        }
       }
       break
     case 'swap-deposit':
@@ -288,7 +291,10 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
         const currencyCode = getCurrencyCode(wallet, tokenId)
 
         titleData = { stringKey: `action_queue_display_loan_borrow_title` }
-        messageData = { stringKey: `action_queue_display_loan_borrow_message_1s`, wildcards: [currencyCode] }
+        messageData = {
+          stringKey: `action_queue_display_loan_borrow_message_1s`,
+          wildcards: [currencyCode]
+        }
       }
       break
     case 'close':

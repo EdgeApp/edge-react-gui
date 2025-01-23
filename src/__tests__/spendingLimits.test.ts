@@ -4,7 +4,9 @@ import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer'
 
 describe('spendingLimits', () => {
   it('should render initialState', () => {
-    const actual = spendingLimits(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+    const actual = spendingLimits(undefined, {
+      type: 'DUMMY_ACTION_PLEASE_IGNORE'
+    })
 
     expect(actual).toMatchSnapshot()
   })

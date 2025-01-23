@@ -55,7 +55,11 @@ beforeAll(async () => {
   lockEdgeCorePlugins()
 
   const world = await makeFakeEdgeWorld(fakeUsers, {})
-  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true, ethereum: true } })
+  context = await world.makeEdgeContext({
+    apiKey: '',
+    appId: '',
+    plugins: { bitcoin: true, ethereum: true }
+  })
   account = await context.loginWithKey('bob', loginKey)
   const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
   const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')

@@ -17,7 +17,10 @@ import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 
 const baseUrl = 'https://api.stakek.it'
-const headers = { 'Content-Type': 'application/json', 'X-API-KEY': ENV.STAKEKIT_API_KEY ?? '' }
+const headers = {
+  'Content-Type': 'application/json',
+  'X-API-KEY': ENV.STAKEKIT_API_KEY ?? ''
+}
 
 const fetchPatch = async <Body, Res>(path: string, body: Body): Promise<Res> => {
   const response = await fetch(baseUrl + path, {

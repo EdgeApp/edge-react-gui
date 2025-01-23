@@ -92,7 +92,10 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const currentUsername = useWatch(account, 'username')
   const initUsername = React.useRef<string | undefined>(account.username)
 
-  const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
+  const stateManager = useStateManager<EnterAmountState>({
+    ...defaultEnterAmountState,
+    ...initState
+  })
   const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
   const convertValueDebounced = React.useMemo(() => {
     return pDebounce(convertValue, 500)

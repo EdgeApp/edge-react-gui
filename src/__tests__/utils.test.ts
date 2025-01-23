@@ -220,7 +220,12 @@ describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = getSupportedFiats()
     supportedFiats.forEach(fiat => {
-      expect(fiat).toEqual(expect.objectContaining({ label: expect.any(String), value: expect.any(String) }))
+      expect(fiat).toEqual(
+        expect.objectContaining({
+          label: expect.any(String),
+          value: expect.any(String)
+        })
+      )
     })
   })
 })
@@ -314,7 +319,11 @@ describe('precisionAdjust', function () {
     const { displayDenominationMultiplier, primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio } = input
 
     test(key, function () {
-      const precisionAdjustmentValue = precisionAdjust({ primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio })
+      const precisionAdjustmentValue = precisionAdjust({
+        primaryExchangeMultiplier,
+        secondaryExchangeMultiplier,
+        exchangeSecondaryToPrimaryRatio
+      })
       expect(precisionAdjustmentValue).toBe(output.precisionAdjustmentValue)
       expect(maxPrimaryCurrencyConversionDecimals(log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
         output.maxPrimaryCurrencyConversionDecimals

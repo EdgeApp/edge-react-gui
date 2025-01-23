@@ -260,7 +260,10 @@ export function DevTestScene(props: Props) {
               const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
               if (isCreateHandle) {
                 const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-                navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+                navigation.navigate('fioCreateHandle', {
+                  freeRegApiToken,
+                  freeRegRefCode
+                })
               }
             }}
           />
@@ -268,7 +271,10 @@ export function DevTestScene(props: Props) {
             label="BackupModal (Long, Original with image)"
             marginRem={0.25}
             onPress={async () => {
-              showBackupModal({ navigation: navigation as NavigationBase, forgetLoginId: 'test' })
+              showBackupModal({
+                navigation: navigation as NavigationBase,
+                forgetLoginId: 'test'
+              })
             }}
           />
           <EdgeButton
@@ -402,7 +408,10 @@ export function DevTestScene(props: Props) {
             <ButtonsView
               primary={{ label: 'Primary', onPress: () => {} }}
               secondary={{ label: 'Secondary', onPress: () => {} }}
-              tertiary={{ label: 'Tertiary Tertiary Tertiary Tertiary', onPress: () => {} }}
+              tertiary={{
+                label: 'Tertiary Tertiary Tertiary Tertiary',
+                onPress: () => {}
+              }}
               layout="column"
             />
           </OutlinedView>

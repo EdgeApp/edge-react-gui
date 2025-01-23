@@ -210,7 +210,13 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
-  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused, setNativeProps }))
+  React.useImperativeHandle(ref, () => ({
+    blur,
+    clear,
+    focus,
+    isFocused,
+    setNativeProps
+  }))
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)
@@ -239,7 +245,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
-      setNativeProps({ selection: { start: 0, end: value.length } })
+      setNativeProps({
+        selection: { start: 0, end: value.length },
+        selectTextOnFocus: true
+      })
     }
     if (onFocus != null) onFocus()
   })
@@ -352,7 +361,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   )
 })
 
-const OuterContainer = styled(View)<{ multiline: boolean; marginRemStyle: MarginRemStyle }>(theme => ({ multiline, marginRemStyle }) => ({
+const OuterContainer = styled(View)<{
+  multiline: boolean
+  marginRemStyle: MarginRemStyle
+}>(theme => ({ multiline, marginRemStyle }) => ({
   ...marginRemStyle,
   flexGrow: multiline ? 1 : undefined,
   flexShrink: multiline ? 1 : undefined
@@ -400,7 +412,9 @@ const Container = styled(Animated.View)<{
  * extendTappable: Which horizontal side of the icon do we want to increase
  * tappable area? 'full' means both left and right sides.
  */
-const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | 'rightOnly' | 'full' }>(theme => ({ extendTappable }) => {
+const TouchContainer = styled(TouchableOpacity)<{
+  extendTappable: 'leftOnly' | 'rightOnly' | 'full'
+}>(theme => ({ extendTappable }) => {
   // Increase tappable area with padding, while net 0 with negative margin to
   // visually appear as if 0 margins/padding
   const tapArea =
@@ -471,7 +485,9 @@ const InnerContainer = styled(Animated.View)<{
   ]
 })
 
-const PrefixAnimatedText = styled(Animated.Text)<{ visibility: SharedValue<number> }>(theme => ({ visibility }) => {
+const PrefixAnimatedText = styled(Animated.Text)<{
+  visibility: SharedValue<number>
+}>(theme => ({ visibility }) => {
   const rem = theme.rem(1)
 
   return [

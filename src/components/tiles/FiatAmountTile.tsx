@@ -28,7 +28,9 @@ export const FiatAmountTile = (props: Props) => {
 
   const amountValue =
     fiatAmount != null ? (
-      `${getDenomFromIsoCode(defaultIsoFiat).symbol ?? ''}${formatFiatString({ fiatAmount })}`
+      `${getDenomFromIsoCode(defaultIsoFiat).symbol ?? ''}${formatFiatString({
+        fiatAmount
+      })}`
     ) : nativeCryptoAmount != null ? (
       <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
     ) : null

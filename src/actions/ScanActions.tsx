@@ -1,4 +1,4 @@
-import { abs, eq, gt, mul } from 'biggystring'
+import { abs, div, eq, gt, mul } from 'biggystring'
 import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,7 @@ import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
@@ -227,7 +227,14 @@ export function handleWalletUris(
       // React navigation doesn't like passing non-serializable objects as params. Convert date to string first
       // https://github.com/react-navigation/react-navigation/issues/7925
       const isoExpireDate = parsedUri?.expireDate?.toISOString()
-      navigation.push('send2', { walletId: wallet.id, minNativeAmount, spendInfo, tokenId, isoExpireDate, hiddenFeaturesMap: { scamWarning: false } })
+      navigation.push('send2', {
+        walletId: wallet.id,
+        minNativeAmount,
+        spendInfo,
+        tokenId,
+        isoExpireDate,
+        hiddenFeaturesMap: { scamWarning: false }
+      })
     } catch (error: any) {
       // INVALID URI
       await Airship.show<'ok' | undefined>(bridge => (
@@ -264,7 +271,10 @@ async function privateKeyModalActivated(
               try {
                 const keys = await account.currencyConfig[wallet.currencyInfo.pluginId].importKey(privateKeys[0])
                 const memoryWalletPromise = account.makeMemoryWallet(wallet.type, { keys })
-                navigation.navigate('sweepPrivateKeyProcessing', { memoryWalletPromise, receivingWallet: wallet })
+                navigation.navigate('sweepPrivateKeyProcessing', {
+                  memoryWalletPromise,
+                  receivingWallet: wallet
+                })
               } catch (e) {
                 await sweepPrivateKeys(state, account, navigation, wallet, privateKeys)
               }
@@ -288,7 +298,8 @@ async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigati
 
     // Check for a $50 maximum sweep for light accounts:
     const sendNativeAmount = abs(unsignedTx.nativeAmount)
-    const sendExchangeAmount = await wallet.nativeToDenomination(sendNativeAmount, wallet.currencyInfo.currencyCode)
+    const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, wallet.currencyInfo.currencyCode)
+    const sendExchangeAmount = div(sendNativeAmount, multiplier, multiplier.length)
     const exchangeRate = getExchangeRate(state, wallet.currencyInfo.currencyCode, 'iso:USD')
     const sweepAmountFiat = mul(sendExchangeAmount, exchangeRate)
     if (eq(exchangeRate, '0') || gt(sweepAmountFiat, '50')) {
@@ -359,7 +370,9 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
               title={lstrings.buy_crypto_modal_title}
               message={messageSyntax}
               buttons={{
-                buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
+                buy: {
+                  label: getUkCompliantString(countryCode, 'buy_1s', currencyCode)
+                },
                 decline: { label: lstrings.buy_crypto_decline }
               }}
             />
@@ -372,8 +385,13 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
               title={lstrings.buy_crypto_modal_title}
               message={messageSyntax}
               buttons={{
-                buy: { label: getUkCompliantString(countryCode, 'buy_1s', currencyCode) },
-                exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
+                buy: {
+                  label: getUkCompliantString(countryCode, 'buy_1s', currencyCode)
+                },
+                exchange: {
+                  label: lstrings.buy_crypto_modal_exchange,
+                  type: 'primary'
+                },
                 decline: { label: lstrings.buy_crypto_decline }
               }}
             />
@@ -400,7 +418,10 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
         if (config.disableSwaps === true) {
           showDevError('Swaps are disabled. Cannot navigate to exchange.')
         } else {
-          navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+          navigation.navigate('swapTab', {
+            screen: 'swapCreate',
+            params: { toWalletId: wallet.id, toTokenId: tokenId }
+          })
         }
       }
     } catch (e: any) {

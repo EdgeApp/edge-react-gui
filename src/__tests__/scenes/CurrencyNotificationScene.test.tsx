@@ -27,6 +27,8 @@ describe('CurrencyNotificationComponent', () => {
           {...fakeEdgeAppSceneProps('currencyNotificationSettings', {
             currencyInfo: {
               pluginId: 'bitcoin',
+              assetDisplayName: 'Bitcoin',
+              chainDisplayName: 'Bitcoin',
               displayName: 'Bitcoin',
               walletType: 'My Bitcoin Wallet',
               currencyCode: 'BTC',

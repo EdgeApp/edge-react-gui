@@ -154,7 +154,13 @@ export function createAccountTransaction(
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
               notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
-            paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
+            paymentWallet
+              .saveTxMetadata({
+                txid: edgeTransaction.txid,
+                tokenId,
+                metadata: edgeMetadata
+              })
+              .catch(err => console.warn(err))
             navigation.navigate('walletsTab', { screen: 'walletList' })
             setTimeout(() => {
               Airship.show<'ok' | undefined>(bridge => (

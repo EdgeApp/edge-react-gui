@@ -7,7 +7,7 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
@@ -319,33 +319,58 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // Try to get an error by requesting a massive quote
             const result = await getMaxQuoteOrError(1, MAX_QUOTE_VALUE)
             if (result == null) {
-              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_buy_quote_error, textType: 'error' } })
+              stateManager.update({
+                statusText: {
+                  content: lstrings.fiat_plugin_max_buy_quote_error,
+                  textType: 'error'
+                }
+              })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
             } else {
               // Wow. Can we really buy this much?
-              stateManager.update({ value1: MAX_QUOTE_VALUE, value2: result.value })
+              stateManager.update({
+                value1: MAX_QUOTE_VALUE,
+                value2: result.value
+              })
             }
           } else {
             // Get the max amount of the wallet's currency
             const publicAddress = dummyAddressMap[currencyPluginId]
             if (publicAddress == null) {
-              stateManager.update({ statusText: { content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode), textType: 'error' } })
+              stateManager.update({
+                statusText: {
+                  content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode),
+                  textType: 'error'
+                }
+              })
             }
-            const maxAmount = await coreWallet.getMaxSpendable({ tokenId, spendTargets: [{ publicAddress }] })
-            const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
+            const maxAmount = await coreWallet.getMaxSpendable({
+              tokenId,
+              spendTargets: [{ publicAddress }]
+            })
+            const multiplier = getCurrencyCodeMultiplier(coreWallet.currencyConfig, currencyCode)
+            const exchangeAmount = div(maxAmount, multiplier, multiplier.length)
 
             const result = await getMaxQuoteOrError(2, exchangeAmount)
             if (result == null) {
-              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_sell_quote_error, textType: 'error' } })
+              stateManager.update({
+                statusText: {
+                  content: lstrings.fiat_plugin_max_sell_quote_error,
+                  textType: 'error'
+                }
+              })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
             } else {
               // The amount in the user's wallet is within the range of what the provider can
               // support.
-              stateManager.update({ value1: result.value, value2: exchangeAmount })
+              stateManager.update({
+                value1: result.value,
+                value2: exchangeAmount
+              })
             }
           }
         },
@@ -358,7 +383,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
         async convertValueInternal(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
-            return { stateManagerUpdate: { statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } } }
+            return {
+              stateManagerUpdate: {
+                statusText: {
+                  content: lstrings.create_wallet_invalid_input,
+                  textType: 'error'
+                }
+              }
+            }
           }
           bestQuote = undefined
           goodQuotes = []
@@ -442,21 +474,39 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           if (goodQuotes.length === 0) {
             // Find the best error to surface
             const bestError = getBestError(errors as any, sourceFieldCurrencyCode, direction)
-            return { bestError, stateManagerUpdate: { statusText: { content: bestError.errorText ?? noQuoteText, textType: 'error' } } }
+            return {
+              bestError,
+              stateManagerUpdate: {
+                statusText: {
+                  content: bestError.errorText ?? noQuoteText,
+                  textType: 'error'
+                }
+              }
+            }
           }
 
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(direction, goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            return { stateManagerUpdate: { statusText: { content: noQuoteText, textType: 'error' } } }
+            return {
+              stateManagerUpdate: {
+                statusText: { content: noQuoteText, textType: 'error' }
+              }
+            }
           }
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
 
           const out: ConvertValueInternalResult = {
             stateManagerUpdate: {
-              statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
-              poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+              statusText: {
+                content: exchangeRateText,
+                textType: bestQuote.isEstimate ? 'warning' : undefined
+              },
+              poweredBy: {
+                poweredByText: bestQuote.pluginDisplayName,
+                poweredByIcon: bestQuote.partnerIcon
+              }
             }
           }
 
@@ -502,7 +552,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
             stateManager.update({
               statusText: { content: statusText },
-              poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+              poweredBy: {
+                poweredByText: bestQuote.pluginDisplayName,
+                poweredByIcon: bestQuote.partnerIcon
+              }
             })
 
             logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')

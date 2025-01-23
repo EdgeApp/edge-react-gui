@@ -44,7 +44,10 @@ export function bestOfMessages(
   let i = accountReferral.promotions.length
   while (--i >= 0) {
     const promo = accountReferral.promotions[i]
-    const source: TweakSource = { type: 'promotion', installerId: promo.installerId }
+    const source: TweakSource = {
+      type: 'promotion',
+      installerId: promo.installerId
+    }
     const topMessage = getTopMessage(promo.messages, source, promo.hiddenMessages, now)
     if (topMessage != null) return topMessage
   }

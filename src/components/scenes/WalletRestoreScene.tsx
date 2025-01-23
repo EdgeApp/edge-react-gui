@@ -64,7 +64,10 @@ export function WalletRestoreScene(props: Props) {
       await account.changeWalletStates(states)
       logActivity(`Restore Wallets: ${account.username}`)
 
-      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+      navigation.navigate('edgeTabs', {
+        screen: 'walletsTab',
+        params: { screen: 'walletList' }
+      })
     }
   })
 

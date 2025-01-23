@@ -222,8 +222,10 @@ export function formatTime(date: Date): string {
   const { localeIdentifier } = locale
 
   try {
-    // @ts-expect-error
-    return format(date, 'p', { locale: locales[localeIdentifier.replace('_', '-')] })
+    return format(date, 'p', {
+      // @ts-expect-error
+      locale: locales[localeIdentifier.replace('_', '-')]
+    })
   } catch (e: any) {
     //
   }

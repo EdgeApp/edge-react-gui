@@ -165,7 +165,9 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     })
   }
   const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
-  const assetOverrides = infoServerData.rollup?.assetOverrides ?? { disable: {} }
+  const assetOverrides = infoServerData.rollup?.assetOverrides ?? {
+    disable: {}
+  }
   return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 

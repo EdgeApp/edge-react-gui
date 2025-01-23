@@ -53,7 +53,11 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
       return newState
     })
     const index = unsignedEdgeTransactions.findIndex(asset => asset.tokenId === tx.tokenId)
-    flatListRef.current?.scrollToIndex({ animated: true, index, viewPosition: 0.5 })
+    flatListRef.current?.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 0.5
+    })
   }
 
   // Sweep the funds and enable the tokens
@@ -137,7 +141,12 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
           marginRem={[0, 0, 1]}
-          onPress={() => navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })}
+          onPress={() =>
+            navigation.navigate('edgeTabs', {
+              screen: 'walletsTab',
+              params: { screen: 'walletList' }
+            })
+          }
         />
       </View>
     )
@@ -153,7 +162,12 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           <FlatList
             automaticallyAdjustContentInsets={false}
             data={unsignedEdgeTransactions}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             extraData={itemStatus}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

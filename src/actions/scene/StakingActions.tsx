@@ -31,7 +31,11 @@ export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWal
     let lockedNativeAmount = '0'
     const stakePositionMap: StakePositionMap = {}
     for (const stakePlugin of stakePlugins) {
-      const stakePolicies = stakePlugin.getPolicies({ pluginId, wallet, currencyCode })
+      const stakePolicies = stakePlugin.getPolicies({
+        pluginId,
+        wallet,
+        currencyCode
+      })
       for (const stakePolicy of stakePolicies) {
         stakePolicyMap[stakePolicy.stakePolicyId] = stakePolicy
         let total: string | undefined
@@ -61,7 +65,14 @@ export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWal
       }
     }
 
-    dispatch({ type: 'STAKING/SETUP', walletId, lockedNativeAmount, stakePlugins, stakePolicies: stakePolicyMap, stakePositionMap })
+    dispatch({
+      type: 'STAKING/SETUP',
+      walletId,
+      lockedNativeAmount,
+      stakePlugins,
+      stakePolicies: stakePolicyMap,
+      stakePositionMap
+    })
   }
 }
 
@@ -72,7 +83,16 @@ export const updateStakingPosition = (
   account: EdgeAccount
 ): ThunkAction<Promise<void>> => {
   return async dispatch => {
-    const stakePosition = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
-    dispatch({ type: 'STAKING/UPDATE_POSITION', walletId: wallet.id, stakePolicyId, stakePosition })
+    const stakePosition = await stakePlugin.fetchStakePosition({
+      stakePolicyId,
+      wallet,
+      account
+    })
+    dispatch({
+      type: 'STAKING/UPDATE_POSITION',
+      walletId: wallet.id,
+      stakePolicyId,
+      stakePosition
+    })
   }
 }

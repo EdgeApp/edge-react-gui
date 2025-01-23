@@ -45,7 +45,10 @@ const CoinRankRowComponent = (props: Props) => {
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    navigation.navigate('coinRankingDetails', { coinRankingData: coinRankingDatas[index], fiatCurrencyCode })
+    navigation.navigate('coinRankingDetails', {
+      coinRankingData: coinRankingDatas[index],
+      fiatCurrencyCode
+    })
   })
 
   React.useEffect(() => {
@@ -130,14 +133,18 @@ const CoinRankRowComponent = (props: Props) => {
   numDecimals = getNumDecimals(percentChangeRaw, 2)
 
   const decimalChangeRaw = div(String(percentChangeRaw), '100', DECIMAL_PRECISION)
-  const percentChangeString = toPercentString(decimalChangeRaw, { intlOpts: { noGrouping: true } })
+  const percentChangeString = toPercentString(decimalChangeRaw, {
+    intlOpts: { noGrouping: true }
+  })
   const negative = lt(decimalChangeRaw, '0')
 
   // Calculate price string
   numDecimals = getNumDecimals(price)
   const priceStyle = negative ? styles.negativeText : styles.positiveText
   const plusMinus = negative ? '' : '+'
-  const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })}`
+  const priceString = `${fiatSymbol}${formatFiatString({
+    fiatAmount: price.toString()
+  })}`
   const percentString = `${plusMinus}${percentChangeString}`
 
   return (

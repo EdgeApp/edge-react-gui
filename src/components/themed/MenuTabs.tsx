@@ -127,34 +127,38 @@ const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => (
   }))
 ])
 
-const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; openRatio: SharedValue<number>; tabLabelHeight: number }>(
-  () =>
-    ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
-      return [
-        {
-          ...StyleSheet.absoluteFillObject
-        },
-        useAnimatedStyle(() => {
-          const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
-          const offsetFooterHeight = openRatioInverted * footerHeightRef.value
-          const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
-          return {
-            transform: [
-              {
-                translateY: offsetFooterHeight + offsetTabLabelHeight
-              }
-            ]
+const Background = styled(Animated.View)<{
+  footerHeight: SharedValue<number>
+  openRatio: SharedValue<number>
+  tabLabelHeight: number
+}>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+  return [
+    {
+      ...StyleSheet.absoluteFillObject
+    },
+    useAnimatedStyle(() => {
+      const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
+      const offsetFooterHeight = openRatioInverted * footerHeightRef.value
+      const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
+      return {
+        transform: [
+          {
+            translateY: offsetFooterHeight + offsetTabLabelHeight
           }
-        })
-      ]
-    }
-)
+        ]
+      }
+    })
+  ]
+})
 
 const BackgroundLinearGradient = styled(LinearGradient)({
   flex: 1
 })
 
-const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
+const Tabs = styled(Animated.View)<{
+  openRatio: SharedValue<number>
+  tabLabelHeight: number
+}>(() => ({ openRatio, tabLabelHeight }) => {
   return [
     {
       flexDirection: 'row',

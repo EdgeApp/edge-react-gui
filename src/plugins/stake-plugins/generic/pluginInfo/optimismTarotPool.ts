@@ -153,7 +153,10 @@ const adaptors: TarotPoolAdapterConfig[] = [
 const makePolicyConfig = (adapterConfig: TarotPoolAdapterConfig) => {
   return {
     stakePolicyId: `optimism_tarot_${adapterConfig.token0.tokenId}_${adapterConfig.token1.tokenId}_${adapterConfig.leverage}x`,
-    stakeProviderInfo: { ...stakeProviderInfo, displayName: `Tarot Finance ${adapterConfig.leverage}x Leverage` },
+    stakeProviderInfo: {
+      ...stakeProviderInfo,
+      displayName: `Tarot Finance ${adapterConfig.leverage}x Leverage`
+    },
     parentPluginId: 'optimism',
     parentCurrencyCode: 'ETH',
     stakeWarning: lstrings.stake_warning_multiple_transactions,

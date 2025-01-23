@@ -70,7 +70,14 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  notificationSettings(state: NotificationSettings = { ignoreMarketing: false, ignorePriceChanges: false, plugins: {} }, action: Action): NotificationSettings {
+  notificationSettings(
+    state: NotificationSettings = {
+      ignoreMarketing: false,
+      ignorePriceChanges: false,
+      plugins: {}
+    },
+    action: Action
+  ): NotificationSettings {
     switch (action.type) {
       case 'NOTIFICATION_SETTINGS_UPDATE':
         return action.data

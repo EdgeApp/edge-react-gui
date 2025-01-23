@@ -10,6 +10,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
@@ -241,42 +242,98 @@ const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
 
 const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
-  AAVE: { pluginId: 'ethereum', tokenId: '7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9' },
+  AAVE: {
+    pluginId: 'ethereum',
+    tokenId: '7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9'
+  },
   ADA: { pluginId: 'cardano', tokenId: null },
-  BAT: { pluginId: 'ethereum', tokenId: '0d8775f648430679a709e98d2b0cb6250d2887ef' },
+  BAT: {
+    pluginId: 'ethereum',
+    tokenId: '0d8775f648430679a709e98d2b0cb6250d2887ef'
+  },
   BCH: { pluginId: 'bitcoincash', tokenId: null },
   BNB: { pluginId: 'binancechain', tokenId: null },
   BTC: { pluginId: 'bitcoin', tokenId: null },
-  'BTC-TESTNET': { currencyCode: 'TESTBTC', pluginId: 'bitcointestnet', tokenId: null },
-  BUSD: { pluginId: 'binancesmartchain', tokenId: 'e9e7cea3dedca5984780bafc599bd69add087d56' },
-  COMP: { pluginId: 'ethereum', tokenId: 'c00e94cb662c3520282e6f5717214004a7f26888' },
-  CRV: { pluginId: 'ethereum', tokenId: 'd533a949740bb3306d119cc777fa900ba034cd52' },
-  DAI: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
+  'BTC-TESTNET': {
+    currencyCode: 'TESTBTC',
+    pluginId: 'bitcointestnet',
+    tokenId: null
+  },
+  BUSD: {
+    pluginId: 'binancesmartchain',
+    tokenId: 'e9e7cea3dedca5984780bafc599bd69add087d56'
+  },
+  COMP: {
+    pluginId: 'ethereum',
+    tokenId: 'c00e94cb662c3520282e6f5717214004a7f26888'
+  },
+  CRV: {
+    pluginId: 'ethereum',
+    tokenId: 'd533a949740bb3306d119cc777fa900ba034cd52'
+  },
+  DAI: {
+    pluginId: 'ethereum',
+    tokenId: '6b175474e89094c44da98b954eedeac495271d0f'
+  },
   DOGE: { pluginId: 'dogecoin', tokenId: null },
   DOT: { pluginId: 'polkadot', tokenId: null },
   ETH: { pluginId: 'ethereum', tokenId: null },
-  KNC: { pluginId: 'ethereum', tokenId: 'defa4e8a7bcba345f687a2f1456f5edd9ce97202' },
-  LINK: { pluginId: 'ethereum', tokenId: '514910771af9ca656af840dff83e8264ecf986ca' },
+  KNC: {
+    pluginId: 'ethereum',
+    tokenId: 'defa4e8a7bcba345f687a2f1456f5edd9ce97202'
+  },
+  LINK: {
+    pluginId: 'ethereum',
+    tokenId: '514910771af9ca656af840dff83e8264ecf986ca'
+  },
   LTC: { pluginId: 'litecoin', tokenId: null },
-  MKR: { pluginId: 'ethereum', tokenId: '9f8f72aa9304c8b593d555f12ef6589cc3a579a2' },
+  MKR: {
+    pluginId: 'ethereum',
+    tokenId: '9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
+  },
   POL: { currencyCode: 'POL', pluginId: 'polygon', tokenId: null },
-  SHIB: { pluginId: 'ethereum', tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce' },
+  SHIB: {
+    pluginId: 'ethereum',
+    tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'
+  },
   SOL: { pluginId: 'solana', tokenId: null },
-  SUSHI: { pluginId: 'ethereum', tokenId: '6b3595068778dd592e39a122f4f5a5cf09c90fe2' },
+  SUSHI: {
+    pluginId: 'ethereum',
+    tokenId: '6b3595068778dd592e39a122f4f5a5cf09c90fe2'
+  },
   TON: { pluginId: 'ton', tokenId: null },
   TRX: { pluginId: 'tron', tokenId: null },
-  USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
-  USDT: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
-  'USDT-TRC20': { currencyCode: 'USDT', pluginId: 'tron', tokenId: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t' },
-  WBTC: { pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599' },
+  USDC: {
+    pluginId: 'ethereum',
+    tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  },
+  USDT: {
+    pluginId: 'ethereum',
+    tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7'
+  },
+  'USDT-TRC20': {
+    currencyCode: 'USDT',
+    pluginId: 'tron',
+    tokenId: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+  },
+  WBTC: {
+    pluginId: 'ethereum',
+    tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
   XLM: { pluginId: 'stellar', tokenId: null },
   XRP: { pluginId: 'ripple', tokenId: null },
   XTZ: { pluginId: 'tezos', tokenId: null },
-  YFI: { pluginId: 'ethereum', tokenId: '0bc529c00c6401aef6d220be8c6ea1667f6ad93e' }
+  YFI: {
+    pluginId: 'ethereum',
+    tokenId: '0bc529c00c6401aef6d220be8c6ea1667f6ad93e'
+  }
 }
 
 const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CURRENCY_MAP).reduce((prev, [paybisCc, edgeToken]) => {
-  return { ...prev, [`${edgeToken.pluginId}_${edgeToken.tokenId ?? ''}`]: paybisCc }
+  return {
+    ...prev,
+    [`${edgeToken.pluginId}_${edgeToken.tokenId ?? ''}`]: paybisCc
+  }
 }, {})
 
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
@@ -301,7 +358,9 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id_bridgerpay_directa24_pix_payout': 'pix'
 }
 
-const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
+const REVERSE_PAYMENT_METHOD_MAP: Partial<{
+  [Payment in FiatPaymentType]: PaymentMethodId
+}> = {
   applepay: 'method-id-credit-card',
   credit: 'method-id-credit-card',
   googlepay: 'method-id-credit-card',
@@ -311,7 +370,9 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: Paymen
   spei: 'method-id_bridgerpay_directa24_spei'
 }
 
-const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
+const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{
+  [Payment in FiatPaymentType]: PaymentMethodId
+}> = {
   credit: 'method-id-credit-card-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
@@ -353,12 +414,19 @@ export const paybisProvider: FiatProviderFactory = {
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         // Do not allow sell to debit in US, disable all UK
         if (regionCode.countryCode === 'GB' || (direction === 'sell' && paymentTypes.includes('credit') && regionCode.countryCode === 'US')) {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
         validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
-        if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (paymentType == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const fiats = allowedCurrencyCodes[direction][paymentType]?.fiat
         const cryptos = allowedCurrencyCodes[direction][paymentType]?.crypto
@@ -379,7 +447,12 @@ export const paybisProvider: FiatProviderFactory = {
         }
 
         try {
-          const response = await paybisFetch({ method: 'GET', url, path: `v2/public/user/${partnerUserId}/status`, apiKey })
+          const response = await paybisFetch({
+            method: 'GET',
+            url,
+            path: `v2/public/user/${partnerUserId}/status`,
+            apiKey
+          })
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
         } catch (e) {
@@ -387,7 +460,11 @@ export const paybisProvider: FiatProviderFactory = {
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
-        if (out == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (out == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         return out
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
@@ -406,11 +483,18 @@ export const paybisProvider: FiatProviderFactory = {
         } = params
         validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
-        if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (paymentType == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const pairs = paybisPairs[direction]?.data
         if (pairs == null) {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'assetUnsupported'
+          })
         }
 
         // Check if the region, payment type, and fiat/crypto codes are supported
@@ -419,7 +503,11 @@ export const paybisProvider: FiatProviderFactory = {
         const paymentMethod = direction === 'buy' ? REVERSE_PAYMENT_METHOD_MAP[paymentType] : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
         const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
-        if (paymentMethod == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (paymentMethod == null)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         let currencyCodeFrom
         let currencyCodeTo
@@ -478,7 +566,14 @@ export const paybisProvider: FiatProviderFactory = {
           }
         }
 
-        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams, promoCode })
+        const response = await paybisFetch({
+          method: 'POST',
+          url,
+          path: 'v2/public/quote',
+          apiKey,
+          bodyParams,
+          promoCode
+        })
         const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
 
         const pmErrors = paymentMethodErrors ?? payoutMethodErrors
@@ -489,9 +584,19 @@ export const paybisProvider: FiatProviderFactory = {
             const maxMatch = e.error.message.match(/^Amount must be less than (\d+\.\d+) ([A-Z]+)/)
             const minMatch = e.error.message.match(/^Minimum amount is (\d+\.\d+) ([A-Z]+)/)
             if (maxMatch != null) {
-              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: Number(maxMatch[1]), displayCurrencyCode: maxMatch[2] })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'overLimit',
+                errorAmount: Number(maxMatch[1]),
+                displayCurrencyCode: maxMatch[2]
+              })
             } else if (minMatch != null) {
-              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: Number(minMatch[1]), displayCurrencyCode: minMatch[2] })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'underLimit',
+                errorAmount: Number(minMatch[1]),
+                displayCurrencyCode: minMatch[2]
+              })
             }
           }
           throw new Error(lastError?.error.message ?? 'Paybis Unknown paymentMethodError')
@@ -544,7 +649,9 @@ export const paybisProvider: FiatProviderFactory = {
             if (!success) {
               await showUi.showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
+            const receiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
 
             let bodyParams
             if (direction === 'buy') {
@@ -576,7 +683,16 @@ export const paybisProvider: FiatProviderFactory = {
             }
 
             const privateKey = atob(privateKeyB64)
-            const promise = paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, promoCode, privateKey, showUi })
+            const promise = paybisFetch({
+              method: 'POST',
+              url,
+              path: 'v2/public/request',
+              apiKey,
+              bodyParams,
+              promoCode,
+              privateKey,
+              showUi
+            })
             const response = await showUi.showToastSpinner(lstrings.fiat_plugin_finalizing_quote, promise)
             const { oneTimeToken, requestId } = asPublicRequestResponse(response)
 
@@ -651,7 +767,13 @@ export const paybisProvider: FiatProviderFactory = {
                     if (inPayment) return
                     inPayment = true
                     try {
-                      const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey, promoCode })
+                      const payDetails = await paybisFetch({
+                        method: 'GET',
+                        url,
+                        path: `v2/request/${requestId}/payment-details`,
+                        apiKey,
+                        promoCode
+                      })
                       const { assetId, amount, currencyCode: pbCurrencyCode, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
                       const { pluginId, tokenId } = PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
@@ -662,7 +784,7 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  network: ${network}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
+                      const nativeAmount = mul(amount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode))
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
@@ -748,7 +870,10 @@ export const paybisProvider: FiatProviderFactory = {
                           tokenId,
                           txid: tx.txid,
                           savedAction,
-                          assetAction: { ...assetAction, assetActionType: 'sell' }
+                          assetAction: {
+                            ...assetAction,
+                            assetActionType: 'sell'
+                          }
                         }
                         await showUi.saveTxAction(params)
                       }
@@ -844,7 +969,12 @@ const paybisFetch = async (params: {
 const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<void> => {
   if (paybisPairs.buy == null) {
     const promises = [
-      paybisFetch({ method: 'GET', url, path: `v2/public/currency/pairs/buy-crypto`, apiKey })
+      paybisFetch({
+        method: 'GET',
+        url,
+        path: `v2/public/currency/pairs/buy-crypto`,
+        apiKey
+      })
         .then(response => {
           paybisPairs.buy = asPaybisBuyPairs(response)
         })
@@ -907,7 +1037,12 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
 const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<void> => {
   if (paybisPairs.sell == null) {
     const promises = [
-      paybisFetch({ method: 'GET', url, path: `v2/public/currency/pairs/sell-crypto`, apiKey })
+      paybisFetch({
+        method: 'GET',
+        url,
+        path: `v2/public/currency/pairs/sell-crypto`,
+        apiKey
+      })
         .then(response => {
           paybisPairs.sell = asPaybisSellPairs(response)
         })

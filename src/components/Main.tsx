@@ -272,7 +272,9 @@ const EdgeWalletsTabScreen = () => {
       <WalletsStack.Screen
         name="transactionList"
         component={TransactionList}
-        options={{ headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} /> }}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+        }}
       />
     </WalletsStack.Navigator>
   )
@@ -814,7 +816,11 @@ const EdgeApp = () => {
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
+        drawerStyle: {
+          backgroundColor: 'transparent',
+          bottom: 0,
+          width: '66%'
+        },
         headerShown: false
       }}
     >

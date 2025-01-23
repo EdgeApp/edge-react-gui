@@ -80,7 +80,13 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
     const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
     const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
 
-    return { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletAddress, walletSigner }
+    return {
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+      nextNonce,
+      walletAddress,
+      walletSigner
+    }
   }
 
   const instance: StakePolicyAdapter = {

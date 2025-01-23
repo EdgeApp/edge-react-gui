@@ -27,7 +27,10 @@ const adaptors: CoreumNativeStakeKitAdapterConfig[] = [
 const coreumPolicyConfig: Array<StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>> = adaptors.map(adapterConfig => {
   return {
     stakePolicyId: `coreum_native_${adapterConfig.preferredValidatorAddress}`,
-    stakeProviderInfo: { ...stakeProviderInfo, displayName: `Coreum Native Staking - ${adapterConfig.preferredValidatorName}` },
+    stakeProviderInfo: {
+      ...stakeProviderInfo,
+      displayName: `Coreum Native Staking - ${adapterConfig.preferredValidatorName}`
+    },
     parentPluginId: 'coreum',
     parentCurrencyCode: 'COREUM',
     hideUnstakeAction: true,

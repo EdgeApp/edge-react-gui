@@ -23,8 +23,8 @@ import URL from 'url-parse'
 import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
-import { toBigNumberString } from '../../../util/toBigNumberString'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
 import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
@@ -276,7 +276,12 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     let hiddenCardIds: number[] = asStoreHiddenCards(await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined))
     let purchaseCardTimeoutId: NodeJS.Timeout
-    const ratesCache: { [currencyCode: string]: { expiry: number; rateQueryPromise: Promise<number> } } = {}
+    const ratesCache: {
+      [currencyCode: string]: {
+        expiry: number
+        rateQueryPromise: Promise<number>
+      }
+    } = {}
 
     //
     // Private methods:
@@ -417,12 +422,12 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         if (quoteParams.wallet == null) throw new Error('missing wallet')
 
         const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
-        const rateExchangeAmount = await quoteParams.wallet.nativeToDenomination(toBigNumberString(rateAmount), quoteParams.displayCurrencyCode)
+        const multiplier = getCurrencyCodeMultiplier(quoteParams.wallet.currencyConfig, quoteParams.displayCurrencyCode)
+        const rateExchangeAmount = div(rateAmount, multiplier, multiplier.length)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
-        const cryptoAmount =
-          quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
-        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, toBigNumberString(price))
+        const cryptoAmount = quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, price, HARD_CURRENCY_PRECISION)
+        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, price)
 
         // Concurrently get the latest purchase card promise
         const purchaseCardPromise = getPurchaseCard(quoteParams.displayCurrencyCode, parseFloat(fiatAmount))

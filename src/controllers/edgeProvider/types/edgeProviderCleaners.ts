@@ -151,7 +151,10 @@ export const methodCleaners: MethodTable<EdgeProviderMethods> = {
     asReturn: asEdgeReceiveAddress
   },
   getCurrentWalletInfo: { asParams: asTuple(), asReturn: asWalletDetails },
-  getWalletHistory: { asParams: asTuple(), asReturn: asEdgeGetWalletHistoryResult },
+  getWalletHistory: {
+    asParams: asTuple(),
+    asReturn: asEdgeGetWalletHistoryResult
+  },
   requestSpend: {
     asParams: asTuple(asArray(asEdgeProviderSpendTarget), asOptional(asEdgeRequestSpendOptions)),
     asReturn: asVoid

@@ -82,7 +82,10 @@ export function Services(props: Props) {
       if (fioCreateHandleRecord == null) {
         const shouldCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
         if (shouldCreateHandle) {
-          navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+          navigation.navigate('fioCreateHandle', {
+            freeRegApiToken,
+            freeRegRefCode
+          })
         } else {
           await account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
         }

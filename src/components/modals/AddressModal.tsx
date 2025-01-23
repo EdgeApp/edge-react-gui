@@ -153,7 +153,10 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
 
     if (currencyTicker == null) {
-      throw new ResolutionError('UnsupportedCurrency', { currencyTicker: this.props.coreWallet.currencyInfo.displayName, domain })
+      throw new ResolutionError('UnsupportedCurrency', {
+        currencyTicker: this.props.coreWallet.currencyInfo.displayName,
+        domain
+      })
     }
 
     const isValid = await resolver.isSupportedDomain(domain)

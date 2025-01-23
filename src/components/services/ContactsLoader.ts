@@ -282,6 +282,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Unizen',
+    hasThumbnail: true,
+    thumbnailPath: 'unizen.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Velodrome',
     hasThumbnail: true,
     thumbnailPath: 'velodrome.png',
@@ -341,7 +353,10 @@ const merchantPartners = [
     familyName: '',
     recordID: ''
   }
-].map(({ thumbnailPath, ...rest }) => ({ ...rest, thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/${thumbnailPath}` }))
+].map(({ thumbnailPath, ...rest }) => ({
+  ...rest,
+  thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/${thumbnailPath}`
+}))
 
 class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {

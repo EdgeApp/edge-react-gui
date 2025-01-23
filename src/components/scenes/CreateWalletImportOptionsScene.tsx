@@ -205,7 +205,12 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
       allKeyOptions.set(pluginId, keyOptions)
     })
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, keyOptions: allKeyOptions, importText })
+    navigation.navigate('createWalletCompletion', {
+      createWalletList,
+      walletNames,
+      keyOptions: allKeyOptions,
+      importText
+    })
   })
 
   const keyExtractor = useHandler((item: [string, Set<ImportKeyOption>]) => item[0])

@@ -253,7 +253,10 @@ describe('ProviderSupportStore', () => {
   })
 
   describe('getFiatProviderAssetMap', () => {
-    type Tester = (params: FiatProviderAssetMapQuery) => { crypto: string[]; fiat: string[] }
+    type Tester = (params: FiatProviderAssetMapQuery) => {
+      crypto: string[]
+      fiat: string[]
+    }
 
     function makeTestCase(fixture: ProviderSupportObject): Tester {
       // Setup fixtures:

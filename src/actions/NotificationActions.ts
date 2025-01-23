@@ -121,9 +121,11 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
           }
         } else {
           // v1 settings do exist let's migrate them to v2
-          const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
-            activeCurrencyInfos.map(async info => await fetchLegacySettings(userId, info.currencyCode))
-          )
+          const currencySettings: Array<{
+            '1': boolean
+            '24': boolean
+            fallbackSettings?: boolean
+          }> = await Promise.all(activeCurrencyInfos.map(async info => await fetchLegacySettings(userId, info.currencyCode)))
 
           for (const [i, setting] of currencySettings.entries()) {
             if (setting.fallbackSettings) {
@@ -138,7 +140,10 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       }
 
       if (createEvents.length > 0 || removeEvents.length > 0) {
-        serverSettings = await updateServerSettings(state.core.context, { createEvents, removeEvents })
+        serverSettings = await updateServerSettings(state.core.context, {
+          createEvents,
+          removeEvents
+        })
       }
     } catch (e: any) {
       // If this fails we don't need to bother the user just log and move on.
