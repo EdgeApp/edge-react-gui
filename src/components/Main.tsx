@@ -126,6 +126,7 @@ import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneCompone
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
+import { TransactionList2 as TransactionList2Component } from './scenes/TransactionListScene2'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
@@ -218,6 +219,7 @@ const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
 const SwapSuccessScene = ifLoggedIn(SwapSuccessSceneComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
+const TransactionList2 = ifLoggedIn(TransactionList2Component)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
@@ -274,6 +276,13 @@ const EdgeWalletsTabScreen = () => {
         component={TransactionList}
         options={{
           headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+        }}
+      />
+      <WalletsStack.Screen
+        name="transactionList2"
+        component={TransactionList2}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList2'> fromParams={params => params.walletName} />
         }}
       />
     </WalletsStack.Navigator>
@@ -779,6 +788,13 @@ const EdgeAppStack = () => {
         component={TransactionDetailsScene}
         options={{
           headerTitle: () => <TransactionDetailsTitle />
+        }}
+      />
+      <WalletsStack.Screen
+        name="transactionList2"
+        component={TransactionList2}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList2'> fromParams={params => params.walletName} />
         }}
       />
       <AppStack.Screen
