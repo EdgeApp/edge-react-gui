@@ -225,6 +225,7 @@ const strings = {
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
   transaction_list_search_no_result: 'Search returned no results',
+  transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
@@ -1532,6 +1533,7 @@ const strings = {
   coin_rank_week: '7D',
   coin_rank_month: '30D',
   coin_rank_year: '1Y',
+  coin_rank_see_more: 'See More',
 
   // #endregion CoinRanking
 

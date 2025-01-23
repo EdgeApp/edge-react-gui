@@ -25,9 +25,12 @@ type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
 type CoinGeckoDataPair = number[]
 
 interface Props {
-  assetId: string // The asset's 'id' as defined by CoinGecko
+  /** The asset's 'id' as defined by CoinGecko */
+  assetId: string
   currencyCode: string
   fiatCurrencyCode: string
+  /** Modify positioning to fit properly in a card */
+  cardAdjust?: boolean
 }
 interface ChartDataPoint {
   x: Date
@@ -129,7 +132,7 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode, fiatCurrencyCode } = params
+  const { assetId, cardAdjust, currencyCode, fiatCurrencyCode } = params
 
   // #region Chart setup
 
@@ -567,7 +570,7 @@ const SwipeChartComponent = (params: Props) => {
             toolTipProps={tooltipProps}
             // #endregion ToolTip
 
-            style={styles.baseChart}
+            style={[styles.baseChart, cardAdjust ? styles.cardAdjust : undefined]}
           />
 
           {/* Min/Max price labels */}
@@ -613,6 +616,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     baseCursor: {
       alignSelf: 'flex-start',
       position: 'absolute'
+    },
+    cardAdjust: {
+      marginLeft: theme.rem(-1)
     },
     container: {
       margin: theme.rem(0.5)

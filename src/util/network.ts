@@ -1,4 +1,4 @@
-import { Cleaner } from 'cleaners'
+import { asObject, asString, Cleaner } from 'cleaners'
 import { EdgeFetchFunction, EdgeFetchOptions, EdgeFetchResponse } from 'edge-core-js'
 import { asInfoRollup, InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
@@ -7,7 +7,8 @@ import { getVersion } from 'react-native-device-info'
 import { config } from '../theme/appConfig'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
-const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
+// const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
+const RATES_SERVERS = ['http://localhost:8087']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
@@ -95,4 +96,30 @@ export const initInfoServer = async () => {
 
   await queryInfo()
   setInterval(queryInfo, INFO_FETCH_INTERVAL)
+}
+
+const asCoinrankList = asObject(asString)
+
+const asCoinGeckoCoinsResponse = asObject({
+  data: asCoinrankList
+})
+
+export type CoinrankList = ReturnType<typeof asCoinrankList>
+
+export const coinrankListData: { coins: CoinrankList } = { coins: {} }
+export const initCoinrankList = async () => {
+  try {
+    const response = await fetchRates('v2/coinrankList')
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(`initCoinrankList error ${response.status}: ${text}`)
+    }
+    const responseJson = await response.json()
+    const { data } = asCoinGeckoCoinsResponse(responseJson)
+
+    coinrankListData.coins = data
+    console.log('initCoinrankList: Successfully fetched coingecko list')
+  } catch (e) {
+    console.warn('initCoinrankList: Failed to fetch coinrank list', String(e))
+  }
 }

@@ -1,3 +1,4 @@
+import { gt, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
@@ -12,24 +13,29 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
-import { infoServerData } from '../../util/network'
-import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { coinrankListData, infoServerData } from '../../util/network'
+import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor, zeroString } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
+import { SwipeChart } from '../charts/SwipeChart'
 import { AccentColors } from '../common/DotsBackground'
-import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
-import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
+import { EmptyLoader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 
@@ -56,6 +62,7 @@ function TransactionListComponent(props: Props) {
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+  const { displayName } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
   const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
@@ -66,6 +73,7 @@ function TransactionListComponent(props: Props) {
 
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+  const fiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat).replace('iso:', '')
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${state.ui.settings.defaultIsoFiat}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
@@ -79,6 +87,13 @@ function TransactionListComponent(props: Props) {
   // Derived values
   // ---------------------------------------------------------------------------
 
+  // Fiat Balance Formatting
+  const exchangeAmount = convertNativeToDenomination(exchangeDenom.multiplier)(exchangeDenom.multiplier)
+  const fiatRate = mul(exchangeAmount, exchangeRate)
+  const fiatRateFormat = `${formatNumber(fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0, {
+    toFixed: gt(fiatRate, '1000') ? 0 : 2
+  })} ${fiatCurrencyCode}/${currencyCode}`
+
   const spamThreshold = React.useMemo<string | undefined>(() => {
     if (spamFilterOn && !zeroString(exchangeRate)) {
       return calculateSpamThreshold(exchangeRate, exchangeDenom)
@@ -86,11 +101,7 @@ function TransactionListComponent(props: Props) {
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
   // Transaction list state machine:
-  const {
-    transactions,
-    atEnd,
-    requestMore: handleScrollEnd
-  } = useTransactionList(wallet, tokenId, {
+  const { transactions, requestMore: handleScrollEnd } = useTransactionList(wallet, tokenId, {
     searchString: isSearching ? searchText : undefined,
     spamThreshold
   })
@@ -101,36 +112,10 @@ function TransactionListComponent(props: Props) {
   const listItems = React.useMemo(() => {
     if (isTransactionListUnsupported) return []
 
-    let lastSection = ''
-    const out: ListItem[] = []
-    for (const tx of transactions) {
-      // Create a new section header if we need one:
-      const { date } = unixToLocaleDateTime(tx.date)
-      if (date !== lastSection) {
-        out.push(date)
-        lastSection = date
-      }
-
-      // Add the transaction to the list:
-      out.push(tx)
-    }
-
-    // If we are still loading, add a spinner at the end:
-    if (!atEnd) out.push(null)
-
-    return out
-  }, [atEnd, isTransactionListUnsupported, transactions])
-
-  // TODO: Comment out sticky header indices until we figure out how to
-  // give the headers a background only when they're sticking.
-  // Figure out where the section headers are located:
-  // const stickyHeaderIndices = React.useMemo<number[]>(() => {
-  //   const out: number[] = []
-  //   for (let i = 0; i < listItems.length; ++i) {
-  //     if (typeof listItems[i] === 'string') out.push(i)
-  //   }
-  //   return out
-  // }, [listItems])
+    // Take only the 5 most recent transactions
+    const recentTransactions = transactions.slice(0, 5)
+    return recentTransactions.length > 0 ? recentTransactions : []
+  }, [isTransactionListUnsupported, transactions])
 
   // ---------------------------------------------------------------------------
   // Side-Effects
@@ -181,6 +166,12 @@ function TransactionListComponent(props: Props) {
     setFooterHeight(height)
   })
 
+  const assetId = coinrankListData.coins[currencyCode]
+
+  const handlePressCoinRanking = useHandler(() => {
+    navigation.navigate('coinRankingDetails', { assetId, fiatCurrencyCode })
+  })
+
   //
   // Renderers
   //
@@ -222,9 +213,47 @@ function TransactionListComponent(props: Props) {
           countryCode={route.params.countryCode}
           screenWidth={screenWidth}
         />
+        {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
+        {assetId != null && (
+          <EdgeCard>
+            <Paragraph>
+              <EdgeText>{fiatRateFormat}</EdgeText>
+            </Paragraph>
+            <SwipeChart cardAdjust assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
+          </EdgeCard>
+        )}
+        <SectionHeaderUi4
+          leftTitle={lstrings.transaction_list_recent_transactions}
+          rightNode={lstrings.see_all}
+          onRightPress={() => navigation.navigate('transactionList2', route.params)}
+        />
+        <EdgeCard sections>
+          {listItems.map((tx: EdgeTransaction) => (
+            <View key={tx.txid} style={styles.txRow}>
+              <TransactionListRow navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} noCard />
+            </View>
+          ))}
+        </EdgeCard>
       </>
     )
-  }, [listItems.length, navigation, isSearching, tokenId, wallet, isLightAccount, pluginId, route.params.countryCode, screenWidth])
+  }, [
+    listItems,
+    navigation,
+    isSearching,
+    tokenId,
+    wallet,
+    isLightAccount,
+    pluginId,
+    route.params,
+    screenWidth,
+    assetId,
+    displayName,
+    handlePressCoinRanking,
+    fiatRateFormat,
+    currencyCode,
+    fiatCurrencyCode,
+    styles.txRow
+  ])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {
@@ -241,19 +270,7 @@ function TransactionListComponent(props: Props) {
       return <EmptyLoader />
     }
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
-    if (typeof item === 'string') {
-      return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-          <SectionHeader title={item} />
-        </EdgeAnim>
-      )
-    }
-    return (
-      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
-      </EdgeAnim>
-    )
+    return null // We're not using the FlatList rendering anymore
   })
 
   const keyExtractor = useHandler((item: ListItem) => {
@@ -325,9 +342,6 @@ function TransactionListComponent(props: Props) {
             ListHeaderComponent={topArea}
             onEndReachedThreshold={0.5}
             renderItem={renderItem}
-            // TODO: Comment out sticky header indices until we figure out how to
-            // give the headers a background only when they're sticking.
-            // stickyHeaderIndices={stickyHeaderIndices}
             onEndReached={handleScrollEnd}
             onScroll={handleScroll}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
@@ -355,7 +369,9 @@ export const TransactionList = withWallet(TransactionListComponent)
 
 const getStyles = cacheStyles(() => ({
   flatList: {
-    overflow: 'visible',
-    flexShrink: 0
+    flex: 1
+  },
+  txRow: {
+    paddingVertical: 0
   }
 }))
