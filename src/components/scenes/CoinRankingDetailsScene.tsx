@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
@@ -82,15 +82,33 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route, navigation } = props
-  const { assetId, coinRankingData: initCoinRankingData, fiatCurrencyCode } = route.params
-  const [coinRankingData, setCoinRankingData] = React.useState<CoinRankingData | undefined>(initCoinRankingData)
-  const { currencyCode, currencyName } = coinRankingData ?? {}
-  const currencyCodeUppercase = currencyCode?.toUpperCase() ?? ''
+  const { assetId, fiatCurrencyCode, coinRankingData: initCoinRankingData } = route.params
 
   // In case the user changes their default fiat while viewing this scene, we
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const supportedFiat = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+  const [fetchedCoinRankingData] = useAsyncValue(async () => {
+    if (assetId == null) {
+      throw new Error('No currencyCode or coinRankingData provided')
+    }
+    const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${supportedFiat}`)
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(`Unable to fetch coin ranking data. ${text}`)
+    }
+
+    const json = await response.json()
+    const crData = asCoinRankingData(json.data)
+
+    return crData
+  }, [assetId, supportedFiat])
+
+  const coinRankingData = fetchedCoinRankingData ?? initCoinRankingData
+
+  const { currencyCode, currencyName } = coinRankingData ?? {}
+  const currencyCodeUppercase = currencyCode?.toUpperCase() ?? ''
+
   const isFocused = useIsFocused()
   const initFiat = React.useState<string>(fiatCurrencyCode)[0]
   React.useEffect(() => {
@@ -101,27 +119,6 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       navigation.navigate('coinRanking')
     }
   }, [supportedFiat, initFiat, isFocused, navigation])
-
-  useAsyncEffect(
-    async () => {
-      if (coinRankingData == null) {
-        if (assetId == null) {
-          throw new Error('No currencyCode or coinRankingData provided')
-        }
-        const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${supportedFiat}`)
-        if (!response.ok) {
-          const text = await response.text()
-          throw new Error(`Unable to fetch coin ranking data. ${text}`)
-        }
-
-        const json = await response.json()
-        const crData = asCoinRankingData(json.data)
-        setCoinRankingData(crData)
-      }
-    },
-    [currencyCode, supportedFiat],
-    'CoinRankingDetailsScene'
-  )
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -232,7 +229,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           </View>
         </View>
       ) : (
-        <EdgeText>Loading...</EdgeText>
+        <EdgeText>{lstrings.loading}</EdgeText>
       )}
     </SceneWrapper>
   )

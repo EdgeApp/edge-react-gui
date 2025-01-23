@@ -1,3 +1,4 @@
+import { gt, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
@@ -12,6 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
@@ -19,17 +21,18 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
 import { coinrankListData, infoServerData } from '../../util/network'
-import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
 import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
@@ -59,6 +62,7 @@ function TransactionListComponent(props: Props) {
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+  const { displayName } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
   const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
@@ -82,6 +86,13 @@ function TransactionListComponent(props: Props) {
   // ---------------------------------------------------------------------------
   // Derived values
   // ---------------------------------------------------------------------------
+
+  // Fiat Balance Formatting
+  const exchangeAmount = convertNativeToDenomination(exchangeDenom.multiplier)(exchangeDenom.multiplier)
+  const fiatRate = mul(exchangeAmount, exchangeRate)
+  const fiatRateFormat = `${formatNumber(fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0, {
+    toFixed: gt(fiatRate, '1000') ? 0 : 2
+  })} ${fiatCurrencyCode}/${currencyCode}`
 
   const spamThreshold = React.useMemo<string | undefined>(() => {
     if (spamFilterOn && !zeroString(exchangeRate)) {
@@ -185,6 +196,12 @@ function TransactionListComponent(props: Props) {
     setFooterHeight(height)
   })
 
+  const assetId = coinrankListData.coins[currencyCode]
+
+  const handlePressCoinRanking = useHandler(() => {
+    navigation.navigate('coinRankingDetails', { assetId, fiatCurrencyCode })
+  })
+
   //
   // Renderers
   //
@@ -206,12 +223,6 @@ function TransactionListComponent(props: Props) {
     )
   }, [])
 
-  const assetId = coinrankListData.coins[currencyCode]
-
-  const handlePressCoinRanking = useHandler(() => {
-    navigation.navigate('coinRankingDetails', { assetId, fiatCurrencyCode })
-  })
-
   const topArea = React.useMemo(() => {
     return (
       <>
@@ -232,12 +243,20 @@ function TransactionListComponent(props: Props) {
           countryCode={route.params.countryCode}
           screenWidth={screenWidth}
         />
+        {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
         {assetId != null && (
-          <EdgeTouchableOpacity onPress={handlePressCoinRanking}>
-            <EdgeText>See More</EdgeText>
-          </EdgeTouchableOpacity>
+          <EdgeCard>
+            <Paragraph>
+              <EdgeText>{fiatRateFormat}</EdgeText>
+            </Paragraph>
+            <SwipeChart cardAdjust assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
+          </EdgeCard>
         )}
-        {assetId != null && <SwipeChart assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />}
+        <SectionHeaderUi4
+          leftTitle={lstrings.transaction_list_recent_transactions}
+          rightNode={lstrings.coin_rank_see_more}
+          onRightPress={handlePressCoinRanking}
+        />
       </>
     )
   }, [
@@ -251,9 +270,11 @@ function TransactionListComponent(props: Props) {
     route.params.countryCode,
     screenWidth,
     assetId,
+    displayName,
+    handlePressCoinRanking,
+    fiatRateFormat,
     currencyCode,
-    fiatCurrencyCode,
-    handlePressCoinRanking
+    fiatCurrencyCode
   ])
 
   const emptyComponent = React.useMemo(() => {
