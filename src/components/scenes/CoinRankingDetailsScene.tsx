@@ -83,6 +83,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
   const { route, navigation } = props
   const { assetId, coinRankingData: initCoinRankingData, fiatCurrencyCode } = route.params
+
   const [coinRankingData, setCoinRankingData] = React.useState<CoinRankingData | undefined>(initCoinRankingData)
   const { currencyCode, currencyName } = coinRankingData ?? {}
   const currencyCodeUppercase = currencyCode?.toUpperCase() ?? ''
@@ -108,7 +109,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         if (assetId == null) {
           throw new Error('No currencyCode or coinRankingData provided')
         }
-        const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=${supportedFiat}`)
+        const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${supportedFiat}`)
         if (!response.ok) {
           const text = await response.text()
           throw new Error(`Unable to fetch coin ranking data. ${text}`)

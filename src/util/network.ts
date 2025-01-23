@@ -8,7 +8,7 @@ import { config } from '../theme/appConfig'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 // const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
-const RATES_SERVERS = ['http://localhost:8008']
+const RATES_SERVERS = ['http://localhost:8087']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
