@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- added: Price chart to `TransactionListScene`
+- changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `TransactionListScene2`
+
 ## 4.21.0 (staging)
 
 - added: Add SUI
