@@ -4,6 +4,7 @@
 
 - added: `NotificationCenterScene`
 - added: Search bar to `EarnScene`
+- added: Buy, Sell, Earn, and Trade buttons to `CoinRankingDetailsScene`
 - added: Price chart to `TransactionListScene`
 - added: Add Unizen DEX
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `TransactionListScene2`
