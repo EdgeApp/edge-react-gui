@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Search bar to `EarnScene`
 - added: Add Unizen DEX
 
 ## 4.21.0 (2025-01-22)
