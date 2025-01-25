@@ -1224,6 +1224,7 @@
   "fund_account_modal_receive_message": "Scansiona il codice QR con un portafoglio esterno o copia l'indirizzo toccando la parola \"Copia\" e incolla l'indirizzo in un portafoglio esterno.",
   "util_s_and_s": "%1$s e %2$s",
   "util_truncate_delimeter": "...",
+  "earn_search": "Search Earning Pools",
   "stake_estimated_return": "Ritorno stimato: %s",
   "stake_estimated_apr_s": "APR stimato %s",
   "stake_stake_1s": "Metti in stake %1$s",
