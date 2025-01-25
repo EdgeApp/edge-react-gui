@@ -1224,6 +1224,7 @@
   "fund_account_modal_receive_message": "Scan QR code with an external wallet or copy the address by tapping the word \"Copy\" and paste the address into an external wallet.",
   "util_s_and_s": "%1$s と %2$s",
   "util_truncate_delimeter": "...",
+  "earn_search": "Search Earning Pools",
   "stake_estimated_return": "推定リターン: %s",
   "stake_estimated_apr_s": "%s Estimated APR",
   "stake_stake_1s": "Stake: %1$s",
