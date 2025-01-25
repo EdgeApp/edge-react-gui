@@ -1386,6 +1386,7 @@ const strings = {
   util_truncate_delimeter: '...',
 
   // Stake
+  earn_search: 'Search Earning Pools',
   stake_estimated_return: 'Estimated Return: %s',
   stake_estimated_apr_s: '%s Estimated APR',
   stake_stake_1s: 'Stake: %1$s',
