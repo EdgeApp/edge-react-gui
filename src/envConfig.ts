@@ -323,6 +323,11 @@ export const asEnvConfig = asObject({
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  TON_INIT: asCorePluginInit(
+    asObject({
+      tonCenterApiKeys: asOptional(asArray(asString), () => [])
+    }).withRest
+  ),
   WALLET_CONNECT_INIT: asCorePluginInit(
     asObject({
       projectId: asOptional(asString, '')
