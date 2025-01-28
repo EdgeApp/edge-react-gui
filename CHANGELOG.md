@@ -5,6 +5,12 @@
 - added: Search bar to `EarnScene`
 - added: Add Unizen DEX
 
+## 4.21.1 (2025-01-28)
+
+- changed: (Solana) Implement transaction broadcast retry logic
+- changed: (Ton) Only use ton center for transaction query
+- fixed: (Ton) Fix `isSend` when processing transactions
+
 ## 4.21.0 (2025-01-22)
 
 - added: Add SUI
