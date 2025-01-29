@@ -144,12 +144,7 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
   return `${truncatedAmount} `
 }
 
-export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [pair: string]: string },
-  fromCurrencyCode: string,
-  toCurrencyCode: string,
-  amount: string
-): string => {
+export const convertCurrencyFromExchangeRates = (exchangeRates: GuiExchangeRates, fromCurrencyCode: string, toCurrencyCode: string, amount: string): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = mul(amount, rate)

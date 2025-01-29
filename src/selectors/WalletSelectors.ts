@@ -2,6 +2,7 @@ import { mul } from 'biggystring'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
+import { GuiExchangeRates } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, zeroString } from '../util/utils'
 
@@ -47,7 +48,7 @@ export const calculateFiatBalance = (
   wallet: EdgeCurrencyWallet,
   isoFiatCurrencyCode: string,
   exchangeDenomination: EdgeDenomination,
-  exchangeRates: { [pair: string]: string }
+  exchangeRates: GuiExchangeRates
 ): string => {
   const currencyCode = exchangeDenomination.name
   const tokenId = getWalletTokenId(wallet, currencyCode)
