@@ -2,7 +2,7 @@ import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { EdgeAsset, WalletListItem } from '../types/types'
-import { checkAssetFilter, hasAsset, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import { isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 import { normalizeForSearch } from '../util/utils'
 
@@ -64,52 +64,115 @@ interface CreateWalletListOpts {
 }
 
 export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
-  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets, disableLegacy = false } = opts
+  const { filteredWalletList = [], filterActivation, allowedAssets = [], excludeAssets = [], disableLegacy = false } = opts
+  const segwitSpecialCases = new Set(['bitcoin', 'litecoin', 'digibyte'])
+  const existingWalletsMap = new Map<string, Set<EdgeTokenId>>()
+  for (const item of filteredWalletList) {
+    if (item.type !== 'asset') continue
+    const { wallet, tokenId } = item
+    const tokenIdSet = existingWalletsMap.get(wallet.currencyInfo.pluginId) ?? new Set()
+    tokenIdSet.add(tokenId)
+    existingWalletsMap.set(wallet.currencyInfo.pluginId, tokenIdSet)
+  }
+  const assetOverrides = infoServerData.rollup?.assetOverrides ?? {
+    disable: {}
+  }
+
+  const createAssetMap = (assets: EdgeAsset[]): Map<string, Set<EdgeTokenId>> => {
+    const assetsMap = new Map<string, Set<EdgeTokenId>>()
+    for (const asset of assets) {
+      const tokenIdSet = assetsMap.get(asset.pluginId) ?? new Set()
+      tokenIdSet.add(asset.tokenId)
+      assetsMap.set(asset.pluginId, tokenIdSet)
+    }
+    return assetsMap
+  }
+  const excludedAssetsMap = createAssetMap(excludeAssets)
+  const allowedAssetsMap = createAssetMap(allowedAssets)
+
+  const isAllowed = (pluginId: string, tokenId: EdgeTokenId) =>
+    // if the wallet already exists, then it is not allowed
+    !existingWalletsMap.get(pluginId)?.has(tokenId) &&
+    // if allowedAssets is empty, then all assets are allowed
+    (allowedAssetsMap.size === 0 || allowedAssetsMap.get(pluginId)?.has(tokenId)) &&
+    // if excludedAssets is not empty, then the asset must not be in the excluded list
+    (excludedAssetsMap.size === 0 || !excludedAssetsMap.get(pluginId)?.has(tokenId))
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
+  const newTokens: TokenWalletCreateItem[] = []
   for (const pluginId of Object.keys(account.currencyConfig)) {
-    const currencyConfig = account.currencyConfig[pluginId]
-    const { currencyCode, displayName, walletType } = currencyConfig.currencyInfo
-
+    // Prevent plugins that are disabled on the info server
+    if (assetOverrides.disable[pluginId]) continue
     // Prevent plugins that are "watch only" from being allowed to create new wallets
     if (isKeysOnlyPlugin(pluginId)) continue
-
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && requiresActivation(pluginId)) continue
 
-    if (!disableLegacy && ['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
-      newWallets.push({
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { currencyCode, displayName, walletType } = currencyConfig.currencyInfo
+
+    if (isAllowed(pluginId, null))
+      if (!disableLegacy && segwitSpecialCases.has(pluginId)) {
+        newWallets.push({
+          type: 'create',
+          key: `create-${walletType}-bip49-${pluginId}`,
+          currencyCode,
+          displayName: `${displayName} (Segwit)`,
+          keyOptions: { format: 'bip49' },
+          pluginId,
+          tokenId: null,
+          walletType
+        })
+        newWallets.push({
+          type: 'create',
+          key: `create-${walletType}-bip44-${pluginId}`,
+          currencyCode,
+          displayName: `${displayName} (no Segwit)`,
+          keyOptions: { format: 'bip44' },
+          pluginId,
+          tokenId: null,
+          walletType
+        })
+      } else {
+        newWallets.push({
+          type: 'create',
+          key: `create-${walletType}-${pluginId}`,
+          currencyCode,
+          displayName,
+          keyOptions: {},
+          pluginId,
+          tokenId: null,
+          walletType
+        })
+      }
+
+    const { builtinTokens, currencyInfo } = currencyConfig
+    const tokenIds = Object.keys(builtinTokens)
+    if (tokenIds.length === 0) continue
+
+    // Identify which wallets could add the token
+    const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+
+    for (const tokenId of tokenIds) {
+      const { currencyCode, displayName, networkLocation } = builtinTokens[tokenId]
+
+      // Fix for when the token code and chain code are the same (like EOS/TLOS)
+      if (currencyCode === currencyInfo.currencyCode) continue
+
+      if (!isAllowed(pluginId, tokenId)) continue
+
+      const item: TokenWalletCreateItem = {
         type: 'create',
-        key: `create-${walletType}-bip49-${pluginId}`,
-        currencyCode,
-        displayName: `${displayName} (Segwit)`,
-        keyOptions: { format: 'bip49' },
-        pluginId,
-        tokenId: null,
-        walletType
-      })
-      newWallets.push({
-        type: 'create',
-        key: `create-${walletType}-bip44-${pluginId}`,
-        currencyCode,
-        displayName: `${displayName} (no Segwit)`,
-        keyOptions: { format: 'bip44' },
-        pluginId,
-        tokenId: null,
-        walletType
-      })
-    } else {
-      newWallets.push({
-        type: 'create',
-        key: `create-${walletType}-${pluginId}`,
+        key: `create-${currencyInfo.pluginId}-${tokenId}`,
         currencyCode,
         displayName,
-        keyOptions: {},
+        networkLocation,
         pluginId,
-        tokenId: null,
-        walletType
-      })
+        tokenId,
+        createWalletIds
+      }
+      newTokens.push(item)
     }
   }
 
@@ -125,50 +188,9 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     // Otherwise, sort display names alphabetically:
     return a.displayName.localeCompare(b.displayName)
   })
+  walletList.push(...newTokens)
 
-  // Add token types:
-  for (const pluginId of Object.keys(account.currencyConfig)) {
-    const currencyConfig = account.currencyConfig[pluginId]
-    const { builtinTokens, currencyInfo } = currencyConfig
-
-    // Identify which wallets could add the token
-    const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
-
-    for (const tokenId of Object.keys(builtinTokens)) {
-      const { currencyCode, displayName, networkLocation } = builtinTokens[tokenId]
-
-      // Fix for when the token code and chain code are the same (like EOS/TLOS)
-      if (currencyCode === currencyInfo.currencyCode) continue
-
-      const item: TokenWalletCreateItem = {
-        type: 'create',
-        key: `create-${currencyInfo.pluginId}-${tokenId}`,
-        currencyCode,
-        displayName,
-        networkLocation,
-        pluginId,
-        tokenId,
-        createWalletIds
-      }
-      walletList.push(item)
-    }
-  }
-
-  // Filter this list:
-  const existingWallets: EdgeAsset[] = []
-  for (const item of filteredWalletList) {
-    if (item.type !== 'asset') continue
-    const { wallet, tokenId } = item
-    existingWallets.push({
-      pluginId: wallet.currencyInfo.pluginId,
-      tokenId
-    })
-  }
-  const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
-  const assetOverrides = infoServerData.rollup?.assetOverrides ?? {
-    disable: {}
-  }
-  return out.filter(item => !assetOverrides.disable[item.pluginId])
+  return walletList
 }
 
 export const filterWalletCreateItemListBySearchText = (createWalletList: WalletCreateItem[], searchText: string): WalletCreateItem[] => {
