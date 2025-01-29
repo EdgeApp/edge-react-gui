@@ -111,6 +111,7 @@ exports[`initialState 1`] = `
       "isTouchEnabled": false,
       "isTouchSupported": false,
       "mostRecentWallets": [],
+      "notifState": {},
       "passwordRecoveryRemindersShown": {
         "20": false,
         "200": false,

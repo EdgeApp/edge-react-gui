@@ -81,12 +81,14 @@ const NotificationCardComponent = (props: Props) => {
         <TouchableContents onPress={handlePress}>
           <Icon source={{ uri: iconUri }} />
           <TextView>
-            <TitleText type={type}>{title}</TitleText>
             {/* Android font scaling is too aggressive. 
               Android prioritizes font shrinking much more before trying to add
               newlines, while iOS prioritizes newlines before shrinking text.
               We already use smaller text here so we shouldn't shrink it
               more */}
+            <TitleText type={type} numberOfLines={2} disableFontScaling={Platform.OS === 'android'}>
+              {title}
+            </TitleText>
             <MessageText type={type} numberOfLines={3} disableFontScaling={Platform.OS === 'android'}>
               {message}
             </MessageText>
@@ -115,17 +117,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   shadowIos: {
     borderRadius: theme.cardBorderRadius,
     marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
-    ...theme.notifcationCardShadow
+    ...theme.notificationCardShadow
   },
   shadowAndroid: {
     overflow: 'hidden',
     borderRadius: theme.cardBorderRadius,
     marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
-    ...theme.notifcationCardShadow
+    ...theme.notificationCardShadow
   }
 }))
 

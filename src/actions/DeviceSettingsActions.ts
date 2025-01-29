@@ -1,6 +1,6 @@
 import { makeReactNativeDisklet } from 'disklet'
 
-import { asDeviceSettings, DefaultScreen, DeviceNotifDismissInfo, DeviceSettings } from '../types/types'
+import { asDeviceSettings, DefaultScreen, DeviceSettings } from '../types/types'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
@@ -61,18 +61,6 @@ export const writeForceLightAccountCreate = async (forceLightAccountCreate: bool
   const updatedSettings: DeviceSettings = {
     ...deviceSettings,
     forceLightAccountCreate
-  }
-  return await writeDeviceSettings(updatedSettings)
-}
-
-/**
- * Track the state of whether particular one-time notifications associated with
- * the device were interacted with or dismissed.
- **/
-export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: DeviceNotifDismissInfo) => {
-  const updatedSettings: DeviceSettings = {
-    ...deviceSettings,
-    deviceNotifDismissInfo
   }
   return await writeDeviceSettings(updatedSettings)
 }
