@@ -8,6 +8,7 @@
 - added: Add Unizen DEX
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `TransactionListScene2`
 - changed: All floating `NotificationCard`s are dismissible
+- fixed: Show correct staked balance for deprecated Velodrome pools
 
 ## 4.21.1 (2025-01-28)
 
