@@ -25,7 +25,7 @@ export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId
 interface Props {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
-  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
+  navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
 }
 
 export const VisaCardCard = (props: Props) => {

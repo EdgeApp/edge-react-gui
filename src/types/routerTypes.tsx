@@ -62,8 +62,9 @@ import type { SweepPrivateKeyCompletionParams } from '../components/scenes/Sweep
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
 import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
-import type { TransactionListParams } from '../components/scenes/TransactionListScene'
+import type { TransactionListParams } from '../components/scenes/TransactionListScene2'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
+import type { WalletDetailsParams } from '../components/scenes/WalletDetailsScene'
 import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
@@ -87,6 +88,7 @@ import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormSce
 
 export type WalletsTabParamList = {} & {
   walletList: undefined
+  walletDetails: WalletDetailsParams
   transactionList: TransactionListParams
   transactionDetails: TransactionDetailsParams
 }
@@ -204,6 +206,7 @@ export type EdgeAppStackParamList = {} & {
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
   transactionDetails: TransactionDetailsParams
+  transactionList2: TransactionListParams
   transactionsExport: TransactionsExportParams
   upgradeUsername: undefined
   walletRestore: undefined

@@ -86,7 +86,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       .then(async activated => {
         const { countryCode } = await getFirstOpenInfo()
         if (activated) {
-          navigation.navigate('transactionList', {
+          navigation.navigate('walletDetails', {
             tokenId,
             walletId: wallet.id,
             walletName: wallet.name ?? wallet.currencyInfo.displayName,
