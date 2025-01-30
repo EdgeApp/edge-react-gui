@@ -1,4 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
+import { gt } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -374,27 +375,29 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
     const { walletId, tokenId } = walletListResult
 
-    // Find the wallet with highest USD value to use as source (swap from)
-    // TODO: Include token balances in this sort
-    const sourceWallet = Object.values(currencyWallets)
-      .filter(wallet => wallet.id !== walletId)
-      .sort((a, b) => {
-        const aCryptoAmount = new CryptoAmount({
-          currencyConfig: a.currencyConfig,
-          tokenId: null,
-          nativeAmount: a.balanceMap.get(null) ?? '0'
-        })
-        const aDollarValue = parseFloat(aCryptoAmount.displayDollarValue(exchangeRates, DECIMAL_PRECISION))
+    // Find the wallet/token with highest USD value to use as source (swap from)
+    let largestDollarValue
+    let sourceWallet
+    let sourceTokenId = null
+    for (const wallet of Object.values(currencyWallets)) {
+      // Get the highest CryptoAmount from the balanceMap and record the
+      // tokenId:
+      for (const balanceTokenId of wallet.balanceMap.keys()) {
+        if (balanceTokenId === tokenId && wallet.id === walletId) continue
 
-        const bCryptoAmount = new CryptoAmount({
-          currencyConfig: b.currencyConfig,
-          tokenId: null,
-          nativeAmount: b.balanceMap.get(null) ?? '0'
-        })
-        const bDollarValue = parseFloat(bCryptoAmount.displayDollarValue(exchangeRates, DECIMAL_PRECISION))
+        const dollarValue = new CryptoAmount({
+          currencyConfig: wallet.currencyConfig,
+          tokenId: balanceTokenId,
+          nativeAmount: wallet.balanceMap.get(balanceTokenId) ?? '0'
+        }).displayDollarValue(exchangeRates, DECIMAL_PRECISION)
 
-        return bDollarValue - aDollarValue
-      })[0]
+        if (largestDollarValue == null || gt(dollarValue, largestDollarValue)) {
+          sourceWallet = wallet
+          sourceTokenId = balanceTokenId
+          largestDollarValue = dollarValue
+        }
+      }
+    }
 
     // Navigate to the swap scene
     navigation.navigate('edgeTabs', {
@@ -402,7 +405,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       params: {
         screen: 'swapCreate',
         params: {
-          fromWalletId: sourceWallet.id,
+          fromWalletId: sourceWallet?.id,
+          fromTokenId: sourceTokenId,
           toWalletId: walletId,
           toTokenId: tokenId
         }
