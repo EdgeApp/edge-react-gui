@@ -364,7 +364,7 @@ export const calculateFiatAmount = (
   const { currencyCode, denominations } = token
   const key = `${currencyCode}_${isoFiatCurrencyCode}`
   const assetFiatPrice = exchangeRates[key] ?? '0'
-  if (zeroString(assetFiatPrice)) {
+  if (assetFiatPrice === 0) {
     return '0'
   }
 

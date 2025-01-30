@@ -1,11 +1,10 @@
-import { div, eq } from 'biggystring'
 import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { GuiExchangeRates } from '../types/types'
 import { fetchRates } from '../util/network'
-import { datelog, DECIMAL_PRECISION } from '../util/utils'
+import { datelog } from '../util/utils'
 
 const disklet = makeReactNativeDisklet()
 const EXCHANGE_RATES_FILENAME = 'exchangeRates.json'
@@ -23,7 +22,7 @@ const asAssetPair = asObject({
 const asExchangeRateCache = asObject(
   asObject({
     expiration: asNumber,
-    rate: asString
+    rate: asNumber
   })
 )
 const asExchangeRateCacheFile = asObject({
@@ -197,13 +196,13 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
             if (exchangeRate != null) {
               rateCache[key] = {
                 expiration: rateExpiration,
-                rate: exchangeRate
+                rate: parseFloat(exchangeRate)
               }
             } else if (rateCache[key] == null) {
               // We at least need a placeholder:
               rateCache[key] = {
                 expiration: 0,
-                rate: '0'
+                rate: 0
               }
             }
           }
@@ -228,7 +227,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   exchangeRateCache = rateCache
 
   // Build the GUI rate structure:
-  const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': '1' }
+  const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': 1 }
   for (const key of Object.keys(rateCache)) {
     const { rate } = rateCache[key]
     serverRates[key] = rate
@@ -236,7 +235,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     // Include reverse rates:
     const codes = key.split('_')
     const reverseKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
-    serverRates[reverseKey] = eq(rate, '0') ? '0' : div('1', rate, DECIMAL_PRECISION)
+    serverRates[reverseKey] = rate === 0 ? 0 : 1 / rate
   }
   return serverRates
 }

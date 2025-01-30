@@ -2,7 +2,7 @@ import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
-import { getDenomFromIsoCode, zeroString } from '../util/utils'
+import { getDenomFromIsoCode } from '../util/utils'
 
 /**
  * Returns data from tokens relevant for display
@@ -37,7 +37,7 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
     // The extra _ at the end means there is yesterday's date string at the end of the key
     const pair = Object.keys(state.exchangeRates).find(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
     if (pair != null) return state.exchangeRates[pair]
-    return '0'
+    return 0
   })
 
   return {
@@ -45,15 +45,15 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
     denomination,
     fiatDenomination,
     isoFiatCurrencyCode,
-    assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '0',
-    usdToWalletFiatRate: !zeroString(usdToWalletFiatRate) ? usdToWalletFiatRate : '0',
-    assetToYestUsdRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '0'
+    assetToFiatRate: assetFiatPrice,
+    usdToWalletFiatRate,
+    assetToYestUsdRate: assetFiatYestPrice
   }
 }
 
-export const useCurrencyFiatRate = ({ currencyCode, isoFiatCurrencyCode }: { currencyCode?: string; isoFiatCurrencyCode?: string }): string => {
+export const useCurrencyFiatRate = ({ currencyCode, isoFiatCurrencyCode }: { currencyCode?: string; isoFiatCurrencyCode?: string }): number => {
   return useSelector(state => {
-    if (currencyCode == null || isoFiatCurrencyCode == null) return '0'
+    if (currencyCode == null || isoFiatCurrencyCode == null) return 0
     else return state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`]
   })
 }

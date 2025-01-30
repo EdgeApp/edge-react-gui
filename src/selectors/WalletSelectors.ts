@@ -22,10 +22,10 @@ export const getActiveWalletCurrencyInfos = (currencyWallets: { [walletId: strin
   return Object.keys(activeCurrencyInfos).map(pluginId => activeCurrencyInfos[pluginId])
 }
 
-export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): string => {
+export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const rate = exchangeRates[rateKey] ?? '0'
+  const rate = exchangeRates[rateKey] ?? 0
   return rate
 }
 

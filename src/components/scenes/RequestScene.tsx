@@ -59,7 +59,7 @@ interface OwnProps extends EdgeAppSceneProps<'request'> {
 interface StateProps {
   currencyCode: string
   displayDenomination: EdgeDenomination
-  exchangeSecondaryToPrimaryRatio: string
+  exchangeSecondaryToPrimaryRatio: number
   fioAddressesExist: boolean
   isConnected: boolean
   isLightAccount: boolean
