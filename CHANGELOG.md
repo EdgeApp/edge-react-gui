@@ -4,6 +4,7 @@
 
 - added: Add Abstract ETH Layer 2 support
 - changed: Force max unstake on Kiln ETH positions
+- changed: Disconnect `CryptoIcon` from redux
 - changed: Optimize `getCreateWalletList` function and usage
 - fixed: Correct the display name for ETH txs on non-Ethereum chains
 

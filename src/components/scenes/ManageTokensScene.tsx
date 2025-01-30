@@ -171,7 +171,7 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <Title leftIcon={<CryptoIcon sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
+        <Title leftIcon={<CryptoIcon sizeRem={1.5} tokenId={null} pluginId={wallet.currencyInfo.pluginId} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <FilledTextInput
           topRem={1}
