@@ -2,12 +2,14 @@
 
 ## Unreleased (develop)
 
+## 4.22.0 (staging)
+
 - added: `NotificationCenterScene`
 - added: Search bar to `EarnScene`
 - added: Buy, Sell, Earn, and Trade buttons to `CoinRankingDetailsScene`
 - added: Price chart to `TransactionListScene`
 - added: Add Unizen DEX
-- changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `TransactionListScene2`
+- changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
 - changed: All floating `NotificationCard`s are dismissible
 - fixed: Show correct staked balance for deprecated Velodrome pools
 
@@ -22,6 +24,7 @@
 - added: Add SUI
 - changed: `SurveyModal` expanded to a category & subcategory response
 - changed: Show KYC warning modal when trading with Swapuz
+- fixed: Incorrect date entry bug in Password Recovery
 - fixed: Using deprecated wallets to handle links
 - fixed: Thorchain stake minimum amount requirements
 
