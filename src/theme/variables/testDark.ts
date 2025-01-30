@@ -463,6 +463,9 @@ export const testDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
+
+  badgeDot: palette.accentRed,
+
   // Shadows
   iconShadow: {
     shadowColor: palette.black,
@@ -475,7 +478,7 @@ export const testDark: Theme = {
     elevation: 0
   },
 
-  notifcationCardShadow: {
+  notificationCardShadow: {
     shadowColor: palette.black,
     shadowOffset: {
       width: 3,

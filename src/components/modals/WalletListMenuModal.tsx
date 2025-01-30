@@ -28,7 +28,7 @@ interface Option {
 
 interface Props {
   bridge: AirshipBridge<void>
-  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation']
+  navigation: WalletsTabSceneProps<'walletList' | 'walletDetails'>['navigation']
 
   // Wallet identity:
   tokenId: EdgeTokenId

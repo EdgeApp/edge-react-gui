@@ -225,6 +225,7 @@ const strings = {
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
   transaction_list_search_no_result: 'Search returned no results',
+  transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
@@ -1386,6 +1387,7 @@ const strings = {
   util_truncate_delimeter: '...',
 
   // Stake
+  earn_search: 'Search Earning Pools',
   stake_estimated_return: 'Estimated Return: %s',
   stake_estimated_apr_s: '%s Estimated APR',
   stake_stake_1s: 'Stake: %1$s',
@@ -1532,6 +1534,7 @@ const strings = {
   coin_rank_week: '7D',
   coin_rank_month: '30D',
   coin_rank_year: '1Y',
+  coin_rank_see_more: 'See More',
 
   // #endregion CoinRanking
 
@@ -1673,6 +1676,9 @@ const strings = {
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
   choose_custom_token_wallet: 'Select Wallet for Custom Token',
+  notifications_pinned: 'Pinned',
+  notifications_recent: 'Recent',
+  notifications_none: `You're all caught up!`,
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

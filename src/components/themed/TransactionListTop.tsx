@@ -66,7 +66,7 @@ const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
 ]
 
 interface OwnProps {
-  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
+  navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
 
   isLightAccount: boolean
 

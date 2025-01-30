@@ -14,6 +14,7 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -25,9 +26,16 @@ type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
 type CoinGeckoDataPair = number[]
 
 interface Props {
-  assetId: string // The asset's 'id' as defined by CoinGecko
+  /** The asset's 'id' as defined by CoinGecko */
+  assetId: string
   currencyCode: string
   fiatCurrencyCode: string
+  /**
+   * Typically we don't want to add custom margins to break consistent design,
+   * but for this particular component, we sometimes want to adjust how the line
+   * chart itself, minus the timeframe buttons, is laid out.
+   */
+  marginRem?: number[] | number
 }
 interface ChartDataPoint {
   x: Date
@@ -129,7 +137,9 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode, fiatCurrencyCode } = params
+  const { assetId, marginRem, currencyCode, fiatCurrencyCode } = params
+
+  const customMargin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
   // #region Chart setup
 
@@ -567,7 +577,7 @@ const SwipeChartComponent = (params: Props) => {
             toolTipProps={tooltipProps}
             // #endregion ToolTip
 
-            style={styles.baseChart}
+            style={[styles.baseChart, customMargin]}
           />
 
           {/* Min/Max price labels */}

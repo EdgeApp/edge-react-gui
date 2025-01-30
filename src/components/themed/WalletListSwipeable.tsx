@@ -87,7 +87,7 @@ function WalletListSwipeableComponent(props: Props) {
       .then(
         activationNotRequired =>
           activationNotRequired &&
-          navigation.navigate('transactionList', {
+          navigation.navigate('walletDetails', {
             walletId,
             tokenId,
             walletName: wallet.name ?? wallet.currencyInfo.displayName,
