@@ -7,6 +7,7 @@ import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationSelectors'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
@@ -35,7 +36,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
 
     // Check the spam limits:
     const { spamFilterOn } = state.ui.settings
-    const exchangeRate = state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`]
+    const exchangeRate = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
     const spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
     if (spamFilterOn && (zeroString(exchangeRate) || lt(nativeAmount, spamThreshold))) {
