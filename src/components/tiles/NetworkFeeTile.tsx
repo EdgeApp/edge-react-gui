@@ -5,6 +5,7 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useFiatText } from '../../hooks/useFiatText'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -26,7 +27,7 @@ export const NetworkFeeTile = (props: Props) => {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${defaultIsoFiat}`])
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
 
   const exchangeDenominationMultiplier = getExchangeDenom(currencyConfig, null).multiplier
   const exchangeDenominationName = getExchangeDenom(currencyConfig, null).name
