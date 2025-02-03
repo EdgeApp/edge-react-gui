@@ -1,5 +1,6 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
 import { getDenomFromIsoCode, zeroString } from '../util/utils'
 
@@ -27,7 +28,7 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
   // BASE / QUOTE = PRICE, where:
   // - 'Fiat' is the QUOTE, defined by the wallet's fiatCurrencyCode
   // - 'Yest' is an index for a historical price from 24 hours ago.
-  const usdFiatPrice = useSelector(state => state.exchangeRates[`iso:USD_${isoFiatCurrencyCode}`])
+  const usdFiatPrice = useSelector(state => getExchangeRate(state, currencyCode, isoFiatCurrencyCode))
   const assetFiatPrice = useCurrencyFiatRate({
     currencyCode,
     isoFiatCurrencyCode

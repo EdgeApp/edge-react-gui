@@ -16,6 +16,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -72,8 +73,9 @@ function WalletDetailsComponent(props: Props) {
 
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
-  const fiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat).replace('iso:', '')
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${state.ui.settings.defaultIsoFiat}`])
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null

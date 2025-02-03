@@ -18,6 +18,7 @@ import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import {
@@ -62,8 +63,7 @@ export function TransactionListRow(props: Props) {
   const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const rateKey = `${currencyCode}_${defaultIsoFiat}`
-  const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
+  const exchangeRate: string = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({
