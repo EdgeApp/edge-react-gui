@@ -355,7 +355,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
    */
   const chooseWalletListResult = async (
     filteredEdgeAssets: EdgeAsset[],
-    filteredMatchingWallets: EdgeCurrencyWallet[]
+    filteredMatchingWallets: EdgeCurrencyWallet[],
+    title: string
   ): Promise<Extract<WalletListResult, { type: 'wallet' }> | undefined> => {
     // No compatible assets. Shouldn't happen since buttons are blocked from
     // handlers anyway, if there's no filteredEdgeAssets
@@ -390,13 +391,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
     // Else, If multiple wallets, show picker. Tokens also can be added here.
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={navigation as NavigationBase}
-        headerTitle={lstrings.select_wallet_to_send_from}
-        allowedAssets={filteredEdgeAssets}
-        showCreateWallet
-      />
+      <WalletListModal bridge={bridge} navigation={navigation as NavigationBase} headerTitle={title} allowedAssets={filteredEdgeAssets} showCreateWallet />
     ))
     // User aborted the flow. Callers will also noop.
     if (result?.type !== 'wallet') return
@@ -405,7 +400,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleBuyPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets)
+    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets, lstrings.fiat_plugin_select_asset_to_purchase)
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -421,7 +416,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleSellPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets)
+    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets, lstrings.fiat_plugin_select_asset_to_sell)
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -438,7 +433,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const handleSwapPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
 
-    const walletListResult = await chooseWalletListResult(edgeAssets, matchingWallets)
+    const walletListResult = await chooseWalletListResult(edgeAssets, matchingWallets, lstrings.select_wallet)
     if (walletListResult == null) return
 
     const { walletId, tokenId } = walletListResult
@@ -483,7 +478,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   })
 
   const handleStakePress = useHandler(async () => {
-    const walletListResult = await chooseWalletListResult(edgeStakingAssets, stakingWallets)
+    const walletListResult = await chooseWalletListResult(edgeStakingAssets, stakingWallets, lstrings.select_wallet)
     if (walletListResult == null) return
     const { walletId } = walletListResult
 
