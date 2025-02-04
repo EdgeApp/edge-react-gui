@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
-import { gt } from 'biggystring'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -18,6 +18,8 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
+import { filterStakePolicies, StakePolicy } from '../../plugins/stake-plugins/types'
 import { defaultWalletStakingState } from '../../reducers/StakingReducer'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { asCoinRankingData, CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
@@ -26,9 +28,9 @@ import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { fetchRates } from '../../util/network'
-import { getPluginFromPolicy } from '../../util/stakeUtils'
+import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
-import { DECIMAL_PRECISION, formatLargeNumberString as formatLargeNumber } from '../../util/utils'
+import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
@@ -107,6 +109,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const walletStakingStateMap = useSelector(state => state.staking.walletStakingMap ?? defaultWalletStakingState)
 
+  const currencyConfigMap = useWatch(account, 'currencyConfig')
   const currencyWallets = useWatch(account, 'currencyWallets')
   const isFocused = useIsFocused()
 
@@ -168,8 +171,21 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     [edgeAssets, currencyWallets]
   )
 
-  /** Check if all the stake plugins are loaded for this asset type */
-  const isStakingLoading = matchingWallets.some(wallet => walletStakingStateMap[wallet.id] == null || walletStakingStateMap[wallet.id].isLoading)
+  /**
+   * Out of those wallets, which ones support staking, specific to the asset on
+   * this scene. This is only populated once the staking state has been
+   * initialized in the effect below.
+   */
+  const stakingWallets = matchingWallets.filter(wallet => {
+    return (
+      isStakingSupported(wallet.currencyInfo.pluginId, currencyCode) &&
+      walletStakingStateMap[wallet.id] != null &&
+      filterStakePolicies(
+        Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(stakePolicy => stakePolicy),
+        { wallet, currencyCode }
+      ).length > 0
+    )
+  })
 
   React.useEffect(() => {
     if (isFocused && initFiat !== supportedFiat) {
@@ -177,15 +193,65 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       navigation.pop()
       // Force a refresh & refetch
       navigation.navigate('coinRanking')
+    }
+  }, [initFiat, isFocused, navigation, supportedFiat])
 
-      // Update staking state:
-      if (coinRankingData != null && matchingWallets.length > 0) {
-        matchingWallets.forEach(wallet => {
-          dispatch(updateStakingState(currencyCode, wallet)).catch(err => showError(err))
-        })
+  React.useEffect(() => {
+    // Initialize staking state
+    if (coinRankingData != null && matchingWallets.length > 0) {
+      // Start with a looser filter that does not include the stake policy,
+      // because it has not yet been initialized
+      const uninitializedStakingWallets = matchingWallets.filter(wallet => isStakingSupported(wallet.currencyInfo.pluginId, currencyCode))
+
+      for (const wallet of uninitializedStakingWallets) {
+        if (walletStakingStateMap[wallet.id] != null && Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0) continue
+        dispatch(updateStakingState(currencyCode, wallet)).catch(err => showError(err))
       }
     }
-  }, [coinRankingData, currencyCode, dispatch, edgeAssets, initFiat, isFocused, matchingWallets, navigation, supportedFiat])
+    // We don't want other dependencies to cause a flood of update requests that
+    // break the staking state update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchingWallets.length, coinRankingData])
+
+  // Get all stake policies we support
+  const [stakePolicies] = useAsyncValue<StakePolicy[]>(async () => {
+    const out = []
+    const pluginIds = Object.keys(currencyConfigMap)
+    if (currencyCode === 'FIO') {
+      // FIO has special handling
+      return []
+    }
+    for (const pluginId of pluginIds.filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true)) {
+      const stakePlugins = await getStakePlugins(pluginId)
+
+      for (const stakePlugin of stakePlugins) {
+        for (const stakePolicy of stakePlugin.getPolicies({ pluginId }).filter(stakePolicy => !stakePolicy.deprecated)) {
+          out.push(stakePolicy)
+        }
+      }
+    }
+
+    return out
+  }, [currencyCode, currencyConfigMap])
+
+  const edgeStakingAssets =
+    stakePolicies == null
+      ? []
+      : edgeAssets.filter(asset => filterStakePolicies(stakePolicies, { pluginId: asset.pluginId, currencyCode: currencyCode.toUpperCase() }).length > 0)
+
+  /** Check if all the stake plugins are loaded for this asset type */
+  const isStakingLoading =
+    stakingWallets.length === 0 ||
+    stakingWallets.some(
+      wallet =>
+        walletStakingStateMap[wallet.id] == null ||
+        walletStakingStateMap[wallet.id].isLoading ||
+        walletStakingStateMap[wallet.id].stakePlugins.length === 0 ||
+        Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length === 0
+    ) ||
+    edgeStakingAssets.length === 0 ||
+    stakePolicies == null ||
+    stakePolicies.length === 0
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -287,36 +353,38 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
    * single wallet, or undefined if the user was presented with the wallet
    * picker but dismissed it.
    */
-  const chooseWalletListResult = async (): Promise<Extract<WalletListResult, { type: 'wallet' }> | undefined> => {
+  const chooseWalletListResult = async (
+    filteredEdgeAssets: EdgeAsset[],
+    filteredMatchingWallets: EdgeCurrencyWallet[]
+  ): Promise<Extract<WalletListResult, { type: 'wallet' }> | undefined> => {
     // No compatible assets. Shouldn't happen since buttons are blocked from
-    // handlers anyway, if there's no edgeAssets
-    if (edgeAssets.length === 0) return
+    // handlers anyway, if there's no filteredEdgeAssets
+    if (filteredEdgeAssets.length === 0) return
 
     // If no wallet exists, auto create one.
     // Only do this if there is only one possible match that we know of
-    if (matchingWallets.length === 0 && edgeAssets.length === 1) {
-      const walletName = getUniqueWalletName(account, edgeAssets[0].pluginId)
+    if (filteredMatchingWallets.length === 0 && filteredEdgeAssets.length === 1) {
+      const walletName = getUniqueWalletName(account, filteredEdgeAssets[0].pluginId)
       const targetWallet = await createWallet(account, {
         name: walletName,
-        walletType: `wallet:${edgeAssets[0].pluginId}`,
-        fiatCurrencyCode: fiatCurrencyCode
+        walletType: `wallet:${filteredEdgeAssets[0].pluginId}`
       })
-      if (edgeAssets[0].tokenId != null) {
-        await targetWallet.changeEnabledTokenIds([...targetWallet.enabledTokenIds, edgeAssets[0].tokenId])
+      if (filteredEdgeAssets[0].tokenId != null) {
+        await targetWallet.changeEnabledTokenIds([...targetWallet.enabledTokenIds, filteredEdgeAssets[0].tokenId])
       }
       return {
         type: 'wallet',
-        tokenId: edgeAssets[0].tokenId,
+        tokenId: filteredEdgeAssets[0].tokenId,
         walletId: targetWallet.id
       }
     }
 
     // If only one wallet, auto-select it
-    if (matchingWallets.length === 1) {
+    if (filteredMatchingWallets.length === 1 && filteredEdgeAssets.length === 1) {
       return {
         type: 'wallet',
-        tokenId: edgeAssets[0].tokenId,
-        walletId: matchingWallets[0].id
+        tokenId: filteredEdgeAssets[0].tokenId,
+        walletId: filteredMatchingWallets[0].id
       }
     }
 
@@ -326,7 +394,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         bridge={bridge}
         navigation={navigation as NavigationBase}
         headerTitle={lstrings.select_wallet_to_send_from}
-        allowedAssets={edgeAssets}
+        allowedAssets={filteredEdgeAssets}
         showCreateWallet
       />
     ))
@@ -337,7 +405,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleBuyPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult()
+    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets)
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -353,7 +421,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleSellPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult()
+    const forcedWalletResult = await chooseWalletListResult(edgeAssets, matchingWallets)
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -370,7 +438,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const handleTradePress = useHandler(async () => {
     if (edgeAssets.length === 0) return
 
-    const walletListResult = await chooseWalletListResult()
+    const walletListResult = await chooseWalletListResult(edgeAssets, matchingWallets)
     if (walletListResult == null) return
 
     const { walletId, tokenId } = walletListResult
@@ -389,9 +457,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           currencyConfig: wallet.currencyConfig,
           tokenId: balanceTokenId,
           nativeAmount: wallet.balanceMap.get(balanceTokenId) ?? '0'
-        }).displayDollarValue(exchangeRates, DECIMAL_PRECISION)
+        }).fiatValue(exchangeRates, 'iso:USD')
 
-        if (largestDollarValue == null || gt(dollarValue, largestDollarValue)) {
+        if (largestDollarValue == null || dollarValue > largestDollarValue) {
           sourceWallet = wallet
           sourceTokenId = balanceTokenId
           largestDollarValue = dollarValue
@@ -414,22 +482,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     })
   })
 
-  const isStakingAvailable = (): boolean => {
-    if (countryCode == null || edgeAssets.length === 0) return false
-
-    // Special case for FIO because it uses it's own staking plugin
-    const isStakingSupported = currencyCode === 'FIO' || edgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
-    return isStakingSupported
-  }
-
   const handleStakePress = useHandler(async () => {
-    const walletListResult = await chooseWalletListResult()
+    const walletListResult = await chooseWalletListResult(edgeStakingAssets, stakingWallets)
     if (walletListResult == null) return
     const { walletId } = walletListResult
-
-    const walletStakingState = walletStakingStateMap[walletId] ?? defaultWalletStakingState
-    const { stakePlugins } = walletStakingState
-    const stakePolicies = Object.values(walletStakingState.stakePolicies)
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
@@ -437,30 +493,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         tokenId: null,
         walletId
       })
-      return
-    }
-
-    // Handle StakePlugin staking
-    if (stakePlugins != null && stakePolicies != null) {
-      if (stakePolicies.length > 1) {
-        navigation.push('stakeOptions', {
-          walletId,
-          currencyCode
-        })
-      } else if (stakePolicies.length === 1) {
-        const [stakePolicy] = stakePolicies
-        const { stakePolicyId } = stakePolicy
-        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
-          pluginId: currencyWallets[walletId].currencyInfo.pluginId,
-          currencyCode
-        })
-        if (stakePlugin != null)
-          navigation.push('stakeOverview', {
-            stakePlugin,
-            walletId,
-            stakePolicyId
-          })
-      }
+    } else {
+      navigation.push('stakeOptions', {
+        walletId,
+        currencyCode
+      })
     }
   })
 
@@ -481,8 +518,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
               <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
                 <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
-              {!isStakingAvailable() ? null : (
-                <IconButton label={getUkCompliantString(countryCode, 'stake_earn_button_label')} onPress={handleStakePress}>
+              {countryCode == null || edgeStakingAssets.length === 0 ? null : (
+                <IconButton
+                  label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
+                  superscriptLabel={stakingWallets.length <= 0 ? undefined : getBestApyText(stakePolicies)}
+                  onPress={handleStakePress}
+                  disabled={isStakingLoading}
+                >
                   {isStakingLoading ? (
                     <ActivityIndicator color={theme.primaryText} style={styles.buttonLoader} />
                   ) : (
