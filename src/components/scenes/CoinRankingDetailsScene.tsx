@@ -435,7 +435,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     })
   })
 
-  const handleTradePress = useHandler(async () => {
+  const handleSwapPress = useHandler(async () => {
     if (edgeAssets.length === 0) return
 
     const walletListResult = await chooseWalletListResult(edgeAssets, matchingWallets)
@@ -532,7 +532,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
                   )}
                 </IconButton>
               )}
-              <IconButton label={lstrings.trade_currency} onPress={handleTradePress}>
+              <IconButton label={lstrings.swap} onPress={handleSwapPress}>
                 <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
             </View>

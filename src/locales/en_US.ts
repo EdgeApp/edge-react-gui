@@ -1683,6 +1683,7 @@ const strings = {
   notifications_pinned: 'Pinned',
   notifications_recent: 'Recent',
   notifications_none: `You're all caught up!`,
+  swap: 'Swap',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
