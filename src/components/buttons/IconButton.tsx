@@ -13,6 +13,9 @@ export interface Props {
   /** React node that gets rendered within the circular container area */
   children?: React.ReactNode
 
+  /** Whether the button is disabled */
+  disabled?: boolean
+
   /** Text to render on top of a primary gradient container in the top right */
   superscriptLabel?: string
 
@@ -29,7 +32,7 @@ export interface Props {
  * container, if given.
  */
 export const IconButton = (props: Props) => {
-  const { children, superscriptLabel, label, sizeRem = 3, testID, onPress } = props
+  const { children, disabled, superscriptLabel, label, sizeRem = 3, testID, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -46,7 +49,7 @@ export const IconButton = (props: Props) => {
   )
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID}>
+    <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID} disabled={disabled}>
       <View style={styles.topContainer}>
         <View style={iconContainerStyle}>{children}</View>
         {superscriptLabel == null ? null : (
