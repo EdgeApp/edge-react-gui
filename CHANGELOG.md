@@ -3,7 +3,11 @@
 ## Unreleased (develop)
 
 - added: Add Unizen DEX
+
+## 4.21.2 (2025-02-05)
+
 - changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
+- fixed: Missing new-transaction notifications.
 
 ## 4.21.1 (2025-01-28)
 
