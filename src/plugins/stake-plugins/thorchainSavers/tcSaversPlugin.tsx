@@ -10,7 +10,12 @@ import {
   EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
+import * as React from 'react'
+import { Linking } from 'react-native'
 
+import { ButtonsModal } from '../../../components/modals/ButtonsModal'
+import { Airship } from '../../../components/services/AirshipInstance'
+import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
 import { getCurrencyCodeMultiplier, getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
@@ -295,11 +300,16 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
 
       switch (action) {
         case 'stake':
-          return await stakeRequest(opts, request)
+          // return await stakeRequest(opts, request)
+          await showDisabledModal()
+          throw new Error(lstrings.stake_tc_unavailable)
+
         case 'unstake':
         case 'claim':
         case 'unstakeExact':
-          return await unstakeRequest(opts, request)
+          // return await unstakeRequest(opts, request)
+          await showDisabledModal()
+          throw new Error(lstrings.stake_tc_unavailable)
       }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
@@ -438,6 +448,7 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
   return policy
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
@@ -801,6 +812,7 @@ const tcAssetToEdge = (asset: string): { pluginId: string; currencyCode: string 
   if (pluginId != null && currencyCode != null) return { currencyCode, pluginId }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { allocations } = await getStakePosition(opts, request)
   const { wallet, currencyCode, account } = request
@@ -1274,4 +1286,19 @@ const edgeToTcAsset = (currencyConfig: EdgeCurrencyConfig, currencyCode: string)
 const EVM_PLUGINIDS: { [id: string]: boolean } = {
   avalanche: true,
   ethereum: true
+}
+
+async function showDisabledModal(): Promise<void> {
+  const result = await Airship.show<'info' | 'ok' | undefined>(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={lstrings.stake_tc_unavailable}
+      message={lstrings.stake_tc_unavailable_message}
+      buttons={{
+        info: { label: lstrings.learn_more_button },
+        ok: { label: lstrings.string_ok }
+      }}
+    />
+  ))
+  if (result === 'info') await Linking.openURL('https://edge.app/blog/company-news/thorchain-savers-halts/?af=edge-app')
 }
