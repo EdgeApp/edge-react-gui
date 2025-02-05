@@ -2189,9 +2189,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -9160,10 +9160,10 @@ edge-core-js@^2.24.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.35.3:
-  version "4.35.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.35.3.tgz#8dbec57b8570c3c049f45fb9545bfe263bf1d380"
-  integrity sha512-EEWOiMNkC6bq5klxFmFlnD1RB2XxWgpBMDpDQaXwqQRCgfEicyumOYTc0xLRtv4/uuZfmpnaGb24v/OM5pT3ug==
+edge-currency-accountbased@4.35.4:
+  version "4.35.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.35.4.tgz#d99c778099e6238729fe2f76b8a8da3a0dd1d6e4"
+  integrity sha512-HZSOiIcBP7ZLUZNpe+JSd6biAYpaPt0Og8QEXQaFVMvxoZk4TcpHQRc177EVWc5cLg16tiTFZTtSk3j710a0FA==
   dependencies:
     "@chain-registry/client" "^1.15.0"
     "@cosmjs/stargate" "^0.32.3"
@@ -10597,9 +10597,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
