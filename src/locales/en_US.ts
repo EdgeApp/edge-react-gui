@@ -1452,6 +1452,10 @@ const strings = {
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 
+  // Thorchain savers
+  stake_tc_unavailable: 'Thorchain Savers Unavailable',
+  stake_tc_unavailable_message: 'Deposits and withdrawal for Thorchian Savers are paused for up to 90 days.',
+
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
   fiat_plugin_sell_network_fee: 'Sell Network Fee',
