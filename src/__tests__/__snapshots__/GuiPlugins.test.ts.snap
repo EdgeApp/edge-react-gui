@@ -201,6 +201,20 @@ Limit $1000",
     "deepQuery": {},
     "description": "Fee: ~5%
 Settlement: 5 min - 24 hours",
+    "paymentType": "venmo",
+    "paymentTypeLogoKey": "venmo",
+    "paymentTypes": [
+      "venmo",
+    ],
+    "pluginId": "venmo",
+    "title": "Venmo",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
     "paymentType": "paypal",
     "paymentTypeLogoKey": "paypal",
     "paymentTypes": [
@@ -302,6 +316,20 @@ Settlement: 2 - 3 days",
     ],
     "pluginId": "ach",
     "title": "ACH Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: ~5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "venmo",
+    "paymentTypeLogoKey": "venmo",
+    "paymentTypes": [
+      "venmo",
+    ],
+    "pluginId": "venmo",
+    "title": "Venmo",
   },
   {
     "cryptoCodes": [],

@@ -18,9 +18,11 @@ import { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { isEmail } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -106,6 +108,24 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       }
     }
 
+    // Check if this is an email for Tron USDT and show warning for potential
+    // PIX send
+    if (isEmail(address) && coreWallet.currencyInfo.pluginId === 'tron' && tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') {
+      const approved = await Airship.show<boolean>(bridge => (
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={lstrings.warning_sending_pix_to_email_title}
+          body={lstrings.warning_sending_pix_to_email_body}
+          warning
+          isSkippable
+        />
+      ))
+      if (!approved) {
+        setLoading(false)
+        return
+      }
+    }
+
     // Try resolving address by ENS domain for ethereum wallets only
     if (coreWallet.currencyInfo.pluginId === 'ethereum' && /^.*\.eth$/.test(address)) {
       const chainId = 1 // Hard-coded to Ethereum mainnet
@@ -151,7 +171,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       const parsedLink = { ...parseDeepLink(address) }
       if (parsedLink.type === 'paymentProto') {
         if (ercTokenStandard === 'ERC20') {
-          showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
+          showError(
+            new PaymentProtoError('CurrencyNotSupported', {
+              text: currencyInfo.currencyCode
+            })
+          )
         } else {
           await launchPaymentProto(navigation, account, parsedLink.uri, {
             tokenId,
@@ -222,7 +246,12 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
         navigation={navigation}
-        allowedAssets={[{ pluginId, tokenId: getTokenIdForced(account, pluginId, currencyCode) }]}
+        allowedAssets={[
+          {
+            pluginId,
+            tokenId: getTokenIdForced(account, pluginId, currencyCode)
+          }
+        ]}
         excludeWalletIds={[coreWallet.id]}
       />
     ))

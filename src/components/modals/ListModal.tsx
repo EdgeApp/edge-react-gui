@@ -31,6 +31,7 @@ interface Props<T> {
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
+  autoSelect?: boolean // Defaults to 'false'
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
@@ -47,6 +48,7 @@ export function ListModal<T>({
   initialValue = '',
   rowsData = [],
   fullScreen = true,
+  autoSelect = false,
   rowComponent,
   rowDataFilter,
   onSubmitEditing,
@@ -67,7 +69,10 @@ export function ListModal<T>({
   const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
-    return { paddingBottom: theme.rem(ModalFooter.bottomRem), marginTop: theme.rem(0.5) }
+    return {
+      paddingBottom: theme.rem(ModalFooter.bottomRem),
+      marginTop: theme.rem(0.5)
+    }
   }, [theme])
 
   return (
@@ -80,6 +85,7 @@ export function ListModal<T>({
           blurOnClear={false}
           autoCorrect={false}
           autoCapitalize="words"
+          autoSelect={autoSelect}
           returnKeyType="done"
           testID={title}
           onChangeText={handleChangeText}

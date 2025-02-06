@@ -62,18 +62,32 @@ function WalletListSwipeableComponent(props: Props) {
 
   // This list is shown when we're in a searching state
   const createWalletList = React.useMemo(
-    () => (searching ? filterWalletCreateItemListBySearchText(getCreateWalletList(account, { filteredWalletList: sortedWalletList }), searchText) : []),
+    () =>
+      searching
+        ? filterWalletCreateItemListBySearchText(
+            getCreateWalletList(account, {
+              filteredWalletList: sortedWalletList
+            }),
+            searchText
+          )
+        : [],
     [account, searching, searchText, sortedWalletList]
   )
 
   const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
     const wallet = account.currencyWallets[walletId]
     const { countryCode } = await getFirstOpenInfo()
-    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
+    dispatch(
+      selectWalletToken({
+        navigation: navigation as NavigationBase,
+        walletId,
+        tokenId
+      })
+    )
       .then(
         activationNotRequired =>
           activationNotRequired &&
-          navigation.navigate('transactionList', {
+          navigation.navigate('walletDetails', {
             walletId,
             tokenId,
             walletName: wallet.name ?? wallet.currencyInfo.displayName,

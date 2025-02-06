@@ -55,7 +55,11 @@ beforeAll(async () => {
   lockEdgeCorePlugins()
 
   const world = await makeFakeEdgeWorld(fakeUsers, {})
-  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true, ethereum: true } })
+  context = await world.makeEdgeContext({
+    apiKey: '',
+    appId: '',
+    plugins: { bitcoin: true, ethereum: true }
+  })
   account = await context.loginWithKey('bob', loginKey)
   const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
   const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
@@ -89,7 +93,8 @@ describe('ExchangeQuote', () => {
             toNativeAmount: '10000',
             networkFee: {
               currencyCode: 'BTC',
-              nativeAmount: '1'
+              nativeAmount: '1',
+              tokenId: null
             },
             pluginId: 'bitcoin',
             approve: async () => {
@@ -109,6 +114,7 @@ describe('ExchangeQuote', () => {
                   },
                   nativeAmount: '123000000',
                   networkFee: '1000',
+                  networkFees: [],
                   ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
                   parentNetworkFee: '10002',
                   signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',

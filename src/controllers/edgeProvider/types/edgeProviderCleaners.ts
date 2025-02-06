@@ -1,5 +1,5 @@
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
-import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction, EdgeTxAmount } from 'edge-core-js'
 
 import { asEdgeAsset, asEdgeCurrencyCode, asEdgeTokenId } from '../../../types/types'
 import {
@@ -23,6 +23,11 @@ const asEdgeMetadata = asObject<EdgeMetadata & { amountFiat?: number }>({
 const asEdgeNetworkFee = asObject<EdgeNetworkFee>({
   currencyCode: asString,
   nativeAmount: asString
+})
+
+const asEdgeTxAmount = asObject<EdgeTxAmount>({
+  nativeAmount: asString,
+  tokenId: asEdgeTokenId
 })
 
 const asEdgeReceiveAddress = asObject<EdgeReceiveAddress>({
@@ -52,6 +57,7 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
   // Amounts:
   nativeAmount: asString,
   networkFee: asString,
+  networkFees: asArray(asEdgeTxAmount),
   parentNetworkFee: asOptional(asString),
 
   // Confirmation status:
@@ -145,7 +151,10 @@ export const methodCleaners: MethodTable<EdgeProviderMethods> = {
     asReturn: asEdgeReceiveAddress
   },
   getCurrentWalletInfo: { asParams: asTuple(), asReturn: asWalletDetails },
-  getWalletHistory: { asParams: asTuple(), asReturn: asEdgeGetWalletHistoryResult },
+  getWalletHistory: {
+    asParams: asTuple(),
+    asReturn: asEdgeGetWalletHistoryResult
+  },
   requestSpend: {
     asParams: asTuple(asArray(asEdgeProviderSpendTarget), asOptional(asEdgeRequestSpendOptions)),
     asReturn: asVoid

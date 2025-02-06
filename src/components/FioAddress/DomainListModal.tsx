@@ -45,7 +45,10 @@ type Props = OwnProps & ThemeProps & StateProps
 
 const newDomainItem = {
   createNew: true,
-  value: { ...FIO_DOMAIN_DEFAULT, name: lstrings.fio_address_list_register_domain },
+  value: {
+    ...FIO_DOMAIN_DEFAULT,
+    name: lstrings.fio_address_list_register_domain
+  },
   label: lstrings.fio_address_list_register_domain
 }
 
@@ -73,7 +76,10 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }))
     const userDomainsConverted: Item[] = []
     for (const fioDomain of userDomains) {
-      userDomainsConverted.push({ value: fioDomain, label: `${FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
+      userDomainsConverted.push({
+        value: fioDomain,
+        label: `${FIO_ADDRESS_DELIMITER}${fioDomain.name}`
+      })
     }
     userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
 

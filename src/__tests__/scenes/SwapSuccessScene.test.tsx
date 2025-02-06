@@ -10,6 +10,8 @@ import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
   currencyCode: 'BTC',
+  assetDisplayName: 'Bitcoin',
+  chainDisplayName: 'Bitcoin',
   displayName: 'Bitcoin',
   walletType: 'bitcoin',
 
@@ -74,6 +76,7 @@ describe('SwapSuccessSceneComponent', () => {
               metadata: { name: 'timmy' },
               nativeAmount: '12300000',
               networkFee: '1',
+              networkFees: [],
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',

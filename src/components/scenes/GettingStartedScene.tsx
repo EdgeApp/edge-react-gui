@@ -20,7 +20,7 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ExperimentConfig, UspSigninCtaType } from '../../experimentConfig'
+import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -156,36 +156,24 @@ export const GettingStartedScene = (props: Props) => {
     }
   )
 
-  const footerButtons =
-    experimentConfig.uspSigninCta === 'alreadyHaveAccount' ? (
-      <>
-        <ButtonsView
-          layout="column"
-          primary={{
-            label: lstrings.account_get_started,
-            onPress: handlePressSignUp
-          }}
-        />
-        <TertiaryTouchable onPress={handlePressSignIn}>
-          <TertiaryText>
-            {/* eslint-disable-next-line react-native/no-raw-text */}
-            {`${lstrings.getting_started_already_have_an_account} `}
-            <TappableText>{lstrings.getting_started_sign_in}</TappableText>
-          </TertiaryText>
-        </TertiaryTouchable>
-      </>
-    ) : (
+  const footerButtons = (
+    <>
       <ButtonsView
+        layout="column"
         primary={{
           label: lstrings.account_get_started,
           onPress: handlePressSignUp
         }}
-        secondary={{
-          label: lstrings.getting_started_sign_in,
-          onPress: handlePressSignIn
-        }}
       />
-    )
+      <TertiaryTouchable onPress={handlePressSignIn}>
+        <TertiaryText>
+          {/* eslint-disable-next-line react-native/no-raw-text */}
+          {`${lstrings.getting_started_already_have_an_account} `}
+          <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+        </TertiaryText>
+      </TertiaryTouchable>
+    </>
+  )
 
   return (
     <SceneWrapper hasHeader={false}>
@@ -200,20 +188,44 @@ export const GettingStartedScene = (props: Props) => {
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 80 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 80
+                }}
+              >
                 <Image source={edgeLogoIcon} />
               </EdgeAnim>
 
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 60 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 60
+                }}
+              >
                 <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
                   {parseMarkedText(lstrings.getting_started_welcome_title)}
                 </WelcomeHeroTitle>
               </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 40 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 40
+                }}
+              >
                 <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
               </EdgeAnim>
 
-              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 20 }}>
+              <EdgeAnim
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 20
+                }}
+              >
                 <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
               </EdgeAnim>
             </WelcomeHero>
@@ -235,7 +247,7 @@ export const GettingStartedScene = (props: Props) => {
             ))}
           </Pagination>
           <SectionCoverAnimated swipeOffset={swipeOffset}>
-            <Sections swipeOffset={swipeOffset} uspSigninCta={experimentConfig.uspSigninCta}>
+            <Sections swipeOffset={swipeOffset}>
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
@@ -309,7 +321,11 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
     },
     useAnimatedStyle(() => ({
       opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
-      transform: [{ scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
+      transform: [
+        {
+          scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP)
+        }
+      ]
     }))
   ]
 })
@@ -334,7 +350,10 @@ const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
   textAlign: 'center'
 }))
 
-const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const HeroItem = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const { swipeOffset, itemIndex } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
@@ -385,7 +404,10 @@ const Pagination = styled(View)(theme => ({
   marginVertical: theme.rem(0.7)
 }))
 
-const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const PageIndicator = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const themeIcon = theme.icon
   const themeIconTappable = theme.iconTappable
   const { itemIndex, swipeOffset } = props
@@ -412,7 +434,9 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 // Sections
 //
 
-const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
+const SectionCoverAnimated = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+}>(theme => props => {
   const { swipeOffset } = props
   const themeRem = theme.rem(1)
   const themeModal = theme.modal
@@ -440,11 +464,13 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   ]
 })
 
-const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number>; uspSigninCta: UspSigninCtaType }>(theme => props => {
-  const { swipeOffset, uspSigninCta } = props
+const Sections = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+}>(theme => props => {
+  const { swipeOffset } = props
   return [
     {
-      paddingBottom: uspSigninCta === 'alreadyHaveAccount' ? theme.rem(1) : theme.rem(-0.5)
+      paddingBottom: theme.rem(1)
     },
     useAnimatedStyle(() => {
       const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.5])
@@ -455,7 +481,10 @@ const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number>; uspSi
   ]
 })
 
-const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+const Section = styled(Animated.View)<{
+  swipeOffset: SharedValue<number>
+  itemIndex: number
+}>(theme => props => {
   const { itemIndex, swipeOffset } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()

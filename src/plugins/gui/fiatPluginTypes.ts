@@ -45,6 +45,7 @@ export const asFiatPaymentType = asValue(
   'sepa',
   'spei',
   'turkishbank',
+  'venmo',
   'wire'
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
@@ -72,7 +73,11 @@ export interface FiatPluginSepaTransferInfo {
 
 export interface FiatPluginListModalParams {
   title: string
-  items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
+  items: Array<{
+    icon: string | number | React.ReactNode
+    name: string
+    text?: string
+  }> // Icon strings are image uri, numbers are local files
   selected?: string // Must match one of the name param in the items array
 }
 
@@ -127,6 +132,7 @@ export type FiatPluginPermissions = Permission[]
 export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
+  confirmation: (params: { title: string; message: string }) => Promise<void>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
@@ -134,6 +140,7 @@ export interface FiatPluginUi {
   showError: (error: unknown) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
+  emailForm: (params: { message?: string }) => Promise<string | undefined>
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress | undefined>
   requestPermission: (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean) => Promise<boolean>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>

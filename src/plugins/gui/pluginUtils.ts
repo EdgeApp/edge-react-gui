@@ -68,7 +68,10 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
     }
   }
   if (bestError == null) return {}
-  return { errorText: getErrorText(bestError, currencyCode, direction), quoteError: bestError }
+  return {
+    errorText: getErrorText(bestError, currencyCode, direction),
+    quoteError: bestError
+  }
 }
 
 const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {

@@ -11,7 +11,10 @@ import { NavigationBase } from '../../types/routerTypes'
 export const AutoLogout = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationBase>()
-  const stateRef = React.useRef({ timestamp: new Date(), isAppForeground: true })
+  const stateRef = React.useRef({
+    timestamp: new Date(),
+    isAppForeground: true
+  })
   const settingsLoaded = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()

@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.20.1):
+  - edge-core-js (2.25.1):
     - React-Core
-  - edge-currency-accountbased (4.27.0):
+  - edge-currency-accountbased (4.36.1):
     - React-Core
-  - edge-currency-plugins (3.4.4):
+  - edge-currency-plugins (3.5.2):
     - React-Core
-  - edge-exchange-plugins (2.13.0):
+  - edge-exchange-plugins (2.17.1):
     - React-Core
-  - edge-login-ui-rn (3.23.0):
+  - edge-login-ui-rn (3.24.2):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -430,7 +430,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.9.2):
+  - react-native-zcash (0.9.5):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1079,12 +1079,12 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
-  edge-core-js: 9264309f29f398da3b714dc5e80702f102f9db2d
-  edge-currency-accountbased: 97ec1dc1622445f5388da049ea3eb2875c85f147
-  edge-currency-plugins: 95577a282061148263207fad9befe11bb07a57c1
-  edge-exchange-plugins: 896eb55d2a03140bae7b45321efa9e9ac3d3bbe6
-  edge-login-ui-rn: 58ee453724222a7feac090500587db8cbf2dd083
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  edge-core-js: 6500856c1d635b56421d7b96dffd0e8f346c81da
+  edge-currency-accountbased: e2fbabcc36634a86b19a41e5d8dec67373daf50e
+  edge-currency-plugins: cf6f94db7b7d90f9edbc038c698958e584a0cde9
+  edge-exchange-plugins: 1b52dbcac506124eee9398e879b0117c6e6ae745
+  edge-login-ui-rn: 265894d316c33e5ab117ac3a52c22e73ad390514
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1101,7 +1101,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
   FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
@@ -1141,7 +1141,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: 8d6da0be327896cd68c623e4d261aab0e497276e
+  react-native-zcash: b54e07fd36332f8b2fe57e3ae8d76e795e339c9a
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad
@@ -1206,4 +1206,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a604cb59fd3c1007e2f9b5442f05cf33ac324851
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

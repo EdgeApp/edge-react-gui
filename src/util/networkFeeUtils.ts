@@ -17,7 +17,10 @@ export const getExecutionNetworkFees = (executionOutputs: ExecutionOutput[]): Ne
         currencyCode,
         nativeAmount: '0'
       }
-      networkFeeMap[currencyCode] = { ...current, nativeAmount: add(current.nativeAmount, nativeAmount) }
+      networkFeeMap[currencyCode] = {
+        ...current,
+        nativeAmount: add(current.nativeAmount, nativeAmount)
+      }
     }
   }
 

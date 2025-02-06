@@ -38,7 +38,7 @@ export type WalletListMenuKey =
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
-  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation'],
+  navigation: WalletsTabSceneProps<'walletList' | 'walletDetails'>['navigation'],
   walletId: string,
   option: WalletListMenuKey,
   tokenId: EdgeTokenId,
@@ -240,7 +240,10 @@ export function walletListMenuAction(
           // Add a copy button only for development
           let devButtons = {}
           // @ts-expect-error
-          if (global.__DEV__) devButtons = { copy: { label: lstrings.fragment_wallets_copy_seed } }
+          if (global.__DEV__)
+            devButtons = {
+              copy: { label: lstrings.fragment_wallets_copy_seed }
+            }
 
           const privateKey = await account.getDisplayPrivateKey(wallet.id)
 
@@ -289,7 +292,7 @@ export function walletListMenuAction(
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
 
-        navigation.navigate('transactionList', {
+        navigation.navigate('walletDetails', {
           walletId,
           tokenId: null,
           walletName: getWalletName(wallet)

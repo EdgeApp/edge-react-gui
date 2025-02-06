@@ -29,7 +29,12 @@ export const SwapProviderRow = (props: Props) => {
 
   const costOrReceiveAmount = useCryptoText({ wallet, tokenId, nativeAmount })
 
-  const minCryptoAmountText = useCryptoText({ wallet: toWallet, tokenId: toTokenId, nativeAmount: quote.minReceiveAmount ?? '0', withSymbol: false })
+  const minCryptoAmountText = useCryptoText({
+    wallet: toWallet,
+    tokenId: toTokenId,
+    nativeAmount: quote.minReceiveAmount ?? '0',
+    withSymbol: false
+  })
   const minReceiveAmountOrPartial =
     quote.minReceiveAmount != null ? (
       sprintf(lstrings.swap_minimum_amount_1s, minCryptoAmountText)

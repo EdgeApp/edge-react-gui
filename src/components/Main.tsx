@@ -14,6 +14,8 @@ import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
+import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
+import { EmailFormScene } from '../plugins/gui/scenes/EmailFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -100,6 +102,7 @@ import { ManageTokensScene as ManageTokensSceneComponent } from './scenes/Manage
 import { MigrateWalletCalculateFeeScene as MigrateWalletCalculateFeeSceneComponent } from './scenes/MigrateWalletCalculateFeeScene'
 import { MigrateWalletCompletionScene as MigrateWalletCompletionSceneComponent } from './scenes/MigrateWalletCompletionScene'
 import { MigrateWalletSelectCryptoScene as MigrateWalletSelectCryptoSceneComponent } from './scenes/MigrateWalletSelectCryptoScene'
+import { NotificationCenterScene as NotificationCenterSceneComponent } from './scenes/NotificationCenterScene'
 import { NotificationScene as NotificationSceneComponent } from './scenes/NotificationScene'
 import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
@@ -123,9 +126,10 @@ import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneCompone
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
-import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
+import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene2'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
+import { WalletDetails as WalletDetailsComponent } from './scenes/WalletDetailsScene'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
@@ -195,6 +199,7 @@ const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingScene
 const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
+const NotificationCenterScene = ifLoggedIn(NotificationCenterSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
@@ -216,6 +221,7 @@ const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
 const SwapSuccessScene = ifLoggedIn(SwapSuccessSceneComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
+const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
@@ -270,7 +276,16 @@ const EdgeWalletsTabScreen = () => {
       <WalletsStack.Screen
         name="transactionList"
         component={TransactionList}
-        options={{ headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} /> }}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+        }}
+      />
+      <WalletsStack.Screen
+        name="walletDetails"
+        component={WalletDetails}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'walletDetails'> fromParams={params => params.walletName} />
+        }}
       />
     </WalletsStack.Navigator>
   )
@@ -292,6 +307,21 @@ const EdgeBuyTabScreen = () => {
       <BuyStack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <BuyStack.Screen
+        name="guiPluginConfirmation"
+        component={ConfirmationScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+      <BuyStack.Screen
+        name="guiPluginEmailForm"
+        component={EmailFormScene}
         options={{
           headerRight: () => null
         }}
@@ -686,6 +716,13 @@ const EdgeAppStack = () => {
       />
       <AppStack.Screen name="migrateWalletSelectCrypto" component={MigrateWalletSelectCryptoScene} />
       <AppStack.Screen
+        name="notificationCenter"
+        component={NotificationCenterScene}
+        options={{
+          title: lstrings.settings_notifications
+        }}
+      />
+      <AppStack.Screen
         name="notificationSettings"
         component={NotificationScene}
         options={{
@@ -762,6 +799,13 @@ const EdgeAppStack = () => {
           headerTitle: () => <TransactionDetailsTitle />
         }}
       />
+      <WalletsStack.Screen
+        name="transactionList"
+        component={TransactionList}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+        }}
+      />
       <AppStack.Screen
         name="transactionsExport"
         component={TransactionsExportScene}
@@ -792,12 +836,16 @@ const EdgeAppStack = () => {
 const EdgeApp = () => {
   return (
     <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
+      drawerContent={({ navigation }) => <SideMenu navigation={navigation} />}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
+        drawerStyle: {
+          backgroundColor: 'transparent',
+          bottom: 0,
+          width: '66%'
+        },
         headerShown: false
       }}
     >

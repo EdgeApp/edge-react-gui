@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
@@ -8,7 +9,7 @@ import { BuyTabSceneProps } from '../../../types/routerTypes'
 export interface FiatPluginOpenWebViewParams {
   url: string
   injectedJs?: string
-  onClose?: () => void
+  onClose?: (() => boolean) | (() => void)
   onMessage?: (message: string, injectJs: (js: string) => void) => void
   onUrlChange?: (url: string) => void
 }
@@ -18,6 +19,7 @@ interface Props extends BuyTabSceneProps<'guiPluginWebView'> {}
 export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   const { route } = props
   const { injectedJs, onClose, onMessage, onUrlChange, url } = route.params
+  const navigation = useNavigation()
 
   const webViewRef = React.useRef<WebView>(null)
 
@@ -35,10 +37,15 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
     if (onMessage != null) onMessage(data, injectJs)
   })
 
-  React.useEffect(() => () => {
-    // Cleanup code when scene unmounts
-    if (onClose != null) onClose()
-  })
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', event => {
+        if (onClose != null) {
+          if (onClose() === false) event.preventDefault()
+        }
+      }),
+    [navigation, onClose]
+  )
 
   return (
     <SceneWrapper hasTabs avoidKeyboard>

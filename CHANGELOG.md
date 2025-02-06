@@ -1,10 +1,102 @@
 # edge-react-gui
 
-## Unreleased
+## Unreleased (develop)
 
+## 4.22.0 (staging)
+
+- added: `NotificationCenterScene`
+- added: Search bar to `EarnScene`
+- added: Buy, Sell, Earn, and Trade buttons to `CoinRankingDetailsScene`
+- added: Price chart to `TransactionListScene`
+- added: Add Unizen DEX
+- changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
+- changed: All floating `NotificationCard`s are dismissible
+- changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
+- fixed: Show correct staked balance for deprecated Velodrome pools
+- fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
+
+## 4.21.1 (2025-01-28)
+
+- changed: (Solana) Implement transaction broadcast retry logic
+- changed: (Ton) Only use ton center for transaction query
+- fixed: (Ton) Fix `isSend` when processing transactions
+
+## 4.21.0 (2025-01-22)
+
+- added: Add SUI
+- changed: `SurveyModal` expanded to a category & subcategory response
+- changed: Show KYC warning modal when trading with Swapuz
+- fixed: Incorrect date entry bug in Password Recovery
+- fixed: Using deprecated wallets to handle links
+- fixed: Thorchain stake minimum amount requirements
+
+## 4.20.0 (2025-01-14)
+
+- added: (Tron) PIX warning when sending USDT to a pasted email
+- added: 'numAccounts' to 'Signup_Complete' event
+- added: New Kado OTC provider integration.
+- added: Transaction id for swap details
+- changed: (iOS) `SimpleTextInput` back chevron replaced with "Cancel" button
+- changed: `WalletListScene` filter mode remains active on empty text
+- changed: Auto select text in tx details payee field when focused
+- changed: Fiat buy/sell shows message if region is unsupported for the selected payment method
+- changed: Handle errors in StakeKit API responses
+- changed: Improved EdgeCrashEvent reporting with additional metadata, tags, and name/message information.
+- changed: Integrate `installSurvey` endpoint for post-install survey options
+- changed: StakeKit staking plugin to check validator status before getting quote
+- changed: Clean build archive directories from deploy script
+- fixed: Missing "Done" button when managing tokens for certain assets
+- fixed: Only send successful import items to completion scene
+- fixed: WalletConnect `eth_sendRawTransaction` event handling
+- removed: Removed patch for usb and node-hid
+- removed: 'uspSigninCta' experiment in favor of the 'alreadyHaveAccount' variant
+
+## 4.19.2 (2025-01-06)
+
+- fixed: Thorchain Savers would check for staked funds using the wrong address.
+
+## 4.19.1 (2024-12-19)
+
+- fixed: Fixed Solana syncing issues with Helius node connections.
+- fixed: Patched conversion tracking return URL detection for Banxa and Simplex.
+
+## 4.19.0 (2024-12-13)
+
+- added: Venmo GUI plugin via Moonpay.
+- added: "Add Wallet" button to bottom of `WalletListScene`
+- added: `isBuiltInAsset` param for 'Exchange_Shift_Success' tracking event
+- added: Show all Zcash addresses on Request scene
+- changed: Credit and apply pay payment types changed from Banxa provider.
+- changed: Support optional Sideshift private key
+- changed: Upgrade edge-core-js to v2.21.0
+- changed: Filter CreateWalletItem list by networkLocation instead of tokenId
+- changed: Update Ripple base reserve text strings
+- changed: Enable `keysOnlyMode` for Binance Beacon Chain
+- changed: Always show Add Wallet button at bottom of asset list
+- changed: Use chain icon for staking cards
+- fixed: Default home/assets scene post-login based on last visited scene
+- fixed: Receive flip input default currency selection
+- removed: Keyboard autofocus from `WalletListModal`
+
+## 4.17.2 (2024-11-22)
+
+- fixed: (Zcash/Pirate) Fixed android build issues
+
+## 4.17.1 (2024-11-20)
+
+- added: (Zcash) Add NU6 support
+
+## 4.18.0 (2024-12-02)
+
+- added: Support for LLD & LLM transaction history
 - added: Close button (X) for `EdgeModals,` specifically if a desktop platform is detected.
+- changed: Auto-enable required tokens when navigating to `Stake*` scenes
+- fixed: Incorrect `SwapInput` amounts on `SwapCreateScene` after changing wallet.
+- fixed: Backing up a light account while on the `FiatPluginEnterAmountScene` retains light account-related quote errors
+- fixed: Various `EarnScene` display bugs
+- fixed: `EarnScene` missing wallet creation option in "Discover" view
 
-## 4.17.0
+## 4.17.0 (2024-11-12)
 
 - added: Add TON
 - added: Log swap errors to Sentry.

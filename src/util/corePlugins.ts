@@ -3,7 +3,7 @@ import { EdgeCorePluginsInit } from 'edge-core-js'
 import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
-  // edge-currency-accountbased:
+  // // edge-currency-accountbased:
   algorand: ENV.ALGORAND_INIT,
   amoy: ENV.AMOY_INIT,
   arbitrum: ENV.ARBITRUM_INIT,
@@ -42,10 +42,11 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   sepolia: ENV.SEPOLIA_INIT,
   solana: ENV.SOLANA_INIT,
   stellar: true,
+  sui: true,
   telos: true,
   tezos: true,
   thorchainrune: ENV.THORCHAIN_INIT,
-  ton: true,
+  ton: ENV.TON_INIT,
   tron: true,
   wax: true,
   zcash: true,
@@ -91,8 +92,9 @@ export const swapPlugins = {
   spookySwap: false,
   mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
   thorchain: ENV.THORCHAIN_INIT,
-  thorchainda: ENV.THORCHAIN_DA_INIT,
+  swapkit: ENV.SWAPKIT_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
+  unizen: false,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
   '0xgasless': ENV['0XGASLESS_INIT'],

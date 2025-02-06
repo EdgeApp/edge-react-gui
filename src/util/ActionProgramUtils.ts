@@ -10,7 +10,7 @@ import { BorrowCollateral, BorrowDebt, BorrowEngine } from '../plugins/borrow-pl
 import { config } from '../theme/appConfig'
 import { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
-import { enableToken } from './CurrencyWalletHelpers'
+import { enableTokenCurrencyCode } from './CurrencyWalletHelpers'
 import {
   convertCurrencyFromExchangeRates,
   convertNativeToExchange,
@@ -69,7 +69,7 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
 
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
   const depositTokenCc = depositToken == null ? 'WBTC' : depositToken.currencyCode
-  await enableToken(depositTokenCc, borrowEngineWallet)
+  await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
 
   const toTokenId = source.tokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
   if (toTokenId == null) throw new Error(`makeAaveCreateActionProgram: Cannot find toTokenId`)
@@ -110,7 +110,13 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   // Borrow and ACH steps
   //
   // HACK: par as top level ActionOp type not supported
-  const borrowAction = ((await makeAaveBorrowAction({ borrowEngineWallet, borrowPluginId, destination })) as SeqActionOp).actions[0] as ParActionOp
+  const borrowAction = (
+    (await makeAaveBorrowAction({
+      borrowEngineWallet,
+      borrowPluginId,
+      destination
+    })) as SeqActionOp
+  ).actions[0] as ParActionOp
   if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
 
   // Special complete message for withdraw to bank
@@ -148,7 +154,7 @@ export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Prom
 
   // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
   const borrowTokenCc = borrowToken == null ? 'USDC' : borrowToken.currencyCode
-  await enableToken(borrowTokenCc, borrowEngineWallet)
+  await enableTokenCurrencyCode(borrowTokenCc, borrowEngineWallet)
 
   // TODO: ASSUMPTION: The only borrow destinations are:
   // 1. USDC
@@ -202,7 +208,7 @@ export const makeAaveDepositAction = async ({
 
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
   const depositTokenCc = depositToken == null ? 'WBTC' : depositToken.currencyCode
-  await enableToken(depositTokenCc, borrowEngineWallet)
+  await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
   const tokenId = depositTokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
   if (tokenId == null) throw new Error(`makeAaveDepositAction: Cannot find tokenId`)
@@ -270,7 +276,7 @@ export const makeAaveCloseAction = async ({
 
     // We must ensure the token is enabled to get the user's token balance and
     // calculate exchange rates
-    await enableToken(collateralCurrencyCode, wallet)
+    await enableTokenCurrencyCode(collateralCurrencyCode, wallet)
 
     if (debt != null) {
       const debtTokenId = debt.tokenId
@@ -281,7 +287,7 @@ export const makeAaveCloseAction = async ({
 
       // We must ensure the token is enabled to get the user's token balance
       // and calculate exchange rates
-      await enableToken(debtCurrencyCode, wallet)
+      await enableTokenCurrencyCode(debtCurrencyCode, wallet)
 
       // #region Swap Validation
 

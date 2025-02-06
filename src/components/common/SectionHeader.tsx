@@ -46,7 +46,9 @@ export const SectionHeader = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   leftColumn: {
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexShrink: 1,
+    marginRight: theme.rem(1)
   },
   rightColumn: {
     flexDirection: 'column',

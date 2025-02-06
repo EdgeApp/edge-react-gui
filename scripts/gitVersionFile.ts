@@ -95,13 +95,17 @@ function updateVersionFile(branch: string, version: string): void {
     call(`mkdir -p ${versionFileDir}`)
     const versionFileString = JSON.stringify(tryVersionFile)
     fs.writeFileSync(versionFilePath, versionFileString, { encoding: 'utf8' })
-    fs.writeFileSync(join(baseDir, versionFileName), versionFileString, { encoding: 'utf8' })
+    fs.writeFileSync(join(baseDir, versionFileName), versionFileString, {
+      encoding: 'utf8'
+    })
     chdir(repoPath)
     call(`git add ${versionFilePath}`)
     call(`git commit -m "Update ${branch} to build ${build}"`)
     try {
       call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push`)
-      fs.writeFileSync(join(baseDir, versionFileName), versionFileString, { encoding: 'utf8' })
+      fs.writeFileSync(join(baseDir, versionFileName), versionFileString, {
+        encoding: 'utf8'
+      })
       process.exit(0)
     } catch (e: any) {
       // Error pushing file. Retry a few times

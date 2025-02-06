@@ -1,6 +1,16 @@
-import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePluginFactory, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  filterStakePolicies,
+  StakePlugin,
+  StakePluginFactory,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition,
+  StakePositionRequest
+} from '../types'
 import { CardanoPooledKilnAdapterConfig, makeCardanoKilnAdapter } from './policyAdapters/CardanoKilnAdaptor'
-import { CoreumNativeSkateKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
+import { CoreumNativeStakeKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
@@ -22,21 +32,7 @@ export const makeGenericStakePlugin =
 
     const instance: StakePlugin = {
       getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
-        const { currencyCode, wallet } = filter ?? {}
-        let filteredPolicies: StakePolicy[] = policies
-
-        if (wallet != null) {
-          filteredPolicies = filteredPolicies.filter(policy =>
-            [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId)
-          )
-        }
-        if (currencyCode != null) {
-          filteredPolicies = filteredPolicies.filter(policy =>
-            [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode)
-          )
-        }
-
-        return filteredPolicies
+        return filterStakePolicies(policies, filter)
       },
 
       async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
@@ -75,7 +71,7 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
     case 'cardano-pooled-kiln':
       return makeCardanoKilnAdapter(policyInfo as StakePolicyConfig<CardanoPooledKilnAdapterConfig>)
     case 'coreum-native-stake-kit':
-      return makeSkateKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeSkateKitAdapterConfig>)
+      return makeSkateKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>)
     case 'ethereum-pooled-kiln':
       return makeEthereumKilnAdapter(policyInfo as StakePolicyConfig<EthereumPooledKilnAdapterConfig>)
     case 'glif-infinity-pool':

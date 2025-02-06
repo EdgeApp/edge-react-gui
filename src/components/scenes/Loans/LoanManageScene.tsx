@@ -164,7 +164,10 @@ export const LoanManageSceneComponent = (props: Props) => {
   const [actionNativeAmount, setActionNativeAmount] = React.useState('0')
   const [newApr, setNewApr] = React.useState(0)
   const [actionProgram, setActionProgram] = React.useState<ActionProgram | undefined>(undefined)
-  const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
+  const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({
+    wallet: borrowEngineWallet,
+    tokenId: defaultTokenId
+  })
   const [pendingDebtOrCollateral, setPendingDebtOrCollateral] = React.useState<BorrowDebt | BorrowCollateral>({
     nativeAmount: '0',
     tokenId: selectedAsset.tokenId,
@@ -180,7 +183,11 @@ export const LoanManageSceneComponent = (props: Props) => {
   const actionAmountSign = amountChange === 'increase' ? '1' : '-1'
 
   // APR change
-  const newInterestRateDebt = { nativeAmount: actionNativeAmount, tokenId: selectedAsset.tokenId, apr: newApr }
+  const newInterestRateDebt = {
+    nativeAmount: actionNativeAmount,
+    tokenId: selectedAsset.tokenId,
+    apr: newApr
+  }
 
   // Loan Asset change
   const pendingDebts: BorrowDebt[] = isActionSideDebts
@@ -343,7 +350,10 @@ export const LoanManageSceneComponent = (props: Props) => {
         const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
         if (seq != null && seq.actions.length > 1) {
           // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
-          navigation.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
+          navigation.replace('loanStatus', {
+            actionQueueId: actionProgram.programId,
+            loanAccountId: loanAccount.id
+          })
         } else {
           navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
         }
@@ -397,13 +407,21 @@ export const LoanManageSceneComponent = (props: Props) => {
           })
         } else if (result?.type === 'custom') {
           const { customAsset } = result
-          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardAllowedDebtAssets[0].tokenId, customAsset })
+          setSelectedAsset({
+            wallet: borrowEngineWallet,
+            tokenId: hardAllowedDebtAssets[0].tokenId,
+            customAsset
+          })
         } else if (result?.type === 'wyre') {
           const { fiatAccountId } = result
           const paymentMethod = bankAccountsMap[fiatAccountId]
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
-          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtTokenId, paymentMethod })
+          setSelectedAsset({
+            wallet: borrowEngineWallet,
+            tokenId: hardDebtTokenId,
+            paymentMethod
+          })
         } else if (result?.type === 'wallet') {
           const { walletId, tokenId } = result
           const selectedWallet = wallets[walletId]

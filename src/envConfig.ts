@@ -72,8 +72,19 @@ export const asEnvConfig = asObject({
           apiKey: asString
         })
       ),
+      kadoOtc: asOptional(
+        asObject({
+          apiKey: asString,
+          apiUserEmail: asString
+        })
+      ),
       moonpay: asOptional(asString),
-      mtpelerin: asOptional(asString),
+      mtpelerin: asOptional(
+        asObject({
+          apiKey: asString,
+          referralCode: asOptional(asString)
+        })
+      ),
       paybis: asOptional(
         asObject({
           partnerUrl: asString,
@@ -102,6 +113,7 @@ export const asEnvConfig = asObject({
       banxa: undefined,
       Bitrefill: undefined,
       kado: undefined,
+      kadoOtc: undefined,
       moonpay: undefined,
       mtpelerin: undefined,
       paybis: undefined,
@@ -261,12 +273,14 @@ export const asEnvConfig = asObject({
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
-      affiliateId: asOptional(asString, '')
+      affiliateId: asOptional(asString, ''),
+      privateKey: asOptional(asString)
     }).withRest
   ),
   SOLANA_INIT: asCorePluginInit(
     asObject({
       alchemyApiKey: asOptional(asString, ''),
+      heliusApiKey: asOptional(asString),
       poktPortalApiKey: asOptional(asString, '')
     }).withRest
   ),
@@ -276,6 +290,11 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   SWAPUZ_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  UNIZEN_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
     }).withRest
@@ -295,7 +314,7 @@ export const asEnvConfig = asObject({
       thorname: asOptional(asString, 'ej')
     }).withRest
   ),
-  THORCHAIN_DA_INIT: asCorePluginInit(
+  SWAPKIT_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),
@@ -307,6 +326,11 @@ export const asEnvConfig = asObject({
   TOMB_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  TON_INIT: asCorePluginInit(
+    asObject({
+      tonCenterApiKeys: asOptional(asArray(asString), () => [])
     }).withRest
   ),
   WALLET_CONNECT_INIT: asCorePluginInit(

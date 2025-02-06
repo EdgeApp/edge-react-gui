@@ -81,6 +81,11 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
    * 'autoFocus' and 'regular' text inputs don't. */
   autoFocus?: boolean // Defaults to 'true'
 
+  /**
+   * autoSelect: If true, the text input will be selected when focused.
+   */
+  autoSelect?: boolean
+
   /** Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls
    * 'blur' when cleared and text inputs don't call 'blur' when cleared.
    * Defaults to 'false' */
@@ -158,6 +163,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     autoComplete,
     autoCorrect,
     autoFocus = false,
+    autoSelect = false,
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
@@ -204,7 +210,13 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
-  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused, setNativeProps }))
+  React.useImperativeHandle(ref, () => ({
+    blur,
+    clear,
+    focus,
+    isFocused,
+    setNativeProps
+  }))
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)
@@ -232,6 +244,12 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   })
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
+    if (autoSelect) {
+      setNativeProps({
+        selection: { start: 0, end: value.length },
+        selectTextOnFocus: true
+      })
+    }
     if (onFocus != null) onFocus()
   })
   const handleSubmitEditing = useHandler(() => {
@@ -343,7 +361,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   )
 })
 
-const OuterContainer = styled(View)<{ multiline: boolean; marginRemStyle: MarginRemStyle }>(theme => ({ multiline, marginRemStyle }) => ({
+const OuterContainer = styled(View)<{
+  multiline: boolean
+  marginRemStyle: MarginRemStyle
+}>(theme => ({ multiline, marginRemStyle }) => ({
   ...marginRemStyle,
   flexGrow: multiline ? 1 : undefined,
   flexShrink: multiline ? 1 : undefined
@@ -391,7 +412,9 @@ const Container = styled(Animated.View)<{
  * extendTappable: Which horizontal side of the icon do we want to increase
  * tappable area? 'full' means both left and right sides.
  */
-const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | 'rightOnly' | 'full' }>(theme => ({ extendTappable }) => {
+const TouchContainer = styled(TouchableOpacity)<{
+  extendTappable: 'leftOnly' | 'rightOnly' | 'full'
+}>(theme => ({ extendTappable }) => {
   // Increase tappable area with padding, while net 0 with negative margin to
   // visually appear as if 0 margins/padding
   const tapArea =
@@ -462,7 +485,9 @@ const InnerContainer = styled(Animated.View)<{
   ]
 })
 
-const PrefixAnimatedText = styled(Animated.Text)<{ visibility: SharedValue<number> }>(theme => ({ visibility }) => {
+const PrefixAnimatedText = styled(Animated.Text)<{
+  visibility: SharedValue<number>
+}>(theme => ({ visibility }) => {
   const rem = theme.rem(1)
 
   return [

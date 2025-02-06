@@ -62,13 +62,16 @@ import type { SweepPrivateKeyCompletionParams } from '../components/scenes/Sweep
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
 import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
-import type { TransactionListParams } from '../components/scenes/TransactionListScene'
+import type { TransactionListParams } from '../components/scenes/TransactionListScene2'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
+import type { WalletDetailsParams } from '../components/scenes/WalletDetailsScene'
 import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
 import type { FiatPluginAddressFormParams } from '../plugins/gui/scenes/AddressFormScene'
+import { FiatPluginConfirmationParams } from '../plugins/gui/scenes/ConfirmationScene'
+import { FiatPluginEmailFormParams } from '../plugins/gui/scenes/EmailFormScene'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -85,6 +88,7 @@ import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormSce
 
 export type WalletsTabParamList = {} & {
   walletList: undefined
+  walletDetails: WalletDetailsParams
   transactionList: TransactionListParams
   transactionDetails: TransactionDetailsParams
 }
@@ -96,6 +100,8 @@ export type BuyTabParamList = {} & {
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   guiPluginAddressForm: FiatPluginAddressFormParams
+  guiPluginEmailForm: FiatPluginEmailFormParams
+  guiPluginConfirmation: FiatPluginConfirmationParams
   guiPluginEnterAmount: FiatPluginEnterAmountParams
   guiPluginInfoDisplay: FiatPluginSepaTransferParams
   guiPluginSepaForm: FiatPluginSepaFormParams
@@ -178,6 +184,7 @@ export type EdgeAppStackParamList = {} & {
   migrateWalletCompletion: MigrateWalletCompletionParams
   migrateWalletSelectCrypto: MigrateWalletSelectCryptoParams
   notificationSettings: undefined
+  notificationCenter: undefined
   otpRepair: OtpRepairParams
   otpSetup: undefined
   passwordRecovery: undefined
@@ -200,6 +207,7 @@ export type EdgeAppStackParamList = {} & {
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
   transactionDetails: TransactionDetailsParams
+  transactionList2: TransactionListParams
   transactionsExport: TransactionsExportParams
   upgradeUsername: undefined
   walletRestore: undefined

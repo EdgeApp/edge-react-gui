@@ -1,4 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
+import { asArray, asMaybe, asObject, asValue } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
@@ -6,6 +7,7 @@ import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
+import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
@@ -43,6 +45,7 @@ import { filterInfoCards } from '../cards/InfoCardCarousel'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -88,6 +91,7 @@ const paymentTypeLogosById = {
   revolut: 'paymentTypeLogoRevolut',
   sofort: 'paymentTypeLogoSofort',
   upi: 'paymentTypeLogoUpi',
+  venmo: 'paymentTypeLogoVenmo',
   visa: 'paymentTypeVisa'
 }
 const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
@@ -341,6 +345,36 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
+  handleError = (error: unknown): void => {
+    const { countryCode, stateProvinceCode } = this.props
+
+    const regionError = asMaybe(
+      asArray(
+        asObject({
+          quoteError: asObject({ errorType: asValue('regionRestricted') })
+        })
+      )
+    )(error)
+    if (regionError != null && regionError.length > 0) {
+      const country = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
+      const countryName = country ? country.name : countryCode // Fallback to countryCode if not found
+
+      // Attempt to find the stateProvince name if stateProvinceCode is provided
+      let stateProvinceName = stateProvinceCode
+      if (country && country.stateProvinces && stateProvinceCode) {
+        const stateProvince = country.stateProvinces.find(sp => sp['alpha-2'] === stateProvinceCode)
+        stateProvinceName = stateProvince ? stateProvince.name : stateProvinceCode // Fallback to stateProvinceCode if not found
+      }
+
+      const text = stateProvinceName ? `${stateProvinceName}, ${countryName}` : countryName
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal bridge={bridge} message={sprintf(lstrings.fiat_plugin_no_provider_1s, text)} buttons={{ ok: { label: lstrings.string_ok_cap } }} />
+      )).catch(() => {})
+    } else {
+      showError(error)
+    }
+  }
+
   renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
@@ -363,8 +397,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () => await this.openPlugin(item).catch(error => showError(error))}
-          onLongPress={async () => await this.openPlugin(item, true).catch(error => showError(error))}
+          onPress={async () => await this.openPlugin(item).catch(error => this.handleError(error))}
+          onLongPress={async () => await this.openPlugin(item, true).catch(error => this.handleError(error))}
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>

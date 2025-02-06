@@ -43,7 +43,13 @@ import {
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
 export const SendErrorBackPressed = 'SendErrorBackPressed'
 
-const deeplinkListeners: { listener: { direction: FiatDirection; providerId: string; deeplinkHandler: LinkHandler } | null } = { listener: null }
+const deeplinkListeners: {
+  listener: {
+    direction: FiatDirection
+    providerId: string
+    deeplinkHandler: LinkHandler
+  } | null
+} = { listener: null }
 
 export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (deeplinkListeners.listener == null) {
@@ -121,6 +127,18 @@ export const executePlugin = async (params: {
     buttonModal: async params => {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },
+    confirmation: async params => {
+      return await new Promise(resolve => {
+        maybeNavigateToCorrectTabScene()
+        navigation.navigate('guiPluginConfirmation', {
+          title: params.title,
+          message: params.message,
+          onClose: async () => {
+            resolve()
+          }
+        })
+      })
+    },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       maybeNavigateToCorrectTabScene()
@@ -169,6 +187,20 @@ export const executePlugin = async (params: {
     enterAmount(params: FiatPluginEnterAmountParams) {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
+    },
+    async emailForm(params) {
+      return await new Promise((resolve, reject) => {
+        maybeNavigateToCorrectTabScene()
+        navigation.navigate('guiPluginEmailForm', {
+          message: params.message,
+          onSubmit: async (email: string) => {
+            resolve(email)
+          },
+          onClose: async () => {
+            resolve(undefined)
+          }
+        })
+      })
     },
     addressForm: async params => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
@@ -279,7 +311,10 @@ export const executePlugin = async (params: {
     },
     sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
       // Always avoid the scam warning with plugins since we trust our plugins
-      await launchPaymentProto(navigation, account, params.uri, { ...params.params, hideScamWarning: true })
+      await launchPaymentProto(navigation, account, params.uri, {
+        ...params.params,
+        hideScamWarning: true
+      })
     },
     setClipboard: async (value: string) => {
       Clipboard.setString(value)

@@ -31,6 +31,7 @@ import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
   setAmounts: (value: string[]) => void
+  triggerConvertValue: () => void
 }
 
 export type FieldNum = 0 | 1
@@ -210,7 +211,10 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   const renderTopRow = (fieldNum: FieldNum) => {
     let topText = amounts[fieldNum]
     if (isValidInput(topText)) {
-      topText = formatNumberInput(topText, { minDecimals: 0, maxDecimals: fieldInfos[fieldNum].maxEntryDecimals })
+      topText = formatNumberInput(topText, {
+        minDecimals: 0,
+        maxDecimals: fieldInfos[fieldNum].maxEntryDecimals
+      })
     }
 
     const placeholder = placeholders[1]
@@ -232,6 +236,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   React.useImperativeHandle(ref, () => ({
     setAmounts: amounts => {
       setAmounts([amounts[0], amounts[1]])
+    },
+    triggerConvertValue: () => {
+      onNumericInputChange(amounts[primaryField])
     }
   }))
 
@@ -320,7 +327,9 @@ const InputTextView = styled(Animated.View)<{
   }
 })
 
-const FrontAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
+const FrontAnimatedView = styled(Animated.View)<{
+  animatedValue: SharedValue<number>
+}>(theme => ({ animatedValue }) => [
   {
     backfaceVisibility: 'hidden',
     paddingRight: theme.rem(1),
@@ -334,7 +343,9 @@ const FrontAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<num
   })
 ])
 
-const BackAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
+const BackAnimatedView = styled(Animated.View)<{
+  animatedValue: SharedValue<number>
+}>(theme => ({ animatedValue }) => [
   {
     backfaceVisibility: 'hidden',
     paddingRight: theme.rem(1),

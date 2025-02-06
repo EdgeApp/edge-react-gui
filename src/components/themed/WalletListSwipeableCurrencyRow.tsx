@@ -56,7 +56,14 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const handleRequest = useHandler(() => {
     closeRow()
     if (!checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
-      dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
+      dispatch(
+        selectWalletToken({
+          navigation: navigation as NavigationBase,
+          walletId: wallet.id,
+          tokenId,
+          alwaysActivate: true
+        })
+      )
         .then(activated => {
           if (activated) {
             navigation.navigate('request', { tokenId, walletId: wallet.id })
@@ -68,11 +75,23 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
+    dispatch(
+      selectWalletToken({
+        navigation: navigation as NavigationBase,
+        walletId: wallet.id,
+        tokenId,
+        alwaysActivate: true
+      })
+    )
       .then(async activated => {
         const { countryCode } = await getFirstOpenInfo()
         if (activated) {
-          navigation.navigate('transactionList', { tokenId, walletId: wallet.id, walletName: wallet.name ?? wallet.currencyInfo.displayName, countryCode })
+          navigation.navigate('walletDetails', {
+            tokenId,
+            walletId: wallet.id,
+            walletName: wallet.name ?? wallet.currencyInfo.displayName,
+            countryCode
+          })
         }
       })
       .catch(err => showError(err))
@@ -80,7 +99,14 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId: wallet.id, tokenId, alwaysActivate: true }))
+    dispatch(
+      selectWalletToken({
+        navigation: navigation as NavigationBase,
+        walletId: wallet.id,
+        tokenId,
+        alwaysActivate: true
+      })
+    )
       .then(activated => {
         if (activated) {
           navigation.navigate('send2', {

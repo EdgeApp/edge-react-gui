@@ -37,9 +37,8 @@ import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
-import { ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { SwapInput } from '../themed/SwapInput'
+import { SwapInput, SwapInputCardAmounts, SwapInputCardInputRef } from '../themed/SwapInput'
 import { ButtonBox } from '../themed/ThemedButtons'
 
 export interface SwapCreateParams {
@@ -72,8 +71,8 @@ export const SwapCreateScene = (props: Props) => {
   const [inputFiatAmount, setInputFiatAmount] = useState('0')
   const [inputNativeAmountFor, setInputNativeAmountFor] = useState<'from' | 'to'>('from')
 
-  const fromInputRef = React.useRef<ExchangedFlipInputRef>(null)
-  const toInputRef = React.useRef<ExchangedFlipInputRef>(null)
+  const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
+  const toInputRef = React.useRef<SwapInputCardInputRef>(null)
 
   const swapRequestOptions = useSwapRequestOptions()
 
@@ -283,18 +282,31 @@ export const SwapCreateScene = (props: Props) => {
       // Update the error state:
       ...getNewErrorInfo('asset')
     })
+
+    // Make sure to update the values if the wallet change is for the input
+    // field that has a native amount:
+    if (direction === 'from' && inputNativeAmountFor === 'from') {
+      fromInputRef.current?.triggerConvertValue()
+    }
+    if (direction === 'to' && inputNativeAmountFor === 'to') {
+      toInputRef.current?.triggerConvertValue()
+    }
   })
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`, { trackError: false })
+      showWarning(`${lstrings.exchange_select_receiving_wallet}`, {
+        trackError: false
+      })
       return
     }
 
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`, { trackError: false })
+      showWarning(`${lstrings.exchange_select_sending_wallet}`, {
+        trackError: false
+      })
       return
     }
 
@@ -341,7 +353,7 @@ export const SwapCreateScene = (props: Props) => {
     await showWalletListModal('to')
   })
 
-  const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+  const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
       ...route.params,
       // Update the error state:
@@ -355,7 +367,7 @@ export const SwapCreateScene = (props: Props) => {
     toInputRef.current?.setAmount('crypto', '0')
   })
 
-  const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
+  const handleToAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
       ...route.params,
       // Update the error state:
@@ -448,7 +460,15 @@ export const SwapCreateScene = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
       <EdgeAnim enter={fadeInDown90}>
-        {isNextHidden ? null : <ButtonsView primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />}
+        {isNextHidden ? null : (
+          <ButtonsView
+            primary={{
+              label: lstrings.string_next_capitalized,
+              onPress: handleNext
+            }}
+            parentType="scene"
+          />
+        )}
       </EdgeAnim>
     </SceneWrapper>
   )

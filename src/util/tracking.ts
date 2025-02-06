@@ -53,6 +53,7 @@ export type TrackingEventName =
   | 'Start_App_No_Accounts'
   | 'Start_App_With_Accounts'
   | 'Survey_Discover'
+  | 'Survey_Discover2'
   | 'purchase'
   | 'Visa_Card_Launch'
   | 'Earn_Spend_Launch' // No longer used
@@ -75,6 +76,20 @@ export interface DollarConversionValues {
 export interface CryptoConversionValues {
   conversionType: 'crypto'
   cryptoAmount: CryptoAmount
+
+  swapProviderId?: string
+  orderId?: string
+}
+
+/**
+ * Analytics: Swap
+ */
+export interface SwapConversionValues {
+  conversionType: 'swap'
+  isBuiltInAsset: boolean
+
+  destAmount: CryptoAmount
+  sourceAmount: CryptoAmount
 
   swapProviderId?: string
   orderId?: string
@@ -122,10 +137,11 @@ export interface TrackingValues extends LoginTrackingValues {
   createdWalletCurrencyCode?: string
   numSelectedWallets?: number // Number of wallets to be created
   numAccounts?: number // Number of full accounts saved on the device
-  surveyResponse?: string // User's answer to a survey
+  surveyCategory2?: string // User's answer to a survey (first tier response)
+  surveyResponse2?: string // User's answer to a survey
 
   // Conversion values
-  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues
+  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues | SwapConversionValues
 }
 
 // Set up the global Posthog analytics instance at boot
@@ -193,7 +209,14 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
 
         const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
-        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...restValue }
+        const params: any = {
+          edgeVersion: getVersion(),
+          buildNumber: getBuildNumber(),
+          isFirstOpen,
+          deviceId,
+          firstOpenEpoch,
+          ...restValue
+        }
 
         // Populate referral params:
         const state = getState()
@@ -254,6 +277,21 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
             params.currency = cryptoAmount.currencyCode
 
             params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(exchangeRates)))
+
+            if (orderId != null) params.orderId = orderId
+            if (swapProviderId != null) params.swapProviderId = swapProviderId
+          } else if (conversionType === 'swap') {
+            const { destAmount, sourceAmount, swapProviderId, orderId, isBuiltInAsset } = conversionValues
+
+            params.isBuiltInAsset = isBuiltInAsset
+
+            params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
+            params.sourceCurrencyCode = sourceAmount.currencyCode
+            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
+
+            params.destCryptoAmount = Math.abs(Number(destAmount.exchangeAmount))
+            params.destCurrencyCode = destAmount.currencyCode
+            params.destDollarValue = Math.abs(Number(destAmount.displayDollarValue(exchangeRates)))
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId

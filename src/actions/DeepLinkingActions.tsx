@@ -3,10 +3,12 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FundAccountModal } from '../components/modals/FundAccountModal'
 import { pickWallet } from '../components/modals/WalletListModal'
 import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
@@ -15,7 +17,7 @@ import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
-import { base58ToUuid } from '../util/utils'
+import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
@@ -174,7 +176,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       break
 
     case 'paymentProto':
-      await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
+      await launchPaymentProto(navigation, account, link.uri, {
+        hideScamWarning: false
+      })
       break
 
     case 'price-change': {
@@ -220,23 +224,53 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
+      const matchingWalletIdsAndUris: Array<{
+        walletId: string
+        parsedUri: EdgeParsedUri
+        tokenId: EdgeTokenId
+      }> = []
       const assets: EdgeAsset[] = []
 
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
+          // Ignore disabled wallets:
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO
+          if (keysOnlyMode) return
+
           const { pluginId } = wallet.currencyInfo
           const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
-            matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri, tokenId })
+            matchingWalletIdsAndUris.push({
+              walletId: wallet.id,
+              parsedUri,
+              tokenId
+            })
             assets.push({ pluginId, tokenId })
           }
         }
       }
+
       const promise = parseWallets()
       await showToastSpinner(lstrings.scan_parsing_link, promise)
+
+      // Check if this is an email for Tron USDT and show warning for potential
+      // PIX send
+      if (isEmail(link.uri) && assets.find(asset => asset.pluginId === 'tron' && asset.tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') != null) {
+        const approved = await Airship.show<boolean>(bridge => (
+          <ConfirmContinueModal
+            bridge={bridge}
+            title={lstrings.warning_sending_pix_to_email_title}
+            body={lstrings.warning_sending_pix_to_email_body}
+            warning
+            isSkippable
+          />
+        ))
+        if (!approved) {
+          return
+        }
+      }
 
       // Check if the uri matches one of the wallet types that we could create. In such a case, link.uri
       // would be of the format 'dogecoin:QUE1U9n3kMYR...'

@@ -71,6 +71,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:polkadot',
   'wallet:optimism',
   'wallet:ton',
+  'wallet:sui',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -277,12 +278,12 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     minimumPopupModals: {
-      minimumNativeBalance: '10000000',
-      modalMessage: lstrings.request_xrp_minimum_notification_body,
-      alertMessage: lstrings.request_xrp_minimum_notification_alert_body
+      minimumNativeBalance: '1000000',
+      modalMessage: lstrings.request_xrp_minimum_notification_body_1xrp,
+      alertMessage: lstrings.request_xrp_minimum_notification_alert_body_1xrp
     },
     displayBuyCrypto: false,
-    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra_point2xrp,
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'XRP'
   },
@@ -531,6 +532,14 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: 'osmosis-1'
     }
   },
+  sui: {
+    initWalletName: lstrings.string_first_sui_wallet_name,
+    chainCode: 'SUI',
+    dummyPublicAddress: '0x9e58c463e1eed8294d1161d90093afa588236064edac6d78960249e834653805',
+    isImportKeySupported: true,
+    noChangeMiningFee: true,
+    unstoppableDomainsTicker: 'SUI'
+  },
   ton: {
     initWalletName: lstrings.string_first_ton_wallet_name,
     chainCode: 'TON',
@@ -551,6 +560,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
     chainCode: 'BNB',
     isImportKeySupported: true,
+    keysOnlyMode: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   binancesmartchain: {
@@ -728,7 +738,7 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isTransactionListUnsupported: true,
+    isTransactionListUnsupported: false,
     isImportKeySupported: true
   },
   liberlandtestnet: {

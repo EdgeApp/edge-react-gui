@@ -1,18 +1,15 @@
 import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
-import DraggableFlatList, { DragEndParams, RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
-import Animated from 'react-native-reanimated'
+import ReorderableList, { ReorderableListItem } from 'react-native-reorderable-list'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import { useSceneScrollWorkletHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { InsetStyle } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { WalletListSortableRow } from './WalletListSortableRow'
-
-const AnimatedDraggableFlatList = Animated.createAnimatedComponent(DraggableFlatList)
 
 interface Props {
   insetStyle?: InsetStyle
@@ -23,39 +20,50 @@ interface Props {
  */
 export function WalletListSortable(props: Props) {
   const { insetStyle } = props
+
   // Subscribe to account state:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const [walletOrder, setWalletOrder] = React.useState(account.activeWalletIds)
-  const handleDragEnd = useHandler((params: DragEndParams<string>) => setWalletOrder(params.data))
 
-  const keyExtractor = useHandler((walletId: string) => walletId)
-  const renderItem = useHandler((params: RenderItemParams<string>) => (
-    <ScaleDecorator activeScale={0.9}>
-      <WalletListSortableRow wallet={currencyWallets[params.item]} onDrag={params.drag} />
-    </ScaleDecorator>
-  ))
-  const handleScroll = useSceneScrollHandler()
+  const handleReorder = useHandler(({ from, to }: { from: number; to: number }) => {
+    // Reorder the walletOrder array
+    const newOrder = [...walletOrder]
+    newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
+    setWalletOrder(newOrder)
 
-  React.useEffect(() => () => {
+    // Update the wallet sort order in the account
     const keyStates: EdgeWalletStates = {}
-    for (let i = 0; i < walletOrder.length; ++i) {
-      const walletId = walletOrder[i]
+    for (let i = 0; i < newOrder.length; ++i) {
+      const walletId = newOrder[i]
       keyStates[walletId] = { sortIndex: i }
     }
     account.changeWalletStates(keyStates).catch(error => showError(error))
   })
 
+  const keyExtractor = React.useCallback(
+    (item: string) => item,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [walletOrder]
+  )
+
+  const renderItem = useHandler(item => {
+    return (
+      <ReorderableListItem>
+        <WalletListSortableRow wallet={currencyWallets[item.item]} />
+      </ReorderableListItem>
+    )
+  })
+
+  const handleScroll = useSceneScrollWorkletHandler()
+
   return (
-    <AnimatedDraggableFlatList
+    <ReorderableList
       data={walletOrder}
-      // @ts-expect-error
       keyExtractor={keyExtractor}
-      // @ts-expect-error
       renderItem={renderItem}
-      // @ts-expect-error
-      onDragEnd={handleDragEnd}
+      onReorder={handleReorder}
       onScroll={handleScroll}
       contentContainerStyle={insetStyle}
       scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}

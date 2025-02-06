@@ -38,7 +38,12 @@ export const ExchangeQuote = (props: Props) => {
   // Fees are assumed to be denominated in the native currency
   const feeNativeAmount = networkFee.nativeAmount
   const feeTokenId = getWalletTokenId(fromWallet, networkFee.currencyCode)
-  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: feeTokenId, withSymbol: false })
+  const feeCryptoText = useCryptoText({
+    wallet: fromWallet,
+    nativeAmount: feeNativeAmount,
+    tokenId: feeTokenId,
+    withSymbol: false
+  })
   const { denomination: feeDenomination, isoFiatCurrencyCode } = useTokenDisplayData({
     wallet: fromWallet,
     tokenId: feeTokenId
@@ -70,9 +75,16 @@ export const ExchangeQuote = (props: Props) => {
   })
 
   const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
-  const totalFiatText = `${formatFiatString({ fiatAmount: add(feeFiatAmount, fromFiatAmount) })} ${fiatCurrencyCode}`
+  const totalFiatText = `${formatFiatString({
+    fiatAmount: add(feeFiatAmount, fromFiatAmount)
+  })} ${fiatCurrencyCode}`
 
-  const minCryptoAmountText = useCryptoText({ wallet: toWallet, tokenId: toTokenId, nativeAmount: quote.minReceiveAmount ?? '0', withSymbol: false })
+  const minCryptoAmountText = useCryptoText({
+    wallet: toWallet,
+    tokenId: toTokenId,
+    nativeAmount: quote.minReceiveAmount ?? '0',
+    withSymbol: false
+  })
   const minFiatAmountText = (
     <FiatText wallet={toWallet} tokenId={toTokenId} nativeCryptoAmount={quote.minReceiveAmount ?? '0'} hideFiatSymbol appendFiatCurrencyCode />
   )

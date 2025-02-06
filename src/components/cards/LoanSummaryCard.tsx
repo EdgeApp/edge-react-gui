@@ -37,11 +37,17 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   const collateralTotal = useFiatTotal(currencyWallet, collaterals)
-  const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal })}`
+  const displayCollateralTotal = `${fiatSymbol}${formatFiatString({
+    autoPrecision: true,
+    fiatAmount: collateralTotal
+  })}`
 
   const borrowTotal = useFiatTotal(
     currencyWallet,
-    debts.map(debt => ({ tokenId: debt.tokenId, nativeAmount: debt.nativeAmount }))
+    debts.map(debt => ({
+      tokenId: debt.tokenId,
+      nativeAmount: debt.nativeAmount
+    }))
   )
   const displayBorrowTotal = formatFiatString({
     autoPrecision: true,

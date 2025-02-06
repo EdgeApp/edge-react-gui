@@ -2,6 +2,8 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
+import { lstrings } from '../../../locales/strings'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -16,14 +18,16 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, isDailyCheckDue, validateExactRegion } from './common'
+import { addExactRegion, isDailyCheckDue, NOT_SUCCESS_TOAST_HIDE_MS, validateExactRegion } from './common'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
 // https://integrations.simplex.com/docs/supported_currencies
-const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
+const SIMPLEX_ID_MAP: {
+  [pluginId: string]: { [currencyCode: string]: string }
+} = {
   algorand: { ALGO: 'ALGO' },
   avalanche: { AVAX: 'AVAX-C' },
   binance: { AVA: 'AVA', BNB: 'BNB' },
@@ -114,6 +118,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   ripple: { XRP: 'XRP' },
   solana: { KIN: 'KIN', SOL: 'SOL' },
   stellar: { XLM: 'XLM' },
+  sui: { SUI: 'SUI' },
   tezos: { XTZ: 'XTZ' },
   ton: { TON: 'TON', USDT: 'USDT-TON' },
   tron: {
@@ -126,9 +131,17 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMap = {
+  providerId,
+  crypto: {},
+  fiat: {}
+}
 const allowedCountryCodes: FiatProviderExactRegions = {}
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = {
+  applepay: true,
+  credit: true,
+  googlepay: true
+}
 
 const asSimplexApiKeys = asObject({
   partner: asString,
@@ -202,12 +215,18 @@ export const simplexProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ direction, regionCode, paymentTypes }): Promise<FiatProviderAssetMap> => {
         if (direction !== 'buy' || regionCode.countryCode === 'GB') {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         if (isDailyCheckDue(lastChecked)) {
           const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
@@ -240,12 +259,23 @@ export const simplexProvider: FiatProviderFactory = {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
         validateExactRegion(providerId, regionCode, allowedCountryCodes)
         if (direction !== 'buy') {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!allowedCountryCodes[regionCode.countryCode])
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         let foundPaymentType = false
         for (const type of paymentTypes) {
@@ -255,7 +285,11 @@ export const simplexProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (!foundPaymentType)
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'paymentUnsupported'
+          })
 
         const ts = Math.floor(Date.now() / 1000)
         const simplexCryptoCode = SIMPLEX_ID_MAP[params.pluginId][params.displayCurrencyCode]
@@ -275,7 +309,9 @@ export const simplexProvider: FiatProviderFactory = {
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: { euid: simplexUserId, ts, soam, socn, tacn } })
+            body: JSON.stringify({
+              data: { euid: simplexUserId, ts, soam, socn, tacn }
+            })
           },
           3000
         ).catch(e => {
@@ -302,10 +338,20 @@ export const simplexProvider: FiatProviderFactory = {
             const [fiatCode, minLimit, maxLimit] = result3.slice(1, 4)
 
             if (gt(params.exchangeAmount, maxLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(maxLimit), displayCurrencyCode: fiatCode })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'overLimit',
+                errorAmount: parseFloat(maxLimit),
+                displayCurrencyCode: fiatCode
+              })
             }
             if (lt(params.exchangeAmount, minLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit), displayCurrencyCode: fiatCode })
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'underLimit',
+                errorAmount: parseFloat(minLimit),
+                displayCurrencyCode: fiatCode
+              })
             }
           } else if (quote.type === 'quote_error' && quote.error.includes('fees for this transaction exceed')) {
             throw new FiatProviderError({ providerId, errorType: 'underLimit' })
@@ -313,6 +359,8 @@ export const simplexProvider: FiatProviderFactory = {
           throw new Error('Simplex unknown error')
         }
         const goodQuote = asSimplexQuoteSuccess(quote)
+        const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
+        const quoteCryptAmount = goodQuote.digital_money.amount.toString()
 
         const paymentQuote: FiatProviderQuote = {
           providerId,
@@ -323,13 +371,15 @@ export const simplexProvider: FiatProviderFactory = {
           displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
-          fiatAmount: goodQuote.fiat_money.amount.toString(),
-          cryptoAmount: goodQuote.digital_money.amount.toString(),
+          fiatAmount: quoteFiatAmount,
+          cryptoAmount: quoteCryptAmount,
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
+            const receiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
 
             const data = {
               ts: Math.floor(Date.now() / 1000),
@@ -355,7 +405,50 @@ export const simplexProvider: FiatProviderFactory = {
             const url = `https://partners.simplex.com/?partner=${partner}&t=${token}`
 
             console.log('Approving simplex quote url=' + url)
-            await showUi.openExternalWebView({ url })
+            await showUi.openExternalWebView({
+              url,
+              providerId,
+              deeplinkHandler: async link => {
+                if (link.direction !== 'buy') return
+
+                const orderId = link.query.orderId ?? 'unknown'
+                // Simplex _may_ incorrectly add their query string parameters
+                // to the url with a simple concatenation of '?orderId=...'
+                // (like Banxa), and this will break our query string.
+                const status = link.query.status?.replace('?', '')
+
+                switch (status) {
+                  case 'success': {
+                    await showUi.trackConversion('Buy_Success', {
+                      conversionValues: {
+                        conversionType: 'buy',
+                        sourceFiatCurrencyCode: params.fiatCurrencyCode,
+                        sourceFiatAmount: quoteFiatAmount,
+                        destAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: quoteCryptAmount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId
+                      }
+                    })
+                    await showUi.exitScene()
+                    break
+                  }
+                  case 'failure': {
+                    console.log('Simplex WebView launch buy failure: ' + link.uri)
+                    await showUi.showToast(lstrings.fiat_plugin_buy_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                    break
+                  }
+                  default: {
+                    await showUi.showToast(lstrings.fiat_plugin_buy_unknown_status, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                  }
+                }
+              }
+            })
           },
           closeQuote: async (): Promise<void> => {}
         }

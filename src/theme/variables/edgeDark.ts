@@ -23,6 +23,7 @@ import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentTypeLogoRevolut-dark.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
+import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLogoVenmo.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
@@ -455,6 +456,7 @@ export const edgeDark: Theme = {
   paymentTypeLogoRevolut,
   paymentTypeLogoSofort,
   paymentTypeLogoUpi,
+  paymentTypeLogoVenmo,
   paymentTypeVisa,
 
   primaryLogo: edgeLogo,
@@ -464,6 +466,9 @@ export const edgeDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
+
+  badgeDot: palette.accentRed,
+
   // Shadows
   iconShadow: {
     shadowColor: palette.black,
@@ -477,7 +482,7 @@ export const edgeDark: Theme = {
     elevation: 0
   },
 
-  notifcationCardShadow: {
+  notificationCardShadow: {
     shadowColor: palette.black,
     shadowOffset: {
       width: 3,

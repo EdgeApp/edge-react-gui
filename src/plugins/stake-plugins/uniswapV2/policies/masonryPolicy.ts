@@ -252,7 +252,11 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 category: 'Expense:Fees',
                 notes: 'Stake funds'
               })
-              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, { name: metadataName, category: 'Transfer:Staking', notes: 'Stake funds' })
+              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: 'Stake funds'
+              })
             })(gasLimitAcc('240000'))
         )
       }
@@ -271,7 +275,11 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 category: 'Expense:Fees',
                 notes: 'Unstake funds'
               })
-              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, { name: metadataName, category: 'Transfer:Staking', notes: 'Unstake funds' })
+              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: 'Unstake funds'
+              })
               cacheTxMetadata(result.hash, metadataRewardCurrencyCode, {
                 name: metadataName,
                 category: 'Income:Staking',

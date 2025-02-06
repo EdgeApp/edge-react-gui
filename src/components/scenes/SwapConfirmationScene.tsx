@@ -21,7 +21,7 @@ import { SwapTabSceneProps } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
@@ -162,7 +162,7 @@ export const SwapConfirmationScene = (props: Props) => {
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await dispatch(getSwapInfo(selectedQuote))
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { toWallet, toTokenId } = request
+    const { toWallet, toTokenId, fromWallet, fromTokenId } = request
     try {
       dispatch(logEvent('Exchange_Shift_Start'))
       const result: EdgeSwapResult = await selectedQuote.approve()
@@ -199,12 +199,20 @@ export const SwapConfirmationScene = (props: Props) => {
       dispatch(
         logEvent('Exchange_Shift_Success', {
           conversionValues: {
-            conversionType: 'crypto',
-            cryptoAmount: new CryptoAmount({
+            conversionType: 'swap',
+            destAmount: new CryptoAmount({
               nativeAmount: toNativeAmount,
               tokenId: toTokenId,
               currencyConfig: toWallet.currencyConfig
             }),
+            sourceAmount: new CryptoAmount({
+              nativeAmount: fromNativeAmount,
+              tokenId: fromTokenId,
+              currencyConfig: fromWallet.currencyConfig
+            }),
+            isBuiltInAsset:
+              (toTokenId == null || toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
+              (fromTokenId == null || fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
             orderId: result.orderId,
             swapProviderId: pluginId
           }
@@ -387,7 +395,8 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
     // Format fiat fee:
-    const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
+    const multiplier = getCurrencyCodeMultiplier(fromWallet.currencyConfig, fromWallet.currencyInfo.currencyCode)
+    const feeDenominatedAmount = div(feeNativeAmount, multiplier, multiplier.length)
     const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, defaultIsoFiat, feeDenominatedAmount))
     const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
     const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`

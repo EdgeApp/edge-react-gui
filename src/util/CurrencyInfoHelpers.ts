@@ -82,6 +82,25 @@ export const getTokenIdForced = (account: EdgeAccount, pluginId: string, currenc
   return tokenId
 }
 
+export function getCurrencyCodeMultiplier(currencyConfig: EdgeCurrencyConfig, currencyCode: string): string {
+  const { currencyInfo, allTokens } = currencyConfig
+  for (const denomination of currencyInfo.denominations) {
+    if (denomination.name === currencyCode) {
+      return denomination.multiplier
+    }
+  }
+
+  for (const token of Object.values(allTokens)) {
+    for (const denomination of token.denominations) {
+      if (denomination.name === currencyCode) {
+        return denomination.multiplier
+      }
+    }
+  }
+
+  return '1'
+}
+
 export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: string): EdgeTokenId => {
   const { currencyConfig, currencyInfo } = wallet
   if (currencyInfo.currencyCode === currencyCode) return null

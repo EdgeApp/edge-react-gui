@@ -102,6 +102,7 @@ const strings = {
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
   error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
   error_balance_below_minimum_to_stake_2s: 'Your balance of %1$s does not meet the minimum %2$s required to stake.',
+  error_inactive_validator: 'The selected validator is inactive. Please select a different validator or try again later.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -126,6 +127,10 @@ const strings = {
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
   warning_battery_saver: `Battery Saver Detected! Balances may not update. For the best experience, please turn off battery saver mode.`,
+
+  warning_sending_pix_to_email_title: 'Sending PIX payment to email address',
+  warning_sending_pix_to_email_body:
+    'You scanned or entered an email address which is a valid Brazil PIX payment address. Continuing will create a PIX payment of Tron USDT to the email address provided.',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -179,9 +184,9 @@ const strings = {
   fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
-  request_xrp_minimum_notification_body:
-    'Ripple (XRP) wallets require a 10 XRP minimum balance. You must deposit at least 10 XRP to this address before this wallet will show a balance or transactions. 10 XRP will be unspendable for the lifetime of this wallet address.',
-  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 10 XRP minimum',
+  request_xrp_minimum_notification_body_1xrp:
+    'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
+  request_xrp_minimum_notification_alert_body_1xrp: 'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
@@ -220,6 +225,7 @@ const strings = {
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
   transaction_list_search_no_result: 'Search returned no results',
+  transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
@@ -324,7 +330,7 @@ const strings = {
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
     'To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.',
-  activate_wallet_token_scene_body_xrp_extra: 'Token activation will increase the XRP reserve requirement by 2 XRP per token activated.',
+  activate_wallet_token_scene_body_xrp_extra_point2xrp: 'Token activation will increase the XRP reserve requirement by 0.2 XRP per token activated.',
   activate_wallet_token_scene_body_algo_extra: 'Token activation will increase the ALGO reserve requirement by 0.1 ALGO per token activated.',
   activate_wallet_tokens_scene_body:
     'To send and receive the selected tokens you will first need to activate them with one or more blockchain transactions. The transactions in total will cost the following fee shown below. Please confirm using the slider below.',
@@ -368,6 +374,9 @@ const strings = {
   request_qr_your_wrapped_segwit_address: 'Your Wrapped-Segwit Address',
   request_qr_your_legacy_address: 'Your Legacy Address',
   request_qr_your_segwit_address: 'Your Segwit Address',
+  request_qr_your_sapling_address: 'Your Sapling Address (shielded)',
+  request_qr_your_transparent_address: 'Your Transparent Address (auto-shielded)',
+  request_qr_your_unified_address: 'Your Unified Address (shielded)',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
@@ -506,7 +515,6 @@ const strings = {
   staking_overview_explainer: 'You have the following funds staked:',
   staking_portfolio: 'Portfolio',
   staking_locked_title: 'Unstaked and locked until %1$s',
-  staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
   staking_status: '%1$s locked (%2$s)',
   staking_success: 'Successfully staked',
@@ -573,6 +581,7 @@ const strings = {
   string_first_coreum_wallet_name: 'My Coreum',
   string_first_cosmoshub_wallet_name: 'My Cosmos Hub',
   string_first_osmosis_wallet_name: 'My Osmosis',
+  string_first_sui_wallet_name: 'My Sui',
   string_first_ton_wallet_name: 'My Toncoin',
   string_first_thorchainrune_wallet_name: 'My Thorchain',
   string_first_rsk_wallet_name: 'My Rootstock',
@@ -735,7 +744,7 @@ const strings = {
   transaction_details_fee_warning: 'High Network Fees',
   transaction_details_swap: 'Swap Funds',
   transaction_details_swap_network_fee: 'Swap Network Fee',
-  transaction_details_swap_order_cancel: 'Swap Order Canceled',
+  transaction_details_swap_order_cancel: 'Swap Order Cancelled',
   transaction_details_swap_order_post: 'Swap Order Opened',
   transaction_details_swap_order_fill: 'Swap Order Filled',
   transaction_details_claim: 'Claim Staked Funds',
@@ -1378,6 +1387,7 @@ const strings = {
   util_truncate_delimeter: '...',
 
   // Stake
+  earn_search: 'Search Earning Pools',
   stake_estimated_return: 'Estimated Return: %s',
   stake_estimated_apr_s: '%s Estimated APR',
   stake_stake_1s: 'Stake: %1$s',
@@ -1386,6 +1396,7 @@ const strings = {
   stake_earning_1s: 'Earning: %1$s',
 
   stake_apy_1s: '%1$s APY',
+  stake_stable_apy: 'Stable APY',
   stake_variable_apy: 'Variable APY',
 
   stake_s_staked: '%s Staked',
@@ -1393,7 +1404,6 @@ const strings = {
   stake_s_unstaked: '%s Unstaked',
   stake_lock_message: 'locked until %s',
   stake_select_options: 'Select staking options:',
-  stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
   stake_unstake: 'Unstake',
@@ -1442,6 +1452,10 @@ const strings = {
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 
+  // Thorchain savers
+  stake_tc_unavailable: 'Thorchain Savers Unavailable',
+  stake_tc_unavailable_message: 'Deposits and withdrawal for Thorchian Savers are paused for up to 90 days.',
+
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
   fiat_plugin_sell_network_fee: 'Sell Network Fee',
@@ -1460,14 +1474,18 @@ const strings = {
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_sell_region_restricted: 'Region restricted from selling %s',
   fiat_plugin_sell_no_quote: 'Unable to get sell quote',
+  fiat_plugin_no_provider_1s:
+    'There is currently no provider available in your region that supports %1$s. Please try again later or select another payment method.',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
   fiat_plugin_sell_cancelled: 'Sell order cancelled',
   fiat_plugin_finalizing_quote: 'Finalizing your exchange quote. Please wait as this may take up to a minute',
+  fiat_plugin_buy_cancelled: 'Buy order cancelled',
   fiat_plugin_buy_complete_title: 'Buy Order Complete',
   fiat_plugin_buy_complete_message_s: 'Your buy order of %1$s %2$s with %3$s %4$s has been completed.',
   fiat_plugin_buy_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your wallet.',
   fiat_plugin_buy_complete_message_2_hours_s: 'Please allow up to %1$s hours for the funds to appear in your wallet.',
   fiat_plugin_buy_failed_try_again: 'Buy order failed. Please try again',
+  fiat_plugin_buy_unknown_status: 'Unknown order status upon completion. Please contact support for assistence.',
   fiat_plugin_sell_complete_title: 'Sell Order Complete',
   fiat_plugin_sell_complete_message_s: 'Your sell order of %1$s %2$s for %3$s %4$s has been completed.',
   fiat_plugin_sell_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your account.',
@@ -1520,6 +1538,7 @@ const strings = {
   coin_rank_week: '7D',
   coin_rank_month: '30D',
   coin_rank_year: '1Y',
+  coin_rank_see_more: 'See More',
 
   // #endregion CoinRanking
 
@@ -1532,6 +1551,7 @@ const strings = {
   form_field_title_address_line_2: 'Address Line 2 (optional)',
   form_field_title_address_state_province_region: 'Province',
   form_field_title_address_zip_postal_code: 'Postal Code/Zip',
+  form_field_title_email_address: 'Email Address',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
 
@@ -1546,6 +1566,11 @@ const strings = {
   sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
+
+  otc_enter_email_to_buy: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) purchase.',
+  otc_enter_email_to_sell: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
+  otc_confirmation_title: 'Request Sent',
+  otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
 
   // #endregion GuiPlugins
 
@@ -1593,12 +1618,14 @@ const strings = {
 
   survey_discover_title_1s: 'How Did You Discover %1$s?',
   survey_discover_subtitle: 'This survey is anonymous and your response will not be tied to your account.',
-  survey_opt_youtube: 'YouTube',
+  survey_opt_social: 'Social Media',
   survey_opt_search_engine: 'Search Engine',
   survey_opt_x_twitter: 'X/Twitter',
   survey_opt_in_person_event: 'In-person Event',
   survey_opt_personal_referral: 'Personal Referral',
   survey_opt_article: 'Article',
+  survey_opt_ad: 'Advertisement',
+  survey_opt_app_store: 'App Store',
   survey_opt_BTCTKVR_magazine: 'BTCTKVR Magazine',
   survey_opt_submit: 'Submit',
   survey_opt_dismiss: 'Dismiss',
@@ -1653,6 +1680,9 @@ const strings = {
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
   choose_custom_token_wallet: 'Select Wallet for Custom Token',
+  notifications_pinned: 'Pinned',
+  notifications_recent: 'Recent',
+  notifications_none: `You're all caught up!`,
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

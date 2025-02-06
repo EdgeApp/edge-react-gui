@@ -18,6 +18,7 @@ export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
 export interface SwapInputCardInputRef {
   setAmount: (field: ExchangeFlipInputFields, value: string) => void
+  triggerConvertValue: () => void
 }
 
 export interface SwapInputCardAmounts {
@@ -80,8 +81,14 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
   const fiatDenom = getDenomFromIsoCode(defaultIsoFiat)
 
   const fieldInfos: FlipInputFieldInfos = [
-    { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
-    { currencyName: removeIsoPrefix(fiatDenom.name), maxEntryDecimals: log10(fiatDenom.multiplier) }
+    {
+      currencyName: cryptoDisplayDenom.name,
+      maxEntryDecimals: log10(cryptoDisplayDenom.multiplier)
+    },
+    {
+      currencyName: removeIsoPrefix(fiatDenom.name),
+      maxEntryDecimals: log10(fiatDenom.multiplier)
+    }
   ]
 
   const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {
@@ -166,7 +173,10 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
 
   const { initialExchangeAmount, initialDisplayAmount } = React.useMemo(() => {
     const { exchangeAmount, displayAmount } = convertFromCryptoNative(startNativeAmount ?? '')
-    return { initialExchangeAmount: exchangeAmount, initialDisplayAmount: displayAmount }
+    return {
+      initialExchangeAmount: exchangeAmount,
+      initialDisplayAmount: displayAmount
+    }
   }, [convertFromCryptoNative, startNativeAmount])
 
   const initialFiatAmount = React.useMemo(() => {
@@ -184,6 +194,9 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         const { displayAmount } = convertFromFiat(value)
         flipInputRef.current?.setAmounts([displayAmount, value])
       }
+    },
+    triggerConvertValue: () => {
+      flipInputRef.current?.triggerConvertValue()
     }
   }))
 

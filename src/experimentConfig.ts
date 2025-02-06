@@ -5,27 +5,22 @@ import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 import { ENV } from './env'
 import { isMaestro } from './util/maestro'
 
-export type UspSigninCtaType = 'alreadyHaveAccount' | 'signIn'
-
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
 export interface ExperimentConfig {
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
-  uspSigninCta: UspSigninCtaType
 }
 
 // Defined default "unchanged" values before experimentation.
 export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
-  signupCaptcha: 'withoutCaptcha',
-  uspSigninCta: 'alreadyHaveAccount'
+  signupCaptcha: 'withoutCaptcha'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
 
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
-  signupCaptcha: [50, 50],
-  uspSigninCta: [50, 50]
+  signupCaptcha: [50, 50]
 }
 
 /**
@@ -65,8 +60,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 }
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
-  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha'])),
-  uspSigninCta: asMaybe(asValue('alreadyHaveAccount', 'signIn'), generateExperimentConfigVal('uspSigninCta', ['alreadyHaveAccount', 'signIn']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
 })
 
 /**

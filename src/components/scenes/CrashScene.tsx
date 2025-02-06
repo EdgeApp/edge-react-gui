@@ -29,9 +29,19 @@ export function CrashScene(props: Props): React.ReactElement {
         <AntDesignIcon name="frowno" style={styles.icon} />
         <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
         <Text style={styles.messageText}>{sprintf(lstrings.error_boundary_message_s, config.appNameShort)}</Text>
-        <ButtonsView secondary={{ label: lstrings.error_boundary_help_button, onPress: () => openBrowserUri(config.forceCloseUrl) }} />
+        <ButtonsView
+          secondary={{
+            label: lstrings.error_boundary_help_button,
+            onPress: () => openBrowserUri(config.forceCloseUrl)
+          }}
+        />
         <Text style={styles.messageText}>{lstrings.error_boundary_message2}</Text>
-        <ButtonsView secondary={{ label: lstrings.button_support, onPress: () => openBrowserUri(config.supportContactSite) }} />
+        <ButtonsView
+          secondary={{
+            label: lstrings.button_support,
+            onPress: () => openBrowserUri(config.supportContactSite)
+          }}
+        />
       </ScrollView>
     </>
   )

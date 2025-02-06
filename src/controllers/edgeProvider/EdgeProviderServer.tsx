@@ -1,4 +1,4 @@
-import { abs } from 'biggystring'
+import { abs, div, mul } from 'biggystring'
 import { asArray, asOptional } from 'cleaners'
 import {
   EdgeAccount,
@@ -29,7 +29,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
@@ -302,7 +302,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       let { exchangeAmount, nativeAmount, publicAddress, otherParams } = target
 
       if (exchangeAmount != null) {
-        nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
+        const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+        nativeAmount = mul(exchangeAmount, multiplier)
       }
       spendTargets.push({
         publicAddress,
@@ -407,25 +408,22 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
-          wallet
-            .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-            .then(exchangeAmount => {
-              this._dispatch(
-                logEvent('EdgeProvider_Conversion_Success', {
-                  conversionValues: {
-                    conversionType: 'crypto',
-                    cryptoAmount: new CryptoAmount({
-                      currencyConfig: wallet.currencyConfig,
-                      currencyCode: transaction.currencyCode,
-                      exchangeAmount: abs(exchangeAmount)
-                    }),
-                    swapProviderId: this._plugin.storeId,
-                    orderId
-                  }
-                })
-              )
+          const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, transaction.currencyCode)
+          const exchangeAmount = div(transaction.nativeAmount, multiplier, multiplier.length)
+          this._dispatch(
+            logEvent('EdgeProvider_Conversion_Success', {
+              conversionValues: {
+                conversionType: 'crypto',
+                cryptoAmount: new CryptoAmount({
+                  currencyConfig: wallet.currencyConfig,
+                  currencyCode: transaction.currencyCode,
+                  exchangeAmount: abs(exchangeAmount)
+                }),
+                swapProviderId: this._plugin.storeId,
+                orderId
+              }
             })
-            .catch(e => console.error(e.message))
+          )
         }
       })
     })
@@ -440,7 +438,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     if (wallet == null) throw new Error('No selected wallet')
 
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
-    const signedMessage = await wallet.signMessage(message, { otherParams: { publicAddress } })
+    const signedMessage = await wallet.signMessage(message, {
+      otherParams: { publicAddress }
+    })
     console.log(`signMessage public address:***${publicAddress}***`)
     console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage
@@ -578,6 +578,7 @@ function cleanTx(tx: EdgeTransaction): EdgeTransaction {
     metadata: tx.metadata,
     nativeAmount: tx.nativeAmount,
     networkFee: tx.networkFee,
+    networkFees: [],
     // networkFeeOption: tx.networkFeeOption,
     ourReceiveAddresses: tx.ourReceiveAddresses,
     parentNetworkFee: tx.parentNetworkFee,

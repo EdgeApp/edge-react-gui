@@ -68,7 +68,10 @@ export const LoanStatusSceneComponent = (props: Props) => {
   // All values derived from displayInfo while it's null are hidden by FillLoader
   const steps = displayInfo != null ? displayInfo.steps : []
   const completeMessage = displayInfo != null ? displayInfo.completeMessage : undefined
-  const { title: completeTitle, message: completeBody } = completeMessage ?? { title: '', message: '' }
+  const { title: completeTitle, message: completeBody } = completeMessage ?? {
+    title: '',
+    message: ''
+  }
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {
     const approve = await Airship.show<boolean>(bridge => (

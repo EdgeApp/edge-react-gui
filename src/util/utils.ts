@@ -26,6 +26,12 @@ export const DEFAULT_TRUNCATE_PRECISION = 6
 
 export const normalizeForSearch = (str: string, delimiter: string = '') => str.replace(/\s/g, delimiter).toLowerCase()
 
+// Taken from pixkey.ts in edge-currency-accountbased
+export const isEmail = (text: string) =>
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    text.toLowerCase()
+  )
+
 // Replaces extra chars with '...' either in the middle or end of the input string
 export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
@@ -421,7 +427,14 @@ export const convertTransactionFeeToDisplayFee = (
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
-): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
+): {
+  fiatSymbol?: string
+  fiatAmount: string
+  fiatStyle?: string
+  cryptoSymbol?: string
+  cryptoAmount: string
+  nativeCryptoAmount: string
+} => {
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
@@ -462,7 +475,11 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 
-export function unixToLocaleDateTime(unixDate: number): { date: string; time: string; dateTime: string } {
+export function unixToLocaleDateTime(unixDate: number): {
+  date: string
+  time: string
+  dateTime: string
+} {
   const date = new Date(unixDate * 1000)
   return {
     date: toLocaleDate(date),

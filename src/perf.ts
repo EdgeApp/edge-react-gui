@@ -81,7 +81,9 @@ export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void 
       performance.mark('passwordLoginBegin')
       break
     case 'passwordLoginEnd':
-      performance.mark('passwordLoginEnd', { detail: { isSuccessful: event.error == null } })
+      performance.mark('passwordLoginEnd', {
+        detail: { isSuccessful: event.error == null }
+      })
       break
 
     case 'pinLoginBegin':
@@ -89,7 +91,9 @@ export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void 
       performance.mark('pinLoginBegin')
       break
     case 'pinLoginEnd':
-      performance.mark('pinLoginEnd', { detail: { isSuccessful: event.error == null } })
+      performance.mark('pinLoginEnd', {
+        detail: { isSuccessful: event.error == null }
+      })
       break
 
     default:

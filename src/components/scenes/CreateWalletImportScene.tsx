@@ -123,10 +123,18 @@ const CreateWalletImportComponent = (props: Props) => {
     }
 
     if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
-      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, importText: cleanImportText })
+      navigation.navigate('createWalletImportOptions', {
+        createWalletList: successItems,
+        walletNames,
+        importText: cleanImportText
+      })
       return
     }
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, importText: cleanImportText })
+    navigation.navigate('createWalletCompletion', {
+      createWalletList: successItems,
+      walletNames,
+      importText: cleanImportText
+    })
   })
 
   // Scale the icon
@@ -162,7 +170,12 @@ const CreateWalletImportComponent = (props: Props) => {
             returnKeyType="none"
             ref={textInputRef}
           />
-          <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
+          <SceneButtons
+            primary={{
+              label: lstrings.string_next_capitalized,
+              onPress: handleNext
+            }}
+          />
         </KeyboardAwareScrollView>
       </View>
     </SceneWrapper>

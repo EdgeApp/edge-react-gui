@@ -27,8 +27,12 @@ const asFiatDirectionInfo = asObject({
 type FiatDirectionInfo = ReturnType<typeof asFiatDirectionInfo>
 
 export const asExchangeInfo = asObject({
-  buy: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({ disablePlugins: {} })),
-  sell: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({ disablePlugins: {} })),
+  buy: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({
+    disablePlugins: {}
+  })),
+  sell: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({
+    disablePlugins: {}
+  })),
   swap: asMaybe(
     asObject({
       disableAssets: asMaybe(

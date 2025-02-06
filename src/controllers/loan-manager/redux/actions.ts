@@ -66,7 +66,10 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
         programEdges
       }
 
-      await loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
+      await loanAccountMapRecord.update({
+        ...loanAccountMapRecord.data,
+        [loanAccount.id]: loanEntry
+      })
     }
 
     // Update loan account if it does exist
@@ -155,7 +158,13 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
       programId: actionProgram.programId,
       programType
     }
-    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge], closed: programType === 'loan-close' }))
+    await dispatch(
+      saveLoanAccount({
+        ...loanAccount,
+        programEdges: [...loanAccount.programEdges, programEdge],
+        closed: programType === 'loan-close'
+      })
+    )
 
     return loanAccount
   }

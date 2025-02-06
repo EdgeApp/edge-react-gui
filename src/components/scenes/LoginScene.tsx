@@ -82,7 +82,9 @@ export function LoginScene(props: Props) {
       // Allow YOLO_PIN with light accounts
       firstRun = false
       context
-        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
+        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, {
+          useLoginId: true
+        })
         .then(async account => {
           await dispatch(initializeAccount(navigation as NavigationBase, account))
         })

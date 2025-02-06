@@ -20,7 +20,7 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { scale } from '../../util/scaling'
-import { BlurBackground } from '../common/BlurBackground'
+import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { VectorIcon } from './VectorIcon'
@@ -89,7 +89,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   return (
     <Container shiftY={shiftY} pointerEvents="box-none">
       <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
-        <BlurBackground />
+        <BlurBackgroundNoRoundedCorners />
         <BackgroundLinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
       </Background>
       {renderFooter()}
@@ -127,34 +127,38 @@ const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => (
   }))
 ])
 
-const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; openRatio: SharedValue<number>; tabLabelHeight: number }>(
-  () =>
-    ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
-      return [
-        {
-          ...StyleSheet.absoluteFillObject
-        },
-        useAnimatedStyle(() => {
-          const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
-          const offsetFooterHeight = openRatioInverted * footerHeightRef.value
-          const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
-          return {
-            transform: [
-              {
-                translateY: offsetFooterHeight + offsetTabLabelHeight
-              }
-            ]
+const Background = styled(Animated.View)<{
+  footerHeight: SharedValue<number>
+  openRatio: SharedValue<number>
+  tabLabelHeight: number
+}>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+  return [
+    {
+      ...StyleSheet.absoluteFillObject
+    },
+    useAnimatedStyle(() => {
+      const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
+      const offsetFooterHeight = openRatioInverted * footerHeightRef.value
+      const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
+      return {
+        transform: [
+          {
+            translateY: offsetFooterHeight + offsetTabLabelHeight
           }
-        })
-      ]
-    }
-)
+        ]
+      }
+    })
+  ]
+})
 
 const BackgroundLinearGradient = styled(LinearGradient)({
   flex: 1
 })
 
-const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
+const Tabs = styled(Animated.View)<{
+  openRatio: SharedValue<number>
+  tabLabelHeight: number
+}>(() => ({ openRatio, tabLabelHeight }) => {
   return [
     {
       flexDirection: 'row',

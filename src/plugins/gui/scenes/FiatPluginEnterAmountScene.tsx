@@ -1,3 +1,4 @@
+import pDebounce from 'p-debounce'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Text, TextStyle, View } from 'react-native'
@@ -13,7 +14,9 @@ import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
+import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
+import { useSelector } from '../../../types/reactRedux'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
@@ -66,7 +69,7 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route } = props
+  const { route, navigation } = props
   const {
     disableInput,
     initState,
@@ -85,14 +88,23 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     throw new Error('disableInput must be 1 or 2')
   }
   const lastUsed = React.useRef<number>(1)
+  const account = useSelector(state => state.core.account)
+  const currentUsername = useWatch(account, 'username')
+  const initUsername = React.useRef<string | undefined>(account.username)
 
-  const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
+  const stateManager = useStateManager<EnterAmountState>({
+    ...defaultEnterAmountState,
+    ...initState
+  })
   const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
+  const convertValueDebounced = React.useMemo(() => {
+    return pDebounce(convertValue, 500)
+  }, [convertValue])
 
   useEffect(() => {
     if (initState?.value1 != null) {
       stateManager.update({ value2: ' ', spinner2: true })
-      convertValue(1, initState?.value1, stateManager)
+      convertValueDebounced(1, initState?.value1, stateManager)
         .then(otherValue => {
           if (typeof otherValue === 'string') {
             stateManager.update({ value2: otherValue, spinner2: false })
@@ -100,7 +112,21 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         })
         .catch(err => showError(err))
     }
-  }, [initState?.value1, convertValue, stateManager])
+  }, [initState?.value1, convertValueDebounced, stateManager])
+
+  // Handle light account backups initiated from this scene
+  useEffect(() => {
+    if (initUsername.current !== currentUsername) {
+      // TODO: Doesn't seem to be a straightforward way to update the stale
+      // fiat plugin with the new username state, so just go back to the
+      // `GuiPluginListScene` after upgrading. Ideally we somehow
+      // re-initialize the plugin and automatically end up back on this
+      // scene...
+      // For now, simply go back to the `GuiPluginListScene`.
+      navigation.goBack()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUsername])
 
   let headerIcon = null
   if (headerIconUri != null) {
@@ -111,7 +137,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     lastUsed.current = 1
     onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => showError(err))
     stateManager.update({ value1: value, spinner2: true })
-    convertValue(1, value, stateManager)
+    convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
         if (typeof otherValue === 'string') {
           stateManager.update({ value2: otherValue })
@@ -126,7 +152,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     lastUsed.current = 2
     onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => showError(err))
     stateManager.update({ value2: value, spinner1: true })
-    convertValue(2, value, stateManager)
+    convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
         if (typeof otherValue === 'string') {
           stateManager.update({ value1: otherValue, spinner1: false })

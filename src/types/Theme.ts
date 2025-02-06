@@ -430,6 +430,7 @@ export interface Theme {
   paymentTypeLogoRevolut: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
+  paymentTypeLogoVenmo: ImageProp
   paymentTypeVisa: ImageProp
 
   primaryLogo: ImageProp
@@ -440,10 +441,12 @@ export interface Theme {
 
   // UI 4.0:
 
+  badgeDot: string
+
   // Shadows
   iconShadow: ThemeShadowParams
   dropdownListShadow: ThemeShadowParams
-  notifcationCardShadow: ThemeShadowParams
+  notificationCardShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColor: string

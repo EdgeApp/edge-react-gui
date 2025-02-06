@@ -47,7 +47,9 @@ export const LoanManagerService = (props: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const allTokens = useAllTokens(account)
 
-  const [cachedLoanAssetsMap, setCachedLoanAssetsMap] = useState<{ [loanAccountId: string]: string }>({})
+  const [cachedLoanAssetsMap, setCachedLoanAssetsMap] = useState<{
+    [loanAccountId: string]: string
+  }>({})
 
   //
   // Initialization

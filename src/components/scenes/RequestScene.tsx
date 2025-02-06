@@ -19,6 +19,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import { StringMap } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -143,28 +144,32 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     if (wallet == null) return
     if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) return
 
-    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
-    const addresses: AddressInfo[] = []
+    const addressTypeLabelMap: StringMap = {
+      segwitAddress: lstrings.request_qr_your_segwit_address,
+      legacyAddress: lstrings.request_qr_your_legacy_address,
 
-    // Handle segwitAddress
-    if (receiveAddress.segwitAddress != null) {
-      addresses.push({
-        addressString: receiveAddress.segwitAddress,
-        label: lstrings.request_qr_your_segwit_address
-      })
+      // Zcash
+      saplingAddress: lstrings.request_qr_your_sapling_address,
+      transparentAddress: lstrings.request_qr_your_transparent_address,
+      unifiedAddress: lstrings.request_qr_your_unified_address
     }
-    // Handle publicAddress
-    addresses.push({
-      addressString: receiveAddress.publicAddress,
-      label: receiveAddress.segwitAddress != null ? lstrings.request_qr_your_wrapped_segwit_address : lstrings.request_qr_your_wallet_address
+
+    const allAddresses = await wallet.getAddresses({ tokenId: null })
+    const hasSegwitAddress = allAddresses.some(address => address.addressType === 'segwitAddress')
+    const addresses: AddressInfo[] = allAddresses.map(edgeAddress => {
+      let label: string = lstrings.request_qr_your_wallet_address
+
+      if (hasSegwitAddress && edgeAddress.addressType === 'publicAddress') {
+        label = lstrings.request_qr_your_wrapped_segwit_address
+      } else if (addressTypeLabelMap[edgeAddress.addressType] != null) {
+        label = addressTypeLabelMap[edgeAddress.addressType]
+      }
+
+      return {
+        addressString: edgeAddress.publicAddress,
+        label
+      }
     })
-    // Handle legacyAddress
-    if (receiveAddress.legacyAddress != null) {
-      addresses.push({
-        addressString: receiveAddress.legacyAddress,
-        label: lstrings.request_qr_your_legacy_address
-      })
-    }
 
     this.setState({ addresses, selectedAddress: addresses[0] })
   }
@@ -175,7 +180,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
 
     if (wallet == null || currencyCode == null || selectedAddress == null) return
 
-    return await wallet.encodeUri({ currencyCode, publicAddress: selectedAddress.addressString, nativeAmount: amounts?.nativeAmount })
+    return await wallet.encodeUri({
+      currencyCode,
+      publicAddress: selectedAddress.addressString,
+      nativeAmount: amounts?.nativeAmount
+    })
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -276,6 +285,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   handleKeysOnlyModePress = async () => await showWebViewModal(lstrings.help_support, config.supportSite)
+
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
@@ -299,7 +309,13 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeText numberOfLines={0} style={styles.backupText}>
             {sprintf(lstrings.backup_for_transfer_message, config.appName)}
           </EdgeText>
-          <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+          <ButtonsView
+            parentType="scene"
+            primary={{
+              label: lstrings.backup_account,
+              onPress: this.handleBackupPress
+            }}
+          />
         </View>
       </SceneWrapper>
     )
@@ -384,7 +400,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeAnim enter={fadeInUp25}>
             <EdgeCard marginRem={0}>
               <ExchangedFlipInput2
-                forceField="crypto"
+                forceField="fiat"
                 headerCallback={this.handleOpenWalletListModal}
                 headerText={flipInputHeaderText}
                 inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
@@ -495,7 +511,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
       if (sharedAddress != null && !sharedAddress.includes('amount')) {
-        const edgeEncodeUri: EdgeEncodeUri = { publicAddress, currencyCode, nativeAmount: '0' }
+        const edgeEncodeUri: EdgeEncodeUri = {
+          publicAddress,
+          currencyCode,
+          nativeAmount: '0'
+        }
         const newUri = await wallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
@@ -650,7 +670,13 @@ export const RequestScene = withWallet((props: OwnProps) => {
       wallet={wallet}
       refreshAllFioAddresses={async () => await dispatch(refreshAllFioAddresses())}
       onSelectWallet={async (walletId: string, tokenId: EdgeTokenId) => {
-        await dispatch(selectWalletToken({ navigation: navigation as NavigationBase, walletId, tokenId }))
+        await dispatch(
+          selectWalletToken({
+            navigation: navigation as NavigationBase,
+            walletId,
+            tokenId
+          })
+        )
       }}
       toggleAccountBalanceVisibility={() => dispatch(toggleAccountBalanceVisibility())}
     />

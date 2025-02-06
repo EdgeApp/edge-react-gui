@@ -11,11 +11,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
+import { useNotifCount } from '../../actions/LocalSettingsActions'
 import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
@@ -26,12 +28,13 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { DrawerSceneProps, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
+import { IconBadge } from '../icons/IconBadge'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -44,12 +47,15 @@ import { EdgeText } from './EdgeText'
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenu(props: DrawerContentComponentProps) {
-  // Fix this type assertion (seems like DrawerContentComponentProps works just
-  // fine as NavigationBase?)
-  const { navigation } = props as any as DrawerSceneProps<'edgeAppStack'>
-  const navigationBase = props.navigation as any as NavigationBase
+interface Props {
+  navigation: DrawerContentComponentProps['navigation']
+}
+
+export function SideMenuComponent(props: Props) {
+  const { navigation } = props
+  const navigationBase = navigation as any as NavigationBase
   const isDrawerOpen = useDrawerStatus() === 'open'
+  const number = useNotifCount()
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -92,7 +98,10 @@ export function SideMenu(props: DrawerContentComponentProps) {
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
     if (userInfo.username == null) {
-      showBackupModal({ navigation: navigationBase, forgetLoginId: userInfo.loginId })
+      showBackupModal({
+        navigation: navigationBase,
+        forgetLoginId: userInfo.loginId
+      })
     } else {
       Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
@@ -218,6 +227,14 @@ export function SideMenu(props: DrawerContentComponentProps) {
   }> = [
     {
       pressHandler: () => {
+        navigation.navigate('edgeAppStack', { screen: 'notificationCenter' })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconName: 'notifications',
+      title: lstrings.settings_notifications
+    },
+    {
+      pressHandler: () => {
         navigation.navigate('edgeAppStack', { screen: 'fioAddressList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -234,7 +251,10 @@ export function SideMenu(props: DrawerContentComponentProps) {
     },
     {
       pressHandler: () => {
-        navigation.navigate('edgeAppStack', { screen: 'wcConnections', params: {} })
+        navigation.navigate('edgeAppStack', {
+          screen: 'wcConnections',
+          params: {}
+        })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-wallet-connect',
@@ -250,8 +270,20 @@ export function SideMenu(props: DrawerContentComponentProps) {
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
-    ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
-    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
+    ...(ENV.BETA_FEATURES
+      ? [
+          {
+            pressHandler: handleBorrow,
+            iconName: 'control-panel-borrow',
+            title: lstrings.drawer_borrow_dollars
+          }
+        ]
+      : []),
+    {
+      pressHandler: handleShareApp,
+      iconName: 'control-panel-share',
+      title: lstrings.string_share + ' ' + config.appName
+    },
     {
       pressHandler: () => {
         navigation.navigate('edgeAppStack', { screen: 'settingsOverview' })
@@ -357,7 +389,13 @@ export function SideMenu(props: DrawerContentComponentProps) {
           {rowDatas.map(rowData => (
             <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
               <View style={styles.leftIconContainer}>
-                {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
+                {rowData.iconName === 'notifications' ? (
+                  <IconBadge number={number} offsetX={theme.rem(0.25)} offsetY={theme.rem(0.25)} sizeRem={1.5}>
+                    <Ionicons name="notifications-outline" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  </IconBadge>
+                ) : rowData.iconName != null ? (
+                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                ) : null}
                 {rowData.iconNameFontAwesome != null ? (
                   <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
                 ) : null}
@@ -384,6 +422,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
     </OuterView>
   )
 }
+
+export const SideMenu = React.memo(SideMenuComponent)
 
 /**
  * Given a list of users from the core,

@@ -52,17 +52,29 @@ const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: str
   let percentString
   // Prepend a < sign if a nonzero delta rounds to zero
   if (!zeroString(yesterdayDeltaPct) && lt(abs(yesterdayDeltaPct), '0.001')) {
-    percentString = `<${toPercentString(0.0001, { maxPrecision: 2, intlOpts: { noGrouping: true } })}`
+    percentString = `<${toPercentString(0.0001, {
+      maxPrecision: 2,
+      intlOpts: { noGrouping: true }
+    })}`
   } else {
-    percentString = toPercentString(yesterdayDeltaPct, { maxPrecision: 2, intlOpts: { noGrouping: true } })
+    percentString = toPercentString(yesterdayDeltaPct, {
+      maxPrecision: 2,
+      intlOpts: { noGrouping: true }
+    })
   }
 
   // Colored, signed percentString representing daily price delta. Prepends a '+'
   // symbol to the percent string if > 0, otherwise a "-" if < 0.
   if (gt(yesterdayDeltaPct, '0')) {
-    return { percentString: `+${percentString}`, deltaColorStyle: theme.positiveText }
+    return {
+      percentString: `+${percentString}`,
+      deltaColorStyle: theme.positiveText
+    }
   } else if (lt(yesterdayDeltaPct, '0')) {
-    return { percentString: `${percentString}`, deltaColorStyle: theme.negativeDeltaText }
+    return {
+      percentString: `${percentString}`,
+      deltaColorStyle: theme.negativeDeltaText
+    }
   } else {
     return { percentString, deltaColorStyle: theme.negativeText }
   }

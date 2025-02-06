@@ -1,6 +1,6 @@
 import { abs, add, div, gt, mul } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -103,7 +103,9 @@ export const WcSmartContractModal = (props: Props) => {
         case 'eth_signTypedData_v4': {
           const cleanPayload = asEvmSignPayload(payload)
           const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
-          const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
+          const result = await wallet.signMessage(cleanPayload.params[1], {
+            otherParams: { typedData }
+          })
           await walletConnect.approveRequest(topic, requestId, result)
           break
         }
@@ -116,8 +118,7 @@ export const WcSmartContractModal = (props: Props) => {
           await wallet.saveTx(signTx)
           break
         }
-        case 'eth_sendTransaction':
-        case 'eth_sendRawTransaction': {
+        case 'eth_sendTransaction': {
           const cleanPayload = asEvmTransactionPayload(payload)
           const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
           const tx = await wallet.makeSpend(spendInfo)
@@ -125,6 +126,27 @@ export const WcSmartContractModal = (props: Props) => {
           const sentTx = await wallet.broadcastTx(signedTx)
           await walletConnect.approveRequest(topic, requestId, sentTx.txid)
           await wallet.saveTx(sentTx)
+          break
+        }
+        case 'eth_sendRawTransaction': {
+          const cleanPayload = asEvmSendRawTransactionPayload(payload)
+          const fakeEdgeTransaction: EdgeTransaction = {
+            blockHeight: 0,
+            currencyCode: wallet.currencyInfo.currencyCode,
+            date: 0,
+            isSend: false,
+            memos: [],
+            nativeAmount: '0',
+            networkFee: '0',
+            networkFees: [],
+            ourReceiveAddresses: [],
+            signedTx: cleanPayload.params[0],
+            tokenId: null,
+            txid: '',
+            walletId: wallet.id
+          }
+          const sentTx = await wallet.broadcastTx(fakeEdgeTransaction)
+          await walletConnect.approveRequest(topic, requestId, sentTx.txid)
           break
         }
         case 'algo_signTxn': {
@@ -137,7 +159,9 @@ export const WcSmartContractModal = (props: Props) => {
         case 'cosmos_signDirect':
         case 'cosmos_signAmino': {
           const cleanPayload = asEither(asCosmosGetAccountsPayload, asCosmosSignDirectPayload, asCosmosSignAminoPayload)(payload)
-          const result = await wallet.signMessage('', { otherParams: cleanPayload })
+          const result = await wallet.signMessage('', {
+            otherParams: cleanPayload
+          })
           await walletConnect.approveRequest(topic, requestId, JSON.parse(result))
         }
       }
@@ -229,7 +253,12 @@ const asEvmSignPayload = asObject({
   params: asTuple(asString, asString)
 })
 
-const asEvmTransactionMethod = asValue('eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction')
+const asEvmSendRawTransactionMethod = asValue('eth_sendRawTransaction')
+const asEvmSendRawTransactionPayload = asObject({
+  method: asEvmSendRawTransactionMethod,
+  params: asTuple(asString)
+})
+const asEvmTransactionMethod = asValue('eth_sendTransaction', 'eth_signTransaction')
 const asEvmTransactionPayload = asObject({
   method: asEvmTransactionMethod,
   params: asTuple(
@@ -293,7 +322,9 @@ const asCosmosSignAminoPayload = asObject({
   })
 })
 
-const asPayload = asObject({ method: asEither(asCosmosPayloadMethod, asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod) }).withRest
+const asPayload = asObject({
+  method: asEither(asCosmosPayloadMethod, asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod, asEvmSendRawTransactionMethod)
+}).withRest
 
 export const asWcSmartContractModalProps = asObject({
   dApp: asObject({

@@ -68,14 +68,25 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
     const walletSigner = new EdgeWalletSigner(wallet, provider)
     const walletAddress = await walletSigner.getAddress()
 
-    let txCount: number = await walletSigner.getTransactionCount('pending')
-    const nextNonce = (): number => txCount++
+    let txCount: number | undefined
+    const nextNonce = async (): Promise<number> => {
+      if (txCount == null) {
+        txCount = await walletSigner.getTransactionCount('pending')
+      }
+      return txCount++
+    }
 
     const feeData = await provider.getFeeData()
     const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
     const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
 
-    return { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletAddress, walletSigner }
+    return {
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+      nextNonce,
+      walletAddress,
+      walletSigner
+    }
   }
 
   const instance: StakePolicyAdapter = {
@@ -113,7 +124,7 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         gasLimit: '500000',
         maxFeePerGas,
         maxPriorityFeePerGas,
-        nonce: nextNonce(),
+        nonce: await nextNonce(),
         customData: {
           metadata: {
             name: metadataName,
@@ -133,7 +144,7 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         gasLimit: '250000', // Typically uses 190000-225000 gas
         maxFeePerGas,
         maxPriorityFeePerGas,
-        nonce: nextNonce(),
+        nonce: await nextNonce(),
         value: requestNativeAmount,
         customData: {
           metadata: {
@@ -163,7 +174,7 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         gasLimit: '500000',
         maxFeePerGas,
         maxPriorityFeePerGas,
-        nonce: nextNonce(),
+        nonce: await nextNonce(),
         customData: {
           metadata: {
             name: metadataName,

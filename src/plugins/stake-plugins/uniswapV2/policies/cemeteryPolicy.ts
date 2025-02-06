@@ -55,7 +55,13 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
     lpTokenAmount: string
-  ): Promise<{ [assetId: string]: { pluginId: string; currencyCode: string; nativeAmount: string } }> {
+  ): Promise<{
+    [assetId: string]: {
+      pluginId: string
+      currencyCode: string
+      nativeAmount: string
+    }
+  }> {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
     const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     // 2. Get the amount of each token reserve in the LP-pool contract
@@ -80,7 +86,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     return liquidity
   }
 
-  async function getTokenReservesMap(): Promise<{ [contractAddress: string]: string }> {
+  async function getTokenReservesMap(): Promise<{
+    [contractAddress: string]: string
+  }> {
     const reservesResponse = await eco.multipass(p => lpTokenContract.connect(p).getReserves())
     const { _reserve0, _reserve1 } = reservesResponse
     const [token0, token1] = await Promise.all([
@@ -142,7 +150,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, currencyCode }, index) => {
-            const tokenContractAddress = assetToContractAddress(policyInfo, { pluginId, currencyCode })
+            const tokenContractAddress = assetToContractAddress(policyInfo, {
+              pluginId,
+              currencyCode
+            })
             const tokenReserves = reservesMap[tokenContractAddress]
             const nativeAmount = div(mul(tokenReserves, request.nativeAmount), requestTokenReserves)
             return {

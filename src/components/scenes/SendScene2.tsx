@@ -192,7 +192,10 @@ const SendComponent = (props: Props) => {
     if (uniqueIdentifier == null || spendTarget.publicAddress == null) {
       return initSpendInfo
     } else {
-      return { ...initSpendInfo, memos: [createEdgeMemo(memoOptions, uniqueIdentifier)] }
+      return {
+        ...initSpendInfo,
+        memos: [createEdgeMemo(memoOptions, uniqueIdentifier)]
+      }
     }
   })
 
@@ -958,7 +961,10 @@ const SendComponent = (props: Props) => {
           spendInfo.spendTargets[0].nativeAmount = maxSpendable
         }
         if (spendInfo.spendTargets[0].nativeAmount == null) {
-          flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
+          flipInputModalRef.current?.setFees({
+            feeNativeAmount: '',
+            feeTokenId: null
+          })
         }
         if (pinSpendingLimitsEnabled) {
           const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
@@ -1029,7 +1035,10 @@ const SendComponent = (props: Props) => {
         setError(e)
         setEdgeTransaction(null)
         flipInputModalRef.current?.setError(e.message)
-        flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
+        flipInputModalRef.current?.setFees({
+          feeNativeAmount: '',
+          feeTokenId: null
+        })
       }
       setProcessingAmountChanged(false)
     },
@@ -1077,7 +1086,11 @@ const SendComponent = (props: Props) => {
       {({ insetStyle }) => (
         <>
           <StyledKeyboardAwareScrollView
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: theme.rem(5)
+            }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
@@ -1123,7 +1136,10 @@ const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(theme => (
   marginBottom: 0
 }))
 
-const StyledSliderView = styled(View)<{ insetBottom: number; hasNotifications: boolean }>(theme => props => {
+const StyledSliderView = styled(View)<{
+  insetBottom: number
+  hasNotifications: boolean
+}>(theme => props => {
   const { insetBottom, hasNotifications } = props
 
   // We only need a bit more room under the slider when it's against the bottom

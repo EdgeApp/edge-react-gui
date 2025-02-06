@@ -213,7 +213,6 @@ export function WalletListModal(props: Props) {
           <ModalTitle>{headerTitle}</ModalTitle>
           <SimpleTextInput
             aroundRem={0.5}
-            autoFocus
             returnKeyType="search"
             placeholder={lstrings.search_wallets}
             onChangeText={setSearchText}
@@ -247,7 +246,8 @@ export function WalletListModal(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   header: {
-    flexGrow: 1
+    flexGrow: 1,
+    flexShrink: 1
   },
   bankMargin: {
     flex: 1,

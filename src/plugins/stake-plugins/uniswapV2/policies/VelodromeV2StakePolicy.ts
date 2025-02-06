@@ -55,7 +55,13 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
     lpTokenAmount: string
-  ): Promise<{ [assetId: string]: { pluginId: string; currencyCode: string; nativeAmount: string } }> {
+  ): Promise<{
+    [assetId: string]: {
+      pluginId: string
+      currencyCode: string
+      nativeAmount: string
+    }
+  }> {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
     const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     // 2. Get the amount of each token reserve in the LP-pool contract
@@ -80,7 +86,9 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
     return liquidity
   }
 
-  async function getTokenReservesMap(): Promise<{ [contractAddress: string]: string }> {
+  async function getTokenReservesMap(): Promise<{
+    [contractAddress: string]: string
+  }> {
     const reservesResponse = await eco.multipass(p => lpTokenContract.connect(p).getReserves())
     const { _reserve0, _reserve1 } = reservesResponse
     const [token0, token1] = await Promise.all([
@@ -142,7 +150,10 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, currencyCode }, index) => {
-            const tokenContractAddress = assetToContractAddress(policyInfo, { pluginId, currencyCode })
+            const tokenContractAddress = assetToContractAddress(policyInfo, {
+              pluginId,
+              currencyCode
+            })
             const tokenReserves = reservesMap[tokenContractAddress]
             const nativeAmount = div(mul(tokenReserves, request.nativeAmount), requestTokenReserves)
             return {
@@ -646,39 +657,50 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       // Get the signer for the wallet
       const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
-      const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
-        // Get staked allocations:
-        // 1. Get the amount of LP-tokens staked in the pool contract
-        eco
-          .multipass(p => {
-            return stakingContract.connect(p).balanceOf(signerAddress)
-          })
-          .then(async stakedLpTokenBalanceResponse => {
-            const stakedLpTokenBalance = stakedLpTokenBalanceResponse.toString()
-            // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
-            const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
-            return { stakedLpTokenBalance, assetAmountsFromLp }
-          }),
-        // Get reward amount:
-        eco.multipass(p => stakingContract.connect(p).earned(signerAddress)).then(String),
-        // Get token A balance:
-        eco.multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
-        // Get token B balance:
-        eco.multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
-        // Get LP token balance:
-        eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress)).then(String)
-      ])
+      const [{ stakedLpTokenBalance, assetAmountsFromStakedLp }, rewardNativeAmount, tokenABalance, tokenBBalance, { lpTokenBalance, assetAmountsFromLp }] =
+        await Promise.all([
+          // Get staked allocations:
+          // 1. Get the amount of LP-tokens staked in the pool contract
+          eco
+            .multipass(p => {
+              return stakingContract.connect(p).balanceOf(signerAddress)
+            })
+            .then(async stakedLpTokenBalanceResponse => {
+              const stakedLpTokenBalance = stakedLpTokenBalanceResponse.toString()
+              // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
+              const assetAmountsFromStakedLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
+              return { stakedLpTokenBalance, assetAmountsFromStakedLp }
+            }),
+          // Get reward amount:
+          eco.multipass(p => stakingContract.connect(p).earned(signerAddress)).then(String),
+          // Get token A balance:
+          eco.multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
+          // Get token B balance:
+          eco.multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
+          // Get LP token balance:
+          eco
+            .multipass(p => {
+              return lpTokenContract.connect(p).balanceOf(signerAddress)
+            })
+            .then(async lpTokenBalanceResponse => {
+              const lpTokenBalance = lpTokenBalanceResponse.toString()
+              // 2. Get the conversion amounts for each stakeAsset using the LP-token amount
+              const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, lpTokenBalance)
+              return { lpTokenBalance, assetAmountsFromLp }
+            })
+        ])
 
       // 3. Use the conversion amounts to create the staked allocations
       const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((assetId, index) => {
+        const { nativeAmount: stakedNativeAmount } = assetAmountsFromStakedLp[serializeAssetId(assetId)]
         const { nativeAmount } = assetAmountsFromLp[serializeAssetId(assetId)]
-        if (nativeAmount == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
+        if (stakedNativeAmount == null || nativeAmount == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
 
         return {
           pluginId: assetId.pluginId,
           currencyCode: assetId.currencyCode,
           allocationType: 'staked',
-          nativeAmount,
+          nativeAmount: add(stakedNativeAmount, nativeAmount),
           locktime: undefined
         }
       })
@@ -702,7 +724,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstakeAndClaim = !disableUnstake && gt(stakedLpTokenBalance, '0')
+      const canUnstakeAndClaim = !disableUnstake && (gt(stakedLpTokenBalance, '0') || gt(lpTokenBalance, '0'))
 
       // You can claim so long as there is some reward balance (there are no timelocks)
       const canClaim = !disableClaim && gt(rewardNativeAmount, '0')

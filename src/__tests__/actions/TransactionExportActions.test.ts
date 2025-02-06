@@ -4,8 +4,12 @@ import fs from 'fs'
 
 import { exportTransactionsToCSVInner, exportTransactionsToQBO } from '../../actions/TransactionExportActions'
 
-const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', { encoding: 'utf8' })
-const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encoding: 'utf8' })
+const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', {
+  encoding: 'utf8'
+})
+const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', {
+  encoding: 'utf8'
+})
 
 const edgeTxs: EdgeTransaction[] = [
   {
@@ -23,6 +27,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '123000000',
     networkFee: '1000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
     parentNetworkFee: '10002',
     signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
@@ -45,6 +50,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
@@ -66,6 +72,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: false,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
@@ -87,6 +94,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '321000000',
     networkFee: '2000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
@@ -109,6 +117,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '-321000000',
     networkFee: '0',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
@@ -130,6 +139,7 @@ const edgeTxs: EdgeTransaction[] = [
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
@@ -147,6 +157,7 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: undefined,
     nativeAmount: '-321000000',
     networkFee: '2000',
+    networkFees: [],
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     signedTx: 'fiuwh34f98h3tiuheirgserg',
     tokenId: null,

@@ -17,6 +17,8 @@ const defaultSettings: FakeSettings = {
 export const ethCurrencyInfo: EdgeCurrencyInfo = {
   // Basic currency information:
   currencyCode: 'ETH',
+  assetDisplayName: 'Ethereum',
+  chainDisplayName: 'Ethereum',
   displayName: 'Ethereum',
   pluginId: 'ethereum',
   walletType: 'wallet:ethereum',

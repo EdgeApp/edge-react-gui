@@ -116,7 +116,11 @@ export function WalletList(props: Props) {
       const parentWalletListItem = sortedWalletList.find(
         walletListItem => walletListItem.type === 'asset' && walletListItem.wallet?.id === parentWalletId && walletListItem.tokenId == null
       )
-      if (parentWalletListItem != null) out.push({ ...parentWalletListItem, key: `parent-${parentWalletListItem.key}` })
+      if (parentWalletListItem != null)
+        out.push({
+          ...parentWalletListItem,
+          key: `parent-${parentWalletListItem.key}`
+        })
     }
     return out
   }, [parentWalletId, sortedWalletList])
@@ -152,7 +156,15 @@ export function WalletList(props: Props) {
   // Assemble create-wallet rows:
   const createWalletList: WalletCreateItem[] = React.useMemo(
     () =>
-      filterWalletCreateItemListBySearchText(getCreateWalletList(account, { allowedAssets, excludeAssets, filteredWalletList, filterActivation }), searchText),
+      filterWalletCreateItemListBySearchText(
+        getCreateWalletList(account, {
+          allowedAssets,
+          excludeAssets,
+          filteredWalletList,
+          filterActivation
+        }),
+        searchText
+      ),
     [account, allowedAssets, excludeAssets, searchText, filteredWalletList, filterActivation]
   )
 

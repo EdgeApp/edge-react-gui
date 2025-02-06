@@ -33,7 +33,10 @@ import { showScamWarningModal } from './ScamWarningActions'
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
 
-function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
+function getFirstActiveWalletInfo(account: EdgeAccount): {
+  walletId: string
+  currencyCode: string
+} {
   // Find the first wallet:
   const [walletId] = account.activeWalletIds
   const walletKey = account.allKeys.find(key => key.id === walletId)
@@ -98,12 +101,19 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
           hideSurvey = true
           const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
           if (isCreateHandle) {
-            navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+            navigation.navigate('fioCreateHandle', {
+              freeRegApiToken,
+              freeRegRefCode
+            })
           }
         }
 
         await createWalletsPromise
-        dispatch(logEvent('Signup_Complete'))
+        dispatch(
+          logEvent('Signup_Complete', {
+            numAccounts: getState().core.context.localUsers.length
+          })
+        )
       }
 
       rootNavigation.replace('edgeApp', {
@@ -120,11 +130,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
+      const { defaultScreen } = getDeviceSettings()
       rootNavigation.replace('edgeApp', {
         screen: 'edgeAppStack',
         params: {
           screen: 'edgeTabs',
-          params: { screen: 'home' }
+          params: defaultScreen === 'home' ? { screen: 'home' } : { screen: 'walletsTab', params: { screen: 'walletList' } }
         }
       })
       referralPromise.catch(() => console.log(`Failed to load account referral info`))

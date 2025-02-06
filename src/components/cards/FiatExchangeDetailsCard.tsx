@@ -1,3 +1,4 @@
+import { div } from 'biggystring'
 import { EdgeAssetAction, EdgeCurrencyWallet, EdgeTransaction, EdgeTxActionFiat } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, View } from 'react-native'
@@ -5,10 +6,9 @@ import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -29,8 +29,6 @@ export function FiatExchangeDetailsCard(props: Props) {
   const { action, assetAction, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [sourceAmount, setSourceAmount] = useState<string>('')
-  const [destinationAmount, setDestinationAmount] = useState<string>('')
 
   const {
     orderId,
@@ -52,6 +50,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
     const exchangeData = [
       [lstrings.fio_date_label, dateTime],
+      [lstrings.transaction_details_tx_id_modal_title, transaction.txid],
       [lstrings.transaction_details_exchange_service, providerDisplayName],
       [lstrings.transaction_details_exchange_order_id, orderId],
       [isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote, undefined]
@@ -112,20 +111,10 @@ export function FiatExchangeDetailsCard(props: Props) {
     sourceCurrencyCode = currencyCode
     destinationCurrencyCode = fiatAsset.fiatCurrencyCode
   }
-  useAsyncEffect(
-    async () => {
-      const exchangeAmount = nativeAmount != null ? await wallet.nativeToDenomination(nativeAmount, currencyCode) : ''
-      if (direction === 'buy') {
-        setSourceAmount(`${fiatAsset.fiatAmount} `)
-        setDestinationAmount(`${exchangeAmount} `)
-      } else {
-        setDestinationAmount(`${fiatAsset.fiatAmount} `)
-        setSourceAmount(`${exchangeAmount} `)
-      }
-    },
-    [],
-    'FiatExchangeDetailsCard'
-  )
+  const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
+  const exchangeAmount = nativeAmount != null ? div(nativeAmount, multiplier, multiplier.length) : ''
+  const sourceAmount = direction === 'buy' ? fiatAsset.fiatAmount : exchangeAmount
+  const destinationAmount = direction === 'buy' ? exchangeAmount : fiatAsset.fiatAmount
 
   if (pluginId !== wallet.currencyInfo.pluginId) return null
   if (action.actionType !== 'fiat') return null
@@ -135,8 +124,8 @@ export function FiatExchangeDetailsCard(props: Props) {
     <EdgeCard sections>
       <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
-          <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + sourceCurrencyCode}</EdgeText>
-          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + destinationCurrencyCode}</EdgeText>
+          <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + sourceCurrencyCode}</EdgeText>
+          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
           <EdgeText>{isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
       </EdgeRow>

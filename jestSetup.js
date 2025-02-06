@@ -199,8 +199,18 @@ jest.mock('react-native-localize', () => ({
   },
   getLocales() {
     return [
-      { countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false },
-      { countryCode: 'FR', languageTag: 'fr-FR', languageCode: 'fr', isRTL: false }
+      {
+        countryCode: 'US',
+        languageTag: 'en-US',
+        languageCode: 'en',
+        isRTL: false
+      },
+      {
+        countryCode: 'FR',
+        languageTag: 'fr-FR',
+        languageCode: 'fr',
+        isRTL: false
+      }
     ]
   },
   getNumberFormatSettings() {
@@ -254,3 +264,8 @@ jest.mock('react-native-device-info', () => {
     getVersion: jest.fn()
   }
 })
+
+jest.mock('react-native-reorderable-list', () => ({
+  ...jest.requireActual('react-native-reorderable-list'),
+  useReorderableDrag: () => jest.fn()
+}))

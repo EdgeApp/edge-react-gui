@@ -98,10 +98,18 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.navigate('fioStakingChange', { assetActionType: 'stake', tokenId, walletId })
+    navigation.navigate('fioStakingChange', {
+      assetActionType: 'stake',
+      tokenId,
+      walletId
+    })
   }
   const handlePressUnstake = () => {
-    navigation.navigate('fioStakingChange', { assetActionType: 'unstake', tokenId, walletId })
+    navigation.navigate('fioStakingChange', {
+      assetActionType: 'unstake',
+      tokenId,
+      walletId
+    })
   }
 
   const renderItems = () =>
@@ -140,8 +148,14 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
 
       <ButtonsView
         parentType="scene"
-        primary={{ label: lstrings.fragment_stake_label, onPress: handlePressStake }}
-        tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}
+        primary={{
+          label: lstrings.fragment_stake_label,
+          onPress: handlePressStake
+        }}
+        tertiary={{
+          label: lstrings.staking_unstake_funds_button,
+          onPress: handlePressUnstake
+        }}
       />
     </>
   )

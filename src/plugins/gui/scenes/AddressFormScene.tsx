@@ -282,7 +282,13 @@ export const AddressFormScene = React.memo((props: Props) => {
         onChangeText={handleChangePostalCode}
         onBlur={handleHideAddressHints}
       />
-      <SceneButtons primary={{ label: lstrings.string_next_capitalized, disabled: disableNextButton, onPress: handleSubmit }} />
+      <SceneButtons
+        primary={{
+          label: lstrings.string_next_capitalized,
+          disabled: disableNextButton,
+          onPress: handleSubmit
+        }}
+      />
     </>
   )
 

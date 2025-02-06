@@ -71,7 +71,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const [searchTerm, setSearchTerm] = React.useState('')
 
   const allowedAssets = splitPluginIds.length > 0 ? splitPluginIds.map(pluginId => ({ pluginId, tokenId: null })) : undefined
-  const createList = getCreateWalletList(account, { allowedAssets, disableLegacy })
+  const createList = getCreateWalletList(account, {
+    allowedAssets,
+    disableLegacy
+  })
 
   const createWalletList = React.useMemo(() => {
     const preselectedList: WalletCreateItem[] = []
@@ -126,7 +129,12 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       return
     }
 
-    if (newAccountFlow != null) dispatch(logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: selectedItems.size }))
+    if (newAccountFlow != null)
+      dispatch(
+        logEvent('Signup_Wallets_Selected_Next', {
+          numSelectedWallets: selectedItems.size
+        })
+      )
 
     const createItems = createWalletList.filter(item => selectedItems.has(item.key))
     const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
@@ -220,11 +228,17 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       await newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
-      navigation.push('createWalletEditName', { createWalletList: newList, splitSourceWalletId })
+      navigation.push('createWalletEditName', {
+        createWalletList: newList,
+        splitSourceWalletId
+      })
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('edgeTabs', { screen: 'walletsTab', params: { screen: 'walletList' } })
+      navigation.navigate('edgeTabs', {
+        screen: 'walletsTab',
+        params: { screen: 'walletList' }
+      })
     }
   })
 
@@ -264,7 +278,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       return (
         <EdgeAnim
           visible={selectedItems.size === 0}
-          enter={{ type: 'fadeIn', duration: selectedItems.size === 0 ? 0 : 300 }}
+          enter={{
+            type: 'fadeIn',
+            duration: selectedItems.size === 0 ? 0 : 300
+          }}
           exit={{ type: 'fadeOut', duration: 300 }}
         >
           <EdgeButton type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
@@ -308,11 +325,20 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <EdgeAnim
         visible={selectedItems.size > 0}
-        enter={{ type: 'fadeIn', duration: defaultSelection.length > 0 ? 0 : 300 }}
+        enter={{
+          type: 'fadeIn',
+          duration: defaultSelection.length > 0 ? 0 : 300
+        }}
         exit={{ type: 'fadeOut', duration: 300 }}
         accessible={false}
       >
-        <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNextPress }} absolute />
+        <SceneButtons
+          primary={{
+            label: lstrings.string_next_capitalized,
+            onPress: handleNextPress
+          }}
+          absolute
+        />
       </EdgeAnim>
     ),
     [defaultSelection.length, handleNextPress, selectedItems.size]

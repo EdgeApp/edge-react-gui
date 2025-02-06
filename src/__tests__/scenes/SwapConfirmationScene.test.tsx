@@ -69,7 +69,11 @@ beforeAll(async () => {
   lockEdgeCorePlugins()
 
   const world = await makeFakeEdgeWorld(fakeUsers, {})
-  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true, ethereum: true } })
+  context = await world.makeEdgeContext({
+    apiKey: '',
+    appId: '',
+    plugins: { bitcoin: true, ethereum: true }
+  })
   account = await context.loginWithKey('bob', loginKey)
   const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
   const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
@@ -99,7 +103,8 @@ describe('SwapConfirmationScene', () => {
       toNativeAmount: '10000',
       networkFee: {
         currencyCode: 'BTC',
-        nativeAmount: '1'
+        nativeAmount: '1',
+        tokenId: null
       },
       pluginId: 'bitcoin',
       approve: async () => {
@@ -119,6 +124,7 @@ describe('SwapConfirmationScene', () => {
             },
             nativeAmount: '123000000',
             networkFee: '1000',
+            networkFees: [],
             ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
             parentNetworkFee: '10002',
             signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
@@ -152,16 +158,36 @@ describe('SwapConfirmationScene', () => {
 
   it('pickBestQuote fixed', () => {
     quotes = [
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '10000' },
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '11000' }
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '10000'
+      },
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '11000'
+      }
     ]
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[1])
   })
   it('pickBestQuote prefer DEX first in list', () => {
     quotes = [
-      { swapInfo: { isDex: true }, isEstimate: true, fromNativeAmount: '100', toNativeAmount: '11000' },
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '10000' }
+      {
+        swapInfo: { isDex: true },
+        isEstimate: true,
+        fromNativeAmount: '100',
+        toNativeAmount: '11000'
+      },
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '10000'
+      }
     ]
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[0])
@@ -169,24 +195,54 @@ describe('SwapConfirmationScene', () => {
 
   it('pickBestQuote prefer DEX second in list', () => {
     quotes = [
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '10000' },
-      { swapInfo: { isDex: true }, isEstimate: true, fromNativeAmount: '100', toNativeAmount: '11000' }
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '10000'
+      },
+      {
+        swapInfo: { isDex: true },
+        isEstimate: true,
+        fromNativeAmount: '100',
+        toNativeAmount: '11000'
+      }
     ]
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[1])
   })
   it('pickBestQuote prefer CEX', () => {
     quotes = [
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '10000' },
-      { swapInfo: { isDex: true }, isEstimate: true, fromNativeAmount: '100', toNativeAmount: '9000' }
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '10000'
+      },
+      {
+        swapInfo: { isDex: true },
+        isEstimate: true,
+        fromNativeAmount: '100',
+        toNativeAmount: '9000'
+      }
     ]
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[0])
   })
   it('pickBestQuote prefer fixed', () => {
     quotes = [
-      { swapInfo: { isDex: false }, isEstimate: true, fromNativeAmount: '100', toNativeAmount: '10000' },
-      { swapInfo: { isDex: false }, isEstimate: false, fromNativeAmount: '100', toNativeAmount: '9000' }
+      {
+        swapInfo: { isDex: false },
+        isEstimate: true,
+        fromNativeAmount: '100',
+        toNativeAmount: '10000'
+      },
+      {
+        swapInfo: { isDex: false },
+        isEstimate: false,
+        fromNativeAmount: '100',
+        toNativeAmount: '9000'
+      }
     ]
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[1])

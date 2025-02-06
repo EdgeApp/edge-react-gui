@@ -37,7 +37,9 @@ export const StateProvinceListModal = ({ countryCode, stateProvinces: rawStatePr
 
   const renderRow = React.useCallback(
     ({ name, 'alpha-2': alpha }: StateProvinceData) => {
-      const source = { uri: `${FLAG_LOGO_URL}/stateprovinces/${countryCode.toLowerCase()}/${alpha.toLowerCase()}.png` }
+      const source = {
+        uri: `${FLAG_LOGO_URL}/stateprovinces/${countryCode.toLowerCase()}/${alpha.toLowerCase()}.png`
+      }
       return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
     },
     [bridge, countryCode, styles.image]

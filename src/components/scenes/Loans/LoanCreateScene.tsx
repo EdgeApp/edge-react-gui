@@ -29,7 +29,7 @@ import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode, getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { enableToken } from '../../../util/CurrencyWalletHelpers'
+import { enableTokenCurrencyCode } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, removeIsoPrefix, truncateDecimals, zeroString } from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -67,8 +67,8 @@ export const LoanCreateScene = (props: Props) => {
   // Force enable tokens required for loan
   useAsyncEffect(
     async () => {
-      await enableToken('WBTC', borrowEngineWallet)
-      await enableToken('USDC', borrowEngineWallet)
+      await enableTokenCurrencyCode('WBTC', borrowEngineWallet)
+      await enableTokenCurrencyCode('USDC', borrowEngineWallet)
     },
     [],
     'LoanCreateScene:1'
@@ -201,7 +201,10 @@ export const LoanCreateScene = (props: Props) => {
   // We want to use the same isoFiatCurrencyCode throughout the scene,
   // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
   // conversions have the same quote asset.
-  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode: defaultIsoFiat })
+  const collateralToFiatRate = useCurrencyFiatRate({
+    currencyCode: srcCurrencyCode,
+    isoFiatCurrencyCode: defaultIsoFiat
+  })
 
   const isUserInputComplete =
     srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
@@ -397,7 +400,11 @@ export const LoanCreateScene = (props: Props) => {
           <TappableAccountCard
             emptyLabel={lstrings.loan_select_receiving_wallet}
             onPress={handleShowWalletPickerModal('destination')}
-            selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
+            selectedAsset={{
+              wallet: destWallet,
+              tokenId: destTokenId,
+              paymentMethod
+            }}
             marginRem={[0, 0.5, 0.5, 0.5]}
           />
 

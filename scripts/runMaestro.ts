@@ -52,7 +52,11 @@ const cwd = join(__dirname, '..')
 
 const { env } = makeConfig(asTestConfig, TESTER_CONFIG)
 
-const execSyncOpts: ExecSyncOptions = { cwd, stdio: 'inherit', env: { ...process.env, ...env } }
+const execSyncOpts: ExecSyncOptions = {
+  cwd,
+  stdio: 'inherit',
+  env: { ...process.env, ...env }
+}
 const args = process.argv.slice(2).join(' ')
 const cmd = `maestro ${args}`
 execSync(cmd, execSyncOpts)
