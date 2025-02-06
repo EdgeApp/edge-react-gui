@@ -28,7 +28,7 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
   // BASE / QUOTE = PRICE, where:
   // - 'Fiat' is the QUOTE, defined by the wallet's fiatCurrencyCode
   // - 'Yest' is an index for a historical price from 24 hours ago.
-  const usdFiatPrice = useSelector(state => getExchangeRate(state, 'iso:USD', isoFiatCurrencyCode))
+  const usdToWalletFiatRate = useSelector(state => getExchangeRate(state, 'iso:USD', isoFiatCurrencyCode))
   const assetFiatPrice = useCurrencyFiatRate({
     currencyCode,
     isoFiatCurrencyCode
@@ -46,8 +46,8 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
     fiatDenomination,
     isoFiatCurrencyCode,
     assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '0',
-    usdToWalletFiatRate: !zeroString(usdFiatPrice) ? usdFiatPrice : '0',
-    assetToYestFiatRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '0'
+    usdToWalletFiatRate: !zeroString(usdToWalletFiatRate) ? usdToWalletFiatRate : '0',
+    assetToYestUsdRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '0'
   }
 }
 

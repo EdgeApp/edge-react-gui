@@ -21,13 +21,13 @@ interface Props {
  * asset
  **/
 export const AssetChangeTextUi4 = React.memo(({ wallet, tokenId, style }: Props) => {
-  const { assetToFiatRate, usdToWalletFiatRate, assetToYestFiatRate } = useTokenDisplayData({
+  const { assetToFiatRate, usdToWalletFiatRate, assetToYestUsdRate } = useTokenDisplayData({
     tokenId,
     wallet
   })
 
   const theme = useTheme()
-  const { percentString, deltaColorStyle } = getPercentDeltaString(assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)
+  const { percentString, deltaColorStyle } = getPercentDeltaString(assetToFiatRate, assetToYestUsdRate, usdToWalletFiatRate, theme)
   const textStyle = React.useMemo<TextStyle>(
     () => ({
       color: deltaColorStyle,
@@ -41,8 +41,8 @@ export const AssetChangeTextUi4 = React.memo(({ wallet, tokenId, style }: Props)
   return <EdgeText style={textStyle}>{percentString}</EdgeText>
 })
 
-const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: string, usdToWalletFiatRate: string, theme: Theme) => {
-  const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
+const getPercentDeltaString = (assetToFiatRate: string, assetToYestUsdRate: string, usdToWalletFiatRate: string, theme: Theme) => {
+  const yesterdayExchangeRate = mul(assetToYestUsdRate, usdToWalletFiatRate)
   const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
 
   // Use 0 as delta if either exchange rate is missing or 0
