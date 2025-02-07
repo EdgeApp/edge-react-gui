@@ -11,7 +11,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris.ts'
-import { getOtpReminderModal } from '../../util/otpReminder.tsx'
+import { showOtpReminderModal } from '../../util/otpReminder.tsx'
 import { openBrowserUri } from '../../util/WebUtils.ts'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -43,8 +43,7 @@ export const NotificationCenterScene = (props: Props) => {
   })
 
   const handleOtpReminderPress = useHandler(async () => {
-    const otpReminderModal = await getOtpReminderModal(account)
-    if (otpReminderModal != null) await otpReminderModal()
+    await showOtpReminderModal(account)
   })
 
   const handle2FaEnabledPress = useHandler(async () => {
