@@ -2,11 +2,10 @@ import { EdgeAccount } from 'edge-core-js'
 
 import { getLocalAccountSettings, useAccountSettings, writeAccountNotifInfo } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.ts'
-import { useAsyncValue } from '../../hooks/useAsyncValue.ts'
 import { useWatch } from '../../hooks/useWatch.ts'
 import { useSelector } from '../../types/reactRedux.ts'
 import { asNotifInfo } from '../../types/types.ts'
-import { getOtpReminderModal } from '../../util/otpReminder.tsx'
+import { OTP_REMINDER_MILLISECONDS, useOtpSettings } from '../../util/otpUtils.ts'
 
 const PRIORITY_NOTIFICATION_KEYS = ['ip2FaReminder', 'lightAccountReminder', 'otpReminder', 'pwReminder']
 
@@ -61,23 +60,26 @@ export const updateNotificationInfo = async (
  */
 export const NotificationService = (props: Props) => {
   const { account } = props
-  const { notifState, accountNotifDismissInfo } = useAccountSettings()
 
-  const isLightAccountReminder = account.id != null && account.username == null
-  const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
-  const isPwReminder = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+  const { notifState, accountNotifDismissInfo } = useAccountSettings()
+  const otpSettings = useOtpSettings()
+
   const wallets = useWatch(account, 'currencyWallets')
   const otpKey = useWatch(account, 'otpKey')
-  const isIp2faReminder = !isLightAccountReminder && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown
 
-  const [isOtpReminderModal] = useAsyncValue(async () => {
-    try {
-      const otpReminderModal = await getOtpReminderModal(account)
-      return otpReminderModal != null
-    } catch (error) {
-      return false
-    }
-  }, [account])
+  const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
+  const isPwReminder = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+
+  const isLightAccountReminder = account.id != null && account.username == null
+
+  const isOtpReminder =
+    otpKey == null &&
+    !isLightAccountReminder &&
+    !otpSettings.dontAsk &&
+    ((otpSettings.lastChecked == null && (account.created == null || Date.now() > account.created.valueOf() + OTP_REMINDER_MILLISECONDS)) ||
+      (otpSettings.lastChecked != null && Date.now() > otpSettings.lastChecked.valueOf() + OTP_REMINDER_MILLISECONDS))
+
+  const isIp2faReminder = !isLightAccountReminder && otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown
 
   // Update notification info with
   // 1. Date last received if transitioning from incomplete to complete
@@ -98,13 +100,13 @@ export const NotificationService = (props: Props) => {
 
       await updateNotificationInfo(account, 'ip2FaReminder', isIp2faReminder)
       await updateNotificationInfo(account, 'lightAccountReminder', isLightAccountReminder)
-      await updateNotificationInfo(account, 'otpReminder', isOtpReminderModal ?? false)
+      await updateNotificationInfo(account, 'otpReminder', isOtpReminder ?? false)
       await updateNotificationInfo(account, 'pwReminder', isPwReminder)
 
       // cleanup:
       return () => {}
     },
-    [isIp2faReminder, isLightAccountReminder, isOtpReminderModal, isPwReminder, wallets, detectedTokensRedux, notifState],
+    [isIp2faReminder, isLightAccountReminder, isOtpReminder, isPwReminder, wallets, detectedTokensRedux, notifState],
     'NotificationServices'
   )
 
