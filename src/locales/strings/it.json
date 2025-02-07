@@ -1282,7 +1282,7 @@
   "stake_resource_bandwidth": "Bandwidth",
   "stake_resource_energy": "Energy",
   "stake_tc_unavailable": "Thorchain Savers non disponibile",
-  "stake_tc_unavailable_message": "Deposits and withdrawals for Thorchain Savers are paused for up to 90 days.",
+  "stake_tc_unavailable_message": "Depositi e prelievi per Thorchain Savers sono in pausa fino a 90 giorni.",
   "fiat_plugin_select_asset_to_purchase": "Seleziona asset da comprare",
   "fiat_plugin_select_asset_to_sell": "Seleziona l'asset da vendere",
   "fiat_plugin_sell_network_fee": "Commissioni di rete per la vendita",
