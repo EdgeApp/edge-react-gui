@@ -183,6 +183,19 @@ export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo =>
 export const SPECIAL_CURRENCY_INFO: {
   [pluginId: string]: SpecialCurrencyInfo
 } = {
+  abstract: {
+    allowZeroTx: true,
+    chainCode: 'ETH',
+    chainIcon: true,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_abstract_wallet_name,
+    isImportKeySupported: true,
+    noMaxSpend: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '324'
+    }
+  },
   amoy: {
     allowZeroTx: true,
     chainCode: 'ETH',
