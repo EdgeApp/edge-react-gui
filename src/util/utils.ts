@@ -338,15 +338,6 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   return total
 }
 
-export const getYesterdayDateRoundDownHour = () => {
-  const date = new Date()
-  date.setMinutes(0)
-  date.setSeconds(0)
-  date.setMilliseconds(0)
-  const yesterday = date.setDate(date.getDate() - 1)
-  return new Date(yesterday).toISOString()
-}
-
 type AsyncFunction = () => Promise<any>
 
 export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
