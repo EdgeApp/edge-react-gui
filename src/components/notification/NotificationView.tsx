@@ -16,7 +16,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris'
-import { getOtpReminderModal } from '../../util/otpReminder'
+import { showOtpReminderModal } from '../../util/otpReminder'
 import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
@@ -83,8 +83,7 @@ const NotificationViewComponent = (props: Props) => {
   })
   const handleOtpReminderPress = useHandler(async () => {
     await handleOtpReminderClose()
-    const otpReminderModal = await getOtpReminderModal(account)
-    if (otpReminderModal != null) await otpReminderModal()
+    await showOtpReminderModal(account)
   })
 
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
