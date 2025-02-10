@@ -84,8 +84,10 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     // but just overlay the new transactions over the old ones:
     const cleanupChanged = wallet.on('transactionsChanged', txs => {
       let relevant = false
+      const existingTxidsSet = new Set<string>()
+      streamedTxs.forEach(tx => existingTxidsSet.add(tx.txid))
       for (const tx of txs) {
-        if (tx.tokenId === tokenId) {
+        if (tx.tokenId === tokenId && existingTxidsSet.has(tx.txid)) {
           relevant = true
           changedTxs.set(tx.txid, tx)
         }
