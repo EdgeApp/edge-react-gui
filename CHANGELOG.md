@@ -7,6 +7,7 @@
 ## 4.23.0 (staging)
 
 - added: Add Abstract ETH Layer 2 support
+- changed: `WalletDetailsScene` title shows the name of the network for most use cases
 - changed: Force max unstake on Kiln ETH positions
 - changed: Disconnect `CryptoIcon` from redux
 - changed: Use number math when handling exchange rates

@@ -126,10 +126,10 @@ import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneCompone
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
-import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
+import { TransactionList as TransactionListComponent, TransactionListTitle } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
-import { WalletDetails as WalletDetailsComponent } from './scenes/WalletDetailsScene'
+import { WalletDetails as WalletDetailsComponent, WalletDetailsTitle } from './scenes/WalletDetailsScene'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
@@ -277,14 +277,14 @@ const EdgeWalletsTabScreen = () => {
         name="transactionList"
         component={TransactionList}
         options={{
-          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+          headerTitle: () => <TransactionListTitle />
         }}
       />
       <WalletsStack.Screen
         name="walletDetails"
         component={WalletDetails}
         options={{
-          headerTitle: () => <ParamHeaderTitle<'walletDetails'> fromParams={params => params.walletName} />
+          headerTitle: () => <WalletDetailsTitle />
         }}
       />
     </WalletsStack.Navigator>
@@ -803,7 +803,7 @@ const EdgeAppStack = () => {
         name="transactionList"
         component={TransactionList}
         options={{
-          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+          headerTitle: () => <TransactionListTitle />
         }}
       />
       <AppStack.Screen
