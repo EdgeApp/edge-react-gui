@@ -1,4 +1,4 @@
-import { add } from 'biggystring'
+import { add, round } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -139,4 +139,32 @@ export const enableStakeTokens = async (account: EdgeAccount, wallet: EdgeCurren
   }
 
   await enableTokens(requiredTokenIds, wallet)
+}
+
+export const getBestApy = (stakePolicies: StakePolicy[]) => {
+  return stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
+}
+
+/**
+ * Return the best APY found, defaulting to 1 decimal place, rounding to the
+ * nearest whole number if >= 10, and truncating to '>99%' if greater than 99%.
+ * Only returns a value if `stakePolicies` is available.
+ */
+export const getBestApyText = (stakePolicies?: StakePolicy[]): string | undefined => {
+  if (stakePolicies == null || stakePolicies.length === 0) return
+  const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
+  if (bestApy === 0) return
+
+  const precision = Math.log10(bestApy) > 1 ? 0 : -1
+  return round(bestApy.toString(), precision) + '%'
+}
+
+/**
+ * Returns true if staking is supported for the given currency code and
+ * pluginId.
+ * NOTE: currencyCode is ONLY checked against 'FIO'!
+ */
+export const isStakingSupported = (pluginId: string, currencyCode: string): boolean => {
+  // Special case for FIO because it uses it's own staking plugin
+  return currencyCode.toUpperCase() === 'FIO' || SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true
 }

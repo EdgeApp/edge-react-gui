@@ -147,6 +147,16 @@ export class CryptoAmount {
   //
 
   /**
+   * Unrounded numeric fiat value.
+   */
+  fiatValue(exchangeRates: GuiExchangeRates, isoFiatCode: string): number {
+    const exchangeRateKey = `${this.currencyCode}_${isoFiatCode}`
+    const exchangeRate = exchangeRates[exchangeRateKey] ?? '0'
+    const convertedAmount = mul(this.exchangeAmount, exchangeRate)
+    return parseFloat(convertedAmount)
+  }
+
+  /**
    * Automatically uses 2 decimal/cent places if unspecified.
    */
   displayDollarValue(exchangeRates: GuiExchangeRates, precision?: number): string {
@@ -157,11 +167,9 @@ export class CryptoAmount {
    * Automatically uses 2 decimal/cent places if unspecified.
    */
   displayFiatValue(exchangeRates: GuiExchangeRates, isoFiatCode: string, precision?: number) {
-    const exchangeRateKey = `${this.currencyCode}_${isoFiatCode}`
-    const exchangeRate = exchangeRates[exchangeRateKey] ?? '0'
-    const convertedAmount = mul(this.exchangeAmount, exchangeRate)
-
-    return parseFloat(convertedAmount).toFixed(precision ?? 2)
+    return this.fiatValue(exchangeRates, isoFiatCode)
+      .toFixed(precision ?? 2)
+      .toString()
   }
 
   /**
