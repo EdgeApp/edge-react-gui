@@ -50,12 +50,12 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     // Reset our mutable state to an empty list:
     let atEnd = false
     const changedTxs = new Map<string, EdgeTransaction>()
-    const txs: EdgeTransaction[] = []
+    const streamedTxs: EdgeTransaction[] = []
 
     // Sends the mutable state to React,
     // merging the two transaction lists together:
     function requestRender() {
-      const mergedTxs = txs.filter(tx => !changedTxs.has(tx.txid))
+      const mergedTxs = streamedTxs.filter(tx => !changedTxs.has(tx.txid))
       mergedTxs.push(...changedTxs.values())
       mergedTxs.sort((a, b) => b.date - a.date)
 
@@ -84,8 +84,10 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     // but just overlay the new transactions over the old ones:
     const cleanupChanged = wallet.on('transactionsChanged', txs => {
       let relevant = false
+      const existingTxidsSet = new Set<string>()
+      streamedTxs.forEach(tx => existingTxidsSet.add(tx.txid))
       for (const tx of txs) {
-        if (tx.tokenId === tokenId) {
+        if (tx.tokenId === tokenId && existingTxidsSet.has(tx.txid)) {
           relevant = true
           changedTxs.set(tx.txid, tx)
         }
@@ -131,14 +133,14 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
             if (closed) return
             if (result.done) {
               atEnd = true
-              txs.splice(offset, Infinity) // Trim stragglers
+              streamedTxs.splice(offset, Infinity) // Trim stragglers
               requestRender()
             } else {
               const { value } = result
-              txs.splice(offset, value.length, ...value)
+              streamedTxs.splice(offset, value.length, ...value)
               offset += value.length
               requestRender()
-              if (offset < txs.length) requestMore.current()
+              if (offset < streamedTxs.length) requestMore.current()
             }
           },
           error => {

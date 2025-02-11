@@ -14,6 +14,7 @@
 - changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
 - fixed: Show correct staked balance for deprecated Velodrome pools
 - fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
+- fixed: Transaction metadata loading bugs.
 
 ## 4.21.1 (2025-01-28)
 
