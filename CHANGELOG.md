@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: "Update Available" modal
+
 ## 4.23.0 (staging)
 
 - added: Add Abstract ETH Layer 2 support
