@@ -102,7 +102,7 @@ function WalletDetailsComponent(props: Props) {
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
   // Transaction list state machine:
-  const { transactions, requestMore: handleScrollEnd } = useTransactionList(wallet, tokenId, {
+  const { transactions } = useTransactionList(wallet, tokenId, {
     searchString: isSearching ? searchText : undefined,
     spamThreshold
   })
@@ -346,7 +346,6 @@ function WalletDetailsComponent(props: Props) {
             ListHeaderComponent={topArea}
             onEndReachedThreshold={0.5}
             renderItem={renderItem}
-            onEndReached={handleScrollEnd}
             onScroll={handleScroll}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             // Android scroll gestures break without refreshControl given the
