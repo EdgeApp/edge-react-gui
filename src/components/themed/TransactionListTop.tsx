@@ -508,7 +508,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             superscriptLabel={bestApyText}
           >
             {this.props.walletStakingState.isLoading ? (
-              <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
+              <ActivityIndicator color={theme.textLink} />
             ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
             )}
@@ -728,13 +728,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
-  },
-  stakingButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: theme.rem(3),
-    paddingRight: theme.rem(1)
   },
 
   // TODO: Fix SceneHeader to be UI4 compatible
