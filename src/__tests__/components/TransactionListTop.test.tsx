@@ -66,16 +66,7 @@ describe('TransactionListTop', () => {
     ENV.ENABLE_VISA_PROGRAM = false
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
-        <TransactionListTop
-          isEmpty={false}
-          navigation={fakeCompositeNavigation}
-          searching={false}
-          tokenId={null}
-          wallet={fakeWallet}
-          onSearchingChange={() => undefined}
-          onSearchTextChange={() => undefined}
-          isLightAccount={false}
-        />
+        <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
       </FakeProviders>
     )
 
@@ -87,16 +78,7 @@ describe('TransactionListTop', () => {
     ENV.ENABLE_VISA_PROGRAM = true
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
-        <TransactionListTop
-          isEmpty={false}
-          navigation={fakeCompositeNavigation}
-          searching={false}
-          tokenId={null}
-          wallet={fakeWallet}
-          onSearchingChange={() => undefined}
-          onSearchTextChange={() => undefined}
-          isLightAccount={false}
-        />
+        <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
       </FakeProviders>
     )
 

@@ -208,8 +208,6 @@ function WalletDetailsComponent(props: Props) {
           tokenId={tokenId}
           wallet={wallet}
           isLightAccount={isLightAccount}
-          onSearchingChange={setIsSearching}
-          onSearchTextChange={setSearchText}
         />
         <InfoCardCarousel
           enterAnim={fadeInDown10}
