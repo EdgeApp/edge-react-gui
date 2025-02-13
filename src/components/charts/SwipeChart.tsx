@@ -1,7 +1,7 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
 import { asArray, asEither, asNumber, asObject, asString, asTuple } from 'cleaners'
 import * as React from 'react'
-import { LayoutChangeEvent, Platform, View } from 'react-native'
+import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated'
 import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
@@ -14,7 +14,6 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -30,12 +29,6 @@ interface Props {
   assetId: string
   currencyCode: string
   fiatCurrencyCode: string
-  /**
-   * Typically we don't want to add custom margins to break consistent design,
-   * but for this particular component, we sometimes want to adjust how the line
-   * chart itself, minus the timeframe buttons, is laid out.
-   */
-  marginRem?: number[] | number
 }
 interface ChartDataPoint {
   x: Date
@@ -137,9 +130,7 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, marginRem, currencyCode, fiatCurrencyCode } = params
-
-  const customMargin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+  const { assetId, currencyCode, fiatCurrencyCode } = params
 
   // #region Chart setup
 
@@ -156,9 +147,6 @@ const SwipeChartComponent = (params: Props) => {
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const chartWidth = React.useRef(0)
-  const chartHeight = React.useRef(0)
-
   const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   // Min/Max Price Calcs
@@ -167,9 +155,7 @@ const SwipeChartComponent = (params: Props) => {
   const maxPrice = Math.max(...prices)
 
   const sMinPriceLabelX = useSharedValue(0)
-  const sMinPriceLabelY = useSharedValue(0)
   const sMaxPriceLabelX = useSharedValue(0)
-  const sMaxPriceLabelY = useSharedValue(0)
 
   const sMinPriceString = useSharedValue(``)
   const sMaxPriceString = useSharedValue(``)
@@ -178,6 +164,14 @@ const SwipeChartComponent = (params: Props) => {
 
   const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
   const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
+
+  // The chart component defaults to the phone width.
+  // To fit the chart into its parent view,
+  // we measure the parent and pass that width in.
+  // The chart will freeze the whole app if the width is too narrow,
+  // so start with the window width:
+  const [chartWidth, setChartWidth] = React.useState(Dimensions.get('window').width)
+  const chartHeight = theme.rem(CHART_HEIGHT_REM)
 
   // Fetch/cache chart data, set shared animation transition values
   useAsyncEffect(
@@ -303,14 +297,15 @@ const SwipeChartComponent = (params: Props) => {
 
   // A delayed fadein for the max/min labels, to ensure the labels don't get
   // rendered before the price line. Also hidden when gesture is active
+  const minPriceLabelY = Platform.OS === 'ios' ? chartHeight - theme.rem(2.5) : chartHeight - theme.rem(2.75)
   const aMinLabelStyle = useAnimatedStyle(() => ({
     left: sMinPriceLabelX.value,
-    top: sMinPriceLabelY.value,
+    top: minPriceLabelY,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
   const aMaxLabelStyle = useAnimatedStyle(() => ({
     left: sMaxPriceLabelX.value,
-    top: sMaxPriceLabelY.value,
+    top: 0,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
 
@@ -356,6 +351,10 @@ const SwipeChartComponent = (params: Props) => {
 
   // #region Handlers
 
+  const handleLayout = useHandler((event: LayoutChangeEvent) => {
+    setChartWidth(event.nativeEvent.layout.width)
+  })
+
   const handleGradient = useHandler((props: GradientProps) => {
     return (
       <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" {...props}>
@@ -363,16 +362,6 @@ const SwipeChartComponent = (params: Props) => {
         <Stop stopColor={theme.iconTappable} offset="100%" stopOpacity="0" />
       </LinearGradient>
     )
-  })
-
-  /**
-   * Handle the layout event on the chart, set the min price label Y value.
-   */
-  const handleSetChartDimensions = useHandler((event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout
-    chartWidth.current = width
-    chartHeight.current = height
-    sMinPriceLabelY.value = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
   })
 
   /**
@@ -436,7 +425,7 @@ const SwipeChartComponent = (params: Props) => {
   const setMinMaxLabelsX = (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) => (layoutChangeEvent: LayoutChangeEvent) => {
     if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null && minPriceDataPoint != null && chartData != null && priceDatapoint != null) {
       const xIndex = chartData.indexOf(priceDatapoint)
-      const xPosition = (chartWidth.current / (chartData.length - 1)) * xIndex
+      const xPosition = (chartWidth / (chartData.length - 1)) * xIndex
       const labelWidth = layoutChangeEvent.nativeEvent.layout.width
       const isRightJustified = xPosition > chartData.length / 2
 
@@ -536,7 +525,7 @@ const SwipeChartComponent = (params: Props) => {
 
   // Main Render
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={handleLayout}>
       {/* Timespan control bar */}
       <View style={styles.controlBar}>
         {renderTimespanButton(lstrings.coin_rank_hour, 'hour', handleSetTimespanH)}
@@ -548,7 +537,7 @@ const SwipeChartComponent = (params: Props) => {
 
       {/* Chart */}
       {chartData.length === 0 || isLoading ? (
-        <View style={styles.loader} onLayout={handleSetChartDimensions}>
+        <View style={styles.loader}>
           <FillLoader />
         </View>
       ) : (
@@ -556,14 +545,16 @@ const SwipeChartComponent = (params: Props) => {
           <SlideAreaChart
             data={chartData}
             animated
-            height={theme.rem(11)}
+            height={theme.rem(CHART_HEIGHT_REM)}
+            width={chartWidth}
             chartLineColor={theme.iconTappable}
             chartLineWidth={1.5}
             renderFillGradient={handleGradient}
+            // Create space for our min label:
             paddingBottom={theme.rem(1.5)}
-            // Price line has weird uneven margins when unadjusted
-            paddingRight={theme.rem(2)}
-            paddingLeft={theme.rem(-0.5)}
+            // The default padding is 8, which we don't want:
+            paddingRight={0}
+            paddingLeft={0}
             yRange={chartYRange}
             xScale="linear"
             yAxisProps={Y_AXIS_PROPS}
@@ -577,7 +568,7 @@ const SwipeChartComponent = (params: Props) => {
             toolTipProps={tooltipProps}
             // #endregion ToolTip
 
-            style={[styles.baseChart, customMargin]}
+            style={styles.baseChart}
           />
 
           {/* Min/Max price labels */}
@@ -613,6 +604,8 @@ const SwipeChartComponent = (params: Props) => {
   // #endregion Components
 }
 
+const CHART_HEIGHT_REM = 11
+
 const getStyles = cacheStyles((theme: Theme) => {
   return {
     baseChart: {
@@ -625,7 +618,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       position: 'absolute'
     },
     container: {
-      margin: theme.rem(0.5)
+      margin: theme.rem(0.5),
+      // The chart starts off at the phone width,
+      // so hide the extra until we can adjust the layout:
+      overflow: 'hidden'
     },
     controlBar: {
       justifyContent: 'center',
@@ -637,7 +633,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     loader: {
       marginTop: theme.rem(0),
-      height: theme.rem(11)
+      height: theme.rem(CHART_HEIGHT_REM)
     },
     label: {
       color: theme.primaryText,

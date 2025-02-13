@@ -224,7 +224,7 @@ function WalletDetailsComponent(props: Props) {
             <Paragraph>
               <EdgeText>{fiatRateFormat}</EdgeText>
             </Paragraph>
-            <SwipeChart marginRem={[0, -1]} assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
+            <SwipeChart assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
           </EdgeCard>
         )}
         <SectionHeaderUi4
