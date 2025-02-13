@@ -178,7 +178,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
    */
   const stakingWallets = matchingWallets.filter(wallet => {
     return (
-      isStakingSupported(wallet.currencyInfo.pluginId, currencyCode) &&
+      isStakingSupported(wallet.currencyInfo.pluginId) &&
       walletStakingStateMap[wallet.id] != null &&
       filterStakePolicies(
         Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(stakePolicy => stakePolicy),
@@ -201,7 +201,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     if (coinRankingData != null && matchingWallets.length > 0) {
       // Start with a looser filter that does not include the stake policy,
       // because it has not yet been initialized
-      const uninitializedStakingWallets = matchingWallets.filter(wallet => isStakingSupported(wallet.currencyInfo.pluginId, currencyCode))
+      const uninitializedStakingWallets = matchingWallets.filter(wallet => isStakingSupported(wallet.currencyInfo.pluginId))
 
       for (const wallet of uninitializedStakingWallets) {
         if (walletStakingStateMap[wallet.id] != null && Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0) continue

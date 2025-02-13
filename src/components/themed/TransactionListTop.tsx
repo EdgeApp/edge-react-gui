@@ -489,7 +489,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const styles = getStyles(theme)
     const { countryCode } = this.state
 
-    const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId, this.props.currencyCode)
+    const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
     const bestApyText = getBestApyText(Object.values(walletStakingState.stakePolicies))
 
     return (
