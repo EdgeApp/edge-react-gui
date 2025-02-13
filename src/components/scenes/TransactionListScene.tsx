@@ -30,6 +30,7 @@ export interface TransactionListParams {
   walletName: string
   tokenId: EdgeTokenId
   countryCode?: string
+  searchText?: string
 }
 
 type ListItem = EdgeTransaction | string | null
@@ -39,6 +40,7 @@ interface Props extends WalletsTabSceneProps<'transactionList'> {
 
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
+  const { searchText: initSearchText } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -48,8 +50,8 @@ function TransactionListComponent(props: Props) {
 
   // State:
   const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
-  const [isSearching, setIsSearching] = React.useState(false)
-  const [searchText, setSearchText] = React.useState('')
+  const [isSearching, setIsSearching] = React.useState(initSearchText != null)
+  const [searchText, setSearchText] = React.useState(initSearchText ?? '')
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Watchers:

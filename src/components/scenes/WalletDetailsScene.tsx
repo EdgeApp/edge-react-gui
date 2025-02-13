@@ -178,7 +178,10 @@ function WalletDetailsComponent(props: Props) {
   })
 
   const handlePressSeeAll = useHandler(() => {
-    navigation.navigate('transactionList', route.params)
+    navigation.navigate('transactionList', {
+      ...route.params,
+      searchText: isSearching ? searchText : undefined
+    })
   })
 
   //
