@@ -1,8 +1,9 @@
 import { gt, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
-import Animated from 'react-native-reanimated'
+import { Platform, RefreshControl, View } from 'react-native'
+import Reanimated from 'react-native-reanimated'
+import { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { activateWalletTokens } from '../../actions/WalletActions'
@@ -31,12 +32,12 @@ import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
-import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
-import { EmptyLoader, SectionHeaderCentered } from '../themed/TransactionListComponents'
+import { EmptyLoader } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 
@@ -47,7 +48,6 @@ export interface WalletDetailsParams {
   countryCode?: string
 }
 
-type ListItem = EdgeTransaction | string | null
 interface Props extends WalletsTabSceneProps<'walletDetails'> {
   wallet: EdgeCurrencyWallet
 }
@@ -65,7 +65,7 @@ function WalletDetailsComponent(props: Props) {
   const { currencyCode, displayName } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
-  const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
+  const scrollViewRef = React.useRef<AnimatedScrollView>(null)
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
   const iconColor = useIconColor({ pluginId, tokenId })
@@ -102,7 +102,7 @@ function WalletDetailsComponent(props: Props) {
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
   // Transaction list state machine:
-  const { transactions, requestMore: handleScrollEnd } = useTransactionList(wallet, tokenId, {
+  const { transactions, atEnd } = useTransactionList(wallet, tokenId, {
     searchString: isSearching ? searchText : undefined,
     spamThreshold
   })
@@ -150,6 +150,10 @@ function WalletDetailsComponent(props: Props) {
 
   const handleScroll = useSceneScrollHandler()
 
+  const handleContentSizeChange = useHandler(() => {
+    if (isSearching) scrollViewRef.current?.scrollToEnd()
+  })
+
   const handleStartSearching = useHandler(() => {
     setIsSearching(true)
   })
@@ -174,7 +178,10 @@ function WalletDetailsComponent(props: Props) {
   })
 
   const handlePressSeeAll = useHandler(() => {
-    navigation.navigate('transactionList', route.params)
+    navigation.navigate('transactionList', {
+      ...route.params,
+      searchText: isSearching ? searchText : undefined
+    })
   })
 
   //
@@ -197,93 +204,6 @@ function WalletDetailsComponent(props: Props) {
       />
     )
   }, [])
-
-  const topArea = React.useMemo(() => {
-    return (
-      <>
-        <TransactionListTop
-          isEmpty={listItems.length < 1}
-          navigation={navigation}
-          searching={isSearching}
-          tokenId={tokenId}
-          wallet={wallet}
-          isLightAccount={isLightAccount}
-          onSearchingChange={setIsSearching}
-          onSearchTextChange={setSearchText}
-        />
-        <InfoCardCarousel
-          enterAnim={fadeInDown10}
-          cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
-          navigation={navigation as NavigationBase}
-          countryCode={route.params.countryCode}
-          screenWidth={screenWidth}
-        />
-        {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
-        {assetId != null && (
-          <EdgeCard>
-            <Paragraph>
-              <EdgeText>{fiatRateFormat}</EdgeText>
-            </Paragraph>
-            <SwipeChart marginRem={[0, -1]} assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
-          </EdgeCard>
-        )}
-        <SectionHeaderUi4
-          leftTitle={lstrings.transaction_list_recent_transactions}
-          rightNode={listItems.length === 0 ? null : lstrings.see_all}
-          onRightPress={handlePressSeeAll}
-        />
-        <EdgeCard sections>
-          {listItems.map((tx: EdgeTransaction) => (
-            <View key={tx.txid} style={styles.txRow}>
-              <TransactionListRow navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} noCard />
-            </View>
-          ))}
-        </EdgeCard>
-      </>
-    )
-  }, [
-    listItems,
-    navigation,
-    isSearching,
-    tokenId,
-    wallet,
-    isLightAccount,
-    pluginId,
-    route.params.countryCode,
-    screenWidth,
-    assetId,
-    displayName,
-    handlePressCoinRanking,
-    fiatRateFormat,
-    currencyCode,
-    fiatCurrencyCode,
-    handlePressSeeAll,
-    styles.txRow
-  ])
-
-  const emptyComponent = React.useMemo(() => {
-    if (isTransactionListUnsupported) {
-      return <ExplorerCard wallet={wallet} tokenId={tokenId} />
-    } else if (isSearching) {
-      return <SectionHeaderCentered title={lstrings.transaction_list_search_no_result} />
-    } else {
-      return <BuyCrypto countryCode={route.params.countryCode} navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
-    }
-  }, [isTransactionListUnsupported, isSearching, wallet, tokenId, route.params.countryCode, navigation])
-
-  const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
-    if (item == null) {
-      return <EmptyLoader />
-    }
-
-    return null // We're not using the FlatList rendering anymore
-  })
-
-  const keyExtractor = useHandler((item: ListItem) => {
-    if (item == null) return 'spinner'
-    if (typeof item === 'string') return item
-    return item.txid
-  })
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
@@ -330,36 +250,89 @@ function WalletDetailsComponent(props: Props) {
       renderFooter={renderFooter}
     >
       {({ insetStyle, undoInsetStyle }) => (
-        <View style={undoInsetStyle}>
-          <Animated.FlatList
-            style={styles.flatList}
-            ref={flashListRef}
-            contentContainerStyle={{
-              paddingTop: insetStyle.paddingTop + theme.rem(0.5),
-              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
-              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
-            }}
-            data={listItems}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="handled"
-            keyExtractor={keyExtractor}
-            ListEmptyComponent={emptyComponent}
-            ListHeaderComponent={topArea}
-            onEndReachedThreshold={0.5}
-            renderItem={renderItem}
-            onEndReached={handleScrollEnd}
-            onScroll={handleScroll}
-            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-            // Android scroll gestures break without refreshControl given the
-            // combination of props we use on this Animated.FlatList.
-            refreshControl={refreshControl}
+        <Reanimated.ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={{
+            paddingTop: insetStyle.paddingTop + theme.rem(0.5),
+            paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
+            paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+            paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+          }}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          // Android scroll gestures break without refreshControl given the
+          // combination of props we use on this ScrollView:
+          refreshControl={refreshControl}
+          // Fixes middle-floating scrollbar issue
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          style={undoInsetStyle}
+          onContentSizeChange={handleContentSizeChange}
+          onScroll={handleScroll}
+        >
+          <TransactionListTop
+            isEmpty={listItems.length < 1}
+            navigation={navigation}
+            searching={isSearching}
+            tokenId={tokenId}
+            wallet={wallet}
+            isLightAccount={isLightAccount}
           />
-        </View>
+          <InfoCardCarousel
+            enterAnim={fadeInDown10}
+            cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
+            navigation={navigation as NavigationBase}
+            countryCode={route.params.countryCode}
+            screenWidth={screenWidth}
+          />
+          {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
+          {assetId != null && (
+            <EdgeCard>
+              <Paragraph>
+                <EdgeText>{fiatRateFormat}</EdgeText>
+              </Paragraph>
+              <SwipeChart assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
+            </EdgeCard>
+          )}
+          <SectionHeaderUi4
+            leftTitle={lstrings.transaction_list_recent_transactions}
+            rightNode={listItems.length === 0 ? null : lstrings.see_all}
+            onRightPress={handlePressSeeAll}
+          />
+          <View style={styles.txListContainer}>
+            {listItems.length > 0 ? (
+              <EdgeCard sections>
+                {listItems.map((tx: EdgeTransaction) => (
+                  <TransactionListRow key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} noCard />
+                ))}
+              </EdgeCard>
+            ) : listItems.length === 0 && !atEnd ? (
+              <EmptyLoader />
+            ) : isTransactionListUnsupported ? (
+              <ExplorerCard wallet={wallet} tokenId={tokenId} />
+            ) : isSearching ? (
+              <EdgeText style={styles.noResultsText}>{lstrings.transaction_list_search_no_result}</EdgeText>
+            ) : (
+              <BuyCrypto countryCode={route.params.countryCode} navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
+            )}
+          </View>
+        </Reanimated.ScrollView>
       )}
     </SceneWrapper>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  txListContainer: {
+    // A bit less than 5 transaction rows:
+    minHeight: theme.rem(20)
+  },
+  noResultsText: {
+    alignSelf: 'center',
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.25),
+    paddingVertical: theme.rem(2)
+  }
+}))
 
 /**
  * If the token gets deleted, the scene will crash.
@@ -372,12 +345,3 @@ function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId 
 }
 
 export const WalletDetails = withWallet(WalletDetailsComponent)
-
-const getStyles = cacheStyles(() => ({
-  flatList: {
-    flex: 1
-  },
-  txRow: {
-    paddingVertical: 0
-  }
-}))

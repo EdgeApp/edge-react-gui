@@ -77,8 +77,6 @@ interface OwnProps {
   // Scene state:
   isEmpty: boolean
   searching: boolean
-  onSearchingChange: (isSearching: boolean) => void
-  onSearchTextChange: (searchString: string) => void
 }
 
 interface StateProps {
@@ -102,7 +100,6 @@ interface DispatchProps {
 
 interface State {
   countryCode: string | undefined
-  input: string
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -111,8 +108,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   constructor(props: Props) {
     super(props)
     this.state = {
-      countryCode: undefined,
-      input: ''
+      countryCode: undefined
     }
   }
 
@@ -543,18 +539,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     const precision = Math.log10(bestApy) > 1 ? 0 : -1
     return round(bestApy.toString(), precision) + '%'
-  }
-
-  handleOnChangeText = (input: string) => {
-    this.setState({ input })
-  }
-
-  handleTextFieldFocus = () => {
-    this.props.onSearchingChange(true)
-  }
-
-  handleTextFieldBlur = () => {
-    this.props.onSearchTextChange(this.state.input)
   }
 
   handleRequest = (): void => {
