@@ -1,5 +1,5 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
-import { asArray, asEither, asNumber, asObject, asString, asTuple } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asString, asTuple } from 'cleaners'
 import * as React from 'react'
 import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -51,8 +51,6 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
   market_caps: asArray(asCoinGeckoDataPair),
   total_volumes: asArray(asCoinGeckoDataPair)
 })
-
-const asCoinGeckoMarketApi = asEither(asCoinGeckoMarketChartRange, asCoinGeckoError)
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
@@ -209,33 +207,33 @@ const SwipeChartComponent = (params: Props) => {
             // Construct the dataset query
             const response = await fetch(fetchUrl)
             const result = await response.json()
-            const marketChartRange = asCoinGeckoMarketApi(result)
-            if ('status' in marketChartRange) {
-              if (marketChartRange.status.error_code === 429) {
+            const apiError = asMaybe(asCoinGeckoError)(result)
+            if (apiError != null) {
+              if (apiError.status.error_code === 429) {
                 // Rate limit error, use our API key as a fallback
-                if (!fetchUrl.includes('x_cg_pro_api_key')) {
+                if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
                   fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                   continue
                 }
-              } else {
-                throw new Error(JSON.stringify(marketChartRange))
               }
-            } else {
-              const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-                return {
-                  x: new Date(rawDataPoint[0]),
-                  y: rawDataPoint[1]
-                }
-              })
-              const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
-
-              setChartData(reducedChartData)
-              cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-              setCachedChartData(cachedTimespanChartData)
-              setIsLoading(false)
-              delayShowMinMaxLabels()
-              break
+              throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
             }
+
+            const marketChartRange = asCoinGeckoMarketChartRange(result)
+            const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+              return {
+                x: new Date(rawDataPoint[0]),
+                y: rawDataPoint[1]
+              }
+            })
+            const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+            setChartData(reducedChartData)
+            cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+            setCachedChartData(cachedTimespanChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+            break
           } while (true)
         }
       }
