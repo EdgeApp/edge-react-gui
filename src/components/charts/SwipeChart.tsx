@@ -14,6 +14,7 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -213,8 +214,11 @@ const SwipeChartComponent = (params: Props) => {
                 // Rate limit error, use our API key as a fallback
                 if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
                   fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
-                  continue
                 }
+                // Wait 2 second before retrying. It typically takes 1 minute
+                // before rate limiting is relieved, so even 2 seconds is hasty.
+                await snooze(2000)
+                continue
               }
               throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
             }
