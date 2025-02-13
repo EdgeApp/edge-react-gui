@@ -14,8 +14,6 @@ export const getLocalAccountSettings = (): LocalAccountSettings => localAccountS
 
 const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
 
-export { watchAccountSettings }
-
 export function useAccountSettings() {
   const [, setAccountSettings] = React.useState(getLocalAccountSettings())
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
