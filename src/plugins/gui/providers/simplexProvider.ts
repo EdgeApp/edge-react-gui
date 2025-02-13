@@ -116,7 +116,7 @@ const SIMPLEX_ID_MAP: {
   qtum: { QTUM: 'QTUM' },
   ravencoin: { RVN: 'RVN' },
   ripple: { XRP: 'XRP' },
-  solana: { KIN: 'KIN', SOL: 'SOL' },
+  solana: { KIN: 'KIN', MELANIA: 'MELANIA', SOL: 'SOL', TRUMP: 'TRUMP' },
   stellar: { XLM: 'XLM' },
   sui: { SUI: 'SUI' },
   tezos: { XTZ: 'XTZ' },

@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Added TRUMP and MELANIA purchases through Simplex
+
 ## 4.22.0 (staging)
 
 - added: `NotificationCenterScene`
