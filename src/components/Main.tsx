@@ -126,7 +126,7 @@ import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneCompone
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
-import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene2'
+import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletDetails as WalletDetailsComponent } from './scenes/WalletDetailsScene'
