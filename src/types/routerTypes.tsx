@@ -62,7 +62,7 @@ import type { SweepPrivateKeyCompletionParams } from '../components/scenes/Sweep
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
 import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
-import type { TransactionListParams } from '../components/scenes/TransactionListScene2'
+import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
 import type { WalletDetailsParams } from '../components/scenes/WalletDetailsScene'
 import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
