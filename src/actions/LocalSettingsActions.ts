@@ -143,8 +143,9 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
  * `NotificationCenterScene`
  **/
 const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState): Promise<LocalAccountSettings> => {
-  const updatedSettings: LocalAccountSettings = { ...getLocalAccountSettings(), notifState }
-  return await writeLocalAccountSettings(account, updatedSettings)
+  return await readLocalAccountSettings(account).then(async settings => {
+    return await writeLocalAccountSettings(account, { ...settings, notifState })
+  })
 }
 
 /**
