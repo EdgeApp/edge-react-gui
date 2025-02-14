@@ -8,16 +8,19 @@ import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, N
 import { logActivity } from '../util/logger'
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
+const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
+watchAccountSettings(s => {
+  localAccountSettings = s
+})
 
 export const getLocalAccountSettings = (): LocalAccountSettings => localAccountSettings
-
-const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
 
 export function useAccountSettings() {
   const [, setAccountSettings] = React.useState(getLocalAccountSettings())
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
-  return localAccountSettings
+  return getLocalAccountSettings()
 }
 
 /**
@@ -140,7 +143,7 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
  * `NotificationCenterScene`
  **/
 const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState): Promise<LocalAccountSettings> => {
-  const updatedSettings: LocalAccountSettings = { ...localAccountSettings, notifState }
+  const updatedSettings: LocalAccountSettings = { ...getLocalAccountSettings(), notifState }
   return await writeLocalAccountSettings(account, updatedSettings)
 }
 
@@ -153,9 +156,10 @@ export const writeAccountNotifInfo = async (
   accountNotifStateKey: string,
   notifInfo: Partial<NotifInfo>
 ): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
   return await writeAccountNotifState(account, {
-    ...localAccountSettings.notifState,
-    [accountNotifStateKey]: { ...(localAccountSettings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
+    ...settings.notifState,
+    [accountNotifStateKey]: { ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
   })
 }
 
@@ -165,10 +169,11 @@ export const writeAccountNotifInfo = async (
  * warning will not be shown again for that currency plugin.
  */
 export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
   // Use a Set to ensure there's no duplicates when adding to this info
   const updatedSettings = {
-    ...localAccountSettings,
-    tokenWarningsShown: Array.from(new Set([...localAccountSettings.tokenWarningsShown, pluginId]))
+    ...settings,
+    tokenWarningsShown: Array.from(new Set([...settings.tokenWarningsShown, pluginId]))
   }
 
   return await writeLocalAccountSettings(account, updatedSettings)
@@ -179,7 +184,7 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
     const settings = asLocalAccountSettings(json)
-    localAccountSettings = settings
+    emitAccountSettings(settings)
     return settings
   } catch (e) {
     const defaults = asLocalAccountSettings({})
