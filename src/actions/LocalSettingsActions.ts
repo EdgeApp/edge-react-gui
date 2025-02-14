@@ -8,18 +8,19 @@ import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, N
 import { logActivity } from '../util/logger'
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
+const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
+watchAccountSettings(s => {
+  localAccountSettings = s
+})
 
 export const getLocalAccountSettings = (): LocalAccountSettings => localAccountSettings
-
-const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
-
-export { watchAccountSettings }
 
 export function useAccountSettings() {
   const [, setAccountSettings] = React.useState(getLocalAccountSettings())
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
-  return localAccountSettings
+  return getLocalAccountSettings()
 }
 
 /**
@@ -94,41 +95,41 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
   }
 }
 
-const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
+const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder): Promise<LocalAccountSettings> =>
   await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, passwordReminder }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 
-const writeAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
+const writeAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, isAccountBalanceVisible }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeDeveloperModeSetting = async (account: EdgeAccount, developerModeOn: boolean) => {
+const writeDeveloperModeSetting = async (account: EdgeAccount, developerModeOn: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, developerModeOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolean) => {
+const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spamFilterOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean) => {
+export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, contactsPermissionShown }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spendingLimits }
     const out = writeLocalAccountSettings(account, updatedSettings)
@@ -141,21 +142,25 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
  * Manage the state of account notifications, used by both `NotificationView` and
  * `NotificationCenterScene`
  **/
-const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState) => {
-  const updatedSettings: LocalAccountSettings = { ...localAccountSettings, notifState }
-  const newLocalAccountSettings = await writeLocalAccountSettings(account, updatedSettings)
-
-  return newLocalAccountSettings
+const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState): Promise<LocalAccountSettings> => {
+  return await readLocalAccountSettings(account).then(async settings => {
+    return await writeLocalAccountSettings(account, { ...settings, notifState })
+  })
 }
 
 /**
  * Overwrite the values of account notifications or create new values per specific
  * `notifState` key
  **/
-export const writeAccountNotifInfo = async (account: EdgeAccount, accountNotifStateKey: string, notifInfo: Partial<NotifInfo>) => {
+export const writeAccountNotifInfo = async (
+  account: EdgeAccount,
+  accountNotifStateKey: string,
+  notifInfo: Partial<NotifInfo>
+): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
   return await writeAccountNotifState(account, {
-    ...localAccountSettings.notifState,
-    [accountNotifStateKey]: { ...(localAccountSettings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
+    ...settings.notifState,
+    [accountNotifStateKey]: { ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
   })
 }
 
@@ -164,11 +169,12 @@ export const writeAccountNotifInfo = async (account: EdgeAccount, accountNotifSt
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.
  */
-export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string) => {
+export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
   // Use a Set to ensure there's no duplicates when adding to this info
   const updatedSettings = {
-    ...localAccountSettings,
-    tokenWarningsShown: Array.from(new Set([...localAccountSettings.tokenWarningsShown, pluginId]))
+    ...settings,
+    tokenWarningsShown: Array.from(new Set([...settings.tokenWarningsShown, pluginId]))
   }
 
   return await writeLocalAccountSettings(account, updatedSettings)
@@ -179,19 +185,20 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
     const settings = asLocalAccountSettings(json)
-    localAccountSettings = settings
+    emitAccountSettings(settings)
     return settings
   } catch (e) {
     const defaults = asLocalAccountSettings({})
-    return await writeLocalAccountSettings(account, defaults).then(() => defaults)
+    return await writeLocalAccountSettings(account, defaults)
   }
 }
 
-export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
+export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings): Promise<LocalAccountSettings> => {
   // Refresh cache, notify callers
-  localAccountSettings = asLocalAccountSettings(settings)
-  emitAccountSettings(localAccountSettings)
+  emitAccountSettings(settings)
 
   const text = JSON.stringify(settings)
-  return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+
+  return settings
 }
