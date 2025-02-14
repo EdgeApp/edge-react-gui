@@ -489,7 +489,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const styles = getStyles(theme)
     const { countryCode } = this.state
 
-    const showStaking = this.isStakingAvailable()
+    const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
     const bestApyText = getBestApyText(Object.values(walletStakingState.stakePolicies))
 
     return (
@@ -500,18 +500,20 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         <IconButton label={lstrings.fragment_send_subtitle} onPress={this.handleSend}>
           <Ionicons name="arrow-up" size={theme.rem(2)} color={theme.primaryText} />
         </IconButton>
-        <IconButton
-          disabled={this.props.walletStakingState.isLoading}
-          label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-          onPress={this.handleStakePress}
-          superscriptLabel={bestApyText}
-        >
-          {this.props.walletStakingState.isLoading ? (
-            <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
-          ) : !showStaking ? null : (
-            <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
-          )}
-        </IconButton>
+        {hideStaking ? null : (
+          <IconButton
+            disabled={this.props.walletStakingState.isLoading}
+            label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
+            onPress={this.handleStakePress}
+            superscriptLabel={bestApyText}
+          >
+            {this.props.walletStakingState.isLoading ? (
+              <ActivityIndicator color={theme.textLink} />
+            ) : (
+              <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
+            )}
+          </IconButton>
+        )}
         <IconButton label={lstrings.trade_currency} onPress={this.handleTrade}>
           <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
         </IconButton>
@@ -519,13 +521,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  isStakingAvailable = (): boolean => {
-    const { currencyCode, wallet } = this.props
-    const { pluginId } = wallet.currencyInfo
-
-    const isStakingPolicyAvailable = Object.keys(this.props.walletStakingState.stakePolicies).length > 0
-
-    return isStakingPolicyAvailable && isStakingSupported(pluginId, currencyCode)
+  isStakingPolicyAvailable = (): boolean => {
+    return Object.keys(this.props.walletStakingState.stakePolicies).length > 0
   }
 
   /** Return the best APY found, defaulting to 1 decimal place, rounding to the
@@ -601,7 +598,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   render() {
     const { wallet, isEmpty, searching, theme, tokenId, navigation } = this.props
-    const showStakedBalance = this.isStakingAvailable()
+    const showStakedBalance = this.isStakingPolicyAvailable()
     const styles = getStyles(theme)
 
     return (
@@ -731,13 +728,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
-  },
-  stakingButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: theme.rem(3),
-    paddingRight: theme.rem(1)
   },
 
   // TODO: Fix SceneHeader to be UI4 compatible

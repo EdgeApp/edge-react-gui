@@ -162,9 +162,7 @@ export const getBestApyText = (stakePolicies?: StakePolicy[]): string | undefine
 /**
  * Returns true if staking is supported for the given currency code and
  * pluginId.
- * NOTE: currencyCode is ONLY checked against 'FIO'!
  */
-export const isStakingSupported = (pluginId: string, currencyCode: string): boolean => {
-  // Special case for FIO because it uses it's own staking plugin
-  return currencyCode.toUpperCase() === 'FIO' || SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true
+export const isStakingSupported = (pluginId: string): boolean => {
+  return SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true
 }

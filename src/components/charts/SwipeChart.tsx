@@ -1,5 +1,5 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
-import { asArray, asEither, asNumber, asObject, asString, asTuple } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asString, asTuple } from 'cleaners'
 import * as React from 'react'
 import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -14,9 +14,9 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { showWarning } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
@@ -52,8 +52,6 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
   market_caps: asArray(asCoinGeckoDataPair),
   total_volumes: asArray(asCoinGeckoDataPair)
 })
-
-const asCoinGeckoMarketApi = asEither(asCoinGeckoMarketChartRange, asCoinGeckoError)
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
@@ -130,7 +128,7 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode, fiatCurrencyCode } = params
+  const { assetId, fiatCurrencyCode } = params
 
   // #region Chart setup
 
@@ -190,59 +188,57 @@ const SwipeChartComponent = (params: Props) => {
           sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
         }
 
-        try {
-          if (cachedChartData != null) {
-            // The chart price line animation is slow when transitioning directly
-            // between datasets.
-            // Add a delay so the component can get re-mounted with fresh data
-            // instead.
-            setTimeout(() => {
-              setChartData(cachedChartData)
-              setIsLoading(false)
-              delayShowMinMaxLabels()
-            }, 10)
-          } else {
-            const unixNow = Math.trunc(new Date().getTime() / 1000)
-            const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
-            // Start with the free base URL
-            let fetchUrl = `${COINGECKO_URL}${fetchPath}`
-            do {
-              // Construct the dataset query
-              const response = await fetch(fetchUrl)
-              const result = await response.json()
-              const marketChartRange = asCoinGeckoMarketApi(result)
-              if ('status' in marketChartRange) {
-                if (marketChartRange.status.error_code === 429) {
-                  // Rate limit error, use our API key as a fallback
-                  if (!fetchUrl.includes('x_cg_pro_api_key')) {
-                    fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
-                    continue
-                  }
-                } else {
-                  throw new Error(JSON.stringify(marketChartRange))
+        if (cachedChartData != null) {
+          // The chart price line animation is slow when transitioning directly
+          // between datasets.
+          // Add a delay so the component can get re-mounted with fresh data
+          // instead.
+          setTimeout(() => {
+            setChartData(cachedChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+          }, 10)
+        } else {
+          const unixNow = Math.trunc(new Date().getTime() / 1000)
+          const fromParam = unixNow - queryFromTimeOffset
+          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
+          // Start with the free base URL
+          let fetchUrl = `${COINGECKO_URL}${fetchPath}`
+          do {
+            // Construct the dataset query
+            const response = await fetch(fetchUrl)
+            const result = await response.json()
+            const apiError = asMaybe(asCoinGeckoError)(result)
+            if (apiError != null) {
+              if (apiError.status.error_code === 429) {
+                // Rate limit error, use our API key as a fallback
+                if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
+                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                 }
-              } else {
-                const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-                  return {
-                    x: new Date(rawDataPoint[0]),
-                    y: rawDataPoint[1]
-                  }
-                })
-                const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
-
-                setChartData(reducedChartData)
-                cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-                setCachedChartData(cachedTimespanChartData)
-                setIsLoading(false)
-                delayShowMinMaxLabels()
-                break
+                // Wait 2 second before retrying. It typically takes 1 minute
+                // before rate limiting is relieved, so even 2 seconds is hasty.
+                await snooze(2000)
+                continue
               }
-            } while (true)
-          }
-        } catch (e: any) {
-          showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-          console.error(JSON.stringify(e))
+              throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
+            }
+
+            const marketChartRange = asCoinGeckoMarketChartRange(result)
+            const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+              return {
+                x: new Date(rawDataPoint[0]),
+                y: rawDataPoint[1]
+              }
+            })
+            const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+            setChartData(reducedChartData)
+            cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+            setCachedChartData(cachedTimespanChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+            break
+          } while (true)
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -34,7 +34,7 @@ export const asEnvConfig = asObject({
   EDGE_API_KEY: asOptional(asString, ''),
   EDGE_API_SECRET: asOptional(asBase16),
 
-  COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
+  COINGECKO_API_KEY: asOptional(asString, ''),
   IP_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
   SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'SENTRY_MAP_UPLOAD_URL'),
