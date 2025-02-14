@@ -21,7 +21,7 @@ PODS:
     - React-Core
   - edge-currency-plugins (3.5.2):
     - React-Core
-  - edge-exchange-plugins (2.17.2):
+  - edge-exchange-plugins (2.18.0):
     - React-Core
   - edge-login-ui-rn (3.24.2):
     - React-Core
@@ -1079,11 +1079,11 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   edge-core-js: 9457be815c595440b6a95fd636975d5e3f99fa68
   edge-currency-accountbased: 62297eb8a165620d0d3b51b0b189e9f6c47c5a2a
   edge-currency-plugins: cf6f94db7b7d90f9edbc038c698958e584a0cde9
-  edge-exchange-plugins: ec9d76794f713456713e1a712f3f209e68a3ab59
+  edge-exchange-plugins: bd9bc9e56c3040d092cd0a758868d6d6f1723573
   edge-login-ui-rn: 265894d316c33e5ab117ac3a52c22e73ad390514
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
@@ -1101,7 +1101,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
   FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
