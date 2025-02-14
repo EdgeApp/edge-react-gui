@@ -522,7 +522,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   isStakingPolicyAvailable = (): boolean => {
-    return Object.keys(this.props.walletStakingState.stakePolicies).length > 0
+    return (
+      Object.keys(this.props.walletStakingState.stakePolicies).length > 0 ||
+      // FIO was the first staking-enabled currency and doesn't use staking policies yet
+      this.props.wallet.currencyInfo.pluginId === 'fio'
+    )
   }
 
   /** Return the best APY found, defaulting to 1 decimal place, rounding to the
