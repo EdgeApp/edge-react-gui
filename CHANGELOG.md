@@ -2,8 +2,6 @@
 
 ## Unreleased (develop)
 
-- added: Added TRUMP and MELANIA purchases through Simplex
-
 ## 4.22.0 (staging)
 
 - added: `NotificationCenterScene`
@@ -11,6 +9,7 @@
 - added: Buy, Sell, Earn, and Trade buttons to `CoinRankingDetailsScene`
 - added: Price chart to `TransactionListScene`
 - added: Add Unizen DEX
+- added: Added TRUMP and MELANIA purchases through Simplex
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
 - changed: All floating `NotificationCard`s are dismissible
 - changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
