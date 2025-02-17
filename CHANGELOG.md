@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Add Abstract ETH Layer 2 support
+
 ## 4.22.0 (staging)
 
 - added: `NotificationCenterScene`
