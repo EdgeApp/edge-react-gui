@@ -17,6 +17,11 @@
 - fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
 - fixed: Transaction metadata loading bugs.
 
+## 4.21.2 (2025-02-05)
+
+- changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
+- fixed: Missing new-transaction notifications.
+
 ## 4.21.1 (2025-01-28)
 
 - changed: (Solana) Implement transaction broadcast retry logic
