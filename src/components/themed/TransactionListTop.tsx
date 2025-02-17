@@ -33,7 +33,7 @@ import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
+import { getBestApyText, getFioStakingBalances, getPluginFromPolicy, getPositionAllocations, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { convertNativeToDenomination, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
@@ -66,7 +66,7 @@ const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
 ]
 
 interface OwnProps {
-  navigation: WalletsTabSceneProps<'transactionList'>['navigation']
+  navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
 
   isLightAccount: boolean
 
@@ -77,8 +77,6 @@ interface OwnProps {
   // Scene state:
   isEmpty: boolean
   searching: boolean
-  onSearchingChange: (isSearching: boolean) => void
-  onSearchTextChange: (searchString: string) => void
 }
 
 interface StateProps {
@@ -102,7 +100,6 @@ interface DispatchProps {
 
 interface State {
   countryCode: string | undefined
-  input: string
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -111,8 +108,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   constructor(props: Props) {
     super(props)
     this.state = {
-      countryCode: undefined,
-      input: ''
+      countryCode: undefined
     }
   }
 
@@ -489,11 +485,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderButtons() {
-    const { theme } = this.props
+    const { theme, walletStakingState } = this.props
     const styles = getStyles(theme)
     const { countryCode } = this.state
-    const isStakingAvailable = this.isStakingAvailable()
-    const bestApy = this.getBestApy()
+
+    const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
+    const bestApyText = getBestApyText(Object.values(walletStakingState.stakePolicies))
 
     return (
       <View style={styles.buttonsContainer}>
@@ -503,14 +500,19 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         <IconButton label={lstrings.fragment_send_subtitle} onPress={this.handleSend}>
           <Ionicons name="arrow-up" size={theme.rem(2)} color={theme.primaryText} />
         </IconButton>
-        {this.props.walletStakingState.isLoading ? (
-          <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
-        ) : (
-          isStakingAvailable && (
-            <IconButton label={getUkCompliantString(countryCode, 'stake_earn_button_label')} onPress={this.handleStakePress} superscriptLabel={bestApy}>
+        {hideStaking ? null : (
+          <IconButton
+            disabled={this.props.walletStakingState.isLoading}
+            label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
+            onPress={this.handleStakePress}
+            superscriptLabel={bestApyText}
+          >
+            {this.props.walletStakingState.isLoading ? (
+              <ActivityIndicator color={theme.textLink} />
+            ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
-            </IconButton>
-          )
+            )}
+          </IconButton>
         )}
         <IconButton label={lstrings.trade_currency} onPress={this.handleTrade}>
           <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
@@ -519,15 +521,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  isStakingAvailable = (): boolean => {
-    const { currencyCode, wallet } = this.props
-    const { pluginId } = wallet.currencyInfo
-
-    const isStakingPolicyAvailable = Object.keys(this.props.walletStakingState.stakePolicies).length > 0
-
-    // Special case for FIO because it uses it's own staking plugin
-    const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && (isStakingPolicyAvailable || currencyCode === 'FIO')
-    return isStakingSupported
+  isStakingPolicyAvailable = (): boolean => {
+    return (
+      Object.keys(this.props.walletStakingState.stakePolicies).length > 0 ||
+      // FIO was the first staking-enabled currency and doesn't use staking policies yet
+      this.props.wallet.currencyInfo.pluginId === 'fio'
+    )
   }
 
   /** Return the best APY found, defaulting to 1 decimal place, rounding to the
@@ -541,18 +540,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     const precision = Math.log10(bestApy) > 1 ? 0 : -1
     return round(bestApy.toString(), precision) + '%'
-  }
-
-  handleOnChangeText = (input: string) => {
-    this.setState({ input })
-  }
-
-  handleTextFieldFocus = () => {
-    this.props.onSearchingChange(true)
-  }
-
-  handleTextFieldBlur = () => {
-    this.props.onSearchTextChange(this.state.input)
   }
 
   handleRequest = (): void => {
@@ -615,7 +602,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   render() {
     const { wallet, isEmpty, searching, theme, tokenId, navigation } = this.props
-    const isStakingAvailable = this.isStakingAvailable()
+    const showStakedBalance = this.isStakingPolicyAvailable()
     const styles = getStyles(theme)
 
     return (
@@ -624,7 +611,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <>
             <EdgeCard paddingRem={1}>
               {this.renderBalanceBox()}
-              {isStakingAvailable && this.renderStakedBalance()}
+              {!showStakedBalance ? null : this.renderStakedBalance()}
             </EdgeCard>
             {this.renderButtons()}
           </>
@@ -715,13 +702,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.textLink,
     fontFamily: theme.fontFaceMedium
   },
-  apyText: {
-    fontSize: theme.rem(0.75),
-    color: theme.textLink,
-    fontFamily: theme.fontFaceMedium,
-    marginTop: theme.rem(-0.5),
-    marginLeft: theme.rem(0.25)
-  },
 
   // Trade modal
   dualIconContainer: {
@@ -752,13 +732,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
-  },
-  stakingButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: theme.rem(3),
-    paddingRight: theme.rem(1)
   },
 
   // TODO: Fix SceneHeader to be UI4 compatible

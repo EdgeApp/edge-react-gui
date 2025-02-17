@@ -38,7 +38,7 @@ export type WalletListMenuKey =
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
-  navigation: WalletsTabSceneProps<'walletList' | 'transactionList'>['navigation'],
+  navigation: WalletsTabSceneProps<'walletList' | 'walletDetails'>['navigation'],
   walletId: string,
   option: WalletListMenuKey,
   tokenId: EdgeTokenId,
@@ -292,7 +292,7 @@ export function walletListMenuAction(
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
 
-        navigation.navigate('transactionList', {
+        navigation.navigate('walletDetails', {
           walletId,
           tokenId: null,
           walletName: getWalletName(wallet)

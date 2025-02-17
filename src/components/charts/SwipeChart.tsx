@@ -1,7 +1,7 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
-import { asArray, asEither, asNumber, asObject, asString, asTuple } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asString, asTuple } from 'cleaners'
 import * as React from 'react'
-import { LayoutChangeEvent, Platform, View } from 'react-native'
+import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated'
 import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
@@ -14,9 +14,9 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { showWarning } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
@@ -25,7 +25,8 @@ type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
 type CoinGeckoDataPair = number[]
 
 interface Props {
-  assetId: string // The asset's 'id' as defined by CoinGecko
+  /** The asset's 'id' as defined by CoinGecko */
+  assetId: string
   currencyCode: string
   fiatCurrencyCode: string
 }
@@ -51,8 +52,6 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
   market_caps: asArray(asCoinGeckoDataPair),
   total_volumes: asArray(asCoinGeckoDataPair)
 })
-
-const asCoinGeckoMarketApi = asEither(asCoinGeckoMarketChartRange, asCoinGeckoError)
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
@@ -129,7 +128,7 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode, fiatCurrencyCode } = params
+  const { assetId, fiatCurrencyCode } = params
 
   // #region Chart setup
 
@@ -146,9 +145,6 @@ const SwipeChartComponent = (params: Props) => {
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const chartWidth = React.useRef(0)
-  const chartHeight = React.useRef(0)
-
   const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   // Min/Max Price Calcs
@@ -157,9 +153,7 @@ const SwipeChartComponent = (params: Props) => {
   const maxPrice = Math.max(...prices)
 
   const sMinPriceLabelX = useSharedValue(0)
-  const sMinPriceLabelY = useSharedValue(0)
   const sMaxPriceLabelX = useSharedValue(0)
-  const sMaxPriceLabelY = useSharedValue(0)
 
   const sMinPriceString = useSharedValue(``)
   const sMaxPriceString = useSharedValue(``)
@@ -168,6 +162,14 @@ const SwipeChartComponent = (params: Props) => {
 
   const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
   const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
+
+  // The chart component defaults to the phone width.
+  // To fit the chart into its parent view,
+  // we measure the parent and pass that width in.
+  // The chart will freeze the whole app if the width is too narrow,
+  // so start with the window width:
+  const [chartWidth, setChartWidth] = React.useState(Dimensions.get('window').width)
+  const chartHeight = theme.rem(CHART_HEIGHT_REM)
 
   // Fetch/cache chart data, set shared animation transition values
   useAsyncEffect(
@@ -186,59 +188,57 @@ const SwipeChartComponent = (params: Props) => {
           sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
         }
 
-        try {
-          if (cachedChartData != null) {
-            // The chart price line animation is slow when transitioning directly
-            // between datasets.
-            // Add a delay so the component can get re-mounted with fresh data
-            // instead.
-            setTimeout(() => {
-              setChartData(cachedChartData)
-              setIsLoading(false)
-              delayShowMinMaxLabels()
-            }, 10)
-          } else {
-            const unixNow = Math.trunc(new Date().getTime() / 1000)
-            const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
-            // Start with the free base URL
-            let fetchUrl = `${COINGECKO_URL}${fetchPath}`
-            do {
-              // Construct the dataset query
-              const response = await fetch(fetchUrl)
-              const result = await response.json()
-              const marketChartRange = asCoinGeckoMarketApi(result)
-              if ('status' in marketChartRange) {
-                if (marketChartRange.status.error_code === 429) {
-                  // Rate limit error, use our API key as a fallback
-                  if (!fetchUrl.includes('x_cg_pro_api_key')) {
-                    fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
-                    continue
-                  }
-                } else {
-                  throw new Error(JSON.stringify(marketChartRange))
+        if (cachedChartData != null) {
+          // The chart price line animation is slow when transitioning directly
+          // between datasets.
+          // Add a delay so the component can get re-mounted with fresh data
+          // instead.
+          setTimeout(() => {
+            setChartData(cachedChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+          }, 10)
+        } else {
+          const unixNow = Math.trunc(new Date().getTime() / 1000)
+          const fromParam = unixNow - queryFromTimeOffset
+          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
+          // Start with the free base URL
+          let fetchUrl = `${COINGECKO_URL}${fetchPath}`
+          do {
+            // Construct the dataset query
+            const response = await fetch(fetchUrl)
+            const result = await response.json()
+            const apiError = asMaybe(asCoinGeckoError)(result)
+            if (apiError != null) {
+              if (apiError.status.error_code === 429) {
+                // Rate limit error, use our API key as a fallback
+                if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
+                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                 }
-              } else {
-                const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-                  return {
-                    x: new Date(rawDataPoint[0]),
-                    y: rawDataPoint[1]
-                  }
-                })
-                const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
-
-                setChartData(reducedChartData)
-                cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-                setCachedChartData(cachedTimespanChartData)
-                setIsLoading(false)
-                delayShowMinMaxLabels()
-                break
+                // Wait 2 second before retrying. It typically takes 1 minute
+                // before rate limiting is relieved, so even 2 seconds is hasty.
+                await snooze(2000)
+                continue
               }
-            } while (true)
-          }
-        } catch (e: any) {
-          showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-          console.error(JSON.stringify(e))
+              throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
+            }
+
+            const marketChartRange = asCoinGeckoMarketChartRange(result)
+            const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+              return {
+                x: new Date(rawDataPoint[0]),
+                y: rawDataPoint[1]
+              }
+            })
+            const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+            setChartData(reducedChartData)
+            cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+            setCachedChartData(cachedTimespanChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+            break
+          } while (true)
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -293,14 +293,15 @@ const SwipeChartComponent = (params: Props) => {
 
   // A delayed fadein for the max/min labels, to ensure the labels don't get
   // rendered before the price line. Also hidden when gesture is active
+  const minPriceLabelY = Platform.OS === 'ios' ? chartHeight - theme.rem(2.5) : chartHeight - theme.rem(2.75)
   const aMinLabelStyle = useAnimatedStyle(() => ({
     left: sMinPriceLabelX.value,
-    top: sMinPriceLabelY.value,
+    top: minPriceLabelY,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
   const aMaxLabelStyle = useAnimatedStyle(() => ({
     left: sMaxPriceLabelX.value,
-    top: sMaxPriceLabelY.value,
+    top: 0,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
 
@@ -346,6 +347,10 @@ const SwipeChartComponent = (params: Props) => {
 
   // #region Handlers
 
+  const handleLayout = useHandler((event: LayoutChangeEvent) => {
+    setChartWidth(event.nativeEvent.layout.width)
+  })
+
   const handleGradient = useHandler((props: GradientProps) => {
     return (
       <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" {...props}>
@@ -353,16 +358,6 @@ const SwipeChartComponent = (params: Props) => {
         <Stop stopColor={theme.iconTappable} offset="100%" stopOpacity="0" />
       </LinearGradient>
     )
-  })
-
-  /**
-   * Handle the layout event on the chart, set the min price label Y value.
-   */
-  const handleSetChartDimensions = useHandler((event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout
-    chartWidth.current = width
-    chartHeight.current = height
-    sMinPriceLabelY.value = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
   })
 
   /**
@@ -426,7 +421,7 @@ const SwipeChartComponent = (params: Props) => {
   const setMinMaxLabelsX = (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) => (layoutChangeEvent: LayoutChangeEvent) => {
     if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null && minPriceDataPoint != null && chartData != null && priceDatapoint != null) {
       const xIndex = chartData.indexOf(priceDatapoint)
-      const xPosition = (chartWidth.current / (chartData.length - 1)) * xIndex
+      const xPosition = (chartWidth / (chartData.length - 1)) * xIndex
       const labelWidth = layoutChangeEvent.nativeEvent.layout.width
       const isRightJustified = xPosition > chartData.length / 2
 
@@ -526,7 +521,7 @@ const SwipeChartComponent = (params: Props) => {
 
   // Main Render
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={handleLayout}>
       {/* Timespan control bar */}
       <View style={styles.controlBar}>
         {renderTimespanButton(lstrings.coin_rank_hour, 'hour', handleSetTimespanH)}
@@ -538,7 +533,7 @@ const SwipeChartComponent = (params: Props) => {
 
       {/* Chart */}
       {chartData.length === 0 || isLoading ? (
-        <View style={styles.loader} onLayout={handleSetChartDimensions}>
+        <View style={styles.loader}>
           <FillLoader />
         </View>
       ) : (
@@ -546,14 +541,16 @@ const SwipeChartComponent = (params: Props) => {
           <SlideAreaChart
             data={chartData}
             animated
-            height={theme.rem(11)}
+            height={theme.rem(CHART_HEIGHT_REM)}
+            width={chartWidth}
             chartLineColor={theme.iconTappable}
             chartLineWidth={1.5}
             renderFillGradient={handleGradient}
+            // Create space for our min label:
             paddingBottom={theme.rem(1.5)}
-            // Price line has weird uneven margins when unadjusted
-            paddingRight={theme.rem(2)}
-            paddingLeft={theme.rem(-0.5)}
+            // The default padding is 8, which we don't want:
+            paddingRight={0}
+            paddingLeft={0}
             yRange={chartYRange}
             xScale="linear"
             yAxisProps={Y_AXIS_PROPS}
@@ -603,6 +600,8 @@ const SwipeChartComponent = (params: Props) => {
   // #endregion Components
 }
 
+const CHART_HEIGHT_REM = 11
+
 const getStyles = cacheStyles((theme: Theme) => {
   return {
     baseChart: {
@@ -615,7 +614,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       position: 'absolute'
     },
     container: {
-      margin: theme.rem(0.5)
+      margin: theme.rem(0.5),
+      // The chart starts off at the phone width,
+      // so hide the extra until we can adjust the layout:
+      overflow: 'hidden'
     },
     controlBar: {
       justifyContent: 'center',
@@ -627,7 +629,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     loader: {
       marginTop: theme.rem(0),
-      height: theme.rem(11)
+      height: theme.rem(CHART_HEIGHT_REM)
     },
     label: {
       color: theme.primaryText,

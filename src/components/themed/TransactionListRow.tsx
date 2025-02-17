@@ -18,6 +18,7 @@ import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import {
@@ -31,6 +32,7 @@ import {
   unixToLocaleDateTime
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionView } from '../layout/SectionView'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -40,13 +42,14 @@ interface Props {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
   transaction: EdgeTransaction
+  noCard?: boolean
 }
 
 export function TransactionListRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { navigation, wallet, transaction } = props
+  const { navigation, wallet, transaction, noCard } = props
   const { metadata = {}, currencyCode, tokenId } = transaction
   const currencyInfo = wallet.currencyInfo
 
@@ -60,8 +63,7 @@ export function TransactionListRow(props: Props) {
   const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const rateKey = `${currencyCode}_${defaultIsoFiat}`
-  const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
+  const exchangeRate: string = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({
@@ -175,7 +177,33 @@ export function TransactionListRow(props: Props) {
   })
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
-  return (
+  return noCard ? (
+    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
+      <View style={styles.row}>
+        {icon}
+        <View style={styles.cardlessView}>
+          <EdgeText style={styles.dateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
+          <View style={styles.row}>
+            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
+              {name}
+            </EdgeText>
+            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
+          </View>
+          <View style={styles.row}>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              {unconfirmedOrTimeText}
+            </EdgeText>
+            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+          </View>
+          {categoryText == null ? null : (
+            <View style={styles.row}>
+              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+            </View>
+          )}
+        </View>
+      </View>
+    </EdgeTouchableOpacity>
+  ) : (
     <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
@@ -191,18 +219,23 @@ export function TransactionListRow(props: Props) {
             </EdgeText>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
           </View>
+          {categoryText == null ? null : (
+            <View style={styles.row}>
+              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+            </View>
+          )}
         </>
-        {categoryText == null ? null : (
-          <View style={styles.row}>
-            <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
-          </View>
-        )}
       </SectionView>
     </EdgeCard>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  cardlessView: {
+    flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1
+  },
   icon: {
     // Shadow styles for Android
     textShadowColor: 'rgba(0, 0, 0, 0.7)',
@@ -263,6 +296,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(0.5)
+  },
+  dateText: {
+    fontSize: theme.rem(0.75),
+    marginLeft: theme.rem(0.5),
+    color: theme.deactivatedText
   },
   titleText: {
     alignSelf: 'center',

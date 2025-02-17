@@ -102,6 +102,7 @@ import { ManageTokensScene as ManageTokensSceneComponent } from './scenes/Manage
 import { MigrateWalletCalculateFeeScene as MigrateWalletCalculateFeeSceneComponent } from './scenes/MigrateWalletCalculateFeeScene'
 import { MigrateWalletCompletionScene as MigrateWalletCompletionSceneComponent } from './scenes/MigrateWalletCompletionScene'
 import { MigrateWalletSelectCryptoScene as MigrateWalletSelectCryptoSceneComponent } from './scenes/MigrateWalletSelectCryptoScene'
+import { NotificationCenterScene as NotificationCenterSceneComponent } from './scenes/NotificationCenterScene'
 import { NotificationScene as NotificationSceneComponent } from './scenes/NotificationScene'
 import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
@@ -128,6 +129,7 @@ import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './s
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
+import { WalletDetails as WalletDetailsComponent } from './scenes/WalletDetailsScene'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
@@ -197,6 +199,7 @@ const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingScene
 const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
+const NotificationCenterScene = ifLoggedIn(NotificationCenterSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
@@ -218,6 +221,7 @@ const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
 const SwapSuccessScene = ifLoggedIn(SwapSuccessSceneComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
+const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
@@ -274,6 +278,13 @@ const EdgeWalletsTabScreen = () => {
         component={TransactionList}
         options={{
           headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
+        }}
+      />
+      <WalletsStack.Screen
+        name="walletDetails"
+        component={WalletDetails}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'walletDetails'> fromParams={params => params.walletName} />
         }}
       />
     </WalletsStack.Navigator>
@@ -705,6 +716,13 @@ const EdgeAppStack = () => {
       />
       <AppStack.Screen name="migrateWalletSelectCrypto" component={MigrateWalletSelectCryptoScene} />
       <AppStack.Screen
+        name="notificationCenter"
+        component={NotificationCenterScene}
+        options={{
+          title: lstrings.settings_notifications
+        }}
+      />
+      <AppStack.Screen
         name="notificationSettings"
         component={NotificationScene}
         options={{
@@ -779,6 +797,13 @@ const EdgeAppStack = () => {
         component={TransactionDetailsScene}
         options={{
           headerTitle: () => <TransactionDetailsTitle />
+        }}
+      />
+      <WalletsStack.Screen
+        name="transactionList"
+        component={TransactionList}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} />
         }}
       />
       <AppStack.Screen

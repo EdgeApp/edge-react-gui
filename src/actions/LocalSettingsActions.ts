@@ -1,14 +1,43 @@
 import { EdgeAccount } from 'edge-core-js'
+import React from 'react'
+import { makeEvent } from 'yavent'
 
 import { showError } from '../components/services/AirshipInstance'
 import { ThunkAction } from '../types/reduxTypes'
-import { AccountNotifDismissInfo, asLocalAccountSettings, LocalAccountSettings, PasswordReminder, SpendingLimits } from '../types/types'
+import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, NotifState, PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
+const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
+watchAccountSettings(s => {
+  localAccountSettings = s
+})
 
 export const getLocalAccountSettings = (): LocalAccountSettings => localAccountSettings
+
+export function useAccountSettings() {
+  const [, setAccountSettings] = React.useState(getLocalAccountSettings())
+  React.useEffect(() => watchAccountSettings(setAccountSettings), [])
+  return getLocalAccountSettings()
+}
+
+/**
+ * Returns a notification indicator number for the badge:
+ * - undefined: no badge (all notifications completed)
+ * - 0: show dot (has ANY priority notifications)
+ * - number: show count (has ONLY non-priority notifications)
+ */
+export function useNotifCount(): number | undefined {
+  const { notifState } = useAccountSettings()
+  return React.useMemo(() => {
+    const priorityCount = Object.values(notifState).filter(notifInfo => notifInfo.isPriority && !notifInfo.isCompleted).length
+    const incompleteCount = Object.values(notifState).filter(notifInfo => !notifInfo.isCompleted).length
+
+    return priorityCount === 0 && incompleteCount === 0 ? undefined : priorityCount > 0 ? 0 : incompleteCount
+  }, [notifState])
+}
 
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -66,41 +95,41 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
   }
 }
 
-const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
+const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder): Promise<LocalAccountSettings> =>
   await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, passwordReminder }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 
-const writeAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
+const writeAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, isAccountBalanceVisible }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeDeveloperModeSetting = async (account: EdgeAccount, developerModeOn: boolean) => {
+const writeDeveloperModeSetting = async (account: EdgeAccount, developerModeOn: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, developerModeOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolean) => {
+const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spamFilterOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean) => {
+export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, contactsPermissionShown }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits): Promise<LocalAccountSettings> => {
   return await readLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spendingLimits }
     const out = writeLocalAccountSettings(account, updatedSettings)
@@ -110,12 +139,29 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
 }
 
 /**
- * Track the state of whether particular one-time notifications associated with
- * the account were interacted with or dismissed.
+ * Manage the state of account notifications, used by both `NotificationView` and
+ * `NotificationCenterScene`
  **/
-export const writeNotifDismissInfo = async (account: EdgeAccount, accountNotifDismissInfo: AccountNotifDismissInfo) => {
-  const updatedSettings = { ...localAccountSettings, accountNotifDismissInfo }
-  return await writeLocalAccountSettings(account, updatedSettings)
+const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState): Promise<LocalAccountSettings> => {
+  return await readLocalAccountSettings(account).then(async settings => {
+    return await writeLocalAccountSettings(account, { ...settings, notifState })
+  })
+}
+
+/**
+ * Overwrite the values of account notifications or create new values per specific
+ * `notifState` key
+ **/
+export const writeAccountNotifInfo = async (
+  account: EdgeAccount,
+  accountNotifStateKey: string,
+  notifInfo: Partial<NotifInfo>
+): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
+  return await writeAccountNotifState(account, {
+    ...settings.notifState,
+    [accountNotifStateKey]: { ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
+  })
 }
 
 /**
@@ -123,11 +169,12 @@ export const writeNotifDismissInfo = async (account: EdgeAccount, accountNotifDi
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.
  */
-export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string) => {
+export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string): Promise<LocalAccountSettings> => {
+  const settings = getLocalAccountSettings()
   // Use a Set to ensure there's no duplicates when adding to this info
   const updatedSettings = {
-    ...localAccountSettings,
-    tokenWarningsShown: Array.from(new Set([...localAccountSettings.tokenWarningsShown, pluginId]))
+    ...settings,
+    tokenWarningsShown: Array.from(new Set([...settings.tokenWarningsShown, pluginId]))
   }
 
   return await writeLocalAccountSettings(account, updatedSettings)
@@ -138,16 +185,20 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
     const settings = asLocalAccountSettings(json)
-    localAccountSettings = settings
+    emitAccountSettings(settings)
     return settings
   } catch (e) {
     const defaults = asLocalAccountSettings({})
-    return await writeLocalAccountSettings(account, defaults).then(() => defaults)
+    return await writeLocalAccountSettings(account, defaults)
   }
 }
 
-export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
-  localAccountSettings = asLocalAccountSettings(settings)
+export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings): Promise<LocalAccountSettings> => {
+  // Refresh cache, notify callers
+  emitAccountSettings(settings)
+
   const text = JSON.stringify(settings)
-  return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+
+  return settings
 }

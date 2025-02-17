@@ -2,7 +2,20 @@
 
 ## Unreleased (develop)
 
+## 4.22.0 (staging)
+
+- added: `NotificationCenterScene`
+- added: Search bar to `EarnScene`
+- added: Buy, Sell, Earn, and Trade buttons to `CoinRankingDetailsScene`
+- added: Price chart to `TransactionListScene`
 - added: Add Unizen DEX
+- added: Added TRUMP and MELANIA purchases through Simplex
+- changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
+- changed: All floating `NotificationCard`s are dismissible
+- changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
+- fixed: Show correct staked balance for deprecated Velodrome pools
+- fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
+- fixed: Transaction metadata loading bugs.
 
 ## 4.21.2 (2025-02-05)
 
