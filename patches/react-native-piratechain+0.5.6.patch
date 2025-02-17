@@ -1,0 +1,151 @@
+diff --git a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/BlockDao.swift b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/BlockDao.swift
+index 2a8b988..300e43a 100644
+--- a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/BlockDao.swift
++++ b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/BlockDao.swift
+@@ -24,10 +24,10 @@ struct Block: Codable {
+     }
+ 
+     enum TableStructure {
+-        static let height = Expression<Int>(Block.CodingKeys.height.rawValue)
+-        static let hash = Expression<Blob>(Block.CodingKeys.hash.rawValue)
+-        static let time = Expression<Int>(Block.CodingKeys.time.rawValue)
+-        static let saplingTree = Expression<Blob>(Block.CodingKeys.saplingTree.rawValue)
++        static let height = SQLite.Expression<Int>(Block.CodingKeys.height.rawValue)
++        static let hash = SQLite.Expression<Blob>(Block.CodingKeys.hash.rawValue)
++        static let time = SQLite.Expression<Int>(Block.CodingKeys.time.rawValue)
++        static let saplingTree = SQLite.Expression<Blob>(Block.CodingKeys.saplingTree.rawValue)
+     }
+ 
+     let height: BlockHeight
+@@ -41,7 +41,7 @@ struct Block: Codable {
+ class BlockSQLDAO: BlockDao {
+     let dbProvider: ConnectionProvider
+     let table: Table
+-    let height = Expression<Int>("height")
++    let height = SQLite.Expression<Int>("height")
+ 
+     init(dbProvider: ConnectionProvider) {
+         self.dbProvider = dbProvider
+diff --git a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/TransactionDao.swift b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/TransactionDao.swift
+index a0a261d..4862204 100644
+--- a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/TransactionDao.swift
++++ b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/TransactionDao.swift
+@@ -10,8 +10,8 @@ import SQLite
+ 
+ class TransactionSQLDAO: TransactionRepository {
+     enum NotesTableStructure {
+-        static let transactionID = Expression<Int>("tx")
+-        static let memo = Expression<Blob>("memo")
++        static let transactionID = SQLite.Expression<Int>("tx")
++        static let memo = SQLite.Expression<Blob>("memo")
+     }
+ 
+     let dbProvider: ConnectionProvider
+diff --git a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/UnspentTransactionOutputDao.swift b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/UnspentTransactionOutputDao.swift
+index 2ba6e46..2224006 100644
+--- a/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/UnspentTransactionOutputDao.swift
++++ b/node_modules/react-native-piratechain/ios/PirateLightClientKit/DAO/UnspentTransactionOutputDao.swift
+@@ -69,14 +69,14 @@ extension UnspentTransactionOutputEntity {
+ import SQLite
+ class UnspentTransactionOutputSQLDAO: UnspentTransactionOutputRepository {
+     enum TableColumns {
+-        static let id = Expression<Int>("id_utxo")
+-        static let address = Expression<String>("address")
+-        static let txid = Expression<Blob>("prevout_txid")
+-        static let index = Expression<Int>("prevout_idx")
+-        static let script = Expression<Blob>("script")
+-        static let valueZat = Expression<Int>("value_zat")
+-        static let height = Expression<Int>("height")
+-        static let spentInTx = Expression<Int?>("spent_in_tx")
++        static let id = SQLite.Expression<Int>("id_utxo")
++        static let address = SQLite.Expression<String>("address")
++        static let txid = SQLite.Expression<Blob>("prevout_txid")
++        static let index = SQLite.Expression<Int>("prevout_idx")
++        static let script = SQLite.Expression<Blob>("script")
++        static let valueZat = SQLite.Expression<Int>("value_zat")
++        static let height = SQLite.Expression<Int>("height")
++        static let spentInTx = SQLite.Expression<Int?>("spent_in_tx")
+     }
+ 
+     let table = Table("utxos")
+diff --git a/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/AccountEntity.swift b/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/AccountEntity.swift
+index 2f89777..5d4c82a 100644
+--- a/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/AccountEntity.swift
++++ b/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/AccountEntity.swift
+@@ -47,8 +47,8 @@ protocol AccountRepository {
+ 
+ class AccountSQDAO: AccountRepository {
+     enum TableColums {
+-        static let account = Expression<Int>("account")
+-        static let extfvk = Expression<String>("ufvk")
++        static let account = SQLite.Expression<Int>("account")
++        static let extfvk = SQLite.Expression<String>("ufvk")
+     }
+ 
+     let table = Table("accounts")
+diff --git a/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/TransactionEntity.swift b/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/TransactionEntity.swift
+index 544ae5f..2734b61 100644
+--- a/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/TransactionEntity.swift
++++ b/node_modules/react-native-piratechain/ios/PirateLightClientKit/Entity/TransactionEntity.swift
+@@ -99,15 +99,15 @@ public enum ZcashTransaction {
+ 
+ extension ZcashTransaction.Output {
+     enum Column {
+-        static let idTx = Expression<Int>("id_tx")
+-        static let pool = Expression<Int>("output_pool")
+-        static let index = Expression<Int>("output_index")
+-        static let toAccount = Expression<Int?>("to_account")
+-        static let fromAccount = Expression<Int?>("from_account")
+-        static let toAddress = Expression<String?>("to_address")
+-        static let value = Expression<Int64>("value")
+-        static let isChange = Expression<Bool>("is_change")
+-        static let memo = Expression<Blob?>("memo")
++        static let idTx = SQLite.Expression<Int>("id_tx")
++        static let pool = SQLite.Expression<Int>("output_pool")
++        static let index = SQLite.Expression<Int>("output_index")
++        static let toAccount = SQLite.Expression<Int?>("to_account")
++        static let fromAccount = SQLite.Expression<Int?>("from_account")
++        static let toAddress = SQLite.Expression<String?>("to_address")
++        static let value = SQLite.Expression<Int64>("value")
++        static let isChange = SQLite.Expression<Bool>("is_change")
++        static let memo = SQLite.Expression<Blob?>("memo")
+     }
+ 
+     init(row: Row) throws {
+@@ -143,21 +143,21 @@ extension ZcashTransaction.Output {
+ 
+ extension ZcashTransaction.Overview {
+     enum Column {
+-        static let accountId = Expression<Int>("account_id")
+-        static let id = Expression<Int>("id_tx")
+-        static let minedHeight = Expression<BlockHeight?>("mined_height")
+-        static let index = Expression<Int?>("tx_index")
+-        static let rawID = Expression<Blob>("txid")
+-        static let expiryHeight = Expression<BlockHeight?>("expiry_height")
+-        static let raw = Expression<Blob?>("raw")
+-        static let value = Expression<Int64>("account_balance_delta")
+-        static let fee = Expression<Int64?>("fee_paid")
+-        static let hasChange = Expression<Bool>("has_change")
+-        static let sentNoteCount = Expression<Int>("sent_note_count")
+-        static let receivedNoteCount = Expression<Int>("received_note_count")
+-        static let memoCount = Expression<Int>("memo_count")
+-        static let blockTime = Expression<Int64?>("block_time")
+-        static let expiredUnmined = Expression<Bool>("expired_unmined")
++        static let accountId = SQLite.Expression<Int>("account_id")
++        static let id = SQLite.Expression<Int>("id_tx")
++        static let minedHeight = SQLite.Expression<BlockHeight?>("mined_height")
++        static let index = SQLite.Expression<Int?>("tx_index")
++        static let rawID = SQLite.Expression<Blob>("txid")
++        static let expiryHeight = SQLite.Expression<BlockHeight?>("expiry_height")
++        static let raw = SQLite.Expression<Blob?>("raw")
++        static let value = SQLite.Expression<Int64>("account_balance_delta")
++        static let fee = SQLite.Expression<Int64?>("fee_paid")
++        static let hasChange = SQLite.Expression<Bool>("has_change")
++        static let sentNoteCount = SQLite.Expression<Int>("sent_note_count")
++        static let receivedNoteCount = SQLite.Expression<Int>("received_note_count")
++        static let memoCount = SQLite.Expression<Int>("memo_count")
++        static let blockTime = SQLite.Expression<Int64?>("block_time")
++        static let expiredUnmined = SQLite.Expression<Bool>("expired_unmined")
+     }
+ 
+     init(row: Row) throws {
