@@ -40,7 +40,7 @@ import { IconButton } from '../buttons/IconButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { CryptoIcon } from '../icons/CryptoIcon'
+import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -87,7 +87,7 @@ interface StateProps {
   dispatch: Dispatch
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
-  exchangeRate: string
+  exchangeRate: number
   exchangeRates: GuiExchangeRates
   isAccountBalanceVisible: boolean
   walletName: string
@@ -409,14 +409,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     // Fiat Balance Formatting
     const exchangeAmount = convertNativeToDenomination(exchangeDenomination.multiplier)(nativeBalance)
-    const fiatBalance = mul(exchangeAmount, exchangeRate)
-    const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
+    const fiatBalance = parseFloat(exchangeAmount) * exchangeRate
+    const fiatBalanceFormat = formatNumber(fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0, { toFixed: 2 })
 
     return (
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-            <CryptoIcon marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} walletId={wallet.id} />
+            <WalletIcon marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
@@ -783,7 +783,7 @@ export function TransactionListTop(props: OwnProps) {
       dispatch={dispatch}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
-      exchangeRate={isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? '0' : exchangeRate}
+      exchangeRate={isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? 0 : exchangeRate}
       isAccountBalanceVisible={isAccountBalanceVisible}
       exchangeRates={exchangeRates}
       toggleBalanceVisibility={handleBalanceVisibility}

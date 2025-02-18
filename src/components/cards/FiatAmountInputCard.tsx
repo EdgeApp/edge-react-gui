@@ -1,11 +1,10 @@
-import { div, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { DECIMAL_PRECISION, sanitizeDecimalAmount, truncateDecimals, zeroString } from '../../util/utils'
+import { sanitizeDecimalAmount, zeroString } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
 import { UnderlinedNumInputCard } from './UnderlinedNumInputCard'
@@ -46,10 +45,9 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
 
     // Clean localized fiat amount prior to biggystring ops
-    const calculatedNativeCryptoAmount = truncateDecimals(
-      destToFiatRate == null || destToFiatRate === '0' ? '0' : mul(destExchangeMultiplier, div(sanitizedFiatAmount ?? '0', destToFiatRate, DECIMAL_PRECISION)),
-      0
-    )
+    const calculatedNativeCryptoAmount = (
+      destToFiatRate == null || destToFiatRate === 0 ? 0 : parseInt(destExchangeMultiplier) * (parseFloat(sanitizedFiatAmount) ?? 0 / destToFiatRate)
+    ).toFixed(0)
 
     setNativeCryptoAmount(calculatedNativeCryptoAmount)
     if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(sanitizedFiatAmount)) onAmountChanged(sanitizedFiatAmount, calculatedNativeCryptoAmount)

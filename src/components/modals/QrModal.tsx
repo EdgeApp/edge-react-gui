@@ -33,7 +33,7 @@ export function QrModal(props: Props) {
       onCancel={handleCancel}
       underlay={<BlurView blurType={theme.isDark ? 'light' : 'dark'} style={StyleSheet.absoluteFill} />}
     >
-      <QrCode data={data} tokenId={tokenId} wallet={wallet} onPress={handleCancel} />
+      <QrCode data={data} tokenId={tokenId} pluginId={wallet.currencyInfo.pluginId} onPress={handleCancel} />
     </AirshipModal>
   )
 }

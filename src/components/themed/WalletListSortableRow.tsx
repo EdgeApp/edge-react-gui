@@ -71,7 +71,7 @@ function WalletListSortableRowComponent(props: Props) {
         </View>
       </EdgeTouchableOpacity>
       <View style={styles.iconContainer}>
-        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
+        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
       </View>
       <View style={styles.detailsContainer}>
         <View style={styles.detailsRow}>

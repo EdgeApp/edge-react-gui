@@ -18,7 +18,7 @@ interface GetCryptoTextParams {
   exchangeDenomination: EdgeDenomination
   nativeAmount: string
   currencyCode?: string
-  exchangeRate?: string
+  exchangeRate?: number
   fiatDenomination?: EdgeDenomination
   hideBalance?: boolean
 }
@@ -49,7 +49,7 @@ export const getCryptoText = ({
   const { multiplier: exchangeMultiplier } = exchangeDenomination
 
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
-  if (exchangeRate != null && fiatDenomination != null && parseFloat(exchangeRate) > 0) {
+  if (exchangeRate != null && fiatDenomination != null && exchangeRate > 0) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeMultiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,

@@ -144,12 +144,7 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
   return `${truncatedAmount} `
 }
 
-export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [pair: string]: string },
-  fromCurrencyCode: string,
-  toCurrencyCode: string,
-  amount: string
-): string => {
+export const convertCurrencyFromExchangeRates = (exchangeRates: GuiExchangeRates, fromCurrencyCode: string, toCurrencyCode: string, amount: string): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = mul(amount, rate)
@@ -226,18 +221,18 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 
 // multiplier / exchange rate / ( 1 / unit )
 // 100000000 / $16500 / (1/$0.001) = ~6 sats
-export const calculateSpamThreshold = (rate: string, denom: EdgeDenomination) => {
-  return div(div(denom.multiplier, rate), '1000')
+export const calculateSpamThreshold = (rate: number, denom: EdgeDenomination) => {
+  return div(div(denom.multiplier, rate.toString()), '1000')
 }
 
 export interface PrecisionAdjustParams {
-  exchangeSecondaryToPrimaryRatio: string
+  exchangeSecondaryToPrimaryRatio: number
   secondaryExchangeMultiplier: string
   primaryExchangeMultiplier: string
 }
 
 export function precisionAdjust(params: PrecisionAdjustParams): number {
-  const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
+  const { exchangeSecondaryToPrimaryRatio } = params
   const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
   if (isNaN(exchangeRateOrderOfMagnitude)) return 0

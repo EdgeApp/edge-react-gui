@@ -235,7 +235,7 @@ function getFiat(item: WalletListAssetItem, isoFiatCurrencyCode: string, exchang
   const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
 
   // Do the conversion:
-  return parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
+  return rate * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
 }
 
 /**

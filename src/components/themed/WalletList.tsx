@@ -57,7 +57,7 @@ export function WalletList(props: Props) {
 
     // Visuals:
     searchText,
-    showCreateWallet,
+    showCreateWallet = false,
     createWalletId,
     parentWalletId,
 
@@ -154,19 +154,19 @@ export function WalletList(props: Props) {
   }, [filteredWalletList, mostRecentWallets])
 
   // Assemble create-wallet rows:
-  const createWalletList: WalletCreateItem[] = React.useMemo(
-    () =>
-      filterWalletCreateItemListBySearchText(
-        getCreateWalletList(account, {
-          allowedAssets,
-          excludeAssets,
-          filteredWalletList,
-          filterActivation
-        }),
-        searchText
-      ),
-    [account, allowedAssets, excludeAssets, searchText, filteredWalletList, filterActivation]
-  )
+  const createWalletList: WalletCreateItem[] = React.useMemo(() => {
+    if (!showCreateWallet) return []
+
+    return filterWalletCreateItemListBySearchText(
+      getCreateWalletList(account, {
+        allowedAssets,
+        excludeAssets,
+        filteredWalletList,
+        filterActivation
+      }),
+      searchText
+    )
+  }, [account, allowedAssets, excludeAssets, filterActivation, filteredWalletList, searchText, showCreateWallet])
 
   // Merge the lists, filtering based on the search term:
   const walletList = React.useMemo<Array<WalletListItem | WalletCreateItem | string>>(() => {
@@ -176,9 +176,7 @@ export function WalletList(props: Props) {
     ]
 
     // Show the create-wallet list, filtered by the search term:
-    if (showCreateWallet) {
-      walletList.push(...createWalletList)
-    }
+    walletList.push(...createWalletList)
 
     // Show a flat list if we are searching, or have no recent wallets:
     if (searchText.length > 0 || recentWalletList.length === 0) {
@@ -194,7 +192,7 @@ export function WalletList(props: Props) {
       lstrings.wallet_list_modal_header_all,
       ...walletList
     ]
-  }, [createWalletList, filteredWalletList, parentWalletSection, recentWalletList, searchText, showCreateWallet])
+  }, [createWalletList, filteredWalletList, parentWalletSection, recentWalletList, searchText])
 
   // rendering -------------------------------------------------------------
 
