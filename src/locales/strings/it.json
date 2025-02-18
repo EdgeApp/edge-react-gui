@@ -537,7 +537,7 @@
   "string_first_bobevm_wallet_name": "I miei BOB",
   "string_first_algorand_wallet_name": "I miei Algorand",
   "string_first_zksync_wallet_name": "I miei zkSync",
-  "string_first_abstract_wallet_name": "My Abstract",
+  "string_first_abstract_wallet_name": "I miei Abstract",
   "string_first_sepolia_wallet_name": "I miei Sepolia",
   "my_crypto_wallet_name": "I miei %s",
   "string_help": "Aiuto",
