@@ -57,7 +57,7 @@ export const CurrencyView = (props: Props) => {
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
-  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} pluginId={pluginId} walletId={wallet.id} />
+  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
   const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
   const fiatBalanceText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />

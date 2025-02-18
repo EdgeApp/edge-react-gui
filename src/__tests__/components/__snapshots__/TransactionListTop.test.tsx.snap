@@ -90,69 +90,152 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           }
         }
       >
-        <View
-          style={
-            {
-              "height": 22,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 6,
-              "marginTop": 0,
-              "width": 22,
+        <View>
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={38}
+            bbWidth={38}
+            focusable={false}
+            height={38}
+            meetOrSlice={0}
+            minX={-8}
+            minY={-8}
+            style={
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "left": -8,
+                  "position": "absolute",
+                  "top": -8,
+                  "transform": [
+                    {
+                      "rotateZ": "-90deg",
+                    },
+                  ],
+                },
+                {
+                  "flex": 0,
+                  "height": 38,
+                  "width": 38,
+                },
+              ]
             }
-          }
-        >
+            vbHeight={38}
+            vbWidth={38}
+            width={38}
+          >
+            <RNSVGGroup
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+            >
+              <RNSVGCircle
+                cx={11}
+                cy={11}
+                fill={
+                  {
+                    "payload": 0,
+                    "type": 0,
+                  }
+                }
+                opacity={0}
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                    "strokeDasharray",
+                    "strokeLinecap",
+                  ]
+                }
+                r={13}
+                stroke={
+                  {
+                    "payload": 4278251938,
+                    "type": 0,
+                  }
+                }
+                strokeDasharray={
+                  [
+                    81.68140899333463,
+                    81.68140899333463,
+                  ]
+                }
+                strokeLinecap={1}
+                strokeWidth={4}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
           <View
             style={
               {
-                "backgroundColor": "#000000",
-                "borderRadius": 11,
-                "elevation": 0,
                 "height": 22,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
-                },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 6,
+                "marginTop": 0,
                 "width": 22,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "overflow": "hidden",
+                {
+                  "backgroundColor": "#000000",
+                  "borderRadius": 11,
+                  "elevation": 0,
+                  "height": 22,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
                   },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
+                  "width": 22,
+                }
               }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
+              <View
                 style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
-              />
+              >
+                <FastImageView
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -1063,69 +1146,152 @@ exports[`TransactionListTop should render 1`] = `
           }
         }
       >
-        <View
-          style={
-            {
-              "height": 22,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 6,
-              "marginTop": 0,
-              "width": 22,
+        <View>
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={38}
+            bbWidth={38}
+            focusable={false}
+            height={38}
+            meetOrSlice={0}
+            minX={-8}
+            minY={-8}
+            style={
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "left": -8,
+                  "position": "absolute",
+                  "top": -8,
+                  "transform": [
+                    {
+                      "rotateZ": "-90deg",
+                    },
+                  ],
+                },
+                {
+                  "flex": 0,
+                  "height": 38,
+                  "width": 38,
+                },
+              ]
             }
-          }
-        >
+            vbHeight={38}
+            vbWidth={38}
+            width={38}
+          >
+            <RNSVGGroup
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+            >
+              <RNSVGCircle
+                cx={11}
+                cy={11}
+                fill={
+                  {
+                    "payload": 0,
+                    "type": 0,
+                  }
+                }
+                opacity={0}
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                    "strokeDasharray",
+                    "strokeLinecap",
+                  ]
+                }
+                r={13}
+                stroke={
+                  {
+                    "payload": 4278251938,
+                    "type": 0,
+                  }
+                }
+                strokeDasharray={
+                  [
+                    81.68140899333463,
+                    81.68140899333463,
+                  ]
+                }
+                strokeLinecap={1}
+                strokeWidth={4}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
           <View
             style={
               {
-                "backgroundColor": "#000000",
-                "borderRadius": 11,
-                "elevation": 0,
                 "height": 22,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
-                },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 6,
+                "marginTop": 0,
                 "width": 22,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "overflow": "hidden",
+                {
+                  "backgroundColor": "#000000",
+                  "borderRadius": 11,
+                  "elevation": 0,
+                  "height": 22,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
                   },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
+                  "width": 22,
+                }
               }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
+              <View
                 style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
-              />
+              >
+                <FastImageView
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
             </View>
           </View>
         </View>

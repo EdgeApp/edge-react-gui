@@ -54,7 +54,7 @@ const CurrencyRowComponent = (props: Props) => {
   // Balance stuff:
   const hideBalanceSetting = useSelector(state => (hideBalance == null ? !state.ui.settings.isAccountBalanceVisible : hideBalance))
   const balance = useWalletBalance(wallet, tokenId)
-  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} pluginId={pluginId} walletId={wallet.id} />
+  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalanceSetting} />
   const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalanceSetting} />
 
