@@ -1,4 +1,3 @@
-import { InfoCard } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -9,20 +8,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { FilteredInfoCard } from '../../util/infoUtils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
-
-export interface FilteredInfoCard {
-  background: InfoCard['background']
-  ctaButton: InfoCard['ctaButton']
-  dismissable: InfoCard['dismissable']
-  localeMessages: InfoCard['localeMessages']
-  pluginPromotions: InfoCard['pluginPromotions']
-  messageId: string
-}
 
 interface Props {
   navigation: NavigationBase

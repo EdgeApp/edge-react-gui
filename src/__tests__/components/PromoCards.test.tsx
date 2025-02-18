@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { InfoCard } from 'edge-info-server'
 
-import { filterInfoCards } from '../../components/cards/InfoCardCarousel'
+import { filterInfoCards } from '../../util/infoUtils'
 
 const dummyCard: InfoCard = {
   localeMessages: { en: 'hello' },
