@@ -19,7 +19,6 @@
 - added: Added TRUMP and MELANIA purchases through Simplex
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
 - changed: All floating `NotificationCard`s are dismissible
-- changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
 - fixed: Show correct staked balance for deprecated Velodrome pools
 - fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
 - fixed: Transaction metadata loading bugs.
