@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add Abstract ETH Layer 2 support
+- changed: Force max unstake on Kiln ETH positions
 
 ## 4.22.0 (staging)
 
