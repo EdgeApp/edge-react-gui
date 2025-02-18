@@ -41,7 +41,7 @@ export interface FioRequestConfirmationParams {
 }
 
 interface StateProps {
-  exchangeSecondaryToPrimaryRatio: string
+  exchangeSecondaryToPrimaryRatio: number
   chainCode: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination

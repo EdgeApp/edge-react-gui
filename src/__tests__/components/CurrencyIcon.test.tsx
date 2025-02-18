@@ -22,7 +22,7 @@ describe('CryptoIcon', () => {
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" walletId="332s0ds39f" marginRem={1} />
+        <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" marginRem={1} />
       </FakeProviders>
     )
 

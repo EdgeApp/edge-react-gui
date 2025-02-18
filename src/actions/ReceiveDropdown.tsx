@@ -10,7 +10,7 @@ import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationS
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
+import { calculateSpamThreshold, convertNativeToDisplay } from '../util/utils'
 import { playReceiveSound } from './SoundActions'
 import { selectWalletToken } from './WalletActions'
 
@@ -39,7 +39,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     const exchangeRate = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
     const spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
-    if (spamFilterOn && (zeroString(exchangeRate) || lt(nativeAmount, spamThreshold))) {
+    if (spamFilterOn && (exchangeRate === 0 || lt(nativeAmount, spamThreshold))) {
       return
     }
 

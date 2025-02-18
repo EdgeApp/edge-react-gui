@@ -50,7 +50,7 @@ export const ExplorerCard = (props: Props) => {
       <ButtonBox onPress={handlePress} paddingRem={1}>
         {addressExplorer === '' ? null : (
           <View style={styles.container}>
-            <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+            <CryptoIcon pluginId={pluginId} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
             <EdgeText style={styles.explorerButtonText}>{lstrings.transaction_details_advance_details_show_explorer}</EdgeText>
           </View>
         )}

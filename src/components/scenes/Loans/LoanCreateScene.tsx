@@ -206,8 +206,7 @@ export const LoanCreateScene = (props: Props) => {
     isoFiatCurrencyCode: defaultIsoFiat
   })
 
-  const isUserInputComplete =
-    srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
+  const isUserInputComplete = srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && collateralToFiatRate !== 0
   let totalRequiredCollateralNativeAmount = !isUserInputComplete
     ? '0'
     : truncateDecimals(mul(collateralExchangeMultiplier, div(totalRequiredCollateralFiat, collateralToFiatRate, DECIMAL_PRECISION)), 0)

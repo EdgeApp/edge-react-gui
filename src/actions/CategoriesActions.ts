@@ -283,7 +283,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
-  const { displayName } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId] ?? { displayName: '' }
+  const displayName = tokenId == null ? currencyInfo.assetDisplayName : currencyConfig.allTokens[tokenId]?.displayName ?? ''
 
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction

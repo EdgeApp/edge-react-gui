@@ -45,7 +45,7 @@ export const BuyCrypto = (props: Props) => {
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
-              <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+              <CryptoIcon pluginId={pluginId} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
               <EdgeText style={styles.buyCryptoText}>{getUkCompliantString(countryCode, 'buy_1s', displayName)}</EdgeText>
             </View>

@@ -21,6 +21,7 @@ const kilnPolicyConfig: Array<StakePolicyConfig<EthereumPooledKilnAdapterConfig>
       pluginId: 'holesky',
       rpcProviderUrls: [`https://ethereum-holesky-rpc.publicnode.com`, 'https://1rpc.io/holesky']
     },
+    mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,
     stakeAssets: [{ pluginId: 'holesky', currencyCode: 'ETH' }],
     rewardAssets: [{ pluginId: 'holesky', currencyCode: 'ETH' }]
@@ -43,6 +44,7 @@ const kilnPolicyConfig: Array<StakePolicyConfig<EthereumPooledKilnAdapterConfig>
       pluginId: 'ethereum',
       rpcProviderUrls: [`https://ethereum-rpc.publicnode.com`, 'https://1rpc.io/eth']
     },
+    mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,
     stakeAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }],
     rewardAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }]

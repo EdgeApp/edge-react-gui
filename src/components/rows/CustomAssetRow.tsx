@@ -38,7 +38,7 @@ const CustomAssetRowComponent = (props: Props) => {
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={referenceTokenId} nativeAmount={nativeBalance} withSymbol /> : null
   const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeBalance} tokenId={referenceTokenId} wallet={wallet} /> : null
 
-  const icon = <CryptoIcon sizeRem={2} tokenId={referenceTokenId} walletId={wallet.id} />
+  const icon = <CryptoIcon sizeRem={2} tokenId={referenceTokenId} pluginId={pluginId} />
 
   let displayCurrencyCode = currencyCode
   const tokenFromId = wallet.currencyConfig.allTokens[referenceTokenId]

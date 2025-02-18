@@ -17,11 +17,11 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.25.3):
     - React-Core
-  - edge-currency-accountbased (4.36.3):
+  - edge-currency-accountbased (4.37.1):
     - React-Core
   - edge-currency-plugins (3.5.2):
     - React-Core
-  - edge-exchange-plugins (2.17.2):
+  - edge-exchange-plugins (2.18.0):
     - React-Core
   - edge-login-ui-rn (3.24.2):
     - React-Core
@@ -423,6 +423,11 @@ PODS:
     - React-Core
   - react-native-performance (5.1.2):
     - React-Core
+  - react-native-piratechain (0.5.6):
+    - gRPC-Swift (~> 1.8)
+    - MnemonicSwift (~> 2.2)
+    - React-Core
+    - SQLite.swift/standalone (~> 0.14)
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (4.10.1):
@@ -790,6 +795,7 @@ DEPENDENCIES:
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
+  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -977,6 +983,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
     :path: "../node_modules/react-native-performance"
+  react-native-piratechain:
+    :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -1081,9 +1089,9 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 89b2a3f7cd623d370fe9be7a23ebdde8834e2d25
-  edge-currency-accountbased: c13a0e6e296f65edab3d40bea5fb3bdee4642529
+  edge-currency-accountbased: d98947f1c35c3f427ef621f5495c9e393b0dd40d
   edge-currency-plugins: cf6f94db7b7d90f9edbc038c698958e584a0cde9
-  edge-exchange-plugins: ec9d76794f713456713e1a712f3f209e68a3ab59
+  edge-exchange-plugins: bd9bc9e56c3040d092cd0a758868d6d6f1723573
   edge-login-ui-rn: 265894d316c33e5ab117ac3a52c22e73ad390514
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
@@ -1138,6 +1146,7 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: ff93f8af3b2ee9519fd7879896aa9b8b8272691d
+  react-native-piratechain: 08671056e2362f6a96cae1e2315c4adc9de7370a
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf

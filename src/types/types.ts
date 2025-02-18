@@ -202,7 +202,7 @@ export type SpendingLimits = ReturnType<typeof asSpendingLimits>
 export type SpendAuthType = 'pin' | 'none'
 
 export interface GuiExchangeRates {
-  [pair: string]: string
+  [pair: string]: number
 }
 
 export interface StateProvinceData {
