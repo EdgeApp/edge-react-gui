@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 - added: "Update Available" modal
+- added: `activePromotions` to save promos upon deeplink activation
+- changed: `activePromotions` used to filter available promo cards
 
 ## 4.23.0 (staging)
 
