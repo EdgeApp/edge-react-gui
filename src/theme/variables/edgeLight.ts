@@ -386,6 +386,7 @@ export const edgeLight: Theme = {
   textInputPlaceholderColor: palette.gray,
   textInputPlaceholderColorDisabled: palette.gray,
   textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputSelectionColor: palette.blackOp25,
 
   // Animation
   fadeDisable: palette.gray,

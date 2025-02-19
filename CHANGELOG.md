@@ -10,6 +10,7 @@
 - changed: Use number math when handling exchange rates
 - changed: Optimize `getCreateWalletList` function and usage
 - fixed: Correct the display name for ETH txs on non-Ethereum chains
+- fixed: Input text selection color adjusted for transparency on Android.
 
 ## 4.22.0 (2025-02-17)
 

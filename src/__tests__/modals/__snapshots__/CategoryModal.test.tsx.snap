@@ -626,7 +626,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": 1,
               }
             }
-            selectionColor="#FFFFFF"
+            selectionColor="rgba(255, 255, 255, .25)"
             style={
               [
                 {
@@ -2018,7 +2018,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "value": 1,
               }
             }
-            selectionColor="#FFFFFF"
+            selectionColor="rgba(255, 255, 255, .25)"
             style={
               [
                 {

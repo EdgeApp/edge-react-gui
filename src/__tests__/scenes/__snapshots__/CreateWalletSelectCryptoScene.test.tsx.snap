@@ -511,7 +511,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             onSubmitEditing={[Function]}
             placeholder="Search Wallets"
             placeholderTextColor="rgba(255, 255, 255, .5)"
-            selectionColor="#FFFFFF"
+            selectionColor="rgba(255, 255, 255, .25)"
             style={
               [
                 {
