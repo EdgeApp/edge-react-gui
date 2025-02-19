@@ -70,6 +70,8 @@ export type Action =
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
+  | { type: 'ACTIVE_PROMOTION_ADDED'; data: string /* installerId */ }
+  | { type: 'ACTIVE_PROMOTION_REMOVED'; data: string /* installerId */ }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | {

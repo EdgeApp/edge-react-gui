@@ -1,8 +1,12 @@
 import { asDate } from 'cleaners'
 import { InfoCard } from 'edge-info-server'
+import { Platform } from 'react-native'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { infoServerData } from './network'
+import { getOsVersion } from './utils'
 
 export interface DisplayInfoCard {
   background: InfoCard['background']
@@ -142,4 +146,32 @@ export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] =
   }
 
   return filteredInfoCards
+}
+
+/**
+ * Returns a list of promo IDs that are currently valid ("active") for the
+ * environment and time according to info server `promoCards2` data.
+ */
+export const getActivePromoIds = async (props: { promoIds?: string[]; installerId?: string }): Promise<string[]> => {
+  const { installerId, promoIds } = props
+
+  const currentDate = new Date()
+  const buildNumber = getBuildNumber()
+  const osType = Platform.OS.toLowerCase()
+  const version = getVersion()
+  const osVersion = getOsVersion()
+  const countryCode = (await getFirstOpenInfo()).countryCode
+
+  const filteredPromoData = filterInfoCards({
+    buildNumber,
+    countryCode,
+    currentDate,
+    installerId,
+    osType,
+    osVersion,
+    promoIds,
+    version
+  })
+
+  return filteredPromoData.map(promo => promo.promoId).filter((id): id is string => id != null)
 }

@@ -51,7 +51,7 @@ export const InfoCardCarousel = (props: Props) => {
     const osVersion = getOsVersion()
 
     const referralPromotions = accountReferral.promotions ?? []
-    const promoIds = referralPromotions.map(promotion => promotion.installerId)
+    const promoIds = [...referralPromotions.map(promotion => promotion.installerId), ...(accountReferral.activePromotions ?? [])]
     setFilteredCards(getDisplayInfoCards({ countryCode, accountFunded, promoIds, buildNumber, osType, osVersion, version, currentDate }))
   }, [accountFunded, accountReferral, cards, countryCode])
 
