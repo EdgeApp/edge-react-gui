@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { FilteredInfoCard } from '../../util/infoUtils'
+import { DisplayInfoCard } from '../../util/infoUtils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -17,7 +17,7 @@ import { EdgeCard } from './EdgeCard'
 
 interface Props {
   navigation: NavigationBase
-  promoInfo: FilteredInfoCard
+  promoInfo: DisplayInfoCard
   onClose: () => Promise<void>
 }
 

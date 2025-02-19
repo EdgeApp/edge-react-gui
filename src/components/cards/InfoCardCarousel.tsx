@@ -10,7 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { FilteredInfoCard, filterInfoCards } from '../../util/infoUtils'
+import { DisplayInfoCard, getDisplayInfoCards } from '../../util/infoUtils'
 import { getOsVersion } from '../../util/utils'
 import { Anim, EdgeAnim } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
@@ -34,7 +34,7 @@ export const InfoCardCarousel = (props: Props) => {
   const [firstOpenInfo] = useAsyncValue(async () => await getFirstOpenInfo())
   const { countryCode } = firstOpenInfo ?? {}
 
-  const [filteredCards, setFilteredCards] = React.useState<FilteredInfoCard[]>([])
+  const [filteredCards, setFilteredCards] = React.useState<DisplayInfoCard[]>([])
 
   // Set account funded status
   const accountFunded = useIsAccountFunded()
@@ -50,27 +50,17 @@ export const InfoCardCarousel = (props: Props) => {
     const version = getVersion()
     const osVersion = getOsVersion()
 
-    setFilteredCards(
-      filterInfoCards({
-        cards,
-        countryCode,
-        accountFunded,
-        accountReferral,
-        buildNumber,
-        osType,
-        osVersion,
-        version,
-        currentDate
-      })
-    )
+    const referralPromotions = accountReferral.promotions ?? []
+    const promoIds = referralPromotions.map(promotion => promotion.installerId)
+    setFilteredCards(getDisplayInfoCards({ countryCode, accountFunded, promoIds, buildNumber, osType, osVersion, version, currentDate }))
   }, [accountFunded, accountReferral, cards, countryCode])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
 
   // List rendering methods:
-  const keyExtractor = useHandler((item: FilteredInfoCard) => item.messageId)
-  const renderItem: ListRenderItem<FilteredInfoCard> = useHandler(({ item }) => {
+  const keyExtractor = useHandler((item: DisplayInfoCard) => item.messageId)
+  const renderItem: ListRenderItem<DisplayInfoCard> = useHandler(({ item }) => {
     const handleClose = async (): Promise<void> => {
       await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
     }

@@ -2,9 +2,9 @@ import { asDate } from 'cleaners'
 import { InfoCard } from 'edge-info-server'
 import shajs from 'sha.js'
 
-import { AccountReferral } from '../types/ReferralTypes'
+import { infoServerData } from './network'
 
-export interface FilteredInfoCard {
+export interface DisplayInfoCard {
   background: InfoCard['background']
   ctaButton: InfoCard['ctaButton']
   dismissable: InfoCard['dismissable']
@@ -13,58 +13,57 @@ export interface FilteredInfoCard {
   messageId: string
 }
 
-/**
- * Finds the info server cards that are relevant to our application version &
- * other factors.
- */
-export function filterInfoCards(params: {
-  cards: InfoCard[]
-  countryCode?: string
-  buildNumber: string
-  osType: string
-  version: string
-  osVersion: string
-  currentDate: Date
+interface InfoFilterProps {
   accountFunded?: boolean
-  accountReferral?: Partial<AccountReferral>
-}): FilteredInfoCard[] {
-  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, accountReferral } = params
+  buildNumber: string
+  countryCode?: string
+  currentDate: Date
+  installerId?: string
+  osType: string
+  osVersion: string
+  promoIds?: Array<string | null>
+  version: string
 
-  let accountPromoIds: string[] | undefined
-  if (accountReferral != null) {
-    const accountReferralId = accountReferral?.installerId == null ? [] : [accountReferral.installerId]
-    const promotions = accountReferral.promotions ?? []
-    accountPromoIds = [...promotions.map(promotion => promotion.installerId), ...accountReferralId]
-  }
+  /** For unit testing */
+  testCards?: InfoCard[]
+}
+
+/**
+ * Finds the info server data that is relevant to our application version &
+ * other factors.
+ *
+ * `promoIds` and `installerId` are both used to check against `promoId` from
+ * the info server data.
+ */
+const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
+  const { testCards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, promoIds, installerId } = props
+  const cards = testCards ?? infoServerData.rollup?.promoCards2
+
+  if (cards == null) return []
 
   // Find relevant cards:
   const ccLowerCase = countryCode?.toLowerCase()
-  const filteredCards: FilteredInfoCard[] = []
+  const filteredInfoData: InfoCard[] = []
   for (const card of cards) {
     const {
       appVersion,
-      background,
       countryCodes = [],
-      ctaButton,
-      dismissable = false,
       endIsoDate,
       exactBuildNum,
       excludeCountryCodes = [],
-      localeMessages,
       maxBuildNum,
       minBuildNum,
       noBalance = false,
       osTypes = [],
       osVersions = [],
       startIsoDate,
-      pluginPromotions,
       promoId
     } = card
 
     const startDate = asDate(startIsoDate ?? '1970-01-01')
     const endDate = asDate(endIsoDate ?? '1970-01-01')
 
-    // Validate balance status. If the card specifies 'noBalance' and
+    // Validate balance status. If the data specifies 'noBalance' and
     // accountFunded balances are not ready yet (undefined), omit until balances
     // are ready and we re-run.
     if (noBalance) {
@@ -101,13 +100,38 @@ export function filterInfoCards(params: {
     if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
 
     // Validate promoId
-    if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
+    if (
+      promoId != null &&
+      ((promoIds != null && !promoIds.some(accountPromoId => accountPromoId === promoId)) || (installerId != null && installerId !== promoId))
+    )
+      continue
+
+    filteredInfoData.push(card)
+  }
+
+  return filteredInfoData
+}
+
+/**
+ * Similar to filterInfoCards, but returns only an array of `DisplayInfoCard`
+ * display data.
+ *
+ * Ignores any info that doesn't contain display messages.
+ */
+export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] => {
+  const filteredInfoData = filterInfoCards(props)
+
+  const filteredInfoCards: DisplayInfoCard[] = []
+  for (const card of filteredInfoData) {
+    const { background, ctaButton, dismissable, localeMessages, pluginPromotions } = card
+
+    // Ignore any cards with no display data
+    if (Object.keys(localeMessages).length === 0) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
       .digest('base64')
-
-    filteredCards.push({
+    filteredInfoCards.push({
       background,
       ctaButton,
       dismissable,
@@ -117,5 +141,5 @@ export function filterInfoCards(params: {
     })
   }
 
-  return filteredCards
+  return filteredInfoCards
 }

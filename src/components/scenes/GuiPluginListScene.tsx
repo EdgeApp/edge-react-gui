@@ -35,13 +35,13 @@ import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
+import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
-import { filterInfoCards } from '../cards/InfoCardCarousel'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -268,10 +268,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
     if (plugin.nativePlugin != null) {
-      const cards = infoServerData.rollup?.promoCards2 ?? []
-      const promoCards = filterInfoCards({
-        accountReferral,
-        cards,
+      const { activePromotions, installerId } = accountReferral
+      const promoCards = getDisplayInfoCards({
+        promoIds: activePromotions,
+        installerId,
         countryCode,
         buildNumber: getBuildNumber(),
         osType: Platform.OS,
