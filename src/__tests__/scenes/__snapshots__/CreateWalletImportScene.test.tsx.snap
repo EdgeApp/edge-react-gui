@@ -576,7 +576,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 "value": 1,
               }
             }
-            selectionColor="#FFFFFF"
+            selectionColor="rgba(255, 255, 255, .25)"
             style={
               [
                 {

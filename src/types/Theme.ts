@@ -404,6 +404,7 @@ export interface Theme {
   textInputPlaceholderColor: string
   textInputPlaceholderColorDisabled: string
   textInputPlaceholderColorFocused: string
+  textInputSelectionColor: string
 
   // Animation
   fadeDisable: string

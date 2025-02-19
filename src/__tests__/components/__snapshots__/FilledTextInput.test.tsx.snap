@@ -133,7 +133,7 @@ exports[`FilledTextInput should render with some props 1`] = `
               "value": 1,
             }
           }
-          selectionColor="#FFFFFF"
+          selectionColor="rgba(255, 255, 255, .25)"
           testID="string.textInput"
           textAlignVertical="top"
           value="string"
