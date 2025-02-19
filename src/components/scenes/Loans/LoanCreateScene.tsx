@@ -14,7 +14,6 @@ import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
-import { useCurrencyFiatRate } from '../../../hooks/useTokenDisplayData'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
@@ -474,3 +473,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'left'
   }
 }))
+
+const useCurrencyFiatRate = ({ currencyCode, isoFiatCurrencyCode }: { currencyCode?: string; isoFiatCurrencyCode?: string }): number => {
+  return useSelector(state => {
+    if (currencyCode == null || isoFiatCurrencyCode == null) return 0
+    else return state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? 0
+  })
+}
