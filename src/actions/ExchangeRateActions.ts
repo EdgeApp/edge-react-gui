@@ -1,7 +1,8 @@
 import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
+import { EdgeAccount } from 'edge-core-js'
 
-import { RootState, ThunkAction } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { GuiExchangeRates } from '../types/types'
 import { fetchRates } from '../util/network'
 import { datelog } from '../util/utils'
@@ -34,7 +35,7 @@ type AssetPair = ReturnType<typeof asAssetPair>
 type ExchangeRateCache = ReturnType<typeof asExchangeRateCache>
 type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
 
-let exchangeRateCache: ExchangeRateCache = {}
+let exchangeRateCache: ExchangeRateCacheFile | undefined
 
 const asRatesResponse = asObject({
   data: asArray(
@@ -49,17 +50,68 @@ const asRatesResponse = asObject({
 export function updateExchangeRates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const exchangeRates = await buildExchangeRates(state)
+    const { account } = state.core
+    const { defaultIsoFiat } = state.ui.settings
+
+    // If this is the first run, immediately use whatever we have on disk
+    // before moving on to the potentially slow network:
+    if (exchangeRateCache == null) {
+      exchangeRateCache = await loadExchangeRateCache().catch(error => {
+        datelog('Error loading exchange rate cache:', String(error))
+        return { assetPairs: [], rates: {} }
+      })
+      dispatch({
+        type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
+        data: {
+          exchangeRates: buildGuiRates(exchangeRateCache.rates)
+        }
+      })
+    }
+
+    // Refresh from the network:
+    await fetchExchangeRates(account, defaultIsoFiat, exchangeRateCache)
     dispatch({
       type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
-      data: { exchangeRates }
+      data: {
+        exchangeRates: buildGuiRates(exchangeRateCache.rates)
+      }
     })
   }
 }
 
-async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
-  const accountIsoFiat = state.ui.settings.defaultIsoFiat
-  const { account } = state.core
+/**
+ * Loads the exchange rate cache from disk, and deletes expired entries.
+ */
+async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
+  const now = Date.now()
+  const out: ExchangeRateCacheFile = {
+    assetPairs: [],
+    rates: {}
+  }
+
+  const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
+  const json = JSON.parse(raw)
+  const { assetPairs, rates } = asExchangeRateCacheFile(json)
+
+  // Keep un-expired asset pairs:
+  for (const pair of assetPairs) {
+    if (pair.expiration < now) continue
+    out.assetPairs.push(pair)
+  }
+
+  // Keep un-expired rates:
+  for (const key of Object.keys(rates)) {
+    if (rates[key].expiration < now) continue
+    out.rates[key] = rates[key]
+  }
+
+  return out
+}
+
+/**
+ * Fetches exchange rates from the server, and writes them out to disk.
+ */
+async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, cache: ExchangeRateCacheFile): Promise<void> {
   const { currencyWallets } = account
 
   // Look up various dates:
@@ -68,69 +120,48 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const rateExpiration = now + ONE_DAY
   const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
 
-  // What we need to fetch from the server:
-  const initialAssetPairs: AssetPair[] = []
-  let hasWallets = false
-  let hasCachedRates = false
+  // Maintain a map of the unique asset pairs we need:
+  const assetPairMap = new Map<string, AssetPair>()
+  function addAssetPair(assetPair: AssetPair) {
+    const key = `${assetPair.currency_pair}_${assetPair.date ?? ''}`
+    assetPairMap.set(key, assetPair)
+  }
 
-  // If we have loaded the cache before, keep any un-expired entries:
-  const rateCache: ExchangeRateCache = {}
-  const cachedKeys = Object.keys(exchangeRateCache)
-  if (cachedKeys.length > 0) {
-    for (const key of cachedKeys) {
-      if (exchangeRateCache[key].expiration > now) {
-        rateCache[key] = exchangeRateCache[key]
-        hasCachedRates = true
-      }
-    }
-  } else {
-    // Load exchange rate cache off disk, since we haven't done that yet:
-    try {
-      const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
-      const json = JSON.parse(raw)
-      const { assetPairs, rates } = asExchangeRateCacheFile(json)
+  // Keep the cached asset list, in case any wallets are still loading:
+  for (const assetPair of cache.assetPairs) {
+    if (assetPair.expiration < now) continue
+    addAssetPair(assetPair)
+  }
 
-      // Keep un-expired rates:
-      for (const key of Object.keys(rates)) {
-        if (rates[key].expiration > now) {
-          rateCache[key] = rates[key]
-          hasCachedRates = true
-        }
-      }
-
-      // Keep un-expired asset pairs:
-      for (const pair of assetPairs) {
-        if (pair.expiration > now) {
-          initialAssetPairs.push(pair)
-        }
-      }
-    } catch (e) {
-      datelog('Error loading exchange rate cache:', String(e))
-    }
+  // Keep any un-expired rates, although they are likely to be stomped:
+  const rates: ExchangeRateCache = {}
+  for (const key of Object.keys(cache.rates)) {
+    if (cache.rates[key].expiration < now) continue
+    rates[key] = cache.rates[key]
   }
 
   // If the user's fiat isn't dollars, get it's price:
   if (accountIsoFiat !== 'iso:USD') {
-    initialAssetPairs.push({
+    addAssetPair({
       currency_pair: `iso:USD_${accountIsoFiat}`,
       date: undefined,
       expiration: pairExpiration
     })
   }
 
+  // Grab the assets from all wallets:
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
     const { currencyCode } = wallet.currencyInfo
-    hasWallets = true
 
     // Get the primary asset's prices for today and yesterday,
     // but with yesterday's price in dollars:
-    initialAssetPairs.push({
+    addAssetPair({
       currency_pair: `${currencyCode}_${accountIsoFiat}`,
       date: undefined,
       expiration: pairExpiration
     })
-    initialAssetPairs.push({
+    addAssetPair({
       currency_pair: `${currencyCode}_iso:USD`,
       date: yesterday,
       expiration: pairExpiration
@@ -141,12 +172,12 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
       const token = wallet.currencyConfig.allTokens[tokenId]
       if (token == null) continue
       if (token.currencyCode === currencyCode) continue
-      initialAssetPairs.push({
+      addAssetPair({
         currency_pair: `${token.currencyCode}_${accountIsoFiat}`,
         date: undefined,
         expiration: pairExpiration
       })
-      initialAssetPairs.push({
+      addAssetPair({
         currency_pair: `${token.currencyCode}_iso:USD`,
         date: yesterday,
         expiration: pairExpiration
@@ -154,30 +185,11 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     }
   }
 
-  // De-duplicate asset pairs:
-  const assetMap = new Map<string, AssetPair>()
-  for (const asset of initialAssetPairs) {
-    const key = `${asset.currency_pair}_${asset.date ?? ''}`
+  const assetPairs = [...assetPairMap.values()]
+  for (let i = 0; i < assetPairs.length; i += RATES_SERVER_MAX_QUERY_SIZE) {
+    const query = assetPairs.slice(i, i + RATES_SERVER_MAX_QUERY_SIZE)
 
-    const existing = assetMap.get(key)
-    if (existing == null || asset.expiration > existing.expiration) {
-      assetMap.set(key, asset)
-    }
-  }
-  const filteredAssetPairs = [...assetMap.values()]
-
-  /**
-   * On initial load, buildExchangeRates may get called before any wallets are
-   * loaded. In this case, we can skip the rates fetch and use the cache to
-   * save on the network delay.
-   */
-  const skipRatesFetch = hasCachedRates && !hasWallets
-
-  while (filteredAssetPairs.length > 0) {
-    if (skipRatesFetch) break
-    const query = filteredAssetPairs.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
-    let tries = 5
-    do {
+    for (let attempt = 0; attempt < 5; ++attempt) {
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -194,13 +206,13 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
             const key = isHistorical ? `${currencyPair}_${date}` : currencyPair
 
             if (exchangeRate != null) {
-              rateCache[key] = {
+              rates[key] = {
                 expiration: rateExpiration,
                 rate: parseFloat(exchangeRate)
               }
-            } else if (rateCache[key] == null) {
+            } else if (rates[key] == null) {
               // We at least need a placeholder:
-              rateCache[key] = {
+              rates[key] = {
                 expiration: 0,
                 rate: 0
               }
@@ -208,36 +220,36 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
           }
           break
         }
-      } catch (e: any) {
-        console.log(`buildExchangeRates error querying rates server ${e.message}`)
+      } catch (error: unknown) {
+        console.log(`buildExchangeRates error querying rates server ${String(error)}`)
       }
-    } while (--tries > 0)
-  }
-
-  // Save exchange rate cache to disk:
-  try {
-    const exchangeRateCacheFile: ExchangeRateCacheFile = {
-      rates: rateCache,
-      assetPairs: filteredAssetPairs
     }
-    await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCacheFile))
-  } catch (e) {
-    datelog('Error saving exchange rate cache:', String(e))
   }
-  exchangeRateCache = rateCache
 
-  // Build the GUI rate structure:
-  const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': 1 }
+  // Update the in-memory cache:
+  exchangeRateCache = { rates, assetPairs }
+
+  // Write the cache to disk:
+  await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache)).catch(error => {
+    datelog('Error saving exchange rate cache:', String(error))
+  })
+}
+
+/**
+ * Converts rates from the cache format to the GUI's in-memory format.
+ */
+function buildGuiRates(rateCache: ExchangeRateCache): GuiExchangeRates {
+  const out: GuiExchangeRates = { 'iso:USD_iso:USD': 1 }
   for (const key of Object.keys(rateCache)) {
     const { rate } = rateCache[key]
-    serverRates[key] = rate
+    out[key] = rate
 
     // Include reverse rates:
     const codes = key.split('_')
     const reverseKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
-    serverRates[reverseKey] = rate === 0 ? 0 : 1 / rate
+    out[reverseKey] = rate === 0 ? 0 : 1 / rate
   }
-  return serverRates
+  return out
 }
 
 const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
