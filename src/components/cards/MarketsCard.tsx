@@ -115,8 +115,7 @@ const CoinRow = (props: CoinRowProps) => {
       icon={<FastImage style={styles.icon} source={imageSrc} />}
       onPress={() =>
         navigation.navigate('coinRankingDetails', {
-          coinRankingData: coinRow,
-          fiatCurrencyCode
+          coinRankingData: coinRow
         })
       }
       rightButtonType="none"
