@@ -6,6 +6,8 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -22,15 +24,17 @@ interface Props {
   enterAnim: Anim
   screenWidth: number
   cards?: InfoCard[]
-  countryCode?: string
 }
 
 export const InfoCardCarousel = (props: Props) => {
-  const { enterAnim, countryCode, navigation, screenWidth, cards } = props
+  const { enterAnim, navigation, screenWidth, cards } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const accountReferral = useSelector(state => state.account.accountReferral)
+
+  const [firstOpenInfo] = useAsyncValue(async () => await getFirstOpenInfo())
+  const { countryCode } = firstOpenInfo ?? {}
 
   const [filteredCards, setFilteredCards] = React.useState<FilteredInfoCard[]>([])
 

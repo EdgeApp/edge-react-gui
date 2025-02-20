@@ -16,13 +16,26 @@ const asFirstOpenInfo = asObject({
 type FirstOpenInfo = ReturnType<typeof asFirstOpenInfo>
 
 let firstOpenInfo: FirstOpenInfo
+let firstLoadPromise: Promise<FirstOpenInfo> | undefined
 
 /**
  * Returns whether this session was the first time the user opened the app.
- * Repeated calls will return the same result. Also sets the deviceId &
- * firstOpenEpoch
+ * Repeated calls will return the same result. Initial disk read also sets the
+ * deviceId & firstOpenEpoch if not already present.
  */
 export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
+  if (firstOpenInfo == null) {
+    if (firstLoadPromise == null) firstLoadPromise = readFirstOpenInfoFromDisk()
+    return await firstLoadPromise
+  }
+  return firstOpenInfo
+}
+
+/**
+ * Reads firstOpenInfo from disk and sets the deviceId & firstOpenEpoch if not
+ * already present.
+ */
+const readFirstOpenInfoFromDisk = async (): Promise<FirstOpenInfo> => {
   if (firstOpenInfo == null) {
     let firstOpenText
     try {
@@ -34,7 +47,7 @@ export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
         // Not critical if we can't get the country code
         firstOpenInfo.countryCode = await getCountryCodeByIp().catch(() => undefined)
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Generate new values.
       firstOpenInfo = {
         countryCode: await getCountryCodeByIp(),

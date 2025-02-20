@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
@@ -13,12 +14,14 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
-import { useDispatch } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { unixToLocaleDateTime } from '../../util/utils'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { HeaderTitle } from '../navigation/HeaderTitle'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
@@ -27,9 +30,7 @@ import { TransactionListRow } from '../themed/TransactionListRow'
 
 export interface TransactionListParams {
   walletId: string
-  walletName: string
   tokenId: EdgeTokenId
-  countryCode?: string
   searchText?: string
 }
 
@@ -247,6 +248,14 @@ function TransactionListComponent(props: Props) {
       )}
     </SceneWrapper>
   )
+}
+
+export const TransactionListTitle = () => {
+  const route = useRoute<RouteProp<'walletDetails'>>()
+  const account = useSelector(state => state.core.account)
+  const wallet = account.currencyWallets[route.params.walletId]
+  const title = wallet == null ? '' : getWalletName(wallet)
+  return <HeaderTitle title={title} />
 }
 
 /**

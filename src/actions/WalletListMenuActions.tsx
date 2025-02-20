@@ -287,15 +287,9 @@ export function walletListMenuAction(
 
     case 'goToParent': {
       return async (dispatch, getState) => {
-        const state = getState()
-        const { account } = state.core
-        const { currencyWallets } = account
-        const wallet = currencyWallets[walletId]
-
         navigation.navigate('walletDetails', {
           walletId,
-          tokenId: null,
-          walletName: getWalletName(wallet)
+          tokenId: null
         })
       }
     }
