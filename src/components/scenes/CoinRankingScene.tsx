@@ -44,6 +44,7 @@ export const COINGECKO_SUPPORTED_FIATS = {
   CLP: true,
   CZK: true,
   DKK: true,
+  EUR: true,
   GBP: true,
   GEL: true,
   HKD: true,
