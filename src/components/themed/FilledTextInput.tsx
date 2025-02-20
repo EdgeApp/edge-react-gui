@@ -163,7 +163,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     autoComplete,
     autoCorrect,
     autoFocus = false,
-    autoSelect = false,
+    autoSelect: autoSelectProp = false,
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
@@ -182,6 +182,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const LeftIcon = iconComponent
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
+  const autoSelect = Platform.OS === 'android' ? false : autoSelectProp
 
   const marginRemStyle = useMarginRemStyle(marginRemProps)
 
