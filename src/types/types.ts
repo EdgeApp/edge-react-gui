@@ -334,6 +334,7 @@ export interface AppConfig {
   lightTheme: Theme
   notificationServers: string[]
   phoneNumber: string
+  playStore: string
   referralServers?: string[]
   supportsEdgeLogin: boolean
   supportEmail: string
