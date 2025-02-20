@@ -46,8 +46,7 @@ const CoinRankRowComponent = (props: Props) => {
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
     navigation.navigate('coinRankingDetails', {
-      coinRankingData: coinRankingDatas[index],
-      fiatCurrencyCode
+      coinRankingData: coinRankingDatas[index]
     })
   })
 

@@ -9,6 +9,7 @@
 - changed: Disconnect `CryptoIcon` from redux
 - changed: Use number math when handling exchange rates
 - changed: Optimize `getCreateWalletList` function and usage
+- fixed: Coin Ranking Details scene navigation bug caused by unsupported default currency setting.
 - fixed: Correct the display name for ETH txs on non-Ethereum chains
 - fixed: Input text selection bug in Android caused by `autoSelect` prop.
 - fixed: Input text selection color adjusted for transparency on Android.
