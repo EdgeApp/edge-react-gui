@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
@@ -31,6 +32,7 @@ import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -518,6 +520,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
                 <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
             </View>
+          )}
+          {defaultFiat === supportedFiat ? null : (
+            <AlertCardUi4
+              type="warning"
+              title={lstrings.coin_rank_currency_rates_warning_title}
+              body={sprintf(lstrings.coin_rank_currency_rates_warning_message_2s, supportedFiat, defaultFiat)}
+            />
           )}
           <View style={styles.columns}>
             <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>

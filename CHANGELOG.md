@@ -5,6 +5,7 @@
 ## 4.23.0 (staging)
 
 - added: Add Abstract ETH Layer 2 support
+- added: Add warning card for fallback currency usage on Coin Ranking scene.
 - changed: Force max unstake on Kiln ETH positions
 - changed: Disconnect `CryptoIcon` from redux
 - changed: Use number math when handling exchange rates

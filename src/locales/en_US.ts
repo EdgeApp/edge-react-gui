@@ -1540,6 +1540,8 @@ const strings = {
   coin_rank_month: '30D',
   coin_rank_year: '1Y',
   coin_rank_see_more: 'See More',
+  coin_rank_currency_rates_warning_title: 'Currency Rates',
+  coin_rank_currency_rates_warning_message_2s: `The rates shown are quoted in %1$s as a fallback. Market data for your default currency setting (%2$s) is not supported.`,
 
   // #endregion CoinRanking
 
