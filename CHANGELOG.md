@@ -10,6 +10,7 @@
 
 - added: Add Abstract ETH Layer 2 support
 - added: Add warning card for fallback currency usage on Coin Ranking scene.
+- added: Add EUR price quoting support for Coin Ranking Details scene.
 - changed: `WalletDetailsScene` title shows the name of the network for most use cases
 - changed: Force max unstake on Kiln ETH positions
 - changed: Disconnect `CryptoIcon` from redux
