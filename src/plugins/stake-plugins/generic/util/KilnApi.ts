@@ -211,7 +211,8 @@ const asEthOnChainStake = asObject({
   // owner: asString,
   // integration: asString,
   integration_address: asString,
-  balance: asString,
+  // balance: asString,
+  shares_balance: asString,
   rewards: asString
   // delegated_block: asNumber,
   // delegated_at: asString,
