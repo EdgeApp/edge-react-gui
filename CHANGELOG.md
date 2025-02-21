@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: "Update Available" modal
+- fixed: Reverse text input due to autoselect text on focus on Android.
 
 ## 4.23.0 (staging)
 
