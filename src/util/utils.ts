@@ -222,6 +222,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 // multiplier / exchange rate / ( 1 / unit )
 // 100000000 / $16500 / (1/$0.001) = ~6 sats
 export const calculateSpamThreshold = (rate: number, denom: EdgeDenomination) => {
+  if (rate === 0) return '0'
   return div(div(denom.multiplier, rate.toString()), '1000')
 }
 

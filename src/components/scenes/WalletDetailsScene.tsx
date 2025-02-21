@@ -97,7 +97,7 @@ function WalletDetailsComponent(props: Props) {
   })} ${fiatCurrencyCode}/${currencyCode}`
 
   const spamThreshold = React.useMemo<string | undefined>(() => {
-    if (spamFilterOn && exchangeRate === 0) {
+    if (spamFilterOn) {
       return calculateSpamThreshold(exchangeRate, exchangeDenom)
     }
   }, [exchangeDenom, exchangeRate, spamFilterOn])
