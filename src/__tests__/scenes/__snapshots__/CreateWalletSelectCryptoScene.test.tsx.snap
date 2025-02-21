@@ -495,6 +495,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={false}
+            defaultValue=""
             disableAnimation={
               {
                 "value": 0,
@@ -530,7 +531,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             }
             testID="undefined.textInput"
             textAlignVertical="top"
-            value=""
           />
         </View>
         <View
