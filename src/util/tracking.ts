@@ -224,6 +224,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         const { accountReferral } = account
         params.refDeviceInstallerId = deviceReferral.installerId
         params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
+        params.promoIds = accountReferral.activePromotions
 
         const { creationDate, installerId } = accountReferral
         params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
