@@ -1,10 +1,10 @@
-import { useIsFocused } from '@react-navigation/native'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
@@ -32,6 +32,7 @@ import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -45,7 +46,6 @@ type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange |
 export interface CoinRankingDetailsParams {
   assetId?: string
   coinRankingData?: CoinRankingData
-  fiatCurrencyCode: string
 }
 
 interface Props extends EdgeAppSceneProps<'coinRankingDetails'> {}
@@ -103,7 +103,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const { route, navigation } = props
-  const { assetId, fiatCurrencyCode, coinRankingData: initCoinRankingData } = route.params
+  const { assetId, coinRankingData: initCoinRankingData } = route.params
 
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -111,7 +111,6 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const currencyConfigMap = useWatch(account, 'currencyConfig')
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const isFocused = useIsFocused()
 
   const [countryCode] = useAsyncValue(async () => (await getFirstOpenInfo()).countryCode)
 
@@ -119,6 +118,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const supportedFiat = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
       throw new Error('No currencyCode or coinRankingData provided')
@@ -163,8 +163,6 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     return out
   }, [account.currencyConfig, coinRankingData, currencyCode])
 
-  const initFiat = React.useState<string>(fiatCurrencyCode)[0]
-
   /** Find all wallets that can hold this asset */
   const matchingWallets = React.useMemo(
     () => Object.values(currencyWallets).filter(wallet => edgeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId)),
@@ -186,15 +184,6 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       ).length > 0
     )
   })
-
-  React.useEffect(() => {
-    if (isFocused && initFiat !== supportedFiat) {
-      // Take this stale scene off the stack
-      navigation.pop()
-      // Force a refresh & refetch
-      navigation.navigate('coinRanking')
-    }
-  }, [initFiat, isFocused, navigation, supportedFiat])
 
   React.useEffect(() => {
     // Initialize staking state
@@ -504,7 +493,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
             <FastImage style={styles.icon} source={imageUrlObject} />
             <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
-          <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCode} fiatCurrencyCode={initFiat} />
+          <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCode} fiatCurrencyCode={supportedFiat} />
           {edgeAssets.length <= 0 ? null : (
             <View style={styles.buttonsContainer}>
               <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
@@ -531,6 +520,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
                 <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
             </View>
+          )}
+          {defaultFiat === supportedFiat ? null : (
+            <AlertCardUi4
+              type="warning"
+              title={lstrings.coin_rank_currency_rates_warning_title}
+              body={sprintf(lstrings.coin_rank_currency_rates_warning_message_2s, supportedFiat, defaultFiat)}
+            />
           )}
           <View style={styles.columns}>
             <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>

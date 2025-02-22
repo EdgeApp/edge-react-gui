@@ -175,7 +175,7 @@ function WalletDetailsComponent(props: Props) {
   const assetId = coinrankListData.coins[currencyCode]
 
   const handlePressCoinRanking = useHandler(() => {
-    navigation.navigate('coinRankingDetails', { assetId, fiatCurrencyCode })
+    navigation.navigate('coinRankingDetails', { assetId })
   })
 
   const handlePressSeeAll = useHandler(() => {
