@@ -1359,7 +1359,7 @@
   "coin_rank_month": "30G",
   "coin_rank_year": "1A",
   "coin_rank_see_more": "Vedi di più",
-  "coin_rank_currency_rates_warning_title": "Currency Rates",
+  "coin_rank_currency_rates_warning_title": "Tassi di cambio",
   "coin_rank_currency_rates_warning_message_2s": "The rates shown are quoted in %1$s as a fallback. Market data for your default currency setting (%2$s) is not supported.",
   "form_field_title_account_owner": "Proprietario dell'Account",
   "form_field_title_address_city": "Città",
