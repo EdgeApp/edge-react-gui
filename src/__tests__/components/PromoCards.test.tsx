@@ -32,9 +32,9 @@ const currentDate = new Date('2024-06-13T20:53:33.013Z')
 
 describe('filterPromoCards', () => {
   test('No cards', () => {
-    const testCards: InfoCard[] = []
+    const cards: InfoCard[] = []
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber,
       osType,
@@ -45,9 +45,9 @@ describe('filterPromoCards', () => {
     expect(result.length).toBe(0)
   })
   test('Card no filters', () => {
-    const testCards: InfoCard[] = [{ ...dummyCard }]
+    const cards: InfoCard[] = [{ ...dummyCard }]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber,
       osType,
@@ -59,7 +59,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('hello')
   })
   test('Cards for iOS', () => {
-    const testCards: InfoCard[] = [
+    const cards: InfoCard[] = [
       {
         ...dummyCard,
         osTypes: ['android'],
@@ -74,7 +74,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber,
       osType: 'ios',
@@ -87,7 +87,7 @@ describe('filterPromoCards', () => {
     expect(result[1].localeMessages.en).toBe('Another iOS Message')
   })
   test('Cards for Android, exactBuildNum', () => {
-    const testCards: InfoCard[] = [
+    const cards: InfoCard[] = [
       {
         ...dummyCard,
         exactBuildNum: '123',
@@ -114,7 +114,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber: '432',
       osType: 'android',
@@ -126,7 +126,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('Another Android Message')
   })
   test('Cards for Android, version', () => {
-    const testCards: InfoCard[] = [
+    const cards: InfoCard[] = [
       {
         ...dummyCard,
         osTypes: ['android'],
@@ -143,7 +143,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber: '432',
       osType: 'android',
@@ -155,7 +155,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('Android message')
   })
   test('Cards with min/max build number', () => {
-    const testCards = [
+    const cards = [
       {
         ...dummyCard,
         minBuildNum: '3',
@@ -182,7 +182,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber: '4',
       osType,
@@ -196,7 +196,7 @@ describe('filterPromoCards', () => {
     expect(result[2].localeMessages.en).toBe('1-4')
   })
   test('No system countryCode', () => {
-    const testCards = [
+    const cards = [
       { ...dummyCard, localeMessages: { en: 'no country' } },
       {
         ...dummyCard,
@@ -220,7 +220,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       buildNumber,
       osType,
       version,
@@ -231,7 +231,7 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('no country')
   })
   test('Cards for not in US', () => {
-    const testCards = [
+    const cards = [
       {
         ...dummyCard,
         excludeCountryCodes: ['us'],
@@ -254,7 +254,7 @@ describe('filterPromoCards', () => {
       }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'us',
       buildNumber: '4',
       osType,
@@ -267,14 +267,14 @@ describe('filterPromoCards', () => {
     expect(result[1].localeMessages.en).toBe('ES message')
   })
   test('With installerId', () => {
-    const testCards: InfoCard[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
       { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber,
       osType,
@@ -287,14 +287,14 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('Bob2 Message')
   })
   test('With promotions.installerId', () => {
-    const testCards: InfoCard[] = [
+    const cards: InfoCard[] = [
       { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
       { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
     const result = getDisplayInfoCards({
-      testCards,
+      cards,
       countryCode: 'US',
       buildNumber,
       osType,

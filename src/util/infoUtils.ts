@@ -20,6 +20,7 @@ export interface DisplayInfoCard {
 interface InfoFilterProps {
   accountFunded?: boolean
   buildNumber: string
+  cards: InfoCard[]
   countryCode?: string
   currentDate: Date
   installerId?: string
@@ -27,9 +28,6 @@ interface InfoFilterProps {
   osVersion: string
   promoIds?: Array<string | null>
   version: string
-
-  /** For unit testing */
-  testCards?: InfoCard[]
 }
 
 /**
@@ -40,8 +38,7 @@ interface InfoFilterProps {
  * the info server data.
  */
 const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
-  const { testCards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, promoIds, installerId } = props
-  const cards = testCards ?? infoServerData.rollup?.promoCards2
+  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, promoIds, installerId } = props
 
   if (cards == null) return []
 
@@ -164,6 +161,7 @@ export const getActivePromoIds = async (props: { promoIds?: string[]; installerI
 
   const filteredPromoData = filterInfoCards({
     buildNumber,
+    cards: infoServerData.rollup?.promoCards2 ?? [],
     countryCode,
     currentDate,
     installerId,
