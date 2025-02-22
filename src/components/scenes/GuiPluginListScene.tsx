@@ -270,6 +270,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (plugin.nativePlugin != null) {
       const { activePromotions, installerId } = accountReferral
       const promoCards = getDisplayInfoCards({
+        cards: infoServerData.rollup?.promoCards2 ?? [],
         promoIds: activePromotions,
         installerId,
         countryCode,
