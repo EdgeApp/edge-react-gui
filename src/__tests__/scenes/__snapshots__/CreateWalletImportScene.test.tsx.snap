@@ -552,6 +552,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             autoCorrect={false}
             autoFocus={false}
             blurOnSubmit={false}
+            defaultValue=""
             disableAnimation={
               {
                 "value": 0,
@@ -601,7 +602,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             }
             testID="undefined.textInput"
             textAlignVertical="top"
-            value=""
           />
         </View>
         <View

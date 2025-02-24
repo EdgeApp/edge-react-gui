@@ -530,6 +530,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 animated={true}
                 autoCorrect={true}
                 autoFocus={false}
+                defaultValue=""
                 disableAnimation={
                   {
                     "value": 0,
@@ -578,7 +579,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 }
                 testID="undefined.textInput"
                 textAlignVertical="top"
-                value=""
               />
             </View>
             <View
