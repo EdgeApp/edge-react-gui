@@ -361,11 +361,7 @@ const updatePublicAddresses = async (
     throw new Error(lstrings.fio_get_fee_err_msg)
   }
   if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
-  try {
-    await fioSignAndBroadcast(fioWallet, edgeTx)
-  } catch (e: any) {
-    throw new Error(lstrings.fio_connect_wallets_err)
-  }
+  await fioSignAndBroadcast(fioWallet, edgeTx)
 }
 
 /**
