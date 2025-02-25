@@ -818,7 +818,7 @@
   "ss_unable": "No hay casas de cambio activas que soporten %1$s a %2$s.",
   "account": "Cuenta",
   "forget_account_title": "Olvidar Cuenta",
-  "forget_account_message_common": "Are you sure you want to forget the account %1$s from this device? PIN login will no longer work and you will need to login with your username and password.\n\nIf 2FA is enabled for this account, you will need to either enter your 2FA code or be locked out for 7 days before being able to regain access.",
+  "forget_account_message_common": "¿Estás seguro de que deseas olvidar la cuenta %1$s de este dispositivo? El inicio de sesión con PIN ya no funcionará y necesitarás iniciar sesión con tu nombre de usuario y contraseña.\n\nSi la autenticación de dos factores 2FA está habilitada para esta cuenta, necesitarás ingresar tu código de 2FA o quedarás bloqueado durante 7 días antes de poder recuperar el acceso.",
   "no": "No",
   "yes": "Sí",
   "swap_terms_accept_button": "Aceptar",
