@@ -182,7 +182,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const LeftIcon = iconComponent
   const hasIcon = LeftIcon != null
 
-  const valueRef = React.useRef(value)
+  const valueRef = useSharedValue(value)
 
   const marginRemStyle = useMarginRemStyle(marginRemProps)
 
@@ -196,7 +196,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (inputRef.current != null) inputRef.current.blur()
   }
   function clear(): void {
-    if (blurOnClear || valueRef.current === '') blur()
+    if (blurOnClear || valueRef.value === '') blur()
     if (inputRef.current != null) inputRef.current.clear()
     handleChangeText('')
     if (onClear != null) onClear()
@@ -217,11 +217,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   // TextInput's text value using `setNativeProps({ text: value })`.
   // We do this only if the `value` prop from this component has changed.
   React.useEffect(() => {
-    if (inputRef.current != null && value !== valueRef.current) {
-      valueRef.current = value
+    if (inputRef.current != null && value !== valueRef.value) {
+      valueRef.value = value
       inputRef.current.setNativeProps({ text: value })
     }
-  }, [inputRef, value])
+  }, [inputRef, value, valueRef])
 
   React.useImperativeHandle(ref, () => ({
     blur,
@@ -250,7 +250,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onBlur != null) onBlur()
   })
   const handleChangeText = useHandler((value: string) => {
-    valueRef.current = value
+    valueRef.value = value
     if (autoSelect) {
       setNativeProps({
         selection: {}
@@ -265,7 +265,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
       setNativeProps({
-        selection: { start: 0, end: valueRef.current.length },
+        selection: { start: 0, end: valueRef.value.length },
         selectTextOnFocus: true
       })
     }
@@ -276,11 +276,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   })
 
   const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
+    const hasValue = valueRef.value !== ''
     return hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
   })
   const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
+    const hasValue = valueRef.value !== ''
     return clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0
   })
 
@@ -290,7 +290,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
   const focusValue = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
+    const hasValue = valueRef.value !== ''
     return hasValue ? 1 : focusAnimation.value
   })
 

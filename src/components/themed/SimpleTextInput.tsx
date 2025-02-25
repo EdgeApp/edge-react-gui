@@ -124,12 +124,12 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const hasIcon = Icon != null
   const isIos = Platform.OS === 'ios'
 
-  const valueRef = React.useRef(value)
+  const valueRef = useSharedValue(value)
 
   const [isFocused, setIsFocused] = React.useState(false)
 
   const handleChangeText = (value: string) => {
-    valueRef.current = value
+    valueRef.value = value
     if (onChangeText != null) onChangeText(value)
   }
 
@@ -160,11 +160,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   // TextInput's text value using `setNativeProps({ text: value })`.
   // We do this only if the `value` prop from this component has changed.
   React.useEffect(() => {
-    if (inputRef.current != null && value !== valueRef.current) {
-      valueRef.current = value
+    if (inputRef.current != null && value !== valueRef.value) {
+      valueRef.value = value
       inputRef.current.setNativeProps({ text: value })
     }
-  }, [inputRef, value])
+  }, [inputRef, value, valueRef])
 
   React.useImperativeHandle(ref, () => ({
     blur,
@@ -213,11 +213,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
   const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
+    const hasValue = valueRef.value !== ''
     return hasIcon ? (hasValue && (active == null || !active) ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
   })
   const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
+    const hasValue = valueRef.value !== ''
     return hasValue ? themeRem : focusAnimation.value * themeRem
   })
 
