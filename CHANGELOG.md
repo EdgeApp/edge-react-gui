@@ -6,6 +6,7 @@
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
 - changed: `activePromotions` used to filter available promo cards
+- fixed: Unstable text input cursor on Android for some instances.
 
 ## 4.23.0 (staging)
 
@@ -21,7 +22,6 @@
 - fixed: Correct the display name for ETH txs on non-Ethereum chains
 - fixed: Input text selection bug in Android caused by `autoSelect` prop.
 - fixed: Input text selection color adjusted for transparency on Android.
-- fixed: Unstable text input cursor on Android for some instances.
 
 ## 4.22.0 (2025-02-17)
 
