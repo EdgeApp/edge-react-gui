@@ -27,6 +27,8 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
+const TXID_PLACEHOLDER = '{{TXID}}'
+
 export function SwapDetailsCard(props: Props) {
   const { swapData, transaction, wallet } = props
   const theme = useTheme()
@@ -42,6 +44,7 @@ export function SwapDetailsCard(props: Props) {
   )
 
   const { isEstimate, orderId, orderUri, payoutAddress, payoutWalletId, plugin, refundAddress } = swapData
+  const formattedOrderUri = orderUri == null ? undefined : orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
   const payoutCurrencyCode = swapData.payoutCurrencyCode
 
   const handleExchangeDetails = useHandler(async () => {
@@ -70,20 +73,22 @@ export function SwapDetailsCard(props: Props) {
   })
 
   const handleLink = async () => {
-    if (orderUri == null) return
+    if (formattedOrderUri == null) return
+
+    // Replace {{TXID}} with actual transaction ID if present
 
     if (Platform.OS === 'ios') {
       SafariView.isAvailable()
         .then(async available => {
-          if (available) await SafariView.show({ url: orderUri })
-          else await Linking.openURL(orderUri)
+          if (available) await SafariView.show({ url: formattedOrderUri })
+          else await Linking.openURL(formattedOrderUri)
         })
         .catch(error => {
           showError(error)
-          Linking.openURL(orderUri).catch(err => showError(err))
+          Linking.openURL(formattedOrderUri).catch(err => showError(err))
         })
     } else {
-      await Linking.openURL(orderUri)
+      await Linking.openURL(formattedOrderUri)
     }
   }
 
@@ -140,7 +145,7 @@ export function SwapDetailsCard(props: Props) {
         </View>
       </EdgeRow>
       {orderUri == null ? null : (
-        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
+        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={formattedOrderUri} />
       )}
       {plugin.supportEmail == null ? null : (
         <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />

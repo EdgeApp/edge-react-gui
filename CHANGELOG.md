@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
 - added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
