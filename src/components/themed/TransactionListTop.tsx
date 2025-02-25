@@ -508,7 +508,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             superscriptLabel={bestApyText}
           >
             {this.props.walletStakingState.isLoading ? (
-              <ActivityIndicator color={theme.textLink} />
+              <ActivityIndicator color={theme.primaryText} />
             ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
             )}

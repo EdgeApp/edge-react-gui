@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
 - changed: `activePromotions` used to filter available promo cards
