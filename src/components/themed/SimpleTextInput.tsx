@@ -122,16 +122,10 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const themeRem = theme.rem(1)
 
   const hasIcon = Icon != null
+  const hasValue = value !== ''
   const isIos = Platform.OS === 'ios'
 
-  const valueRef = React.useRef(value)
-
   const [isFocused, setIsFocused] = React.useState(false)
-
-  const handleChangeText = (value: string) => {
-    valueRef.current = value
-    if (onChangeText != null) onChangeText(value)
-  }
 
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
@@ -140,7 +134,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   }
   function clear(): void {
     if (inputRef.current != null) inputRef.current.clear()
-    handleChangeText('')
+    if (onChangeText != null) onChangeText('')
     if (blurOnClear) blur()
     if (onClear != null) onClear()
   }
@@ -153,18 +147,6 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   function setNativeProps(nativeProps: Object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
-
-  // This fixes RN bugs with controlled TextInput components.
-  // By avoiding the `value` prop for the TextInput, we can avoid the bugs.
-  // So an alternative to using the `value` prop, is to imperatively set the,
-  // TextInput's text value using `setNativeProps({ text: value })`.
-  // We do this only if the `value` prop from this component has changed.
-  React.useEffect(() => {
-    if (inputRef.current != null && value !== valueRef.current) {
-      valueRef.current = value
-      inputRef.current.setNativeProps({ text: value })
-    }
-  }, [inputRef, value])
 
   React.useImperativeHandle(ref, () => ({
     blur,
@@ -212,14 +194,10 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   })
 
   const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
-  const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
-    return hasIcon ? (hasValue && (active == null || !active) ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
-  })
-  const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
-    return hasValue ? themeRem : focusAnimation.value * themeRem
-  })
+  const leftIconSize = useDerivedValue(() =>
+    hasIcon ? (hasValue && (active == null || !active) ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
+  )
+  const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
@@ -254,7 +232,6 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
               returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
-              defaultValue={value}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               placeholder={placeholder}
@@ -262,9 +239,10 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
               selectionColor={theme.textInputSelectionColor}
               testID={`${testID}.textInput`}
               textAlignVertical="top"
+              value={value}
               // Callbacks:
               onBlur={handleBlur}
-              onChangeText={handleChangeText}
+              onChangeText={onChangeText}
               onFocus={handleFocus}
               onSubmitEditing={handleSubmitEditing}
               maxLength={maxLength}

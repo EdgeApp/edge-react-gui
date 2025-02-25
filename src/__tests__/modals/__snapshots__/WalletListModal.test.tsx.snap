@@ -360,7 +360,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                 }
                 accessible={true}
                 autoFocus={false}
-                defaultValue=""
                 disableAnimation={
                   {
                     "value": 0,
@@ -397,6 +396,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                 }
                 testID="undefined.textInput"
                 textAlignVertical="top"
+                value=""
               />
             </View>
             <View

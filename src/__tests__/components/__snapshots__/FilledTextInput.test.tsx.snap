@@ -107,7 +107,6 @@ exports[`FilledTextInput should render with some props 1`] = `
           autoCorrect={true}
           autoFocus={true}
           blurOnSubmit={false}
-          defaultValue="string"
           disableAnimation={
             {
               "value": 0,
@@ -137,6 +136,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           selectionColor="rgba(255, 255, 255, .25)"
           testID="string.textInput"
           textAlignVertical="top"
+          value="string"
         />
       </StyledComponent(View)>
       <StyledComponent(TouchableOpacity)

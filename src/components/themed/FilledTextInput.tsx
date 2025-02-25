@@ -181,8 +181,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   const LeftIcon = iconComponent
   const hasIcon = LeftIcon != null
-
-  const valueRef = React.useRef(value)
+  const hasValue = value !== ''
 
   const marginRemStyle = useMarginRemStyle(marginRemProps)
 
@@ -196,9 +195,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (inputRef.current != null) inputRef.current.blur()
   }
   function clear(): void {
-    if (blurOnClear || valueRef.current === '') blur()
     if (inputRef.current != null) inputRef.current.clear()
-    handleChangeText('')
+    if (onChangeText != null) onChangeText('')
+    if (blurOnClear || !hasValue) blur()
     if (onClear != null) onClear()
   }
   function focus(): void {
@@ -210,18 +209,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   function setNativeProps(nativeProps: object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
-
-  // This fixes RN bugs with controlled TextInput components.
-  // By avoiding the `value` prop for the TextInput, we can avoid the bugs.
-  // So an alternative to using the `value` prop, is to imperatively set the,
-  // TextInput's text value using `setNativeProps({ text: value })`.
-  // We do this only if the `value` prop from this component has changed.
-  React.useEffect(() => {
-    if (inputRef.current != null && value !== valueRef.current) {
-      valueRef.current = value
-      inputRef.current.setNativeProps({ text: value })
-    }
-  }, [inputRef, value])
 
   React.useImperativeHandle(ref, () => ({
     blur,
@@ -250,7 +237,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onBlur != null) onBlur()
   })
   const handleChangeText = useHandler((value: string) => {
-    valueRef.current = value
     if (autoSelect) {
       setNativeProps({
         selection: {}
@@ -265,7 +251,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
       setNativeProps({
-        selection: { start: 0, end: valueRef.current.length },
+        selection: { start: 0, end: value.length },
         selectTextOnFocus: true
       })
     }
@@ -275,24 +261,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
-    return hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
-  })
-  const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
-    return clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0
-  })
+  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const focusValue = useDerivedValue(() => {
-    const hasValue = valueRef.current !== ''
-    return hasValue ? 1 : focusAnimation.value
-  })
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value))
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
@@ -334,7 +311,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
-              defaultValue={value}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               minDecimals={minDecimals}
@@ -345,6 +321,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               textAlignVertical="top"
               textsizeRem={textsizeRem}
               scale={scale}
+              value={value}
               // Callbacks:
               onBlur={handleBlur}
               onChangeText={handleChangeText}

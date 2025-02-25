@@ -558,7 +558,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={true}
-              defaultValue=""
               disableAnimation={
                 {
                   "value": 0,
@@ -607,6 +606,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
               testID="undefined.textInput"
               textAlignVertical="top"
+              value=""
             />
           </View>
           <View
