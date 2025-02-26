@@ -1045,7 +1045,7 @@
   "export_transaction_csv": "CSV",
   "export_transaction_bitwave_csv": "Bitwave CSV",
   "export_transaction_bitwave_accountid_modal_title": "ID de cuenta de Bitwave",
-  "export_transaction_bitwave_accountid_modal_message": "Please enter the Bitwave account ID for this wallet",
+  "export_transaction_bitwave_accountid_modal_message": "Por favor, ingresa el ID de cuenta de Bitwave para esta billetera",
   "export_transaction_bitwave_accountid_modal_input_label": "Account ID",
   "string_export": "Exportar",
   "string_status": "Estado",
