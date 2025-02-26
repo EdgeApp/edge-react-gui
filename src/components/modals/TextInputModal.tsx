@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
