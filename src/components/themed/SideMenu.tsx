@@ -162,21 +162,21 @@ export function SideMenuComponent(props: Props) {
     navigation.navigate('edgeAppStack', { screen: 'coinRanking' })
   }
 
-  const handleShareApp = () => {
-    const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
-
+  const handleShareApp = async () => {
     // Generate anonymized referral ID
     const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
     const refId = hashjs.sha256().update(data).digest('hex').replace('0x', '').substring(0, 10)
 
-    const website = `${config.website}?af=appreferred_${refId}`
+    const url = `${config.website}?af=appreferred_${refId}`
+    const subject = sprintf(lstrings.share_subject, config.appName)
 
-    const shareOptions = {
+    await Share.open({
       failOnCancel: false,
-      message: Platform.OS === 'ios' ? message : message + website,
-      url: Platform.OS === 'ios' ? website : ''
-    }
-    Share.open(shareOptions).catch(e => showError(e))
+      title: subject,
+      subject,
+      message: lstrings.share_message,
+      url
+    })
   }
 
   const handleBottomPanelLayout = (event: any) => {
@@ -220,7 +220,7 @@ export function SideMenuComponent(props: Props) {
   /// ---- Row Data ----
 
   const rowDatas: Array<{
-    pressHandler: () => void
+    pressHandler: () => void | Promise<void>
     iconName?: string // Fontello
     iconNameFontAwesome?: string
     title: string
