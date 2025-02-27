@@ -53,7 +53,11 @@ export function QrCode(props: Props) {
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
   const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
-  const icon = <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={1.5} />
+  const icon = (
+    <View style={styles.iconBackground}>
+      <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={3.5} />
+    </View>
+  )
 
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
@@ -89,5 +93,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     right: 0,
     top: 0
+  },
+  iconBackground: {
+    width: theme.rem(4.5),
+    height: theme.rem(4.5),
+    borderRadius: theme.cardBorderRadius,
+    backgroundColor: theme.qrBackgroundColor,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))
