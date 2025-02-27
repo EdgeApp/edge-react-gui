@@ -163,18 +163,18 @@ export function SideMenuComponent(props: Props) {
   }
 
   const handleShareApp = () => {
-    const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
-
     // Generate anonymized referral ID
     const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
     const refId = hashjs.sha256().update(data).digest('hex').replace('0x', '').substring(0, 10)
 
-    const website = `${config.website}?af=appreferred_${refId}`
+    const url = `${config.website}?af=appreferred_${refId}`
 
     const shareOptions = {
       failOnCancel: false,
-      message: Platform.OS === 'ios' ? message : message + website,
-      url: Platform.OS === 'ios' ? website : ''
+      title: lstrings.share_subject,
+      subject: lstrings.share_subject,
+      message: lstrings.share_message,
+      url
     }
     Share.open(shareOptions).catch(e => showError(e))
   }
