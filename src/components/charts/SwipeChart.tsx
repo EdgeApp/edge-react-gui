@@ -14,6 +14,8 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
+import { useSelector } from '../../types/reactRedux'
 import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
@@ -27,8 +29,6 @@ type CoinGeckoDataPair = number[]
 interface Props {
   /** The asset's 'id' as defined by CoinGecko */
   assetId: string
-  currencyCode: string
-  fiatCurrencyCode: string
 }
 interface ChartDataPoint {
   x: Date
@@ -128,7 +128,7 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, fiatCurrencyCode } = params
+  const { assetId } = params
 
   // #region Chart setup
 
@@ -145,7 +145,8 @@ const SwipeChartComponent = (params: Props) => {
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
+  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(coingeckoFiat), [coingeckoFiat])
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
@@ -201,7 +202,7 @@ const SwipeChartComponent = (params: Props) => {
         } else {
           const unixNow = Math.trunc(new Date().getTime() / 1000)
           const fromParam = unixNow - queryFromTimeOffset
-          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
+          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, coingeckoFiat, fromParam, unixNow)
           // Start with the free base URL
           let fetchUrl = `${COINGECKO_URL}${fetchPath}`
           do {

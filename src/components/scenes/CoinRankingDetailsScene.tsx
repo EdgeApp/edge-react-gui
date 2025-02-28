@@ -21,7 +21,7 @@ import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { filterStakePolicies, StakePolicy } from '../../plugins/stake-plugins/types'
 import { defaultWalletStakingState } from '../../reducers/StakingReducer'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { getCoingeckoFiat, getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { asCoinRankingData, CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
@@ -39,7 +39,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { COINGECKO_SUPPORTED_FIATS } from './CoinRankingScene'
 
 type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
 
@@ -117,13 +116,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   // In case the user changes their default fiat while viewing this scene, we
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const supportedFiat = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
       throw new Error('No currencyCode or coinRankingData provided')
     }
-    const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${supportedFiat}`)
+    const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`)
     if (!response.ok) {
       const text = await response.text()
       throw new Error(`Unable to fetch coin ranking data. ${text}`)
@@ -133,7 +132,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     const crData = asCoinRankingData(json.data)
 
     return crData
-  }, [assetId, supportedFiat])
+  }, [assetId, coingeckoFiat])
 
   const coinRankingData = fetchedCoinRankingData ?? initCoinRankingData
 
@@ -280,7 +279,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'marketCap':
         return `${formatFiatString({
           fiatAmount: baseString
-        })} ${supportedFiat}`
+        })} ${coingeckoFiat}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
@@ -289,13 +288,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'allTimeHigh': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
-        })} ${supportedFiat}`
+        })} ${coingeckoFiat}`
         return coinRankingData?.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
       }
       case 'allTimeLow': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
-        })} ${supportedFiat}`
+        })} ${coingeckoFiat}`
         return coinRankingData?.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
       }
       default:
@@ -493,7 +492,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
             <FastImage style={styles.icon} source={imageUrlObject} />
             <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
-          <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCode} fiatCurrencyCode={supportedFiat} />
+          <SwipeChart assetId={coinRankingData.assetId} />
           {edgeAssets.length <= 0 ? null : (
             <View style={styles.buttonsContainer}>
               <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
@@ -521,11 +520,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
               </IconButton>
             </View>
           )}
-          {defaultFiat === supportedFiat ? null : (
+          {defaultFiat === coingeckoFiat ? null : (
             <AlertCardUi4
               type="warning"
               title={lstrings.coin_rank_currency_rates_warning_title}
-              body={sprintf(lstrings.coin_rank_currency_rates_warning_message_2s, supportedFiat, defaultFiat)}
+              body={sprintf(lstrings.coin_rank_currency_rates_warning_message_2s, coingeckoFiat, defaultFiat)}
             />
           )}
           <View style={styles.columns}>
