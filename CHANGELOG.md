@@ -6,6 +6,7 @@
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
 - changed: `activePromotions` used to filter available promo cards
+- changed: Modal components synced with edge-login-ui-rn
 - fixed: Unstable text input cursor on Android for some instances.
 
 ## 4.23.0 (staging)

@@ -154,7 +154,6 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
               buttons={{
                 ok: { label: lstrings.title_fio_add_bundled_txs }
               }}
-              closeArrow
             />
           ))
           if (answer === 'ok') {

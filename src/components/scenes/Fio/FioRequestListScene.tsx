@@ -201,7 +201,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         buttons={{
           ok: { label: lstrings.title_fio_add_bundled_txs }
         }}
-        closeArrow
       />
     ))
     if (answer === 'ok') {
