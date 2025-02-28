@@ -193,7 +193,7 @@ export const SPECIAL_CURRENCY_INFO: {
     noMaxSpend: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
-      reference: '324'
+      reference: '2741'
     }
   },
   amoy: {
