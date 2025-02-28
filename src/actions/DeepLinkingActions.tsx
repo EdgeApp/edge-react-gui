@@ -213,9 +213,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       }
 
       if (result === 'buy') {
-        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+        navigation.navigate('buyTab', { screen: 'pluginListBuy', params: {} })
       } else if (result === 'sell') {
-        navigation.navigate('sellTab', { screen: 'pluginListSell' })
+        navigation.navigate('sellTab', { screen: 'pluginListSell', params: {} })
       } else if (result === 'exchange') {
         navigation.navigate('swapTab', { screen: 'swapCreate' })
       }

@@ -30,7 +30,7 @@ import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScro
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
+import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
@@ -98,7 +98,13 @@ const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-interface OwnProps extends BuyTabSceneProps<'pluginListBuy' | 'pluginListSell'> {}
+type BuyProps = BuyTabSceneProps<'pluginListBuy'>
+type SellProps = SellTabSceneProps<'pluginListSell'>
+type OwnProps = BuyProps | SellProps
+
+function isBuyProps(props: OwnProps): props is BuyProps {
+  return props.route.name === 'pluginListBuy'
+}
 
 interface StateProps {
   account: EdgeAccount
@@ -214,7 +220,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * which plugin list to show.
    */
   getSceneDirection(): 'buy' | 'sell' {
-    return this.props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+    return isBuyProps(this.props) ? 'buy' : 'sell'
   }
 
   /**
@@ -311,11 +317,17 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       })
     } else {
       // Launch!
-      navigation.navigate(direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
+      const navigationProps = {
         plugin,
         deepPath,
         deepQuery
-      })
+      }
+
+      if (isBuyProps(this.props)) {
+        this.props.navigation.navigate('pluginViewBuy', navigationProps)
+      } else {
+        this.props.navigation.navigate('pluginViewSell', navigationProps)
+      }
     }
 
     // Reset potential filterAsset after the user launched a plugin.
@@ -617,7 +629,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const GuiPluginListScene = React.memo((props: OwnProps) => {
+const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
   const { navigation, route } = props
   const { params = { forcedWalletResult: undefined } } = route
   const dispatch = useDispatch()
@@ -630,7 +642,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
   const coreDisklet = useSelector(state => state.core.disklet)
   const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
-  const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+  const direction = isBuyProps(props) ? 'buy' : 'sell'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
   const isFocused = useIsFocused()
 
@@ -694,13 +706,14 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               forcedWalletResult={forcedWalletResultLocal}
               onScroll={handleScroll}
               insetStyle={insetStyle}
-              navigation={debouncedNavigation}
-              route={route}
               stateProvinceCode={stateProvinceCode}
               theme={theme}
               onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
               onPluginOpened={handlePluginOpened}
+              // HACK: Getting these props to work requires a heavier refactor
+              navigation={debouncedNavigation as any}
+              route={route as any}
             />
           </View>
         )
@@ -708,3 +721,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     </SceneWrapper>
   )
 })
+
+// Export separate components for buy and sell routes
+export const BuyScene = (props: BuyProps) => <GuiPluginListSceneComponent {...props} />
+export const SellScene = (props: SellProps) => <GuiPluginListSceneComponent {...props} />
