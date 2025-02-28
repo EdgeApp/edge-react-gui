@@ -7,6 +7,8 @@
 - added: `activePromotions` to save promos upon deeplink activation
 - changed: `activePromotions` used to filter available promo cards
 - changed: Modal components synced with edge-login-ui-rn
+- changed: Make buy/sell plugin list navigation params separate
+- changed: Simplify fake scene props implementation to reduce code duplication
 - fixed: Unstable text input cursor on Android for some instances.
 
 ## 4.23.0 (staging)

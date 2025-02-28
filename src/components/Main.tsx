@@ -31,6 +31,7 @@ import {
   NavigationBase,
   RootParamList,
   RootSceneProps,
+  SellTabParamList,
   SwapTabParamList,
   WalletsTabParamList
 } from '../types/routerTypes'
@@ -87,7 +88,7 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
-import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
+import { BuyScene as BuySceneComponent, SellScene as SellSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
@@ -141,28 +142,28 @@ import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
+const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
+const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
-const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
 const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectSceneComponent)
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
-const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
 const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsSceneComponent)
+const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
-const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
 const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
+const EarnScene = ifLoggedIn(EarnSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
 const EditTokenScene = ifLoggedIn(EditTokenSceneComponent)
-const EarnScene = ifLoggedIn(EarnSceneComponent)
 const ExtraTabScene = ifLoggedIn(ExtraTabSceneComponent)
 const FiatPluginEnterAmountScene = ifLoggedIn(FiatPluginEnterAmountSceneComponent)
 const FioAddressDetailsScene = ifLoggedIn(FioAddressDetailsSceneComponent)
@@ -182,8 +183,8 @@ const FioRequestListScene = ifLoggedIn(FioRequestListSceneComponent)
 const FioSentRequestDetailsScene = ifLoggedIn(FioSentRequestDetailsSceneComponent)
 const FioStakingChangeScene = ifLoggedIn(FioStakingChangeSceneComponent)
 const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
-const GuiPluginListScene = ifLoggedIn(GuiPluginListSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
+const HomeScene = ifLoggedIn(HomeSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(LoanCreateConfirmationSceneComponent)
 const LoanCreateScene = ifLoggedIn(LoanCreateSceneComponent)
@@ -192,10 +193,6 @@ const LoanDetailsScene = ifLoggedIn(LoanDetailsSceneComponent)
 const LoanManageScene = ifLoggedIn(LoanManageSceneComponent)
 const LoanStatusScene = ifLoggedIn(LoanStatusSceneComponent)
 const ManageTokensScene = ifLoggedIn(ManageTokensSceneComponent)
-const SweepPrivateKeyCalculateFeeScene = ifLoggedIn(SweepPrivateKeyCalculateFeeSceneComponent)
-const SweepPrivateKeyCompletionScene = ifLoggedIn(SweepPrivateKeyCompletionSceneComponent)
-const SweepPrivateKeySelectCryptoScene = ifLoggedIn(SweepPrivateKeySelectCryptoSceneComponent)
-const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingSceneComponent)
 const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
@@ -205,31 +202,36 @@ const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
+const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
+const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
 const SecurityAlertsScene = ifLoggedIn(SecurityAlertsSceneComponent)
+const SellScene = ifLoggedIn(SellSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
 const SpendingLimitsScene = ifLoggedIn(SpendingLimitsSceneComponent)
-const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
-const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
 const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
-const SwapProcessingScene = ifLoggedIn(SwapProcessingSceneComponent)
 const SwapConfirmationScene = ifLoggedIn(SwapConfirmationSceneComponent)
 const SwapCreateScene = ifLoggedIn(SwapCreateSceneComponent)
+const SwapProcessingScene = ifLoggedIn(SwapProcessingSceneComponent)
 const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
 const SwapSuccessScene = ifLoggedIn(SwapSuccessSceneComponent)
+const SweepPrivateKeyCalculateFeeScene = ifLoggedIn(SweepPrivateKeyCalculateFeeSceneComponent)
+const SweepPrivateKeyCompletionScene = ifLoggedIn(SweepPrivateKeyCompletionSceneComponent)
+const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingSceneComponent)
+const SweepPrivateKeySelectCryptoScene = ifLoggedIn(SweepPrivateKeySelectCryptoSceneComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
-const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
+const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
+const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WalletRestoreScene = ifLoggedIn(WalletRestoreSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
 const WebViewScene = ifLoggedIn(WebViewSceneComponent)
-const HomeScene = ifLoggedIn(HomeSceneComponent)
 
 const RootStack = createStackNavigator<RootParamList>()
 const Drawer = createDrawerNavigator<DrawerParamList>()
@@ -237,6 +239,7 @@ const AppStack = createStackNavigator<EdgeAppStackParamList>()
 const Tabs = createBottomTabNavigator<EdgeTabsParamList>()
 const SwapStack = createStackNavigator<SwapTabParamList>()
 const BuyStack = createStackNavigator<BuyTabParamList>()
+const SellStack = createStackNavigator<SellTabParamList>()
 const WalletsStack = createStackNavigator<WalletsTabParamList>()
 
 const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefined
@@ -294,7 +297,7 @@ const EdgeWalletsTabScreen = () => {
 const EdgeBuyTabScreen = () => {
   return (
     <BuyStack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
-      <BuyStack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <BuyStack.Screen name="pluginListBuy" component={BuyScene} options={firstSceneScreenOptions} />
       <BuyStack.Screen
         name="pluginViewBuy"
         component={GuiPluginViewScene}
@@ -356,49 +359,62 @@ const EdgeBuyTabScreen = () => {
 
 const EdgeSellTabScreen = () => {
   return (
-    <BuyStack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <BuyStack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <BuyStack.Screen
+    <SellStack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <SellStack.Screen name="pluginListSell" component={SellScene} options={firstSceneScreenOptions} />
+      <SellStack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
         options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
-      <BuyStack.Screen
+      <SellStack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
         options={{
           headerRight: () => null
         }}
       />
-      <BuyStack.Screen
+      <SellStack.Screen
+        name="guiPluginConfirmation"
+        component={ConfirmationScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+      <SellStack.Screen
+        name="guiPluginEmailForm"
+        component={EmailFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <SellStack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
           headerRight: () => null
         }}
       />
-      <BuyStack.Screen
+      <SellStack.Screen
         name="guiPluginInfoDisplay"
         component={InfoDisplayScene}
         options={{
           headerRight: () => null
         }}
       />
-      <BuyStack.Screen
+      <SellStack.Screen
         name="guiPluginSepaForm"
         component={SepaFormScene}
         options={{
           headerRight: () => null
         }}
       />
-      <BuyStack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
-      <BuyStack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
-      <BuyStack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
-    </BuyStack.Navigator>
+      <SellStack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <SellStack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <SellStack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
+    </SellStack.Navigator>
   )
 }
 
