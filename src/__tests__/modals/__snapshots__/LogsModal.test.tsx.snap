@@ -699,234 +699,261 @@ exports[`LogsModal should render with a logs modal 1`] = `
           </View>
         </View>
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+          absolute={false}
+          layout="column"
+          parentType="modal"
           style={
             {
-              "alignItems": "center",
+              "alignItems": "stretch",
               "alignSelf": "center",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "flexDirection": "column",
+              "margin": 11,
+              "marginBottom": 22,
+              "marginTop": 45,
             }
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                4280299823,
-                4278214733,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "justifyContent": "center",
+                "margin": -11,
+                "opacity": 1,
+                "padding": 11,
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
+            <BVLinearGradient
+              colors={
+                [
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
               style={
                 [
                   {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "flexDirection": "row",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "justifyContent": "center",
                   },
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ],
-                  null,
+                  {
+                    "alignSelf": "stretch",
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 34,
+                  },
+                  {
+                    "opacity": 1,
+                  },
                 ]
               }
             >
-              Send Logs to Edge
-            </Text>
-          </BVLinearGradient>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "alignSelf": "center",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "opacity": 1,
-              "paddingBottom": 22,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 11,
-            }
-          }
-        >
-          <BVLinearGradient
-            colors={
-              [
-                872415231,
-                872415231,
-              ]
-            }
-            endPoint={
-              {
-                "x": 1,
-                "y": 1,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
+                  ]
+                }
+              >
+                Send to Edge
+              </Text>
+            </BVLinearGradient>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": undefined,
+                "alignSelf": undefined,
+                "flexDirection": "column",
+                "flexGrow": undefined,
+                "justifyContent": undefined,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              }
+            }
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "justifyContent": "center",
+                "margin": -11,
+                "opacity": 1,
+                "padding": 11,
+              }
+            }
+          >
+            <BVLinearGradient
+              colors={
+                [
+                  872415231,
+                  872415231,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 1,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "flexDirection": "row",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "justifyContent": "center",
+                  },
+                  {
+                    "alignSelf": "stretch",
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 34,
+                  },
+                  {
+                    "opacity": 1,
+                  },
                 ]
               }
             >
-              Export Logs
-            </Text>
-          </BVLinearGradient>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
+                    null,
+                  ]
+                }
+              >
+                Save
+              </Text>
+            </BVLinearGradient>
+          </View>
         </View>
       </View>
     </RCTScrollView>

@@ -445,7 +445,7 @@ const strings = {
   swap_minimum_receive_amount: 'Min Receive Amount',
   swap_minimum_amount_1s: 'Min %1$s',
   settings_button_clear_logs: 'Clear Logs',
-  settings_button_send_logs: 'Send Logs to Edge',
+  send_to_1s: 'Send to %1$s',
   settings_button_export_logs: 'Export Logs',
   settings_button_setup_two_factor: 'Set Up 2-Factor Security',
   settings_button_unlock_settings: 'Tap to Unlock Account Settings',
