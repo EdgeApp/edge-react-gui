@@ -43,7 +43,7 @@ import { EdgeText } from '../themed/EdgeText'
 type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
 
 export interface CoinRankingDetailsParams {
-  assetId?: string
+  assetId: string
   coinRankingData?: CoinRankingData
 }
 
