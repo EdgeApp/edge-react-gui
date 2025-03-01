@@ -16,6 +16,7 @@
 - fixed: Unstable text input cursor on Android for some instances.
 - fixed: Text used for sharing app split from one message into title and message
 - fixed: `CryptoIcon` not showing secondary/parent icon in some cases
+- fixed: `NotificationView` `ip2faReminder` flickering on iOS and never hiding on Android when pressing X
 
 ## 4.23.0 (2025-03-01)
 
