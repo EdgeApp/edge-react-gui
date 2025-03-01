@@ -75,7 +75,7 @@ function WalletDetailsComponent(props: Props) {
   // Selectors:
   const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
+  const defaultFiat = defaultIsoFiat.replace('iso:', '')
   const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
@@ -90,11 +90,13 @@ function WalletDetailsComponent(props: Props) {
   // ---------------------------------------------------------------------------
 
   // Fiat Balance Formatting
+  // Note that we use the user's preferred fiat here,
+  // which may differ from the coingeckoFiat used on the chart itself.
   const exchangeAmount = convertNativeToDenomination(exchangeDenom.multiplier)(exchangeDenom.multiplier)
   const fiatRate = mul(exchangeAmount, exchangeRate ?? 0)
   const fiatRateFormat = `${formatNumber(fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0, {
     toFixed: gt(fiatRate, '1000') ? 0 : 2
-  })} ${fiatCurrencyCode}/${currencyCode}`
+  })} ${defaultFiat}/${currencyCode}`
 
   const spamThreshold = React.useMemo<string | undefined>(() => {
     if (spamFilterOn) {
@@ -290,7 +292,7 @@ function WalletDetailsComponent(props: Props) {
               <Paragraph>
                 <EdgeText>{fiatRateFormat}</EdgeText>
               </Paragraph>
-              <SwipeChart assetId={assetId} currencyCode={currencyCode} fiatCurrencyCode={fiatCurrencyCode} />
+              <SwipeChart assetId={assetId} />
             </EdgeCard>
           )}
           <SectionHeaderUi4
