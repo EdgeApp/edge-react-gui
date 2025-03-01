@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toPercentString } from '../../locales/intl'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
 import { asCoinranking, CoinRankingData } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -17,7 +17,6 @@ import { fetchRates } from '../../util/network'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeRow } from '../rows/EdgeRow'
-import { COINGECKO_SUPPORTED_FIATS } from '../scenes/CoinRankingScene'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -115,8 +114,8 @@ const CoinRow = (props: CoinRowProps) => {
       icon={<FastImage style={styles.icon} source={imageSrc} />}
       onPress={() =>
         navigation.navigate('coinRankingDetails', {
-          coinRankingData: coinRow,
-          fiatCurrencyCode
+          assetId,
+          coinRankingData: coinRow
         })
       }
       rightButtonType="none"
@@ -137,8 +136,7 @@ const CoinRow = (props: CoinRowProps) => {
  */
 export const MarketsCard = (props: Props) => {
   const { numRows } = props
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const supportedFiatSetting = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
   const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
 
@@ -149,7 +147,7 @@ export const MarketsCard = (props: Props) => {
     const task = makePeriodicTask(
       async () => {
         const fetchedData = []
-        const url = `v2/coinrank?fiatCode=iso:${supportedFiatSetting}&start=${1}&length=${numRows - 1}`
+        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${1}&length=${numRows - 1}`
         const response = await fetchRates(url)
         if (!response.ok) {
           const text = await response.text()
@@ -177,12 +175,12 @@ export const MarketsCard = (props: Props) => {
 
     // Cleanup logic:
     return () => task.stop()
-  }, [supportedFiatSetting, numRows])
+  }, [coingeckoFiat, numRows])
 
   return (
     <EdgeCard sections>
       {coinRankingDatas.map((coinRow, index) => (
-        <CoinRow key={coinRow.assetId} coinRow={coinRow} fiatCurrencyCode={supportedFiatSetting} index={index} {...props} />
+        <CoinRow key={coinRow.assetId} coinRow={coinRow} fiatCurrencyCode={coingeckoFiat} index={index} {...props} />
       ))}
     </EdgeCard>
   )

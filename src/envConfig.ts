@@ -138,6 +138,7 @@ export const asEnvConfig = asObject({
   UNSTOPPABLE_DOMAINS_API_KEY: asNullable(asString),
 
   // Core plugin options:
+  ABSTRACT_INIT: asCorePluginInit(asEvmApiKeys),
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
   AMOY_INIT: asCorePluginInit(asEvmApiKeys),
   ALGORAND_INIT: asOptional(asBoolean, true),

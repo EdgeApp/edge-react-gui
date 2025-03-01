@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -17,14 +17,14 @@ interface Props {
   /** Display the asset icon in the center of the QR */
   tokenId?: EdgeTokenId
   /** Display the asset icon in the center of the QR */
-  wallet?: EdgeCurrencyWallet
+  pluginId: string
   onPress?: () => void
 }
 
 export function QrCode(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { data, marginRem, wallet, tokenId = null, onPress } = props
+  const { data, marginRem, pluginId, tokenId = null, onPress } = props
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 2), theme.rem))
 
@@ -53,7 +53,7 @@ export function QrCode(props: Props) {
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
   const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
-  const maybeCryptoIcon = wallet == null ? undefined : <CryptoIcon walletId={wallet.id} tokenId={tokenId} sizeRem={1.5} />
+  const icon = <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={1.5} />
 
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
@@ -66,7 +66,7 @@ export function QrCode(props: Props) {
             </Svg>
           )}
         </Animated.View>
-        {maybeCryptoIcon}
+        {icon}
       </View>
     </EdgeTouchableWithoutFeedback>
   )

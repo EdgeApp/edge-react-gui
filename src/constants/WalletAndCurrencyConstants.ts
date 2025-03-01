@@ -183,6 +183,19 @@ export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo =>
 export const SPECIAL_CURRENCY_INFO: {
   [pluginId: string]: SpecialCurrencyInfo
 } = {
+  abstract: {
+    allowZeroTx: true,
+    chainCode: 'ETH',
+    chainIcon: true,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_abstract_wallet_name,
+    isImportKeySupported: true,
+    noMaxSpend: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '2741'
+    }
+  },
   amoy: {
     allowZeroTx: true,
     chainCode: 'ETH',
@@ -789,7 +802,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode: Platform.OS === 'android' ? Platform.constants.Version < 28 : Platform.OS === 'ios',
+    keysOnlyMode: Platform.OS === 'android' && Platform.constants.Version < 28,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',

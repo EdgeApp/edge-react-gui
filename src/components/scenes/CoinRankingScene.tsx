@@ -6,7 +6,7 @@ import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
@@ -28,50 +28,6 @@ const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
 const QUERY_PAGE_SIZE = 30
 const LISTINGS_REFRESH_INTERVAL = 30000
-
-// HACK: To be moved to a CoinGecko query in the info or rates server.
-// Hard-coded "vs" currencies manually filtered for fiat currency codes for now.
-export const COINGECKO_SUPPORTED_FIATS = {
-  AED: true,
-  ARS: true,
-  AUD: true,
-  BDT: true,
-  BHD: true,
-  BMD: true,
-  BRL: true,
-  CAD: true,
-  CHF: true,
-  CLP: true,
-  CZK: true,
-  DKK: true,
-  GBP: true,
-  GEL: true,
-  HKD: true,
-  HUF: true,
-  ILS: true,
-  INR: true,
-  KWD: true,
-  LKR: true,
-  MMK: true,
-  MXN: true,
-  MYR: true,
-  NGN: true,
-  NOK: true,
-  NZD: true,
-  PHP: true,
-  PKR: true,
-  PLN: true,
-  SAR: true,
-  SEK: true,
-  SGD: true,
-  THB: true,
-  TRY: true,
-  UAH: true,
-  VEF: true,
-  VND: true,
-  ZAR: true,
-  XDR: true
-}
 
 // Masking enable bit with 0 disables logging
 enableDebugLogType(LOG_COINRANK & 0)
@@ -98,16 +54,14 @@ const CoinRankingComponent = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  /** The user's fiat setting, falling back to USD if CoinGecko does not support
-   * it. */
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const supportedFiatSetting = COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+  /** The user's fiat setting, falling back to USD if not supported. */
+  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
   const mounted = React.useRef<boolean>(true)
   const timeoutHandler = React.useRef<Timeout | undefined>()
   const lastStartIndex = React.useRef<number>(1)
   /** The fiat that was last stored from the fetch. */
-  const lastFetchedFiat = React.useRef<string>(supportedFiatSetting)
+  const lastFetchedFiat = React.useRef<string>(coingeckoFiat)
   const isQuerying = React.useRef<boolean>(false)
 
   const [requestDataSize, setRequestDataSize] = React.useState<number>(QUERY_PAGE_SIZE)
@@ -121,8 +75,8 @@ const CoinRankingComponent = (props: Props) => {
   const handleScroll = useSceneScrollHandler()
 
   const extraData = React.useMemo(
-    () => ({ assetSubText, supportedFiatSetting, percentChangeTimeFrame }),
-    [assetSubText, supportedFiatSetting, percentChangeTimeFrame]
+    () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame }),
+    [assetSubText, coingeckoFiat, percentChangeTimeFrame]
   )
 
   const { coinRankingDatas } = coinRanking
@@ -131,7 +85,7 @@ const CoinRankingComponent = (props: Props) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
-    const key = `${index}-${item}-${rank}-${currencyCode}-${supportedFiatSetting}`
+    const key = `${index}-${item}-${rank}-${currencyCode}-${coingeckoFiat}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
@@ -142,7 +96,7 @@ const CoinRankingComponent = (props: Props) => {
           coinRanking={coinRanking}
           percentChangeTimeFrame={percentChangeTimeFrame}
           assetSubText={assetSubText}
-          fiatCurrencyCode={supportedFiatSetting}
+          fiatCurrencyCode={coingeckoFiat}
         />
       </EdgeAnim>
     )
@@ -217,7 +171,7 @@ const CoinRankingComponent = (props: Props) => {
       try {
         // Catch up to the total required items
         while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
-          const url = `v2/coinrank?fiatCode=iso:${supportedFiatSetting}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
+          const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
 
           const response = await fetchRates(url)
           if (!response.ok) {
@@ -250,17 +204,17 @@ const CoinRankingComponent = (props: Props) => {
       }, LISTINGS_REFRESH_INTERVAL)
     }
 
-    if (lastFetchedFiat.current !== supportedFiatSetting) {
+    if (lastFetchedFiat.current !== coingeckoFiat) {
       // Reset everything when the fiat setting does not match what cached
       // data we fetched previously.
-      debugLog(LOG_COINRANK, `Fiat changed from ${lastFetchedFiat.current} to ${supportedFiatSetting}`)
+      debugLog(LOG_COINRANK, `Fiat changed from ${lastFetchedFiat.current} to ${coingeckoFiat}`)
       isQuerying.current = false
       if (timeoutHandler.current) clearTimeout(timeoutHandler.current)
       coinRanking.coinRankingDatas = []
       lastStartIndex.current = 1
       setDataSize(0)
       setRequestDataSize(QUERY_PAGE_SIZE)
-      lastFetchedFiat.current = supportedFiatSetting
+      lastFetchedFiat.current = coingeckoFiat
     }
 
     queryLoop(lastStartIndex.current).catch(e => console.error(`Error in query loop: ${e.message}`))
@@ -272,7 +226,7 @@ const CoinRankingComponent = (props: Props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestDataSize, supportedFiatSetting])
+  }, [requestDataSize, coingeckoFiat])
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)

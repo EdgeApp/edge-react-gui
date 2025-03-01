@@ -605,6 +605,7 @@ const strings = {
   string_first_bobevm_wallet_name: 'My BOB',
   string_first_algorand_wallet_name: 'My Algorand',
   string_first_zksync_wallet_name: 'My zkSync',
+  string_first_abstract_wallet_name: 'My Abstract',
   string_first_sepolia_wallet_name: 'My Sepolia',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
@@ -1539,6 +1540,8 @@ const strings = {
   coin_rank_month: '30D',
   coin_rank_year: '1Y',
   coin_rank_see_more: 'See More',
+  coin_rank_currency_rates_warning_title: 'Currency Rates',
+  coin_rank_currency_rates_warning_message_2s: `The rates shown are quoted in %1$s as a fallback. Market data for your default currency setting (%2$s) is not supported.`,
 
   // #endregion CoinRanking
 

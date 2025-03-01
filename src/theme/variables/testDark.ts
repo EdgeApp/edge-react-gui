@@ -57,6 +57,7 @@ const palette = {
 
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp25: 'rgba(255, 255, 255, .25)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -427,6 +428,7 @@ export const testDark: Theme = {
   textInputPlaceholderColor: palette.gray,
   textInputPlaceholderColorDisabled: palette.gray,
   textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputSelectionColor: palette.whiteOp25,
 
   // Animation
   fadeDisable: palette.gray,

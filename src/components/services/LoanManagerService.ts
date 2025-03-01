@@ -119,7 +119,7 @@ export const LoanManagerService = (props: Props) => {
           // Only trigger push events after the exchange rates are available for
           // all loan assets on this account
           const loanAssetTokenIds = [...filteredDebts, ...filteredCollaterals].map(loanAsset => loanAsset.tokenId)
-          if (loanAssetTokenIds.every(tokenId => tokenId == null || !zeroString(exchangeRates[`${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`]))) {
+          if (loanAssetTokenIds.every(tokenId => tokenId == null || exchangeRates[`${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`] != null)) {
             if (debts.length > 0) {
               // If it's the first time the account has been seen, we want to
               // avoid a notification if it already exceeds the liquidation price
@@ -209,7 +209,7 @@ export const LoanManagerService = (props: Props) => {
         const thresholdRate = parseFloat(div(debtFiatTotal, mul(collateralExchangeAmount, ALERT_THRESHOLD_LTV), DECIMAL_PRECISION))
         const currencyPair = `${collateralCurrencyCode}_iso:USD`
 
-        if (isSkipPriceCheck || parseFloat(exchangeRates[currencyPair]) > thresholdRate) {
+        if (isSkipPriceCheck || exchangeRates[currencyPair] > thresholdRate) {
           await uploadLiquidationEvent(currencyPair, thresholdRate)
         }
       }

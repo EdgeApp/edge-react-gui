@@ -12,6 +12,7 @@ describe('TransactionListRow', () => {
       pluginId: 'bitcoin',
       currencyCode: 'BTC',
       displayName: 'Bitcoin',
+      assetDisplayName: 'Bitcoin',
       requiredConfirmations: 1,
       denominations: [
         { name: 'BTC', multiplier: '100000000', symbol: '₿' },

@@ -7,7 +7,7 @@ import { useWalletBalance } from '../../hooks/useWalletBalance'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { CryptoIcon } from '../icons/CryptoIcon'
+import { WalletIcon } from '../icons/WalletIcon'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
@@ -54,7 +54,7 @@ const CurrencyRowComponent = (props: Props) => {
   // Balance stuff:
   const hideBalanceSetting = useSelector(state => (hideBalance == null ? !state.ui.settings.isAccountBalanceVisible : hideBalance))
   const balance = useWalletBalance(wallet, tokenId)
-  const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
+  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalanceSetting} />
   const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalanceSetting} />
 

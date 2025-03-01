@@ -206,7 +206,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
-  function setNativeProps(nativeProps: Object): void {
+  function setNativeProps(nativeProps: object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
@@ -237,6 +237,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onBlur != null) onBlur()
   })
   const handleChangeText = useHandler((value: string) => {
+    if (autoSelect) {
+      setNativeProps({
+        selection: {}
+      })
+    }
     if (props.onChangeText != null) props.onChangeText(value)
   })
   const handleClearPress = useHandler(() => {
@@ -311,7 +316,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               minDecimals={minDecimals}
               maxDecimals={maxDecimals}
               multiline={multiline}
-              selectionColor={theme.textInputTextColor}
+              selectionColor={theme.textInputSelectionColor}
               testID={`${testID}.textInput`}
               textAlignVertical="top"
               textsizeRem={textsizeRem}

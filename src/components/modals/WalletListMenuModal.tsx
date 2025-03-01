@@ -233,7 +233,7 @@ export function WalletListMenuModal(props: Props) {
           <View>
             <ModalTitle paddingRem={[0, 0, 0.5]}>{getWalletName(wallet)}</ModalTitle>
             <View style={styles.row}>
-              <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+              <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} pluginId={wallet.currencyInfo.pluginId} />
               <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
             </View>
           </View>

@@ -63,7 +63,7 @@ export function TransactionListRow(props: Props) {
   const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const exchangeRate: string = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({

@@ -2,7 +2,21 @@
 
 ## Unreleased (develop)
 
-## 4.22.0 (staging)
+## 4.23.0 (staging)
+
+- added: Add Abstract ETH Layer 2 support
+- added: Add warning card for fallback currency usage on Coin Ranking scene.
+- added: Add EUR price quoting support for Coin Ranking Details scene.
+- changed: Force max unstake on Kiln ETH positions
+- changed: Disconnect `CryptoIcon` from redux
+- changed: Use number math when handling exchange rates
+- changed: Optimize `getCreateWalletList` function and usage
+- fixed: Coin Ranking Details scene navigation bug caused by unsupported default currency setting.
+- fixed: Correct the display name for ETH txs on non-Ethereum chains
+- fixed: Input text selection bug in Android caused by `autoSelect` prop.
+- fixed: Input text selection color adjusted for transparency on Android.
+
+## 4.22.0 (2025-02-17)
 
 - added: `NotificationCenterScene`
 - added: Search bar to `EarnScene`
