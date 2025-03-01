@@ -6,6 +6,7 @@
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
 - changed: `activePromotions` used to filter available promo cards
+- changed: Enlarged asset icon in `QrCode` and added a white background
 - changed: Modal components synced with edge-login-ui-rn
 - changed: Make buy/sell plugin list navigation params separate
 - changed: Simplify fake scene props implementation to reduce code duplication
