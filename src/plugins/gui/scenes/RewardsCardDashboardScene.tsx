@@ -52,7 +52,6 @@ export const RewardsCardDashboardScene = (props: Props) => {
         bridge={bridge}
         title={lstrings.rewards_card_loading}
         message={lstrings.rewards_card_purchase_disclaimer}
-        closeArrow
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
     )).catch(error => showError(error))

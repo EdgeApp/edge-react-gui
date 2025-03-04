@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
 import { Appearance, Platform, Text, TextStyle } from 'react-native'

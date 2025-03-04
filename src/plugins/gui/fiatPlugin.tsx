@@ -20,7 +20,7 @@ import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPlugin
 import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationBase } from '../../types/routerTypes'
+import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { BuyConversionValues, OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
@@ -112,13 +112,21 @@ export const executePlugin = async (params: {
   const isBuy = direction === 'buy'
 
   const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
-  const listSceneKey = isBuy ? 'pluginListBuy' : 'pluginListSell'
 
   function maybeNavigateToCorrectTabScene() {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
+      // Navigate to the correct tab first
       navigation.navigate(tabSceneKey)
-      navigation.navigate(listSceneKey, {})
+
+      // Then navigate to the correct list scene based on direction
+      if (isBuy) {
+        const buyNavigation = navigation as BuyTabSceneProps<'pluginListBuy'>['navigation']
+        buyNavigation.navigate('pluginListBuy', {})
+      } else {
+        const sellNavigation = navigation as SellTabSceneProps<'pluginListSell'>['navigation']
+        sellNavigation.navigate('pluginListSell', {})
+      }
     }
   }
 

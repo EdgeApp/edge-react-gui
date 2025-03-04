@@ -3,6 +3,7 @@ import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
@@ -15,10 +16,13 @@ import { selectDisplayDenomByCurrencyCode } from '../../../selectors/Denominatio
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
+import { InfoCardCarousel } from '../../cards/InfoCardCarousel'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
+import { fadeInDown10 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -53,6 +57,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const { width: screenWidth } = useSafeAreaFrame()
 
   // We wait for state only when liquid staking is enabled
   // This is because liquid staking actions are dependent on the position state.
@@ -172,6 +177,12 @@ const StakeOverviewSceneComponent = (props: Props) => {
   return (
     <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeaderUi4 title={title} />
+      <InfoCardCarousel
+        enterAnim={fadeInDown10}
+        cards={(infoServerData.rollup?.stakeStatusCards ?? {})[stakePolicyId]}
+        navigation={navigation}
+        screenWidth={screenWidth}
+      />
       <StakingReturnsCard
         fromCurrencyLogos={policyIcons.stakeAssetUris}
         toCurrencyLogos={policyIcons.rewardAssetUris}

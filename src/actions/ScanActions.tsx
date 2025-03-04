@@ -413,7 +413,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
         ))
       }
       if (threeButtonModal === 'buy') {
-        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+        navigation.navigate('buyTab', { screen: 'pluginListBuy', params: {} })
       } else if (threeButtonModal === 'exchange') {
         if (config.disableSwaps === true) {
           showDevError('Swaps are disabled. Cannot navigate to exchange.')

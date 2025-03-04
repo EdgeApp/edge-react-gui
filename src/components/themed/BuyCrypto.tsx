@@ -3,7 +3,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
@@ -21,17 +23,19 @@ interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   navigation: NavigationBase
-  countryCode?: string
 }
 
 type Props = OwnProps
 
 export const BuyCrypto = (props: Props) => {
-  const { countryCode, wallet, tokenId, navigation } = props
+  const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const syncRatio = useWatch(wallet, 'syncRatio')
+
+  const [firstOpenInfo] = useAsyncValue(async () => await getFirstOpenInfo())
+  const { countryCode } = firstOpenInfo ?? {}
 
   const handlePress = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })

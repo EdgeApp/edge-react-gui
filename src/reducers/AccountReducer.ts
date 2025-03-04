@@ -14,6 +14,7 @@ export interface AccountState {
 }
 
 const defaultAccountReferral: AccountReferral = {
+  activePromotions: [],
   promotions: [],
   ignoreAccountSwap: false,
   hiddenAccountMessages: {}
@@ -57,6 +58,10 @@ const accountInner = combineReducers<AccountState, Action>({
           return { ...state, hiddenAccountMessages }
         }
       }
+      case 'ACTIVE_PROMOTION_ADDED': {
+        const activePromotions = state.activePromotions.some(id => id === action.data) ? state.activePromotions : [...state.activePromotions, action.data]
+        return { ...state, activePromotions }
+      }
       case 'PROMOTION_ADDED': {
         const newPromo = action.data
         const promotions = mergePromotions(state.promotions, [newPromo])
@@ -65,7 +70,8 @@ const accountInner = combineReducers<AccountState, Action>({
       case 'PROMOTION_REMOVED': {
         const installerId = action.data
         const promotions = state.promotions.filter(promo => promo.installerId !== installerId)
-        return { ...state, promotions }
+        const activePromotions = state.activePromotions.filter(id => id !== installerId)
+        return { ...state, promotions, activePromotions }
       }
       default:
         return state

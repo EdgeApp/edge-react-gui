@@ -308,6 +308,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               accessible={true}
               animated={true}
               autoFocus={true}
+              defaultValue=""
               disableAnimation={
                 {
                   "value": 0,
@@ -354,7 +355,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               }
               testID="undefined.textInput"
               textAlignVertical="top"
-              value=""
             />
           </View>
           <View
@@ -874,6 +874,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               accessible={true}
               animated={true}
               autoFocus={true}
+              defaultValue="initialValue"
               disableAnimation={
                 {
                   "value": 0,
@@ -920,7 +921,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               }
               testID="undefined.textInput"
               textAlignVertical="top"
-              value="initialValue"
             />
           </View>
           <View

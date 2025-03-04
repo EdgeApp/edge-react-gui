@@ -147,7 +147,6 @@ export const HomeScene = (props: Props) => {
                 <InfoCardCarousel
                   enterAnim={fadeInUp110}
                   cards={infoServerData.rollup?.promoCards2}
-                  countryCode={countryCode}
                   navigation={navigation as NavigationBase}
                   screenWidth={screenWidth}
                 />

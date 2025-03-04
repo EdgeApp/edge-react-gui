@@ -59,6 +59,9 @@ export class PromotionSettingsComponent extends React.Component<Props> {
             onPress={async () => await removePromotion(promotion.installerId)}
           />
         ))}
+        {accountReferral.activePromotions.map(activePromotion => (
+          <SettingsTappableRow action="delete" key={activePromotion} label={activePromotion} onPress={async () => await removePromotion(activePromotion)} />
+        ))}
         <SettingsTappableRow action="add" label={lstrings.settings_promotion_add} onPress={this.handleAdd} />
       </SceneWrapper>
     )

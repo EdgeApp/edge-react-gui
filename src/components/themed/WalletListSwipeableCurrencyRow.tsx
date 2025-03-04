@@ -4,7 +4,6 @@ import { Text } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
@@ -20,7 +19,6 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 interface Props {
   navigation: WalletsTabSceneProps<'walletList'>['navigation']
-
   token?: EdgeToken
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
@@ -84,13 +82,10 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       })
     )
       .then(async activated => {
-        const { countryCode } = await getFirstOpenInfo()
         if (activated) {
           navigation.navigate('walletDetails', {
             tokenId,
-            walletId: wallet.id,
-            walletName: wallet.name ?? wallet.currencyInfo.displayName,
-            countryCode
+            walletId: wallet.id
           })
         }
       })

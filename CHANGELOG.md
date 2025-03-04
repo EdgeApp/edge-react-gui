@@ -2,11 +2,26 @@
 
 ## Unreleased (develop)
 
-## 4.23.0 (staging)
+## 4.24.0 (staging)
+
+- added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
+- added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
+- added: "Update Available" modal
+- added: `activePromotions` to save promos upon deeplink activation
+- changed: `activePromotions` used to filter available promo cards
+- changed: Enlarged asset icon in `QrCode` and added a white background
+- changed: Modal components synced with edge-login-ui-rn
+- changed: Make buy/sell plugin list navigation params separate
+- changed: Simplify fake scene props implementation to reduce code duplication
+- fixed: Unstable text input cursor on Android for some instances.
+- fixed: Text used for sharing app split from one message into title and message
+
+## 4.23.0 (2025-03-01)
 
 - added: Add Abstract ETH Layer 2 support
 - added: Add warning card for fallback currency usage on Coin Ranking scene.
 - added: Add EUR price quoting support for Coin Ranking Details scene.
+- changed: `WalletDetailsScene` title shows the name of the network for most use cases
 - changed: Force max unstake on Kiln ETH positions
 - changed: Disconnect `CryptoIcon` from redux
 - changed: Use number math when handling exchange rates
@@ -26,7 +41,6 @@
 - added: Added TRUMP and MELANIA purchases through Simplex
 - changed: `TransactionListScene` split into two scenes: `TransactionListScene` and `WalletDetailsScene`
 - changed: All floating `NotificationCard`s are dismissible
-- changed: Replace Thorchain Savers quoting with an information modal about the shutdown.
 - fixed: Show correct staked balance for deprecated Velodrome pools
 - fixed: Crash when retrieving `exchangeRates` in some situations when no internet is available
 - fixed: Transaction metadata loading bugs.
