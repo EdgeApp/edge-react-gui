@@ -42,7 +42,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     aspectRatio: 1,
     height: '100%',
-    width: '100%',
-    alignSelf: 'center'
+    width: '100%'
   }
 }))

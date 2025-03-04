@@ -414,8 +414,8 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
             </EdgeCard>
           </EdgeAnim>
 
-          {this.state.addresses.length === 1 ? (
-            <View style={styles.qrContainer}>
+          <View style={styles.qrContainer}>
+            {this.state.addresses.length === 1 ? (
               <AddressQr
                 address={this.state.addresses[0].addressString}
                 wallet={wallet}
@@ -423,23 +423,23 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
                 nativeAmount={this.state.amounts?.nativeAmount}
                 onPress={this.handlePressAddressItem}
               />
-            </View>
-          ) : (
-            <Carousel
-              items={this.state.addresses}
-              keyExtractor={item => item.addressString}
-              onChangeItem={this.handleChangeAddressItem}
-              renderItem={item => (
-                <AddressQr
-                  address={item.addressString}
-                  wallet={wallet}
-                  tokenId={tokenId}
-                  nativeAmount={this.state.amounts?.nativeAmount}
-                  onPress={this.handlePressAddressItem}
-                />
-              )}
-            />
-          )}
+            ) : (
+              <Carousel
+                items={this.state.addresses}
+                keyExtractor={item => item.addressString}
+                onChangeItem={this.handleChangeAddressItem}
+                renderItem={item => (
+                  <AddressQr
+                    address={item.addressString}
+                    wallet={wallet}
+                    tokenId={tokenId}
+                    nativeAmount={this.state.amounts?.nativeAmount}
+                    onPress={this.handlePressAddressItem}
+                  />
+                )}
+              />
+            )}
+          </View>
 
           <EdgeAnim enter={fadeInDown50}>
             <EdgeTouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
@@ -579,6 +579,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
+    alignItems: 'stretch',
     paddingHorizontal: theme.rem(1)
   },
   requestContainer: {
@@ -606,10 +607,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   },
   qrContainer: {
-    margin: theme.rem(1),
+    aspectRatio: 1,
     alignSelf: 'center',
-    flex: 1,
-    flexDirection: 'column'
+    width: '100%',
+    backgroundColor: 'red'
   },
   title: {
     fontFamily: theme.fontFaceMedium,
