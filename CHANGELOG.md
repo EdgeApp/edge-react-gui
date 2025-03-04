@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.24.0 (staging)
+
 - added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
 - added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
 - added: "Update Available" modal
@@ -14,7 +16,7 @@
 - fixed: Unstable text input cursor on Android for some instances.
 - fixed: Text used for sharing app split from one message into title and message
 
-## 4.23.0 (staging)
+## 4.23.0 (2025-03-01)
 
 - added: Add Abstract ETH Layer 2 support
 - added: Add warning card for fallback currency usage on Coin Ranking scene.
