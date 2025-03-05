@@ -65,6 +65,40 @@ exports[`CryptoIcon should render with loading props 1`] = `
         }
       />
     </View>
+    <View
+      style={
+        [
+          {
+            "overflow": "hidden",
+          },
+          {
+            "bottom": 0,
+            "height": "50%",
+            "position": "absolute",
+            "right": 0,
+            "width": "50%",
+          },
+        ]
+      }
+    >
+      <FastImageView
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
   </View>
 </View>
 `;

@@ -15,6 +15,7 @@
 - changed: Simplify fake scene props implementation to reduce code duplication
 - fixed: Unstable text input cursor on Android for some instances.
 - fixed: Text used for sharing app split from one message into title and message
+- fixed: `CryptoIcon` not showing secondary/parent icon in some cases
 
 ## 4.23.0 (2025-03-01)
 
