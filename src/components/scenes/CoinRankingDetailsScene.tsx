@@ -506,7 +506,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
               {countryCode == null || edgeStakingAssets.length === 0 ? null : (
                 <IconButton
                   label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-                  superscriptLabel={stakingWallets.length <= 0 ? undefined : getBestApyText(allStakePolicies)}
+                  superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
                   onPress={handleStakePress}
                   disabled={isStakingLoading}
                 >
