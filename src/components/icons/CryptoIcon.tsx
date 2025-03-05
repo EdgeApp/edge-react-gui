@@ -17,7 +17,7 @@ export interface CryptoIconProps {
   // Image props
   hideSecondary?: boolean // Only show the currency icon for token (no secondary icon for the network)
   mono?: boolean // To use the mono dark icon logo
-  secondaryCurrencyIconProp?: number | { uri: string }
+  secondaryIconOverride?: number | { uri: string }
 
   // Styling props
   marginRem?: number | number[]
@@ -25,7 +25,7 @@ export interface CryptoIconProps {
 }
 
 export const CryptoIcon = (props: CryptoIconProps) => {
-  const { hideSecondary = false, marginRem, mono = false, secondaryCurrencyIconProp, sizeRem = 2, tokenId } = props
+  const { hideSecondary = false, marginRem, mono = false, secondaryIconOverride, sizeRem = 2, tokenId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -40,8 +40,8 @@ export const CryptoIcon = (props: CryptoIconProps) => {
   const primaryCurrencyIcon = { uri: primaryCurrencyIconUrl }
 
   // Secondary (parent) currency icon (if it's a token)
-  let secondaryCurrencyIcon = secondaryCurrencyIconProp
-  if (tokenId != null && useChainIcon) {
+  let secondaryCurrencyIcon = secondaryIconOverride
+  if (secondaryIconOverride == null && (tokenId != null || useChainIcon)) {
     const icon = getCurrencyIconUris(pluginId, null)
     secondaryCurrencyIcon = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
   }
