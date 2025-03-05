@@ -63,6 +63,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   dash: ENV.DASH_INIT,
   digibyte: ENV.DIGIBYTE_INIT,
   dogecoin: ENV.DOGE_INIT,
+  ecash: true,
   eboost: true,
   feathercoin: true,
   groestlcoin: ENV.GROESTLCOIN_INIT,
