@@ -8,6 +8,7 @@
 - added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
 - added: "Update Available" modal
 - added: `activePromotions` to save promos upon deeplink activation
+- changed: Sending to an unactivated Algorand recipient now shows a readable error
 - changed: `activePromotions` used to filter available promo cards
 - changed: Enlarged asset icon in `QrCode` and added a white background
 - changed: Modal components synced with edge-login-ui-rn
