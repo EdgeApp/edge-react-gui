@@ -891,6 +891,9 @@ const SendComponent = (props: Props) => {
       console.log(e)
       let message = sprintf(lstrings.transaction_failure_message, e.message)
       e.message = 'broadcastError'
+      if (e.name === 'ErrorAlgoRecipientNotActivated') {
+        message = sprintf(lstrings.send_confirmation_algo_recipient_not_activated_s, currencyCode)
+      }
       if (e.name === 'ErrorEosInsufficientCpu') {
         message = lstrings.send_confirmation_eos_error_cpu
       } else if (e.name === 'ErrorEosInsufficientNet') {
