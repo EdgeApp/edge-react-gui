@@ -26,7 +26,7 @@ import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
-import { TransactionListRow } from '../themed/TransactionListRow'
+import { TransactionCard } from '../themed/TransactionListRow'
 
 export interface TransactionListParams {
   walletId: string
@@ -188,7 +188,7 @@ function TransactionListComponent(props: Props) {
     }
     return (
       <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionListRow navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
+        <TransactionCard navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )
   })
