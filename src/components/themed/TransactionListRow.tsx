@@ -38,18 +38,29 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-interface Props {
+export interface TransactionListRowProps {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
   transaction: EdgeTransaction
-  noCard?: boolean
 }
 
-export function TransactionListRow(props: Props) {
+interface TransactionViewInnerProps extends TransactionListRowProps {
+  isCard?: boolean
+}
+
+export const TransactionView = (props: TransactionListRowProps) => {
+  return <TransactionViewInner {...props} />
+}
+
+export const TransactionCard = (props: TransactionListRowProps) => {
+  return <TransactionViewInner {...props} isCard />
+}
+
+function TransactionViewInner(props: TransactionViewInnerProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { navigation, wallet, transaction, noCard } = props
+  const { navigation, wallet, transaction, isCard } = props
   const { metadata = {}, currencyCode, tokenId } = transaction
   const currencyInfo = wallet.currencyInfo
 
@@ -177,7 +188,31 @@ export function TransactionListRow(props: Props) {
   })
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
-  return noCard ? (
+  return isCard ? (
+    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+      <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
+        <>
+          <View style={styles.row}>
+            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
+              {name}
+            </EdgeText>
+            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
+          </View>
+          <View style={styles.row}>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              {unconfirmedOrTimeText}
+            </EdgeText>
+            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+          </View>
+          {categoryText == null ? null : (
+            <View style={styles.row}>
+              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+            </View>
+          )}
+        </>
+      </SectionView>
+    </EdgeCard>
+  ) : (
     <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
       <View style={styles.row}>
         {icon}
@@ -203,30 +238,6 @@ export function TransactionListRow(props: Props) {
         </View>
       </View>
     </EdgeTouchableOpacity>
-  ) : (
-    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
-      <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
-        <>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
-              {name}
-            </EdgeText>
-            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
-          </View>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-              {unconfirmedOrTimeText}
-            </EdgeText>
-            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-          </View>
-          {categoryText == null ? null : (
-            <View style={styles.row}>
-              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
-            </View>
-          )}
-        </>
-      </SectionView>
-    </EdgeCard>
   )
 }
 
