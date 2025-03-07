@@ -213,29 +213,27 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       </SectionView>
     </EdgeCard>
   ) : (
-    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
-      <View style={styles.row}>
-        {icon}
-        <View style={styles.cardlessView}>
-          <EdgeText style={styles.dateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
-              {name}
-            </EdgeText>
-            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
-          </View>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-              {unconfirmedOrTimeText}
-            </EdgeText>
-            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-          </View>
-          {categoryText == null ? null : (
-            <View style={styles.row}>
-              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
-            </View>
-          )}
+    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress} style={styles.cardlessRow}>
+      {icon}
+      <View style={styles.cardlessView}>
+        <EdgeText style={styles.dateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
+        <View style={styles.row}>
+          <EdgeText ellipsizeMode="tail" style={styles.titleText}>
+            {name}
+          </EdgeText>
+          <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
         </View>
+        <View style={styles.row}>
+          <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+            {unconfirmedOrTimeText}
+          </EdgeText>
+          <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+        </View>
+        {categoryText == null ? null : (
+          <View style={styles.row}>
+            <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+          </View>
+        )}
       </View>
     </EdgeTouchableOpacity>
   )
@@ -307,6 +305,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(0.5)
+  },
+  cardlessRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginLeft: theme.rem(0.5)
   },
   dateText: {
     fontSize: theme.rem(0.75),
