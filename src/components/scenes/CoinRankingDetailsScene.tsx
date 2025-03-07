@@ -232,10 +232,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   /** Check if all the stake plugins are loaded for this asset type */
   const isStakingLoading =
     stakingWallets.length === 0 ||
-    stakingWallets.some(
+    stakingWallets.every(
       wallet =>
         walletStakingStateMap[wallet.id] == null ||
-        walletStakingStateMap[wallet.id].isLoading ||
         walletStakingStateMap[wallet.id].stakePlugins.length === 0 ||
         Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length === 0
     ) ||
