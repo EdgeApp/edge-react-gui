@@ -216,7 +216,6 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
     <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress} style={styles.cardlessRow}>
       {icon}
       <View style={styles.cardlessView}>
-        <EdgeText style={styles.dateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
         <View style={styles.row}>
           <EdgeText ellipsizeMode="tail" style={styles.titleText}>
             {name}
@@ -224,9 +223,12 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
           <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
         </View>
         <View style={styles.row}>
-          <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-            {unconfirmedOrTimeText}
-          </EdgeText>
+          <View style={styles.dateRow}>
+            <EdgeText style={styles.cardlessDateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              {unconfirmedOrTimeText}
+            </EdgeText>
+          </View>
           <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
         </View>
         {categoryText == null ? null : (
@@ -305,6 +307,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(0.5)
+  },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  cardlessDateText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
+    marginRight: theme.rem(0.25)
   },
   cardlessRow: {
     flexDirection: 'row',
