@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { TransactionListRow } from '../../components/themed/TransactionListRow'
+import { TransactionCard } from '../../components/themed/TransactionListRow'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
@@ -48,7 +48,7 @@ describe('TransactionListRow', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockStore}>
-        <TransactionListRow
+        <TransactionCard
           navigation={fakeNavigation}
           wallet={fakeWallet}
           transaction={{

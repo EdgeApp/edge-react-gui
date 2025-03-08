@@ -38,18 +38,29 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-interface Props {
+export interface TransactionListRowProps {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
   transaction: EdgeTransaction
-  noCard?: boolean
 }
 
-export function TransactionListRow(props: Props) {
+interface TransactionViewInnerProps extends TransactionListRowProps {
+  isCard?: boolean
+}
+
+export const TransactionView = (props: TransactionListRowProps) => {
+  return <TransactionViewInner {...props} />
+}
+
+export const TransactionCard = (props: TransactionListRowProps) => {
+  return <TransactionViewInner {...props} isCard />
+}
+
+function TransactionViewInner(props: TransactionViewInnerProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { navigation, wallet, transaction, noCard } = props
+  const { navigation, wallet, transaction, isCard } = props
   const { metadata = {}, currencyCode, tokenId } = transaction
   const currencyInfo = wallet.currencyInfo
 
@@ -177,33 +188,7 @@ export function TransactionListRow(props: Props) {
   })
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
-  return noCard ? (
-    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
-      <View style={styles.row}>
-        {icon}
-        <View style={styles.cardlessView}>
-          <EdgeText style={styles.dateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
-              {name}
-            </EdgeText>
-            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
-          </View>
-          <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-              {unconfirmedOrTimeText}
-            </EdgeText>
-            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-          </View>
-          {categoryText == null ? null : (
-            <View style={styles.row}>
-              <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
-            </View>
-          )}
-        </View>
-      </View>
-    </EdgeTouchableOpacity>
-  ) : (
+  return isCard ? (
     <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
@@ -227,6 +212,32 @@ export function TransactionListRow(props: Props) {
         </>
       </SectionView>
     </EdgeCard>
+  ) : (
+    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress} style={styles.cardlessRow}>
+      {icon}
+      <View style={styles.cardlessView}>
+        <View style={styles.row}>
+          <EdgeText ellipsizeMode="tail" style={styles.titleText}>
+            {name}
+          </EdgeText>
+          <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.dateRow}>
+            <EdgeText style={styles.cardlessDateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              {unconfirmedOrTimeText}
+            </EdgeText>
+          </View>
+          <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+        </View>
+        {categoryText == null ? null : (
+          <View style={styles.row}>
+            <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+          </View>
+        )}
+      </View>
+    </EdgeTouchableOpacity>
   )
 }
 
@@ -296,6 +307,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(0.5)
+  },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  cardlessDateText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
+    marginRight: theme.rem(0.25)
+  },
+  cardlessRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginLeft: theme.rem(0.5)
   },
   dateText: {
     fontSize: theme.rem(0.75),

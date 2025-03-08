@@ -41,7 +41,7 @@ import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader } from '../themed/TransactionListComponents'
-import { TransactionListRow } from '../themed/TransactionListRow'
+import { TransactionView } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 
 export interface WalletDetailsParams {
@@ -304,7 +304,7 @@ function WalletDetailsComponent(props: Props) {
             {listItems.length > 0 ? (
               <EdgeCard sections>
                 {listItems.map((tx: EdgeTransaction) => (
-                  <TransactionListRow key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} noCard />
+                  <TransactionView key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} />
                 ))}
               </EdgeCard>
             ) : listItems.length === 0 && !atEnd ? (

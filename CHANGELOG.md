@@ -13,6 +13,9 @@
 - changed: Modal components synced with edge-login-ui-rn
 - changed: Make buy/sell plugin list navigation params separate
 - changed: Simplify fake scene props implementation to reduce code duplication
+- changed: Transaction date moved to time/confirmations row in `WalletDetailsScene`
+- fixed: Spacing in `WalletDetailsScene` transactions and `HomeScene` Markets card
+- fixed: Date spacing in `NotificationCenterCard`
 - fixed: Unstable text input cursor on Android for some instances.
 - fixed: Text used for sharing app split from one message into title and message
 - fixed: `CryptoIcon` not showing secondary/parent icon in some cases

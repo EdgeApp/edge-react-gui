@@ -198,7 +198,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flexGrow: 1,
     flexShrink: 1,
-    marginHorizontal: theme.rem(0.5)
+    marginLeft: theme.rem(0.5)
   },
   rowRight: {
     flexDirection: 'row',
