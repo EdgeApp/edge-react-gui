@@ -154,7 +154,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   dateText: {
     fontSize: theme.rem(0.75),
-    marginLeft: theme.rem(1.5)
+    marginLeft: theme.rem(1.5),
+    marginBottom: theme.rem(0.25)
   },
   columnContainer: {
     alignSelf: 'stretch',
