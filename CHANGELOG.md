@@ -23,6 +23,7 @@
 - fixed: `CryptoIcon` not showing secondary/parent icon in some cases
 - fixed: `NotificationView` `ip2faReminder` flickering on iOS and never hiding on Android when pressing X
 - fixed: Markets "Earn" button excessive loading time if many wallets matching the market asset exist on the account
+- fixed: `TransactionListTop` "Earn" button excessive loading time
 
 ## 4.23.0 (2025-03-01)
 
