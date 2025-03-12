@@ -190,7 +190,7 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return isCard ? (
     <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
-      <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
+      <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={0.25}>
         <>
           <View style={styles.row}>
             <EdgeText ellipsizeMode="tail" style={styles.titleText}>
@@ -245,7 +245,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cardlessView: {
     flexDirection: 'column',
     flexGrow: 1,
-    flexShrink: 1
+    flexShrink: 1,
+    marginLeft: theme.rem(0.5)
   },
   icon: {
     // Shadow styles for Android
@@ -305,8 +306,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: theme.rem(0.5)
+    justifyContent: 'space-between'
   },
   dateRow: {
     flexDirection: 'row',
@@ -321,7 +321,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginLeft: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.5),
     marginVertical: theme.rem(0.5)
   },
   dateText: {
