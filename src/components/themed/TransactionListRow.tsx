@@ -321,7 +321,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginLeft: theme.rem(0.5)
+    marginLeft: theme.rem(0.5),
+    marginVertical: theme.rem(0.5)
   },
   dateText: {
     fontSize: theme.rem(0.75),
