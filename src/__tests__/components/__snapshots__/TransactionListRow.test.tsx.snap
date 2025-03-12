@@ -150,8 +150,8 @@ exports[`TransactionListRow should render with loading props 1`] = `
           },
           {
             "marginBottom": 6,
-            "marginLeft": 0,
-            "marginRight": 0,
+            "marginLeft": 6,
+            "marginRight": 6,
             "marginTop": 6,
           },
         ]
@@ -163,7 +163,6 @@ exports[`TransactionListRow should render with loading props 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
-            "marginHorizontal": 11,
           }
         }
       >
@@ -222,7 +221,6 @@ exports[`TransactionListRow should render with loading props 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
-            "marginHorizontal": 11,
           }
         }
       >
