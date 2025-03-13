@@ -23,7 +23,7 @@ import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { StateManager, useStateManager } from '../hooks/useStateManager'
 
 export interface FiatPluginEnterAmountParams {
-  initState?: Partial<any>
+  initState?: Partial<EnterAmountState>
   headerTitle: string
   label1: string
   label2: string
