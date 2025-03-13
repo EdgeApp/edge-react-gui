@@ -325,7 +325,7 @@
   "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "Slide to Confirm",
   "send_confirmation_balance": "Balance",
-  "send_confirmation_algo_recipient_not_activated_s": "Recipient must activate %1$s.",
+  "send_confirmation_algo_recipient_not_activated_s": "Recipient must first activate %1$s before they can receive funds.",
   "send_confirmation_eos_error_cpu": "Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.",
   "send_confirmation_eos_error_net": "Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.",
   "send_confirmation_eos_error_ram": "Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.",
