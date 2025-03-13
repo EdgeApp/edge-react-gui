@@ -20,11 +20,11 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
+import { formatNumberInput, formatToNativeNumber, isValidInput } from '../../locales/intl'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
-import { NumericInput } from './NumericInput'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
@@ -182,7 +182,13 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const LeftIcon = iconComponent
   const hasIcon = LeftIcon != null
 
-  const valueRef = useSharedValue(value)
+  const displayValue = React.useMemo(() => {
+    if (numeric && value !== '') {
+      return formatNumberInput(value, { minDecimals, maxDecimals })
+    }
+    return value
+  }, [maxDecimals, minDecimals, numeric, value])
+  const sharedDisplayValue = useSharedValue(displayValue)
 
   const marginRemStyle = useMarginRemStyle(marginRemProps)
 
@@ -196,7 +202,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (inputRef.current != null) inputRef.current.blur()
   }
   function clear(): void {
-    if (blurOnClear || valueRef.value === '') blur()
+    if (blurOnClear || sharedDisplayValue.value === '') blur()
     if (inputRef.current != null) inputRef.current.clear()
     handleChangeText('')
     if (onClear != null) onClear()
@@ -210,19 +216,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   function setNativeProps(nativeProps: object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
-
-  // This fixes RN bugs with controlled TextInput components.
-  // By avoiding the `value` prop for the TextInput, we can avoid the bugs.
-  // So an alternative to using the `value` prop, is to imperatively set the,
-  // TextInput's text value using `setNativeProps({ text: value })`.
-  // We do this only if the `value` prop from this component has changed.
-  React.useEffect(() => {
-    if (inputRef.current != null && value !== valueRef.value) {
-      valueRef.value = value
-      inputRef.current.setNativeProps({ text: value })
-    }
-  }, [inputRef, value, valueRef])
-
   React.useImperativeHandle(ref, () => ({
     blur,
     clear,
@@ -230,6 +223,18 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     isFocused,
     setNativeProps
   }))
+
+  // This fixes RN bugs with controlled TextInput components.
+  // By avoiding the `value` prop for the TextInput, we can avoid the bugs.
+  // So an alternative to using the `value` prop, is to imperatively set the,
+  // TextInput's text value using `setNativeProps({ text: value })`.
+  // We do this only if the `value` prop from this component has changed.
+  React.useEffect(() => {
+    if (inputRef.current != null && displayValue !== sharedDisplayValue.value) {
+      sharedDisplayValue.value = displayValue
+      inputRef.current.setNativeProps({ text: displayValue })
+    }
+  }, [displayValue, inputRef, sharedDisplayValue])
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)
@@ -249,14 +254,36 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
     if (onBlur != null) onBlur()
   })
+
   const handleChangeText = useHandler((value: string) => {
-    valueRef.value = value
-    if (autoSelect) {
-      setNativeProps({
-        selection: {}
-      })
+    // Handle numeric input:
+    let displayValue = value
+    let outputValue = value
+    if (numeric && value !== '') {
+      if (isValidInput(value)) {
+        outputValue = formatToNativeNumber(value)
+        displayValue = formatNumberInput(outputValue, { minDecimals, maxDecimals })
+      } else {
+        // Revert to the pervious valid value:
+        displayValue = sharedDisplayValue.value
+        outputValue = formatToNativeNumber(displayValue)
+      }
     }
-    if (props.onChangeText != null) props.onChangeText(value)
+
+    sharedDisplayValue.value = displayValue
+    if (displayValue !== value) {
+      // Update the native text since it differs from what we just got:
+      if (autoSelect) {
+        setNativeProps({ selection: {}, text: displayValue })
+      } else {
+        setNativeProps({ text: displayValue })
+      }
+    } else if (autoSelect) {
+      setNativeProps({ selection: {} })
+    }
+
+    // Fire our callback:
+    if (props.onChangeText != null) props.onChangeText(outputValue)
   })
   const handleClearPress = useHandler(() => {
     clear()
@@ -265,7 +292,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
       setNativeProps({
-        selection: { start: 0, end: valueRef.value.length },
+        selection: { start: 0, end: sharedDisplayValue.value.length },
         selectTextOnFocus: true
       })
     }
@@ -276,11 +303,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   })
 
   const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
+    const hasValue = sharedDisplayValue.value !== ''
     return hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
   })
   const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
+    const hasValue = sharedDisplayValue.value !== ''
     return clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0
   })
 
@@ -290,14 +317,12 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
   const focusValue = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
+    const hasValue = sharedDisplayValue.value !== ''
     return hasValue ? 1 : focusAnimation.value
   })
 
   // Character Limit:
-  const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
-
-  const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
+  const charactersLeft = maxLength === undefined ? '' : `${maxLength - sharedDisplayValue.value.length}`
 
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
@@ -325,20 +350,17 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             )}
 
             {prefix == null ? null : <PrefixAnimatedText visibility={focusValue}>{prefix}</PrefixAnimatedText>}
-            <InputComponent
+            <StyledAnimatedTextInput
               accessible
-              animated
               editable={!disabled}
               ref={inputRef}
               keyboardType={hackKeyboardType}
               returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
-              defaultValue={value}
+              defaultValue={displayValue}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
-              minDecimals={minDecimals}
-              maxDecimals={maxDecimals}
               multiline={multiline}
               selectionColor={theme.textInputSelectionColor}
               testID={`${testID}.textInput`}
@@ -607,37 +629,6 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   scale: SharedValue<number>
   textsizeRem?: number
 }>(theme => ({ disableAnimation, focusAnimation, scale, textsizeRem }) => {
-  const rem = theme.rem(textsizeRem ?? 1)
-  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
-  // Need 2 pixels of shift given a 16 point rem settings
-  // This is due to Android rendering a text input vertically lower
-  // than a Text field by ~2 pixels
-  const androidVShift = isAndroid ? rem / 8 : 0
-
-  return [
-    {
-      color: theme.textInputBackgroundColor,
-      flexGrow: 1,
-      flexShrink: 1,
-      fontFamily: theme.fontFaceDefault,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
-      transform: [{ translateY: -androidVShift }],
-      margin: 0
-    },
-    useAnimatedStyle(() => ({
-      color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
-    }))
-  ]
-})
-
-const StyledNumericInput = styledWithRef(NumericInput)<{
-  disableAnimation: SharedValue<number>
-  focusAnimation: SharedValue<number>
-  scale: SharedValue<number>
-  textsizeRem?: number
-}>(theme => ({ disableAnimation, focusAnimation, textsizeRem, scale }) => {
   const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
