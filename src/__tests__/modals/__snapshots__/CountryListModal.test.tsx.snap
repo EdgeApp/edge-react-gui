@@ -343,7 +343,6 @@ exports[`CountryListModal should render with a country list 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={true}

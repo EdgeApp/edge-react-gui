@@ -601,7 +601,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoFocus={true}
             defaultValue="Paycheck"
@@ -1993,7 +1992,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoFocus={true}
             defaultValue=""

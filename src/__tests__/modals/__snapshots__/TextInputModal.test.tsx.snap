@@ -306,7 +306,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 }
               }
               accessible={true}
-              animated={true}
               autoFocus={true}
               defaultValue=""
               disableAnimation={
@@ -872,7 +871,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 }
               }
               accessible={true}
-              animated={true}
               autoFocus={true}
               defaultValue="initialValue"
               disableAnimation={
