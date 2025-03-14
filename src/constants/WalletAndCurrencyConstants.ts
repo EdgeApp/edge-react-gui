@@ -471,6 +471,7 @@ export const SPECIAL_CURRENCY_INFO: {
   bobevm: {
     initWalletName: lstrings.string_first_bobevm_wallet_name,
     chainCode: 'ETH',
+    chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
