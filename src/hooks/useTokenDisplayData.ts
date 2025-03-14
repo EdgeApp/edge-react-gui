@@ -2,7 +2,10 @@ import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
+import { GuiExchangeRates } from '../types/types'
 import { getDenomFromIsoCode } from '../util/utils'
+
+const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24
 
 /**
  * Returns data from tokens relevant for display
@@ -31,10 +34,8 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
   const usdToWalletFiatRate = useSelector(state => getExchangeRate(state, 'iso:USD', isoFiatCurrencyCode))
   const assetFiatPrice = useSelector(state => getExchangeRate(state, currencyCode, isoFiatCurrencyCode))
   const assetFiatYestPrice = useSelector(state => {
-    // The extra _ at the end means there is yesterday's date string at the end of the key
-    const pair = Object.keys(state.exchangeRates).find(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
-    if (pair != null) return state.exchangeRates[pair]
-    return 0
+    const yesterday = Date.now() - TWENTY_FOUR_HOURS
+    return closestRateForTimestamp(state.exchangeRates, currencyCode, yesterday)
   })
 
   return {
@@ -46,4 +47,22 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeC
     usdToWalletFiatRate,
     assetToYestUsdRate: assetFiatYestPrice
   }
+}
+
+export const closestRateForTimestamp = (exchangeRates: GuiExchangeRates, currencyCode: string, timestamp: number): number => {
+  // The extra _ at the end means there is a date string at the end of the key
+  const filteredPairs = Object.keys(exchangeRates).filter(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
+
+  let bestRate = 0
+  let bestDistance = Infinity
+  for (const pair of filteredPairs) {
+    const [, , date] = pair.split('_')
+    const ms = Date.parse(date).valueOf()
+    const distance = Math.abs(ms - timestamp)
+    if (distance < bestDistance) {
+      bestDistance = distance
+      bestRate = exchangeRates[pair]
+    }
+  }
+  return bestRate
 }
