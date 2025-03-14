@@ -65,7 +65,7 @@
       "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT",
       "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID",
       "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE",
-      "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP",
+      "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP",
       "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI", "LK", "LR",
       "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF",
       "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR",
@@ -192,7 +192,7 @@
     "forCountries": [
       "AE", "AR", "AT", "AU", "BE", "BR", "CH", "CL", "CO",
       "CZ", "DE", "DK", "EG", "ES", "FI", "FR", "GH", "GR", "HK",
-      "HU", "IE", "IL", "IN", "IT", "JP", "KE", "KR", "MX", "MY",
+      "HU", "IE", "IN", "IT", "JP", "KE", "KR", "MX", "MY",
       "NG", "NL", "NO", "NZ", "PE", "PH", "PL", "PT", "RU", "SA",
       "SE", "SG", "TH", "TR", "TZ", "US", "VN", "ZA"
     ],
