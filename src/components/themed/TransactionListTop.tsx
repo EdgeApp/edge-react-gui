@@ -23,8 +23,8 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { PositionAllocation, StakePlugin } from '../../plugins/stake-plugins/types'
-import { defaultWalletStakingState, WalletStakingState } from '../../reducers/StakingReducer'
+import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
+import { defaultWalletStakingState, StakePositionMap, WalletStakingState } from '../../reducers/StakingReducer'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
@@ -93,8 +93,10 @@ interface StateProps {
   exchangeRates: GuiExchangeRates
   isAccountBalanceVisible: boolean
   stakePlugins: StakePlugin[]
+  stakePolicies: StakePolicy[]
+  stakePositionMap: StakePositionMap
+  lockedNativeAmount: string
   walletName: string
-  walletStakingState: WalletStakingState
 }
 
 interface DispatchProps {
@@ -123,7 +125,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       // Update staked amount if the tokenId changes but the wallet remains the same
       let total = '0'
       let lockedNativeAmount = '0'
-      for (const stakePosition of Object.values(this.props.walletStakingState.stakePositionMap)) {
+      for (const stakePosition of Object.values(this.props.stakePositionMap)) {
         const { staked, earned } = getPositionAllocations(stakePosition)
         total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
         lockedNativeAmount = add(lockedNativeAmount, total)
@@ -454,7 +456,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, wallet, defaultFiat, displayDenomination, exchangeDenomination, exchangeRate } = this.props
+    const { theme, wallet, defaultFiat, displayDenomination, exchangeDenomination, exchangeRate, lockedNativeAmount } = this.props
     const styles = getStyles(theme)
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
@@ -464,7 +466,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { locked } = getFioStakingBalances(wallet.stakingStatus)
 
     const walletBalanceLocked = locked
-    const nativeLocked = add(walletBalanceLocked, this.props.walletStakingState.lockedNativeAmount)
+    const nativeLocked = add(walletBalanceLocked, lockedNativeAmount)
     if (nativeLocked === '0') return null
 
     const stakingCryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeLocked)
@@ -488,11 +490,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderButtons() {
-    const { theme, walletStakingState } = this.props
+    const { theme, stakePolicies } = this.props
     const styles = getStyles(theme)
     const { countryCode } = this.state
     const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
-    const bestApyText = getBestApyText(Object.values(walletStakingState.stakePolicies))
+    const bestApyText = getBestApyText(stakePolicies)
 
     return (
       <View style={styles.buttonsContainer}>
@@ -509,7 +511,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             onPress={this.handleStakePress}
             superscriptLabel={bestApyText}
           >
-            {this.props.walletStakingState.isLoading ? (
+            {stakePolicies.length === 0 ? (
               <ActivityIndicator color={theme.primaryText} />
             ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
@@ -525,7 +527,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   isStakingPolicyAvailable = (): boolean => {
     return (
-      Object.keys(this.props.walletStakingState.stakePolicies).length > 0 ||
+      Object.keys(this.props.stakePolicies).length > 0 ||
       // FIO was the first staking-enabled currency and doesn't use staking policies yet
       this.props.wallet.currencyInfo.pluginId === 'fio'
     )
@@ -535,7 +537,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * nearest whole number if >= 10, and truncating to '>99%' if greater than 99%
    * */
   getBestApy = (): string | undefined => {
-    const stakePolicies = Object.values(this.props.walletStakingState.stakePolicies)
+    const { stakePolicies } = this.props
     if (stakePolicies.length === 0) return
     const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
     if (bestApy === 0) return
@@ -567,9 +569,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleStakePress = () => {
     triggerHaptic('impactLight')
-    const { currencyCode, wallet, navigation, tokenId } = this.props
+    const { currencyCode, wallet, navigation, stakePolicies, tokenId } = this.props
     const { stakePlugins } = this.props
-    const stakePolicies = Object.values(this.props.walletStakingState.stakePolicies)
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
@@ -581,9 +582,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     // Handle StakePlugin staking
     if (stakePolicies.length === 1) {
-      const [stakePolicy] = stakePolicies
-      const { stakePolicyId } = stakePolicy
-      const stakePlugin = getPluginFromPolicyId(stakePlugins, stakePolicy.stakePolicyId, {
+      const stakePolicyId = stakePolicies[0].stakePolicyId
+      const stakePlugin = getPluginFromPolicyId(stakePlugins, stakePolicyId, {
         pluginId: wallet.currencyInfo.pluginId
       })
       if (stakePlugin != null)
@@ -754,13 +754,23 @@ export function TransactionListTop(props: OwnProps) {
     // Fallback to a default state using the reducer if the wallet is not found
     state => state.staking.walletStakingMap[wallet.id] ?? defaultWalletStakingState
   )
-
-  const [stakePlugins] = useAsyncValue<StakePlugin[]>(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
+  const { stakePositionMap, lockedNativeAmount } = walletStakingState
 
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const theme = useTheme()
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+
+  const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
+  const stakePolicies = stakePlugins.flatMap(stakePlugin =>
+    stakePlugin
+      .getPolicies({ pluginId: wallet.currencyInfo.pluginId })
+      .filter(
+        stakePolicy =>
+          !stakePolicy.deprecated &&
+          stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)
+      )
+  )
 
   const displayDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode))
   const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
@@ -793,8 +803,10 @@ export function TransactionListTop(props: OwnProps) {
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
       walletName={walletName}
-      walletStakingState={walletStakingState}
-      stakePlugins={stakePlugins ?? []}
+      stakePlugins={stakePlugins}
+      stakePolicies={stakePolicies}
+      stakePositionMap={stakePositionMap}
+      lockedNativeAmount={lockedNativeAmount}
     />
   )
 }
