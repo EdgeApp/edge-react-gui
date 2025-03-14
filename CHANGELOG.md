@@ -17,6 +17,7 @@
 - changed: Transaction date moved to time/confirmations row in `WalletDetailsScene`
 - changed: `HomeScene` tile images
 - changed: FIO handle registrations supported without a configured `fioRegApiToken` 
+- changed: Use Ethereum chain icon for bobevm
 - fixed: Spacing in `WalletDetailsScene` transactions and `HomeScene` Markets card
 - fixed: Date spacing in `NotificationCenterCard`
 - fixed: Unstable text input cursor on Android for some instances.
