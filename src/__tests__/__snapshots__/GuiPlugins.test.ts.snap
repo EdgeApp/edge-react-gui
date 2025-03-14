@@ -137,20 +137,6 @@ Settlement: 1 - 48 hours",
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
-    "description": "Fee: ~5%
-Settlement: 5 min - 24 hours",
-    "paymentType": "paypal",
-    "paymentTypeLogoKey": "paypal",
-    "paymentTypes": [
-      "paypal",
-    ],
-    "pluginId": "paypal",
-    "title": "Paypal",
-  },
-  {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "googlepay",
