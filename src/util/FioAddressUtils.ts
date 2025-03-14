@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../types/types'
@@ -646,7 +647,11 @@ export const getRegInfo = async (
     throw new Error(lstrings.fio_get_fee_err_msg)
   }
 
-  if (selectedDomain.walletId) {
+  if (
+    selectedDomain.walletId ||
+    // Fall back to only allowing FIO payments if no fioRegApiToken is configured
+    (typeof ENV.FIO_INIT === 'object' && ENV.FIO_INIT.fioRegApiToken === '')
+  ) {
     return {
       activationCost,
       feeValue,
