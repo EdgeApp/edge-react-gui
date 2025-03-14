@@ -7,8 +7,10 @@ import { sprintf } from 'sprintf-js'
 import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
+import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
@@ -38,9 +40,17 @@ export interface StakeOptionsParams {
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { currencyCode } = route.params
-  const stakePlugins = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePlugins ?? [])
-  const stakePolicies = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePolicies ?? [])
-  const stakePositionMap = useSelector(state => state.staking.walletStakingMap[wallet.id].stakePositionMap)
+  const [stakePlugins = []] = useAsyncValue(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
+  const stakePolicies = stakePlugins.flatMap(stakePlugin =>
+    stakePlugin
+      .getPolicies({ pluginId })
+      .filter(
+        stakePolicy =>
+          !stakePolicy.deprecated &&
+          stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)
+      )
+  )
+  const stakePositionMap = useSelector(state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {})
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
