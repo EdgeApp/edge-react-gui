@@ -15,7 +15,7 @@ import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
+import { getPluginFromPolicyId, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { AccentColors } from '../../common/DotsBackground'
@@ -75,7 +75,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
     const { stakePolicyId } = stakePolicy
-    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
+    const stakePlugin = getPluginFromPolicyId(stakePlugins, stakePolicyId, {
       pluginId
     })
     if (stakePlugin != null)

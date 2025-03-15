@@ -35,7 +35,7 @@ import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { getBestApyText, getFioStakingBalances, getPluginFromPolicy, getPositionAllocations, isStakingSupported } from '../../util/stakeUtils'
+import { getBestApyText, getFioStakingBalances, getPluginFromPolicyId, getPositionAllocations, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { convertNativeToDenomination, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
@@ -583,7 +583,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     if (stakePolicies.length === 1) {
       const [stakePolicy] = stakePolicies
       const { stakePolicyId } = stakePolicy
-      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
+      const stakePlugin = getPluginFromPolicyId(stakePlugins, stakePolicy.stakePolicyId, {
         pluginId: wallet.currencyInfo.pluginId
       })
       if (stakePlugin != null)
