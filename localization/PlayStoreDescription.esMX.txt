@@ -14,22 +14,22 @@ Edge es una cartera de criptomonedas potente y fácil de usar que permite a los 
 
 ¡Toma el control de tus fondos! Con Edge, solo TÚ tienes acceso a tus fondos o a los datos de tus transacciones. 
 
-Edge también permite cambio entre criptomonedas. Cambie fácilmente sus monedas por otras con unos pocos clicks. Intercambie BTC por Ethereum, ETH por BCH y muchas más. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
+Edge también permite cambio entre criptomonedas. Cambie fácilmente sus monedas por otras con unos pocos clicks. Intercambia BTC por Ethereum, ETH por BCH y muchos más. ¡Crear nuevas carteras de Avalanche (AVAX), Solana (SOL) y más criptomonedas es fácil con los intercambios!
 
-<b>Características</b>
-• Una segura cartera crypto y aplicación blockchain
-Cartera Bitcoin fácil de usar con soporte para otras criptomonedas punteras como Bitcoin Cash, Litecoin, Ripple (XRP)
-• Conocimiento y acceso cero a los fondos, claves o datos de transacciones de los usuarios por parte de Edge o de terceros
-• Simple creación de cuentas con sólo un nombre de usuario y una contraseña (no se imprimen archivos PDF, ni se escriben frases o se agregan configuraciones de cifrado)
-• Carteras jerárquicas deterministas con cambio de direcciones para cada transacción
-• Arquitectura de servidor descentralizada. * Las carteras funcionan incluso si los servidores Edge están inactivos.
-• Software de código abierto. Available at https://github.com/EdgeApp
-• Casa de cambio incorporada para comprar y vender criptomonedas
+<b>Características de la Billetera Bitcoin Edge</b>
+• Billetera de criptomonedas segura y aplicación de blockchain
+• Aplicación de billetera de Bitcoin y criptomonedas fácil de usar con soporte para los principales activos criptográficos como Bitcoin Cash, Ethereum (ETH), Litecoin (LTC), Binance Coin (BNB), Ripple (XRP), Avalanche (AVAX), Monero (XMR), Polygon (MATIC), Hedera (HBAR) y más
+• Conocimiento cero y sin acceso a los fondos del usuario, claves o datos de transacciones por parte de Edge o terceros
+• Creación de cuenta simple usando solo un nombre de usuario y contraseña
+• Carteras criptográficas determinísticas jerárquicas con direcciones cambiantes por transacción
+• Arquitectura de servidor descentralizada. Las carteras criptográficas funcionan incluso si los servidores de Edge están caídos.
+• Código abierto. Disponible en https://github.com/EdgeApp
+• Intercambio de criptomonedas integrado para comprar y vender criptomonedas como Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) ¡y más!
 
-Aviso de Privacidad
-La aplicación Edge Wallet solicita acceso a la lista de contactos del dispositivo e información personal. Esta información se utiliza en el dispositivo para proporcionar una mejor experiencia de usuario de las siguientes maneras:
+Aviso de privacidad
+La aplicación Edge Wallet solicita acceso a la lista de contactos del dispositivo y a la información personal. Esta información se utiliza en el dispositivo para ofrecer una experiencia de usuario mejorada de las siguientes maneras:
 
-1. Autocompletar contactos desde la libreta de direcciones del usuario después de una transacción
-2. Autocompletar contactos desde la libreta de direcciones del usuario para enviar correos electrónicos o solicitudes de pago por SMS
+1. Autocompletar los contactos de la libreta de direcciones del usuario después de una transacción.
+2. Autocompletar los contactos de la libreta de direcciones del usuario para enviar solicitudes de pago por correo electrónico o SMS.
 
-Ninguna información personal o información de la lista de contactos abandona el dispositivo sin antes haber sido cifrada con las credenciales del usuario (nombre de usuario / contraseña). Ni Edge ni ningún tercero puede acceder a la información solicitada por la aplicación.
+Ninguna información personal ni de la lista de contactos abandona el dispositivo sin ser primero cifrada por las credenciales del usuario (nombre de usuario/contraseña). Ni Edge ni ningún tercero pueden acceder a la información solicitada por la aplicación.
