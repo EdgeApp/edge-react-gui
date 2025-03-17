@@ -343,10 +343,10 @@ exports[`CountryListModal should render with a country list 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={true}
+            defaultValue=""
             disableAnimation={
               {
                 "value": 0,
@@ -394,7 +394,6 @@ exports[`CountryListModal should render with a country list 1`] = `
             }
             testID="Select your region.textInput"
             textAlignVertical="top"
-            value=""
           />
         </View>
         <View

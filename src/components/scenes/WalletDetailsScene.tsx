@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native'
 import { gt, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
@@ -5,6 +6,7 @@ import { Platform, RefreshControl, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { sprintf } from 'sprintf-js'
 
 import { activateWalletTokens } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -21,7 +23,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
 import { coinrankListData, infoServerData } from '../../util/network'
 import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -32,20 +34,19 @@ import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
+import { HeaderTitle } from '../navigation/HeaderTitle'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader } from '../themed/TransactionListComponents'
-import { TransactionListRow } from '../themed/TransactionListRow'
+import { TransactionView } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 
 export interface WalletDetailsParams {
   walletId: string
-  walletName: string
   tokenId: EdgeTokenId
-  countryCode?: string
 }
 
 interface Props extends WalletsTabSceneProps<'walletDetails'> {
@@ -283,7 +284,6 @@ function WalletDetailsComponent(props: Props) {
             enterAnim={fadeInDown10}
             cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
             navigation={navigation as NavigationBase}
-            countryCode={route.params.countryCode}
             screenWidth={screenWidth}
           />
           {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
@@ -304,7 +304,7 @@ function WalletDetailsComponent(props: Props) {
             {listItems.length > 0 ? (
               <EdgeCard sections>
                 {listItems.map((tx: EdgeTransaction) => (
-                  <TransactionListRow key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} noCard />
+                  <TransactionView key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} />
                 ))}
               </EdgeCard>
             ) : listItems.length === 0 && !atEnd ? (
@@ -314,13 +314,21 @@ function WalletDetailsComponent(props: Props) {
             ) : isSearching ? (
               <EdgeText style={styles.noResultsText}>{lstrings.transaction_list_search_no_result}</EdgeText>
             ) : (
-              <BuyCrypto countryCode={route.params.countryCode} navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
+              <BuyCrypto navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
             )}
           </View>
         </Reanimated.ScrollView>
       )}
     </SceneWrapper>
   )
+}
+
+export const WalletDetailsTitle = (params: { customTitle?: string }) => {
+  const route = useRoute<RouteProp<'walletDetails'>>()
+  const account = useSelector(state => state.core.account)
+  const wallet = account.currencyWallets[route.params.walletId]
+  const title = sprintf(lstrings.create_wallet_account_metadata_name, wallet?.currencyInfo.displayName)
+  return <HeaderTitle title={title} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

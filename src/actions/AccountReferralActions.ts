@@ -6,6 +6,7 @@ import { ENV } from '../env'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
 import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
+import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -31,7 +32,16 @@ export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<v
       ])
       const cache = asDiskReferralCache(JSON.parse(cacheText))
       const referral = unpackAccountReferral(JSON.parse(referralText))
+
+      // Reference info server promo data to see if:
+      // 1. Any of these `activePromotions` are no longer valid (e.g. a
+      //    promotion expired)
+      // 2. If the current `installerId` should get copied into
+      //    `activePromotions` due to new matching promotion info
+      referral.activePromotions = await getActivePromoIds({ promoIds: referral.activePromotions, installerId: referral.installerId })
+
       dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
+      await saveAccountReferral(getState())
       return
     } catch (error: any) {}
 
@@ -47,7 +57,8 @@ export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<v
     const referral: AccountReferral = {
       promotions: [],
       ignoreAccountSwap: false,
-      hiddenAccountMessages: {}
+      hiddenAccountMessages: {},
+      activePromotions: []
     }
     const cache: ReferralCache = {
       accountMessages: [],
@@ -67,6 +78,7 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
     const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
     const creationDate = new Date()
     const referral: AccountReferral = {
+      activePromotions: [],
       creationDate,
       installerId,
       currencyCodes,
@@ -93,9 +105,28 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
 
 /**
  * Downloads a promotion matching the given install link.
+ *
+ * Saves the `installerId` to `accountReferral.installerId,` if the promotion
+ * was found on the referral server.
+ *
+ * Saves the `installerId` to the `activePromotions` array in `AccountState`, if
+ * it passes the filter. NOTE: We expect there NOT to be a `noBalance` flag set
+ * in data meant this type of promo, because account balances are not ready at
+ * boot.
  */
 export function activatePromotion(installerId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    // Add the promotion to `accountReferral.activePromotions` immediately, if
+    // it passes the filters:
+    const filteredPromoData = await getActivePromoIds({ installerId })
+
+    if (filteredPromoData.length > 0) {
+      dispatch({ type: 'ACTIVE_PROMOTION_ADDED', data: installerId })
+      await saveAccountReferral(getState())
+    }
+
+    // Check referral server for a match and save to
+    // `accountReferral.installerId` if we find a match:
     const uri = `api/v1/promo?installerId=${installerId}`
     let reply
     try {
@@ -242,7 +273,8 @@ function unpackAccountReferral(raw: any): AccountReferral {
     currencyCodes: clean.currencyCodes,
     promotions: clean.promotions,
     ignoreAccountSwap: clean.ignoreAccountSwap,
-    hiddenAccountMessages: clean.hiddenAccountMessages
+    hiddenAccountMessages: clean.hiddenAccountMessages,
+    activePromotions: clean.activePromotions
   }
 
   // Upgrade legacy fields:
@@ -264,6 +296,7 @@ const asDiskAccountReferral = asObject({
   installerId: asOptional(asString),
   currencyCodes: asOptional(asArray(asCurrencyCode)),
   promotions: asOptional(asArray(asDiskPromotion), []),
+  activePromotions: asOptional(asArray(asString), []),
 
   // User overrides:
   ignoreAccountSwap: asOptional(asBoolean, false),

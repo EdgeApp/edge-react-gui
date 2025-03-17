@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
@@ -75,8 +74,6 @@ function WalletListSwipeableComponent(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
-    const wallet = account.currencyWallets[walletId]
-    const { countryCode } = await getFirstOpenInfo()
     dispatch(
       selectWalletToken({
         navigation: navigation as NavigationBase,
@@ -89,9 +86,7 @@ function WalletListSwipeableComponent(props: Props) {
           activationNotRequired &&
           navigation.navigate('walletDetails', {
             walletId,
-            tokenId,
-            walletName: wallet.name ?? wallet.currencyInfo.displayName,
-            countryCode
+            tokenId
           })
       )
       .finally(onReset)

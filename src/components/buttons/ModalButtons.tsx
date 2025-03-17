@@ -1,4 +1,7 @@
-// TODO: Replace <ButtonsViewUi4 parentType="modal" .../> with this
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
 
 import * as React from 'react'
 

@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -36,10 +41,6 @@ export interface ButtonModalProps<Buttons> {
   title?: string
   /** Adds a border around the modal */
   warning?: boolean
-
-  /** @deprecated. Does nothing. */
-  // eslint-disable-next-line react/no-unused-prop-types
-  closeArrow?: boolean
 }
 
 /**
@@ -103,13 +104,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   buttonsStyle: {
     justifyContent: 'flex-end',
     marginTop: theme.rem(0.5)
-  },
-  // TODO: Remove
-  innerButtonStyle: {
-    justifyContent: 'space-between',
-    alignSelf: 'center', // Shrink view around buttons
-    alignItems: 'stretch', // Stretch our children out
-    flexDirection: 'column'
   },
   textStyle: {
     justifyContent: 'flex-start'

@@ -554,10 +554,10 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 }
               }
               accessible={true}
-              animated={true}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={true}
+              defaultValue=""
               disableAnimation={
                 {
                   "value": 0,
@@ -606,7 +606,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
               testID="undefined.textInput"
               textAlignVertical="top"
-              value=""
             />
           </View>
           <View

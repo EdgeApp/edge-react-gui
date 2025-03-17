@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { BackHandler, Dimensions, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -20,20 +25,28 @@ const BACKGROUND_ALPHA = 0.7
 export interface EdgeModalProps<T = unknown> {
   bridge: AirshipBridge<T>
 
-  // If a non-string title is provided, it's up to the caller to ensure no close
-  // button overlap.
+  /**
+   * If a non-string title is provided, it's up to the caller to ensure no close
+   * button overlap.
+   */
   title?: React.ReactNode
 
   children?: React.ReactNode
 
-  // Include a scroll area:
+  /**
+   * Include a scroll area:
+   */
   scroll?: boolean
 
-  // Gives the box a border:
+  /**
+   * Gives the box a border:
+   */
   warning?: boolean
 
-  // Called when the user taps outside the modal or clicks the back button.
-  // If this is missing, the modal will not be closable.
+  /**
+   * Called when the user taps outside the modal or clicks the back button.
+   * If this is missing, the modal will not be closable.
+   */
   onCancel?: () => void
 }
 

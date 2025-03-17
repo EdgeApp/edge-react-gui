@@ -119,10 +119,10 @@ export const HomeScene = (props: Props) => {
     setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
   }, [countryCode])
 
-  const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
-  const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
-  const earnIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-earn') }), [theme])
-  const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }), [theme])
+  const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto1') }), [theme])
+  const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto1') }), [theme])
+  const earnIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-earn1') }), [theme])
+  const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade1') }), [theme])
   const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
   const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
   const hideSwap = config.disableSwaps === true
@@ -147,7 +147,6 @@ export const HomeScene = (props: Props) => {
                 <InfoCardCarousel
                   enterAnim={fadeInUp110}
                   cards={infoServerData.rollup?.promoCards2}
-                  countryCode={countryCode}
                   navigation={navigation as NavigationBase}
                   screenWidth={screenWidth}
                 />
@@ -245,7 +244,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   backroundImageContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
-    opacity: 0.6
+    opacity: 0.5
   },
   backgroundImage: {
     aspectRatio: 1,

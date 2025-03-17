@@ -1,6 +1,8 @@
 import { beforeAll, expect, it, jest } from '@jest/globals'
 import fetch from 'node-fetch'
 
+import { closestRateForTimestamp } from '../hooks/useTokenDisplayData'
+import { GuiExchangeRates } from '../types/types'
 import { getHistoricalRate } from '../util/exchangeRates'
 import { snooze } from '../util/utils'
 
@@ -101,6 +103,18 @@ it('get bulk rates', async () => {
   )
 
   await Promise.all(promises)
+})
+
+it('get closest rate for timestamp', () => {
+  const targetDate = '2025-03-12T23:00:00.000Z'
+  const exchangeRates: GuiExchangeRates = {
+    'ETH_iso:USD_2025-03-13T23:10:00.000Z': 1879.75664619359304197133,
+    'ETH_iso:USD_2025-03-11T22:55:00.000Z': 1944.99840563707630280987,
+    'ETH_iso:USD_2025-03-09T20:00:00.000Z': 2041.15092554349985221052,
+    'ETH_iso:USD_2025-03-04T19:00:00.000Z': 2160.9592242148933110002
+  }
+  const rate = closestRateForTimestamp(exchangeRates, 'ETH', Date.parse(targetDate))
+  expect(rate).toEqual(1944.99840563707630280987)
 })
 
 // main().catch(e => console.log('error'))

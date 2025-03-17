@@ -3,15 +3,17 @@ import { Platform } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import RNFS from 'react-native-fs'
 import Share, { ShareOptions } from 'react-native-share'
+import { sprintf } from 'sprintf-js'
 
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
 import { EdgeModal } from './EdgeModal'
 interface Props {
   bridge: AirshipBridge<void>
@@ -28,7 +30,7 @@ export const LogsModal = (props: Props) => {
     return SENSITIVE_KEY_REGEX.test(logs.activity.data) || SENSITIVE_KEY_REGEX.test(logs.info.data)
   }, [logs])
 
-  const handleShare = async () => {
+  const handleSave = async () => {
     logs.info.userMessage = userMessage
     logs.activity.userMessage = userMessage
 
@@ -73,8 +75,11 @@ export const LogsModal = (props: Props) => {
 
   return (
     <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
-      {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
-      {isDangerous ? null : <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>}
+      {isDangerous ? (
+        <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />
+      ) : (
+        <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>
+      )}
       <AlertCardUi4 title={lstrings.settings_modal_export_logs_warning} type="warning" />
       <ModalFilledTextInput
         autoCorrect
@@ -85,10 +90,10 @@ export const LogsModal = (props: Props) => {
         returnKeyType="done"
         value={userMessage}
       />
-      {isDangerous ? null : (
-        <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
-      )}
-      <MainButton label={lstrings.settings_button_export_logs} marginRem={[0.5, 0, 1]} type="secondary" onPress={handleShare} />
+      <ModalButtons
+        primary={{ label: sprintf(lstrings.send_to_1s, config.appName), onPress: handleSend, disabled: isDangerous }}
+        secondary={{ label: lstrings.save, onPress: handleSave }}
+      />
     </EdgeModal>
   )
 }

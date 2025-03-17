@@ -71,7 +71,7 @@ export function walletListMenuAction(
 
         if (Object.values(currencyWallets).length === 1) {
           await Airship.show<'ok' | undefined>(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
+            <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} title={lstrings.cannot_delete_last_wallet_modal_title}>
               <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</Paragraph>
               <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</Paragraph>
             </ButtonsModal>
@@ -175,7 +175,7 @@ export function walletListMenuAction(
         const title = switchString === 'viewPrivateViewKey' ? lstrings.fragment_wallets_view_private_view_key : lstrings.fragment_wallets_view_xpub
 
         await Airship.show<'copy' | 'link' | undefined>(bridge => (
-          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} closeArrow message={displayPublicSeed} title={title}>
+          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} message={displayPublicSeed} title={title}>
             {switchString === 'viewXPub' ? null : (
               <Alert
                 type="warning"
@@ -287,15 +287,9 @@ export function walletListMenuAction(
 
     case 'goToParent': {
       return async (dispatch, getState) => {
-        const state = getState()
-        const { account } = state.core
-        const { currencyWallets } = account
-        const wallet = currencyWallets[walletId]
-
         navigation.navigate('walletDetails', {
           walletId,
-          tokenId: null,
-          walletName: getWalletName(wallet)
+          tokenId: null
         })
       }
     }

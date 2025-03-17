@@ -31,7 +31,7 @@ export const WalletIcon = (props: WalletIconProps) => {
         size={size}
         wallet={wallet}
       />
-      <CryptoIcon {...props} pluginId={pluginId} secondaryCurrencyIconProp={compromised ? compromisedIcon : undefined} />
+      <CryptoIcon {...props} pluginId={pluginId} secondaryIconOverride={compromised ? compromisedIcon : undefined} />
     </View>
   )
 }

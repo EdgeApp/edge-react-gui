@@ -601,9 +601,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoFocus={true}
+            defaultValue="Paycheck"
             disableAnimation={
               {
                 "value": 0,
@@ -651,7 +651,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             }
             testID="undefined.textInput"
             textAlignVertical="top"
-            value="Paycheck"
           />
         </View>
         <View
@@ -1993,9 +1992,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               }
             }
             accessible={true}
-            animated={true}
             autoCapitalize="words"
             autoFocus={true}
+            defaultValue=""
             disableAnimation={
               {
                 "value": 0,
@@ -2043,7 +2042,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             }
             testID="undefined.textInput"
             textAlignVertical="top"
-            value=""
           />
         </View>
         <View

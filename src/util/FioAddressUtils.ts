@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../types/types'
@@ -361,11 +362,7 @@ const updatePublicAddresses = async (
     throw new Error(lstrings.fio_get_fee_err_msg)
   }
   if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
-  try {
-    await fioSignAndBroadcast(fioWallet, edgeTx)
-  } catch (e: any) {
-    throw new Error(lstrings.fio_connect_wallets_err)
-  }
+  await fioSignAndBroadcast(fioWallet, edgeTx)
 }
 
 /**
@@ -650,7 +647,11 @@ export const getRegInfo = async (
     throw new Error(lstrings.fio_get_fee_err_msg)
   }
 
-  if (selectedDomain.walletId) {
+  if (
+    selectedDomain.walletId ||
+    // Fall back to only allowing FIO payments if no fioRegApiToken is configured
+    (typeof ENV.FIO_INIT === 'object' && ENV.FIO_INIT.fioRegApiToken === '')
+  ) {
     return {
       activationCost,
       feeValue,

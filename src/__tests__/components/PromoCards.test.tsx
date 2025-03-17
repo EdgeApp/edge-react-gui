@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { InfoCard } from 'edge-info-server'
 
-import { filterInfoCards } from '../../components/cards/InfoCardCarousel'
+import { getDisplayInfoCards } from '../../util/infoUtils'
 
 const dummyCard: InfoCard = {
   localeMessages: { en: 'hello' },
@@ -33,7 +33,7 @@ const currentDate = new Date('2024-06-13T20:53:33.013Z')
 describe('filterPromoCards', () => {
   test('No cards', () => {
     const cards: InfoCard[] = []
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -46,7 +46,7 @@ describe('filterPromoCards', () => {
   })
   test('Card no filters', () => {
     const cards: InfoCard[] = [{ ...dummyCard }]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -73,7 +73,7 @@ describe('filterPromoCards', () => {
         localeMessages: { en: 'Another iOS Message' }
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -113,12 +113,12 @@ describe('filterPromoCards', () => {
         localeMessages: { en: 'Another Android Message' }
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber: '432',
       osType: 'android',
-      version: '1.2.3',
+      version,
       osVersion,
       currentDate
     })
@@ -142,7 +142,7 @@ describe('filterPromoCards', () => {
         appVersion: '1.2.4'
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber: '432',
@@ -181,12 +181,12 @@ describe('filterPromoCards', () => {
         localeMessages: { en: '1-4' }
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber: '4',
       osType,
-      version: '1.2.3',
+      version,
       osVersion,
       currentDate
     })
@@ -219,7 +219,7 @@ describe('filterPromoCards', () => {
         localeMessages: { en: 'ES message' }
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       buildNumber,
       osType,
@@ -253,7 +253,7 @@ describe('filterPromoCards', () => {
         localeMessages: { en: 'ES message' }
       }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'us',
       buildNumber: '4',
@@ -273,7 +273,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -281,7 +281,7 @@ describe('filterPromoCards', () => {
       version,
       osVersion,
       currentDate,
-      accountReferral: { installerId: 'bob2' }
+      promoIds: ['bob2']
     })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('Bob2 Message')
@@ -293,7 +293,7 @@ describe('filterPromoCards', () => {
       { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
       { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
     ]
-    const result = filterInfoCards({
+    const result = getDisplayInfoCards({
       cards,
       countryCode: 'US',
       buildNumber,
@@ -301,9 +301,7 @@ describe('filterPromoCards', () => {
       version,
       osVersion,
       currentDate,
-      accountReferral: {
-        promotions: [{ installerId: 'bob2', hiddenMessages: {}, messages: [], plugins: [] }]
-      }
+      promoIds: ['bob2']
     })
     expect(result.length).toBe(1)
     expect(result[0].localeMessages.en).toBe('Bob2 Message')

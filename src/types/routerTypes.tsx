@@ -93,12 +93,12 @@ export type WalletsTabParamList = {} & {
   transactionDetails: TransactionDetailsParams
 }
 
-// TODO: Split this up into distinct param lists?
 export type BuyTabParamList = {} & {
-  pluginListBuy: GuiPluginListParams | undefined
-  pluginListSell: GuiPluginListParams | undefined
+  // Buy-specific navigation
+  pluginListBuy?: GuiPluginListParams
   pluginViewBuy: PluginViewParams
-  pluginViewSell: PluginViewParams
+
+  // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
   guiPluginEmailForm: FiatPluginEmailFormParams
   guiPluginConfirmation: FiatPluginConfirmationParams
@@ -106,11 +106,16 @@ export type BuyTabParamList = {} & {
   guiPluginInfoDisplay: FiatPluginSepaTransferParams
   guiPluginSepaForm: FiatPluginSepaFormParams
   guiPluginWebView: FiatPluginOpenWebViewParams
+
+  // Shared rewards card screens
   rewardsCardDashboard: RewardsCardDashboardParams
   rewardsCardWelcome: RewardsCardWelcomeParams
 }
 
-export type SellTabParamList = {} & BuyTabParamList
+export type SellTabParamList = Omit<BuyTabParamList, 'pluginListBuy' | 'pluginViewBuy'> & {
+  pluginListSell?: GuiPluginListParams
+  pluginViewSell: PluginViewParams
+}
 
 export type SwapTabParamList = {} & {
   swapCreate: SwapCreateParams | undefined
@@ -279,6 +284,7 @@ export type AppParamList = RootParamList &
   EdgeTabsParamList &
   SwapTabParamList &
   BuyTabParamList &
+  SellTabParamList &
   WalletsTabParamList
 
 export type RouteSceneKey = keyof AppParamList

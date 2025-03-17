@@ -33,6 +33,9 @@ export interface AccountReferral {
 
   // Add account messages to this array to prevent them from appearing:
   hiddenAccountMessages: { [messageId: string]: boolean }
+
+  // List of active promotion IDs
+  activePromotions: string[]
 }
 
 /**

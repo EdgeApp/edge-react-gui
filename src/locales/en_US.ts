@@ -390,6 +390,7 @@ const strings = {
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
+  send_confirmation_algo_recipient_not_activated_s: 'Recipient must first activate %1$s before they can receive funds.',
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
@@ -445,7 +446,7 @@ const strings = {
   swap_minimum_receive_amount: 'Min Receive Amount',
   swap_minimum_amount_1s: 'Min %1$s',
   settings_button_clear_logs: 'Clear Logs',
-  settings_button_send_logs: 'Send Logs to Edge',
+  send_to_1s: 'Send to %1$s',
   settings_button_export_logs: 'Export Logs',
   settings_button_setup_two_factor: 'Set Up 2-Factor Security',
   settings_button_unlock_settings: 'Tap to Unlock Account Settings',
@@ -1687,6 +1688,7 @@ const strings = {
   notifications_recent: 'Recent',
   notifications_none: `You're all caught up!`,
   swap: 'Swap',
+  update_available: 'Update Available',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

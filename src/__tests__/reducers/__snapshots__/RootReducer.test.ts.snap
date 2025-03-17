@@ -4,6 +4,7 @@ exports[`initialState 1`] = `
 {
   "account": {
     "accountReferral": {
+      "activePromotions": [],
       "hiddenAccountMessages": {},
       "ignoreAccountSwap": false,
       "promotions": [],

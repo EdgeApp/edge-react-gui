@@ -70,8 +70,15 @@ const NotificationViewComponent = (props: Props) => {
   })
 
   const handle2FaEnabledClose = useHandler(async () => {
-    await hideBanner(account, 'ip2FaReminder')
-    await writeLocalAccountSettings(account, { ...accountSettings, accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true } })
+    // Update both notifState and accountNotifDismissInfo in a single write
+    await writeLocalAccountSettings(account, {
+      ...accountSettings,
+      accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true },
+      notifState: {
+        ...accountSettings.notifState,
+        ip2FaReminder: { ...(accountSettings.notifState.ip2FaReminder ?? {}), isBannerHidden: true }
+      }
+    })
   })
   const handle2FaEnabledPress = useHandler(async () => {
     await handle2FaEnabledClose()

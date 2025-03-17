@@ -2,6 +2,8 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
@@ -29,6 +31,7 @@ interface Props {
 export function Providers(props: Props) {
   const { context } = props
   const theme = useTheme()
+  const isDesktop = Platform.OS === 'windows' || Platform.OS === 'macos' || Platform.OS === 'web' || DeviceInfo.getDeviceType() === 'Desktop'
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.
@@ -58,6 +61,7 @@ export function Providers(props: Props) {
   return (
     <Provider store={store}>
       <LoginUiProvider
+        isDesktop={isDesktop}
         // @ts-expect-error
         themeOverride={theme}
       >

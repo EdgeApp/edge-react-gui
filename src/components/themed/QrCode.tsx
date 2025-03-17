@@ -1,7 +1,7 @@
 import { EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
@@ -28,12 +28,11 @@ export function QrCode(props: Props) {
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 2), theme.rem))
 
-  // Scale the surface to match the container's size (minus padding):
-  const [containerHeight, setContainerHeight] = React.useState<number>(0)
-  const size = containerHeight - theme.rem(1)
+  // Scale the surface to match the container's size:
+  const [size, setSize] = React.useState<number>(0)
 
   const handleLayout = (event: any) => {
-    setContainerHeight(event.nativeEvent.layout.height)
+    setSize(event.nativeEvent.layout.height)
   }
   // Generate an SVG path:
   const cellsPadding = 1
@@ -53,7 +52,32 @@ export function QrCode(props: Props) {
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
   const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
-  const icon = <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={1.5} />
+  // Calculate crypto icon size and its parent background container
+  const iconContainerSize = size * 0.2
+  const iconContainerStyle = React.useMemo<ViewStyle>(
+    () => ({
+      position: 'absolute',
+      width: iconContainerSize,
+      height: iconContainerSize,
+      borderRadius: theme.cardBorderRadius,
+      backgroundColor: theme.qrBackgroundColor,
+      alignItems: 'center',
+      justifyContent: 'center',
+      left: '50%',
+      top: '50%',
+      marginLeft: -iconContainerSize / 2,
+      marginTop: -iconContainerSize / 2
+    }),
+    [iconContainerSize, theme.cardBorderRadius, theme.qrBackgroundColor]
+  )
+  // 80% of parent container to add some padding
+  const iconSizeRem = (iconContainerSize * 0.8) / theme.rem(1)
+
+  const icon = (
+    <View style={iconContainerStyle}>
+      <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={iconSizeRem} />
+    </View>
+  )
 
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
@@ -61,18 +85,25 @@ export function QrCode(props: Props) {
         <ActivityIndicator color={theme.iconTappable} />
         <Animated.View style={[styles.whiteBox, fadeStyle]}>
           {size <= 0 ? null : (
-            <Svg height={size} width={size} viewBox={viewBox}>
-              <Path d={path} fill={theme.qrForegroundColor} />
-            </Svg>
+            <View style={styles.whiteBoxInner}>
+              <Svg height="100%" width="100%" viewBox={viewBox}>
+                <Path d={path} fill={theme.qrForegroundColor} />
+              </Svg>
+            </View>
           )}
+          {icon}
         </Animated.View>
-        {icon}
       </View>
     </EdgeTouchableWithoutFeedback>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  whiteBoxInner: {
+    flex: 1,
+    margin: theme.rem(0.5),
+    aspectRatio: 1
+  },
   container: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -85,9 +116,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderRadius: theme.rem(0.5),
     bottom: 0,
     left: 0,
-    padding: theme.rem(0.5),
     position: 'absolute',
     right: 0,
-    top: 0
+    top: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))

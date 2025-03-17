@@ -502,13 +502,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         </IconButton>
         {hideStaking ? null : (
           <IconButton
-            disabled={this.props.walletStakingState.isLoading}
+            disabled={this.props.walletStakingState.stakePlugins.length === 0}
             label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
             onPress={this.handleStakePress}
             superscriptLabel={bestApyText}
           >
-            {this.props.walletStakingState.isLoading ? (
-              <ActivityIndicator color={theme.textLink} />
+            {this.props.walletStakingState.stakePlugins.length === 0 ? (
+              <ActivityIndicator color={theme.primaryText} />
             ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
             )}
@@ -578,13 +578,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     }
 
     // Handle StakePlugin staking
-    if (stakePlugins != null && stakePolicies != null) {
-      if (stakePolicies.length > 1) {
-        navigation.push('stakeOptions', {
-          walletId: wallet.id,
-          currencyCode
-        })
-      } else if (stakePolicies.length === 1) {
+    if (stakePlugins != null) {
+      if (stakePolicies.length === 1) {
         const [stakePolicy] = stakePolicies
         const { stakePolicyId } = stakePolicy
         const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy, {
@@ -596,6 +591,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             walletId: wallet.id,
             stakePolicyId
           })
+      }
+      // More than one option or stakePolicies are not yet loaded/populated
+      else {
+        navigation.push('stakeOptions', {
+          walletId: wallet.id,
+          currencyCode
+        })
       }
     }
   }

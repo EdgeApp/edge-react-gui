@@ -164,7 +164,6 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
                 buttons={{
                   ok: { label: lstrings.title_fio_add_bundled_txs }
                 }}
-                closeArrow
               />
             ))
             if (answer === 'ok') {
