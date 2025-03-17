@@ -69,7 +69,22 @@ export interface WalletStakingStateMap {
 export interface WalletStakingState {
   isLoading: boolean
   lockedNativeAmount: string
+  /**
+   * @deprecated: Using this takes too long to load. Use `getStakePlugins`
+   * instead.
+   *
+   * TODO: Can probably remove this completely.
+   */
   stakePlugins: StakePlugin[]
+  /**
+   * @deprecated: Using this takes too long to load if all you are doing is
+   * trying to find policy information.
+   *
+   * Use `stakePositionMap` for position information, and `getStakePolicy` for
+   * policy information.
+   *
+   * TODO: Can probably remove this completely.
+   */
   stakePolicies: StakePolicyMap
   stakePositionMap: StakePositionMap
 }
