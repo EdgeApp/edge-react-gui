@@ -29,7 +29,7 @@ Edge también permite cambio entre criptomonedas. Cambie fácilmente sus monedas
 Aviso de privacidad
 La aplicación Edge Wallet solicita acceso a la lista de contactos del dispositivo y a la información personal. Esta información se utiliza en el dispositivo para ofrecer una experiencia de usuario mejorada de las siguientes maneras:
 
-1. Autocompletar contactos desde la libreta de direcciones del usuario después de una transacción
-2. Autocompletar contactos desde la libreta de direcciones del usuario para enviar correos electrónicos o solicitudes de pago por SMS
+1. Autocompletar los contactos de la libreta de direcciones del usuario después de una transacción.
+2. Autocompletar los contactos de la libreta de direcciones del usuario para enviar solicitudes de pago por correo electrónico o SMS.
 
-Ninguna información personal o información de la lista de contactos abandona el dispositivo sin antes haber sido cifrada con las credenciales del usuario (nombre de usuario / contraseña). Ni Edge ni ningún tercero puede acceder a la información solicitada por la aplicación.
+Ninguna información personal ni de la lista de contactos abandona el dispositivo sin ser primero cifrada por las credenciales del usuario (nombre de usuario/contraseña). Ni Edge ni ningún tercero pueden acceder a la información solicitada por la aplicación.
