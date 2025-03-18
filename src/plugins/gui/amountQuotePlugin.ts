@@ -1,5 +1,6 @@
 import { div, eq, gt, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
+import { PluginPromotion } from 'edge-info-server'
 import { sprintf } from 'sprintf-js'
 
 import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
@@ -144,7 +145,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         try {
           if (infoServerData.rollup?.fiatPluginPriority != null) {
             providerPriority = infoServerData.rollup.fiatPluginPriority
-            priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
+            priorityArray = createPriorityArray(providerPriority[paymentTypes[0]], pluginPromotions)
           }
         } catch (e: any) {
           console.warn('Failed to fetch provider priorities:', e)
@@ -606,12 +607,37 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 // showing the quotes.
 // TODO: conflict: also defines whether or not to accept a quote from the
 // provider
-export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap): PriorityArray => {
+export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap, pluginPromotions: PluginPromotion[] = []): PriorityArray => {
   const priorityArray: PriorityArray = []
   if (providerPriorityMap != null) {
+    // Create a copy of the providerPriorityMap to avoid modifying the original
+    const priorityMapCopy = { ...providerPriorityMap }
+
+    // Create a separate object for preferred providers
+    const preferredProviders: { [pluginId: string]: boolean } = {}
+
+    // Identify all preferred providers from pluginPromotions
+    for (const pluginPromotion of pluginPromotions) {
+      if (pluginPromotion.preferProviders != null) {
+        for (const provider of pluginPromotion.preferProviders) {
+          // Add to preferred providers list
+          preferredProviders[provider] = true
+          // Remove from the regular priority map if it exists there, so they
+          // are omitted from normal ordering logic
+          delete priorityMapCopy[provider]
+        }
+      }
+    }
+
+    // If we have preferred providers, add them as the first priority group
+    if (Object.keys(preferredProviders).length > 0) {
+      priorityArray.push(preferredProviders)
+    }
+
+    // Process the remaining providers by priority
     const tempPriorityList: Array<{ pluginId: string; priority: number }> = []
-    for (const pluginId in providerPriorityMap) {
-      tempPriorityList.push({ pluginId, priority: providerPriorityMap[pluginId] })
+    for (const pluginId in priorityMapCopy) {
+      tempPriorityList.push({ pluginId, priority: priorityMapCopy[pluginId] })
     }
     tempPriorityList.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity
@@ -625,6 +651,7 @@ export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap): 
       priorityObj[tempPriority.pluginId] = true
     }
   }
+
   return priorityArray
 }
 
