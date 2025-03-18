@@ -2,7 +2,11 @@
 
 ## Unreleased (develop)
 
-## 4.24.0 (staging)
+## 4.25.0 (staging)
+
+- fixed: Fix yesterday rate lookup in `exchangeRates`
+
+## 4.24.0 (2025-03-17)
 
 - added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
 - added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
@@ -18,7 +22,6 @@
 - changed: `HomeScene` tile images
 - changed: FIO handle registrations supported without a configured `fioRegApiToken`
 - changed: Use Ethereum chain icon for bobevm
-- fixed: Fix yesterday rate lookup in `exchangeRates`
 - fixed: Spacing in `WalletDetailsScene` transactions and `HomeScene` Markets card
 - fixed: Date spacing in `NotificationCenterCard`
 - fixed: Unstable text input cursor on Android for some instances.
