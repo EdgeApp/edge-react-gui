@@ -204,6 +204,8 @@ export type SpendAuthType = 'pin' | 'none'
 export interface GuiExchangeRates {
   [pair: string]: number
 }
+// Same as GuiExchangeRates but with better ergonomics. Limited to current and 24 hour rates.
+export type GuiExchangeRatesMap = Map<string, Map<string, { currentRate: number; yesterdayRate: number }>>
 
 export interface StateProvinceData {
   name: string

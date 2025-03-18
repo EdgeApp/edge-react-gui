@@ -3,7 +3,7 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
 import { ThunkAction } from '../types/reduxTypes'
-import { GuiExchangeRates } from '../types/types'
+import { GuiExchangeRates, GuiExchangeRatesMap } from '../types/types'
 import { fetchRates } from '../util/network'
 import { datelog } from '../util/utils'
 
@@ -32,7 +32,8 @@ const asExchangeRateCacheFile = asObject({
 })
 
 type AssetPair = ReturnType<typeof asAssetPair>
-type ExchangeRateCache = ReturnType<typeof asExchangeRateCache>
+// Exported for unit tests
+export type ExchangeRateCache = ReturnType<typeof asExchangeRateCache>
 type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
 
 let exchangeRateCache: ExchangeRateCacheFile | undefined
@@ -52,6 +53,8 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
     const state = getState()
     const { account } = state.core
     const { defaultIsoFiat } = state.ui.settings
+    const now = Date.now()
+    const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
 
     // If this is the first run, immediately use whatever we have on disk
     // before moving on to the potentially slow network:
@@ -60,20 +63,24 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
         datelog('Error loading exchange rate cache:', String(error))
         return { assetPairs: [], rates: {} }
       })
+      const { exchangeRates, exchangeRatesMap } = buildGuiRates(exchangeRateCache.rates, yesterday)
       dispatch({
         type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
         data: {
-          exchangeRates: buildGuiRates(exchangeRateCache.rates)
+          exchangeRates,
+          exchangeRatesMap
         }
       })
     }
 
     // Refresh from the network:
-    await fetchExchangeRates(account, defaultIsoFiat, exchangeRateCache)
+    await fetchExchangeRates(account, defaultIsoFiat, exchangeRateCache, now, yesterday)
+    const { exchangeRates, exchangeRatesMap } = buildGuiRates(exchangeRateCache.rates, yesterday)
     dispatch({
       type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
       data: {
-        exchangeRates: buildGuiRates(exchangeRateCache.rates)
+        exchangeRates,
+        exchangeRatesMap
       }
     })
   }
@@ -111,14 +118,12 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
 /**
  * Fetches exchange rates from the server, and writes them out to disk.
  */
-async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, cache: ExchangeRateCacheFile): Promise<void> {
+async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, cache: ExchangeRateCacheFile, now: number, yesterday: string): Promise<void> {
   const { currencyWallets } = account
 
   // Look up various dates:
-  const now = Date.now()
   const pairExpiration = now + ONE_MONTH
   const rateExpiration = now + ONE_DAY
-  const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
 
   // Maintain a map of the unique asset pairs we need:
   const assetPairMap = new Map<string, AssetPair>()
@@ -238,18 +243,45 @@ async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, 
 /**
  * Converts rates from the cache format to the GUI's in-memory format.
  */
-function buildGuiRates(rateCache: ExchangeRateCache): GuiExchangeRates {
+function buildGuiRates(rateCache: ExchangeRateCache, yesterday: string): { exchangeRates: GuiExchangeRates; exchangeRatesMap: GuiExchangeRatesMap } {
   const out: GuiExchangeRates = { 'iso:USD_iso:USD': 1 }
+  const outMap: GuiExchangeRatesMap = new Map()
+  const yesterdayTimestamp = Date.parse(yesterday)
+
   for (const key of Object.keys(rateCache)) {
     const { rate } = rateCache[key]
     out[key] = rate
 
     // Include reverse rates:
-    const codes = key.split('_')
-    const reverseKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
+    const [codeA, codeB, date] = key.split('_') as [string, string, string | undefined]
+    const reverseKey = `${codeB}_${codeA}${date ? '_' + date : ''}`
     out[reverseKey] = rate === 0 ? 0 : 1 / rate
+
+    // Set up exchange rate map. This nest map is keyed This map will hold current rate and 24 hour rate, if available.
+    if (outMap.get(codeA)?.get(codeB) != null || date != null) {
+      continue
+    }
+
+    let yesterdayRate: number | undefined
+    // We only look up yesterday's rate for USD pairs
+    if (codeB === 'iso:USD') {
+      yesterdayRate = rateCache[`${codeA}_${codeB}_${yesterday}`]?.rate ?? closestRateForTimestamp(rateCache, codeA, yesterdayTimestamp)
+    }
+
+    const codeAMap = outMap.get(codeA) ?? new Map()
+    outMap.set(codeA, codeAMap.set(codeB, { currentRate: rate, yesterdayRate }))
+
+    const codeBMap = outMap.get(codeB) ?? new Map()
+    outMap.set(
+      codeB,
+      codeBMap.set(codeA, { currentRate: out[reverseKey], yesterdayRate: yesterdayRate === 0 || yesterdayRate == null ? 0 : 1 / yesterdayRate })
+    )
   }
-  return out
+
+  return {
+    exchangeRates: out,
+    exchangeRatesMap: outMap
+  }
 }
 
 const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
@@ -259,4 +291,22 @@ const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
   yesterday.setMilliseconds(0)
   yesterday.setDate(yesterday.getDate() - 1)
   return yesterday
+}
+
+export const closestRateForTimestamp = (exchangeRates: ExchangeRateCache, currencyCode: string, timestamp: number): number | undefined => {
+  // The extra _ at the end means there is a date string at the end of the key
+  const filteredPairs = Object.keys(exchangeRates).filter(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
+
+  let bestRate: number | undefined
+  let bestDistance = Infinity
+  for (const pair of filteredPairs) {
+    const [, , date] = pair.split('_')
+    const ms = Date.parse(date).valueOf()
+    const distance = Math.abs(ms - timestamp)
+    if (distance < bestDistance) {
+      bestDistance = distance
+      bestRate = exchangeRates[pair].rate
+    }
+  }
+  return bestRate
 }

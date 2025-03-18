@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+## 4.25.1 (staging)
+
+- added: Add `exchangeRatesMap` to hold current and yesterday rates
+
 ## 4.25.0 (staging)
 
 - fixed: Fix yesterday rate lookup in `exchangeRates`
