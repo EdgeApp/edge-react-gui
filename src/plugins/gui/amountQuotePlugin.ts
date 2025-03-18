@@ -129,7 +129,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotion, providerId } = params
+      const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotions, providerId } = params
       const { countryCode } = await getFirstOpenInfo()
 
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
@@ -450,8 +450,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const quotePromises = finalProvidersArray
             .filter(p => (providerId == null ? true : providerId === p.providerId))
             .map(async p => {
-              const providerIds = pluginPromotion?.providerIds ?? []
-              const promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+              let promoCode
+              if (pluginPromotions != null) {
+                // For lack of a better algo, choose the first pluginPromotion
+                const pluginPromotion = pluginPromotions[0] // providerIds is actually "promoProviderIds" and are linked
+                const providerIds = pluginPromotion?.providerIds ?? []
+                promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+              }
               return await p.getQuote({ ...quoteParams, promoCode })
             })
           let errors: unknown[] = []
@@ -601,23 +606,23 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 // showing the quotes.
 // TODO: conflict: also defines whether or not to accept a quote from the
 // provider
-export const createPriorityArray = (providerPriority: ProviderPriorityMap | undefined): PriorityArray => {
+export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap): PriorityArray => {
   const priorityArray: PriorityArray = []
-  if (providerPriority != null) {
-    const temp: Array<{ pluginId: string; priority: number }> = []
-    for (const pluginId in providerPriority) {
-      temp.push({ pluginId, priority: providerPriority[pluginId] })
+  if (providerPriorityMap != null) {
+    const tempPriorityList: Array<{ pluginId: string; priority: number }> = []
+    for (const pluginId in providerPriorityMap) {
+      tempPriorityList.push({ pluginId, priority: providerPriorityMap[pluginId] })
     }
-    temp.sort((a, b) => b.priority - a.priority)
+    tempPriorityList.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity
     let priorityObj: PriorityArray[number] = {}
-    for (const t of temp) {
-      if (t.priority < currentPriority) {
+    for (const tempPriority of tempPriorityList) {
+      if (tempPriority.priority < currentPriority) {
         priorityArray.push({})
-        currentPriority = t.priority
+        currentPriority = tempPriority.priority
         priorityObj = priorityArray[priorityArray.length - 1]
       }
-      priorityObj[t.pluginId] = true
+      priorityObj[tempPriority.pluginId] = true
     }
   }
   return priorityArray
