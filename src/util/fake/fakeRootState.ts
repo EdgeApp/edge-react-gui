@@ -241,6 +241,7 @@ export const fakeRootState: FakeState = {
     'ETH_iso:USD_2022-11-08T01:00:00.000Z': 1562.74372528628146028495,
     'iso:USD_ETH_2022-11-08T01:00:00.000Z': 0.000639900185692192
   },
+  exchangeRatesMap: new Map([['BTC', new Map([['iso:EUR', { currentRate: 1000000, yesterdayRate: 10000000 }]])]]),
   notificationSettings: {
     ignoreMarketing: false,
     ignorePriceChanges: false,

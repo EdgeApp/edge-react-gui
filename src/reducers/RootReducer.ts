@@ -5,7 +5,7 @@ import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux
 import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
 import { Action } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
-import { GuiContact, GuiExchangeRates, WalletListItem } from '../types/types'
+import { GuiContact, GuiExchangeRates, GuiExchangeRatesMap, WalletListItem } from '../types/types'
 import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
 import { network, NetworkState } from './NetworkReducer'
@@ -19,6 +19,7 @@ export interface RootState {
   readonly contacts: GuiContact[]
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates
+  readonly exchangeRatesMap: GuiExchangeRatesMap
 
   // Flag to signal scrolling components to add extra padding at the bottom to
   // avoid blocking content with the notification view
@@ -56,6 +57,17 @@ export const rootReducer = combineReducers<RootState, Action>({
         return action.data.exchangeRates
       case 'LOGOUT':
         return {}
+      default:
+        return state
+    }
+  },
+
+  exchangeRatesMap: (state = new Map(), action: Action): GuiExchangeRatesMap => {
+    switch (action.type) {
+      case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
+        return action.data.exchangeRatesMap
+      case 'LOGOUT':
+        return new Map()
       default:
         return state
     }
