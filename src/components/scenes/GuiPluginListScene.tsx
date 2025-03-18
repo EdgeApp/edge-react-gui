@@ -286,14 +286,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         osVersion: getOsVersion(),
         currentDate: new Date()
       })
-      const pluginPromos = promoCards.map(card => card.pluginPromotions ?? []).flat()
-      const filteredPromos = pluginPromos.filter(promo => {
+      const allPluginPromotions = promoCards.map(card => card.pluginPromotions ?? []).flat()
+      const pluginPromotions = allPluginPromotions.filter(promo => {
         const pluginIdMatch = (promo.pluginIds ?? []).some(pid => pid === pluginId)
         return pluginIdMatch && promo.pluginType === direction
       })
 
-      // For lack of a better algo, choose the first promotion that matches
-      const pluginPromotion = filteredPromos[0]
       const disableProviders = disablePlugins[pluginId]
 
       // This should not happen, since we don't show disabled rows:
@@ -311,7 +309,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         longPress,
         navigation: navigation as NavigationBase,
         paymentType,
-        pluginPromotion,
+        pluginPromotions,
         regionCode: { countryCode, stateProvinceCode },
         onLogEvent
       })

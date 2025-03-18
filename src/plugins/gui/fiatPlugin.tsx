@@ -86,7 +86,7 @@ export const executePlugin = async (params: {
   longPress?: boolean
   navigation: NavigationBase
   paymentType?: FiatPaymentType
-  pluginPromotion?: PluginPromotion
+  pluginPromotions?: PluginPromotion[]
   providerId?: string
   regionCode: FiatPluginRegionCode
   onLogEvent: OnLogEvent
@@ -103,7 +103,7 @@ export const executePlugin = async (params: {
     longPress = false,
     navigation,
     paymentType,
-    pluginPromotion,
+    pluginPromotions,
     providerId,
     regionCode,
     onLogEvent
@@ -378,7 +378,7 @@ export const executePlugin = async (params: {
     paymentTypes,
     forceFiatCurrencyCode,
     defaultFiatAmount,
-    pluginPromotion,
+    pluginPromotions,
     providerId
   }
   await plugin.startPlugin(startPluginParams)
