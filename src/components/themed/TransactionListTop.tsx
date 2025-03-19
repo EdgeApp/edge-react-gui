@@ -506,12 +506,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         </IconButton>
         {hideStaking ? null : (
           <IconButton
-            disabled={this.props.stakePlugins.length === 0}
+            disabled={this.props.stakePlugins.length === 0 && this.props.wallet.currencyInfo.pluginId !== 'fio'}
             label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
             onPress={this.handleStakePress}
             superscriptLabel={bestApyText}
           >
-            {stakePolicies.length === 0 ? (
+            {!this.isStakingPolicyAvailable() ? (
               <ActivityIndicator color={theme.primaryText} />
             ) : (
               <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
@@ -578,6 +578,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         tokenId,
         walletId: wallet.id
       })
+      return
     }
 
     // Handle StakePlugin staking
