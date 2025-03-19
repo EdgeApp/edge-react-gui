@@ -10,7 +10,7 @@ import { getLocalAccountSettings, writeTokenWarningsShown } from './LocalSetting
 
 export const approveTokenTerms = async (account: EdgeAccount, pluginId: string) => {
   const { currencyCode } = account.currencyConfig[pluginId].currencyInfo
-  const tokenWarningsShown = getLocalAccountSettings().tokenWarningsShown
+  const { tokenWarningsShown } = await getLocalAccountSettings(account)
   if (tokenWarningsShown.includes(pluginId)) return
 
   await writeTokenWarningsShown(account, pluginId)
