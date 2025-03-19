@@ -69,7 +69,6 @@ export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWal
       type: 'STAKING/SETUP',
       walletId,
       lockedNativeAmount,
-      stakePlugins,
       stakePolicies: stakePolicyMap,
       stakePositionMap
     })
