@@ -7,6 +7,7 @@
 ## 4.25.0 (staging)
 
 - fixed: Fix yesterday rate lookup in `exchangeRates`
+- fixed: Crash on `StakeOverviewScene`
 
 ## 4.24.1 (staging)
 
