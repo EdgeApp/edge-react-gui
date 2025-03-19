@@ -6,6 +6,7 @@
 
 - fixed: Fix yesterday rate lookup in `exchangeRates`
 - fixed: Crash on `StakeOverviewScene`
+- fixed: Fix race condition between reading and writing account settings
 
 ## 4.24.1 (staging)
 
