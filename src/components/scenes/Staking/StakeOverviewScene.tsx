@@ -53,8 +53,11 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const { stakePlugin, stakePolicyId } = route.params
 
   const stakeState = useSelector(state => state.staking.walletStakingMap[wallet.id])
-  const [stakePlugins] = useAsyncValue(async () => (await getStakePlugins(wallet.currencyInfo.pluginId)).flatMap(stakePlugin => stakePlugin.getPolicies()))
-  const stakePolicy: StakePolicy | undefined = stakePlugins?.find(policy => policy.stakePolicyId === stakePolicyId)
+  const [stakePolicies] = useAsyncValue(async () => {
+    const plugins = await getStakePlugins(wallet.currencyInfo.pluginId)
+    return plugins.flatMap(stakePlugin => stakePlugin.getPolicies())
+  })
+  const stakePolicy: StakePolicy | undefined = stakePolicies?.find(policy => policy.stakePolicyId === stakePolicyId)
   const stakePosition: StakePosition | undefined = stakeState?.stakePositionMap[stakePolicyId]
   const isStakeStateLoading = stakeState == null || stakeState.isLoading
 
@@ -149,7 +152,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       navigation.navigate('stakeModify', {
         modification,
         stakePlugin,
-        stakePolicyId,
+        stakePolicy,
         title,
         walletId: wallet.id
       })
@@ -195,7 +198,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         apy={stakePolicy.apy}
         stakeProviderInfo={stakePolicy.stakeProviderInfo}
       />
-      {stakePosition == null || waitingOnStateLoading ? (
+      {stakePosition == null || isStakeStateLoading ? (
         <>
           <View style={styles.shimmer}>
             <Shimmer isShown />
