@@ -13,7 +13,7 @@ import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsRe
 import { StakingAction } from '../reducers/StakingReducer'
 import { TweakSource } from '../util/ReferralHelpers'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
-import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
+import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, GuiExchangeRatesMap, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -55,7 +55,7 @@ export type Action =
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | {
       type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-      data: { exchangeRates: GuiExchangeRates }
+      data: { exchangeRates: GuiExchangeRates; exchangeRatesMap: GuiExchangeRatesMap }
     }
   | {
       type: 'IS_NOTIFICATION_VIEW_ACTIVE'
