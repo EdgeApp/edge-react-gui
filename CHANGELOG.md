@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+## 4.25.1 (staging)
+
+- added: Add `exchangeRatesMap` to hold current and yesterday rates
+
 ## 4.24.0 (staging)
 
 - added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
