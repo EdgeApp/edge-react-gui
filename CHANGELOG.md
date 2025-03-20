@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: `preferProviders` support to override default priority when selecting a fiat provider
+
 ## 4.25.0 (staging)
 
 - fixed: Fix yesterday rate lookup in `exchangeRates`

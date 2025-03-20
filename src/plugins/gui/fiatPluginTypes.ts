@@ -192,7 +192,7 @@ export interface FiatPluginStartParams {
   regionCode: FiatPluginRegionCode
   forceFiatCurrencyCode?: string
   defaultFiatAmount?: string
-  pluginPromotion?: PluginPromotion
+  pluginPromotions?: PluginPromotion[]
   providerId?: string
 }
 export interface FiatPlugin {
