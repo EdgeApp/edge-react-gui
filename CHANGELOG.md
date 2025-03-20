@@ -5,6 +5,7 @@
 ## 4.24.1 (staging)
 
 - added: Add `exchangeRatesMap` to hold current and yesterday rates
+- fixed: FIO wallet Earn button behavior
 
 ## 4.24.0 (2025-03-17)
 
