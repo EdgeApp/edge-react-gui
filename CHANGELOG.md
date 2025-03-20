@@ -2,11 +2,11 @@
 
 ## Unreleased (develop)
 
-## 4.25.1 (staging)
+## 4.24.1 (staging)
 
 - added: Add `exchangeRatesMap` to hold current and yesterday rates
 
-## 4.24.0 (staging)
+## 4.24.0 (2025-03-17)
 
 - added: Dynamically populate txId in `SwapDetailsCard` if a "{{TXID}}" tag is found in the `orderUri`
 - added: Integrate `stakeStatusCards` from info server into `StakeOverviewScene`
@@ -20,7 +20,7 @@
 - changed: Simplify fake scene props implementation to reduce code duplication
 - changed: Transaction date moved to time/confirmations row in `WalletDetailsScene`
 - changed: `HomeScene` tile images
-- changed: FIO handle registrations supported without a configured `fioRegApiToken` 
+- changed: FIO handle registrations supported without a configured `fioRegApiToken`
 - changed: Use Ethereum chain icon for bobevm
 - fixed: Spacing in `WalletDetailsScene` transactions and `HomeScene` Markets card
 - fixed: Date spacing in `NotificationCenterCard`
