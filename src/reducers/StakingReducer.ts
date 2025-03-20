@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from 'redux'
 
-import { StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { Action } from '../types/reduxTypes'
 
 export type StakingAction =
@@ -29,11 +29,6 @@ export type StakingAction =
       lockedNativeAmount: string
     }
   | {
-      type: 'STAKING/UPDATE_PLUGINS'
-      walletId: string
-      stakePlugins: StakePlugin[]
-    }
-  | {
       type: 'STAKING/UPDATE_POLICIES'
       walletId: string
       stakePolicies: StakePolicyMap
@@ -53,7 +48,6 @@ export type StakingAction =
       type: 'STAKING/SETUP'
       walletId: string
       lockedNativeAmount: string
-      stakePlugins: StakePlugin[]
       stakePolicies: StakePolicyMap
       stakePositionMap: StakePositionMap
     }
@@ -70,20 +64,13 @@ export interface WalletStakingState {
   isLoading: boolean
   lockedNativeAmount: string
   /**
-   * @deprecated: Using this takes too long to load. Use `getStakePlugins`
-   * instead.
-   *
-   * TODO: Can probably remove this completely.
-   */
-  stakePlugins: StakePlugin[]
-  /**
    * @deprecated: Using this takes too long to load if all you are doing is
    * trying to find policy information.
    *
-   * Use `stakePositionMap` for position information, and `getStakePolicy` for
-   * policy information.
+   * Use `stakePositionMap` for position information, and `getPolicies()` on
+   * `stakePlugins` generated from `getStakePlugins()` for policy information.
    *
-   * TODO: Can probably remove this completely.
+   * TODO: Remove.
    */
   stakePolicies: StakePolicyMap
   stakePositionMap: StakePositionMap
@@ -128,15 +115,6 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> = co
       case 'STAKING/UPDATE_LOCKED_AMOUNT':
       case 'STAKING/SETUP':
         return action.lockedNativeAmount
-      default:
-        return state
-    }
-  },
-  stakePlugins: (state = [], action: Action) => {
-    switch (action.type) {
-      case 'STAKING/UPDATE_PLUGINS':
-      case 'STAKING/SETUP':
-        return action.stakePlugins
       default:
         return state
     }

@@ -10,7 +10,9 @@ import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { lstrings } from '../../../locales/strings'
+import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -49,9 +51,16 @@ interface DenomMap {
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { stakePlugin, stakePolicyId } = route.params
-  const isStakeStakeLoading = useSelector(state => state.staking.walletStakingMap[wallet.id].isLoading)
-  const stakePolicy = useSelector<StakePolicy | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePolicies[stakePolicyId])
-  const stakePosition = useSelector<StakePosition | undefined>(state => state.staking.walletStakingMap[wallet.id].stakePositionMap[stakePolicyId])
+
+  const stakeState = useSelector(state => state.staking.walletStakingMap[wallet.id])
+  const [stakePolicies] = useAsyncValue(async () => {
+    const plugins = await getStakePlugins(wallet.currencyInfo.pluginId)
+    return plugins.flatMap(stakePlugin => stakePlugin.getPolicies())
+  })
+  const stakePolicy: StakePolicy | undefined = stakePolicies?.find(policy => policy.stakePolicyId === stakePolicyId)
+  const stakePosition: StakePosition | undefined = stakeState?.stakePositionMap[stakePolicyId]
+  const isStakeStateLoading = stakeState == null || stakeState.isLoading
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -63,7 +72,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // This is because liquid staking actions are dependent on the position state.
   // If the position state is not loaded and update-to-date, then the buttons
   // will not be enabled/disabled properly. So we must wait for the state to load.
-  const waitingOnStateLoading = isStakeStakeLoading && stakePolicy?.isLiquidStaking === true
+  const waitingOnStateLoading = isStakeStateLoading && stakePolicy?.isLiquidStaking === true
 
   const displayDenomMap: DenomMap =
     stakePolicy == null
@@ -143,7 +152,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       navigation.navigate('stakeModify', {
         modification,
         stakePlugin,
-        stakePolicyId,
+        stakePolicy,
         title,
         walletId: wallet.id
       })
@@ -189,7 +198,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         apy={stakePolicy.apy}
         stakeProviderInfo={stakePolicy.stakeProviderInfo}
       />
-      {stakePosition == null || waitingOnStateLoading ? (
+      {stakePosition == null || isStakeStateLoading ? (
         <>
           <View style={styles.shimmer}>
             <Shimmer isShown />
