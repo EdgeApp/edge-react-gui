@@ -14,12 +14,14 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { scale } from '../../util/scaling'
+import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
@@ -54,6 +56,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
+  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
   const routes = useMemo(
     () =>
       state.routes.filter(route => {
@@ -66,9 +69,12 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (config.disableSwaps === true && route.name === 'swapTab') {
           return false
         }
+        if (hideNonUkCompliantFeat && (route.name === 'buyTab' || route.name === 'sellTab')) {
+          return false
+        }
         return true
       }),
-    [state.routes]
+    [state.routes, hideNonUkCompliantFeat]
   )
 
   const tabLabelHeight = theme.rem(1.1)

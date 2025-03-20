@@ -266,7 +266,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     bridge.resolve()
   }
 
-  handleTradeSwap = (bridge: AirshipBridge<void>) => {
+  handleTradeSwap = (bridge?: AirshipBridge<void>) => {
     const { account, navigation, wallet, tokenId } = this.props
 
     const sceneWallet = wallet
@@ -396,7 +396,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       }
     })
 
-    bridge.resolve()
+    if (bridge != null) bridge.resolve()
   }
 
   renderBalanceBox = () => {
@@ -496,6 +496,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
     const bestApyText = getBestApyText(stakePolicies)
 
+    // For UK compliance, we only allow swap without buy/sell, so we don't need
+    // to show the trade modal in all cases, and if swap is disabled, we don't
+    // show this button at all.
+    const hideSwap = config.disableSwaps && countryCode === 'GB'
+
     return (
       <View style={styles.buttonsContainer}>
         <IconButton label={lstrings.fragment_request_subtitle} onPress={this.handleRequest}>
@@ -518,9 +523,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             )}
           </IconButton>
         )}
-        <IconButton label={lstrings.trade_currency} onPress={this.handleTrade}>
-          <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
-        </IconButton>
+        {hideSwap ? null : (
+          <IconButton label={lstrings.trade_currency} onPress={countryCode === 'GB' ? this.handleTradeSwap : this.handleTrade}>
+            <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+          </IconButton>
+        )}
       </View>
     )
   }

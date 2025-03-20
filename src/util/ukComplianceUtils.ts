@@ -1,3 +1,4 @@
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { LocaleStringKey } from '../locales/en_US'
 import { lstrings } from '../locales/strings'
 
@@ -27,6 +28,15 @@ const formatString = (template: string, values: string[]): string => {
   return template.replace(/%(\d+)\$s/g, (_, index) => values[parseInt(index) - 1] || '')
 }
 
+/** Whether we should hide a non-UK compliant feature */
+export const hideNonUkCompliantFeature = async (): Promise<boolean> => {
+  return (await getFirstOpenInfo()).countryCode === 'GB'
+}
+
+/**
+ * @deprecated For now, we are completely disabling potentially disallowed
+ * features for the UK to improve odds of UK approval.
+ */
 export const getUkCompliantString = (countryCode: string | undefined, key: CompliantStringKeys, ...values: string[]): string => {
   const compliantStringKeys = UK_COMPLIANT_STRING_MAP[key]
   const template = countryCode === 'GB' ? lstrings[compliantStringKeys.gb] : lstrings[compliantStringKeys.default]

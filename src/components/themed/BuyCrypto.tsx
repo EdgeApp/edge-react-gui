@@ -3,7 +3,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,7 +10,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -34,8 +33,7 @@ export const BuyCrypto = (props: Props) => {
 
   const syncRatio = useWatch(wallet, 'syncRatio')
 
-  const [firstOpenInfo] = useAsyncValue(async () => await getFirstOpenInfo())
-  const { countryCode } = firstOpenInfo ?? {}
+  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
 
   const handlePress = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
@@ -45,13 +43,13 @@ export const BuyCrypto = (props: Props) => {
 
   return (
     <>
-      {allowedPluginIds.includes(pluginId) && tokenId == null && (
+      {!allowedPluginIds.includes(pluginId) || tokenId != null || hideNonUkCompliantFeat ? null : (
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
               <CryptoIcon pluginId={pluginId} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-              <EdgeText style={styles.buyCryptoText}>{getUkCompliantString(countryCode, 'buy_1s', displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.buy_1s, displayName)}</EdgeText>
             </View>
           </View>
         </ButtonBox>

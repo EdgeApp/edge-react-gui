@@ -9,6 +9,7 @@ import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -16,6 +17,7 @@ import { config } from '../../theme/appConfig'
 import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
+import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { BalanceCard } from '../cards/BalanceCard'
 import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
@@ -63,6 +65,8 @@ export const HomeScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const { width: screenWidth } = useSafeAreaFrame()
+
+  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
 
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
@@ -150,30 +154,32 @@ export const HomeScene = (props: Props) => {
                   navigation={navigation as NavigationBase}
                   screenWidth={screenWidth}
                 />
-                <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
-                  <HomeTileCard
-                    title={lstrings.buy_crypto}
-                    footer={lstrings.buy_crypto_footer}
-                    gradientBackground={theme.buyCardGradient}
-                    nodeBackground={
-                      <View style={styles.backroundImageContainer}>
-                        <FastImage source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
-                      </View>
-                    }
-                    onPress={handleBuyPress}
-                  />
-                  <HomeTileCard
-                    title={lstrings.sell_crypto}
-                    footer={lstrings.sell_crypto_footer}
-                    gradientBackground={theme.sellCardGradient}
-                    nodeBackground={
-                      <View style={styles.backroundImageContainer}>
-                        <FastImage source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
-                      </View>
-                    }
-                    onPress={handleSellPress}
-                  />
-                </EdgeAnim>
+                {hideNonUkCompliantFeat ? null : (
+                  <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
+                    <HomeTileCard
+                      title={lstrings.buy_crypto}
+                      footer={lstrings.buy_crypto_footer}
+                      gradientBackground={theme.buyCardGradient}
+                      nodeBackground={
+                        <View style={styles.backroundImageContainer}>
+                          <FastImage source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        </View>
+                      }
+                      onPress={handleBuyPress}
+                    />
+                    <HomeTileCard
+                      title={lstrings.sell_crypto}
+                      footer={lstrings.sell_crypto_footer}
+                      gradientBackground={theme.sellCardGradient}
+                      nodeBackground={
+                        <View style={styles.backroundImageContainer}>
+                          <FastImage source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                        </View>
+                      }
+                      onPress={handleSellPress}
+                    />
+                  </EdgeAnim>
+                )}
                 {!hideFio || !hideSwap ? (
                   <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
                     {hideFio ? null : (

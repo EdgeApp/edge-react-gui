@@ -1,213 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BuyCrypto should render with some props 1`] = `
-[
-  <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": false,
-        "expanded": undefined,
-        "selected": undefined,
-      }
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "center",
+      "marginVertical": 11,
     }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
-    collapsable={false}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+  }
+>
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
     style={
-      {
-        "marginBottom": 0,
-        "marginLeft": 0,
-        "marginRight": 0,
-        "marginTop": 0,
-        "opacity": 1,
-        "paddingBottom": 22,
-        "paddingLeft": 22,
-        "paddingRight": 22,
-        "paddingTop": 22,
-      }
-    }
-  >
-    <View
-      style={
+      [
         {
-          "alignItems": "center",
-          "backgroundColor": "rgba(255, 255, 255, 0)",
-          "flex": 1,
-          "justifyContent": "center",
-          "padding": 22,
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "justifyContent": "center",
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "height": 51,
-              "marginBottom": 6,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 6,
-              "width": 51,
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "backgroundColor": "#000000",
-                "borderRadius": 25.5,
-                "elevation": 0,
-                "height": 51,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
-                },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
-                "width": 51,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
-              }
-            >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-          </View>
-        </View>
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "fontFamily": "Quicksand-Medium",
-                "marginVertical": 6,
-              },
-              null,
-            ]
-          }
-        >
-          Buy Bitcoin
-        </Text>
-      </View>
-    </View>
-  </View>,
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flex": 1,
-        "justifyContent": "center",
-        "marginVertical": 11,
-      }
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 22,
+          "includeFontPadding": false,
+        },
+        {
+          "fontSize": 28,
+          "textAlign": "center",
+        },
+        null,
+      ]
     }
   >
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "fontSize": 28,
-            "textAlign": "center",
-          },
-          null,
-        ]
-      }
-    >
-      Loading Transactions…
-    </Text>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "color": "#3dd9f4",
-            "textAlign": "center",
-          },
-          null,
-        ]
-      }
-    >
-      50% Complete
-    </Text>
-  </View>,
-]
+    Loading Transactions…
+  </Text>
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 22,
+          "includeFontPadding": false,
+        },
+        {
+          "color": "#3dd9f4",
+          "textAlign": "center",
+        },
+        null,
+      ]
+    }
+  >
+    50% Complete
+  </Text>
+</View>
 `;

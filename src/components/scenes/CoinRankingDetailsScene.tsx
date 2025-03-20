@@ -29,7 +29,7 @@ import { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { fetchRates } from '../../util/network'
 import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { getUkCompliantString, hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -117,6 +117,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+
+  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature())
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
@@ -490,12 +492,16 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <SwipeChart assetId={coinRankingData.assetId} />
           {matchingEdgeAssets.length <= 0 ? null : (
             <View style={styles.buttonsContainer}>
-              <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
-                <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
-              </IconButton>
-              <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
-                <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
-              </IconButton>
+              {hideNonUkCompliantFeat ? null : (
+                <>
+                  <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
+                    <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
+                  </IconButton>
+                  <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
+                    <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
+                  </IconButton>
+                </>
+              )}
               {countryCode == null || !isEarnShown ? null : (
                 <IconButton
                   label={getUkCompliantString(countryCode, 'stake_earn_button_label')}

@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Buy/sell removed for UK
+
 ## 4.25.0 (staging)
 
 - fixed: Fix yesterday rate lookup in `exchangeRates`
