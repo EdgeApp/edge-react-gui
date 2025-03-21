@@ -130,6 +130,7 @@ const tcChainCodePluginIdMap: StringMap = {
   AVAX: 'avalanche',
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
+  BSC: 'binancesmartchain',
   DOGE: 'dogecoin',
   ETH: 'ethereum',
   LTC: 'litecoin'
@@ -1285,6 +1286,7 @@ const edgeToTcAsset = (currencyConfig: EdgeCurrencyConfig, currencyCode: string)
 
 const EVM_PLUGINIDS: { [id: string]: boolean } = {
   avalanche: true,
+  binancesmartchain: true,
   ethereum: true
 }
 
