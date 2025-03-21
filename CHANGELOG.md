@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- fixed: Prevent acceleration for swap transactions.
 - changed: Buy/sell removed for UK
 
 ## 4.25.0 (staging)
