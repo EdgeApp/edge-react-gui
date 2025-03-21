@@ -139,11 +139,20 @@ export const MarketsCard = (props: Props) => {
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
   const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
+  // Detect change to fiat to allow refresh
+  const [lastFetchedFiat, setLastFetchedFiat] = React.useState<string>(coingeckoFiat)
 
   /**
    * Fetch Markets Data
    */
   React.useEffect(() => {
+    // Force an immediate refresh when currency changes
+    if (lastFetchedFiat !== coingeckoFiat) {
+      // Clear the data array to avoid showing stale data
+      setCoinRankingDatas([])
+      setLastFetchedFiat(coingeckoFiat)
+    }
+
     const task = makePeriodicTask(
       async () => {
         const fetchedData = []
@@ -162,6 +171,10 @@ export const MarketsCard = (props: Props) => {
         }
 
         setCoinRankingDatas(fetchedData)
+        // Update lastFetchedFiat after successful fetch
+        if (lastFetchedFiat !== coingeckoFiat) {
+          setLastFetchedFiat(coingeckoFiat)
+        }
       },
       LISTINGS_REFRESH_INTERVAL,
       {
@@ -175,12 +188,12 @@ export const MarketsCard = (props: Props) => {
 
     // Cleanup logic:
     return () => task.stop()
-  }, [coingeckoFiat, numRows])
+  }, [coingeckoFiat, numRows, lastFetchedFiat])
 
   return (
     <EdgeCard sections>
       {coinRankingDatas.map((coinRow, index) => (
-        <CoinRow key={coinRow.assetId} coinRow={coinRow} fiatCurrencyCode={coingeckoFiat} index={index} {...props} />
+        <CoinRow key={`${coinRow.assetId}-${coingeckoFiat}`} coinRow={coinRow} fiatCurrencyCode={coingeckoFiat} index={index} {...props} />
       ))}
     </EdgeCard>
   )
