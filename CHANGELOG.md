@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - changed: Buy/sell removed for UK
+- fixed: Changing default currency shows wrong price in Markets components
 
 ## 4.25.0 (staging)
 
