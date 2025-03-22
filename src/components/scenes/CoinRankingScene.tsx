@@ -71,18 +71,27 @@ const CoinRankingComponent = (props: Props) => {
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = React.useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = React.useState<AssetSubText>('marketCap')
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+  // Add a forceRefresh flag to trigger UI updates when currency changes
+  const [forceRefresh, setForceRefresh] = React.useState<number>(0)
 
   const handleScroll = useSceneScrollHandler()
 
   const extraData = React.useMemo(
-    () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame }),
-    [assetSubText, coingeckoFiat, percentChangeTimeFrame]
+    () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame, forceRefresh }),
+    [assetSubText, coingeckoFiat, percentChangeTimeFrame, forceRefresh]
   )
 
   const { coinRankingDatas } = coinRanking
 
   const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
+
+    // Safety check - make sure we have data for this index
+    if (coinRankingDatas[item] == null) {
+      debugLog(LOG_COINRANK, `renderItem: No data for item ${item} (index ${index})`)
+      return null
+    }
+
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
     const key = `${index}-${item}-${rank}-${currencyCode}-${coingeckoFiat}`
@@ -103,8 +112,8 @@ const CoinRankingComponent = (props: Props) => {
   }
 
   const handleEndReached = useHandler(() => {
-    debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${requestDataSize + QUERY_PAGE_SIZE}`)
-    setRequestDataSize(requestDataSize + QUERY_PAGE_SIZE)
+    debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${dataSize + QUERY_PAGE_SIZE}`)
+    setRequestDataSize(dataSize + QUERY_PAGE_SIZE)
   })
 
   const handlePercentChange = useHandler(() => {
@@ -158,6 +167,30 @@ const CoinRankingComponent = (props: Props) => {
   }, [dispatch, navigation])
 
   React.useEffect(() => {
+    // Always clear any existing timeout when making changes to the query and an
+    // existing timeout is in flight. Running this effect either to grab extra
+    // rows or change fiat always triggers a new query immediately.
+    clearTimeout(timeoutHandler.current)
+    timeoutHandler.current = undefined
+
+    if (lastFetchedFiat.current !== coingeckoFiat) {
+      if (coinRanking.coinRankingDatas.length === 0) return // Already handling
+
+      debugLog(LOG_COINRANK, `'** Fiat change detected from ${lastFetchedFiat.current} to ${coingeckoFiat} **'`)
+      // Reset everything when the fiat setting does not match what cached
+      // data we fetched previously.
+      coinRanking.coinRankingDatas = []
+      setDataSize(0)
+      lastStartIndex.current = 1
+
+      // Force a re-render immediately to ensure no stale data is shown while we
+      // wait for fetch
+      setForceRefresh(prev => prev + 1)
+
+      // Allow fetching updated data in case another fetch is already in flight
+      isQuerying.current = false
+    }
+
     // Start querying starting from either the last fetched index (scrolling) or
     // the first index (initial load/timed refresh)
     const queryLoop = async (startIndex: number) => {
@@ -167,12 +200,28 @@ const CoinRankingComponent = (props: Props) => {
         debugLog(LOG_COINRANK, '** Skipping query **')
         return
       }
+
       isQuerying.current = true
+      timeoutHandler.current = undefined
+      let dataUpdated = false
+
+      // If this call started with a pending currency change, this is the run
+      // where we want to perform fiat change specific behavior.
+      const isHandlingFiatChange = lastFetchedFiat.current !== coingeckoFiat
+
+      // Always start from index 1 when changing fiat currency.
+      if (isHandlingFiatChange) {
+        debugLog(LOG_COINRANK, 'queryLoop: handling fiat change to ' + coingeckoFiat)
+        startIndex = 1
+        setDataSize(0)
+        setRequestDataSize(QUERY_PAGE_SIZE)
+      }
+
       try {
         // Catch up to the total required items
-        while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
+        while (startIndex <= requestDataSize) {
           const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
-
+          debugLog(LOG_COINRANK, 'Fetching: ' + url)
           const response = await fetchRates(url)
           if (!response.ok) {
             const text = await response.text()
@@ -181,11 +230,25 @@ const CoinRankingComponent = (props: Props) => {
           }
           const replyJson = await response.json()
           const listings = asCoinranking(replyJson)
-          for (let i = 0; i < listings.data.length; i++) {
-            const rankIndex = startIndex - 1 + i
-            const row = listings.data[i]
-            coinRankingDatas[rankIndex] = row
-            debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+
+          // Fiat was changed while this fetch was happening so this call is
+          // looking at old fiat data. Another call to this method is in flight
+          // already so we can completely get out of this one.
+          if (!isHandlingFiatChange && lastFetchedFiat.current !== coingeckoFiat) {
+            debugLog(LOG_COINRANK, `Stopping stale query loop for ${lastFetchedFiat.current} due to fiat change`)
+            dataUpdated = false
+            break
+          }
+
+          // Business as usual
+          if (listings.data.length > 0) {
+            dataUpdated = true
+            for (let i = 0; i < listings.data.length; i++) {
+              const rankIndex = startIndex - 1 + i
+              const row = listings.data[i]
+              coinRanking.coinRankingDatas[rankIndex] = row
+              debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+            }
           }
           startIndex += QUERY_PAGE_SIZE
         }
@@ -193,28 +256,36 @@ const CoinRankingComponent = (props: Props) => {
         console.warn(`Error during data fetch: ${e.message}`)
       }
 
-      setDataSize(coinRankingDatas.length)
-      lastStartIndex.current = startIndex
+      // Do nothing if fiat was changed while the fetch was happening. There is
+      // another call to queryLoop() handling this.
+      if (lastFetchedFiat.current !== coingeckoFiat && !isHandlingFiatChange) return
+
+      // Always update UI if data changed
+      if (dataUpdated) {
+        debugLog(LOG_COINRANK, 'Updating UI with all fetched data')
+        // Ensure dataSize is updated to reflect the actual data we have
+        const newDataSize = Math.max(requestDataSize, coinRanking.coinRankingDatas.length)
+        debugLog(LOG_COINRANK, `Setting dataSize to ${newDataSize} (array length: ${coinRanking.coinRankingDatas.length})`)
+        setDataSize(newDataSize)
+
+        // Update lastFetchedFiat after successful fetch
+        if (lastFetchedFiat.current !== coingeckoFiat) {
+          console.debug(`Updating lastFetchedFiat from ${lastFetchedFiat.current} to ${coingeckoFiat}`)
+          lastFetchedFiat.current = coingeckoFiat
+        }
+
+        lastStartIndex.current = startIndex
+      }
       isQuerying.current = false
 
-      // Refresh from the beginning periodically
-      timeoutHandler.current = setTimeout(async () => {
-        debugLog(LOG_COINRANK, 'Refreshing list')
-        await queryLoop(1)
-      }, LISTINGS_REFRESH_INTERVAL)
-    }
-
-    if (lastFetchedFiat.current !== coingeckoFiat) {
-      // Reset everything when the fiat setting does not match what cached
-      // data we fetched previously.
-      debugLog(LOG_COINRANK, `Fiat changed from ${lastFetchedFiat.current} to ${coingeckoFiat}`)
-      isQuerying.current = false
-      if (timeoutHandler.current) clearTimeout(timeoutHandler.current)
-      coinRanking.coinRankingDatas = []
-      lastStartIndex.current = 1
-      setDataSize(0)
-      setRequestDataSize(QUERY_PAGE_SIZE)
-      lastFetchedFiat.current = coingeckoFiat
+      if (timeoutHandler.current == null && mounted.current) {
+        // Refresh from the beginning periodically
+        debugLog(LOG_COINRANK, `Setting up refresh timeout for fiat: ${coingeckoFiat}`)
+        timeoutHandler.current = setTimeout(async () => {
+          debugLog(LOG_COINRANK, `Refreshing list with fiat: ${coingeckoFiat}`)
+          await queryLoop(1)
+        }, LISTINGS_REFRESH_INTERVAL)
+      }
     }
 
     queryLoop(lastStartIndex.current).catch(e => console.error(`Error in query loop: ${e.message}`))
@@ -229,24 +300,39 @@ const CoinRankingComponent = (props: Props) => {
   }, [requestDataSize, coingeckoFiat])
 
   const listdata: number[] = React.useMemo(() => {
-    debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
+    debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText} fiat=${coingeckoFiat} forceRefresh=${forceRefresh}`)
     const out = []
-    for (let i = 0; i < dataSize; i++) {
-      const cr = coinRankingDatas[i]
+
+    // Make sure dataSize doesn't exceed the actual array length
+    const effectiveDataSize = Math.min(dataSize, coinRanking.coinRankingDatas.length)
+    if (effectiveDataSize !== dataSize) {
+      debugLog(LOG_COINRANK, `Adjusting dataSize from ${dataSize} to ${effectiveDataSize} to match actual array length`)
+    }
+
+    for (let i = 0; i < effectiveDataSize; i++) {
+      const coinRankingData = coinRanking.coinRankingDatas[i]
+      if (coinRankingData == null) {
+        debugLog(LOG_COINRANK, `Missing data for index ${i}, dataSize=${dataSize}, actual length=${coinRanking.coinRankingDatas.length}`)
+        continue
+      }
       if (searchText === '') {
         out.push(i)
       } else {
-        if (cr.currencyCode.toLowerCase().includes(searchText.toLowerCase()) || cr.currencyName.toLowerCase().includes(searchText.toLowerCase())) {
+        if (
+          coinRankingData.currencyCode.toLowerCase().includes(searchText.toLowerCase()) ||
+          coinRankingData.currencyName.toLowerCase().includes(searchText.toLowerCase())
+        ) {
           out.push(i)
         }
       }
     }
+    debugLog(LOG_COINRANK, `Generated listdata with ${out.length} items from ${effectiveDataSize} available items`)
     return out
 
     // Do not re-render on change of coinRankings. This is intended to be
     // asynchronously accessed by each individual row.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataSize, searchText])
+  }, [dataSize, searchText, coingeckoFiat, forceRefresh])
 
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
