@@ -29,6 +29,10 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   const [activeIndex, setActiveIndex] = useState(0)
   const [dataLocal, setDataLocal] = useState(data)
 
+  React.useEffect(() => {
+    setDataLocal(data)
+  }, [data])
+
   const renderItem = useHandler<ListRenderItem<T>>(info => (
     <View style={[styles.childContainer, { width: width * 0.9, height }]}>{props.renderItem(info)}</View>
   ))
@@ -41,10 +45,11 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   useAsyncEffect(
     async () => {
       // HACK: With 1 item, this is the only way to force a render in iOS
-      if (Platform.OS === 'ios' && data.length === 1) {
+      if (Platform.OS === 'ios' && dataLocal.length === 1) {
+        const tempData = [...dataLocal]
         setDataLocal([])
         setTimeout(() => {
-          setDataLocal(data)
+          setDataLocal(tempData)
         }, 500)
       }
       // The built-in hack fn works for all other cases
@@ -54,7 +59,7 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
         })
       }
     },
-    [],
+    [dataLocal], // Depend on dataLocal instead of data to avoid infinite loops
     'triggerRenderingHack'
   )
 
