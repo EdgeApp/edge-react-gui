@@ -4,9 +4,10 @@
 
 ## 4.25.0 (staging)
 
-- fixed: Fix yesterday rate lookup in `exchangeRates`
 - fixed: Crash on `StakeOverviewScene`
 - fixed: Fix race condition between reading and writing account settings
+- fixed: Fix yesterday rate lookup in `exchangeRates`
+- fixed: Intermittent staking/unstaking errors for Cardano
 - fixed: Prevent acceleration for swap transactions.
 
 ## 4.24.1 (staging)
