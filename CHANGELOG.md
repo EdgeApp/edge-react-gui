@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: `preferProviders` support to override default priority when selecting a fiat provider
 - changed: Buy/sell removed for UK
 
 ## 4.25.0 (staging)
