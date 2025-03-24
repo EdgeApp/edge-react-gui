@@ -2175,9 +2175,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -9104,10 +9104,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.26.1:
-  version "2.26.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.26.1.tgz#d8790c8a3e5a306d151f5f64d213fc5dab3f09b3"
-  integrity sha512-bgf/AbPOmkapKhgsW4btuHkNV1sO6brOswRCph1qUne7BgGIXyhDt5m995iYAdm1/np0YZcemjEKNrlRBxCldg==
+edge-core-js@^2.26.2:
+  version "2.26.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.26.2.tgz#17fe39c31449b105d51212667f1ea173d4853530"
+  integrity sha512-XoVe4zTlrqbCEqg/1G9F9vF/TdyYoOTxpas+a4PHb42EhSnSLw6Pi9WcDemY4Or/HcnRM2Z76hMDOi55EtdQkw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -10566,9 +10566,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
