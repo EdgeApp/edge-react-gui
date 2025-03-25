@@ -1,5 +1,6 @@
 import { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
+import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -326,6 +327,30 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         default:
           showError(`Unknown modal: '${link.modalName}'`)
       }
+      break
+    }
+
+    case 'rewards': {
+      const { pluginId, tokenId } = link
+
+      // Choose wallet:
+      const walletListResult = await pickWallet({
+        account,
+        assets: [{ pluginId, tokenId }],
+        navigation,
+        showCreateWallet: true
+      })
+      if (walletListResult?.type !== 'wallet') break
+      const { walletId } = walletListResult
+      const wallet = account.currencyWallets[walletId]
+      const { publicAddress } = (await wallet.getAddresses({ tokenId }))[0]
+      const { currencyCode } = tokenId == null ? account.currencyConfig[pluginId].currencyInfo : account.currencyConfig[pluginId].allTokens[tokenId]
+
+      // Encode data:
+      const data = btoa(`edgerewards|${publicAddress}|${currencyCode}`)
+
+      // Open URL:
+      await Linking.openURL(`https://edge.app/rewards/?data=${data}`)
       break
     }
 

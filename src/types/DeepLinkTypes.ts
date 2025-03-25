@@ -33,6 +33,7 @@
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
 import { asValue } from 'cleaners'
+import { EdgeTokenId } from 'edge-core-js'
 
 import { FiatDirection, FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { AppParamList } from './routerTypes'
@@ -92,6 +93,12 @@ export interface PriceChangeLink {
   body: string // Human-readable message
 }
 
+export interface RewardsLink {
+  type: 'rewards'
+  pluginId: string
+  tokenId: EdgeTokenId
+}
+
 export interface RequestAddressLink {
   type: 'requestAddress'
   assets: Array<{ nativeCode: string; tokenCode: string }>
@@ -144,6 +151,7 @@ export type DeepLink =
   | RequestAddressLink
   | SwapLink
   | WalletConnectLink
+  | RewardsLink
   | {
       type: 'other'
       protocol: string // Without the ':'

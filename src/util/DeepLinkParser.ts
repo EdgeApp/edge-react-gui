@@ -1,4 +1,5 @@
 import { asOptional } from 'cleaners'
+import { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
@@ -33,9 +34,17 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     }
   }
 
-  // Handle dl.edge.app links:
-  if ((url.protocol === 'https:' || url.protocol === 'http:') && url.host === 'dl.edge.app') {
-    return parseDownloadLink(url)
+  // Handle edge.app and dl.edge.app links:
+  if (url.protocol === 'https:' || url.protocol === 'http:') {
+    // Handle dl.edge.app links:
+    if (url.host === 'dl.edge.app') {
+      return parseDownloadLink(url)
+    }
+
+    // Handle edge.app links:
+    if (url.host === 'edge.app') {
+      return parseEdgeAppLink(url)
+    }
   }
 
   // Handle payment protocol links.
@@ -228,6 +237,43 @@ function parseDownloadLink(url: URL<string>): PromotionLink {
   }
   const [, installerId = ''] = url.pathname.split('/')
   return { type: 'promotion', installerId }
+}
+
+/**
+ * Parse an https://edge.app/ link
+ */
+function parseEdgeAppLink(url: URL<string>): DeepLink {
+  const [, ...pathParts] = url.pathname.split('/')
+  const firstPath = pathParts[0] || ''
+  const query = parseQuery(url.query)
+
+  // Handle rewards links
+  if (firstPath === 'rewards') {
+    // Extract data from query parameter
+    const { data } = query
+
+    if (data != null) {
+      // Parse data in format{{REWARDS:ethereum:a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48}}
+      const dataMatch = data.match(/{{([^:]+):([^:]+)(?::([^}]+))?}}/)
+
+      if (dataMatch) {
+        const [, type, pluginId, tokenId = null] = dataMatch
+
+        // Currently only handling REWARDS type
+        if (type === 'REWARDS') {
+          console.debug(`Rewards link detected with pluginId: ${pluginId}, tokenId: ${tokenId}`)
+
+          return {
+            type: 'rewards',
+            pluginId,
+            tokenId: tokenId as EdgeTokenId
+          }
+        }
+      }
+    }
+  }
+
+  throw new SyntaxError('Unknown "edge.app" deep link format')
 }
 
 /**
