@@ -5,6 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
+import { Fontello } from '../../assets/vector'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -48,7 +49,8 @@ const icons: { [key: string]: string } = {
   split: 'arrowsalt',
   togglePause: 'pause',
   viewPrivateViewKey: 'eye',
-  viewXPub: 'eye'
+  viewXPub: 'eye',
+  settings: 'control-panel-settings'
 }
 
 /**
@@ -59,6 +61,10 @@ export const WALLET_LIST_MENU: Array<{
   label: string
   value: WalletListMenuKey
 }> = [
+  {
+    label: lstrings.settings_asset_settings,
+    value: 'settings'
+  },
   {
     label: lstrings.string_rename,
     value: 'rename'
@@ -181,6 +187,12 @@ export function WalletListMenuModal(props: Props) {
 
       const result: Option[] = []
 
+      // First add the settings option to make it appear at the top
+      const settingsOption = WALLET_LIST_MENU.find(option => option.value === 'settings')
+      if (settingsOption != null) {
+        result.push({ label: settingsOption.label, value: settingsOption.value })
+      }
+
       const { pluginId } = wallet.currencyInfo
       if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
         result.push({
@@ -201,6 +213,9 @@ export function WalletListMenuModal(props: Props) {
 
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
+
+        // Skip settings since we already added it
+        if (value === 'settings') continue
 
         if (value === 'split' && splitPluginIds.length <= 0) continue
 
@@ -244,11 +259,19 @@ export function WalletListMenuModal(props: Props) {
     >
       {options.map((option: Option) => (
         <EdgeTouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-          <AntDesignIcon
-            name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
-            size={theme.rem(1)}
-            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-          />
+          {option.value === 'settings' ? (
+            // Special case for settings to keep it consistent with our side
+            // menu.
+            // We eventually will move to using our own custom icons for all
+            // icons instead of picking from different RN vector icon packs
+            <Fontello name={icons[option.value]} style={styles.optionIcon} size={theme.rem(1)} />
+          ) : (
+            <AntDesignIcon
+              name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
+              size={theme.rem(1)}
+              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+            />
+          )}
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
         </EdgeTouchableOpacity>
       ))}
