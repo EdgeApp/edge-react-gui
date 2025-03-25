@@ -58,7 +58,7 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
 
     // If this is the first run, immediately use whatever we have on disk
     // before moving on to the potentially slow network:
-    if (exchangeRateCache == null) {
+    if (state.exchangeRatesMap.size === 0 || exchangeRateCache == null) {
       exchangeRateCache = await loadExchangeRateCache().catch(error => {
         datelog('Error loading exchange rate cache:', String(error))
         return { assetPairs: [], rates: {} }
