@@ -385,7 +385,7 @@ function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTr
     return
   }
   if (!isSentTransaction && canReplaceByFee && transaction.confirmations === 'unconfirmed') {
-    return lstrings.fragment_transaction_list_unconfirmed_rbf
+    return lstrings.fragment_transaction_list_unconfirmed_rbf2
   }
   if (transaction.confirmations === 'unconfirmed') {
     return lstrings.fragment_wallet_unconfirmed
