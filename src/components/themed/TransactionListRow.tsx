@@ -156,7 +156,8 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
     )
 
   // Pending Text and Style
-  const unconfirmedOrTimeText = getConfirmationText(currencyInfo, transaction)
+  const timeText = transaction.confirmations === 'confirmed' ? unixToLocaleDateTime(transaction.date).time : null
+  const confirmationText = getConfirmationText(currencyInfo, transaction)
 
   const confirmationStyle =
     transaction.confirmations === 'confirmed' ? null : transaction.confirmations === 'failed' ? styles.failedText : styles.unconfirmedText
@@ -199,14 +200,21 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
             <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-              {unconfirmedOrTimeText}
+            <EdgeText ellipsizeMode="tail" style={styles.secondaryText}>
+              {timeText}
             </EdgeText>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
           </View>
           {categoryText == null ? null : (
             <View style={styles.row}>
               <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+            </View>
+          )}
+          {confirmationText == null ? null : (
+            <View style={styles.row}>
+              <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+                {confirmationText}
+              </EdgeText>
             </View>
           )}
         </>
@@ -225,8 +233,8 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
         <View style={styles.row}>
           <View style={styles.dateRow}>
             <EdgeText style={styles.cardlessDateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
-              {unconfirmedOrTimeText}
+            <EdgeText ellipsizeMode="tail" style={styles.secondaryText}>
+              {timeText}
             </EdgeText>
           </View>
           <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
@@ -234,6 +242,13 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
         {categoryText == null ? null : (
           <View style={styles.row}>
             <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+          </View>
+        )}
+        {confirmationText == null ? null : (
+          <View style={styles.row}>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              {confirmationText}
+            </EdgeText>
           </View>
         )}
       </View>
@@ -359,7 +374,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTransaction): string {
+function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTransaction): string | undefined {
   // Default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
   // Default canReplaceByFee to false, so we don't show the RBF message unless the currencyInfo has it set.
   const { canReplaceByFee = false, requiredConfirmations = 1 } = currencyInfo
@@ -367,7 +382,7 @@ function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTr
   const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
   if (transaction.confirmations === 'confirmed') {
-    return unixToLocaleDateTime(transaction.date).time
+    return
   }
   if (!isSentTransaction && canReplaceByFee && transaction.confirmations === 'unconfirmed') {
     return lstrings.fragment_transaction_list_unconfirmed_rbf
