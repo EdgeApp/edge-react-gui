@@ -383,8 +383,10 @@ const WelcomeHeroMessage = styled(EdgeText)(theme => ({
 }))
 const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.75),
+  color: theme.textLink,
   fontFamily: theme.fontFaceBold,
-  textAlign: 'center'
+  textAlign: 'center',
+  margin: theme.rem(0.5)
 }))
 
 const HeroItem = styled(Animated.View)<{
@@ -558,9 +560,8 @@ const SectionParagraph = styled(EdgeText)(theme => ({
 const Footnote = styled(EdgeText)(theme => ({
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.6),
+  fontSize: theme.rem(0.75),
   marginBottom: theme.rem(1),
-  opacity: 0.75,
   includeFontPadding: false
 }))
 
