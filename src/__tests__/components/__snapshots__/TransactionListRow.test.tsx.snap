@@ -237,23 +237,16 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "color": "#3dd9f4",
-                  "flexShrink": 1,
-                  "fontSize": 17,
-                  "marginRight": 22,
-                },
-                {
-                  "color": "#F1AA19",
-                },
-              ],
+              {
+                "color": "#3dd9f4",
+                "flexShrink": 1,
+                "fontSize": 17,
+                "marginRight": 22,
+              },
               null,
             ]
           }
-        >
-          Syncing...
-        </Text>
+        />
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
@@ -276,6 +269,46 @@ exports[`TransactionListRow should render with loading props 1`] = `
           }
         >
           $0.00
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          ellipsizeMode="tail"
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#3dd9f4",
+                  "flexShrink": 1,
+                  "fontSize": 17,
+                  "marginRight": 22,
+                },
+                {
+                  "color": "#F1AA19",
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Syncing...
         </Text>
       </View>
     </View>
