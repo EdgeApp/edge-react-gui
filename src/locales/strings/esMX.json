@@ -160,7 +160,7 @@
   "fragment_transaction_list_tx_failed": "Fallido",
   "fragment_transaction_list_tx_synchronizing": "Sincronizando...",
   "fragment_transaction_list_confirmation_progress": "%s de %s confirmaciones",
-  "fragment_transaction_list_unconfirmed_rbf": "Esperando confirmación, puede ser cancelado",
+  "fragment_transaction_list_unconfirmed_rbf2": "Awaiting confirmation; may be cancelled",
   "fragment_transaction_list_transaction": "Transacciones",
   "transaction_list_buy_crypto_message": "Comprar %s",
   "transaction_list_loading_txs": "Cargando transacciones…",
