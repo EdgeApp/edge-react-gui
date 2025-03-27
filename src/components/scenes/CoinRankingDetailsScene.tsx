@@ -204,7 +204,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }, [matchingWallets.length, coinRankingData])
 
   // Get all stake policies we support
-  const [allStakePolicies = []] = useAsyncValue<StakePolicy[]>(async () => {
+  const [allStakePolicies] = useAsyncValue<StakePolicy[]>(async () => {
     const out = []
     const pluginIds = Object.keys(currencyConfigMap)
     if (currencyCode === 'FIO') {
@@ -215,7 +215,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       const stakePlugins = await getStakePlugins(pluginId)
 
       for (const stakePlugin of stakePlugins) {
-        for (const stakePolicy of stakePlugin.getPolicies({ pluginId }).filter(stakePolicy => !stakePolicy.deprecated)) {
+        for (const stakePolicy of stakePlugin.getPolicies({ pluginId, currencyCode }).filter(stakePolicy => !stakePolicy.deprecated)) {
           out.push(stakePolicy)
         }
       }
@@ -226,7 +226,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const edgeStakingAssets = matchingEdgeAssets.filter(
     asset =>
-      filterStakePolicies(allStakePolicies, {
+      filterStakePolicies(allStakePolicies ?? [], {
         pluginId: asset.pluginId,
         currencyCode: currencyCode.toUpperCase()
       }).length > 0
@@ -236,7 +236,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const isEarnShown = matchingEdgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
 
   /** Check if all the stake plugins/policies are loaded for this asset type */
-  const isStakingLoading = isEarnShown && allStakePolicies.length === 0
+  const isStakingLoading = isEarnShown && allStakePolicies == null
 
   const imageUrlObject = React.useMemo(
     () => ({
