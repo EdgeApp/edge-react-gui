@@ -6,6 +6,7 @@
 - added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
 - changed: Buy/sell removed for UK
+- changed: Newly created wallets are added to `mostRecentWallets`
 - fixed: `EdgeCarousel` not updating when data changes
 - fixed: Network error handling in `SwipeChart`
 
