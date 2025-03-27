@@ -493,7 +493,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { theme, stakePolicies } = this.props
     const styles = getStyles(theme)
     const { countryCode } = this.state
-    const hideStaking = !this.isStakingPolicyAvailable()
+    const hideStaking = !this.isStakingAvailable()
     const bestApyText = getBestApyText(stakePolicies)
 
     // For UK compliance, we only allow swap without buy/sell, so we don't need
@@ -528,7 +528,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  isStakingPolicyAvailable = (): boolean => {
+  isStakingAvailable = (): boolean => {
     return (
       isStakingSupported(this.props.wallet.currencyInfo.pluginId) &&
       (Object.keys(this.props.stakePolicies).length > 0 ||
@@ -608,7 +608,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   render() {
     const { wallet, isEmpty, searching, theme, tokenId, navigation } = this.props
-    const showStakedBalance = this.isStakingPolicyAvailable()
+    const showStakedBalance = this.isStakingAvailable()
     const styles = getStyles(theme)
 
     return (
