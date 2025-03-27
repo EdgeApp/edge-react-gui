@@ -118,7 +118,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
-  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature())
+  const [hideNonUkCompliantFeat] = useAsyncValue(async () => await hideNonUkCompliantFeature())
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
@@ -488,7 +488,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
             <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
           <SwipeChart assetId={coinRankingData.assetId} />
-          {matchingEdgeAssets.length <= 0 ? null : (
+          {matchingEdgeAssets.length === 0 || hideNonUkCompliantFeat == null ? null : (
             <View style={styles.buttonsContainer}>
               {hideNonUkCompliantFeat ? null : (
                 <>
