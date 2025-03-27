@@ -12,12 +12,14 @@ import { useHandler } from '../../hooks/useHandler'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { unixToLocaleDateTime } from '../../util/utils'
+import { calculateSpamThreshold, unixToLocaleDateTime } from '../../util/utils'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -59,13 +61,26 @@ function TransactionListComponent(props: Props) {
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
   const unactivatedTokenIds = useWatch(wallet, 'unactivatedTokenIds')
 
+  // Spam filter
+  const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const currencyCode = tokenId == null ? wallet.currencyInfo.currencyCode : wallet.currencyConfig.allTokens[tokenId].currencyCode
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  const spamThreshold = React.useMemo<string | undefined>(() => {
+    if (spamFilterOn) {
+      return calculateSpamThreshold(exchangeRate, exchangeDenom)
+    }
+  }, [exchangeDenom, exchangeRate, spamFilterOn])
+
   // Transaction list state machine:
   const {
     transactions,
     atEnd,
     requestMore: handleScrollEnd
   } = useTransactionList(wallet, tokenId, {
-    searchString: isSearching ? searchText : undefined
+    searchString: isSearching ? searchText : undefined,
+    spamThreshold
   })
 
   const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
