@@ -1,7 +1,7 @@
 import { add, gt, mul, round } from 'biggystring'
 import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -493,7 +493,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { theme, stakePolicies } = this.props
     const styles = getStyles(theme)
     const { countryCode } = this.state
-    const hideStaking = !isStakingSupported(this.props.wallet.currencyInfo.pluginId)
+    const hideStaking = !this.isStakingPolicyAvailable()
     const bestApyText = getBestApyText(stakePolicies)
 
     return (
@@ -511,11 +511,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             onPress={this.handleStakePress}
             superscriptLabel={bestApyText}
           >
-            {!this.isStakingPolicyAvailable() ? (
-              <ActivityIndicator color={theme.primaryText} />
-            ) : (
-              <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
-            )}
+            <Feather name="percent" size={theme.rem(1.75)} color={theme.primaryText} />
           </IconButton>
         )}
         <IconButton label={lstrings.trade_currency} onPress={this.handleTrade}>
@@ -527,9 +523,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   isStakingPolicyAvailable = (): boolean => {
     return (
-      Object.keys(this.props.stakePolicies).length > 0 ||
-      // FIO was the first staking-enabled currency and doesn't use staking policies yet
-      this.props.wallet.currencyInfo.pluginId === 'fio'
+      isStakingSupported(this.props.wallet.currencyInfo.pluginId) &&
+      (Object.keys(this.props.stakePolicies).length > 0 ||
+        // FIO was the first staking-enabled currency and doesn't use staking policies yet
+        this.props.wallet.currencyInfo.pluginId === 'fio')
     )
   }
 
@@ -765,7 +762,7 @@ export function TransactionListTop(props: OwnProps) {
   const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
   const stakePolicies = stakePlugins.flatMap(stakePlugin =>
     stakePlugin
-      .getPolicies({ pluginId: wallet.currencyInfo.pluginId })
+      .getPolicies({ wallet, pluginId: wallet.currencyInfo.pluginId, currencyCode })
       .filter(
         stakePolicy =>
           !stakePolicy.deprecated &&
