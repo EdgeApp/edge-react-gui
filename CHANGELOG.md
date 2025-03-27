@@ -9,6 +9,7 @@
 - fixed: Fix yesterday rate lookup in `exchangeRates`
 - fixed: Intermittent staking/unstaking errors for Cardano
 - fixed: Prevent acceleration for swap transactions.
+- fixed: Filter spam transaction on `TransactionListScene`
 
 ## 4.24.1 (staging)
 
