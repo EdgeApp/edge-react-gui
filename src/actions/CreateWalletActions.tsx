@@ -18,6 +18,7 @@ import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
+import { updateMostRecentWalletsSelected } from './WalletActions'
 
 export const createWallets = async (account: EdgeAccount, items: EdgeCreateCurrencyWallet[]): Promise<Array<EdgeResult<EdgeCurrencyWallet>>> => {
   const out = await account.createCurrencyWallets(items)
@@ -32,13 +33,21 @@ export const createWallets = async (account: EdgeAccount, items: EdgeCreateCurre
   return out
 }
 
-export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrencyWallet): Promise<EdgeCurrencyWallet> => {
-  const { walletType, name, fiatCurrencyCode } = opts
-  const out = await account.createCurrencyWallet(walletType, opts)
+export const createWallet = (account: EdgeAccount, opts: EdgeCreateCurrencyWallet): ThunkAction<Promise<EdgeCurrencyWallet>> => {
+  return async dispatch => {
+    const { walletType, name, fiatCurrencyCode } = opts
+    const out = await account.createCurrencyWallet(walletType, opts)
 
-  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name ?? ''}`)
+    logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name ?? ''}`)
 
-  return out
+    // Update most recent wallets list
+    if (out != null) {
+      const walletId = out.id
+      dispatch(updateMostRecentWalletsSelected(walletId, null))
+    }
+
+    return out
+  }
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector

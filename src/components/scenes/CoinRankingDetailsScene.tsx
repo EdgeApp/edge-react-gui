@@ -349,10 +349,12 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     // Only do this if there is only one possible match that we know of
     if (filteredMatchingWallets.length === 0 && filteredEdgeAssets.length === 1) {
       const walletName = getUniqueWalletName(account, filteredEdgeAssets[0].pluginId)
-      const targetWallet = await createWallet(account, {
-        name: walletName,
-        walletType: `wallet:${filteredEdgeAssets[0].pluginId}`
-      })
+      const targetWallet = await dispatch(
+        createWallet(account, {
+          name: walletName,
+          walletType: `wallet:${filteredEdgeAssets[0].pluginId}`
+        })
+      )
       if (filteredEdgeAssets[0].tokenId != null) {
         await targetWallet.changeEnabledTokenIds([...targetWallet.enabledTokenIds, filteredEdgeAssets[0].tokenId])
       }
