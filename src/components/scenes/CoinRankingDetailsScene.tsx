@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -231,10 +231,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   )
 
   /** True if currency supports staking, regardless of if wallets are owned */
-  const isEarnShown = matchingEdgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
-
-  /** Check if all the stake plugins/policies are loaded for this asset type */
-  const isStakingLoading = isEarnShown && allStakePolicies == null
+  const isEarnShown =
+    (allStakePolicies?.length ?? 0) > 0 && matchingEdgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -502,11 +500,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
                   superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
                   onPress={handleStakePress}
                 >
-                  {isStakingLoading ? (
-                    <ActivityIndicator color={theme.primaryText} style={styles.buttonLoader} />
-                  ) : (
-                    <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
-                  )}
+                  <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
                 </IconButton>
               )}
               <IconButton label={lstrings.swap} onPress={handleSwapPress}>
