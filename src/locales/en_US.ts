@@ -608,6 +608,7 @@ const strings = {
   string_first_zksync_wallet_name: 'My zkSync',
   string_first_abstract_wallet_name: 'My Abstract',
   string_first_sepolia_wallet_name: 'My Sepolia',
+  string_first_sonic_wallet_name: 'My Sonic',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',

@@ -895,6 +895,19 @@ export const SPECIAL_CURRENCY_INFO: {
       namespace: 'eip155',
       reference: '11155111'
     }
+  },
+  sonic: {
+    initWalletName: lstrings.string_first_sonic_wallet_name,
+    chainCode: 'S',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '146'
+    }
   }
 }
 
