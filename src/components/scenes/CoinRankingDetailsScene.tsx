@@ -34,7 +34,7 @@ import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { SwipeChart } from '../charts/SwipeChart'
-import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -488,32 +488,30 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
             <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
           <SwipeChart assetId={coinRankingData.assetId} />
-          {matchingEdgeAssets.length === 0 || hideNonUkCompliantFeat == null ? null : (
-            <View style={styles.buttonsContainer}>
-              {hideNonUkCompliantFeat ? null : (
-                <>
-                  <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
-                    <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
-                  </IconButton>
-                  <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
-                    <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
-                  </IconButton>
-                </>
-              )}
-              {countryCode == null || !isEarnShown ? null : (
-                <IconButton
-                  label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-                  superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
-                  onPress={handleStakePress}
-                >
-                  <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
+          <EdgeAnim style={styles.buttonsContainer} visible={matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null} enter={fadeInDown}>
+            {hideNonUkCompliantFeat ? null : (
+              <>
+                <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
+                  <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
                 </IconButton>
-              )}
-              <IconButton label={lstrings.swap} onPress={handleSwapPress}>
-                <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+                <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
+                  <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
+                </IconButton>
+              </>
+            )}
+            {countryCode == null || !isEarnShown ? null : (
+              <IconButton
+                label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
+                superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
+                onPress={handleStakePress}
+              >
+                <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
-            </View>
-          )}
+            )}
+            <IconButton label={lstrings.swap} onPress={handleSwapPress}>
+              <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+            </IconButton>
+          </EdgeAnim>
           {defaultFiat === coingeckoFiat ? null : (
             <AlertCardUi4
               type="warning"
