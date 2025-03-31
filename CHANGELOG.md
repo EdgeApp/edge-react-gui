@@ -2,7 +2,12 @@
 
 ## Unreleased (develop)
 
-## 4.25.0 (staging)
+- added: `preferProviders` support to override default priority when selecting a fiat provider
+- added: "Asset Settings" option to `WalletListMenuModal`
+- changed: Buy/sell removed for UK
+- fixed: `EdgeCarousel` not updating when data changes
+
+## 4.25.0 (2025-03-31)
 
 - fixed: Crash on `StakeOverviewScene`
 - fixed: Fix race condition between reading and writing account settings
@@ -11,7 +16,7 @@
 - fixed: Prevent acceleration for swap transactions.
 - fixed: Filter spam transaction on `TransactionListScene`
 
-## 4.24.1 (staging)
+## 4.24.1 (2025-03-20)
 
 - added: Add `exchangeRatesMap` to hold current and yesterday rates
 - fixed: FIO wallet Earn button behavior
