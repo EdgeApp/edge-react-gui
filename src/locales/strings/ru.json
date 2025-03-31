@@ -325,6 +325,7 @@
   "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "Сдвиньте для подтверждения",
   "send_confirmation_balance": "Balance",
+  "send_confirmation_algo_recipient_not_activated_s": "Recipient must first activate %1$s before they can receive funds.",
   "send_confirmation_eos_error_cpu": "Недостаточно CPU для отправки EOS транзакции. Пожалуйста, подождите 1-3 дня для пополнения CPU.",
   "send_confirmation_eos_error_net": "Недостаточно NET для отправки EOS транзакции. Пожалуйста, подождите 1-3 дня для пополнения NET.",
   "send_confirmation_eos_error_ram": "Недостаточно памяти для отправки EOS транзакции. Пожалуйста, смотрите edge.app/eos для подробной информации о том, как решить.",

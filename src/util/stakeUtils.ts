@@ -95,8 +95,8 @@ export const getPolicyIconUris = (
   return { stakeAssetUris, rewardAssetUris }
 }
 
-export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy, filter?: StakePolicyFilter): StakePlugin | undefined => {
-  return stakePlugins.find(plugin => plugin.getPolicies(filter).find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
+export const getPluginFromPolicyId = (stakePlugins: StakePlugin[], stakePolicyId: string, filter?: StakePolicyFilter): StakePlugin | undefined => {
+  return stakePlugins.find(plugin => plugin.getPolicies(filter).find(policy => policy.stakePolicyId === stakePolicyId))
 }
 
 /**

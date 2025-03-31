@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -213,7 +213,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       const stakePlugins = await getStakePlugins(pluginId)
 
       for (const stakePlugin of stakePlugins) {
-        for (const stakePolicy of stakePlugin.getPolicies({ pluginId }).filter(stakePolicy => !stakePolicy.deprecated)) {
+        for (const stakePolicy of stakePlugin.getPolicies({ pluginId, currencyCode }).filter(stakePolicy => !stakePolicy.deprecated)) {
           out.push(stakePolicy)
         }
       }
@@ -222,26 +222,17 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     return out
   }, [currencyCode, currencyConfigMap])
 
-  const edgeStakingAssets =
-    allStakePolicies == null
-      ? []
-      : matchingEdgeAssets.filter(
-          asset => filterStakePolicies(allStakePolicies, { pluginId: asset.pluginId, currencyCode: currencyCode.toUpperCase() }).length > 0
-        )
+  const edgeStakingAssets = matchingEdgeAssets.filter(
+    asset =>
+      filterStakePolicies(allStakePolicies ?? [], {
+        pluginId: asset.pluginId,
+        currencyCode: currencyCode.toUpperCase()
+      }).length > 0
+  )
 
-  /** Check if all the stake plugins are loaded for this asset type */
-  const isStakingLoading =
-    stakingWallets.length === 0 ||
-    stakingWallets.some(
-      wallet =>
-        walletStakingStateMap[wallet.id] == null ||
-        walletStakingStateMap[wallet.id].isLoading ||
-        walletStakingStateMap[wallet.id].stakePlugins.length === 0 ||
-        Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length === 0
-    ) ||
-    edgeStakingAssets.length === 0 ||
-    allStakePolicies == null ||
-    allStakePolicies.length === 0
+  /** True if currency supports staking, regardless of if wallets are owned */
+  const isEarnShown =
+    (allStakePolicies?.length ?? 0) > 0 && matchingEdgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -503,18 +494,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
               <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
                 <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
-              {countryCode == null || edgeStakingAssets.length === 0 ? null : (
+              {countryCode == null || !isEarnShown ? null : (
                 <IconButton
                   label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
                   superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
                   onPress={handleStakePress}
-                  disabled={isStakingLoading}
                 >
-                  {isStakingLoading ? (
-                    <ActivityIndicator color={theme.primaryText} style={styles.buttonLoader} />
-                  ) : (
-                    <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
-                  )}
+                  <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
                 </IconButton>
               )}
               <IconButton label={lstrings.swap} onPress={handleSwapPress}>

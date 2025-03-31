@@ -160,6 +160,9 @@ const TransactionDetailsComponent = (props: Props) => {
       wallet
         .accelerate(transaction)
         .then(acceleratedTx => {
+          // Do not let swap transactions be accelerated because that would
+          // cause issues with the swap service and potential loss of funds.
+          if (acceleratedTx?.savedAction?.actionType === 'swap') return
           setAcceleratedTx(acceleratedTx)
         })
         .catch(_err => {})

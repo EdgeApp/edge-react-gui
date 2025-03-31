@@ -5,6 +5,7 @@ import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import { getCurrencyCodeMultiplier } from '../../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../../util/network'
+import { snooze } from '../../../../util/utils'
 import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
@@ -43,8 +44,11 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         tokenId: null
       })
 
-      const stakeTransaction = await kiln.adaWithdrawRewards(walletAddress, nativeAmount)
-      const edgeTx: EdgeTransaction = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      let edgeTx: EdgeTransaction
+      do {
+        const stakeTransaction = await kiln.adaWithdrawRewards(walletAddress, nativeAmount)
+        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
 
       const allocations: QuoteAllocation[] = [
         {
@@ -89,22 +93,19 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         throw new HumanFriendlyError(lstrings.error_balance_below_minimum_to_stake_2s, balanceDisplayString, minimumDisplayString)
       }
 
-      const result = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId).catch(error => {
-        if (error instanceof Error) return error
-        throw error
-      })
-      if (result instanceof KilnError) {
-        if (/Value \d+ less than the minimum UTXO value \d+/.test(result.error)) {
-          const displayBalance = div(walletBalance, multiplier, multiplier.length)
-          throw new HumanFriendlyError(lstrings.error_amount_too_low_to_stake_s, `${displayBalance} ${wallet.currencyInfo.currencyCode}`)
-        }
-      }
-      if (result instanceof Error) {
-        throw result
-      }
-
-      const stakeTransaction = result
-      const edgeTx: EdgeTransaction = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      let edgeTx: EdgeTransaction
+      do {
+        const stakeTransaction = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId).catch(error => {
+          if (error instanceof KilnError) {
+            if (/Value \d+ less than the minimum UTXO value \d+/.test(error.error)) {
+              const displayBalance = div(walletBalance, multiplier, multiplier.length)
+              throw new HumanFriendlyError(lstrings.error_amount_too_low_to_stake_s, `${displayBalance} ${wallet.currencyInfo.currencyCode}`)
+            }
+          }
+          throw error
+        })
+        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
 
       const allocations: QuoteAllocation[] = [
         {
@@ -141,8 +142,11 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         throw new Error('Insufficient funds')
       }
 
-      const stakeTransaction = await kiln.adaUnstakeTransaction(walletAddress)
-      const edgeTx: EdgeTransaction = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      let edgeTx: EdgeTransaction
+      do {
+        const stakeTransaction = await kiln.adaUnstakeTransaction(walletAddress)
+        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
+      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
 
       const allocations: QuoteAllocation[] = [
         {

@@ -23,7 +23,7 @@ export const updateNotificationInfo = async (
   isConditionActive: boolean,
   params?: { walletId: string }
 ): Promise<void> => {
-  const { notifState } = getLocalAccountSettings()
+  const { notifState } = await getLocalAccountSettings(account)
   // Wait on notifState to initialize
   if (notifState == null) return
 

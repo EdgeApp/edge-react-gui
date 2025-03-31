@@ -14,10 +14,18 @@ editFile('package.json', text =>
 
 fs.writeFileSync(
   'src/edge-currency-accountbased.d.ts',
-  `declare module 'edge-currency-accountbased' {
+  `declare module 'edge-currency-accountbased/rn' {
   export function makePluginIo(): any
   export const debugUri: string
   export const pluginUri: string
+}
+
+declare module 'edge-currency-accountbased/rn-piratechain' {
+  export function makePiratechainIo(): any
+}
+
+declare module 'edge-currency-accountbased/rn-zcash' {
+  export function makeZcashIo(): any
 }
 `,
   'utf8'
