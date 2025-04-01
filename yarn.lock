@@ -9259,10 +9259,10 @@ edge-info-server@^3.7.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.25.1:
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.25.1.tgz#9e2d87650d84c173ee2ae38ca1edbcbff83d821d"
-  integrity sha512-LUTa9MTaB2yMzvwkjeQHmu7d7wvNfzN9ns+rbVkOyKX/tTe8QRn6/QsskVCk4YTUz6eNZbypdmtcTawiSkAMfg==
+edge-login-ui-rn@^3.26.0:
+  version "3.26.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.26.0.tgz#7aba6e39259e2f152f8947da491de2975cd49a41"
+  integrity sha512-i+gVuZCTmvkCAvkgVpEtJFcrmSsbIZi7BrQ+Wtadz2o/F/P/VhViaagDnEcuzkUgv/N/EKTM1tq64FZhvXveHg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
