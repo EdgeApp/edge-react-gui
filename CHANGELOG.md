@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `preferProviders` support to override default priority when selecting a fiat provider
+- added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
 - changed: Buy/sell removed for UK
 - fixed: `EdgeCarousel` not updating when data changes
