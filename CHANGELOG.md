@@ -6,6 +6,7 @@
 - added: "Asset Settings" option to `WalletListMenuModal`
 - changed: Buy/sell removed for UK
 - fixed: `EdgeCarousel` not updating when data changes
+- fixed: Network error handling in `SwipeChart`
 
 ## 4.25.0 (2025-03-31)
 
