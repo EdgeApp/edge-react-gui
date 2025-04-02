@@ -225,7 +225,7 @@ const CoinRankingComponent = (props: Props) => {
       setDataSize(0)
       setRequestDataSize(QUERY_PAGE_SIZE)
     }
-  }, [queryLoop])
+  }, [coingeckoFiat /* reset subscription on fiat change */, queryLoop])
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
