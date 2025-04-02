@@ -21,8 +21,10 @@
   "parserOptions": {
     "project": "tsconfig.json"
   },
-  "plugins": ["simple-import-sort"],
+  "plugins": ["simple-import-sort", "local-rules"],
   "rules": {
+    "local-rules/useAbortable-abort-check-param": "error",
+    "local-rules/useAbortable-abort-check-usage": "error",
     "@typescript-eslint/default-param-last": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-dynamic-delete": "off",
