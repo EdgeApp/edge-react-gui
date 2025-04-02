@@ -6,6 +6,8 @@
 - added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
 - changed: Buy/sell removed for UK
+- changed: `GettingStartedScene` "Getting Started" button repurposed to progress through hero pages
+- changed: `GettingStartedScene` "Swipe to Learn More" copy updated to "Learn More" and is now tappable
 - changed: Newly created wallets are added to `mostRecentWallets`
 - fixed: `EdgeCarousel` not updating when data changes
 - fixed: Network error handling in `SwipeChart`
