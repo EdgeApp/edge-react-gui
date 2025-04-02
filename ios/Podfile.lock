@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.26.2):
     - React-Core
-  - edge-currency-accountbased (4.42.3):
+  - edge-currency-accountbased (4.43.0):
     - React-Core
   - edge-currency-plugins (3.5.4):
     - React-Core
@@ -1087,9 +1087,9 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   edge-core-js: b6e3340b75962350ca16dc2a70f2e9d0ded34ac6
-  edge-currency-accountbased: 6c71bbcbb51432f16e585ef3cee523efe0a26d66
+  edge-currency-accountbased: 1fc5cd933fc7faef792525898b0aa777d51d4613
   edge-currency-plugins: 805a2b936174a480243bb4e045afed0c35facc9b
   edge-exchange-plugins: b469d6bb228a70298b53fb8938b3e6a69f1c9c8d
   edge-login-ui-rn: ee4fc58572bce156808e047fef538564f56278de
@@ -1109,7 +1109,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
   FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
