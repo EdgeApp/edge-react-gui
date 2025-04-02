@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated'
 
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useAbortable } from '../../hooks/useAbortable'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
@@ -151,75 +152,56 @@ const CoinRankingComponent = (props: Props) => {
 
   // Start querying starting from either the last fetched index (scrolling) or
   // the first index (initial load/timed refresh)
-  const queryLoop = useHandler((startIndex: number) => {
-    let shouldCancel = false
-    const cancel = () => {
-      shouldCancel = true
-    }
-    const routine = async () => {
-      debugLog(LOG_COINRANK, `queryLoop(start: ${startIndex})`)
+  const queryLoop = useAbortable(maybeAbort => async (startIndex: number) => {
+    debugLog(LOG_COINRANK, `queryLoop(start: ${startIndex})`)
 
-      try {
-        // Catch up to the total required items
-        while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
-          // Cancel:
-          if (shouldCancel) return
-          const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
-          const response = await fetchRates(url)
-          // Cancel:
-          if (shouldCancel) return
-          if (!response.ok) {
-            const text = await response.text()
-            // Cancel:
-            if (shouldCancel) return
-            console.warn(`API call failed with response: ${text}`)
-            break
-          }
-          const replyJson = await response.json()
-          // Cancel:
-          if (shouldCancel) return
-          const listings = asCoinranking(replyJson)
-          for (let i = 0; i < listings.data.length; i++) {
-            const rankIndex = startIndex - 1 + i
-            const row = listings.data[i]
-            coinRankingDatas[rankIndex] = row
-            debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
-          }
-          startIndex += QUERY_PAGE_SIZE
+    try {
+      // Catch up to the total required items
+      while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
+        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
+        const response = await fetchRates(url).then(maybeAbort)
+        if (!response.ok) {
+          const text = await response.text().then(maybeAbort)
+          console.warn(`API call failed with response: ${text}`)
+          break
         }
-      } catch (e: any) {
-        console.warn(`Error during data fetch: ${e.message}`)
+        const replyJson = await response.json().then(maybeAbort)
+        const listings = asCoinranking(replyJson)
+        for (let i = 0; i < listings.data.length; i++) {
+          const rankIndex = startIndex - 1 + i
+          const row = listings.data[i]
+          coinRankingDatas[rankIndex] = row
+          debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+        }
+        startIndex += QUERY_PAGE_SIZE
       }
-
-      setDataSize(coinRankingDatas.length)
-      lastStartIndex.current = startIndex
+    } catch (e: any) {
+      console.warn(`Error during data fetch: ${e.message}`)
     }
 
-    return {
-      routine,
-      cancel
-    }
+    setDataSize(coinRankingDatas.length)
+    lastStartIndex.current = startIndex
   })
 
   // Query for a new page of data:
-  const pageQueryCancelRef = React.useRef<() => void>(() => {})
+  const pageQueryAbortRef = React.useRef<() => void>(() => {})
   React.useEffect(() => {
-    const { routine, cancel } = queryLoop(lastStartIndex.current)
-    pageQueryCancelRef.current = cancel
-    routine().catch(e => console.error(`Error in query loop: ${e.message}`))
-    return cancel
+    const { promise, abort } = queryLoop(lastStartIndex.current)
+    pageQueryAbortRef.current = abort
+    promise.catch(e => console.error(`Error in query loop: ${e.message}`))
+    return abort
   }, [queryLoop, requestDataSize])
 
   // Subscribe to changes to the current data set:
   React.useEffect(() => {
-    let cancel = () => {}
+    let abort = () => {}
     // Refresh from the beginning periodically
     let timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
     function loopBody() {
       debugLog(LOG_COINRANK, 'Refreshing list')
-      const { routine, cancel: newCancel } = queryLoop(1)
-      cancel = newCancel
-      routine()
+      const abortable = queryLoop(1)
+      abort = abortable.abort
+      abortable.promise
         .catch(e => console.error(`Error in query loop: ${e.message}`))
         .finally(() => {
           timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
@@ -229,8 +211,8 @@ const CoinRankingComponent = (props: Props) => {
     return () => {
       // Reset related query state when this effect is unmounted:
       clearTimeout(timeoutId)
-      cancel()
-      pageQueryCancelRef.current()
+      abort()
+      pageQueryAbortRef.current()
       coinRanking.coinRankingDatas = []
       lastStartIndex.current = 1
       setDataSize(0)
