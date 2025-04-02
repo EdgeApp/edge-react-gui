@@ -74,22 +74,24 @@ const CreateWalletCompletionComponent = (props: Props) => {
   useAsyncEffect(
     async () => {
       // Create new wallets in parallel:
-      const walletResults = await createWallets(
-        account,
-        newWalletItems.map(
-          (item): EdgeCreateCurrencyWallet => ({
-            enabledTokenIds: newTokenItems
-              .filter(tokenItem => tokenItem.createWalletIds[0] === PLACEHOLDER_WALLET_ID && tokenItem.pluginId === item.pluginId)
-              .map(tokenItem => tokenItem.tokenId),
-            fiatCurrencyCode: defaultIsoFiat,
-            importText,
-            keyOptions: {
-              ...item.keyOptions,
-              ...keyOptions.get(item.pluginId)
-            },
-            name: walletNames[item.key],
-            walletType: item.walletType
-          })
+      const walletResults = await dispatch(
+        createWallets(
+          account,
+          newWalletItems.map(
+            (item): EdgeCreateCurrencyWallet => ({
+              enabledTokenIds: newTokenItems
+                .filter(tokenItem => tokenItem.createWalletIds[0] === PLACEHOLDER_WALLET_ID && tokenItem.pluginId === item.pluginId)
+                .map(tokenItem => tokenItem.tokenId),
+              fiatCurrencyCode: defaultIsoFiat,
+              importText,
+              keyOptions: {
+                ...item.keyOptions,
+                ...keyOptions.get(item.pluginId)
+              },
+              name: walletNames[item.key],
+              walletType: item.walletType
+            })
+          )
         )
       )
 
