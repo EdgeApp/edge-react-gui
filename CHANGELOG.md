@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.46.0 (staging)
+
 - added: `preferProviders` support to override default priority when selecting a fiat provider
 - added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
