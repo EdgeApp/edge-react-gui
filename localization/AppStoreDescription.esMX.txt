@@ -1,30 +1,30 @@
-Título: Edge - Cartera de Bitcoin, Ethereum, Monero, Ripple
+Título: Edge - Billetera de Cripto y Bitcoin
 -----
-Descripción corta: Privada, segura y fácil de usar. Compra, vende, envía y recibe Bitcoin y otras criptomonedas.
+Descripción corta: Compra BTC, AVAX, Monero y más
 -----
-Una cartera blockchain con total seguridad y privacidad fácil de usar. The Edge app has open-source code to ensure the highest level of security and privacy.
+Privacidad y seguridad totales en nuestra billetera blockchain y exchange de criptomonedas fácil de usar. La aplicación Edge tiene código abierto para garantizar el máximo nivel de seguridad y privacidad.
 
-Gestionar tus criptomonedas nunca ha sido tan fácil. Edge Wallet proporciona la máxima seguridad a la vez que mantiene la simplicidad, permitiendo a todos los tipos de usuarios administrar, transferir e intercambiar fácilmente sus monedas.
+Gestionar tus activos de criptomonedas nunca ha sido tan fácil. Edge ofrece la máxima seguridad manteniendo la simplicidad, permitiendo a todo tipo de usuarios gestionar, transferir e intercambiar fácilmente sus monedas.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
+La billetera Edge Crypto actualmente es compatible con: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte y Ripple/XRP.
 
-Edge es una cartera de criptomonedas potente y fácil de usar que permite a los usuarios controlar fácilmente sus propias claves privadas con la familiaridad y facilidad de la banca móvil. 
+Edge es una billetera de criptomonedas potente y fácil de usar que permite a los usuarios controlar sus propias claves privadas con la familiaridad y facilidad de la banca móvil. 
 
-¡Toma el control de tus fondos! Con Edge, solo TÚ tienes acceso a tus fondos o a los datos de tus transacciones. Ni Edge ni ningún tercero puede acceder a tu dinero o a tus datos. Con Edge obtienes la privacidad financiera y la autonomía para la que fue blockchain fue diseñado, con una facilidad de uso que incluso una abuela la podría utilizar.
+¡Toma el control de tus fondos! Con Edge, solo TÚ tienes acceso a tus fondos o datos de transacciones. Ni Edge ni ningún tercero pueden acceder a tu dinero o datos. Obtienes la privacidad financiera y autonomía para la que fue diseñada la blockchain, con una facilidad de uso que hasta tu abuela podría manejar.
 
-Edge también proporciona cambio entre criptomonedas. Cambie fácilmente sus monedas por otras con unos pocos clicks. 
+Edge también ofrece un intercambio de criptomonedas. Intercambia fácilmente tus monedas por otras con solo unos toques. 
 
-• Conocimiento y acceso cero a los fondos, claves o datos de transacciones de los usuarios por parte de Edge o de terceros
-• Simple creación de cuentas con sólo un nombre de usuario y una contraseña (no se imprimen archivos PDF, ni se escriben frases o se agregan configuraciones de cifrado)
-• Registro biométrico con TouchID y FaceID
-• Carteras jerárquicas deterministas con cambio de direcciones para cada transacción
-• Arquitectura de servidor descentralizada. Las carteras funcionan incluso si los servidores Edge están inactivos.
-• Código “open source”. Disponible en https://github.com/EdgeApp
+• Conocimiento cero y acceso cero a los fondos, claves o datos de transacciones del usuario por parte de Edge o terceros
+• Creación de cuenta sencilla con solo un inicio de sesión y contraseña (sin necesidad de imprimir PDFs, anotar frases de recuperación ni configurar opciones de cifrado)
+• Inicio de sesión con biometría mediante TouchID y FaceID
+• Billeteras Jerárquicas Determinísticas (Hd) con direcciones que cambian en cada transacción
+• Arquitectura de servidor descentralizada. Las billeteras funcionan incluso si los servidores de Edge están caídos.
+• Código abierto. Disponible en https://github.com/EdgeApp
 
 Aviso de Privacidad
-La aplicación Edge Wallet solicita acceso a la lista de contactos del dispositivo e información personal. Esta información se utiliza en el dispositivo para proporcionar una mejor experiencia de usuario de las siguientes maneras:
+La aplicación Edge Wallet solicita acceso a la lista de contactos del dispositivo y a información personal. Esta información se utiliza en el dispositivo para mejorar la experiencia del usuario de las siguientes maneras:
 
-1. Autocompletar contactos de la libreta de direcciones del usuario después de una transacción
-2. Autocompletar contactos de la libreta de direcciones del usuario para enviar solicitudes de pago por correo electrónico o SMS
+1. Autocompletar contactos desde la libreta de direcciones del usuario después de una transacción.
+2. Autocompletar contactos desde la libreta de direcciones del usuario para enviar solicitudes de pago por correo electrónico o SMS.
 
 Ninguna información personal ni de la lista de contactos sale nunca del dispositivo. Ni Edge ni ningún tercero pueden acceder a la información solicitada por la aplicación.
