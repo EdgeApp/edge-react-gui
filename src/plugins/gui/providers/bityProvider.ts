@@ -897,6 +897,7 @@ function isUtxoWallet(wallet: EdgeCurrencyWallet) {
     'wallet:bitcoingoldtestnet',
     'wallet:bitcoinsv',
     'wallet:bitcointestnet',
+    'wallet:bitcointestnet4',
     'wallet:dash',
     'wallet:digibyte',
     'wallet:dogecoin',
