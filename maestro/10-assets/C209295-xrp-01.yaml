@@ -1,0 +1,38 @@
+# Priority: Critical
+# Test ID: C209295
+# Title: XRP Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for XRP only
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209295
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_XRP_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_XRP_PASSWORD}
+
+- extendedWaitUntil:
+    visible: XRP
+    timeout: 120000
+- tapOn: XRP
+- extendedWaitUntil:
+    visible: 19.999952 XRP
+    timeout: 120000
+- tapOn: Wallets
+- extendedWaitUntil:
+    visible: Gatehub EUR
+    timeout: 120000
+- tapOn: Gatehub EUR
+- extendedWaitUntil:
+    visible: 0.9276447105788423 EUR.gh
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
