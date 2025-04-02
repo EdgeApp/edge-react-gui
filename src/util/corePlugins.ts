@@ -42,6 +42,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   rsk: ENV.RSK_INIT,
   sepolia: ENV.SEPOLIA_INIT,
   solana: ENV.SOLANA_INIT,
+  sonic: ENV.SONIC_INIT,
   stellar: true,
   sui: true,
   telos: true,

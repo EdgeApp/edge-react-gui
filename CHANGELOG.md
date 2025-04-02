@@ -5,6 +5,7 @@
 - added: `preferProviders` support to override default priority when selecting a fiat provider
 - added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
+- added: Sonic support
 - changed: Buy/sell removed for UK
 - changed: `GettingStartedScene` "Getting Started" button repurposed to progress through hero pages
 - changed: `GettingStartedScene` "Swipe to Learn More" copy updated to "Learn More" and is now tappable
