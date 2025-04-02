@@ -104,6 +104,7 @@ export const WALLET_LIST_MENU: Array<{
       'ravencoin',
       'smartcash',
       'bitcointestnet',
+      'bitcointestnet4',
       'telos',
       'ufo',
       'vertcoin',

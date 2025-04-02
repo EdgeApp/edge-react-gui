@@ -35,6 +35,7 @@ export const FEE_STRINGS = {
 export const CURRENCY_SETTINGS_KEYS = [
   'bitcoin',
   'bitcointestnet',
+  'bitcointestnet4',
   'bitcoincash',
   'ethereum',
   'ethereumclassic',
@@ -221,6 +222,14 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
+    isImportKeySupported: true
+  },
+  bitcointestnet4: {
+    hasSegwit: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
+    chainCode: 'TESTBTC',
+    displayBuyCrypto: false,
     isImportKeySupported: true
   },
   bitcoincash: {
