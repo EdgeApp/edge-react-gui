@@ -170,11 +170,13 @@ function createAndSelectToken({
             await showFullScreenSpinner(
               lstrings.wallet_list_modal_enabling_token,
               (async (): Promise<EdgeCurrencyWallet> => {
-                return await createWallet(account, {
-                  fiatCurrencyCode: defaultIsoFiat,
-                  name: getUniqueWalletName(account, pluginId),
-                  walletType
-                })
+                return await dispatch(
+                  createWallet(account, {
+                    fiatCurrencyCode: defaultIsoFiat,
+                    name: getUniqueWalletName(account, pluginId),
+                    walletType
+                  })
+                )
               })()
             )
 
@@ -201,12 +203,14 @@ function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkA
     try {
       const wallet = await showFullScreenSpinner(
         lstrings.wallet_list_modal_creating_wallet,
-        createWallet(account, {
-          fiatCurrencyCode: defaultIsoFiat,
-          keyOptions,
-          name: getUniqueWalletName(account, pluginId),
-          walletType
-        })
+        dispatch(
+          createWallet(account, {
+            fiatCurrencyCode: defaultIsoFiat,
+            keyOptions,
+            name: getUniqueWalletName(account, pluginId),
+            walletType
+          })
+        )
       )
       return wallet
     } catch (error: any) {

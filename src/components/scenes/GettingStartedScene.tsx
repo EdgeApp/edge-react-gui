@@ -29,7 +29,7 @@ import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -110,7 +110,7 @@ export const GettingStartedScene = (props: Props) => {
       experimentConfig
     })
 
-  const handleFinalSwipe = useHandler(() => {
+  const handleCompleteUsps = useHandler(() => {
     // This delay is necessary to properly reset the scene since it remains on
     // the stack.
     setTimeout(() => {
@@ -136,9 +136,15 @@ export const GettingStartedScene = (props: Props) => {
     visitPasswordScene()
   })
 
-  const handlePressSignUp = useHandler(() => {
-    dispatch(logEvent('Signup_Welcome'))
-    visitNewAccountScene()
+  const handleProgressButtonPress = useHandler(() => {
+    // If we're at the last slide, navigate to account creation
+    if (swipeOffset.value >= sections.length) {
+      dispatch(logEvent('Signup_Welcome'))
+      handleCompleteUsps()
+    } else {
+      // Otherwise, advance to the next slide
+      swipeOffset.value = withTiming(Math.min(Math.floor(swipeOffset.value) + 1, sections.length))
+    }
   })
 
   const handlePressSkip = useHandler(() => {
@@ -151,20 +157,49 @@ export const GettingStartedScene = (props: Props) => {
     () => swipeOffset.value,
     value => {
       if (value === paginationCount) {
-        runOnJS(handleFinalSwipe)()
+        runOnJS(handleCompleteUsps)()
+      }
+    }
+  )
+
+  // Which button label to show: "Get Started" or "Next"
+  const [showNextButton, setShowNextButton] = React.useState(false)
+
+  // Update the button visibility based on swipeOffset
+  useAnimatedReaction(
+    () => swipeOffset.value,
+    value => {
+      if (value > 0 && !showNextButton) {
+        runOnJS(setShowNextButton)(true)
+      } else if (value <= 0 && showNextButton) {
+        runOnJS(setShowNextButton)(false)
       }
     }
   )
 
   const footerButtons = (
     <>
-      <ButtonsView
-        layout="column"
-        primary={{
-          label: lstrings.account_get_started,
-          onPress: handlePressSignUp
-        }}
-      />
+      <ButtonFadeContainer>
+        <EdgeAnim visible={!showNextButton} enter={fadeIn} exit={fadeOut}>
+          <ButtonsView
+            layout="column"
+            primary={{
+              label: lstrings.account_get_started,
+              onPress: handleProgressButtonPress
+            }}
+          />
+        </EdgeAnim>
+
+        <EdgeAnim visible={showNextButton} enter={fadeIn} exit={fadeOut}>
+          <ButtonsView
+            layout="column"
+            primary={{
+              label: lstrings.string_next_capitalized,
+              onPress: handleProgressButtonPress
+            }}
+          />
+        </EdgeAnim>
+      </ButtonFadeContainer>
       <TertiaryTouchable onPress={handlePressSignIn}>
         <TertiaryText>
           {/* eslint-disable-next-line react-native/no-raw-text */}
@@ -226,7 +261,9 @@ export const GettingStartedScene = (props: Props) => {
                   distance: 20
                 }}
               >
-                <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+                <EdgeTouchableOpacity onPress={handleProgressButtonPress}>
+                  <WelcomeHeroPrompt>{lstrings.learn_more}</WelcomeHeroPrompt>
+                </EdgeTouchableOpacity>
               </EdgeAnim>
             </WelcomeHero>
             {sections.map((section, index) => {
@@ -346,8 +383,10 @@ const WelcomeHeroMessage = styled(EdgeText)(theme => ({
 }))
 const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.75),
+  color: theme.textLink,
   fontFamily: theme.fontFaceBold,
-  textAlign: 'center'
+  textAlign: 'center',
+  margin: theme.rem(0.5)
 }))
 
 const HeroItem = styled(Animated.View)<{
@@ -521,8 +560,11 @@ const SectionParagraph = styled(EdgeText)(theme => ({
 const Footnote = styled(EdgeText)(theme => ({
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.6),
+  fontSize: theme.rem(0.75),
   marginBottom: theme.rem(1),
-  opacity: 0.75,
   includeFontPadding: false
 }))
+
+const ButtonFadeContainer = styled(View)({
+  position: 'relative'
+})

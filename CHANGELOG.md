@@ -2,10 +2,18 @@
 
 ## Unreleased (develop)
 
+## 4.46.0 (staging)
+
 - added: `preferProviders` support to override default priority when selecting a fiat provider
+- added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
+- added: Sonic support
 - changed: Buy/sell removed for UK
+- changed: `GettingStartedScene` "Getting Started" button repurposed to progress through hero pages
+- changed: `GettingStartedScene` "Swipe to Learn More" copy updated to "Learn More" and is now tappable
+- changed: Newly created wallets are added to `mostRecentWallets`
 - fixed: `EdgeCarousel` not updating when data changes
+- fixed: Network error handling in `SwipeChart`
 
 ## 4.25.0 (2025-03-31)
 

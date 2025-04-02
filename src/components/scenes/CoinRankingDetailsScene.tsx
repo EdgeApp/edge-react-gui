@@ -29,12 +29,12 @@ import { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { fetchRates } from '../../util/network'
 import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
+import { getUkCompliantString, hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { SwipeChart } from '../charts/SwipeChart'
-import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -117,6 +117,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+
+  const [hideNonUkCompliantFeat] = useAsyncValue(async () => await hideNonUkCompliantFeature())
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
@@ -347,10 +349,12 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     // Only do this if there is only one possible match that we know of
     if (filteredMatchingWallets.length === 0 && filteredEdgeAssets.length === 1) {
       const walletName = getUniqueWalletName(account, filteredEdgeAssets[0].pluginId)
-      const targetWallet = await createWallet(account, {
-        name: walletName,
-        walletType: `wallet:${filteredEdgeAssets[0].pluginId}`
-      })
+      const targetWallet = await dispatch(
+        createWallet(account, {
+          name: walletName,
+          walletType: `wallet:${filteredEdgeAssets[0].pluginId}`
+        })
+      )
       if (filteredEdgeAssets[0].tokenId != null) {
         await targetWallet.changeEnabledTokenIds([...targetWallet.enabledTokenIds, filteredEdgeAssets[0].tokenId])
       }
@@ -486,28 +490,30 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
             <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
           <SwipeChart assetId={coinRankingData.assetId} />
-          {matchingEdgeAssets.length <= 0 ? null : (
-            <View style={styles.buttonsContainer}>
-              <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
-                <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
-              </IconButton>
-              <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
-                <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
-              </IconButton>
-              {countryCode == null || !isEarnShown ? null : (
-                <IconButton
-                  label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-                  superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
-                  onPress={handleStakePress}
-                >
-                  <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
+          <EdgeAnim style={styles.buttonsContainer} visible={matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null} enter={fadeInDown}>
+            {hideNonUkCompliantFeat ? null : (
+              <>
+                <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
+                  <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
                 </IconButton>
-              )}
-              <IconButton label={lstrings.swap} onPress={handleSwapPress}>
-                <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+                <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
+                  <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
+                </IconButton>
+              </>
+            )}
+            {countryCode == null || !isEarnShown ? null : (
+              <IconButton
+                label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
+                superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
+                onPress={handleStakePress}
+              >
+                <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
               </IconButton>
-            </View>
-          )}
+            )}
+            <IconButton label={lstrings.swap} onPress={handleSwapPress}>
+              <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+            </IconButton>
+          </EdgeAnim>
           {defaultFiat === coingeckoFiat ? null : (
             <AlertCardUi4
               type="warning"

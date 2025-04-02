@@ -24,6 +24,7 @@ import { showScamWarningModal } from './ScamWarningActions'
 import { toggleUserPausedWallet } from './SettingsActions'
 
 export type WalletListMenuKey =
+  | 'settings'
   | 'rename'
   | 'delete'
   | 'resync'
@@ -47,6 +48,15 @@ export function walletListMenuAction(
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
+    case 'settings': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { currencyWallets } = state.core.account
+        navigation.navigate('currencySettings', {
+          currencyInfo: currencyWallets[walletId].currencyInfo
+        })
+      }
+    }
     case 'manageTokens': {
       return async (dispatch, getState) => {
         navigation.navigate('manageTokens', {

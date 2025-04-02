@@ -143,10 +143,13 @@ const SwipeChartComponent = (params: Props) => {
   )
   const [selectedTimespan, setSelectedTimespan] = React.useState<Timespan>('month')
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isFetching, setIsFetching] = React.useState(false)
 
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+  const isConnected = useSelector(state => state.network.isConnected)
   const fiatSymbol = React.useMemo(() => getFiatSymbol(coingeckoFiat), [coingeckoFiat])
+
+  const isLoading = isFetching || !isConnected
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
@@ -175,8 +178,10 @@ const SwipeChartComponent = (params: Props) => {
   // Fetch/cache chart data, set shared animation transition values
   useAsyncEffect(
     async () => {
-      if (!isLoading) {
-        setIsLoading(true)
+      if (!isConnected) setIsFetching(false)
+
+      if (!isFetching && isConnected) {
+        setIsFetching(true)
         setChartData([])
         sMinMaxOpacity.value = 0
 
@@ -196,7 +201,7 @@ const SwipeChartComponent = (params: Props) => {
           // instead.
           setTimeout(() => {
             setChartData(cachedChartData)
-            setIsLoading(false)
+            setIsFetching(false)
             delayShowMinMaxLabels()
           }, 10)
         } else {
@@ -206,45 +211,51 @@ const SwipeChartComponent = (params: Props) => {
           // Start with the free base URL
           let fetchUrl = `${COINGECKO_URL}${fetchPath}`
           do {
-            // Construct the dataset query
-            const response = await fetch(fetchUrl)
-            const result = await response.json()
-            const apiError = asMaybe(asCoinGeckoError)(result)
-            if (apiError != null) {
-              if (apiError.status.error_code === 429) {
-                // Rate limit error, use our API key as a fallback
-                if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
-                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+            try {
+              // Construct the dataset query
+              const response = await fetch(fetchUrl)
+              const result = await response.json()
+              const apiError = asMaybe(asCoinGeckoError)(result)
+              if (apiError != null) {
+                if (apiError.status.error_code === 429) {
+                  // Rate limit error, use our API key as a fallback
+                  if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
+                    fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+                  }
+                  // Wait 2 second before retrying. It typically takes 1 minute
+                  // before rate limiting is relieved, so even 2 seconds is hasty.
+                  await snooze(2000)
+                  continue
                 }
-                // Wait 2 second before retrying. It typically takes 1 minute
-                // before rate limiting is relieved, so even 2 seconds is hasty.
-                await snooze(2000)
-                continue
+                throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
               }
-              throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
+
+              const marketChartRange = asCoinGeckoMarketChartRange(result)
+              const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+                return {
+                  x: new Date(rawDataPoint[0]),
+                  y: rawDataPoint[1]
+                }
+              })
+              const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+              setChartData(reducedChartData)
+              cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+              setCachedChartData(cachedTimespanChartData)
+              delayShowMinMaxLabels()
+            } catch (error) {
+              console.log('SwipeChart fetch error:', error)
+              throw error
+            } finally {
+              setIsFetching(false)
             }
-
-            const marketChartRange = asCoinGeckoMarketChartRange(result)
-            const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-              return {
-                x: new Date(rawDataPoint[0]),
-                y: rawDataPoint[1]
-              }
-            })
-            const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
-
-            setChartData(reducedChartData)
-            cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-            setCachedChartData(cachedTimespanChartData)
-            setIsLoading(false)
-            delayShowMinMaxLabels()
             break
           } while (true)
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [selectedTimespan],
+    [selectedTimespan, isConnected],
     'swipeChart'
   )
 
