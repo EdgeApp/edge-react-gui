@@ -1,7 +1,6 @@
 import { InfoCard } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
@@ -45,9 +44,9 @@ export const InfoCardCarousel = (props: Props) => {
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
     const currentDate = new Date()
-    const buildNumber = getBuildNumber()
+    const version = '4.25.0'
+    const buildNumber = '25032609'
     const osType = Platform.OS.toLowerCase()
-    const version = getVersion()
     const osVersion = getOsVersion()
 
     const referralPromotions = accountReferral.promotions ?? []
