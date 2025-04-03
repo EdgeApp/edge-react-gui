@@ -15,6 +15,7 @@
 - changed: Newly created wallets are added to `mostRecentWallets`
 - fixed: `EdgeCarousel` not updating when data changes
 - fixed: Network error handling in `SwipeChart`
+- fixed: Flicking `EdgeCarousel` card on iOS when displaying only one card
 
 ## 4.25.0 (2025-03-31)
 
