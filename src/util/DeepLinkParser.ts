@@ -273,7 +273,8 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
     }
   }
 
-  throw new SyntaxError('Unknown "edge.app" deep link format')
+  // No special handling supported. Open in browser.
+  return { type: 'other', protocol: url.protocol.replace(/:$/, ''), uri: url.href }
 }
 
 /**
