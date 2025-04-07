@@ -115,6 +115,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
       }
       offset.value = withTiming(0, { duration })
     })
+    .simultaneousWithExternalGesture(Gesture.Tap())
 
   //
   // Dynamic styles
@@ -171,7 +172,12 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
           )}
 
           {scroll ? (
-            <ScrollView style={styles.scroll} keyboardDismissMode="on-drag" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+            <ScrollView
+              style={styles.scroll}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="handled"
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            >
               {children}
             </ScrollView>
           ) : (
