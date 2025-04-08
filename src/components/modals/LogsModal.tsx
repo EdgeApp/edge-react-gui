@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Keyboard, Platform } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import RNFS from 'react-native-fs'
 import Share, { ShareOptions } from 'react-native-share'
@@ -25,6 +25,21 @@ const SENSITIVE_KEY_REGEX = /"(?:allKeys|displayPrivateSeed|displayPublicSeed|ot
 export const LogsModal = (props: Props) => {
   const { bridge, logs } = props
   const [userMessage, setUserMessage] = React.useState('')
+  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false)
+    })
+
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
 
   const isDangerous = React.useMemo(() => {
     return SENSITIVE_KEY_REGEX.test(logs.activity.data) || SENSITIVE_KEY_REGEX.test(logs.info.data)
@@ -77,7 +92,7 @@ export const LogsModal = (props: Props) => {
     <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
       {isDangerous ? (
         <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />
-      ) : (
+      ) : isKeyboardVisible ? null : (
         <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>
       )}
       <AlertCardUi4 title={lstrings.settings_modal_export_logs_warning} type="warning" />
