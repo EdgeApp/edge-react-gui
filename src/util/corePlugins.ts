@@ -61,6 +61,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   bitcoingoldtestnet: false,
   bitcoinsv: true,
   bitcointestnet: true,
+  bitcointestnet4: true,
   dash: ENV.DASH_INIT,
   digibyte: ENV.DIGIBYTE_INIT,
   dogecoin: ENV.DOGE_INIT,

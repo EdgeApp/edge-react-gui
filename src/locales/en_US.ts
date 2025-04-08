@@ -553,6 +553,7 @@ const strings = {
   string_first_filecoin_fevm_calibratio_wallet_name: 'My Filecoin FEVM (Calibration)',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
+  string_first_bitcoin_testnet4_wallet_name: 'My Bitcoin Testnet4',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
   string_first_bitcoin_sv_wallet_name: 'My Bitcoin SV',
   string_first_bitcoin_gold_wallet_name: 'My Bitcoin Gold',
