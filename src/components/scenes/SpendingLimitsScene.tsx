@@ -64,7 +64,7 @@ export const SpendingLimitsScene = (props: Props) => {
   const enableSlider = password.length > 8
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX} keyboardShouldPersistTaps="handled">
         <FilledTextInput secureTextEntry autoFocus placeholder={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
         <View style={styles.switchRow}>
