@@ -229,7 +229,7 @@
     "paymentType": "wire",
     "paymentTypes": ["wire"],
     "title": "Bank Wire Transfer",
-    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $10000",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes\nLimit $20,000,000",
     "forCountries": ["US"],
     "notStateProvinces": { "US": ["AK", "AR", "CT", "NC", "NY", "TX", "FL"] },
     "cryptoCodes": [],

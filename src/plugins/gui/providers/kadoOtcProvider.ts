@@ -1,4 +1,4 @@
-import { div, lt, mul } from 'biggystring'
+import { div, gt, lt, mul } from 'biggystring'
 import { asArray, asBoolean, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
@@ -18,8 +18,9 @@ import {
 } from '../fiatProviderTypes'
 import { validateExactRegion } from './common'
 
-// All OTC trades must at least meet this amount in fiat
+// All OTC trades must at least/most meet these amounts in fiat
 const MIN_QUOTE_AMOUNT = '10000'
+const MAX_QUOTE_AMOUNT = '20000000'
 
 const providerId = 'kadoOtc'
 const storeId = 'money.kado'
@@ -394,6 +395,15 @@ export const kadoOtcProvider: FiatProviderFactory = {
             errorAmount: parseFloat(MIN_QUOTE_AMOUNT),
             displayCurrencyCode: 'USD'
           })
+
+        if (params.direction === 'buy' && paymentType === 'wire' && gt(fiatAmount, MAX_QUOTE_AMOUNT)) {
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'overLimit',
+            errorAmount: parseFloat(MAX_QUOTE_AMOUNT),
+            displayCurrencyCode: 'USD'
+          })
+        }
 
         const paymentQuote: FiatProviderQuote = {
           providerId,
