@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Add PIVX.
+
 ## 4.46.0 (staging)
 
 - added: `preferProviders` support to override default priority when selecting a fiat provider

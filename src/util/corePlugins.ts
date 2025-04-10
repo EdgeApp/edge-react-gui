@@ -69,6 +69,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   feathercoin: true,
   groestlcoin: ENV.GROESTLCOIN_INIT,
   litecoin: ENV.LITECOIN_INIT,
+  pivx: ENV.PIVX_INIT,
   qtum: true,
   ravencoin: true,
   smartcash: true,

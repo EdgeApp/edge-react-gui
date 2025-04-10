@@ -130,7 +130,15 @@ interface SpecialCurrencyInfo {
   chainCode: string
 
   // Marketing:
+  /**
+   * Whether to show the "Buy Crypto" button from the wallet details scene.
+   *
+   * Defaults to `false`.
+   */
   displayBuyCrypto?: boolean
+  /**
+   * @deprecated Whether to show Ionia rewards feature. Defaults to `false`.
+   **/
   displayIoniaRewards?: boolean
 
   // Localized GUI text:
@@ -140,6 +148,9 @@ interface SpecialCurrencyInfo {
     modalMessage: string
     alertMessage: string
   }
+  /**
+   * Whether key import is supported. Defaults to `false`.
+   */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
 
@@ -162,7 +173,10 @@ interface SpecialCurrencyInfo {
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
   chainIcon?: boolean
-  unstoppableDomainsTicker?: string // https://support.unstoppabledomains.com/support/solutions/articles/48001185621
+  /**
+   * The ticker for the [unstoppable domains](https://support.unstoppabledomains.com/support/solutions/articles/48001185621).
+   */
+  unstoppableDomainsTicker?: string
 }
 
 /*
@@ -827,6 +841,14 @@ export const SPECIAL_CURRENCY_INFO: {
       }
     ],
     unstoppableDomainsTicker: 'ARRR'
+  },
+  pivx: {
+    chainCode: 'PIVX',
+    displayBuyCrypto: true,
+    hasSegwit: false,
+    initWalletName: lstrings.string_first_pivx_wallet_name,
+    isImportKeySupported: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS
   },
   polygon: {
     initWalletName: lstrings.string_first_polygon_wallet_name,
