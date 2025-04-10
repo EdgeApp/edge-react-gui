@@ -1691,6 +1691,7 @@ const strings = {
   notifications_none: `You're all caught up!`,
   swap: 'Swap',
   update_available: 'Update Available',
+  enter_email: 'Enter Email',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
