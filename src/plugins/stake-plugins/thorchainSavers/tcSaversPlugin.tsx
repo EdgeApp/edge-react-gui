@@ -40,6 +40,7 @@ import {
 } from '../types'
 import { asInfoServerResponse, EdgeGuiPluginOptions, InfoServerResponse } from '../util/internalTypes'
 import { getEvmApprovalData, getEvmDepositWithExpiryData } from './defiUtils'
+import { calculateThorchainFees, ThorchainFees } from './thorchainFees'
 
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
@@ -66,17 +67,26 @@ interface PolicyCurrencyInfo {
 const asInitOptions = asObject({
   ninerealmsClientId: asOptional(asString, ''),
   affiliateFeeBasis: asOptional(asString, '50'),
-  thorname: asOptional(asString, 'ej')
+  thorname: asOptional(asString, 'ej'),
+  outboundFeeMultiplier: asOptional(asString, '3') // Default OFM value, should be fetched from network
 })
 
 const asInboundAddresses = asArray(
   asObject({
     address: asString,
     chain: asString,
+    pub_key: asString,
     outbound_fee: asString,
     router: asOptional(asString),
     synth_mint_paused: asOptional(asBoolean),
-    halted: asBoolean
+    halted: asBoolean,
+    global_trading_paused: asOptional(asBoolean, false),
+    chain_trading_paused: asOptional(asBoolean, false),
+    chain_lp_actions_paused: asOptional(asBoolean, false),
+    gas_rate: asOptional(asString, '0'),
+    gas_rate_units: asOptional(asString, ''),
+    outbound_tx_size: asOptional(asString, '0'),
+    dust_threshold: asOptional(asString, '0')
   })
 )
 
@@ -103,7 +113,7 @@ const asSaver = asObject({
 
 const asSavers = asArray(asSaver)
 
-const asPool = asObject({
+const asMidgardPool = asObject({
   asset: asString,
   status: asString,
   assetPrice: asString,
@@ -126,6 +136,24 @@ const asQuoteDeposit = asEither(
     error: asString
   })
 )
+
+// Pool information cleaner for fee calculations from Thorchain API
+const asThorchainPool = asEither(
+  asObject({
+    asset: asString,
+    asset_depth: asString,
+    rune_depth: asString,
+    pool_units: asString,
+    status: asString,
+    synth_supply: asOptional(asString),
+    synth_units: asOptional(asString),
+    pending_inbound: asOptional(asString)
+  }),
+  asObject({
+    error: asString
+  })
+)
+type ThorchainPool = ReturnType<typeof asThorchainPool>
 
 const tcChainCodePluginIdMap: StringMap = {
   AVAX: 'avalanche',
@@ -169,7 +197,7 @@ const asThorNodePool = asObject({
 const asThorNodePools = asArray(asThorNodePool)
 
 type Saver = ReturnType<typeof asSaver>
-type Pool = ReturnType<typeof asPool>
+type Pool = ReturnType<typeof asMidgardPool>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
 
@@ -352,6 +380,9 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   return saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
 }
 
+/**
+ * Retrieve pool information from Midgard API (does not include fees)
+ */
 async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Pool | undefined> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const response = await fetchWaterfall(midgardServers, `v2/pool/${asset}`, {
@@ -364,7 +395,7 @@ async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Poo
     throw new Error(`Thorchain could not fetch /v2/pool/${asset}: ${responseText}`)
   }
   const poolsJson = await response.json()
-  return asPool(poolsJson)
+  return asMidgardPool(poolsJson)
 }
 
 async function fetchSaver(opts: EdgeGuiPluginOptions, asset: string, address: string): Promise<Saver | undefined> {
@@ -530,6 +561,31 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     thorAmount,
     expectedAmountOut
   })
+
+  // Calculate fees
+  try {
+    const poolPath = `/thorchain/pool/${asset}`
+    const poolInfo = await cleanMultiFetch(asThorchainPool, thornodeServers, poolPath, { headers: { 'x-client-id': ninerealmsClientId } })
+
+    const fees = await calculateThorchainOperationFees({
+      opts,
+      wallet,
+      currencyCode,
+      nativeAmount,
+      isDeposit: true,
+      poolInfo
+    })
+
+    console.log('[Thorchain Fees] Deposit Fee Breakdown:', {
+      inboundFee: fees.inboundFee,
+      liquidityFee: fees.liquidityFee,
+      affiliateFee: fees.affiliateFee,
+      outboundFee: fees.outboundFee,
+      totalFeeInAsset: fees.totalFeeInAsset
+    })
+  } catch (error) {
+    console.error('[Thorchain Fees] Error calculating deposit fees:', error)
+  }
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
   let needsFundingPrimary = false
@@ -980,6 +1036,31 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     totalUnstakeThorAmount,
     expectedAmountOut
   })
+
+  // Calculate fees
+  try {
+    const poolPath = `/thorchain/pool/${asset}`
+    const poolInfo = await cleanMultiFetch(asThorchainPool, thornodeServers, poolPath, { headers: { 'x-client-id': ninerealmsClientId } })
+
+    const fees = await calculateThorchainOperationFees({
+      opts,
+      wallet,
+      currencyCode,
+      nativeAmount: totalUnstakeNativeAmount,
+      isDeposit: false,
+      poolInfo
+    })
+
+    console.debug('[Thorchain Fees] Withdraw Fee Breakdown:', {
+      inboundFee: fees.inboundFee,
+      liquidityFee: fees.liquidityFee,
+      affiliateFee: fees.affiliateFee,
+      outboundFee: fees.outboundFee,
+      totalFeeInAsset: fees.totalFeeInAsset
+    })
+  } catch (error) {
+    console.error('[Thorchain Fees] Error calculating withdrawal fees:', error)
+  }
   const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   const forceChangeAddress = utxoSourceAddress
 
@@ -1374,6 +1455,93 @@ const EVM_PLUGINIDS: { [id: string]: boolean } = {
   avalanche: true,
   binancesmartchain: true,
   ethereum: true
+}
+
+/**
+ * Parameters for calculating Thorchain operation fees
+ */
+interface CalculateThorchainOperationFeesParams {
+  opts: EdgeGuiPluginOptions
+  wallet: EdgeCurrencyWallet
+  currencyCode: string
+  nativeAmount: string
+  isDeposit: boolean
+  poolInfo: ThorchainPool
+}
+
+/**
+ * Calculate Thorchain fees for deposit or withdraw operations
+ *
+ * @param params Parameters for fee calculation
+ * @returns Calculated fees according to Thorchain documentation: https://dev.thorchain.org/concepts/fees.html
+ */
+const calculateThorchainOperationFees = async (params: CalculateThorchainOperationFeesParams): Promise<ThorchainFees> => {
+  const { opts, wallet, currencyCode, nativeAmount, isDeposit, poolInfo } = params
+  const { affiliateFeeBasis, outboundFeeMultiplier } = asInitOptions(opts.initOptions)
+  const { pluginId } = wallet.currencyInfo
+  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const isToken = tokenId != null
+  // Convert to Thorchain asset format
+  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+
+  // For deposits, source chain is the user's chain and destination is Thorchain
+  // For withdrawals, source chain is Thorchain and destination is the user's chain
+  const sourceChainId = isDeposit ? pluginId : 'thorchain'
+  const destChainId = isDeposit ? 'thorchain' : pluginId
+
+  // Get exchange amount
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+  const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
+  const thorAmount = toFixed(mul(exchangeAmount, THOR_LIMIT_UNITS), 0, 0)
+
+  // Get pool depth for liquidity fee calculation
+  // Check if poolInfo is a valid pool (not an error response)
+  const poolDepth = 'asset_depth' in poolInfo ? poolInfo.asset_depth : '0'
+
+  // Ensure inbound addresses are loaded
+  await updateInboundAddresses(opts)
+
+  if (inboundAddresses == null) {
+    throw new Error('Inbound addresses not available')
+  }
+
+  try {
+    const fees = calculateThorchainFees({
+      sourceChain: sourceChainId,
+      destinationChain: destChainId,
+      swapAmount: thorAmount,
+      poolDepth,
+      isDestinationToken: isToken,
+      affiliateFeeBps: affiliateFeeBasis,
+      inboundAddresses,
+      outboundFeeMultiplier
+    })
+
+    console.debug('[Thorchain Fees] Operation Fees:', {
+      isDeposit,
+      asset,
+      nativeAmount,
+      thorAmount,
+      inboundFee: fees.inboundFee,
+      liquidityFee: fees.liquidityFee,
+      affiliateFee: fees.affiliateFee,
+      outboundFee: fees.outboundFee,
+      totalFeeInAsset: fees.totalFeeInAsset
+    })
+
+    return fees
+  } catch (error) {
+    console.error('[Thorchain Fees] Error calculating fees:', error)
+
+    // Return default fee structure if calculation fails
+    return {
+      inboundFee: { amount: '0', chain: sourceChainId, gasRate: '0', txSize: 0 },
+      liquidityFee: { amount: '0', slip: '0', swapAmount: thorAmount, poolDepth },
+      affiliateFee: { amount: '0', basisPoints: affiliateFeeBasis, swapAmount: thorAmount },
+      outboundFee: { amount: '0', chain: destChainId, gasRate: '0', txSize: 0, multiplier: outboundFeeMultiplier },
+      totalFeeInAsset: '0'
+    }
+  }
 }
 
 async function showDisabledModal(): Promise<void> {
