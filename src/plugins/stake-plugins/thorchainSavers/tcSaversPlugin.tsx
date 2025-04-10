@@ -119,7 +119,8 @@ const asQuoteDeposit = asEither(
     expected_amount_out: asString,
     inbound_address: asString,
     memo: asString,
-    expiry: asNumber
+    expiry: asNumber,
+    recommended_min_amount_in: asOptional(asString)
   }),
   asObject({
     error: asString
@@ -499,15 +500,24 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     throw new Error(error)
   }
 
-  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, expiry, memo } = quoteDeposit
+  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, expiry, memo, recommended_min_amount_in: recommendedMinAmountIn } = quoteDeposit
 
   console.debug('[Thorchain API] Deposit quote response:', {
     poolAddress,
     expectedAmountOut,
     expiry,
     memo,
-    quoteDeposit
+    recommendedMinAmountIn
   })
+
+  // Check if the amount is less than the recommended minimum
+  if (recommendedMinAmountIn != null && lt(thorAmount, recommendedMinAmountIn)) {
+    console.warn('[Thorchain API] Amount is less than recommended minimum:', {
+      thorAmount,
+      recommendedMinAmountIn
+    })
+    throw new StakeBelowLimitError(request, currencyCode)
+  }
 
   const slippageThorAmount = sub(thorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
@@ -941,14 +951,23 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     }
     throw new Error(error)
   }
-  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, memo } = quoteDeposit
+  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, memo, recommended_min_amount_in: recommendedMinAmountIn } = quoteDeposit
 
   console.debug('[Thorchain API] Withdraw quote response:', {
     poolAddress,
     expectedAmountOut,
     memo,
-    quoteDeposit
+    recommendedMinAmountIn
   })
+
+  // Check if the amount is less than the recommended minimum
+  if (recommendedMinAmountIn != null && lt(totalUnstakeThorAmount, recommendedMinAmountIn)) {
+    console.warn('[Thorchain API] Amount is less than recommended minimum:', {
+      totalUnstakeThorAmount,
+      recommendedMinAmountIn
+    })
+    throw new StakeBelowLimitError(request, currencyCode)
+  }
 
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
