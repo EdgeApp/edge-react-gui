@@ -26,9 +26,9 @@ export const ConfirmationScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications>
-      <SceneContainer>
-        <SceneHeaderUi4 title={route.params.title} />
-        <Paragraph>{route.params.message}</Paragraph>
+      <SceneHeaderUi4 title={route.params.title} />
+      <SceneContainer center>
+        <Paragraph center>{route.params.message}</Paragraph>
       </SceneContainer>
       <SceneButtons
         primary={{
