@@ -25,17 +25,17 @@ export const ConfirmationScene = React.memo((props: Props) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
+    <SceneWrapper hasTabs hasNotifications>
       <SceneContainer>
         <SceneHeaderUi4 title={route.params.title} />
         <Paragraph>{route.params.message}</Paragraph>
-        <SceneButtons
-          primary={{
-            label: lstrings.string_done_cap,
-            onPress: handleDonePress
-          }}
-        />
       </SceneContainer>
+      <SceneButtons
+        primary={{
+          label: lstrings.string_done_cap,
+          onPress: handleDonePress
+        }}
+      />
     </SceneWrapper>
   )
 })
