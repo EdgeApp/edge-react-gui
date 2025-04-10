@@ -486,6 +486,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
+  console.debug('[Thorchain API] Requesting deposit quote:', { path, asset, primaryAddress, thorAmount })
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
@@ -500,9 +501,25 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, expiry, memo } = quoteDeposit
 
+  console.debug('[Thorchain API] Deposit quote response:', {
+    poolAddress,
+    expectedAmountOut,
+    expiry,
+    memo,
+    quoteDeposit
+  })
+
   const slippageThorAmount = sub(thorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
   const slippageNativeAmount = await mul(slippageDisplayAmount, multiplier)
+
+  console.debug('[Thorchain Fees - OLD] Deposit Slippage:', {
+    slippageThorAmount,
+    slippageDisplayAmount,
+    slippageNativeAmount,
+    thorAmount,
+    expectedAmountOut
+  })
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
   let needsFundingPrimary = false
@@ -720,6 +737,13 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   const fee = add(approvalFee, needsFundingPrimary ? mul(networkFee, '2') : networkFee)
 
+  console.debug('[Thorchain Fees - OLD] Deposit Network Fee:', {
+    networkFee,
+    approvalFee,
+    needsFundingPrimary,
+    totalFee: fee
+  })
+
   let quoteInfo: QuoteInfo | undefined
   const allocations: QuoteAllocation[] = [
     {
@@ -746,6 +770,12 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     console.error(e.message)
   })
 
+  console.debug('[Thorchain Fees - OLD] Future Unstake Fee:', {
+    futureUnstakeFee,
+    asset,
+    parentToTokenRate
+  })
+
   if (futureUnstakeFee != null) {
     allocations.push({
       allocationType: 'futureUnstakeFee',
@@ -761,6 +791,15 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     const feeInTokenNativeAmount = mul(feeInTokenExchangeAmount, multiplier)
 
     const totalFee = add(add(feeInTokenNativeAmount, slippageNativeAmount), futureUnstakeFee)
+
+    console.debug('[Thorchain Fees - OLD] Deposit Total Fees:', {
+      networkFeeInTokens: feeInTokenNativeAmount,
+      slippageFee: slippageNativeAmount,
+      futureUnstakeFee,
+      totalFee,
+      nativeAmount,
+      totalFeePercent: (Number(totalFee) / Number(nativeAmount)) * 100
+    })
     const policy = policies.find(policy => policy.stakePolicyId === stakePolicyId)
     if (policy == null) {
       throw new Error(`Cannot find policy ${stakePolicyId}`)
@@ -893,6 +932,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
+  console.debug('[Thorchain API] Requesting withdraw quote:', { path, asset, primaryAddress, totalUnstakeThorAmount, withdrawBps })
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
@@ -903,9 +943,24 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
   const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, memo } = quoteDeposit
 
+  console.debug('[Thorchain API] Withdraw quote response:', {
+    poolAddress,
+    expectedAmountOut,
+    memo,
+    quoteDeposit
+  })
+
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
   const slippageNativeAmount = mul(slippageDisplayAmount, multiplier)
+
+  console.debug('[Thorchain Fees - OLD] Unstake Slippage:', {
+    slippageThorAmount,
+    slippageDisplayAmount,
+    slippageNativeAmount,
+    totalUnstakeThorAmount,
+    expectedAmountOut
+  })
   const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   const forceChangeAddress = utxoSourceAddress
 
@@ -1028,6 +1083,12 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 
   const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
+
+  console.debug('[Thorchain Fees - OLD] Unstake Network Fee:', {
+    networkFee,
+    needsFundingPrimary,
+    totalFee: fee
+  })
   return {
     allocations: [
       {
@@ -1163,6 +1224,12 @@ const estimateUnstakeFee = async (
   const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'deductedFee')
 
   if (networkFee == null || stakeFee == null) throw new Error('Cannot estimate unstake fee: No fees found')
+
+  console.debug('[Thorchain Fees - OLD] Estimated Unstake Fees:', {
+    networkFee: networkFee?.nativeAmount,
+    stakeFee: stakeFee?.nativeAmount,
+    totalFee: add(networkFee?.nativeAmount ?? '0', stakeFee?.nativeAmount ?? '0')
+  })
 
   // If staking a token, convert the networkFree from the parent currency to the staked currency
   if (currencyCode !== parentCurrencyCode) {
