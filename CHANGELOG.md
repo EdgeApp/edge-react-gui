@@ -18,6 +18,7 @@
 - fixed: Flicking `EdgeCarousel` card on iOS when displaying only one card
 - fixed: Keyboard tapthrough on `SpendingLimitsScene` and scrolling modals
 - fixed: Conditionally show "Asset Settings" in `WalletListMenuModal`
+- fixed: `NotificationCenterCard` date spacing
 
 ## 4.25.0 (2025-03-31)
 
