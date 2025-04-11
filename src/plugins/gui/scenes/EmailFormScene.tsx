@@ -41,7 +41,7 @@ export const EmailFormScene = React.memo((props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
       <SceneContainer>
-        <SceneHeaderUi4 title="Enter Email" />
+        <SceneHeaderUi4 title={lstrings.enter_email} />
         {params.message == null ? null : <Paragraph>{params.message}</Paragraph>}
         <GuiFormField fieldType="text" autofocus label={lstrings.form_field_title_email_address} onChangeText={setEmail} value={email} />
         <SceneButtons
@@ -50,8 +50,8 @@ export const EmailFormScene = React.memo((props: Props) => {
             disabled: email === '',
             onPress: handleSubmitPress
           }}
-          tertiary={{
-            label: lstrings.string_cancel,
+          secondary={{
+            label: lstrings.string_cancel_cap,
             onPress: handleCancelPress
           }}
         />
