@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
 import { Fontello } from '../../assets/vector'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { CURRENCY_SETTINGS_KEYS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -188,13 +188,14 @@ export function WalletListMenuModal(props: Props) {
 
       const result: Option[] = []
 
-      // First add the settings option to make it appear at the top
+      // First add the settings option to make it appear at the top, but only if
+      // the plugin supports asset settings
       const settingsOption = WALLET_LIST_MENU.find(option => option.value === 'settings')
-      if (settingsOption != null) {
+      const { pluginId } = wallet.currencyInfo
+      if (settingsOption != null && CURRENCY_SETTINGS_KEYS.includes(pluginId) && account.currencyConfig[pluginId] != null) {
         result.push({ label: settingsOption.label, value: settingsOption.value })
       }
 
-      const { pluginId } = wallet.currencyInfo
       if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
         result.push({
           label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
