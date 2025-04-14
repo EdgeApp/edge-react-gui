@@ -285,6 +285,7 @@ export const asEnvConfig = asObject({
       poktPortalApiKey: asOptional(asString, '')
     }).withRest
   ),
+  SONIC_INIT: asCorePluginInit(asEvmApiKeys),
   SPOOKY_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')

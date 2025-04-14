@@ -312,6 +312,12 @@ export const fakeRootState: FakeState = {
         dailyChange: 10,
         hourlyChange: 3
       },
+      bitcointestnet4: {
+        eventId: 'TESTBTC',
+        currencyPair: 'TESTBTC_iso:USD',
+        dailyChange: 10,
+        hourlyChange: 3
+      },
       ripple: {
         eventId: 'XRP',
         currencyPair: 'XRP_iso:USD',

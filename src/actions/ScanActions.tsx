@@ -19,11 +19,10 @@ import { getCurrencyCode, getCurrencyCodeMultiplier } from '../util/CurrencyInfo
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
-import { getUkCompliantString } from '../util/ukComplianceUtils'
+import { hideNonUkCompliantFeature } from '../util/ukComplianceUtils'
 import { getPluginIdFromChainCode, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
-import { getFirstOpenInfo } from './FirstOpenActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -353,7 +352,7 @@ const shownWalletGetCryptoModals: string[] = []
 export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
   return async dispatch => {
     try {
-      const { countryCode } = await getFirstOpenInfo()
+      const hideNonUkCompliantFeat = await hideNonUkCompliantFeature()
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
       const balance = wallet.balanceMap.get(tokenId)
@@ -361,7 +360,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
       let threeButtonModal
       const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
-      if (displayBuyCrypto) {
+      if (displayBuyCrypto && !hideNonUkCompliantFeat) {
         if (config.disableSwaps === true) {
           const messageSyntax = sprintf(lstrings.buy_crypto_modal_message_no_exchange_s, currencyCode, currencyCode)
           threeButtonModal = await Airship.show<'buy' | 'decline' | undefined>(bridge => (
@@ -371,7 +370,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
               message={messageSyntax}
               buttons={{
                 buy: {
-                  label: getUkCompliantString(countryCode, 'buy_1s', currencyCode)
+                  label: sprintf(lstrings.buy_1s, currencyCode)
                 },
                 decline: { label: lstrings.buy_crypto_decline }
               }}
@@ -386,7 +385,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
               message={messageSyntax}
               buttons={{
                 buy: {
-                  label: getUkCompliantString(countryCode, 'buy_1s', currencyCode)
+                  label: sprintf(lstrings.buy_1s, currencyCode)
                 },
                 exchange: {
                   label: lstrings.buy_crypto_modal_exchange,

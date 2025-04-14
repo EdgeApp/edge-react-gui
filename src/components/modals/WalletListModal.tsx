@@ -290,7 +290,7 @@ export const pickWallet = async (args: {
         continue
       }
       // See if this wallet has a matching token enabled
-      const tokenIdMatch = wallet.enabledTokenIds.find(tid => tokenId)
+      const tokenIdMatch = wallet.enabledTokenIds.find(enabledTokenId => tokenId === enabledTokenId)
 
       if (tokenIdMatch != null) {
         matchingWallets.push({ walletId, tokenId })

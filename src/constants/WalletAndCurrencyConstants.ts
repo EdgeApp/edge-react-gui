@@ -35,6 +35,7 @@ export const FEE_STRINGS = {
 export const CURRENCY_SETTINGS_KEYS = [
   'bitcoin',
   'bitcointestnet',
+  'bitcointestnet4',
   'bitcoincash',
   'ethereum',
   'ethereumclassic',
@@ -221,6 +222,14 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
+    isImportKeySupported: true
+  },
+  bitcointestnet4: {
+    hasSegwit: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
+    chainCode: 'TESTBTC',
+    displayBuyCrypto: false,
     isImportKeySupported: true
   },
   bitcoincash: {
@@ -894,6 +903,19 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '11155111'
+    }
+  },
+  sonic: {
+    initWalletName: lstrings.string_first_sonic_wallet_name,
+    chainCode: 'S',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '146'
     }
   }
 }

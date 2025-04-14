@@ -553,6 +553,7 @@ const strings = {
   string_first_filecoin_fevm_calibratio_wallet_name: 'My Filecoin FEVM (Calibration)',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
+  string_first_bitcoin_testnet4_wallet_name: 'My Bitcoin Testnet4',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
   string_first_bitcoin_sv_wallet_name: 'My Bitcoin SV',
   string_first_bitcoin_gold_wallet_name: 'My Bitcoin Gold',
@@ -608,6 +609,7 @@ const strings = {
   string_first_zksync_wallet_name: 'My zkSync',
   string_first_abstract_wallet_name: 'My Abstract',
   string_first_sepolia_wallet_name: 'My Sepolia',
+  string_first_sonic_wallet_name: 'My Sonic',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -1689,6 +1691,7 @@ const strings = {
   notifications_none: `You're all caught up!`,
   swap: 'Swap',
   update_available: 'Update Available',
+  enter_email: 'Enter Email',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

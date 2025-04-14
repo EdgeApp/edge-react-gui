@@ -17,13 +17,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.26.2):
     - React-Core
-  - edge-currency-accountbased (4.42.3):
+  - edge-currency-accountbased (4.44.0):
     - React-Core
-  - edge-currency-plugins (3.5.4):
+  - edge-currency-plugins (3.6.1):
     - React-Core
   - edge-exchange-plugins (2.19.0):
     - React-Core
-  - edge-login-ui-rn (3.25.1):
+  - edge-login-ui-rn (3.26.0):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -423,7 +423,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.2):
     - React-Core
-  - react-native-piratechain (0.5.7):
+  - react-native-piratechain (0.5.8):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -435,7 +435,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.9.5):
+  - react-native-zcash (0.9.6):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1089,10 +1089,10 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: b6e3340b75962350ca16dc2a70f2e9d0ded34ac6
-  edge-currency-accountbased: 6c71bbcbb51432f16e585ef3cee523efe0a26d66
-  edge-currency-plugins: 805a2b936174a480243bb4e045afed0c35facc9b
+  edge-currency-accountbased: e370b0031088160d46ab6e5a4bce5c6e3e7c2b8b
+  edge-currency-plugins: 12aaafaa087ec1704fcdbfe888fd085dfeecb4ee
   edge-exchange-plugins: b469d6bb228a70298b53fb8938b3e6a69f1c9c8d
-  edge-login-ui-rn: debea55f7f42145f3706e101129d63015d34af99
+  edge-login-ui-rn: ee4fc58572bce156808e047fef538564f56278de
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1146,11 +1146,11 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: ff93f8af3b2ee9519fd7879896aa9b8b8272691d
-  react-native-piratechain: 2b37af4e7e079f5d925581ddde92b40e6a97e076
+  react-native-piratechain: db6c784097d7952d1721cca77e5429300abade7e
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: b54e07fd36332f8b2fe57e3ae8d76e795e339c9a
+  react-native-zcash: f6c827fc2b5d5f8029cac63df6742b612c8bd6bc
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad
@@ -1213,6 +1213,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: a604cb59fd3c1007e2f9b5442f05cf33ac324851
+PODFILE CHECKSUM: cc73aacd2e53e396c2f77181519bae885d361677
 
 COCOAPODS: 1.16.2

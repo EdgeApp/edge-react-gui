@@ -5,7 +5,8 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { Fontello } from '../../assets/vector'
+import { CURRENCY_SETTINGS_KEYS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -48,7 +49,8 @@ const icons: { [key: string]: string } = {
   split: 'arrowsalt',
   togglePause: 'pause',
   viewPrivateViewKey: 'eye',
-  viewXPub: 'eye'
+  viewXPub: 'eye',
+  settings: 'control-panel-settings'
 }
 
 /**
@@ -59,6 +61,10 @@ export const WALLET_LIST_MENU: Array<{
   label: string
   value: WalletListMenuKey
 }> = [
+  {
+    label: lstrings.settings_asset_settings,
+    value: 'settings'
+  },
   {
     label: lstrings.string_rename,
     value: 'rename'
@@ -98,6 +104,7 @@ export const WALLET_LIST_MENU: Array<{
       'ravencoin',
       'smartcash',
       'bitcointestnet',
+      'bitcointestnet4',
       'telos',
       'ufo',
       'vertcoin',
@@ -181,7 +188,14 @@ export function WalletListMenuModal(props: Props) {
 
       const result: Option[] = []
 
+      // First add the settings option to make it appear at the top, but only if
+      // the plugin supports asset settings
+      const settingsOption = WALLET_LIST_MENU.find(option => option.value === 'settings')
       const { pluginId } = wallet.currencyInfo
+      if (settingsOption != null && CURRENCY_SETTINGS_KEYS.includes(pluginId) && account.currencyConfig[pluginId] != null) {
+        result.push({ label: settingsOption.label, value: settingsOption.value })
+      }
+
       if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
         result.push({
           label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
@@ -201,6 +215,9 @@ export function WalletListMenuModal(props: Props) {
 
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
+
+        // Skip settings since we already added it
+        if (value === 'settings') continue
 
         if (value === 'split' && splitPluginIds.length <= 0) continue
 
@@ -244,11 +261,19 @@ export function WalletListMenuModal(props: Props) {
     >
       {options.map((option: Option) => (
         <EdgeTouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-          <AntDesignIcon
-            name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
-            size={theme.rem(1)}
-            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-          />
+          {option.value === 'settings' ? (
+            // Special case for settings to keep it consistent with our side
+            // menu.
+            // We eventually will move to using our own custom icons for all
+            // icons instead of picking from different RN vector icon packs
+            <Fontello name={icons[option.value]} style={styles.optionIcon} size={theme.rem(1)} />
+          ) : (
+            <AntDesignIcon
+              name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
+              size={theme.rem(1)}
+              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+            />
+          )}
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
         </EdgeTouchableOpacity>
       ))}

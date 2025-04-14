@@ -4,18 +4,22 @@ import { LayoutChangeEvent, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -38,6 +42,8 @@ export const BalanceCard = (props: Props) => {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
 
   const account = useSelector(state => state.core.account)
   const isBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
@@ -70,12 +76,40 @@ export const BalanceCard = (props: Props) => {
     dispatch(toggleAccountBalanceVisibility())
   })
 
-  const handleSend = useHandler(() => {
-    Airship.show(bridge => <TransferModal depositOrSend="send" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+  const handleSend = useHandler(async () => {
+    if (hideNonUkCompliantFeat) {
+      // Only one available option for UK compliance:
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />
+      ))
+      if (result?.type === 'wallet') {
+        const { walletId, tokenId } = result
+        navigation.push('send2', {
+          walletId,
+          tokenId,
+          hiddenFeaturesMap: { scamWarning: false }
+        })
+      }
+    } else {
+      Airship.show(bridge => <TransferModal depositOrSend="send" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+    }
   })
 
-  const handleDeposit = useHandler(() => {
-    Airship.show(bridge => <TransferModal depositOrSend="deposit" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+  const handleDeposit = useHandler(async () => {
+    if (hideNonUkCompliantFeat) {
+      // Only one available option for UK compliance:
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+      ))
+
+      if (result?.type === 'wallet') {
+        const { walletId, tokenId } = result
+        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+        navigation.navigate('request', { tokenId, walletId })
+      }
+    } else {
+      Airship.show(bridge => <TransferModal depositOrSend="deposit" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+    }
   })
 
   const handleDigitLayout = useHandler((event: LayoutChangeEvent) => {

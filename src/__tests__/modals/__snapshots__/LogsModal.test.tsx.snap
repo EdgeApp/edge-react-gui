@@ -152,6 +152,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
       handlerTag={2}
       handlerType="NativeViewGestureHandler"
       keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
       scrollIndicatorInsets={

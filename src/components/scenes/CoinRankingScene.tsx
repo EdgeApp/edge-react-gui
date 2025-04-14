@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated'
 
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useAbortable } from '../../hooks/useAbortable'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
@@ -47,7 +48,6 @@ const assetSubTextStrings: { [pc: string]: string } = {
   volume24h: lstrings.coin_rank_volume_24hr_abbreviation
 }
 
-type Timeout = ReturnType<typeof setTimeout>
 const CoinRankingComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -58,11 +58,7 @@ const CoinRankingComponent = (props: Props) => {
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
   const mounted = React.useRef<boolean>(true)
-  const timeoutHandler = React.useRef<Timeout | undefined>()
   const lastStartIndex = React.useRef<number>(1)
-  /** The fiat that was last stored from the fetch. */
-  const lastFetchedFiat = React.useRef<string>(coingeckoFiat)
-  const isQuerying = React.useRef<boolean>(false)
 
   const [requestDataSize, setRequestDataSize] = React.useState<number>(QUERY_PAGE_SIZE)
   const [dataSize, setDataSize] = React.useState<number>(0)
@@ -144,9 +140,6 @@ const CoinRankingComponent = (props: Props) => {
 
   React.useEffect(() => {
     return () => {
-      if (timeoutHandler.current != null) {
-        clearTimeout(timeoutHandler.current)
-      }
       mounted.current = false
     }
   }, [])
@@ -157,76 +150,75 @@ const CoinRankingComponent = (props: Props) => {
     })
   }, [dispatch, navigation])
 
-  React.useEffect(() => {
-    // Start querying starting from either the last fetched index (scrolling) or
-    // the first index (initial load/timed refresh)
-    const queryLoop = async (startIndex: number) => {
-      debugLog(LOG_COINRANK, `queryLoop(start: ${startIndex})`)
+  // Start querying starting from either the last fetched index (scrolling) or
+  // the first index (initial load/timed refresh)
+  const queryLoop = useAbortable(maybeAbort => async (startIndex: number) => {
+    debugLog(LOG_COINRANK, `queryLoop(start: ${startIndex})`)
 
-      if (isQuerying.current) {
-        debugLog(LOG_COINRANK, '** Skipping query **')
-        return
-      }
-      isQuerying.current = true
-      try {
-        // Catch up to the total required items
-        while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
-          const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
-
-          const response = await fetchRates(url)
-          if (!response.ok) {
-            const text = await response.text()
-            console.warn(`API call failed with response: ${text}`)
-            break
-          }
-          const replyJson = await response.json()
-          const listings = asCoinranking(replyJson)
-          for (let i = 0; i < listings.data.length; i++) {
-            const rankIndex = startIndex - 1 + i
-            const row = listings.data[i]
-            coinRankingDatas[rankIndex] = row
-            debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
-          }
-          startIndex += QUERY_PAGE_SIZE
+    try {
+      // Catch up to the total required items
+      while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
+        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
+        const response = await fetchRates(url).then(maybeAbort)
+        if (!response.ok) {
+          const text = await response.text().then(maybeAbort)
+          console.warn(`API call failed with response: ${text}`)
+          break
         }
-      } catch (e: any) {
-        console.warn(`Error during data fetch: ${e.message}`)
+        const replyJson = await response.json().then(maybeAbort)
+        const listings = asCoinranking(replyJson)
+        for (let i = 0; i < listings.data.length; i++) {
+          const rankIndex = startIndex - 1 + i
+          const row = listings.data[i]
+          coinRankingDatas[rankIndex] = row
+          debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+        }
+        startIndex += QUERY_PAGE_SIZE
       }
-
-      setDataSize(coinRankingDatas.length)
-      lastStartIndex.current = startIndex
-      isQuerying.current = false
-
-      // Refresh from the beginning periodically
-      timeoutHandler.current = setTimeout(async () => {
-        debugLog(LOG_COINRANK, 'Refreshing list')
-        await queryLoop(1)
-      }, LISTINGS_REFRESH_INTERVAL)
+    } catch (e: any) {
+      console.warn(`Error during data fetch: ${e.message}`)
     }
 
-    if (lastFetchedFiat.current !== coingeckoFiat) {
-      // Reset everything when the fiat setting does not match what cached
-      // data we fetched previously.
-      debugLog(LOG_COINRANK, `Fiat changed from ${lastFetchedFiat.current} to ${coingeckoFiat}`)
-      isQuerying.current = false
-      if (timeoutHandler.current) clearTimeout(timeoutHandler.current)
+    setDataSize(coinRankingDatas.length)
+    lastStartIndex.current = startIndex
+  })
+
+  // Query for a new page of data:
+  const pageQueryAbortRef = React.useRef<() => void>(() => {})
+  React.useEffect(() => {
+    const { promise, abort } = queryLoop(lastStartIndex.current)
+    pageQueryAbortRef.current = abort
+    promise.catch(e => console.error(`Error in query loop: ${e.message}`))
+    return abort
+  }, [queryLoop, requestDataSize])
+
+  // Subscribe to changes to the current data set:
+  React.useEffect(() => {
+    let abort = () => {}
+    // Refresh from the beginning periodically
+    let timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
+    function loopBody() {
+      debugLog(LOG_COINRANK, 'Refreshing list')
+      const abortable = queryLoop(1)
+      abort = abortable.abort
+      abortable.promise
+        .catch(e => console.error(`Error in query loop: ${e.message}`))
+        .finally(() => {
+          timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
+        })
+    }
+
+    return () => {
+      // Reset related query state when this effect is unmounted:
+      clearTimeout(timeoutId)
+      abort()
+      pageQueryAbortRef.current()
       coinRanking.coinRankingDatas = []
       lastStartIndex.current = 1
       setDataSize(0)
       setRequestDataSize(QUERY_PAGE_SIZE)
-      lastFetchedFiat.current = coingeckoFiat
     }
-
-    queryLoop(lastStartIndex.current).catch(e => console.error(`Error in query loop: ${e.message}`))
-
-    return () => {
-      if (timeoutHandler.current) {
-        clearTimeout(timeoutHandler.current)
-        isQuerying.current = false
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestDataSize, coingeckoFiat])
+  }, [coingeckoFiat /* reset subscription on fiat change */, queryLoop])
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)

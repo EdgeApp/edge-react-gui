@@ -1212,7 +1212,12 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^0.50.59", "@chain-registry/types@^0.50.94":
+"@chain-registry/types@^0.50.105":
+  version "0.50.105"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.50.105.tgz#8b1c695c364f4f6736d26cd4ae4cc5ce004c93f6"
+  integrity sha512-NZ2sIDreN+jt0Aoghyo5qC4XEkWTM3hyfA4WlgkAQ841rRF+o0YtmX93TlNYPF714fXvMwSAoHLqIKQA7ebv4w==
+
+"@chain-registry/types@^0.50.59":
   version "0.50.94"
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.50.94.tgz#9c9cdeb45b122dae116f19ba04418ad6a183e154"
   integrity sha512-D9PvO09UTjdKD+MmHFNSP//vfWXVEt1ILXOBGvZfi9kBy1a5xM4tCLuH/DH6kX5hjZHGxFmcBUwvYwh1kUJc7w==
@@ -7459,12 +7464,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^1.69.155:
-  version "1.69.155"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.69.155.tgz#72077fba2a0e39cf241854aca6745f585261d032"
-  integrity sha512-d6bQWd7xSmp31pNMSam1bApqO7oCjLeoodipRLQNJL1C9svNquAv+MseNI9O5rf+cpb9kIpvrqa6NaAOt0i8WQ==
+chain-registry@^1.69.171:
+  version "1.69.171"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.69.171.tgz#df85c5608effd43d1832026b5a7af33f3c6ca841"
+  integrity sha512-LeSUPHQWX7dqo0/IPicouoMZfKv8o7CYEj4j/l0bO1q/XhATJXWf98nwWDB2VzYmEqNJm8jT/wvz2PzWRvmNtQ==
   dependencies:
-    "@chain-registry/types" "^0.50.94"
+    "@chain-registry/types" "^0.50.105"
 
 chainsaw@~0.1.0:
   version "0.1.0"
@@ -9144,10 +9149,10 @@ edge-core-js@^2.26.2:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.42.3:
-  version "4.42.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.42.3.tgz#8a7e155973004af11297bfcb50838e98cdb93f94"
-  integrity sha512-9nALQMutKW47yZUAmWzripMA9mKGIGyyd1m0DTQzbeETQbDVnaxTCTjvHCQR+wlJ01Y0z6ZGtLKivtv4yJ/qIw==
+edge-currency-accountbased@^4.44.0:
+  version "4.44.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.44.0.tgz#fe7ff124cdb5669efb74809389282e8f6c10ea42"
+  integrity sha512-X0O5fFeZwj5ebi17HwQUk3rUM3qipnhPV1VbIf6ou3y97T/pGiDXX54Vw6NEtnVoydAOK0z4TQ0RugNSEqlyRw==
   dependencies:
     "@chain-registry/client" "^1.53.59"
     "@cosmjs/stargate" "^0.32.3"
@@ -9171,7 +9176,7 @@ edge-currency-accountbased@^4.42.3:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^1.69.155"
+    chain-registry "^1.69.171"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
@@ -9195,10 +9200,10 @@ edge-currency-accountbased@^4.42.3:
     xrpl "^2.10.0"
     yaob "^0.3.6"
 
-edge-currency-monero@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.4.1.tgz#16822a312388c53bdd037e107624220fc8dce262"
-  integrity sha512-9Z730G8Irl+PghMUNFgRh0hJoW+OAZcmz3Y6sZe3mXpKNIgl63F788oI8AkjsGOs/OJxTlIoNasOjowNv7k2Lg==
+edge-currency-monero@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.4.2.tgz#a953474e5792997cc7b030bb2b0d62b58a50beb6"
+  integrity sha512-fcgyzAgFgd3kEq580tVDr9NfrL4DnWrIW0OsZ43naJPKaHuBJKSFwNNPWbu220ylQHJrpOeS2l9U32k8+7tPsQ==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -9207,10 +9212,10 @@ edge-currency-monero@^1.4.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.5.4:
-  version "3.5.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.5.4.tgz#19bbef35479a777abcb0992247b6b7d0c26f67a0"
-  integrity sha512-IR8lnHwbakRxMT4oE+sPrfTINr6Bgzi8nQc0jUmVYEsLzcEJPFV7MwqFxIIBi6dpPQxJflkucxTuLxrM0Fd83w==
+edge-currency-plugins@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.6.1.tgz#096c134c2d912c8432de0e282fa9b2d7b04bfdf1"
+  integrity sha512-RupDXmXLtfhUDXI0eAfAa4RfLqNNQrzjcg7bbFSe9TwIlPPPrQAG8GTVw+VCJkmhbaVjWa3595zVeuPu1zgVlw==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
@@ -9250,19 +9255,19 @@ edge-exchange-plugins@^2.19.0:
     regenerator-runtime "0.13.11"
     xrpl "^2.10.0"
 
-edge-info-server@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.6.0.tgz#a75c4c80b007912d09e848378fe0a40b3e39a2d9"
-  integrity sha512-RTKaR3z1ARBepzn4N53pM1VJsLw6e085X/Cz0pmj2/mSygmOQTp+8H+qWZYEOCWRduUa8+TvB3XFkeWAh3u8iA==
+edge-info-server@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.7.0.tgz#9293a2521712ddeea8cc98dc2d00464dccb0b7b6"
+  integrity sha512-xvrFM+75NjnCKrKUKsYzbTlCAs3mUdoWKfgzzJTkcbMXhDI+l2IbYqyAYuVjRaQsAh0AKsTHirpGHxWHN0oaWQ==
   dependencies:
     "@orbs-network/ton-access" "^2.3.3"
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.25.1:
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.25.1.tgz#9e2d87650d84c173ee2ae38ca1edbcbff83d821d"
-  integrity sha512-LUTa9MTaB2yMzvwkjeQHmu7d7wvNfzN9ns+rbVkOyKX/tTe8QRn6/QsskVCk4YTUz6eNZbypdmtcTawiSkAMfg==
+edge-login-ui-rn@^3.26.0:
+  version "3.26.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.26.0.tgz#7aba6e39259e2f152f8947da491de2975cd49a41"
+  integrity sha512-i+gVuZCTmvkCAvkgVpEtJFcrmSsbIZi7BrQ+Wtadz2o/F/P/VhViaagDnEcuzkUgv/N/EKTM1tq64FZhvXveHg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -9809,6 +9814,11 @@ eslint-plugin-import@^2.22.1:
     resolve "^1.22.1"
     semver "^6.3.0"
     tsconfig-paths "^3.14.1"
+
+eslint-plugin-local-rules@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-local-rules/-/eslint-plugin-local-rules-3.0.2.tgz#84c02ea1d604ecb00970779ad27f00738ff361ae"
+  integrity sha512-IWME7GIYHXogTkFsToLdBCQVJ0U4kbSuVyDT+nKoR4UgtnVrrVeNWuAZkdEu1nxkvi9nsPccGehEEF6dgA28IQ==
 
 eslint-plugin-node@^11.1.0:
   version "11.1.0"
@@ -16303,10 +16313,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.7.tgz#40d43c8e682d00c4c5fe549657b29f0b9745a9f5"
-  integrity sha512-GzB6q8yVhV0bi5u06EQ+HW4qPh608c3poxSWXG2CWLiQ+8rTTTxY8o5M5pHxGEQ41uLkrbIrtf87RU/s5MdX6Q==
+react-native-piratechain@^0.5.8:
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.8.tgz#0b62bb3a6307bd42e444c20eb4abe24534ed6d6f"
+  integrity sha512-S5SOOWFYJuaqcjiNOqNeF58ZUpdTfIoqlUJ+9NLVVNTTbkyRCh7lK55xBQx0gzLRxcxwCDUhkUAYmLSi+vAYTw==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16425,10 +16435,10 @@ react-native-wheel-picker-android@^2.0.6:
   dependencies:
     moment "^2.22.0"
 
-react-native-zcash@^0.9.5:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.5.tgz#38991a9d83641d9c69fba01cdddbb23b5cec73c9"
-  integrity sha512-yzuDbNvBUgt2sVXtkipzVYBzzvgB/dAUMyjVBBerZe9MQ/Ihm3ivNlJYlnlflAm2PDAWNwQjhrwzZ3oxYYZbnw==
+react-native-zcash@^0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.6.tgz#43e0a51e22a2e6606143df167c29c9d5587990ae"
+  integrity sha512-0Ki8d8s75TAQf6GDv9nhfI9c7S4r6n6TgsF7LlZd5MxnVrswZQKNSc0LHvk56tFvWOeEdTOS9/hGwIPZQLw/DQ==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"

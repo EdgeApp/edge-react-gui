@@ -10,7 +10,8 @@ $RNFirebaseAsStaticFramework = true
 # The min_ios_version_supported is iOS 13.4 for RN 74:
 # However any device that can use iOS 13.4 can also upgrade to iOS 15.6 which
 # is still supported by the latest version of Xcode for debugging
-platform :ios, '15.6'
+ios_platform_version = '15.6'
+platform :ios, ios_platform_version
 prepare_react_native_project!
 
 # Edge addition:
@@ -70,6 +71,13 @@ target 'edge' do
   )
 
   post_install do |installer|
+    # Set the deployment target for all pods to match the project so the builds
+    # will work with the latest versions of Xcode
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = ios_platform_version
+      end
+    end
 
     bitcode_strip_path = `xcrun --find bitcode_strip`.chop!
   
