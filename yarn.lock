@@ -1188,14 +1188,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bitcoin-js/tiny-secp256k1-asmjs@^2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@bitcoin-js/tiny-secp256k1-asmjs/-/tiny-secp256k1-asmjs-2.2.3.tgz#b9306766f4f338a0957297481bbbc1511b8c500a"
-  integrity sha512-arFPdEZi9RIiaG76OZswTnAU0KfuiLwGw2VNfD66LKhzlbfOnX1o1WI/GI3qm9UbjG/0QOzZu/KmTNvL79x/DQ==
-  dependencies:
-    uint8array-tools "0.0.7"
-
-"@bitcoinerlab/secp256k1@^1.0.5":
+"@bitcoinerlab/secp256k1@^1.0.5", "@bitcoinerlab/secp256k1@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@bitcoinerlab/secp256k1/-/secp256k1-1.2.0.tgz#429d043ef4218b9c71915b50172e9aa4a2a8fea4"
   integrity sha512-jeujZSzb3JOZfmJYI0ph1PVpCRV5oaexCgy+RvCXV8XlY+XFB/2n3WOcvBsKLsOw78KYgnQrQWb2HrKE4be88Q==
@@ -9212,12 +9205,12 @@ edge-currency-monero@^1.4.2:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.6.1.tgz#096c134c2d912c8432de0e282fa9b2d7b04bfdf1"
-  integrity sha512-RupDXmXLtfhUDXI0eAfAa4RfLqNNQrzjcg7bbFSe9TwIlPPPrQAG8GTVw+VCJkmhbaVjWa3595zVeuPu1zgVlw==
+edge-currency-plugins@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.7.0.tgz#ab0c2ae59e60371dc7886ed86b29a1dd3d15e4fc"
+  integrity sha512-V7fz588MOxaqkUEA7iFFRlWUenOs5KBlO4I4OY3+0EgmYbNaH7c+R9AX6TtaaPYwuxtaW+t4Bu1PmHa0FTomVQ==
   dependencies:
-    "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
+    "@bitcoinerlab/secp256k1" "^1.2.0"
     altcoin-js "^1.0.0"
     async-mutex "^0.2.6"
     baselet "^0.3.0"
@@ -18903,11 +18896,6 @@ uglify-es@^3.1.9:
   dependencies:
     commander "~2.13.0"
     source-map "~0.6.1"
-
-uint8array-tools@0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/uint8array-tools/-/uint8array-tools-0.0.7.tgz#a7a2bb5d8836eae2fade68c771454e6a438b390d"
-  integrity sha512-vrrNZJiusLWoFWBqz5Y5KMCgP9W9hnjZHzZiZRT8oNAkq3d5Z5Oe76jAvVVSRh4U8GGR90N2X1dWtrhvx6L8UQ==
 
 uint8arrays@^3.0.0, uint8arrays@^3.1.0:
   version "3.1.1"
