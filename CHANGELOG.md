@@ -4,7 +4,7 @@
 
 - added: Add PIVX.
 
-## 4.46.0 (staging)
+## 4.26.0 (2025-04-14)
 
 - added: `preferProviders` support to override default priority when selecting a fiat provider
 - added: Rewards deeplink support
