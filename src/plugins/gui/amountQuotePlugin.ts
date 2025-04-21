@@ -3,7 +3,6 @@ import { asNumber, asObject } from 'cleaners'
 import { PluginPromotion } from 'edge-info-server'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
@@ -12,7 +11,6 @@ import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyI
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -131,7 +129,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
       const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotions, providerId } = params
-      const { countryCode } = await getFirstOpenInfo()
 
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
@@ -264,7 +261,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Navigate to scene to have user enter amount
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
-        headerTitle: isBuy ? getUkCompliantString(countryCode, 'buy_1s', currencyCode) : getUkCompliantString(countryCode, 'sell_1s', currencyCode),
+        headerTitle: isBuy ? sprintf(lstrings.buy_1s, currencyCode) : sprintf(lstrings.sell_1s, currencyCode),
         initState: {
           value1: initialValue1,
           statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }
