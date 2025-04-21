@@ -4,7 +4,6 @@ import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
-import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { infoServerData } from './network'
 import { getOsVersion } from './utils'
 
@@ -149,15 +148,14 @@ export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] =
  * Returns a list of promo IDs that are currently valid ("active") for the
  * environment and time according to info server `promoCards2` data.
  */
-export const getActivePromoIds = async (props: { promoIds?: string[]; installerId?: string }): Promise<string[]> => {
-  const { installerId, promoIds } = props
+export const getActivePromoIds = async (props: { countryCode?: string; promoIds?: string[]; installerId?: string }): Promise<string[]> => {
+  const { installerId, promoIds, countryCode } = props
 
   const currentDate = new Date()
   const buildNumber = getBuildNumber()
   const osType = Platform.OS.toLowerCase()
   const version = getVersion()
   const osVersion = getOsVersion()
-  const countryCode = (await getFirstOpenInfo()).countryCode
 
   const filteredPromoData = filterInfoCards({
     buildNumber,
