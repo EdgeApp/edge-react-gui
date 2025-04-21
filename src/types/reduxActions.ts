@@ -135,6 +135,7 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET'
       data: { currencyCode: string; walletId: string }
     }
+  | { type: 'UI/SET_COUNTRY_CODE'; data: { countryCode: string | undefined } }
   | {
       type: 'UI/SET_NOTIFICATION_HEIGHT'
       data: { height: number }

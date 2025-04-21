@@ -18,6 +18,7 @@ export interface UiState {
   readonly notificationHeight: number
   readonly subcategories: string[]
   readonly wallets: WalletsState
+  readonly countryCode: string
 }
 
 const uiInner = combineReducers<UiState, Action>({
@@ -26,6 +27,10 @@ const uiInner = combineReducers<UiState, Action>({
   fioAddress,
   passwordReminder,
   settings,
+  countryCode(state: string = 'US', action) {
+    if (action.type === 'UI/SET_COUNTRY_CODE') return action.data.countryCode ?? state
+    return state
+  },
   notificationHeight(state = 0, action) {
     if (action.type === 'UI/SET_NOTIFICATION_HEIGHT') {
       return action.data.height
