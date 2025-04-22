@@ -4,9 +4,7 @@ import * as React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
@@ -54,20 +52,12 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const pluginId = wallet?.currencyInfo.pluginId
   const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const stakePolicyArray = React.useMemo(() => Object.values(stakePolicies), [stakePolicies])
-
-  useAsyncEffect(
-    async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-    },
-    [],
-    'StakeOptionsSceneComponent'
-  )
 
   //
   // Handlers
