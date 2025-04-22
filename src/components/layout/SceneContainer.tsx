@@ -4,13 +4,15 @@ import { UndoInsetStyle } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 
 interface Props {
+  expand?: boolean
   undoTop?: boolean
   undoRight?: boolean
   undoBottom?: boolean
   undoLeft?: boolean
   undoInsetStyle?: UndoInsetStyle
 }
-export const SceneContainer = styled(View)<Props>(theme => ({ undoTop, undoRight, undoBottom, undoLeft, undoInsetStyle }) => ({
+export const SceneContainer = styled(View)<Props>(theme => ({ expand, undoTop, undoRight, undoBottom, undoLeft, undoInsetStyle }) => ({
+  flex: expand === true ? 1 : undefined,
   paddingTop: theme.rem(0.5),
   paddingRight: theme.rem(0.5),
   paddingBottom: theme.rem(0.5),

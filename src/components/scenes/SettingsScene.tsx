@@ -216,6 +216,14 @@ export const SettingsScene = (props: Props) => {
     ))
   })
 
+  const handleDuressMode = useHandler(() => {
+    if (isLocked) {
+      handleUnlock()
+      return
+    }
+    navigation.navigate('duressModeSetting')
+  })
+
   const handleExchangeSettings = useHandler((): void => {
     navigation.navigate('swapSettings')
   })
@@ -340,6 +348,7 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_pin} onPress={handleChangePin} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
+              <SettingsTappableRow disabled={isLocked} label={lstrings.title_duress_mode} onPress={handleDuressMode} />
               <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
             </EdgeCard>
           )}

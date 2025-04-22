@@ -11,12 +11,16 @@ export const androidAdjustTextStyle = (theme: Theme) => {
 
 // #region Spacing & Alignment =================================================
 
-/** A properly spaced block of text with default font color and size. Children
+/**
+ * A properly spaced block of text with default font color and size. Children
  * that are wrapped in other `___Text` component types will override those defaults.
  *
  * A `Paragraph` *can* have `marginRem`, but *only* to avoid an extra `View` for
  * spacing out `Paragraph(s)` in relation to their parent, *NOT* to give special
- * spacing *between* `Paragraphs` */
+ * spacing *between* `Paragraphs`
+ *
+ * TODO: Move this to it's own file in `text/` directory or a `typography` directory.
+ */
 export const Paragraph = (props: {
   children: React.ReactNode
 
