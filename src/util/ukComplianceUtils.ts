@@ -1,15 +1,13 @@
 import { LocaleStringKey } from '../locales/en_US'
 import { lstrings } from '../locales/strings'
 
+/** A common string key that parses into default vs UK compliant equivalents. */
 type CompliantStringKeys =
-  | 'buy_1s'
-  | 'buy_1s_quote'
-  | 'sell_1s'
-  | 'stake_earn_1s'
-  | 'stake_earn_button_label'
-  | 'stake_x_to_earn_y'
-  | 'insufficient_fees_2s'
-  | 'insufficient_fees_3s'
+  | 'stake_earn_1s' // stake_earn_1s / stake_stake_1s
+  | 'stake_earn_button_label' // stake_earn_button_label / fragment_stake_label
+  | 'stake_x_to_earn_y' // stake_x_to_earn_y / transaction_details_stake_subcat_1s
+  | 'insufficient_fees_2s' // buy_parent_crypto_modal_message_2s / swap_parent_crypto_modal_message_2s
+  | 'insufficient_fees_3s' // buy_parent_crypto_modal_message_3s / swap_parent_crypto_modal_message_3s
 
 const UK_COMPLIANT_STRING_MAP: {
   [key in CompliantStringKeys]: {
@@ -17,9 +15,6 @@ const UK_COMPLIANT_STRING_MAP: {
     gb: LocaleStringKey
   }
 } = {
-  buy_1s: { default: 'buy_1s', gb: 'uk_ways_to_buy_1s' },
-  buy_1s_quote: { default: 'buy_1s', gb: 'uk_get_quote_provider_1s' },
-  sell_1s: { default: 'sell_1s', gb: 'uk_ways_to_sell_1s' },
   stake_earn_1s: { default: 'stake_earn_1s', gb: 'stake_stake_1s' },
   stake_earn_button_label: {
     default: 'stake_earn_button_label',
@@ -38,8 +33,7 @@ const formatString = (template: string, values: string[]): string => {
 }
 
 /**
- * @deprecated For now, we are completely disabling potentially disallowed
- * features for the UK to improve odds of UK approval.
+ * Returns the UK compliant version of the string
  */
 export const getUkCompliantString = (countryCode: string | undefined, key: CompliantStringKeys, ...values: string[]): string => {
   const compliantStringKeys = UK_COMPLIANT_STRING_MAP[key]

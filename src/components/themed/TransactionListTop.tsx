@@ -11,7 +11,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import { getFiatSymbol, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -46,7 +45,7 @@ import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showDevError, showError } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -85,6 +84,7 @@ interface StateProps {
   account: EdgeAccount
   balanceMap: EdgeBalanceMap
   currencyCode: string
+  countryCode?: string
   defaultFiat: string
   dispatch: Dispatch
   displayDenomination: EdgeDenomination
@@ -103,20 +103,9 @@ interface DispatchProps {
   toggleBalanceVisibility: () => void
 }
 
-interface State {
-  countryCode: string | undefined
-}
-
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      countryCode: undefined
-    }
-  }
-
+export class TransactionListTopComponent extends React.PureComponent<Props> {
   componentDidUpdate(prevProps: Props) {
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
@@ -140,9 +129,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   componentDidMount() {
     this.props.dispatch(updateStakingState(this.props.currencyCode, this.props.wallet)).catch(err => showError(err))
-    getFirstOpenInfo()
-      .then(firstOpenInfo => this.setState({ countryCode: firstOpenInfo.countryCode }))
-      .catch(err => showDevError(err))
   }
 
   getTotalPosition = (currencyCode: string, positions: PositionAllocation[]): string => {
@@ -200,7 +186,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       >
         <SelectableRow
           marginRem={0.5}
-          title={getUkCompliantString(this.state.countryCode, 'buy_1s', sceneCurrencyCode)}
+          title={sprintf(lstrings.buy_1s, sceneCurrencyCode)}
           onPress={() => this.handleTradeBuy(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
@@ -211,7 +197,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         />
         <SelectableRow
           marginRem={0.5}
-          title={getUkCompliantString(this.state.countryCode, 'sell_1s', sceneCurrencyCode)}
+          title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
           onPress={() => this.handleTradeSell(bridge)}
           icon={
             <View style={styles.dualIconContainer}>
@@ -490,9 +476,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderButtons() {
-    const { theme, stakePolicies } = this.props
+    const { theme, stakePolicies, countryCode } = this.props
     const styles = getStyles(theme)
-    const { countryCode } = this.state
     const hideStaking = !this.isStakingAvailable()
     const bestApyText = getBestApyText(stakePolicies)
 
@@ -755,6 +740,7 @@ export function TransactionListTop(props: OwnProps) {
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const walletStakingState: WalletStakingState = useSelector(
     // Fallback to a default state using the reducer if the wallet is not found
     state => state.staking.walletStakingMap[wallet.id] ?? defaultWalletStakingState
@@ -797,6 +783,7 @@ export function TransactionListTop(props: OwnProps) {
       navigation={navigationDebounced}
       account={account}
       balanceMap={balanceMap}
+      countryCode={countryCode}
       currencyCode={currencyCode}
       defaultFiat={defaultFiat}
       dispatch={dispatch}
