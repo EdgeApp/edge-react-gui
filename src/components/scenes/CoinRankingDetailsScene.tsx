@@ -7,7 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import { Fontello } from '../../assets/vector/index'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
@@ -29,7 +28,7 @@ import { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { fetchRates } from '../../util/network'
 import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
-import { getUkCompliantString, hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
+import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -107,18 +106,17 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const walletStakingStateMap = useSelector(state => state.staking.walletStakingMap ?? defaultWalletStakingState)
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   const currencyConfigMap = useWatch(account, 'currencyConfig')
   const currencyWallets = useWatch(account, 'currencyWallets')
-
-  const [countryCode] = useAsyncValue(async () => (await getFirstOpenInfo()).countryCode)
 
   // In case the user changes their default fiat while viewing this scene, we
   // want to go back since the parent scene handles fetching data.
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
-  const [hideNonUkCompliantFeat] = useAsyncValue(async () => await hideNonUkCompliantFeature())
+  const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
     if (assetId == null) {
