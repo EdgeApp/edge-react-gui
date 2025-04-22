@@ -13,16 +13,14 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
-import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
-import { Airship } from '../services/AirshipInstance'
 import { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {
@@ -39,6 +37,7 @@ export function SwapProcessingScene(props: Props) {
   const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
 
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   const fromDenomination = useDisplayDenom(swapRequest.fromWallet.currencyConfig, swapRequest.fromTokenId)
   const toDenomination = useDisplayDenom(swapRequest.toWallet.currencyConfig, swapRequest.toTokenId)
@@ -69,16 +68,12 @@ export function SwapProcessingScene(props: Props) {
 
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
-      const { countryCode } = await getFirstOpenInfo()
-      await Airship.show(bridge => (
-        <InsufficientFeesModal
-          bridge={bridge}
-          countryCode={countryCode}
-          coreError={insufficientFunds}
-          navigation={navigation}
-          wallet={swapRequest.fromWallet}
-        />
-      ))
+      await showInsufficientFeesModal({
+        coreError: insufficientFunds,
+        countryCode,
+        navigation,
+        wallet: swapRequest.fromWallet
+      })
     }
   }
 

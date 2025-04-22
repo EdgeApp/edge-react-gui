@@ -1,7 +1,15 @@
 import { LocaleStringKey } from '../locales/en_US'
 import { lstrings } from '../locales/strings'
 
-type CompliantStringKeys = 'buy_1s' | 'buy_1s_quote' | 'sell_1s' | 'stake_earn_1s' | 'stake_earn_button_label' | 'stake_x_to_earn_y'
+type CompliantStringKeys =
+  | 'buy_1s'
+  | 'buy_1s_quote'
+  | 'sell_1s'
+  | 'stake_earn_1s'
+  | 'stake_earn_button_label'
+  | 'stake_x_to_earn_y'
+  | 'insufficient_fees_2s'
+  | 'insufficient_fees_3s'
 
 const UK_COMPLIANT_STRING_MAP: {
   [key in CompliantStringKeys]: {
@@ -20,7 +28,9 @@ const UK_COMPLIANT_STRING_MAP: {
   stake_x_to_earn_y: {
     default: 'stake_x_to_earn_y',
     gb: 'transaction_details_stake_subcat_1s'
-  }
+  },
+  insufficient_fees_2s: { default: 'buy_parent_crypto_modal_message_2s', gb: 'swap_parent_crypto_modal_message_2s' },
+  insufficient_fees_3s: { default: 'buy_parent_crypto_modal_message_3s', gb: 'swap_parent_crypto_modal_message_3s' }
 }
 
 const formatString = (template: string, values: string[]): string => {
