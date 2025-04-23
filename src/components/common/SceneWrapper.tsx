@@ -167,7 +167,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
   // Ignore inset bottom when keyboard is open because it is rendered behind it
-  const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
+  const maybeInsetBottom = !isKeyboardOpen || !avoidKeyboard ? safeAreaInsets.bottom : 0
   const insets: EdgeInsets = useMemo(
     () => ({
       top: hasHeader ? headerBarHeight : safeAreaInsets.top,
