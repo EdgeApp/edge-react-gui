@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add PIVX.
+- added: Monero multi output support.
 
 ## 4.26.0 (2025-04-14)
 
