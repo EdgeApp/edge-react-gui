@@ -6,6 +6,7 @@
 - added: Monero multi output support.
 - added: Moonpay Sell support for ACH.
 - added: Maestro `testID` support in `NotificationCard`
+- changed: Scanning private key button copy updated from "Import" -> "Confirm"
 - fixed: `SceneWrapper` bottom inset calculations for scenes that do not `avoidKeyboard`
 
 ## 4.26.0 (2025-04-14)
