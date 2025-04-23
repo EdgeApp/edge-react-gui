@@ -39,6 +39,7 @@ const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: Fia
     venmo: { providerId, fiat: {}, crypto: {} }
   },
   sell: {
+    ach: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
     credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
     paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
     venmo: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
@@ -163,7 +164,7 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, MoonpayPaymentMe
   applepay: 'credit_debit_card',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
-  iach: 'ach_bank_transfer',
+  ach: 'ach_bank_transfer',
   paypal: 'paypal',
   venmo: 'venmo'
 }
@@ -193,6 +194,7 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
 }
 
 const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefined>> = {
+  ach: 'ach',
   applepay: 'credit',
   credit: 'credit',
   googlepay: 'credit',
