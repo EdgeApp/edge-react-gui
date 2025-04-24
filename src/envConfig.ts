@@ -198,6 +198,11 @@ export const asEnvConfig = asObject({
       nowNodesApiKey: asOptional(asString, '')
     })
   ),
+  ECASH_INIT: asCorePluginInit(
+    asObject({
+      nowNodesApiKey: asOptional(asString, '')
+    })
+  ),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
   ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
   EXOLIX_INIT: asCorePluginInit(
