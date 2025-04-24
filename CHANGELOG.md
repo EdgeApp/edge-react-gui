@@ -5,6 +5,7 @@
 - added: Add PIVX.
 - added: Monero multi output support.
 - added: Moonpay Sell support for ACH.
+- added: Maestro `testID` support in `NotificationCard`
 - fixed: `SceneWrapper` bottom inset calculations for scenes that do not `avoidKeyboard`
 
 ## 4.26.0 (2025-04-14)
