@@ -141,6 +141,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
+  - OpenSSL-Universal (3.3.3000)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -434,6 +435,9 @@ PODS:
     - React-Core
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - react-native-zano (0.1.1):
+    - OpenSSL-Universal
     - React-Core
   - react-native-zcash (0.9.6):
     - gRPC-Swift (~> 1.8)
@@ -799,6 +803,7 @@ DEPENDENCIES:
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
+  - react-native-zano (from `../node_modules/react-native-zano`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -867,6 +872,7 @@ SPEC REPOS:
     - Logging
     - MnemonicSwift
     - nanopb
+    - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
@@ -991,6 +997,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  react-native-zano:
+    :path: "../node_modules/react-native-zano"
   react-native-zcash:
     :path: "../node_modules/react-native-zcash"
   React-perflogger:
@@ -1120,8 +1128,9 @@ SPEC CHECKSUMS:
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  OpenSSL-Universal: d776ce24dab24323e6995dfb17c64d598885d05c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
+  RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
   RCTTypeSafety: decfec2884f0c523f799600d2b6105cdc15e13db
   React: ca22a0b3f199b6acac95416ef7eb96cc84a55103
@@ -1150,6 +1159,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 8c70551c8688cd584a53487aa1b9361e991a3b4a
   react-native-webview: eb98d9d9c956ebeae58bff20cbe09fb92cd75ffb
+  react-native-zano: db72a56c587d00cb39fd940fe75eafdd34cfbaa9
   react-native-zcash: b80c438c51077050e55e800c5b1d1ba1e61e1e90
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468

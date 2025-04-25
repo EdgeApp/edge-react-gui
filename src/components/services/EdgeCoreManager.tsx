@@ -3,6 +3,7 @@ import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased/rn'
 import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
+import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
 import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
@@ -59,6 +60,7 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
       }),
       'edge-currency-monero': makeMoneroIo(),
       piratechain: makePiratechainIo(),
+      zano: makeZanoIo(),
       zcash: makeZcashIo()
     }
   : {}

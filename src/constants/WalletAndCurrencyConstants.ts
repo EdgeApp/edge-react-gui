@@ -76,6 +76,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
+  'wallet:zano',
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
@@ -792,6 +793,25 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isTransactionListUnsupported: true,
     isImportKeySupported: true
+  },
+  zano: {
+    initWalletName: lstrings.string_first_zano_wallet_name,
+    chainCode: 'ZANO',
+    dummyPublicAddress: 'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
+    noChangeMiningFee: true,
+    isImportKeySupported: true,
+    importKeyOptions: [
+      {
+        optionName: 'passphrase',
+        displayName: lstrings.create_wallet_import_options_passphrase,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_passphrase_description
+        },
+        required: false,
+        inputType: 'default',
+        inputValidation: (input: string) => typeof input === 'string'
+      }
+    ]
   },
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,
