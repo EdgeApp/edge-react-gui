@@ -41,6 +41,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'ethereumclassic',
   'dash',
   'litecoin',
+  'ecash',
   'bitcoinsv',
   'monero',
   'zcoin',
@@ -76,6 +77,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
+  'wallet:ecash',
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
@@ -282,6 +284,14 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isStakingSupported: true,
     unstoppableDomainsTicker: 'LTC'
+  },
+  ecash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecash_wallet_name,
+    chainCode: 'XEC',
+    isImportKeySupported: true,
+    isSplittingDisabled: true,
+    unstoppableDomainsTicker: 'XEC'
   },
   rsk: {
     initWalletName: lstrings.string_first_rsk_wallet_name,

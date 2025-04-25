@@ -95,6 +95,7 @@ export const WALLET_LIST_MENU: Array<{
       'digibyte',
       'dogecoin',
       'eboost',
+      'ecash',
       'eos',
       'zcoin',
       'feathercoin',
