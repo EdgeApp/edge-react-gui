@@ -22,6 +22,7 @@ interface Props {
    * visible if the body is tapped. Default false. */
   persistent?: boolean
   iconUri?: string
+  testID?: string
 
   onPress: () => void | Promise<void>
 
@@ -33,7 +34,7 @@ const NotificationCardComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { title, type, message, persistent = false, onClose, onPress } = props
+  const { title, type, message, persistent = false, testID, onClose, onPress } = props
   const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
 
   const opacity = useSharedValue(1)
@@ -78,7 +79,7 @@ const NotificationCardComponent = (props: Props) => {
     <ShadowedView style={Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos}>
       <BlurBackground />
       <Animated.View style={[styles.cardContainer, animatedStyle]}>
-        <TouchableContents onPress={handlePress}>
+        <TouchableContents onPress={handlePress} testID={testID}>
           <Icon source={{ uri: iconUri }} />
           <TextView>
             {/* Android font scaling is too aggressive. 
@@ -95,7 +96,7 @@ const NotificationCardComponent = (props: Props) => {
           </TextView>
         </TouchableContents>
         {onClose != null ? (
-          <TouchableCloseButton onPress={handleClose}>
+          <TouchableCloseButton onPress={handleClose} testID={`${testID}.close`}>
             <AntDesignIcon color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
           </TouchableCloseButton>
         ) : null}
