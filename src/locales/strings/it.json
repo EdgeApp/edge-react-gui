@@ -768,7 +768,6 @@
   "private_key_modal_sweep_from_private_address": "Importa fondi da chiave privata",
   "private_key_modal_sweep_from_private_key_message": "Questo processo richiede una transazione on-chain dal portafoglio originale a %1$s. Vengono applicate delle commissioni di mining e queste dipendono dallo stato della rete.",
   "private_key_modal_sweep_insufficient_funds": "La chiave privata non dispone di fondi sufficienti per coprire le commissioni onchain richieste in fase di importazione.",
-  "private_key_modal_import": "Importa",
   "private_key_modal_cancel": "Annulla",
   "sweep_private_key_calculate_fee_title": "Conferma importazione",
   "sweep_private_key_instructions_fragment": "L'importazione dei fondi comporta una commissione di rete per ogni asset trasferito. Se non hai abbastanza fondi, puoi tornare indietro e deselezionare i token o toccare la riga per più opzioni.",
