@@ -265,7 +265,7 @@ async function privateKeyModalActivated(
       buttons={
         {
           confirm: {
-            label: lstrings.private_key_modal_import,
+            label: lstrings.restore_wallets_modal_confirm,
             async onPress() {
               try {
                 const keys = await account.currencyConfig[wallet.currencyInfo.pluginId].importKey(privateKeys[0])
