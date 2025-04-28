@@ -149,6 +149,11 @@ const CreateWalletImportComponent = (props: Props) => {
   return (
     <SceneWrapper>
       <View style={styles.container}>
+        {/* We have to use the SceneHeaderUi4 component here because
+        the SceneContainer component does not implement the specific flex
+        styles we need for this scene's container. These styles are a
+        one-off case which has not been codified into our design hierarchy
+        and made it completely into our abstraction (SceneContainer). */}
         <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
         <KeyboardAwareScrollView>
           <View style={styles.icon}>

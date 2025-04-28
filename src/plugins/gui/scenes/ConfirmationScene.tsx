@@ -4,7 +4,6 @@ import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { Paragraph } from '../../../components/themed/EdgeText'
-import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
@@ -26,8 +25,7 @@ export const ConfirmationScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
-      <SceneContainer>
-        <SceneHeaderUi4 title={route.params.title} />
+      <SceneContainer headerTitle={route.params.title}>
         <Paragraph>{route.params.message}</Paragraph>
         <SceneButtons
           primary={{

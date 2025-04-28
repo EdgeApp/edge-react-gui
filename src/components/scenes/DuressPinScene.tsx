@@ -14,7 +14,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { DigitInput, MAX_PIN_LENGTH } from './inputs/DigitInput'
 
 interface Props extends EdgeAppSceneProps<'duressPin'> {}
@@ -46,8 +45,7 @@ export const DuressPinScene = (props: Props) => {
 
   return (
     <SceneWrapper scroll={false}>
-      <SceneContainer expand>
-        <SceneHeaderUi4 title={lstrings.title_set_duress_pin} />
+      <SceneContainer expand headerTitle={lstrings.title_set_duress_pin}>
         <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <EdgeAnim enter={{ type: 'fadeInUp' }}>
             <EdgeText style={styles.description} numberOfLines={0}>

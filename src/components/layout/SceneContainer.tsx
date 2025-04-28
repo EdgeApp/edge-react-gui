@@ -1,9 +1,30 @@
+import * as React from 'react'
 import { View } from 'react-native'
 
 import { UndoInsetStyle } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
-interface Props {
+interface Props extends SceneContainerViewProps {
+  /**
+   * The `title` prop for the {@link SceneHeaderUi4} component.
+   */
+  headerTitle?: string
+  children?: React.ReactNode
+}
+
+export function SceneContainer(props: Props) {
+  const { children, headerTitle, ...sceneContainerProps } = props
+
+  return (
+    <SceneContainerView {...sceneContainerProps}>
+      {headerTitle != null ? <SceneHeaderUi4 title={headerTitle} /> : null}
+      {children}
+    </SceneContainerView>
+  )
+}
+
+interface SceneContainerViewProps {
   expand?: boolean
   undoTop?: boolean
   undoRight?: boolean
@@ -11,7 +32,7 @@ interface Props {
   undoLeft?: boolean
   undoInsetStyle?: UndoInsetStyle
 }
-export const SceneContainer = styled(View)<Props>(theme => ({ expand, undoTop, undoRight, undoBottom, undoLeft, undoInsetStyle }) => ({
+const SceneContainerView = styled(View)<Props>(theme => ({ expand, undoTop, undoRight, undoBottom, undoLeft, undoInsetStyle }) => ({
   flex: expand === true ? 1 : undefined,
   paddingTop: theme.rem(0.5),
   paddingRight: theme.rem(0.5),

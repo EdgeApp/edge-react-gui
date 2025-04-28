@@ -4,7 +4,6 @@ import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { Paragraph } from '../../../components/themed/EdgeText'
-import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
@@ -40,8 +39,7 @@ export const EmailFormScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
-      <SceneContainer>
-        <SceneHeaderUi4 title={lstrings.enter_email} />
+      <SceneContainer headerTitle={lstrings.enter_email}>
         {params.message == null ? null : <Paragraph>{params.message}</Paragraph>}
         <GuiFormField fieldType="text" autofocus label={lstrings.form_field_title_email_address} onChangeText={setEmail} value={email} />
         <SceneButtons
