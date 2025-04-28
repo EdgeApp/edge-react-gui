@@ -768,7 +768,6 @@
   "private_key_modal_sweep_from_private_address": "Resgatar Fundos da Chave Privada",
   "private_key_modal_sweep_from_private_key_message": "Este processo precisa de uma transação on-chain da carteira original para %1$s. As taxas de mineração são aplicadas e dependem do status da rede.",
   "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
-  "private_key_modal_import": "Importar",
   "private_key_modal_cancel": "Cancelar",
   "sweep_private_key_calculate_fee_title": "Confirm Sweep",
   "sweep_private_key_instructions_fragment": "Sweeping assets incurs a network fee for each asset transferred. If you don't have enough funds, you can return and deselect tokens or tap the row for more options.",
