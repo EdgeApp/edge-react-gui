@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.27.0):
     - React-Core
-  - edge-currency-accountbased (4.44.0):
+  - edge-currency-accountbased (4.45.0):
     - React-Core
   - edge-currency-plugins (3.7.0):
     - React-Core
@@ -1089,7 +1089,7 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 9fa8f1ea86209d9c42448675fd1d10f016746396
-  edge-currency-accountbased: 511077f08f096b99e4a3a976941b6834c3a21663
+  edge-currency-accountbased: c296b95070338fbcfccdf16cd663053980b6c0c7
   edge-currency-plugins: f9fe0c22b0fa3cea0989c36e657a0f5d461552c5
   edge-exchange-plugins: ec170f16933c9a6ac0cd86c231ff95646496ef76
   edge-login-ui-rn: 3b6304fc71664c45386090b8413af685a8c86b24
@@ -1121,7 +1121,7 @@ SPEC CHECKSUMS:
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
+  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
   RCTTypeSafety: decfec2884f0c523f799600d2b6105cdc15e13db
   React: ca22a0b3f199b6acac95416ef7eb96cc84a55103
