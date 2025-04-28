@@ -768,7 +768,6 @@
   "private_key_modal_sweep_from_private_address": "Barrer fondos de clave privada",
   "private_key_modal_sweep_from_private_key_message": "Este proceso necesita una transacción en cadena desde la billetera original a %1$s. Se aplican tarifas de minería y dependen del estado de la red.",
   "private_key_modal_sweep_insufficient_funds": "La clave privada no tiene fondos suficientes para cubrir las tasas de onchain requeridas por el sorteo.",
-  "private_key_modal_import": "Importar",
   "private_key_modal_cancel": "Cancelar",
   "sweep_private_key_calculate_fee_title": "Confirmar barrido",
   "sweep_private_key_instructions_fragment": "El barrido de activos genera una tarifa de red por cada activo transferido. Si no tiene fondos suficientes, puede devolver y anular la selección de tokens o tocar la fila para ver más opciones.",
