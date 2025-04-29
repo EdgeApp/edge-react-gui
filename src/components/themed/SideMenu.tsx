@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
-import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
+import { EdgeUserInfo } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
@@ -29,7 +29,9 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { arrangeUsers } from '../../util/arrangeUsers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { getUserInfoUsername } from '../../util/getAccountUsername'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -367,7 +369,7 @@ export function SideMenuComponent(props: Props) {
               <View style={styles.leftIconContainer} />
               <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
                 <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
-                  {userInfo.username == null ? sprintf(lstrings.guest_account_id_1s, userInfo.loginId.slice(userInfo.loginId.length - 3)) : userInfo.username}
+                  {getUserInfoUsername(userInfo)}
                 </EdgeText>
               </EdgeTouchableOpacity>
               <EdgeTouchableOpacity style={styles.rightIconContainer} onPress={handleDeleteAccount(userInfo)}>
@@ -424,36 +426,6 @@ export function SideMenuComponent(props: Props) {
 }
 
 export const SideMenu = React.memo(SideMenuComponent)
-
-/**
- * Given a list of users from the core,
- * remove the given user, then organize the 3 most recent users,
- * followed by the rest in alphabetical order.
- */
-function arrangeUsers(localUsers: EdgeUserInfo[], activeAccount: EdgeAccount): EdgeUserInfo[] {
-  // Sort the users according to their last login date (excluding active logged in user):
-  const inactiveUsers = localUsers
-    .filter(info => info.loginId !== activeAccount.rootLoginId)
-    .sort((a, b) => {
-      const { lastLogin: aDate = new Date(0) } = a
-      const { lastLogin: bDate = new Date(0) } = b
-      return bDate.valueOf() - aDate.valueOf()
-    })
-
-  // Get the most recent 3 users that were logged in
-  const recentUsers = inactiveUsers.slice(0, 3)
-
-  // Sort everything after the last 3 entries alphabetically:
-  const oldUsers = inactiveUsers.slice(3).sort((a, b) => {
-    const stringA = a.username?.toLowerCase() ?? ''
-    const stringB = b.username?.toLowerCase() ?? ''
-    if (stringA < stringB) return -1
-    if (stringA > stringB) return 1
-    return 0
-  })
-
-  return [...recentUsers, ...oldUsers]
-}
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Containers/Panels

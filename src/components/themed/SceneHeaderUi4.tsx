@@ -9,6 +9,12 @@ interface Props {
   title: string
 }
 
+/**
+ * @deprecated SceneHeaderUi4 should only be implemented by the SceneContainer
+ * component where the `headerTitle` prop is passed to SceneHeaderUi4.
+ * For the record, Sam H. is not 100% convinced of this inheritance approach,
+ * he is compliant to this request by peer-review.
+ */
 export const SceneHeaderUi4 = (props: Props) => {
   const { title } = props
   const theme = useTheme()

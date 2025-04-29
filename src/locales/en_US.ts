@@ -120,8 +120,7 @@ const strings = {
 
   warning_scam_message: 'Has anyone helped you set up this account?',
   warning_scam_message_no_1s: 'Great, if you ever have any questions, please reach out to our support team at %1$s.',
-  warning_scam_message_yes_1s:
-    'Please proceed with caution! Assistance with account creation has the potential for fraud. Users should never share passwords or private keys. Social media and chat platforms have been involved in attacks. Do not send cryptocurrency to strangers. If you believe you’re being taken advantage of, please contact our support team at %1$s.',
+  warning_scam_message_yes_1s: `Please proceed with caution! Assistance with account creation has the potential for fraud. Users should never share passwords or private keys. Social media and chat platforms have been involved in attacks. Do not send cryptocurrency to strangers. If you believe you're being taken advantage of, please contact our support team at %1$s.`,
 
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
@@ -262,6 +261,7 @@ const strings = {
   wallet_list_referral_link_ask_wallet_creation_1s: 'You need a %1$s wallet for this promotion. Would you like to create one?',
   wallet_list_wallet_search: 'Search Wallets',
   compromised_key_label: 'Compromised Key',
+  create_new_account: 'Create New Account',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_choice_new_button_fragment: 'New Wallet',
   create_wallet_select_wallet_for_assets: 'Please select the wallet you would like to add the following assets: %s',
@@ -636,11 +636,13 @@ const strings = {
   string_add_edit_tokens: 'Add / Edit Tokens',
   string_get_raw_keys: 'Get Raw Keys',
   string_raw_keys: 'Raw Keys',
+  string_verify: 'Verify',
   title_create_wallet_select_crypto: 'Choose Wallets to Add',
   title_create_wallet_select_fiat: 'Select Fiat',
   title_change_mining_fee: 'Change Mining Fee',
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
+  title_set_duress_pin: 'Set Duress PIN',
   title_create_wallet: 'Create Wallet',
   title_create_wallet_from_seed: 'Create Wallet From Seed',
   title_create_wallets: 'Create Wallets',
@@ -895,7 +897,7 @@ const strings = {
 
   cannot_delete_last_wallet_modal_title: 'Cannot Archive Wallet',
   cannot_delete_last_wallet_modal_message_part_1: 'At least one wallet required in this account.',
-  cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to archive this wallet, you’ll need to add an additional wallet to this account.',
+  cannot_delete_last_wallet_modal_message_part_2: `If you'd like to archive this wallet, you'll need to add an additional wallet to this account.`,
 
   enter_amount_label: 'Enter Amount',
   enter_your_password: 'Enter your password',
@@ -1425,7 +1427,7 @@ const strings = {
   stake_warning_stake:
     'Staking funds will block you from claiming rewards for 16 hours and withdrawing your staked funds for 36 hours.\n\nEvery interaction (stake, unstake, claim rewards) will reset both timers.',
   stake_warning_claim:
-    'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose “Claim Rewards and Unstake” instead.',
+    'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose "Claim Rewards and Unstake" instead.',
   stake_warning_unstake: 'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
@@ -1845,7 +1847,7 @@ const strings = {
   currency_label_TJS: 'Somoni',
   currency_label_TZS: 'Tanzanian Shilling',
   currency_label_THB: 'Baht',
-  currency_label_TOP: 'Pa’anga',
+  currency_label_TOP: `Pa'anga`,
   currency_label_TTD: 'Trinidad and Tobago Dollar',
   currency_label_TND: 'Tunisian Dinar',
   currency_label_TRY: 'Turkish Lira',
@@ -1872,7 +1874,7 @@ const strings = {
   getting_started_slide_1_title: `We've Got You\n*Covered*`,
   getting_started_slide_2_message: `Edge has zero access to user funds, which means no account freezes or asset forfeiture. Buy, sell, and trade with peace of mind.`,
   getting_started_slide_2_title: `They're Your Assets\nYou're in *Control*`,
-  getting_started_slide_3_message: `Edge holds none of your personal information, not even an email address or phone number. We do not track blockchain transactions in your account and we’re open source to prove it.`,
+  getting_started_slide_3_message: `Edge holds none of your personal information, not even an email address or phone number. We do not track blockchain transactions in your account and we're open source to prove it.`,
   getting_started_slide_3_title: `Your Privacy is\nOur *Priority*`,
   getting_started_slide_4_message: `Reach our support team, made up of real humans, by live phone call, live chat, and email every day of the week.`,
   getting_started_slide_4_title: `*Help* Is Here If\nYou Need It`,
@@ -1933,7 +1935,25 @@ const strings = {
   scan_parsing_link: 'Parsing link...',
 
   auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
-  contacts_load_failed_message_s: 'Failed to load contacts: %s'
+  contacts_load_failed_message_s: 'Failed to load contacts: %s',
+
+  title_duress_mode: 'Duress Mode',
+  enable_duress_mode: 'Enable Duress Mode',
+  disable_duress_mode: 'Disable Duress Mode',
+  change_duress_pin: 'Change Duress PIN',
+  enable_duress_mode_description: `Your discreet safety net for high-risk situations.\n\nDuress Mode lets you PIN-login to a decoy account that immediately becomes accessible if you ever feel threatened. All other accounts will temporarily disappear until you enter your real PIN.`,
+  duress_mode_no_accounts_message: `You have no other accounts on this device. Please create an account to use as your duress account.`,
+  select_duress_account: 'Select Duress Account',
+  how_duress_mode_works: 'How Duress Mode Works',
+  how_duress_mode_works_description_md: `1. In an emergency, enter your duress PIN instead of your regular PIN\n2. All other accounts disappear \u2013 only your pre-selected duress account remains accessible\n3. Transactions are real \u2010 interact normally with this decoy account`,
+  how_duress_mode_return_to_normal_title: `How to Return to Normal`,
+  how_duress_mode_return_to_normal_description_md: `1. Log out of the duress account\n2. Enter your original PIN at the login screen\n3. All accounts reappear instantly`,
+  how_duress_mode_add_funds_to_account_title: `How to Add Funds to Your Duress Account`,
+  how_duress_mode_add_funds_to_account_description_md: `Funds should be added to your duress account to make it appear legitimate under a duress situation. Only funds in your duress account will be exposed.\n1. Log out of your current account\n2. Tap on your username and select your duress account in the dropdown\n3. Enter your duress PIN\n4. You are now logged in to your duress account and can create and fund wallets as normal.\n5. Log out and tap the username to switch back to your regular account\n\n\u26A0\uFE0F Duress Mode transactions are real and irreversible. Never store meaningful funds here.`,
+  how_duress_mode_when_to_use_title: `When to Use Duress Mode`,
+  how_duress_mode_when_to_use_description_md: `1. Physical coercion to access your device\n2. Forced transaction demands under surveillance\n3. High-risk travel or regulatory environments\nPro Tip: Practice activating Duress Mode twice yearly to build muscle memory.`,
+  duress_mode_set_pin_message: `Enter your duress PIN for your account.\n\nThis PIN will activate Duress Mode when entered at login.`,
+  duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`
 } as const
 
 // eslint-disable-next-line import/no-default-export

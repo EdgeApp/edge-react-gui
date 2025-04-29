@@ -138,6 +138,10 @@ const StakeOptionsSceneComponent = (props: Props) => {
             contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             ListHeaderComponent={
               <>
+                {/* TODO: Decide if our design language accepts scene headers within
+                the scroll area of a scene. If so, we must make the SceneContainer
+                component implement FlatList components. This is a one-off 
+                until then. */}
                 <SceneHeaderUi4 title={sprintf(lstrings.staking_change_add_header, currencyCode)} />
                 <Space horizontalRem={0.5} bottomRem={0.5}>
                   <EdgeText>{lstrings.stake_select_options}</EdgeText>
