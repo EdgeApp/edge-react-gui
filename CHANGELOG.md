@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add PIVX.
+- added: Add Zano
 - added: Monero multi output support.
 - added: Moonpay Sell support for ACH.
 - added: Maestro `testID` support in `NotificationCard`

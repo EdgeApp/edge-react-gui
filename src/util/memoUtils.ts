@@ -66,15 +66,19 @@ export function getMemoTitle(memoName: string = 'memo'): string {
 }
 
 const memoLabels: { [name: string]: string } = {
+  comment: lstrings.memo_comment_label,
   'destination tag': lstrings.memo_destination_tag_label,
-  op_return: lstrings.memo_op_return_label,
+  memo: lstrings.memo_memo_label,
   note: lstrings.memo_note_label,
-  memo: lstrings.memo_memo_label
+  op_return: lstrings.memo_op_return_label,
+  paymentId: lstrings.memo_payment_id_label
 }
 
 const memoTitles: { [name: string]: string } = {
+  comment: lstrings.memo_comment_title,
   'destination tag': lstrings.memo_destination_tag_title,
-  op_return: lstrings.memo_op_return_title,
+  memo: lstrings.memo_memo_title,
   note: lstrings.memo_note_title,
-  memo: lstrings.memo_memo_title
+  op_return: lstrings.memo_op_return_title,
+  paymentId: lstrings.memo_payment_id_title
 }
