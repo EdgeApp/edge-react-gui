@@ -39,10 +39,10 @@ const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: Fia
     venmo: { providerId, fiat: {}, crypto: {} }
   },
   sell: {
-    ach: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    venmo: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
+    ach: { providerId, fiat: {}, crypto: {} },
+    credit: { providerId, fiat: {}, crypto: {} },
+    paypal: { providerId, fiat: {}, crypto: {} },
+    venmo: { providerId, fiat: {}, crypto: {} }
   }
 }
 const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = {
@@ -384,11 +384,7 @@ export const moonpayProvider: FiatProviderFactory = {
           if (direction === 'buy') {
             amountParam = `baseCurrencyAmount=${params.exchangeAmount}`
           } else {
-            // Moonpay API doesn't let us specify a fiat amount for sell
-            throw new FiatProviderError({
-              providerId,
-              errorType: 'paymentUnsupported'
-            })
+            amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
           }
         } else {
           if (exchangeAmount > maxCrypto)
@@ -534,7 +530,7 @@ export const moonpayProvider: FiatProviderFactory = {
               if (params.amountType === 'crypto') {
                 queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
               } else {
-                queryObj.quoteCurrencyAmount = 'totalAmount' in moonpayQuote ? moonpayQuote.totalAmount : undefined
+                queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay sell quote url=' + urlObj.href)
