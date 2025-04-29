@@ -38,7 +38,11 @@ export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<v
       //    promotion expired)
       // 2. If the current `installerId` should get copied into
       //    `activePromotions` due to new matching promotion info
-      referral.activePromotions = await getActivePromoIds({ promoIds: referral.activePromotions, installerId: referral.installerId })
+      referral.activePromotions = await getActivePromoIds({
+        promoIds: referral.activePromotions,
+        installerId: referral.installerId,
+        countryCode: getState().ui.countryCode
+      })
 
       dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
       await saveAccountReferral(getState())
@@ -118,7 +122,7 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
   return async (dispatch, getState) => {
     // Add the promotion to `accountReferral.activePromotions` immediately, if
     // it passes the filters:
-    const filteredPromoData = await getActivePromoIds({ installerId })
+    const filteredPromoData = await getActivePromoIds({ installerId, countryCode: getState().ui.countryCode })
 
     if (filteredPromoData.length > 0) {
       dispatch({ type: 'ACTIVE_PROMOTION_ADDED', data: installerId })

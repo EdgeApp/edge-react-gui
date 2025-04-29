@@ -5,19 +5,16 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
-import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { BalanceCard } from '../cards/BalanceCard'
 import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
@@ -64,14 +61,15 @@ export const HomeScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const countryCode = useSelector(state => state.ui.countryCode)
+
   const { width: screenWidth } = useSafeAreaFrame()
 
-  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
+  const hideNonUkCompliantFeat = countryCode === 'GB'
 
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const [blogPosts, setBlogPosts] = React.useState<ContentPost[]>([])
   const [videoPosts, setVideoPosts] = React.useState<ContentPost[]>([])
 
@@ -98,16 +96,6 @@ export const HomeScene = (props: Props) => {
     })
   })
   const handleScroll = useSceneScrollHandler()
-
-  // Set countryCode once
-  useAsyncEffect(
-    async () => {
-      const { countryCode } = await getFirstOpenInfo()
-      setCountryCode(countryCode)
-    },
-    [],
-    'countryCode'
-  )
 
   // Check for content posts from info server:
   React.useEffect(() => {

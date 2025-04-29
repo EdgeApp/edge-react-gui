@@ -39,7 +39,6 @@ import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
-import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
@@ -463,13 +462,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader
-            title={
-              direction === 'buy' ? getUkCompliantString(countryCode, 'buy_1s_quote', titleAsset) : getUkCompliantString(countryCode, 'sell_1s', titleAsset)
-            }
-            underline
-            withTopMargin
-          />
+          <SceneHeader title={direction === 'buy' ? sprintf(lstrings.buy_1s, titleAsset) : sprintf(lstrings.sell_1s, titleAsset)} underline withTopMargin />
         </EdgeAnim>
 
         {hasCountryData ? (

@@ -6,10 +6,8 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
-import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
@@ -477,15 +475,7 @@ const EdgeTabs = () => {
 // -------------------------------------------------------------------------
 
 const EdgeAppStack = () => {
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
-
-  useAsyncEffect(
-    async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-    },
-    [],
-    'EdgeAppStack'
-  )
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   return (
     <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>

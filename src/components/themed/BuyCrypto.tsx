@@ -4,13 +4,12 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -33,7 +32,8 @@ export const BuyCrypto = (props: Props) => {
 
   const syncRatio = useWatch(wallet, 'syncRatio')
 
-  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const handlePress = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })

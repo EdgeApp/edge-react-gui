@@ -4,8 +4,6 @@ import { ListRenderItem, Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -31,8 +29,7 @@ export const InfoCardCarousel = (props: Props) => {
 
   const accountReferral = useSelector(state => state.account.accountReferral)
 
-  const [firstOpenInfo] = useAsyncValue(async () => await getFirstOpenInfo())
-  const { countryCode } = firstOpenInfo ?? {}
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   const [filteredCards, setFilteredCards] = React.useState<DisplayInfoCard[]>([])
 

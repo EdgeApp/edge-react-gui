@@ -33,7 +33,7 @@ import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
-import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
 import { SurveyModal } from '../modals/SurveyModal'
@@ -243,14 +243,12 @@ export function DevTestScene(props: Props) {
             marginRem={0.25}
             onPress={async () => {
               if (coreWallet == null) return
-              await Airship.show(bridge => (
-                <InsufficientFeesModal
-                  bridge={bridge}
-                  coreError={new InsufficientFundsError({ tokenId: null })}
-                  navigation={navigation as NavigationBase}
-                  wallet={coreWallet}
-                />
-              ))
+              await showInsufficientFeesModal({
+                coreError: new InsufficientFundsError({ tokenId: null }),
+                countryCode: 'US',
+                navigation: navigation as NavigationBase,
+                wallet: coreWallet
+              })
             }}
           />
           <EdgeButton

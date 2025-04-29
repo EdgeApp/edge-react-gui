@@ -19,7 +19,6 @@ import { getCurrencyCode, getCurrencyCodeMultiplier } from '../util/CurrencyInfo
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
-import { hideNonUkCompliantFeature } from '../util/ukComplianceUtils'
 import { getPluginIdFromChainCode, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
@@ -350,9 +349,9 @@ async function sweepPrivateKeys(state: RootState, account: EdgeAccount, navigati
 const shownWalletGetCryptoModals: string[] = []
 
 export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
-  return async dispatch => {
+  return async (dispatch, getState: () => RootState) => {
     try {
-      const hideNonUkCompliantFeat = await hideNonUkCompliantFeature()
+      const hideNonUkCompliantFeat = getState().ui.countryCode === 'GB'
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
       const balance = wallet.balanceMap.get(tokenId)

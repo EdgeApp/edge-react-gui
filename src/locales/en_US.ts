@@ -854,6 +854,8 @@ const strings = {
   buy_parent_crypto_modal_message_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
   buy_parent_crypto_modal_message_3s:
     '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
+  swap_parent_crypto_modal_message_2s: '%1$s%2$s is required to send this transaction. Would you like to exchange another crypto into %2$s?',
+  swap_parent_crypto_modal_message_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to exchange another crypto into %2$s?',
   buy_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s?',
   buy_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s?',
   buy_crypto_decline: 'Not at this time',
@@ -1683,9 +1685,8 @@ const strings = {
 
   // #region UK Compliance
 
-  uk_ways_to_buy_1s: 'Ways to Buy %1$s',
-  uk_ways_to_sell_1s: 'Ways to Sell %1$s',
-  uk_get_quote_provider_1s: 'Get %1$s Quote from 3rd Party Provider',
+  uk_deposit_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Please deposit %2$s and try again.',
+  uk_deposit_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Please deposit %2$s and try again.',
 
   // #endregion UK Compliance
 
