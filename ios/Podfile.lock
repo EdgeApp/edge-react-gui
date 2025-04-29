@@ -436,7 +436,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zano (0.1.1):
+  - react-native-zano (0.1.2):
     - OpenSSL-Universal
     - React-Core
   - react-native-zcash (0.9.6):
@@ -1159,7 +1159,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 8c70551c8688cd584a53487aa1b9361e991a3b4a
   react-native-webview: eb98d9d9c956ebeae58bff20cbe09fb92cd75ffb
-  react-native-zano: db72a56c587d00cb39fd940fe75eafdd34cfbaa9
+  react-native-zano: 710cdeeb763f44d303f008ea53881fc02de7096b
   react-native-zcash: b80c438c51077050e55e800c5b1d1ba1e61e1e90
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468

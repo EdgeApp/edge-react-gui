@@ -16433,10 +16433,10 @@ react-native-wheel-picker-android@^2.0.6:
   dependencies:
     moment "^2.22.0"
 
-react-native-zano@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.1.1.tgz#50a00628ac29f0fde510353a28f36640d1f0e329"
-  integrity sha512-Y05hlCQ1cbe3AEj6CGmW8nEtivpVIX7MVXKwDrw9P9BlK4IrlS1LlXiBwRrwJite1gQMlSEkBpEvObrRhCBrWg==
+react-native-zano@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.1.2.tgz#e41405799ca06f70935b798c31b82acf15951663"
+  integrity sha512-BdCiM6hFLObOwdcWGc7FSw0p+TuAwLvkPbBgr4XmT7J7Lm/uwOxRlx8xBQ2rfj75IcjFphtJUi7sB07y8jA5vw==
   dependencies:
     cleaners "^0.3.17"
 
