@@ -505,7 +505,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           </IconButton>
         )}
         {hideSwap ? null : (
-          <IconButton label={lstrings.trade_currency} onPress={countryCode === 'GB' ? this.handleTradeSwap : this.handleTrade}>
+          <IconButton label={lstrings.trade_currency} onPress={countryCode === 'GB' ? () => this.handleTradeSwap() : this.handleTrade}>
             <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
           </IconButton>
         )}
