@@ -1,15 +1,17 @@
-import { asNumber, asObject, asString, asValue } from 'cleaners'
+import { asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
 import { makeUuid } from '../util/rnUtils'
+import { getCountryCodeByIp } from './AccountReferralActions'
 
-const firstOpenDisklet = makeReactNativeDisklet()
+export const firstOpenDisklet = makeReactNativeDisklet()
 
 const asFirstOpenInfo = asObject({
   isFirstOpen: asValue('true', 'false'),
   deviceId: asString,
-  firstOpenEpoch: asNumber
+  firstOpenEpoch: asNumber,
+  countryCode: asOptional(asString)
 })
 type FirstOpenInfo = ReturnType<typeof asFirstOpenInfo>
 
@@ -45,6 +47,7 @@ const readFirstOpenInfoFromDisk = async (): Promise<FirstOpenInfo> => {
       firstOpenInfo = {
         deviceId: await makeUuid(),
         firstOpenEpoch: Date.now(),
+        countryCode: await getCountryCodeByIp(),
         // If firstOpen != null: This is not the first time they opened the app,
         // but with an older version that didn't set a deviceId and firstOpen
         // date, just created an empty file.
