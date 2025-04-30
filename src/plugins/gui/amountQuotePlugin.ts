@@ -446,7 +446,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
 
           const quotePromises = finalProvidersArray
-            .filter(p => (providerId == null ? true : providerId === p.providerId))
+            .filter(p => providerId == null || providerId === p.providerId)
             .map(async p => {
               let promoCode
               if (pluginPromotions != null) {
