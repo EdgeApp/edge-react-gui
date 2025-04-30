@@ -424,7 +424,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.2):
     - React-Core
-  - react-native-piratechain (0.5.8):
+  - react-native-piratechain (0.5.9):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -439,7 +439,7 @@ PODS:
   - react-native-zano (0.1.2):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.9.6):
+  - react-native-zcash (0.9.7):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1130,7 +1130,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: d776ce24dab24323e6995dfb17c64d598885d05c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
+  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
   RCTTypeSafety: decfec2884f0c523f799600d2b6105cdc15e13db
   React: ca22a0b3f199b6acac95416ef7eb96cc84a55103
@@ -1155,12 +1155,12 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: d22cfc9d1107daf6aab7c1631071c760509c068c
   react-native-netinfo: 8fa5cbcb4a8e69e265ff685b9e54c175ef2bbd40
   react-native-performance: 125a96c145e29918b55b45ce25cbba54f1e24dcd
-  react-native-piratechain: e9a4c0612ef3f6e9107c899c7fa91463b787c4a4
+  react-native-piratechain: 27b3b40fbe3a8799e92a2482c3561d9b26d1a3b9
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 8c70551c8688cd584a53487aa1b9361e991a3b4a
   react-native-webview: eb98d9d9c956ebeae58bff20cbe09fb92cd75ffb
   react-native-zano: 710cdeeb763f44d303f008ea53881fc02de7096b
-  react-native-zcash: b80c438c51077050e55e800c5b1d1ba1e61e1e90
+  react-native-zcash: 2ad9869faa35580ece8ee62ae5d584b7459b9af7
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

@@ -16311,10 +16311,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.8:
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.8.tgz#0b62bb3a6307bd42e444c20eb4abe24534ed6d6f"
-  integrity sha512-S5SOOWFYJuaqcjiNOqNeF58ZUpdTfIoqlUJ+9NLVVNTTbkyRCh7lK55xBQx0gzLRxcxwCDUhkUAYmLSi+vAYTw==
+react-native-piratechain@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.9.tgz#b9911fcb3da88008ff86d1bbcffa4195f12dd194"
+  integrity sha512-Hd0gKesWDXf1zEqNVZ3GGa2OUGQW2tr3DClZCGS92jkVVdXf+6ugRlxcA/c46l5P7uznHiwhCoqs3fbU3ptxzg==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16440,10 +16440,10 @@ react-native-zano@^0.1.2:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.6.tgz#43e0a51e22a2e6606143df167c29c9d5587990ae"
-  integrity sha512-0Ki8d8s75TAQf6GDv9nhfI9c7S4r6n6TgsF7LlZd5MxnVrswZQKNSc0LHvk56tFvWOeEdTOS9/hGwIPZQLw/DQ==
+react-native-zcash@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.7.tgz#d366768df347df1663d29cb646ea2bf39a34e888"
+  integrity sha512-wBfO2vg5vmxT6b5ER8kUS0CiveI27IxyQ1BbzyVXrPWrRUhmY0hMcufkDS8Be1l2Y/PJxVauFkOX60OI5toTJA==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"
