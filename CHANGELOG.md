@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.27.0 (staging)
+
 - added: Add PIVX.
 - added: Add Zano
 - added: Monero multi output support.
