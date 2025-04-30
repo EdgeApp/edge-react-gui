@@ -169,6 +169,7 @@ const NotificationViewComponent = (props: Props) => {
           persistent
           onPress={handleBackupPress}
           onClose={handleBackupClose}
+          testID="notifBackup"
         />
       </EdgeAnim>
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
@@ -181,6 +182,7 @@ const NotificationViewComponent = (props: Props) => {
           message={lstrings.notif_otp_message}
           onPress={handleOtpReminderPress}
           onClose={handleOtpReminderClose}
+          testID="notifOtp"
         />
       </EdgeAnim>
       <EdgeAnim visible={!pwReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
@@ -190,6 +192,7 @@ const NotificationViewComponent = (props: Props) => {
           message={lstrings.password_reminder_card_body}
           onPress={handlePasswordReminderPress}
           onClose={handlePasswordReminderClose}
+          testID="notifPassword"
         />
       </EdgeAnim>
       <EdgeAnim visible={!ip2FaReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>

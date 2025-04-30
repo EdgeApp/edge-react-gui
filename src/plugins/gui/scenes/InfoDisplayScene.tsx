@@ -133,6 +133,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasTabs scroll hasNotifications padding={theme.rem(0.5)}>
+      {/* TODO: use SceneContainer component instead of SceneWrapper padding and SceneHeaderUi4. */}
       <SceneHeaderUi4 title={headerTitle} />
       <View style={styles.promptContainer}>
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>

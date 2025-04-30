@@ -2,7 +2,20 @@
 
 ## Unreleased (develop)
 
-## 4.46.0 (staging)
+## 4.27.0 (staging)
+
+- added: Add PIVX.
+- added: Add Zano
+- added: Monero multi output support.
+- added: Moonpay Sell support for ACH.
+- added: Maestro `testID` support in `NotificationCard`
+- changed: Scanning private key button copy updated from "Import" -> "Confirm"
+- changed: `countryCode` moved from `firstOpenActions` to redux, and re-evaluated on each boot
+- fixed: iOS not immediately showing `EdgeCarousel` cards if only one card is present
+- fixed: `SceneWrapper` bottom inset calculations for scenes that do not `avoidKeyboard`
+- fixed: `InsufficientFeesModal` updated to UK meet compliance spec (shows swap only)
+
+## 4.26.0 (2025-04-14)
 
 - added: `preferProviders` support to override default priority when selecting a fiat provider
 - added: Rewards deeplink support

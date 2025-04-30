@@ -76,6 +76,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
+  'wallet:zano',
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
@@ -130,7 +131,15 @@ interface SpecialCurrencyInfo {
   chainCode: string
 
   // Marketing:
+  /**
+   * Whether to show the "Buy Crypto" button from the wallet details scene.
+   *
+   * Defaults to `false`.
+   */
   displayBuyCrypto?: boolean
+  /**
+   * @deprecated Whether to show Ionia rewards feature. Defaults to `false`.
+   **/
   displayIoniaRewards?: boolean
 
   // Localized GUI text:
@@ -140,6 +149,9 @@ interface SpecialCurrencyInfo {
     modalMessage: string
     alertMessage: string
   }
+  /**
+   * Whether key import is supported. Defaults to `false`.
+   */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
 
@@ -162,7 +174,10 @@ interface SpecialCurrencyInfo {
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
   chainIcon?: boolean
-  unstoppableDomainsTicker?: string // https://support.unstoppabledomains.com/support/solutions/articles/48001185621
+  /**
+   * The ticker for the [unstoppable domains](https://support.unstoppabledomains.com/support/solutions/articles/48001185621).
+   */
+  unstoppableDomainsTicker?: string
 }
 
 /*
@@ -314,7 +329,8 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false,
-    unstoppableDomainsTicker: 'XMR'
+    unstoppableDomainsTicker: 'XMR',
+    maxSpendTargets: 16
   },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
@@ -778,6 +794,25 @@ export const SPECIAL_CURRENCY_INFO: {
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
+  zano: {
+    initWalletName: lstrings.string_first_zano_wallet_name,
+    chainCode: 'ZANO',
+    dummyPublicAddress: 'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
+    noChangeMiningFee: true,
+    isImportKeySupported: true,
+    importKeyOptions: [
+      {
+        optionName: 'passphrase',
+        displayName: lstrings.create_wallet_import_options_passphrase,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_passphrase_description
+        },
+        required: false,
+        inputType: 'default',
+        inputValidation: (input: string) => typeof input === 'string'
+      }
+    ]
+  },
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,
     chainCode: 'ZEC',
@@ -827,6 +862,14 @@ export const SPECIAL_CURRENCY_INFO: {
       }
     ],
     unstoppableDomainsTicker: 'ARRR'
+  },
+  pivx: {
+    chainCode: 'PIVX',
+    displayBuyCrypto: true,
+    hasSegwit: false,
+    initWalletName: lstrings.string_first_pivx_wallet_name,
+    isImportKeySupported: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS
   },
   polygon: {
     initWalletName: lstrings.string_first_polygon_wallet_name,

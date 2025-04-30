@@ -12,7 +12,6 @@ import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -21,8 +20,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { Airship } from '../services/AirshipInstance'
+import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -47,6 +45,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
 
   const defaultFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const displayDenominations = useSelector(state => {
     const { denominationSettings = {} } = state.ui.settings
     return denominationSettings
@@ -111,10 +110,12 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    const { countryCode } = await getFirstOpenInfo()
-    await Airship.show(bridge => (
-      <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation as NavigationBase} wallet={wallet} />
-    ))
+    await showInsufficientFeesModal({
+      coreError: error,
+      countryCode,
+      navigation: navigation as NavigationBase,
+      wallet
+    })
   })
 
   const handleSlidingComplete = useHandler(() => {

@@ -51,6 +51,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   ton: ENV.TON_INIT,
   tron: true,
   wax: true,
+  zano: true,
   zcash: true,
   zksync: ENV.ZKSYNC_INIT,
   // edge-currency-bitcoin:
@@ -69,6 +70,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   feathercoin: true,
   groestlcoin: ENV.GROESTLCOIN_INIT,
   litecoin: ENV.LITECOIN_INIT,
+  pivx: ENV.PIVX_INIT,
   qtum: true,
   ravencoin: true,
   smartcash: true,

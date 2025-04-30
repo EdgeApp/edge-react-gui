@@ -259,6 +259,11 @@ export const asEnvConfig = asObject({
   ),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asBoolean),
+  PIVX_INIT: asCorePluginInit(
+    asObject({
+      nowNodesApiKey: asOptional(asString, '')
+    })
+  ),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   POLKADOT_INIT: asOptional(asBoolean, true),
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
