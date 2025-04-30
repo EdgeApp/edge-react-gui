@@ -108,6 +108,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:coreum',
   'wallet:osmosis',
   'wallet:thorchainrune',
+  'wallet:thorchainrunestagenet',
   'wallet:bobevm'
 ]
 
@@ -599,6 +600,13 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'thor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'RUNE'
+  },
+  thorchainrunestagenet: {
+    initWalletName: lstrings.string_first_thorchainrunestagenet_wallet_name,
+    chainCode: 'RUNE',
+    noChangeMiningFee: true,
+    dummyPublicAddress: 'sthor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
+    isImportKeySupported: true
   },
   binance: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
