@@ -157,6 +157,7 @@ function createAndSelectToken({
     const state = getState()
     const { account } = state.core
     const { defaultIsoFiat } = state.ui.settings
+    const countryCode = state.ui.countryCode
     const { walletType } = account.currencyConfig[pluginId].currencyInfo
 
     try {
@@ -181,7 +182,7 @@ function createAndSelectToken({
             )
 
       // Show the user the token terms modal only once
-      await approveTokenTerms(account, wallet.currencyInfo.pluginId)
+      await approveTokenTerms(account, wallet.currencyInfo.pluginId, countryCode)
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)

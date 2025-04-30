@@ -8,6 +8,7 @@ type CompliantStringKeys =
   | 'stake_x_to_earn_y' // stake_x_to_earn_y / transaction_details_stake_subcat_1s
   | 'insufficient_fees_2s' // buy_parent_crypto_modal_message_2s / swap_parent_crypto_modal_message_2s
   | 'insufficient_fees_3s' // buy_parent_crypto_modal_message_3s / swap_parent_crypto_modal_message_3s
+  | 'token_agreement_modal_message' // token_agreement_modal_message / uk_token_agreement_modal_message
 
 const UK_COMPLIANT_STRING_MAP: {
   [key in CompliantStringKeys]: {
@@ -25,7 +26,8 @@ const UK_COMPLIANT_STRING_MAP: {
     gb: 'transaction_details_stake_subcat_1s'
   },
   insufficient_fees_2s: { default: 'buy_parent_crypto_modal_message_2s', gb: 'swap_parent_crypto_modal_message_2s' },
-  insufficient_fees_3s: { default: 'buy_parent_crypto_modal_message_3s', gb: 'swap_parent_crypto_modal_message_3s' }
+  insufficient_fees_3s: { default: 'buy_parent_crypto_modal_message_3s', gb: 'swap_parent_crypto_modal_message_3s' },
+  token_agreement_modal_message: { default: 'token_agreement_modal_message', gb: 'uk_token_agreement_modal_message' }
 }
 
 const formatString = (template: string, values: string[]): string => {

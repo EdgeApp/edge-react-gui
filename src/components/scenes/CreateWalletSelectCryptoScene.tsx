@@ -55,6 +55,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const dispatch = useDispatch()
   const theme = useTheme()
 
+  const countryCode = useSelector(state => state.ui.countryCode)
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
@@ -119,7 +120,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     // Check if this is a token to potentially show the gas requirement warning
     const newAsset = createWalletList.find(item => item.key === key)
     if (newAsset != null && newAsset.tokenId != null) {
-      await approveTokenTerms(account, newAsset.pluginId)
+      await approveTokenTerms(account, newAsset.pluginId, countryCode)
     }
   })
 

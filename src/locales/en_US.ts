@@ -1687,6 +1687,8 @@ const strings = {
 
   uk_deposit_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Please deposit %2$s and try again.',
   uk_deposit_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Please deposit %2$s and try again.',
+  uk_token_agreement_modal_message:
+    '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Exchange function.',
 
   // #endregion UK Compliance
 
