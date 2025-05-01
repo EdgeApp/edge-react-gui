@@ -126,6 +126,7 @@ export interface QuoteAllocation {
   pluginId: string
   currencyCode: string
   nativeAmount: string
+  lockInputs?: boolean
 }
 
 export interface QuoteInfo {
