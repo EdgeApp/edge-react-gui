@@ -8,6 +8,8 @@
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
+#import <AdServices/AdServices.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
