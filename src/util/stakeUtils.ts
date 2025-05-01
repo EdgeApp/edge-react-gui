@@ -1,20 +1,16 @@
 import { add, round } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { PositionAllocation, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
+import { PositionAllocation, StakeAssetInfo, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
+import { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
 import { getTokenIdForced } from './CurrencyInfoHelpers'
 import { enableTokens } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
-
-/**
- * Returns an array of all currency codes for a particular asset type
- */
-const getAssetCurrencyCodes = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') => stakePolicy[assetType].map(asset => asset.currencyCode)
 
 /**
  * Returns an array of all display names for a particular asset type
@@ -72,24 +68,38 @@ export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => 
  * Returns the icon uris of stake and reward assets.
  */
 export const getPolicyIconUris = (
-  { metaTokens = [], pluginId }: EdgeCurrencyInfo,
+  currencyConfigs: EdgeAccount['currencyConfig'],
   stakePolicy: StakePolicy
 ): { stakeAssetUris: string[]; rewardAssetUris: string[] } => {
-  const stakeAssetNames = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
-  const rewardAssetNames = getAssetCurrencyCodes(stakePolicy, 'rewardAssets')
+  const assetInfosToEdgeTokens = (assetInfos: StakeAssetInfo[]) => {
+    const edgeAssets: EdgeAsset[] = []
 
-  const stakeContractAddresses = stakeAssetNames.map(
-    (stakeAssetName, i) => stakePolicy.stakeAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === stakeAssetName)?.contractAddress
-  )
-  const rewardContractAddresses = rewardAssetNames.map(
-    (rewardAssetName, i) => stakePolicy.rewardAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
-  )
+    for (const stakeAsset of assetInfos) {
+      const pluginId = stakeAsset.pluginId
+      const currencyCode = stakeAsset.currencyCode
 
-  const stakeAssetUris = stakeContractAddresses.map(
-    stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress ?? null, SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false).symbolImage
+      const currencyConfig = currencyConfigs[pluginId]
+
+      if (currencyCode === currencyConfig.currencyInfo.currencyCode) {
+        edgeAssets.push({ pluginId, tokenId: null })
+        continue
+      }
+      const tokenId = Object.keys(currencyConfig.allTokens).find(tokenId => currencyConfig.allTokens[tokenId].currencyCode === currencyCode)
+      if (tokenId == null) continue
+
+      edgeAssets.push({ pluginId, tokenId })
+    }
+    return edgeAssets
+  }
+
+  const stakeAssets = assetInfosToEdgeTokens(stakePolicy.stakeAssets)
+  const rewardAssets = assetInfosToEdgeTokens(stakePolicy.rewardAssets)
+
+  const stakeAssetUris = stakeAssets.map(
+    asset => getCurrencyIconUris(asset.pluginId, asset.tokenId, SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false).symbolImage
   )
-  const rewardAssetUris = rewardContractAddresses.map(
-    rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress ?? null, SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false).symbolImage
+  const rewardAssetUris = rewardAssets.map(
+    asset => getCurrencyIconUris(asset.pluginId, asset.tokenId, SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false).symbolImage
   )
 
   return { stakeAssetUris, rewardAssetUris }

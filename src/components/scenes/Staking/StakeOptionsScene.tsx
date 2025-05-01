@@ -84,7 +84,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
     const primaryText = getPolicyAssetName(stakePolicy, 'stakeAssets')
     const secondaryText = getPolicyTitleName(stakePolicy, countryCode)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+    const policyIcons = getPolicyIconUris(account.currencyConfig, stakePolicy)
     const stakePosition = stakePositionMap[stakePolicy.stakePolicyId]
     const isStaked = stakePosition?.allocations.some(allocation => allocation.allocationType === 'staked' && gt(allocation.nativeAmount, '0'))
     return (
