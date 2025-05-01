@@ -11,6 +11,7 @@
 - added: Monero multi output support.
 - added: Moonpay Sell support for ACH.
 - added: Maestro `testID` support in `NotificationCard`
+- added: Add TCY claiming to Thorchain Savers staking plugin
 - changed: Scanning private key button copy updated from "Import" -> "Confirm"
 - changed: `countryCode` moved from `firstOpenActions` to redux, and re-evaluated on each boot
 - changed: Show KYC warning modal when trading with Changehero, Exolix, and Sideshift
