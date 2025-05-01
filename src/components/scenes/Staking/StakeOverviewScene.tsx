@@ -81,7 +81,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
           denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
           return denomMap
         }, {})
-  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(account.currencyConfig, stakePolicy)
 
   // Hooks
 

@@ -531,7 +531,7 @@ const StakeModifySceneComponent = (props: Props) => {
     )
   }
 
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  const policyIcons = getPolicyIconUris(account.currencyConfig, stakePolicy)
   const icon = React.useMemo(
     () => (modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />),
     [modification, policyIcons.rewardAssetUris, styles.icon]
