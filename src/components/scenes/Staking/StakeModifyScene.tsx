@@ -347,7 +347,7 @@ const StakeModifySceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const renderEditableQuoteAmountRow = (quoteAllocation: QuoteAllocation) => {
-    const { currencyCode, pluginId, allocationType } = quoteAllocation
+    const { currencyCode, pluginId, allocationType, lockInputs = false } = quoteAllocation
     quoteAllocation =
       allocationType === 'unstake' && mustMaxUnstake
         ? {
@@ -383,7 +383,7 @@ const StakeModifySceneComponent = (props: Props) => {
           currencyCode={quoteCurrencyCode}
           exchangeDenomination={quoteDenom}
           displayDenomination={quoteDenom}
-          lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
+          lockInputs={lockInputs || isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
           onPress={handleShowFlipInputModal(currencyCode, tokenId)}
         />
       </EdgeCard>
