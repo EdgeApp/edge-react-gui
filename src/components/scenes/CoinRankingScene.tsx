@@ -176,7 +176,7 @@ const CoinRankingComponent = (props: Props) => {
         startIndex += QUERY_PAGE_SIZE
       }
     } catch (e: any) {
-      console.warn(`Error during data fetch: ${e.message}`)
+      console.warn(`Error during data fetch: ${e.message}, ${coingeckoFiat}, ${startIndex}, ${requestDataSize}`)
     }
 
     setDataSize(coinRankingDatas.length)
