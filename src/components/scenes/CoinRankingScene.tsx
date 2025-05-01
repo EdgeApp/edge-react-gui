@@ -157,7 +157,7 @@ const CoinRankingComponent = (props: Props) => {
 
     try {
       // Catch up to the total required items
-      while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
+      while (startIndex <= requestDataSize - QUERY_PAGE_SIZE + 1) {
         const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
         const response = await fetchRates(url).then(maybeAbort)
         if (!response.ok) {
