@@ -8,7 +8,7 @@ import { lstrings } from '../locales/strings'
 import { PositionAllocation, StakeAssetInfo, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
 import { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
-import { getTokenIdForced } from './CurrencyInfoHelpers'
+import { getTokenId } from './CurrencyInfoHelpers'
 import { enableTokens } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
 
@@ -144,8 +144,10 @@ export const enableStakeTokens = async (account: EdgeAccount, wallet: EdgeCurren
   const requiredTokenIds: EdgeTokenId[] = []
   for (const stakeAssetInfo of [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets]) {
     const pluginId = wallet.currencyInfo.pluginId
-    const tokenId = getTokenIdForced(account, pluginId, stakeAssetInfo.currencyCode)
-    requiredTokenIds.push(tokenId)
+    const tokenId = getTokenId(account.currencyConfig[pluginId], stakeAssetInfo.currencyCode)
+    if (tokenId != null) {
+      requiredTokenIds.push(tokenId)
+    }
   }
 
   await enableTokens(requiredTokenIds, wallet)
