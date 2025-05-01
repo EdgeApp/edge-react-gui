@@ -206,7 +206,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
-        const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
+        const { isFirstOpen, deviceId, firstOpenEpoch, appleAdsAttribution } = await getFirstOpenInfo()
 
         const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
         const params: any = {
@@ -215,6 +215,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           isFirstOpen,
           deviceId,
           firstOpenEpoch,
+          appleAdsAttribution,
           ...restValue
         }
 

@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Apple Ads Attribution `campaignId` and `keywordId` reporting
+
 ## 4.27.0 (staging)
 
 - added: Add PIVX.
