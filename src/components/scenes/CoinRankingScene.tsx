@@ -18,6 +18,7 @@ import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { FillLoader } from '../progress-indicators/FillLoader'
 import { CoinRankRow } from '../rows/CoinRankRow'
 import { showDevError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -26,6 +27,12 @@ import { EdgeText } from '../themed/EdgeText'
 import { SearchFooter } from '../themed/SearchFooter'
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
+
+/**
+ * Track changes that occurred to fiat while scene is unmounted. Don't react to
+ * changes to this value.
+ */
+let lastSceneFiat: string
 
 const QUERY_PAGE_SIZE = 30
 const LISTINGS_REFRESH_INTERVAL = 30000
@@ -54,19 +61,35 @@ const CoinRankingComponent = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  /** The user's fiat setting, falling back to USD if not supported. */
-  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+  const { coinRankingDatas } = coinRanking
 
-  const mounted = React.useRef<boolean>(true)
   const lastStartIndex = React.useRef<number>(1)
 
   const [requestDataSize, setRequestDataSize] = React.useState<number>(QUERY_PAGE_SIZE)
-  const [dataSize, setDataSize] = React.useState<number>(0)
+  const [dataSize, setDataSize] = React.useState<number>(coinRankingDatas.length)
   const [searchText, setSearchText] = React.useState<string>('')
   const [isSearching, setIsSearching] = React.useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = React.useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = React.useState<AssetSubText>('marketCap')
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+
+  /** The user's fiat setting, falling back to USD if not supported. */
+  const coingeckoFiat = useSelector(state => {
+    const currentCoinGeckoFiat = getCoingeckoFiat(state)
+    if (lastSceneFiat == null) {
+      lastSceneFiat = currentCoinGeckoFiat
+    }
+
+    // Whenever we see a different fiat, clear the cache. We want to do this
+    // here as close to the site of the state change as possible to ensure this
+    // happens before anything else.
+    if (lastSceneFiat != null && currentCoinGeckoFiat !== lastSceneFiat) {
+      debugLog(LOG_COINRANK, 'clearing cache')
+      lastSceneFiat = currentCoinGeckoFiat
+      coinRanking.coinRankingDatas = []
+    }
+    return currentCoinGeckoFiat
+  })
 
   const handleScroll = useSceneScrollHandler()
 
@@ -74,8 +97,6 @@ const CoinRankingComponent = (props: Props) => {
     () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame }),
     [assetSubText, coingeckoFiat, percentChangeTimeFrame]
   )
-
-  const { coinRankingDatas } = coinRanking
 
   const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
@@ -137,12 +158,6 @@ const CoinRankingComponent = (props: Props) => {
   const handleFooterLayoutHeight = useHandler((height: number) => {
     setFooterHeight(height)
   })
-
-  React.useEffect(() => {
-    return () => {
-      mounted.current = false
-    }
-  }, [])
 
   React.useEffect(() => {
     return navigation.addListener('focus', () => {
