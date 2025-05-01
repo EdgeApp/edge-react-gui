@@ -192,7 +192,7 @@ const CoinRankingComponent = (props: Props) => {
     return abort
   }, [queryLoop, requestDataSize])
 
-  // Subscribe to changes to the current data set:
+  // Subscribe to changes to coingeckoFiat and update the periodic refresh
   React.useEffect(() => {
     let abort = () => {}
     // Refresh from the beginning periodically
