@@ -220,8 +220,8 @@ const CoinRankingComponent = (props: Props) => {
     }
   }, [coingeckoFiat /* reset subscription on fiat change */, queryLoop])
 
-  const listdata: number[] = React.useMemo(() => {
-    debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
+  const listData: number[] = React.useMemo(() => {
+    debugLog(LOG_COINRANK, `Updating listData dataSize=${dataSize} searchText=${searchText}`)
     const out = []
     for (let i = 0; i < dataSize; i++) {
       const cr = coinRankingDatas[i]
@@ -282,17 +282,21 @@ const CoinRankingComponent = (props: Props) => {
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-            <Animated.FlatList
-              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
-              data={listdata}
-              extraData={extraData}
-              keyboardDismissMode="on-drag"
-              onEndReachedThreshold={1}
-              onEndReached={handleEndReached}
-              onScroll={handleScroll}
-              renderItem={renderItem}
-              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-            />
+            {listData.length === 0 ? (
+              <FillLoader />
+            ) : (
+              <Animated.FlatList
+                contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+                data={listData}
+                extraData={extraData}
+                keyboardDismissMode="on-drag"
+                onEndReachedThreshold={1}
+                onEndReached={handleEndReached}
+                onScroll={handleScroll}
+                renderItem={renderItem}
+                scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+              />
+            )}
           </View>
         </>
       )}

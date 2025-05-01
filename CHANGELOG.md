@@ -22,6 +22,7 @@
 - added: "Asset Settings" option to `WalletListMenuModal`
 - added: Sonic support
 - added: Bitcoin Testnet4 support
+- added: Loader on `CoinRankingScene`
 - changed: Buy/sell removed for UK
 - changed: `GettingStartedScene` "Getting Started" button repurposed to progress through hero pages
 - changed: `GettingStartedScene` "Swipe to Learn More" copy updated to "Learn More" and is now tappable
