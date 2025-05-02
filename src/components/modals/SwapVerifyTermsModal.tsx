@@ -20,10 +20,24 @@ interface TermsUri {
 }
 
 const pluginData: { [pluginId: string]: TermsUri } = {
+  changehero: {
+    termsUri: 'https://changehero.io/terms-of-use',
+    privacyUri: 'https://changehero.io/privacy-policy',
+    kycUri: 'https://changehero.io/aml-kyc'
+  },
   changenow: {
     termsUri: 'https://changenow.io/terms-of-use',
     privacyUri: 'https://changenow.io/privacy-policy',
     kycUri: 'https://changenow.io/faq/kyc'
+  },
+  exolix: {
+    termsUri: 'https://exolix.com/terms',
+    privacyUri: 'https://exolix.com/privacy',
+    kycUri: 'https://exolix.com/aml-kyc'
+  },
+  sideshift: {
+    termsUri: 'https://sideshift.ai/legal',
+    kycUri: 'https://help.sideshift.ai/en/articles/6230858-sideshift-ai-s-risk-management-policy'
   },
   swapuz: {
     termsUri: 'https://swapuz.com/terms-of-use',

@@ -11,6 +11,7 @@
 - added: Maestro `testID` support in `NotificationCard`
 - changed: Scanning private key button copy updated from "Import" -> "Confirm"
 - changed: `countryCode` moved from `firstOpenActions` to redux, and re-evaluated on each boot
+- changed: Show KYC warning modal when trading with Changehero, Exolix, and Sideshift
 - fixed: iOS not immediately showing `EdgeCarousel` cards if only one card is present
 - fixed: `SceneWrapper` bottom inset calculations for scenes that do not `avoidKeyboard`
 - fixed: `InsufficientFeesModal` updated to UK meet compliance spec (shows swap only)
