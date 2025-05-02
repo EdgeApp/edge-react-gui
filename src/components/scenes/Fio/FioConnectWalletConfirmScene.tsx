@@ -62,12 +62,23 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
       try {
-        let promiseArray = walletsToConnect.map(async (wallet: FioConnectionWalletItem) => ({
-          walletId: wallet.id,
-          tokenCode: wallet.currencyCode,
-          chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
-        }))
+        const getCompatibleAddress = async (wallet: EdgeCurrencyWallet): Promise<string> => {
+          const edgeAddresses = await wallet.getAddresses({ tokenId: null })
+          const edgeAddress = edgeAddresses.find(edgeAddress => edgeAddress.publicAddress.length <= 128)
+          if (edgeAddress == null) {
+            throw new Error('Address exceeds 128 characters')
+          }
+          return edgeAddress.publicAddress
+        }
+
+        let promiseArray = walletsToConnect.map(async (wallet: FioConnectionWalletItem) => {
+          return {
+            walletId: wallet.id,
+            tokenCode: wallet.currencyCode,
+            chainCode: wallet.chainCode,
+            publicAddress: await getCompatibleAddress(wallet.edgeWallet)
+          }
+        })
 
         let publicAddresses = await Promise.all(promiseArray)
 
@@ -83,7 +94,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           walletId: wallet.id,
           tokenCode: wallet.currencyCode,
           chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
+          publicAddress: await getCompatibleAddress(wallet.edgeWallet)
         }))
 
         publicAddresses = await Promise.all(promiseArray)
