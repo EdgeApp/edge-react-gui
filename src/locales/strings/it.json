@@ -1461,6 +1461,7 @@
   "button_support": "Contatta il supporto",
   "uk_deposit_parent_crypto_modal_message_no_exchange_2s": "Sono necessari %1$s%2$s per inviare questa transazione. Per favore deposita %2$s e riprova.",
   "uk_deposit_parent_crypto_modal_message_no_exchange_3s": "Sono necessari %1$s%2$s (su %3$s) per inviare questa transazione. Per favore deposita %2$s e riprova.",
+  "uk_token_agreement_modal_message": "%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Exchange function.",
   "redacted_placeholder": "●●●●",
   "insufficient_funds_2s": "%1$s (%2$s) insufficienti.",
   "split_from_1s": "Dividi da %1$s",
