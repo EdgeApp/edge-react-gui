@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- removed: Disable Fantom transaction list
+
 ## 4.27.0 (staging)
 
 - added: Add PIVX.
