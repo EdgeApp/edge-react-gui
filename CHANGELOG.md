@@ -4,6 +4,7 @@
 
 - added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Add os version to the "OS" line of logs
+- changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - removed: Disable Fantom transaction list
 

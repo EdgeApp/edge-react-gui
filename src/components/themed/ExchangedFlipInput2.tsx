@@ -1,14 +1,17 @@
 import { div, log10, mul, round } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
-import { Platform, ReturnKeyType } from 'react-native'
+import { Platform, ReturnKeyType, View } from 'react-native'
 
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
+import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, removeIsoPrefix } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -43,6 +46,8 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
+  hideMaxButton?: boolean
+  onMaxPress?: () => void
 }
 
 const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
@@ -70,7 +75,9 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     forceField = 'crypto',
     keyboardVisible = true,
     editable,
-    inputAccessoryViewID
+    inputAccessoryViewID,
+    hideMaxButton = false,
+    onMaxPress
   } = props
 
   const theme = useTheme()
@@ -205,26 +212,38 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     [convertCurrency, cryptoCurrencyCode, defaultIsoFiat, forceField]
   )
 
+  const pluginInfo = getSpecialCurrencyInfo(pluginId)
+  const showMaxButton = pluginInfo.noMaxSpend !== true && !hideMaxButton && onMaxPress != null
+
   return (
     <>
       <EdgeRow onPress={headerCallback} icon={<CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
         <EdgeText style={styles.headerText}>{headerText}</EdgeText>
       </EdgeRow>
 
-      <FlipInput2
-        onBlur={onBlur}
-        onFocus={onFocus}
-        onNext={onNext}
-        ref={flipInputRef}
-        convertValue={convertValue}
-        disabled={editable}
-        fieldInfos={fieldInfos}
-        returnKeyType={returnKeyType}
-        forceFieldNum={forceFieldMap[overrideForceField]}
-        inputAccessoryViewID={inputAccessoryViewID}
-        keyboardVisible={keyboardVisible}
-        startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
-      />
+      <View style={styles.flipInputContainer}>
+        <View style={styles.flipInputWrapper}>
+          <FlipInput2
+            onBlur={onBlur}
+            onFocus={onFocus}
+            onNext={onNext}
+            ref={flipInputRef}
+            convertValue={convertValue}
+            disabled={editable}
+            fieldInfos={fieldInfos}
+            returnKeyType={returnKeyType}
+            forceFieldNum={forceFieldMap[overrideForceField]}
+            inputAccessoryViewID={inputAccessoryViewID}
+            keyboardVisible={keyboardVisible}
+            startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
+          />
+        </View>
+        {showMaxButton ? (
+          <EdgeTouchableOpacity style={styles.maxButton} onPress={onMaxPress}>
+            <EdgeText style={styles.maxButtonText}>{lstrings.string_max_cap}</EdgeText>
+          </EdgeTouchableOpacity>
+        ) : null}
+      </View>
     </>
   )
 })
@@ -242,5 +261,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   headerText: {
     fontWeight: '600',
     fontSize: theme.rem(1.0)
+  },
+  flipInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  flipInputWrapper: {
+    flexGrow: 1
+  },
+  maxButton: {
+    marginHorizontal: theme.rem(0.5),
+    justifyContent: 'center'
+  },
+  maxButtonText: {
+    fontFamily: theme.escapeButtonFont,
+    fontSize: theme.rem(theme.escapeButtonFontSizeRem),
+    color: theme.escapeButtonText
   }
 }))
