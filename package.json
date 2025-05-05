@@ -159,7 +159,7 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "^13.8.4",
     "react-native-wheel-picker-android": "^2.0.6",
-    "react-native-zano": "^0.1.2",
+    "react-native-zano": "^0.1.3",
     "react-native-zcash": "^0.9.7",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
