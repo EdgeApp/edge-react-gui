@@ -78,6 +78,7 @@ export const NotificationCenterScene = (props: Props) => {
 
           switch (key) {
             case 'pwReminder': {
+              if (account.isDuressAccount) return null
               return (
                 <NotificationCenterRow
                   key={key}
@@ -91,6 +92,7 @@ export const NotificationCenterScene = (props: Props) => {
               )
             }
             case 'otpReminder': {
+              if (account.isDuressAccount) return null
               return (
                 <NotificationCenterRow
                   key={key}
@@ -104,6 +106,7 @@ export const NotificationCenterScene = (props: Props) => {
               )
             }
             case 'ip2FaReminder': {
+              if (account.isDuressAccount) return null
               return (
                 <NotificationCenterRow
                   key={key}
