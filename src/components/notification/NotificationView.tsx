@@ -175,7 +175,7 @@ const NotificationViewComponent = (props: Props) => {
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
         {autoDetectTokenCards}
       </EdgeAnim>
-      <EdgeAnim visible={!otpReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={!otpReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
           title={lstrings.otp_reset_modal_header}
@@ -185,7 +185,7 @@ const NotificationViewComponent = (props: Props) => {
           testID="notifOtp"
         />
       </EdgeAnim>
-      <EdgeAnim visible={!pwReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={!pwReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="info"
           title={lstrings.password_reminder_card_title}
@@ -195,7 +195,7 @@ const NotificationViewComponent = (props: Props) => {
           testID="notifPassword"
         />
       </EdgeAnim>
-      <EdgeAnim visible={!ip2FaReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={!ip2FaReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}
