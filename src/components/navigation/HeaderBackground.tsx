@@ -5,9 +5,9 @@ import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-nati
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import { DividerLine } from '../common/DividerLine'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
-import { DividerLine } from '../themed/DividerLine'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 
 export const HeaderBackground = (props: any) => {

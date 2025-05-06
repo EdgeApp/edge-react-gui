@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
+import { DividerLine } from '../common/DividerLine'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -29,18 +29,16 @@ const SceneHeaderComponent = (props: Props) => {
         </View>
         {children}
       </View>
-      {underline ? <DividerLine marginRem={dividerMargin} /> : null}
+      {underline ? <DividerLine extendRight /> : null}
     </>
   )
 }
-
-const dividerMargin = [0, 1]
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
     marginHorizontal: theme.rem(1),
-    paddingBottom: theme.rem(1)
+    paddingBottom: theme.rem(0.5)
   },
   titleContainer: {
     flexDirection: 'row',
