@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
@@ -12,15 +12,14 @@ import { getDenomFromIsoCode } from '../util/utils'
  * 3. Localization: commas, decimals, spaces
  * */
 
-export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; wallet: EdgeCurrencyWallet }) => {
-  const { tokenId, wallet } = props
-  const { currencyConfig, currencyInfo } = wallet
+export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; currencyConfig: EdgeCurrencyConfig }) => {
+  const { tokenId, currencyConfig } = props
   const { allTokens } = currencyConfig
   const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   // Get currencyCode and denomination from token
   const token = tokenId != null ? allTokens[tokenId] : null
-  const { currencyCode, denominations } = token != null ? token : currencyInfo
+  const { currencyCode, denominations } = token != null ? token : currencyConfig.currencyInfo
   const [denomination] = denominations
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 

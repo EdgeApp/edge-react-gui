@@ -45,12 +45,12 @@ export const ExchangeQuote = (props: Props) => {
     withSymbol: false
   })
   const { denomination: feeDenomination, isoFiatCurrencyCode } = useTokenDisplayData({
-    wallet: fromWallet,
+    currencyConfig: fromWallet.currencyConfig,
     tokenId: feeTokenId
   })
 
   const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({
-    wallet: fromWallet,
+    currencyConfig: fromWallet.currencyConfig,
     tokenId: fromTokenId
   })
 
@@ -86,7 +86,13 @@ export const ExchangeQuote = (props: Props) => {
     withSymbol: false
   })
   const minFiatAmountText = (
-    <FiatText wallet={toWallet} tokenId={toTokenId} nativeCryptoAmount={quote.minReceiveAmount ?? '0'} hideFiatSymbol appendFiatCurrencyCode />
+    <FiatText
+      currencyConfig={toWallet.currencyConfig}
+      tokenId={toTokenId}
+      nativeCryptoAmount={quote.minReceiveAmount ?? '0'}
+      hideFiatSymbol
+      appendFiatCurrencyCode
+    />
   )
 
   const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {

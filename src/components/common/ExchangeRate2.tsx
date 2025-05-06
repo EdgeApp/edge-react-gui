@@ -23,7 +23,7 @@ export const ExchangeRate2 = memo<Props>((props: Props) => {
   return (
     <EdgeText style={style.rateBalanceText}>
       {primaryText}
-      <FiatText nativeCryptoAmount={primaryDisplayDenom.multiplier} tokenId={tokenId} wallet={wallet} />
+      <FiatText nativeCryptoAmount={primaryDisplayDenom.multiplier} tokenId={tokenId} currencyConfig={wallet.currencyConfig} />
     </EdgeText>
   )
 })
