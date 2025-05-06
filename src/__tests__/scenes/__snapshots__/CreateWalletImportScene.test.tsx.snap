@@ -243,9 +243,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       style={
         {
           "justifyContent": "center",
-          "marginHorizontal": 11,
           "overflow": "visible",
-          "paddingBottom": 22,
+          "paddingBottom": 11,
         }
       }
     >
@@ -255,6 +254,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
+            "marginBottom": 11,
+            "marginHorizontal": 11,
           }
         }
       >
@@ -302,12 +303,17 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           }
         }
         style={
-          {
-            "alignSelf": "stretch",
-            "height": 1,
-            "marginRight": -22,
-            "marginTop": 22,
-          }
+          [
+            {
+              "borderBottomColor": "rgba(255, 255, 255, .1)",
+              "borderBottomWidth": 1,
+              "height": 1,
+            },
+            {
+              "margin": 11,
+              "marginRight": -22,
+            },
+          ]
         }
       />
     </View>
