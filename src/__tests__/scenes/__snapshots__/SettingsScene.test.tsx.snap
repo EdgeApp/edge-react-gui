@@ -480,7 +480,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -608,7 +627,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -736,7 +774,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -864,7 +921,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -992,7 +1068,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1120,7 +1215,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1250,7 +1364,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             </View>
           </View>
         </View>
-        <View
+        <BVLinearGradient
+          colors={
+            [
+              452984831,
+              452984831,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 0.5,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0.5,
+            }
+          }
           style={
             [
               {
@@ -1259,9 +1392,8 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 "height": 1,
               },
               {
-                "marginLeft": 22,
-                "marginRight": -11,
-                "marginVertical": 11,
+                "margin": 11,
+                "marginRight": -22,
               },
             ]
           }
@@ -1496,7 +1628,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1624,7 +1775,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1737,7 +1907,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1850,7 +2039,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1982,7 +2190,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2114,7 +2341,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2246,7 +2492,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2374,7 +2639,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2502,7 +2786,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2630,7 +2933,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2762,7 +3084,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2890,7 +3231,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3018,7 +3378,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3146,7 +3525,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3280,7 +3678,26 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             </View>
           </View>
         </View>
-        <View
+        <BVLinearGradient
+          colors={
+            [
+              452984831,
+              452984831,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 0.5,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0.5,
+            }
+          }
           style={
             [
               {
@@ -3289,9 +3706,8 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 "height": 1,
               },
               {
-                "marginLeft": 22,
-                "marginRight": -11,
-                "marginVertical": 11,
+                "margin": 11,
+                "marginRight": -22,
               },
             ]
           }

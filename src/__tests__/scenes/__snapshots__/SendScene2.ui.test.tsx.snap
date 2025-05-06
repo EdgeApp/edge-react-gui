@@ -630,7 +630,26 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -817,7 +836,26 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -1988,7 +2026,26 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -2175,7 +2232,26 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -2520,7 +2596,26 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -2615,7 +2710,26 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -3540,7 +3654,26 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -3703,7 +3836,26 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -3890,7 +4042,26 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -5065,7 +5236,26 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -6287,7 +6477,26 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -8520,7 +8729,26 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -8617,7 +8845,26 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -9797,7 +10044,26 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -9960,7 +10226,26 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   </Text>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -11074,7 +11359,26 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {
@@ -11171,7 +11475,26 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   </View>
                 </View>
               </View>
-              <View
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
                 style={
                   [
                     {

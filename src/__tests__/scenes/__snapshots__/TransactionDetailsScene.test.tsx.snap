@@ -536,7 +536,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -721,7 +740,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -861,7 +899,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -956,7 +1013,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1256,7 +1332,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -1835,7 +1930,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2706,7 +2820,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -2891,7 +3024,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3031,7 +3183,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </View>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3126,7 +3297,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -3426,7 +3616,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
@@ -4005,7 +4214,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
               </View>
             </View>
-            <View
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
