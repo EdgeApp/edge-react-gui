@@ -3,6 +3,7 @@ import React from 'react'
 import { makeEvent } from 'yavent'
 
 import { showError } from '../components/services/AirshipInstance'
+import { useSelector } from '../types/reactRedux'
 import { ThunkAction } from '../types/reduxTypes'
 import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, NotifState, PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
@@ -36,12 +37,17 @@ export function useAccountSettings() {
  */
 export function useNotifCount(): number | undefined {
   const { notifState } = useAccountSettings()
+  const isDuressAccount = useSelector(state => state.core.account.isDuressAccount)
   return React.useMemo(() => {
-    const priorityCount = Object.values(notifState).filter(notifInfo => notifInfo.isPriority && !notifInfo.isCompleted).length
-    const incompleteCount = Object.values(notifState).filter(notifInfo => !notifInfo.isCompleted).length
+    const priorityCount = Object.entries(notifState)
+      .filter(([type]) => !(isDuressAccount && ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)))
+      .filter(([, notifInfo]) => notifInfo.isPriority && !notifInfo.isCompleted).length
+    const incompleteCount = Object.entries(notifState)
+      .filter(([type]) => !(isDuressAccount && ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)))
+      .filter(([, notifInfo]) => !notifInfo.isCompleted).length
 
     return priorityCount === 0 && incompleteCount === 0 ? undefined : priorityCount > 0 ? 0 : incompleteCount
-  }, [notifState])
+  }, [notifState, isDuressAccount])
 }
 
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
