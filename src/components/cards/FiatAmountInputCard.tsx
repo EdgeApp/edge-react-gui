@@ -28,7 +28,7 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
     tokenId,
-    wallet: wallet
+    currencyConfig: wallet.currencyConfig
   })
   const {
     currencyConfig: { allTokens }

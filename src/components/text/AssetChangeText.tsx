@@ -22,7 +22,7 @@ interface Props {
 export const AssetChangeTextUi4 = React.memo(({ wallet, tokenId, style }: Props) => {
   const { assetToFiatRate, usdToWalletFiatRate, assetToYestUsdRate } = useTokenDisplayData({
     tokenId,
-    wallet
+    currencyConfig: wallet.currencyConfig
   })
 
   const theme = useTheme()

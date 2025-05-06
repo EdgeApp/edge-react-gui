@@ -43,7 +43,14 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
       <View style={styles.columnRight}>
         <FiatIcon sizeRem={1.5} fiatCurrencyCode={isoFiatCurrencyCode} />
         <EdgeText style={styles.text}>
-          <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeAmount} tokenId={tokenId} wallet={wallet} />
+          <FiatText
+            appendFiatCurrencyCode
+            autoPrecision
+            hideFiatSymbol
+            nativeCryptoAmount={nativeAmount}
+            tokenId={tokenId}
+            currencyConfig={wallet.currencyConfig}
+          />
         </EdgeText>
       </View>
     </View>

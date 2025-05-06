@@ -32,7 +32,7 @@ export const FiatAmountTile = (props: Props) => {
         fiatAmount
       })}`
     ) : nativeCryptoAmount != null ? (
-      <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
+      <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} currencyConfig={wallet.currencyConfig} />
     ) : null
 
   return (
