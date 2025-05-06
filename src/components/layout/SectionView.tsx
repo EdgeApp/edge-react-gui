@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { DividerLine } from '../common/DividerLine'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -33,12 +34,6 @@ export const SectionView = (props: Props): JSX.Element | null => {
   const styles = getStyles(theme)
 
   const margin = marginRem != null ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)) : extendRight ? styles.marginScene : styles.marginCard
-  const dividerMargin =
-    dividerMarginRem != null
-      ? sidesToMargin(mapSides(fixSides(dividerMarginRem, 0), theme.rem))
-      : extendRight
-      ? styles.dividerMarginScene
-      : styles.dividerMarginCard
 
   const nonNullChildren = React.Children.map(children, child => {
     if (child != null) {
@@ -59,7 +54,7 @@ export const SectionView = (props: Props): JSX.Element | null => {
               return (
                 <>
                   {child}
-                  <View style={[styles.divider, dividerMargin]} />
+                  <DividerLine marginRem={dividerMarginRem} extendRight={extendRight} />
                 </>
               )
             }
@@ -80,18 +75,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   marginScene: {
     marginVertical: theme.rem(DEFAULT_MARGIN_REM)
-  },
-  divider: {
-    height: theme.thinLineWidth,
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
-  },
-  dividerMarginScene: {
-    marginVertical: theme.rem(DEFAULT_MARGIN_REM),
-    marginLeft: theme.rem(1),
-    marginRight: -theme.rem(DEFAULT_MARGIN_REM)
-  },
-  dividerMarginCard: {
-    margin: theme.rem(DEFAULT_MARGIN_REM)
   }
 }))
