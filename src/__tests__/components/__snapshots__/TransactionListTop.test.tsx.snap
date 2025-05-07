@@ -918,50 +918,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       </Text>
     </View>
   </View>,
-  <View
-    style={
-      {
-        "marginRight": -11,
-        "overflow": "visible",
-      }
-    }
-  >
-    <BVLinearGradient
-      colors={
-        [
-          452984831,
-          452984831,
-        ]
-      }
-      endPoint={
-        {
-          "x": 1,
-          "y": 0.5,
-        }
-      }
-      locations={null}
-      startPoint={
-        {
-          "x": 0,
-          "y": 0.5,
-        }
-      }
-      style={
-        [
-          {
-            "alignSelf": "stretch",
-            "height": 1,
-          },
-          {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": -22,
-            "marginTop": 11,
-          },
-        ]
-      }
-    />
-  </View>,
 ]
 `;
 
@@ -1753,50 +1709,6 @@ exports[`TransactionListTop should render 1`] = `
         Trade
       </Text>
     </View>
-  </View>,
-  <View
-    style={
-      {
-        "marginRight": -11,
-        "overflow": "visible",
-      }
-    }
-  >
-    <BVLinearGradient
-      colors={
-        [
-          452984831,
-          452984831,
-        ]
-      }
-      endPoint={
-        {
-          "x": 1,
-          "y": 0.5,
-        }
-      }
-      locations={null}
-      startPoint={
-        {
-          "x": 0,
-          "y": 0.5,
-        }
-      }
-      style={
-        [
-          {
-            "alignSelf": "stretch",
-            "height": 1,
-          },
-          {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": -22,
-            "marginTop": 11,
-          },
-        ]
-      }
-    />
   </View>,
 ]
 `;

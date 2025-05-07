@@ -29,6 +29,7 @@ import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor } f
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { AccentColors } from '../common/DotsBackground'
 import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -280,6 +281,7 @@ function WalletDetailsComponent(props: Props) {
             wallet={wallet}
             isLightAccount={isLightAccount}
           />
+          <DividerLineUi4 extendRight />
           <InfoCardCarousel
             enterAnim={fadeInDown10}
             cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
