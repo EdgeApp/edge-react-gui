@@ -599,6 +599,7 @@ export const SPECIAL_CURRENCY_INFO: {
     noChangeMiningFee: true,
     dummyPublicAddress: 'thor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
     isImportKeySupported: true,
+    isStakingSupported: true,
     unstoppableDomainsTicker: 'RUNE'
   },
   thorchainrunestagenet: {
