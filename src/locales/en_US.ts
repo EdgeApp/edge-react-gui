@@ -1705,6 +1705,8 @@ const strings = {
   swap: 'Swap',
   update_available: 'Update Available',
   enter_email: 'Enter Email',
+  edge_ucation: 'Edge-ucation',
+  education: 'Education',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

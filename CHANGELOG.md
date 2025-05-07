@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Add os version to the "OS" line of logs
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - removed: Disable Fantom transaction list
