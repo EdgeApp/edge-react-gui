@@ -9,7 +9,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SceneContainer } from '../layout/SceneContainer'
-import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeAppSceneProps<'duressModeHowTo'> {}
 
@@ -23,24 +23,16 @@ export const DuressModeHowToScene = (props: Props) => {
   return (
     <SceneWrapper scroll>
       <SceneContainer headerTitle={lstrings.how_duress_mode_works}>
-        <EdgeCard>
-          <Paragraph>{parseMarkdown(lstrings.how_duress_mode_works_description_md)}</Paragraph>
-        </EdgeCard>
+        <EdgeCard>{parseMarkdown(lstrings.how_duress_mode_works_description_md)}</EdgeCard>
 
         <CardHeadingText>{lstrings.how_duress_mode_return_to_normal_title}</CardHeadingText>
-        <EdgeCard>
-          <Paragraph>{parseMarkdown(lstrings.how_duress_mode_return_to_normal_description_md)}</Paragraph>
-        </EdgeCard>
+        <EdgeCard>{parseMarkdown(lstrings.how_duress_mode_return_to_normal_description_md)}</EdgeCard>
 
         <CardHeadingText>{lstrings.how_duress_mode_add_funds_to_account_title}</CardHeadingText>
-        <EdgeCard>
-          <Paragraph>{parseMarkdown(lstrings.how_duress_mode_add_funds_to_account_description_md)}</Paragraph>
-        </EdgeCard>
+        <EdgeCard>{parseMarkdown(lstrings.how_duress_mode_add_funds_to_account_description_md)}</EdgeCard>
 
         <CardHeadingText>{lstrings.how_duress_mode_when_to_use_title}</CardHeadingText>
-        <EdgeCard>
-          <Paragraph>{parseMarkdown(lstrings.how_duress_mode_when_to_use_description_md)}</Paragraph>
-        </EdgeCard>
+        <EdgeCard>{parseMarkdown(lstrings.how_duress_mode_when_to_use_description_md)}</EdgeCard>
 
         <ButtonsView
           layout="column"

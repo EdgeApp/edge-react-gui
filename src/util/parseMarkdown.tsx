@@ -35,7 +35,7 @@ function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
     }
     case 'paragraph': {
       console.log('P')
-      return <Paragraph>{subTokens ?? token.text}</Paragraph>
+      return <Paragraph>{subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}</Paragraph>
     }
     case 'em': {
       return <Em>{subTokens ?? token.text}</Em>
@@ -51,9 +51,7 @@ function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
           <LiBullet>
             <EdgeText>{token.raw.match(/^[\s]*([*\-\d.]+)/)?.[1] ?? '*'}</EdgeText>
           </LiBullet>
-          <LiContent>
-            <EdgeText numberOfLines={1000}>{subTokens ?? token.text}</EdgeText>
-          </LiContent>
+          <LiContent>{subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}</LiContent>
         </Li>
       )
     }
@@ -67,11 +65,11 @@ function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
 const Markdown = styled(View)(theme => ({
   flexDirection: 'column',
   alignItems: 'stretch',
-  justifyContent: 'flex-start'
+  justifyContent: 'flex-start',
+  margin: theme.rem(0.5)
 }))
 
 const Paragraph = styled(View)(theme => ({
-  // backgroundColor: 'pink',
   flexDirection: 'column',
   paddingVertical: theme.rem(0.25)
 }))
@@ -81,14 +79,12 @@ const Em = styled(Text)(theme => ({
 }))
 
 const Ol = styled(View)(theme => ({
-  // backgroundColor: 'lightblue',
   alignItems: 'flex-start',
   flexDirection: 'column',
   paddingVertical: theme.rem(0.25)
 }))
 
 const Li = styled(View)(theme => ({
-  // backgroundColor: 'lightgreen',
   alignItems: 'flex-start',
   flexDirection: 'row',
   justifyContent: 'flex-start',
