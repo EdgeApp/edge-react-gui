@@ -560,7 +560,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
@@ -669,7 +668,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
@@ -778,7 +776,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
@@ -1481,7 +1478,6 @@ exports[`TransactionListTop should render 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
@@ -1590,7 +1586,6 @@ exports[`TransactionListTop should render 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
@@ -1699,7 +1694,6 @@ exports[`TransactionListTop should render 1`] = `
               "includeFontPadding": false,
             },
             {
-              "marginBottom": 11,
               "textAlign": "center",
             },
             null,
