@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Add eCash.
+
 ## 4.27.0 (staging)
 
 - added: Add PIVX.
