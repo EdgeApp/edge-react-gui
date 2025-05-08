@@ -156,6 +156,10 @@ export const NotificationCenterScene = (props: Props) => {
             const { params } = notifState[key]
             if (params == null) return null
             const { walletId } = params
+            if (wallets[walletId] == null) {
+              console.warn(`newToken notification display failed with unknown walletId: ${walletId}`)
+              return null
+            }
             const { name, currencyInfo } = wallets[walletId]
 
             const handleCloseNewToken = async () => {
