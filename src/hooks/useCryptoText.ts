@@ -19,7 +19,7 @@ export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol, hideB
     assetToFiatRate
   } = useTokenDisplayData({
     tokenId,
-    wallet
+    currencyConfig: wallet.currencyConfig
   })
   const displayDenomination = useDisplayDenom(wallet.currencyConfig, tokenId)
 

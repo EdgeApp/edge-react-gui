@@ -392,7 +392,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </EdgeTouchableOpacity>
             <EdgeText style={styles.exchangeRate}>
-              <FiatText appendFiatCurrencyCode nativeCryptoAmount={displayDenomination.multiplier} tokenId={tokenId} wallet={wallet} />
+              <FiatText appendFiatCurrencyCode nativeCryptoAmount={displayDenomination.multiplier} tokenId={tokenId} currencyConfig={wallet.currencyConfig} />
             </EdgeText>
           </EdgeAnim>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}

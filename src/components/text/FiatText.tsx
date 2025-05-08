@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { useFiatText } from '../../hooks/useFiatText'
@@ -19,7 +19,7 @@ interface Props {
   // Amount to show:
   nativeCryptoAmount: string
   tokenId: EdgeTokenId
-  wallet: EdgeCurrencyWallet
+  currencyConfig: EdgeCurrencyConfig
 }
 
 /**
@@ -37,11 +37,11 @@ export const FiatText = ({
   subCentTruncation = false,
   hideBalance = false,
   tokenId,
-  wallet
+  currencyConfig
 }: Props) => {
   const { currencyCode, denomination, isoFiatCurrencyCode } = useTokenDisplayData({
     tokenId,
-    wallet
+    currencyConfig
   })
 
   const text = useFiatText({
@@ -54,7 +54,7 @@ export const FiatText = ({
     isoFiatCurrencyCode,
     maxPrecision,
     minPrecision,
-    nativeCryptoAmount: isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? '0' : nativeCryptoAmount,
+    nativeCryptoAmount: isKeysOnlyPlugin(currencyConfig.currencyInfo.pluginId) ? '0' : nativeCryptoAmount,
     subCentTruncation,
     hideBalance
   })

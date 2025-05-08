@@ -157,7 +157,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         <EdgeText style={styles.secondaryTitle}>{lstrings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
           {balance}
-          <FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={balanceCrypto} />
+          <FiatText currencyConfig={wallet.currencyConfig} tokenId={tokenId} nativeCryptoAmount={balanceCrypto} />
           {parenString}
         </EdgeText>
       </View>
@@ -179,7 +179,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation tokenId={feeTokenId} />
+          <FiatText nativeCryptoAmount={feeNativeAmount} currencyConfig={wallet.currencyConfig} maxPrecision={2} subCentTruncation tokenId={feeTokenId} />
           {parenString}
         </EdgeText>
       </View>

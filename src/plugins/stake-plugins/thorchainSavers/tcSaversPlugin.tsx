@@ -12,6 +12,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
+import { base16 } from 'rfc4648'
 
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
@@ -140,6 +141,7 @@ const DUST_THRESHOLDS: StringMap = {
   AVAX: '0',
   BTC: '10000',
   BCH: '10000',
+  BSC: '0',
   DOGE: '100000000',
   ETH: '0',
   LTC: '10000'
@@ -166,6 +168,17 @@ const asThorNodePool = asObject({
   // derived_depth_bps: asString // "9110"
 })
 const asThorNodePools = asArray(asThorNodePool)
+
+// TCY STUFF
+const asTcyClaim = asObject({
+  tcy_claimer: asArray(
+    asObject({
+      asset: asString, // 'ETH.ETH'
+      l1_address: asString, // '0x5166ef11e5df6d4ca213778fff4756937e469663'
+      amount: asString // '10000000000000'
+    })
+  )
+})
 
 type Saver = ReturnType<typeof asSaver>
 type Pool = ReturnType<typeof asPool>
@@ -202,7 +215,7 @@ const policyDefault = {
   apy: 0,
   stakeProviderInfo,
   disableMaxStake: true,
-  hideClaimAction: true,
+  hideClaimAction: false,
   hideUnstakeAndClaimAction: true,
   stakeWarning: null,
   unstakeWarning: null,
@@ -261,7 +274,7 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
           policies.push({
             ...policyDefault,
             stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}`,
-            rewardAssets: [{ pluginId, currencyCode }],
+            rewardAssets: [{ pluginId: 'thorchainrune', currencyCode: 'TCY' }],
             stakeAssets: [{ pluginId, currencyCode }]
           })
         }
@@ -287,13 +300,9 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
       return filterStakePolicies(policies, filter)
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, currencyCode, wallet } = request
+      const { action, stakePolicyId, wallet } = request
       const policy = getPolicyFromId(stakePolicyId)
-      const { pluginId, currencyCode: policyCurrencyCode } = policy.stakeAssets[0]
-
-      if (currencyCode !== policyCurrencyCode) {
-        throw new Error('Currency code mismatch between request and policy')
-      }
+      const { pluginId } = policy.stakeAssets[0]
 
       if (pluginId !== wallet.currencyInfo.pluginId) {
         throw new Error('pluginId mismatch between request and policy')
@@ -306,7 +315,9 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
           throw new Error(lstrings.stake_tc_unavailable)
 
         case 'unstake':
-        case 'claim':
+        case 'claim': {
+          return await claimRequest(opts, request)
+        }
         case 'unstakeExact':
           // return await unstakeRequest(opts, request)
           await showDisabledModal()
@@ -348,7 +359,26 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
     }
   }
 
-  return saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
+  const position = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
+
+  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
+  if (claimableTcy !== '0') {
+    // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
+    position.allocations.unshift({
+      pluginId: 'thorchainrune',
+      currencyCode: 'TCY',
+      allocationType: 'earned',
+      nativeAmount: claimableTcy
+    })
+    position.canStake = false
+    position.canUnstake = false
+    position.canUnstakeAndClaim = false
+    position.canClaim = true
+  } else {
+    position.canClaim = false
+  }
+
+  return position
 }
 
 async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Pool | undefined> {
@@ -432,6 +462,27 @@ function saverToPosition(currencyConfig: EdgeCurrencyConfig, currencyCode: strin
     canUnstakeAndClaim: false,
     canClaim: canUnstake
   }
+}
+
+async function fetchClaimableTcy(opts: EdgeGuiPluginOptions, address: string): Promise<string> {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+
+  const response = await fetchWaterfall(thornodeServers, `thorchain/tcy_claimer/${address}`, {
+    headers: { 'x-client-id': ninerealmsClientId }
+  })
+
+  if (!response.ok) {
+    const text = await response.text()
+    if (text.includes("doesn't have any tcy to claim")) {
+      return '0'
+    }
+    throw new Error(text)
+  }
+
+  const raw = await response.json()
+  const json = asTcyClaim(raw)
+
+  return json.tcy_claimer[0].amount
 }
 
 const updatePolicyApys = (infoServerResponse: InfoServerResponse) => {
@@ -1074,6 +1125,218 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
           },
           otherParams: { enableRbf: false, forceChangeAddress }
         })
+        const signedTx = await wallet.signTx(tx)
+        const broadcastedTx = await wallet.broadcastTx(signedTx)
+        await wallet.saveTx(broadcastedTx)
+      }
+      // Spend from primary address to pool address
+      const tx = await wallet.makeSpend(spendInfo)
+      const signedTx = await wallet.signTx(tx)
+      const broadcastedTx = await wallet.broadcastTx(signedTx)
+      await wallet.saveTx(broadcastedTx)
+    }
+  }
+}
+
+const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+  const { wallet, account } = request
+  const { currencyCode, pluginId } = wallet.currencyInfo
+  const dustThreshold = DUST_THRESHOLDS[currencyCode]
+  if (dustThreshold == null) throw new Error('unknown dust threshold')
+  const nativeAmount = add(dustThreshold, '1') // amount sent must exceed the dust threshold
+
+  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const isEvm = EVM_PLUGINIDS[pluginId]
+
+  const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
+
+  if (lt(walletBalance, nativeAmount)) {
+    throw new InsufficientFundsError({ tokenId })
+  }
+
+  await updateInboundAddresses(opts)
+
+  const { primaryAddress, addressBalance } = await getPrimaryAddress(account, wallet, currencyCode)
+
+  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const [chain] = asset.split('.')
+  const poolAddress = inboundAddresses?.find(ia => ia.chain === chain)?.address
+  if (poolAddress == null) {
+    throw new Error('Missing pool address')
+  }
+
+  const utxoSourceAddress = primaryAddress
+  const forceChangeAddress = primaryAddress
+
+  let thorchainWallet = Object.values(account.currencyWallets).find(wallet => wallet.currencyInfo.pluginId === 'thorchainrune')
+
+  if (thorchainWallet == null) {
+    // Make sure the user has a Thorchain wallet to receive the TCY
+    console.log('Thorchain wallet not found, creating one')
+    thorchainWallet = await account.createCurrencyWallet('wallet:thorchainrune', {
+      fiatCurrencyCode: wallet.fiatCurrencyCode,
+      name: lstrings.string_first_thorchainrune_wallet_name,
+      enabledTokenIds: ['tcy']
+    })
+  }
+
+  if (!thorchainWallet.enabledTokenIds.includes('tcy')) {
+    await thorchainWallet.changeEnabledTokenIds([...thorchainWallet.enabledTokenIds, 'tcy'])
+  }
+  const thorchainAddresses = await thorchainWallet.getAddresses({ tokenId: null })
+  const thorchainAddress = thorchainAddresses[0].publicAddress
+
+  let memoValue = `tcy:${thorchainAddress}`
+  let memoType: EdgeMemo['type'] = 'text'
+  if (isEvm) {
+    memoType = 'hex'
+    memoValue = base16.stringify(Buffer.from(memoValue, 'utf8'))
+  }
+
+  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
+
+  // Try to spend right out of the primaryAddress
+  const spendInfo: EdgeSpendInfo = {
+    tokenId,
+    spendTargets: [
+      {
+        publicAddress: poolAddress,
+        nativeAmount: nativeAmount
+      }
+    ],
+    memos: [
+      {
+        type: memoType,
+        value: memoValue
+      }
+    ],
+
+    // Use otherParams to meet Thorchain Savers requirements
+    // 1. Sort the outputs by how they are sent to makeSpend making the target output the 1st, change 2nd
+    // 2. Only use UTXOs from the primary address (index 0)
+    // 3. Force change to go to the primary address
+    otherParams: {
+      enableRbf: false,
+      outputSort: 'targets',
+      utxoSourceAddress,
+      forceChangeAddress
+    },
+    metadata: {
+      name: 'TCY Claiming',
+      category: 'income:Claim',
+      notes: `Claimed Thorchain TCY token`
+    },
+    assetAction: { assetActionType: 'claim' },
+    savedAction: {
+      actionType: 'stake',
+      pluginId: stakeProviderInfo.pluginId,
+      stakeAssets: [
+        {
+          pluginId: 'thorchainrune',
+          tokenId: 'tcy',
+          nativeAmount: claimableTcy
+        }
+      ]
+    }
+  }
+
+  if (isEvm) {
+    // For mainnet coins of EVM chains, use gasLimit override since makeSpend doesn't
+    // know how to estimate an ETH spend with extra data
+    spendInfo.networkFeeOption = 'custom'
+    spendInfo.customNetworkFee = {
+      ...spendInfo.customNetworkFee,
+      gasLimit: EVM_SEND_GAS
+    }
+  }
+
+  let networkFee = '0'
+  let needsFundingPrimary = false
+  if (lt(addressBalance, nativeAmount)) {
+    // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
+    needsFundingPrimary = true
+  } else {
+    try {
+      const estimateTx = await wallet.makeSpend(spendInfo)
+      networkFee = estimateTx.parentNetworkFee ?? estimateTx.networkFee
+    } catch (e: unknown) {
+      if (!isEvm && asMaybeInsufficientFundsError(e) != null) {
+        needsFundingPrimary = true
+      } else {
+        throw e
+      }
+    }
+  }
+
+  let fundingSpendInfo: EdgeSpendInfo | undefined
+  if (needsFundingPrimary) {
+    // Estimate the total cost to create the two transactions
+    // 1. Fund the primary address with the requestedAmount + fees for tx #2
+    // 2. Send the requested amount to the pool address
+    fundingSpendInfo = {
+      tokenId: null,
+      spendTargets: [
+        {
+          publicAddress: primaryAddress,
+          nativeAmount: nativeAmount
+        }
+      ],
+      assetAction: { assetActionType: 'unstakeNetworkFee' },
+      savedAction: {
+        actionType: 'stake',
+        pluginId: stakeProviderInfo.pluginId,
+        stakeAssets: [
+          {
+            pluginId: 'thorchainrune',
+            tokenId: 'tcy',
+            nativeAmount: claimableTcy
+          }
+        ]
+      },
+      otherParams: { forceChangeAddress, enableRbf: false }
+    }
+
+    const estimateTx = await wallet.makeSpend(fundingSpendInfo)
+    networkFee = estimateTx.networkFee
+
+    // The actual funding transaction will need to fund enough for the staking amount
+    // plus the fees for the staking transaction
+    fundingSpendInfo.spendTargets[0].nativeAmount = add(networkFee, nativeAmount)
+
+    const remainingBalance = sub(sub(walletBalance, mul(networkFee, '2')), nativeAmount)
+    if (lt(remainingBalance, '0')) {
+      throw new InsufficientFundsError({ tokenId: null })
+    }
+  }
+
+  const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
+
+  const allocations: QuoteAllocation[] = [
+    {
+      allocationType: 'networkFee',
+      pluginId,
+      currencyCode: wallet.currencyInfo.currencyCode,
+      nativeAmount: add(toFixed(fee, 0, 0), nativeAmount) // we're adding the dust amount to the network fee since it cannot be unclaimed
+    },
+    {
+      allocationType: 'claim',
+      pluginId: 'thorchainrune',
+      currencyCode: 'TCY',
+      nativeAmount: claimableTcy
+    }
+  ]
+
+  return {
+    allocations,
+    approve: async () => {
+      if (fundingSpendInfo != null) {
+        // Transfer funds into the primary address
+        const tx = await wallet.makeSpend(fundingSpendInfo)
         const signedTx = await wallet.signTx(tx)
         const broadcastedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(broadcastedTx)

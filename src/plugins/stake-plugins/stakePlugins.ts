@@ -3,6 +3,7 @@ import { makeTronStakePlugin } from './currency/tronStakePlugin'
 import { makeGenericStakePlugin } from './generic/GenericStakePlugin'
 import { genericPlugins } from './generic/pluginInfo'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
+import { makeThorchainTcyPlugin } from './thorchainSavers/tcyPlugin'
 import { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'
 
@@ -20,6 +21,9 @@ export const getStakePlugins = async (pluginId: string): Promise<StakePlugin[]> 
       console.warn(e.message)
     }),
     makeTcSaversPlugin(pluginId, { initOptions: tcInitOptions }).catch(e => {
+      console.warn(e.message)
+    }),
+    makeThorchainTcyPlugin(pluginId, { initOptions: tcInitOptions }).catch(e => {
       console.warn(e.message)
     }),
     makeTronStakePlugin(pluginId).catch(e => {
