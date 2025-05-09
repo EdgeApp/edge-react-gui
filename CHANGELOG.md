@@ -2,8 +2,9 @@
 
 ## Unreleased (develop)
 
-- removed: Disable Fantom transaction list
 - added: Add os version to the "OS" line of logs
+- fixed: Primary button transforming on the animation on `GettingStartedScene`
+- removed: Disable Fantom transaction list
 
 ## 4.27.0 (2025-05-08)
 
