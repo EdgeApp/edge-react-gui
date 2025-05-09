@@ -155,7 +155,26 @@ export interface NotifInfo {
    * Optional object that holds additional parameters that may be used to
    * customize the notification UI.
    */
-  params?: { walletId: string }
+  params?: {
+    walletId?: string
+    /**
+     * Optional object that holds information about a promo card notification.
+     * Used when a promo card is dismissed from the home screen and added to the notification center.
+     */
+    promoCard?: {
+      /** Unique ID for the promo card */
+      messageId: string
+
+      /** Title to display in the notification center */
+      title: string
+
+      /** Body text to display in the notification center */
+      body: string
+
+      /** URL to open when the notification is tapped */
+      ctaUrl: string
+    }
+  }
 }
 
 export const asNotifInfo = asObject<NotifInfo>({
@@ -163,7 +182,19 @@ export const asNotifInfo = asObject<NotifInfo>({
   isBannerHidden: asOptional(asBoolean, false),
   isCompleted: asMaybe(asBoolean, false),
   isPriority: asMaybe(asBoolean, false),
-  params: asMaybe(asObject({ walletId: asString }))
+  params: asMaybe(
+    asObject({
+      walletId: asMaybe(asString),
+      promoCard: asMaybe(
+        asObject({
+          messageId: asString,
+          title: asString,
+          body: asString,
+          ctaUrl: asString
+        })
+      )
+    })
+  )
 })
 const asNotifState = asObject(asNotifInfo)
 export type NotifState = ReturnType<typeof asNotifState>
