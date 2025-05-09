@@ -44,10 +44,6 @@ interface BuildConfigFile {
   zealotUrl?: string
   zealotApiToken?: string
   zealotChannelKey?: string
-  appCenterApiToken: string
-  appCenterAppName: string
-  appCenterDistroGroup: string
-  appCenterGroupName: string
   hockeyAppId: string
   hockeyAppTags: string
   hockeyAppToken: string
@@ -435,18 +431,6 @@ function buildCommonPost(buildObj: BuildObj) {
 
     call(curl)
     mylog('\nUploaded to HockeyApp')
-  }
-
-  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !maestroBuild) {
-    mylog('\n\nUploading to App Center')
-    mylog('***********************\n')
-
-    call(
-      `npx appcenter distribute release --app ${buildObj.appCenterGroupName}/${buildObj.appCenterAppName} --file ${buildObj.ipaFile} --token ${
-        buildObj.appCenterApiToken
-      } -g ${buildObj.appCenterDistroGroup} -r ${JSON.stringify(notes)}`
-    )
-    mylog('\n*** Upload to App Center Complete ***')
   }
 
   if (zealotApiToken != null && zealotUrl != null && zealotChannelKey != null && !maestroBuild) {
