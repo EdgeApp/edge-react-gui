@@ -4,7 +4,6 @@ import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -16,8 +15,8 @@ import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { Airship, showToast } from '../services/AirshipInstance'
+import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -42,6 +41,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const displayDenominations = useSelector(state => {
     const { denominationSettings = {} } = state.ui.settings
     return denominationSettings
@@ -126,10 +126,12 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   })
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
-    const { countryCode } = await getFirstOpenInfo()
-    await Airship.show(bridge => (
-      <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation as NavigationBase} wallet={wallet} />
-    ))
+    await showInsufficientFeesModal({
+      coreError: error,
+      countryCode,
+      navigation: navigation as NavigationBase,
+      wallet
+    })
   })
 
   const handleSlidingComplete = useHandler(() => {

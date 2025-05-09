@@ -6,14 +6,12 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { hideNonUkCompliantFeature } from '../../util/ukComplianceUtils'
 import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
@@ -43,7 +41,8 @@ export const BalanceCard = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const [hideNonUkCompliantFeat = true] = useAsyncValue(async () => await hideNonUkCompliantFeature(), [])
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const account = useSelector(state => state.core.account)
   const isBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)

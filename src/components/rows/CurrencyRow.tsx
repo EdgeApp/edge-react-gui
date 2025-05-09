@@ -56,7 +56,9 @@ const CurrencyRowComponent = (props: Props) => {
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalanceSetting} />
-  const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalanceSetting} />
+  const fiatText = (
+    <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} currencyConfig={wallet.currencyConfig} hideBalance={hideBalanceSetting} />
+  )
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {

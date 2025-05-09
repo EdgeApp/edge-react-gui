@@ -16,7 +16,6 @@ import { ActivityIndicator, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../actions/FirstOpenActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -50,7 +49,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
-import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -171,6 +170,7 @@ const SendComponent = (props: Props) => {
   // -1 = no max spend, otherwise equal to the index the spendTarget that requested the max spend.
   const [maxSpendSetter, setMaxSpendSetter] = useState<number>(-1)
 
+  const countryCode = useSelector(state => state.ui.countryCode)
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
   const pinSpendingLimitsEnabled = useSelector<boolean>(state => state.ui.settings.spendingLimits.transaction.isEnabled)
@@ -218,11 +218,13 @@ const SendComponent = (props: Props) => {
 
   const pendingInsufficientFees = React.useRef<InsufficientFundsError | undefined>(undefined)
 
-  async function showInsufficientFeesModal(error: InsufficientFundsError): Promise<void> {
-    const { countryCode } = await getFirstOpenInfo()
-    await Airship.show(bridge => (
-      <InsufficientFeesModal bridge={bridge} countryCode={countryCode} coreError={error} navigation={navigation as NavigationBase} wallet={coreWallet} />
-    ))
+  async function showInsufficientFees(error: InsufficientFundsError): Promise<void> {
+    await showInsufficientFeesModal({
+      coreError: error,
+      countryCode,
+      navigation: navigation as NavigationBase,
+      wallet: coreWallet
+    })
   }
 
   const handleChangeAddress =
@@ -371,7 +373,7 @@ const SendComponent = (props: Props) => {
         const insufficientFunds = pendingInsufficientFees.current
         if (insufficientFunds != null) {
           pendingInsufficientFees.current = undefined
-          showInsufficientFeesModal(insufficientFunds).catch(error => showError(error))
+          showInsufficientFees(insufficientFunds).catch(error => showError(error))
         }
       })
   }
@@ -1030,7 +1032,7 @@ const SendComponent = (props: Props) => {
             if (flipInputModalRef.current != null) {
               pendingInsufficientFees.current = insufficientFunds
             } else {
-              await showInsufficientFeesModal(insufficientFunds).catch(error => showError(error))
+              await showInsufficientFees(insufficientFunds).catch(error => showError(error))
             }
           }
         }

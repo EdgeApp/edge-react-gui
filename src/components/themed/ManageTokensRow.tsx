@@ -35,6 +35,7 @@ const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
 export const ManageTokensRowComponent = (props: Props) => {
   const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -54,7 +55,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   // Handle toggling the token on or off:
   const [pending, handleToggle] = usePendingPressAnimation(async () => {
-    if (!isEnabled) await approveTokenTerms(account, wallet.currencyInfo.pluginId)
+    if (!isEnabled) await approveTokenTerms(account, wallet.currencyInfo.pluginId, countryCode)
 
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)

@@ -309,11 +309,11 @@ export const EarnScene = (props: Props) => {
 
       return (
         <EdgeAnim key={stakePolicy.stakePolicyId} enter={fadeInUp20}>
-          <EarnOptionCard currencyInfo={currencyInfo} stakePolicy={stakePolicy} isOpenPosition={false} onPress={handlePress} />
+          <EarnOptionCard currencyConfig={currencyConfigMap} stakePolicy={stakePolicy} isOpenPosition={false} onPress={handlePress} />
         </EdgeAnim>
       )
     },
-    [dispatch, navigation, wallets]
+    [currencyConfigMap, dispatch, navigation, wallets]
   )
 
   const renderPortfolioItem = React.useCallback(
@@ -365,11 +365,11 @@ export const EarnScene = (props: Props) => {
 
       return (
         <EdgeAnim key={stakePolicy.stakePolicyId} enter={fadeInUp20}>
-          <EarnOptionCard currencyInfo={currencyInfo} stakePolicy={stakePolicy} isOpenPosition onPress={handlePress} />
+          <EarnOptionCard currencyConfig={currencyConfigMap} stakePolicy={stakePolicy} isOpenPosition onPress={handlePress} />
         </EdgeAnim>
       )
     },
-    [dispatch, navigation, wallets]
+    [currencyConfigMap, dispatch, navigation, wallets]
   )
 
   const renderFooter: FooterRender = React.useCallback(

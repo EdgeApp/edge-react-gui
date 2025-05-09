@@ -76,6 +76,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
+  'wallet:zano',
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
@@ -107,6 +108,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:coreum',
   'wallet:osmosis',
   'wallet:thorchainrune',
+  'wallet:thorchainrunestagenet',
   'wallet:bobevm'
 ]
 
@@ -130,7 +132,15 @@ interface SpecialCurrencyInfo {
   chainCode: string
 
   // Marketing:
+  /**
+   * Whether to show the "Buy Crypto" button from the wallet details scene.
+   *
+   * Defaults to `false`.
+   */
   displayBuyCrypto?: boolean
+  /**
+   * @deprecated Whether to show Ionia rewards feature. Defaults to `false`.
+   **/
   displayIoniaRewards?: boolean
 
   // Localized GUI text:
@@ -140,6 +150,9 @@ interface SpecialCurrencyInfo {
     modalMessage: string
     alertMessage: string
   }
+  /**
+   * Whether key import is supported. Defaults to `false`.
+   */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
 
@@ -162,7 +175,10 @@ interface SpecialCurrencyInfo {
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
   chainIcon?: boolean
-  unstoppableDomainsTicker?: string // https://support.unstoppabledomains.com/support/solutions/articles/48001185621
+  /**
+   * The ticker for the [unstoppable domains](https://support.unstoppabledomains.com/support/solutions/articles/48001185621).
+   */
+  unstoppableDomainsTicker?: string
 }
 
 /*
@@ -189,6 +205,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'ABSTRACT',
     initWalletName: lstrings.string_first_abstract_wallet_name,
     isImportKeySupported: true,
     noMaxSpend: true,
@@ -314,7 +331,8 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false,
-    unstoppableDomainsTicker: 'XMR'
+    unstoppableDomainsTicker: 'XMR',
+    maxSpendTargets: 16
   },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
@@ -456,6 +474,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
     chainCode: 'ETHW',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'ETHEREUMPO',
     allowZeroTx: true,
     isImportKeySupported: true,
     isTransactionListUnsupported: true,
@@ -468,6 +487,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_optimism_wallet_name,
     chainCode: 'OP',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'OPT',
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
@@ -482,6 +502,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'BOBNETWORK',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -490,9 +511,10 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   zksync: {
     allowZeroTx: true,
-    chainCode: 'OP',
+    chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'ZKSYNC',
     initWalletName: lstrings.string_first_zksync_wallet_name,
     isImportKeySupported: true,
     noMaxSpend: true,
@@ -577,7 +599,15 @@ export const SPECIAL_CURRENCY_INFO: {
     noChangeMiningFee: true,
     dummyPublicAddress: 'thor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
     isImportKeySupported: true,
+    isStakingSupported: true,
     unstoppableDomainsTicker: 'RUNE'
+  },
+  thorchainrunestagenet: {
+    initWalletName: lstrings.string_first_thorchainrunestagenet_wallet_name,
+    chainCode: 'RUNE',
+    noChangeMiningFee: true,
+    dummyPublicAddress: 'sthor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
+    isImportKeySupported: true
   },
   binance: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
@@ -721,6 +751,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
+    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '250'
@@ -778,6 +809,25 @@ export const SPECIAL_CURRENCY_INFO: {
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
+  zano: {
+    initWalletName: lstrings.string_first_zano_wallet_name,
+    chainCode: 'ZANO',
+    dummyPublicAddress: 'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
+    noChangeMiningFee: true,
+    isImportKeySupported: true,
+    importKeyOptions: [
+      {
+        optionName: 'passphrase',
+        displayName: lstrings.create_wallet_import_options_passphrase,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_passphrase_description
+        },
+        required: false,
+        inputType: 'default',
+        inputValidation: (input: string) => typeof input === 'string'
+      }
+    ]
+  },
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,
     chainCode: 'ZEC',
@@ -827,6 +877,14 @@ export const SPECIAL_CURRENCY_INFO: {
       }
     ],
     unstoppableDomainsTicker: 'ARRR'
+  },
+  pivx: {
+    chainCode: 'PIVX',
+    displayBuyCrypto: true,
+    hasSegwit: false,
+    initWalletName: lstrings.string_first_pivx_wallet_name,
+    isImportKeySupported: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS
   },
   polygon: {
     initWalletName: lstrings.string_first_polygon_wallet_name,
@@ -909,6 +967,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_sonic_wallet_name,
     chainCode: 'S',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    fioChainCode: 'SONIC',
     allowZeroTx: true,
     displayBuyCrypto: false,
     isImportKeySupported: true,

@@ -18,6 +18,7 @@ import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { FillLoader } from '../progress-indicators/FillLoader'
 import { CoinRankRow } from '../rows/CoinRankRow'
 import { showDevError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -26,6 +27,12 @@ import { EdgeText } from '../themed/EdgeText'
 import { SearchFooter } from '../themed/SearchFooter'
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
+
+/**
+ * Track changes that occurred to fiat while scene is unmounted. Don't react to
+ * changes to this value.
+ */
+let lastSceneFiat: string
 
 const QUERY_PAGE_SIZE = 30
 const LISTINGS_REFRESH_INTERVAL = 30000
@@ -54,19 +61,35 @@ const CoinRankingComponent = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  /** The user's fiat setting, falling back to USD if not supported. */
-  const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
+  const { coinRankingDatas } = coinRanking
 
-  const mounted = React.useRef<boolean>(true)
   const lastStartIndex = React.useRef<number>(1)
 
   const [requestDataSize, setRequestDataSize] = React.useState<number>(QUERY_PAGE_SIZE)
-  const [dataSize, setDataSize] = React.useState<number>(0)
+  const [dataSize, setDataSize] = React.useState<number>(coinRankingDatas.length)
   const [searchText, setSearchText] = React.useState<string>('')
   const [isSearching, setIsSearching] = React.useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = React.useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = React.useState<AssetSubText>('marketCap')
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+
+  /** The user's fiat setting, falling back to USD if not supported. */
+  const coingeckoFiat = useSelector(state => {
+    const currentCoinGeckoFiat = getCoingeckoFiat(state)
+    if (lastSceneFiat == null) {
+      lastSceneFiat = currentCoinGeckoFiat
+    }
+
+    // Whenever we see a different fiat, clear the cache. We want to do this
+    // here as close to the site of the state change as possible to ensure this
+    // happens before anything else.
+    if (lastSceneFiat != null && currentCoinGeckoFiat !== lastSceneFiat) {
+      debugLog(LOG_COINRANK, 'clearing cache')
+      lastSceneFiat = currentCoinGeckoFiat
+      coinRanking.coinRankingDatas = []
+    }
+    return currentCoinGeckoFiat
+  })
 
   const handleScroll = useSceneScrollHandler()
 
@@ -74,8 +97,6 @@ const CoinRankingComponent = (props: Props) => {
     () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame }),
     [assetSubText, coingeckoFiat, percentChangeTimeFrame]
   )
-
-  const { coinRankingDatas } = coinRanking
 
   const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
@@ -139,12 +160,6 @@ const CoinRankingComponent = (props: Props) => {
   })
 
   React.useEffect(() => {
-    return () => {
-      mounted.current = false
-    }
-  }, [])
-
-  React.useEffect(() => {
     return navigation.addListener('focus', () => {
       dispatch(checkEnabledExchanges())
     })
@@ -157,7 +172,7 @@ const CoinRankingComponent = (props: Props) => {
 
     try {
       // Catch up to the total required items
-      while (startIndex < requestDataSize - QUERY_PAGE_SIZE) {
+      while (startIndex <= requestDataSize - QUERY_PAGE_SIZE + 1) {
         const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${startIndex}&length=${QUERY_PAGE_SIZE}`
         const response = await fetchRates(url).then(maybeAbort)
         if (!response.ok) {
@@ -176,7 +191,7 @@ const CoinRankingComponent = (props: Props) => {
         startIndex += QUERY_PAGE_SIZE
       }
     } catch (e: any) {
-      console.warn(`Error during data fetch: ${e.message}`)
+      console.warn(`Error during data fetch: ${e.message}, ${coingeckoFiat}, ${startIndex}, ${requestDataSize}`)
     }
 
     setDataSize(coinRankingDatas.length)
@@ -192,7 +207,7 @@ const CoinRankingComponent = (props: Props) => {
     return abort
   }, [queryLoop, requestDataSize])
 
-  // Subscribe to changes to the current data set:
+  // Subscribe to changes to coingeckoFiat and update the periodic refresh
   React.useEffect(() => {
     let abort = () => {}
     // Refresh from the beginning periodically
@@ -220,8 +235,8 @@ const CoinRankingComponent = (props: Props) => {
     }
   }, [coingeckoFiat /* reset subscription on fiat change */, queryLoop])
 
-  const listdata: number[] = React.useMemo(() => {
-    debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
+  const listData: number[] = React.useMemo(() => {
+    debugLog(LOG_COINRANK, `Updating listData dataSize=${dataSize} searchText=${searchText}`)
     const out = []
     for (let i = 0; i < dataSize; i++) {
       const cr = coinRankingDatas[i]
@@ -282,17 +297,21 @@ const CoinRankingComponent = (props: Props) => {
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-            <Animated.FlatList
-              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
-              data={listdata}
-              extraData={extraData}
-              keyboardDismissMode="on-drag"
-              onEndReachedThreshold={1}
-              onEndReached={handleEndReached}
-              onScroll={handleScroll}
-              renderItem={renderItem}
-              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-            />
+            {listData.length === 0 ? (
+              <FillLoader />
+            ) : (
+              <Animated.FlatList
+                contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+                data={listData}
+                extraData={extraData}
+                keyboardDismissMode="on-drag"
+                onEndReachedThreshold={1}
+                onEndReached={handleEndReached}
+                onScroll={handleScroll}
+                renderItem={renderItem}
+                scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+              />
+            )}
           </View>
         </>
       )}

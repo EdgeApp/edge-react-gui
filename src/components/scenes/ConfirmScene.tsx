@@ -54,6 +54,10 @@ const ConfirmSceneComponent = (props: Props) => {
   return (
     <SceneWrapper scroll padding={theme.rem(0.5)}>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        {/* We have to use the SceneHeaderUi4 component here because 
+        the SceneContainer component does not implement KeyboardAwareScrollView
+        and we require the KeyboardAwareScrollView component for this one-off
+        scene. */}
         <SceneHeaderUi4 title={titleText} />
         <View style={styles.body}>
           <EdgeText disableFontScaling numberOfLines={16}>

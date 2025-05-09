@@ -4,9 +4,7 @@ import * as React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
@@ -54,20 +52,12 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const pluginId = wallet?.currencyInfo.pluginId
   const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const stakePolicyArray = React.useMemo(() => Object.values(stakePolicies), [stakePolicies])
-
-  useAsyncEffect(
-    async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-    },
-    [],
-    'StakeOptionsSceneComponent'
-  )
 
   //
   // Handlers
@@ -94,7 +84,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
     const primaryText = getPolicyAssetName(stakePolicy, 'stakeAssets')
     const secondaryText = getPolicyTitleName(stakePolicy, countryCode)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+    const policyIcons = getPolicyIconUris(account.currencyConfig, stakePolicy)
     const stakePosition = stakePositionMap[stakePolicy.stakePolicyId]
     const isStaked = stakePosition?.allocations.some(allocation => allocation.allocationType === 'staked' && gt(allocation.nativeAmount, '0'))
     return (
@@ -138,6 +128,10 @@ const StakeOptionsSceneComponent = (props: Props) => {
             contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             ListHeaderComponent={
               <>
+                {/* TODO: Decide if our design language accepts scene headers within
+                the scroll area of a scene. If so, we must make the SceneContainer
+                component implement FlatList components. This is a one-off 
+                until then. */}
                 <SceneHeaderUi4 title={sprintf(lstrings.staking_change_add_header, currencyCode)} />
                 <Space horizontalRem={0.5} bottomRem={0.5}>
                   <EdgeText>{lstrings.stake_select_options}</EdgeText>

@@ -14,6 +14,8 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
 import { styled } from '../hoc/styled'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SceneContainer } from '../layout/SceneContainer'
 import { NotificationView } from '../notification/NotificationView'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { AccentColors, DotsBackground } from './DotsBackground'
@@ -82,7 +84,10 @@ interface SceneWrapperProps {
   // Override existing background dots parameters
   overrideDots?: OverrideDots
 
-  // Padding to add inside the scene border:
+  /**
+   * Padding to add inside the scene border:
+   * @deprecated Use {@link SceneContainer} component instead.
+   */
   padding?: number
 
   // Renderer for the footer to be rendered in the SceneWrapper or MenuTabs.
@@ -167,7 +172,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
   // Ignore inset bottom when keyboard is open because it is rendered behind it
-  const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
+  const maybeInsetBottom = !isKeyboardOpen || !avoidKeyboard ? safeAreaInsets.bottom : 0
   const insets: EdgeInsets = useMemo(
     () => ({
       top: hasHeader ? headerBarHeight : safeAreaInsets.top,

@@ -60,8 +60,10 @@ export const CurrencyView = (props: Props) => {
   const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
   const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
-  const fiatBalanceText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
-  const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} wallet={wallet} />
+  const fiatBalanceText = (
+    <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} currencyConfig={wallet.currencyConfig} hideBalance={hideBalance} />
+  )
+  const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} currencyConfig={wallet.currencyConfig} />
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {

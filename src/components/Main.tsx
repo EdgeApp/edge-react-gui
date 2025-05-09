@@ -6,11 +6,9 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
-import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
-import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
@@ -67,6 +65,9 @@ import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from 
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
 import { DevTestScene } from './scenes/DevTestScene'
+import { DuressModeHowToScene as DuressModeHowToSceneComponent } from './scenes/DuressModeHowToScene'
+import { DuressModeSettingScene as DuressModeSettingSceneComponent } from './scenes/DuressModeSettingScene'
+import { DuressPinScene as DuressPinSceneComponent } from './scenes/DuressPinScene'
 import { EdgeLoginScene as EdgeLoginSceneComponent } from './scenes/EdgeLoginScene'
 import { EditTokenScene as EditTokenSceneComponent } from './scenes/EditTokenScene'
 import { ExtraTabScene as ExtraTabSceneComponent } from './scenes/ExtraTabScene'
@@ -147,6 +148,7 @@ const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
+const DuressPinScene = ifLoggedIn(DuressPinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
@@ -232,6 +234,8 @@ const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
 const WebViewScene = ifLoggedIn(WebViewSceneComponent)
+const DuressModeHowToScene = ifLoggedIn(DuressModeHowToSceneComponent)
+const DuressModeSettingScene = ifLoggedIn(DuressModeSettingSceneComponent)
 
 const RootStack = createStackNavigator<RootParamList>()
 const Drawer = createDrawerNavigator<DrawerParamList>()
@@ -471,15 +475,7 @@ const EdgeTabs = () => {
 // -------------------------------------------------------------------------
 
 const EdgeAppStack = () => {
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
-
-  useAsyncEffect(
-    async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-    },
-    [],
-    'EdgeAppStack'
-  )
+  const countryCode = useSelector(state => state.ui.countryCode)
 
   return (
     <AppStack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
@@ -511,6 +507,14 @@ const EdgeAppStack = () => {
         component={ChangePinScene}
         options={{
           title: lstrings.title_change_pin,
+          headerRight: () => null
+        }}
+      />
+      <AppStack.Screen
+        name="duressPin"
+        component={DuressPinScene}
+        options={{
+          title: lstrings.title_duress_mode,
           headerRight: () => null
         }}
       />
@@ -841,6 +845,21 @@ const EdgeAppStack = () => {
           headerTitle: () => <ParamHeaderTitle<'webView'> fromParams={params => params.title} />
         }}
       />
+      <AppStack.Screen
+        name="duressModeHowTo"
+        component={DuressModeHowToScene}
+        options={{
+          title: lstrings.title_duress_mode,
+          headerRight: () => null
+        }}
+      />
+      <AppStack.Screen
+        name="duressModeSetting"
+        component={DuressModeSettingScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
     </AppStack.Navigator>
   )
 }
@@ -878,9 +897,6 @@ export const Main = () => {
   // but it doesn't live in a scene, so steal the prop another way:
   const [navigation, setNavigation] = React.useState<NavigationBase | undefined>()
 
-  // TODO: Create a new provider instead to serve the experimentConfig globally
-  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig | undefined>(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)
-
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
@@ -912,14 +928,7 @@ export const Main = () => {
   })
 
   // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(
-    async () => {
-      if (isMaestro()) return
-      setExperimentConfig(await getExperimentConfig())
-    },
-    [],
-    'setLegacyLanding'
-  )
+  const experimentConfig = useExperimentConfig()
 
   const initialRouteName = ENV.USE_WELCOME_SCREENS && localUsers.length === 0 ? 'gettingStarted' : 'login'
 

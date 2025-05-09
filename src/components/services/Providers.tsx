@@ -9,6 +9,7 @@ import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
+import { fetchCountryCode } from '../../actions/CountryCodeActions'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
@@ -56,6 +57,7 @@ export function Providers(props: Props) {
   // Actions to perform at startup:
   React.useEffect(() => {
     store.dispatch(loadDeviceReferral()).catch(err => console.warn(err))
+    store.dispatch(fetchCountryCode()).catch(err => console.warn(err))
   }, [store])
 
   return (

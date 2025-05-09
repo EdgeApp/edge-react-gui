@@ -2,13 +2,32 @@
 
 ## Unreleased (develop)
 
-## 4.46.0 (staging)
+- removed: Disable Fantom transaction list
+
+## 4.27.0 (2025-05-08)
+
+- added: Add PIVX.
+- added: Add Zano
+- added: Monero multi output support.
+- added: Moonpay Sell support for ACH.
+- added: Maestro `testID` support in `NotificationCard`
+- added: Add TCY claiming to Thorchain Savers staking plugin
+- changed: Scanning private key button copy updated from "Import" -> "Confirm"
+- changed: `countryCode` moved from `firstOpenActions` to redux, and re-evaluated on each boot
+- changed: Show KYC warning modal when trading with Changehero, Exolix, and Sideshift
+- changed: Enforce public address 128 character limit when connecting asset to FIO handle
+- fixed: iOS not immediately showing `EdgeCarousel` cards if only one card is present
+- fixed: `SceneWrapper` bottom inset calculations for scenes that do not `avoidKeyboard`
+- fixed: `InsufficientFeesModal` updated to UK meet compliance spec (shows swap only)
+
+## 4.26.0 (2025-04-14)
 
 - added: `preferProviders` support to override default priority when selecting a fiat provider
 - added: Rewards deeplink support
 - added: "Asset Settings" option to `WalletListMenuModal`
 - added: Sonic support
 - added: Bitcoin Testnet4 support
+- added: Loader on `CoinRankingScene`
 - changed: Buy/sell removed for UK
 - changed: `GettingStartedScene` "Getting Started" button repurposed to progress through hero pages
 - changed: `GettingStartedScene` "Swipe to Learn More" copy updated to "Learn More" and is now tappable

@@ -6,7 +6,6 @@ import { FlatList } from 'react-native-gesture-handler'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
-import { getFirstOpenInfo } from '../../../actions/FirstOpenActions'
 import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -66,6 +65,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
   const { width: screenWidth } = useSafeAreaFrame()
 
   // We wait for state only when liquid staking is enabled
@@ -78,14 +78,15 @@ const StakeOverviewSceneComponent = (props: Props) => {
     stakePolicy == null
       ? {}
       : [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
-          denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
+          denomMap[asset.currencyCode] = dispatch((_, getState) =>
+            selectDisplayDenomByCurrencyCode(getState(), account.currencyConfig[asset.pluginId], asset.currencyCode)
+          )
           return denomMap
         }, {})
-  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(account.currencyConfig, stakePolicy)
 
   // Hooks
 
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
   const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
@@ -109,8 +110,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   useAsyncEffect(
     async () => {
-      setCountryCode((await getFirstOpenInfo()).countryCode)
-
       if (stakePosition != null) {
         const guiAllocations = getPositionAllocations(stakePosition)
         setStakeAllocations(guiAllocations.staked)
@@ -161,12 +160,12 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   // Renderers
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
-    const { allocationType, currencyCode, nativeAmount } = item
+    const { allocationType, currencyCode, nativeAmount, pluginId } = item
     const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : allocationType === 'earned' ? lstrings.stake_s_earned : lstrings.stake_s_unstaked
     const title = `${sprintf(titleBase, currencyCode)}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
-    const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 

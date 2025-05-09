@@ -39,9 +39,10 @@ const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: Fia
     venmo: { providerId, fiat: {}, crypto: {} }
   },
   sell: {
-    credit: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    paypal: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' },
-    venmo: { providerId, fiat: {}, crypto: {}, requiredAmountType: 'crypto' }
+    ach: { providerId, fiat: {}, crypto: {} },
+    credit: { providerId, fiat: {}, crypto: {} },
+    paypal: { providerId, fiat: {}, crypto: {} },
+    venmo: { providerId, fiat: {}, crypto: {} }
   }
 }
 const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = {
@@ -163,7 +164,7 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, MoonpayPaymentMe
   applepay: 'credit_debit_card',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
-  iach: 'ach_bank_transfer',
+  ach: 'ach_bank_transfer',
   paypal: 'paypal',
   venmo: 'venmo'
 }
@@ -193,6 +194,7 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
 }
 
 const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefined>> = {
+  ach: 'ach',
   applepay: 'credit',
   credit: 'credit',
   googlepay: 'credit',
@@ -382,11 +384,7 @@ export const moonpayProvider: FiatProviderFactory = {
           if (direction === 'buy') {
             amountParam = `baseCurrencyAmount=${params.exchangeAmount}`
           } else {
-            // Moonpay API doesn't let us specify a fiat amount for sell
-            throw new FiatProviderError({
-              providerId,
-              errorType: 'paymentUnsupported'
-            })
+            amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
           }
         } else {
           if (exchangeAmount > maxCrypto)
@@ -532,7 +530,7 @@ export const moonpayProvider: FiatProviderFactory = {
               if (params.amountType === 'crypto') {
                 queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
               } else {
-                queryObj.quoteCurrencyAmount = 'totalAmount' in moonpayQuote ? moonpayQuote.totalAmount : undefined
+                queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay sell quote url=' + urlObj.href)

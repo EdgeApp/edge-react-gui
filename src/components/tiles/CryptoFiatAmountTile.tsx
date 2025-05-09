@@ -53,7 +53,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
         <EdgeText>
           {cryptoAmountText}
           (
-          <FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
+          <FiatText currencyConfig={wallet.currencyConfig} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
         </EdgeText>
       </EdgeRow>
     </EdgeCard>

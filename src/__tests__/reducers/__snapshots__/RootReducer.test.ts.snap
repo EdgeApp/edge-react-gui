@@ -64,6 +64,7 @@ exports[`initialState 1`] = `
     "walletStakingMap": {},
   },
   "ui": {
+    "countryCode": "US",
     "exchangeInfo": {
       "buy": {
         "disablePlugins": {},

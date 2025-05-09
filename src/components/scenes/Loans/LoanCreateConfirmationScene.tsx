@@ -206,7 +206,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     isoFiatCurrencyCode: srcIsoFiatCurrencyCode
   } = useTokenDisplayData({
     tokenId: srcTokenId,
-    wallet: srcWallet
+    currencyConfig: srcWallet.currencyConfig
   })
   const {
     currencyCode: feeCurrencyCode,
@@ -214,7 +214,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     isoFiatCurrencyCode: feeIsoFiatCurrencyCode
   } = useTokenDisplayData({
     tokenId: borrowEngineCurrencyCode,
-    wallet: borrowEngineWallet
+    currencyConfig: borrowEngineWallet.currencyConfig
   })
   const srcWalletBalance = useWalletBalance(srcWallet, srcTokenId)
   const srcBalanceFiatAmount = useSelector(state => {
@@ -247,7 +247,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     >
       <EdgeRow title={lstrings.loan_amount_borrow}>
         <EdgeText>
-          <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
+          <FiatText
+            appendFiatCurrencyCode
+            autoPrecision
+            hideFiatSymbol
+            nativeCryptoAmount={nativeDestAmount}
+            tokenId={destTokenId}
+            currencyConfig={destWallet.currencyConfig}
+          />
         </EdgeText>
       </EdgeRow>
       <EdgeRow title={lstrings.loan_collateral_amount}>

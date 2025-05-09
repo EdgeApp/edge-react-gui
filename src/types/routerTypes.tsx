@@ -155,6 +155,9 @@ export type EdgeAppStackParamList = {} & {
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: undefined
+  duressModeHowTo: undefined
+  duressModeSetting: undefined
+  duressPin: undefined
   earnScene: EarnSceneParams
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams

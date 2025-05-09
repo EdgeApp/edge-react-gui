@@ -165,17 +165,6 @@ exports[`Request should render with loaded props 1`] = `
           appendFiatCurrencyCode={true}
           nativeCryptoAmount="100000000"
           tokenId={null}
-          wallet={
-            {
-              "balanceMap": Map {
-                null => "1234",
-              },
-              "currencyInfo": {
-                "displayName": "Bitcoin",
-                "pluginId": "bitcoin",
-              },
-            }
-          }
         />
       </EdgeText>
     </Memo(EdgeAnimInner)>
