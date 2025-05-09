@@ -10,6 +10,7 @@
 
 ## 4.27.0 (2025-05-08)
 
+- added: Add "DC" to `STATE_PROVINCE_CODES`
 - added: Add PIVX.
 - added: Add Zano
 - added: Monero multi output support.
