@@ -368,7 +368,26 @@ exports[`Card should render sections correctly with multiple children 1`] = `
     >
       Section 1
     </Text>
-    <View
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
       style={
         [
           {

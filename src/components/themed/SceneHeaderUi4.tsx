@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
+import { DividerLineUi4 } from '../common/DividerLineUi4'
+import { DEFAULT_MARGIN_REM } from '../common/Margins'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -23,7 +24,7 @@ export const SceneHeaderUi4 = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>{title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}</View>
-      <LinearGradient colors={theme.dividerLineColors} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.underline} />
+      <DividerLineUi4 extendRight />
     </View>
   )
 }
@@ -31,23 +32,18 @@ export const SceneHeaderUi4 = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
-    marginHorizontal: theme.rem(0.5),
-    paddingBottom: theme.rem(1),
-    overflow: 'visible'
+    overflow: 'visible',
+    paddingBottom: theme.rem(DEFAULT_MARGIN_REM)
   },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginHorizontal: theme.rem(DEFAULT_MARGIN_REM),
+    marginBottom: theme.rem(DEFAULT_MARGIN_REM)
   },
   title: {
     fontSize: theme.rem(1.2),
     fontFamily: theme.fontFaceMedium
-  },
-  underline: {
-    height: theme.dividerLineHeight,
-    alignSelf: 'stretch',
-    marginTop: theme.rem(1),
-    marginRight: theme.rem(-1)
   }
 }))

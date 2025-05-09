@@ -17,10 +17,13 @@ const end = { x: 1, y: 0.5 }
 /**
  * A horizontal line for dividing sections of the app.
  *
- * This is designed to "stick out" to the right of the content area,
- * touching the edge of the screen. Just add the same horizontal
- * margin to this component as you would to its siblings,
- * such as buttons or text fields, and everything will line up.
+ * This is designed to "stick out" to the right of the content area, touching
+ * the edge of the screen. Just add the same horizontal margin to this component
+ * as you would to its siblings, such as buttons or text fields, and everything
+ * will line up.
+ *
+ * @deprecated Use DividerLineUi4 instead, without custom margins where
+ * possible.
  */
 export const DividerLine = (props: Props) => {
   const { marginRem } = props
