@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Dismissed promo cards added to `NotificationCenterScene`
+- fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
 - removed: Disable Fantom transaction list
 
 ## 4.27.0 (staging)

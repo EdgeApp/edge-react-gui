@@ -17,6 +17,7 @@ export const edgeConfig: AppConfig = {
     { pluginId: 'bitcoincash', tokenId: null },
     { pluginId: 'dash', tokenId: null }
   ],
+  expiredPromoUrl: 'https://edge.app/promo-expired', // TBD
   forceCloseUrl: 'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
   ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://help.edge.app/support/home',
