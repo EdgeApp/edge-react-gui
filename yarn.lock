@@ -9248,10 +9248,10 @@ edge-exchange-plugins@^2.22.1:
     regenerator-runtime "0.13.11"
     xrpl "^2.10.0"
 
-edge-info-server@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.7.0.tgz#9293a2521712ddeea8cc98dc2d00464dccb0b7b6"
-  integrity sha512-xvrFM+75NjnCKrKUKsYzbTlCAs3mUdoWKfgzzJTkcbMXhDI+l2IbYqyAYuVjRaQsAh0AKsTHirpGHxWHN0oaWQ==
+edge-info-server@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.8.0.tgz#798f4eb68474a6e70aaa765bee02a9e65f6f395e"
+  integrity sha512-yj0ZFBLkFVwo2ok0mWM/s4BfuXvXQVT5fMyp8sKZwBQstogQs2SYTbydngXdJpnrrBiyWcERJ8mvaqkrRuV1kQ==
   dependencies:
     "@orbs-network/ton-access" "^2.3.3"
     cleaners "^0.3.16"
