@@ -4,7 +4,7 @@
 
 - removed: Disable Fantom transaction list
 
-## 4.27.0 (staging)
+## 4.27.0 (2025-05-08)
 
 - added: Add PIVX.
 - added: Add Zano
