@@ -118,6 +118,9 @@ android {
 
         // Edge addition:
         multiDexEnabled true
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
+        }
     }
 
     splits {
