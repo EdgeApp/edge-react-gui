@@ -21,7 +21,7 @@ export const updateNotificationInfo = async (
   notifStateKey: string,
   /** The condition the notification is based on */
   isConditionActive: boolean,
-  params?: { walletId: string }
+  params?: { walletId?: string; promoCard?: { messageId: string; title: string; body: string; ctaUrl: string } }
 ): Promise<void> => {
   const { notifState } = await getLocalAccountSettings(account)
   // Wait on notifState to initialize
@@ -37,22 +37,36 @@ export const updateNotificationInfo = async (
   } else {
     // Otherwise, update existing notification:
 
-    // We only manage completion status here, so don't bother writing any updates if `isComplete` won't get changed:
-    if (isConditionActive === !currentNotifInfo.isCompleted) return
+    // If we have a promo card, we don't want to update the completion status based on condition
+    // because promo cards don't have a "condition" in the traditional sense
+    const isPromoCard = currentNotifInfo.params?.promoCard != null
 
-    // Change from inactive to active:
-    if (isConditionActive) {
-      currentNotifInfo.isCompleted = false
-      currentNotifInfo.isBannerHidden = false
-    }
-    // Change from active to inactive:
-    else {
-      currentNotifInfo.isCompleted = true
-      currentNotifInfo.isBannerHidden = true
+    // For non-promo cards, we manage completion status
+    if (!isPromoCard) {
+      // We only manage completion status here, so don't bother writing any updates if `isComplete` won't get changed:
+      if (isConditionActive === !currentNotifInfo.isCompleted) return
+
+      // Change from inactive to active:
+      if (isConditionActive) {
+        currentNotifInfo.isCompleted = false
+        currentNotifInfo.isBannerHidden = false
+      }
+      // Change from active to inactive:
+      else {
+        currentNotifInfo.isCompleted = true
+        currentNotifInfo.isBannerHidden = true
+      }
     }
   }
 
-  await writeAccountNotifInfo(account, notifStateKey, { ...currentNotifInfo, isPriority: PRIORITY_NOTIFICATION_KEYS.includes(notifStateKey), params })
+  // Merge any additional properties
+  const updatedNotifInfo = {
+    ...currentNotifInfo,
+    isPriority: PRIORITY_NOTIFICATION_KEYS.includes(notifStateKey),
+    params
+  }
+
+  await writeAccountNotifInfo(account, notifStateKey, updatedNotifInfo)
 }
 
 /**

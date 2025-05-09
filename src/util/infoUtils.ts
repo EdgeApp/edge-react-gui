@@ -2,9 +2,9 @@ import { asDate } from 'cleaners'
 import { InfoCard } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import shajs from 'sha.js'
 
 import { infoServerData } from './network'
+import { getPromoCardMessageId } from './promoCardUtils'
 import { getOsVersion } from './utils'
 
 export interface DisplayInfoCard {
@@ -128,9 +128,7 @@ export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] =
     // Ignore any cards with no display data
     if (Object.keys(localeMessages).length === 0) continue
 
-    const messageId = shajs('sha256')
-      .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
-      .digest('base64')
+    const messageId = getPromoCardMessageId(localeMessages)
     filteredInfoCards.push({
       background,
       ctaButton,

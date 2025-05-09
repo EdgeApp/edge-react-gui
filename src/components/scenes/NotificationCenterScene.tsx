@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions.tsx'
-import { useAccountSettings, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
+import { useAccountSettings, writeAccountNotifInfo, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -11,7 +11,9 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris.ts'
+import { infoServerData } from '../../util/network'
 import { showOtpReminderModal } from '../../util/otpReminder.tsx'
+import { isPromoCardValid } from '../../util/promoCardUtils'
 import { openBrowserUri } from '../../util/WebUtils.ts'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
@@ -147,7 +149,16 @@ export const NotificationCenterScene = (props: Props) => {
         <View style={styles.divider} />
         {recentNotifKeys.map(key => {
           const completeNotif = (key: string) => async () => {
-            await updateNotificationInfo(account, key, false)
+            // For promo cards, we need to directly update the notification info
+            // since they don't follow the same condition-based state management
+            if (key.includes('promoCard-')) {
+              await writeAccountNotifInfo(account, key, {
+                isCompleted: true,
+                isBannerHidden: true
+              })
+            } else {
+              await updateNotificationInfo(account, key, false)
+            }
           }
 
           const date = new Date(notifState[key].dateReceived)
@@ -156,6 +167,10 @@ export const NotificationCenterScene = (props: Props) => {
             const { params } = notifState[key]
             if (params == null) return null
             const { walletId } = params
+            if (walletId == null || wallets[walletId] == null) {
+              console.warn(`newToken notification display failed with unknown walletId: ${walletId}`)
+              return null
+            }
             const { name, currencyInfo } = wallets[walletId]
 
             const handleCloseNewToken = async () => {
@@ -187,6 +202,49 @@ export const NotificationCenterScene = (props: Props) => {
                     : sprintf(lstrings.notif_tokens_detected_on_wallet_name_1s, name)
                 }
                 onPress={handlePressNewToken}
+                onClose={completeNotif(key)}
+              />
+            )
+          } else if (key.includes('promoCard-')) {
+            // Handle promo card notifications
+            const { promoCard } = notifState[key].params ?? {}
+            if (promoCard == null) return null
+
+            // Make sure we have valid content
+            const { title, body, messageId, ctaUrl } = promoCard
+            if (title == null || body == null || messageId == null || ctaUrl == null) return null
+
+            const handlePromoPress = async () => {
+              try {
+                // Check if the promo is still valid
+                const isValid = isPromoCardValid(messageId, infoServerData.rollup?.promoCards2)
+
+                if (isValid) {
+                  // If valid, navigate to the CTA link
+                  await openBrowserUri(ctaUrl)
+                } else {
+                  // If invalid, direct to the expired promo page
+                  await openBrowserUri(config.expiredPromoUrl)
+                }
+
+                // Complete the notification after tapping
+                await completeNotif(key)()
+              } catch (error) {
+                console.error('Error handling promo card press:', error)
+                // Still mark as completed even if there was an error
+                await completeNotif(key)()
+              }
+            }
+
+            return (
+              <NotificationCenterRow
+                key={key}
+                date={date}
+                type="info"
+                title={title}
+                message={body}
+                iconUri={getThemedIconUri(theme, 'notifications/icon-notification')}
+                onPress={handlePromoPress}
                 onClose={completeNotif(key)}
               />
             )
