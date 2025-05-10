@@ -13,6 +13,7 @@ export const STATE_PROVINCE_CODES: {
     { name: 'Colorado', 'alpha-2': 'CO' },
     { name: 'Connecticut', 'alpha-2': 'CT' },
     { name: 'Delaware', 'alpha-2': 'DE' },
+    { name: 'District of Columbia', 'alpha-2': 'DC' },
     { name: 'Florida', 'alpha-2': 'FL' },
     { name: 'Georgia', 'alpha-2': 'GA' },
     { name: 'Hawaii', 'alpha-2': 'HI' },
