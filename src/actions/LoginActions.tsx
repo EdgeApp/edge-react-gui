@@ -57,6 +57,9 @@ function getFirstActiveWalletInfo(account: EdgeAccount): {
 
 export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    if (account.isDuressAccount) logActivity(`pineapple juice`)
+    else logActivity(`Kansas`)
+
     const rootNavigation = getRootNavigation(navigation)
 
     // Log in as quickly as possible, but we do need the sort order:
