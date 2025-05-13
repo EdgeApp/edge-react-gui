@@ -15,7 +15,7 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.27.2):
+  - edge-core-js (2.27.3):
     - React-Core
   - edge-currency-accountbased (4.46.1):
     - React-Core
@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.22.1):
     - React-Core
-  - edge-login-ui-rn (3.26.0):
+  - edge-login-ui-rn (3.26.1):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -1096,11 +1096,11 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: cc954e2feeb6d15e11088df49beb565259d8c6b7
+  edge-core-js: 81d35874de6a2ca83204d0ec5919193fa7617dfe
   edge-currency-accountbased: 49759ffa870eb44fc06fe7e705d44fa260432499
   edge-currency-plugins: f9fe0c22b0fa3cea0989c36e657a0f5d461552c5
   edge-exchange-plugins: ec170f16933c9a6ac0cd86c231ff95646496ef76
-  edge-login-ui-rn: 3b6304fc71664c45386090b8413af685a8c86b24
+  edge-login-ui-rn: 91b4cfca94bc40f6020c88de7580fe1613229832
   EXApplication: 9e02dde69a11d17d394bc89a9ea90c619217bada
   EXConstants: 0a70495c8b5dff454903ed9e798dbb39da9c3fd7
   EXFileSystem: 6c8c6df1f092c49cbbb97df4273eee3b619369b9
