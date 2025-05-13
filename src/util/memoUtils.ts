@@ -1,6 +1,6 @@
 import { gt } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import { EdgeMemo, EdgeMemoOption, EdgeSpendInfo, EdgeSpendTarget } from 'edge-core-js'
+import { EdgeMemo, EdgeMemoOption, EdgeSpendTarget } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
@@ -20,8 +20,8 @@ export const createEdgeMemo = (memoOptions: EdgeMemoOption[], text: string): Edg
 }
 
 /** Get a default memo, compatible with all potentially deprecated props */
-export const getDefaultMemoString = (spendInfo: EdgeSpendInfo, spendTarget?: EdgeSpendTarget) => {
-  return spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+export const getLegacyUniqueIdentifier = (spendTarget?: EdgeSpendTarget) => {
+  return spendTarget?.memo ?? spendTarget?.uniqueIdentifier
 }
 
 /**
@@ -69,6 +69,8 @@ const memoLabels: { [name: string]: string } = {
   comment: lstrings.memo_comment_label,
   'destination tag': lstrings.memo_destination_tag_label,
   memo: lstrings.memo_memo_label,
+  memo_text: lstrings.memo_text_label,
+  memo_id: lstrings.memo_id_label,
   note: lstrings.memo_note_label,
   op_return: lstrings.memo_op_return_label,
   paymentId: lstrings.memo_payment_id_label
@@ -78,6 +80,8 @@ const memoTitles: { [name: string]: string } = {
   comment: lstrings.memo_comment_title,
   'destination tag': lstrings.memo_destination_tag_title,
   memo: lstrings.memo_memo_title,
+  memo_text: lstrings.memo_text_title,
+  memo_id: lstrings.memo_id_title,
   note: lstrings.memo_note_title,
   op_return: lstrings.memo_op_return_title,
   paymentId: lstrings.memo_payment_id_title

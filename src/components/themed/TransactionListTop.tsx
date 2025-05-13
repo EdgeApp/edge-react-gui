@@ -47,7 +47,6 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { SelectableRow } from './SelectableRow'
 
@@ -592,9 +591,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { wallet, isEmpty, searching, theme, tokenId, navigation } = this.props
+    const { wallet, isEmpty, searching, tokenId, navigation } = this.props
     const showStakedBalance = this.isStakingAvailable()
-    const styles = getStyles(theme)
 
     return (
       <>
@@ -608,11 +606,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           </>
         )}
         {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={navigation} />}
-        {isEmpty || searching ? null : (
-          <View style={styles.tempSceneHeader}>
-            <DividerLine marginRem={[0.5, 0, 0.5, 0.5]} />
-          </View>
-        )}
       </>
     )
   }
@@ -723,14 +716,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
-  },
-
-  // TODO: Fix SceneHeader to be UI4 compatible
-  // This negative margin will cause the SceneHeader's divider-line to touch
-  // the right edge of the screen. This is design roll-off from UI3.
-  tempSceneHeader: {
-    marginRight: -theme.rem(0.5),
-    overflow: 'visible'
   }
 }))
 

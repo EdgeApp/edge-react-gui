@@ -5,6 +5,8 @@ import {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
+  EdgeMemo,
+  EdgeMemoOption,
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTokenId,
@@ -39,7 +41,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { createEdgeMemo, getDefaultMemoString, getMemoError, getMemoLabel, getMemoTitle } from '../../util/memoUtils'
+import { createEdgeMemo, getLegacyUniqueIdentifier, getMemoError, getMemoLabel, getMemoTitle } from '../../util/memoUtils'
 import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -187,14 +189,14 @@ const SendComponent = (props: Props) => {
     if (initSpendInfo == null) return { tokenId: null, spendTargets: [{}] }
 
     const spendTarget = initSpendInfo.spendTargets[0]
-    const uniqueIdentifier = getDefaultMemoString(initSpendInfo, spendTarget)
+    const legacyUniqueIdentifier = getLegacyUniqueIdentifier(spendTarget)
 
-    if (uniqueIdentifier == null || spendTarget.publicAddress == null) {
+    if (legacyUniqueIdentifier == null || spendTarget.publicAddress == null) {
       return initSpendInfo
     } else {
       return {
         ...initSpendInfo,
-        memos: [createEdgeMemo(memoOptions, uniqueIdentifier)]
+        memos: [createEdgeMemo(memoOptions, legacyUniqueIdentifier)]
       }
     }
   })
@@ -606,13 +608,11 @@ const SendComponent = (props: Props) => {
     )
   }
 
-  // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
-  const renderUniqueIdentifier = () => {
-    const spendTarget = spendInfo.spendTargets[0]
-    const uniqueIdentifier = getDefaultMemoString(spendInfo, spendTarget)
-    const [memoOption] = memoOptions.filter(option => option.hidden !== true)
+  const renderMemoOptions = () => {
+    const spendTarget: EdgeSpendTarget | undefined = spendInfo.spendTargets[0]
+    if (spendTarget == null || spendTarget.publicAddress == null) return null
 
-    if (memoOption != null && spendTarget.publicAddress != null) {
+    const renderOption = (memoOption: EdgeMemoOption, value: string = '') => {
       const memoLabel = getMemoLabel(memoOption.memoName)
       const memoTitle = getMemoTitle(memoOption.memoName)
       const addButtonText = sprintf(lstrings.memo_dropdown_option_s, memoLabel)
@@ -626,34 +626,70 @@ const SendComponent = (props: Props) => {
         maxLength = 2 * memoOption.maxBytes
       }
 
-      const handleUniqueIdentifier = async () => {
+      const handleMemo = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
-            initialValue={uniqueIdentifier}
+            initialValue={value}
             inputLabel={memoTitle}
             keyboardType={memoOption.type === 'number' ? 'numeric' : 'default'}
             maxLength={maxLength}
             message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
-            onSubmit={async text => getMemoError(createEdgeMemo(memoOptions, text), memoOption) ?? true}
+            onSubmit={async value =>
+              getMemoError(
+                {
+                  type: memoOption.type,
+                  memoName: memoOption.memoName,
+                  value
+                },
+                memoOption
+              ) ?? true
+            }
           />
         )).then(value => {
           if (value == null) return
-          spendInfo.memos = [createEdgeMemo(memoOptions, value)]
+          if (spendInfo.memos == null) spendInfo.memos = []
+
+          const edgeMemo: EdgeMemo = {
+            type: memoOption.type,
+            memoName: memoOption.memoName,
+            value
+          }
+
+          const spendInfoMemoIndex = spendInfo.memos.findIndex(memo => memo.type === memoOption.type)
+          if (spendInfoMemoIndex === -1) {
+            spendInfo.memos.push(edgeMemo)
+          } else {
+            spendInfo.memos[spendInfoMemoIndex] = edgeMemo
+          }
           setSpendInfo({ ...spendInfo })
         })
       }
 
       return (
-        <EdgeRow rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
-          <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
+        <EdgeRow rightButtonType="touchable" title={memoTitle} onPress={handleMemo}>
+          <EdgeText>{value ?? addButtonText}</EdgeText>
         </EdgeRow>
       )
     }
 
-    return null
+    let legacyUniqueIdentifier = getLegacyUniqueIdentifier(spendTarget)
+
+    const rows: Array<JSX.Element | null> = []
+    for (let i = 0; i < memoOptions.length; i++) {
+      if (memoOptions[i].hidden) continue
+
+      if (legacyUniqueIdentifier != null) {
+        rows.push(renderOption(memoOptions[i], legacyUniqueIdentifier))
+        legacyUniqueIdentifier = undefined
+      } else {
+        const memoValue = spendInfo?.memos?.find(memo => memo.type === memoOptions[i].type)?.value ?? ''
+        rows.push(renderOption(memoOptions[i], memoValue))
+      }
+    }
+    return rows
   }
 
   const handleFocusPin = useHandler(() => {
@@ -1116,7 +1152,7 @@ const SendComponent = (props: Props) => {
                 {renderFees()}
                 {renderMetadataNotes()}
                 {renderSelectFioAddress()}
-                {renderUniqueIdentifier()}
+                {renderMemoOptions()}
                 {renderInfoTiles()}
                 {renderAuthentication()}
               </EdgeCard>

@@ -44,10 +44,6 @@ interface BuildConfigFile {
   zealotUrl?: string
   zealotApiToken?: string
   zealotChannelKey?: string
-  appCenterApiToken: string
-  appCenterAppName: string
-  appCenterDistroGroup: string
-  appCenterGroupName: string
   hockeyAppId: string
   hockeyAppTags: string
   hockeyAppToken: string
@@ -111,7 +107,6 @@ function main() {
   makeProject(buildObj)
   makeCommonPost(buildObj)
 
-  // buildCommonPre()
   if (buildObj.platformType === 'ios') {
     if (buildObj.maestroBuild) {
       buildIosMaestro(buildObj)
@@ -182,10 +177,6 @@ function makeCommonPost(buildObj: BuildObj) {
   }
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
 }
-
-// function buildCommonPre() {
-//   call('npm install -g appcenter-cli')
-// }
 
 function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
@@ -435,18 +426,6 @@ function buildCommonPost(buildObj: BuildObj) {
 
     call(curl)
     mylog('\nUploaded to HockeyApp')
-  }
-
-  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !maestroBuild) {
-    mylog('\n\nUploading to App Center')
-    mylog('***********************\n')
-
-    call(
-      `npx appcenter distribute release --app ${buildObj.appCenterGroupName}/${buildObj.appCenterAppName} --file ${buildObj.ipaFile} --token ${
-        buildObj.appCenterApiToken
-      } -g ${buildObj.appCenterDistroGroup} -r ${JSON.stringify(notes)}`
-    )
-    mylog('\n*** Upload to App Center Complete ***')
   }
 
   if (zealotApiToken != null && zealotUrl != null && zealotChannelKey != null && !maestroBuild) {

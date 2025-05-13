@@ -7,7 +7,6 @@ import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -22,7 +21,6 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
-import { MiniButton } from '../themed/MiniButton'
 import { EdgeModal } from './EdgeModal'
 
 export interface FlipInputModalResult {
@@ -76,9 +74,6 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
     headerText,
     hideMaxButton
   } = props
-
-  const { currencyInfo } = wallet
-  const { pluginId } = currencyInfo
 
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
@@ -199,10 +194,9 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           onAmountChanged={handleAmountsChanged}
           keyboardVisible
           onNext={handleCloseModal}
+          hideMaxButton={hideMaxButton}
+          onMaxPress={handleSendMaxAmount}
         />
-        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
-          <MiniButton label={lstrings.string_max_cap} marginRem={[1, 0, 1]} alignSelf="center" onPress={handleSendMaxAmount} />
-        ) : null}
       </EdgeCard>
     )
   }

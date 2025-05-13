@@ -310,7 +310,8 @@ export const GettingStartedScene = (props: Props) => {
 // -----------------------------------------------------------------------------
 
 const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => props => ({
-  marginVertical: theme.rem(0.5),
+  marginBottom: theme.rem(0.5),
+  marginTop: theme.rem(4.5),
   alignItems: 'center'
 }))
 
@@ -565,6 +566,10 @@ const Footnote = styled(EdgeText)(theme => ({
   includeFontPadding: false
 }))
 
-const ButtonFadeContainer = styled(View)({
-  position: 'relative'
-})
+const ButtonFadeContainer = styled(View)(theme => ({
+  position: 'absolute',
+  bottom: theme.rem(3.25),
+  left: 0,
+  right: 0,
+  zIndex: 1
+}))

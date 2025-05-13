@@ -22,6 +22,7 @@ import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSele
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
 import { coinrankListData, infoServerData } from '../../util/network'
@@ -29,6 +30,7 @@ import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor } f
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { AccentColors } from '../common/DotsBackground'
 import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -64,6 +66,8 @@ function WalletDetailsComponent(props: Props) {
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
   const { currencyCode, displayName } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+
+  const educationCards = (infoServerData.rollup?.assetInfoCards ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`] ?? []
 
   // State:
   const scrollViewRef = React.useRef<AnimatedScrollView>(null)
@@ -280,6 +284,7 @@ function WalletDetailsComponent(props: Props) {
             wallet={wallet}
             isLightAccount={isLightAccount}
           />
+          <DividerLineUi4 extendRight />
           <InfoCardCarousel
             enterAnim={fadeInDown10}
             cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
@@ -317,6 +322,13 @@ function WalletDetailsComponent(props: Props) {
               <BuyCrypto navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
             )}
           </View>
+          {educationCards.length === 0 ? null : (
+            <>
+              <DividerLineUi4 extendRight />
+              <SectionHeaderUi4 leftTitle={config.appName === 'Edge' ? lstrings.edge_ucation : lstrings.education} />
+              <InfoCardCarousel enterAnim={fadeInDown10} cards={educationCards} navigation={navigation as NavigationBase} screenWidth={screenWidth} />
+            </>
+          )}
         </Reanimated.ScrollView>
       )}
     </SceneWrapper>
