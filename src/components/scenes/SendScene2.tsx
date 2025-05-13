@@ -1,4 +1,4 @@
-import { add, div, gte, lt, mul } from 'biggystring'
+import { abs, add, div, gte, lt, lte, mul, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
@@ -110,12 +110,15 @@ interface FioSenderInfo {
   skipRecord?: boolean
 }
 
-// TODO: For now, do not allow multiple targets to be added via GUI. UX is very poor until
-// animation is added. Waiting for reanimated v3 which fixes crashes in Layout animations.
-// Note: multiple targets can be added via JSON payment protocol to fix payments to Anypay
-// invoices.
 const ALLOW_MULTIPLE_TARGETS = true
 
+/**
+ * If the prior two spend targets of a multi-out payment have the same amount
+ * within 0.5%, then use the same amount for the new spend target.
+ * This makes it MUCH easier to load many gift cards without having to enter
+ * amounts manually.
+ */
+const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
@@ -242,6 +245,20 @@ const SendComponent = (props: Props) => {
         spendTarget.uniqueIdentifier = parsedUri?.uniqueIdentifier
         spendTarget.publicAddress = parsedUri?.publicAddress
         spendTarget.nativeAmount = parsedUri?.nativeAmount
+
+        if (spendInfo.spendTargets.length > 2 && spendTarget.nativeAmount == null) {
+          // Check if the last two spend targets have the same amount within 0.5%
+          const prevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 2].nativeAmount
+          const pprevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 3].nativeAmount
+
+          if (prevAmount != null && pprevAmount != null) {
+            const diff = abs(sub(prevAmount, pprevAmount))
+            const diffPercent = div(diff, prevAmount, DECIMAL_PRECISION)
+            if (lte(diffPercent, MULTI_OUT_DIFF_PERCENT)) {
+              spendTarget.nativeAmount = prevAmount
+            }
+          }
+        }
         spendTarget.otherParams = {
           fioAddress
         }

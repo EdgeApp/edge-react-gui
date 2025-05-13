@@ -9,6 +9,8 @@
 - added: Multiple memo support to `SendScene2`
 - added: Add os version to the "OS" line of logs
 - changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
+- changed: Auto launch QR scanner for multi-out payments if previously used
+- changed: Auto populate amount for multi-out payments if prior amounts are similar
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
 - removed: Disable Fantom transaction list
