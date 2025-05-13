@@ -9,6 +9,7 @@
 - changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
+- fixed: Bug preventing re-enabling duress mode.
 - removed: Disable Fantom transaction list
 
 ## 4.27.1 (2025-05-13)
