@@ -11,6 +11,12 @@
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
 - removed: Disable Fantom transaction list
 
+## 4.27.1 (2025-05-13)
+
+- fixed: Bug causing duress account creation from `loginWithKey` while in duress mode.
+- fixed: Clean the Android build folder, so leftover files don't get published.
+- fixed: Fixed biometric login bug caused by saving the duress account's login key.
+
 ## 4.27.0 (2025-05-08)
 
 - added: Add "DC" to `STATE_PROVINCE_CODES`
