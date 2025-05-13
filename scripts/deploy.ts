@@ -107,7 +107,6 @@ function main() {
   makeProject(buildObj)
   makeCommonPost(buildObj)
 
-  // buildCommonPre()
   if (buildObj.platformType === 'ios') {
     if (buildObj.maestroBuild) {
       buildIosMaestro(buildObj)
@@ -178,10 +177,6 @@ function makeCommonPost(buildObj: BuildObj) {
   }
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
 }
-
-// function buildCommonPre() {
-//   call('npm install -g appcenter-cli')
-// }
 
 function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
