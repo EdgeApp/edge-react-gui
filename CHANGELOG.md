@@ -7,6 +7,8 @@
 ## 4.27.2 (staging)
 
 - fixed: Bug preventing re-enabling duress mode.
+- fixed: Disable duress pin mistakenly disables pin-login for entire account.
+- fixed: Fixed error notifications when deleting account for Android.
 
 ## 4.27.1 (2025-05-13)
 
