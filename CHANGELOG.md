@@ -4,6 +4,10 @@
 
 - removed: Disable Fantom transaction list
 
+## 4.27.2 (staging)
+
+- fixed: Bug preventing re-enabling duress mode.
+
 ## 4.27.1 (2025-05-13)
 
 - fixed: Bug causing duress account creation from `loginWithKey` while in duress mode.
