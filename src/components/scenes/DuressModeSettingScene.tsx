@@ -48,7 +48,7 @@ export const DuressModeSettingScene = (props: Props) => {
               showToast(lstrings.duress_mode_pin_match_rule_message)
               return
             }
-            await account.changePin({ pin, forDuressAccount: true })
+            await account.changePin({ enableLogin: true, pin, forDuressAccount: true })
             // Navigate back to this scene
             navigation.navigate('duressModeSetting')
           })
