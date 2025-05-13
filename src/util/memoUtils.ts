@@ -1,6 +1,6 @@
 import { gt } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import { EdgeMemo, EdgeMemoOption, EdgeSpendInfo, EdgeSpendTarget } from 'edge-core-js'
+import { EdgeMemo, EdgeMemoOption, EdgeSpendTarget } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
@@ -20,8 +20,8 @@ export const createEdgeMemo = (memoOptions: EdgeMemoOption[], text: string): Edg
 }
 
 /** Get a default memo, compatible with all potentially deprecated props */
-export const getDefaultMemoString = (spendInfo: EdgeSpendInfo, spendTarget?: EdgeSpendTarget) => {
-  return spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+export const getLegacyUniqueIdentifier = (spendTarget?: EdgeSpendTarget) => {
+  return spendTarget?.memo ?? spendTarget?.uniqueIdentifier
 }
 
 /**
