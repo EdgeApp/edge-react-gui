@@ -14,7 +14,7 @@
 - removed: Disable Fantom transaction list
 - fixed: Show the correct username in the "Forget Account" modal.
 
-## 4.27.2 (staging)
+## 4.27.2 (2025-05-13)
 
 - fixed: Bug preventing re-enabling duress mode.
 - fixed: Disable duress pin mistakenly disables pin-login for entire account.
