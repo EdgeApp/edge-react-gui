@@ -20,7 +20,7 @@ import { validateExactRegion } from './common'
 
 // All OTC trades must at least/most meet these amounts in fiat
 const MIN_QUOTE_AMOUNT = '10000'
-const MAX_QUOTE_AMOUNT = '20000000'
+const MAX_QUOTE_AMOUNT = '5000000'
 
 const providerId = 'kadoOtc'
 const storeId = 'money.kado'
