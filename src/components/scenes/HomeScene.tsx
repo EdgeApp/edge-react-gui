@@ -72,6 +72,7 @@ export const HomeScene = (props: Props) => {
 
   const [blogPosts, setBlogPosts] = React.useState<ContentPost[]>([])
   const [videoPosts, setVideoPosts] = React.useState<ContentPost[]>([])
+  const [promoCards, setPromoCards] = React.useState<any>([])
 
   //
   // Handlers
@@ -109,6 +110,8 @@ export const HomeScene = (props: Props) => {
 
     // Get video posts
     setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
+
+    setPromoCards(infoServerData.rollup?.promoCards2)
   }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto1') }), [theme])
@@ -118,6 +121,8 @@ export const HomeScene = (props: Props) => {
   const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
   const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
   const hideSwap = config.disableSwaps === true
+
+  console.debug('HOME', infoServerData.rollup?.promoCards2[0].localeMessages.en_US)
 
   return (
     <SceneWrapper hasNotifications hasTabs>
@@ -136,12 +141,7 @@ export const HomeScene = (props: Props) => {
                   <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation as NavigationBase} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
-                <InfoCardCarousel
-                  enterAnim={fadeInUp110}
-                  cards={infoServerData.rollup?.promoCards2}
-                  navigation={navigation as NavigationBase}
-                  screenWidth={screenWidth}
-                />
+                <InfoCardCarousel enterAnim={fadeInUp110} cards={promoCards} navigation={navigation as NavigationBase} screenWidth={screenWidth} />
                 {hideNonUkCompliantFeat ? null : (
                   <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
                     <HomeTileCard
@@ -202,7 +202,7 @@ export const HomeScene = (props: Props) => {
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
                   <SectionHeader leftTitle={lstrings.edgeucation_articles} />
-                  <ContentPostCarousel contentPosts={blogPosts} />
+                  {/* <ContentPostCarousel contentPosts={blogPosts} /> */}
                 </>
               )}
               <>
@@ -222,7 +222,7 @@ export const HomeScene = (props: Props) => {
               {videoPosts == null || videoPosts.length === 0 ? null : (
                 <>
                   <SectionHeader leftTitle={lstrings.edgeucation_videos} />
-                  <ContentPostCarousel contentPosts={videoPosts} />
+                  {/* <ContentPostCarousel contentPosts={videoPosts} /> */}
                 </>
               )}
               <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />

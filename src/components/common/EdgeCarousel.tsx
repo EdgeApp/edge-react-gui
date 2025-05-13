@@ -21,6 +21,8 @@ const DOT_SIZE_REM = 0.5
  */
 export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   const { data, keyExtractor, height, width } = props
+  console.debug('🚀 - data:', data)
+
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -47,7 +49,7 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
       // HACK: With 1 item, this is the only way to force a render in iOS
       if (Platform.OS === 'ios' && dataLocal.length === 1) {
         setDataLocal([])
-        setTimeout(() => setDataLocal(data), 50)
+        setTimeout(() => setDataLocal(data), 500)
       }
       // The built-in hack fn works for all other cases
       else if (carouselRef.current != null) {

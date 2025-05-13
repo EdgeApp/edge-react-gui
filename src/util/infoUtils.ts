@@ -47,6 +47,8 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
   const ccLowerCase = countryCode?.toLowerCase()
   const filteredInfoData: InfoCard[] = []
   for (const card of cards) {
+    const isDuressCard = card.localeMessages.en_US.includes('Introducing Duress Mode')
+    if (isDuressCard) console.debug(`isDuressCard`)
     const {
       appVersion,
       countryCodes = [],
@@ -69,22 +71,36 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
     // accountFunded balances are not ready yet (undefined), omit until balances
     // are ready and we re-run.
     if (noBalance) {
+      if (isDuressCard) console.debug(`noBalance`)
       if (accountFunded == null || accountFunded) continue
     }
 
     // Validate app version
     // Ignore everything else if build version is specified and mismatched.
-    if (exactBuildNum != null && exactBuildNum !== buildNumber) continue
+    if (exactBuildNum != null && exactBuildNum !== buildNumber) {
+      if (isDuressCard) console.debug(`exactBuildNum`)
+      continue
+    }
 
     // Ignore min/max if app version is specified and mismatched.
-    if (appVersion != null && appVersion !== version) continue
+    if (appVersion != null && appVersion !== version) {
+      if (isDuressCard) console.debug(`appVersion`)
+      continue
+    }
 
     // Look at min/max only if exact build or app version is not specified.
-    if (minBuildNum != null && minBuildNum > buildNumber) continue
-    if (maxBuildNum != null && maxBuildNum < buildNumber) continue
+    if (minBuildNum != null && minBuildNum > buildNumber) {
+      if (isDuressCard) console.debug(`minBuildNum`)
+      continue
+    }
+    if (maxBuildNum != null && maxBuildNum < buildNumber) {
+      if (isDuressCard) console.debug(`maxBuildNum`)
+      continue
+    }
 
     // Validate country
     if (excludeCountryCodes.length > 0 || countryCodes.length > 0) {
+      if (isDuressCard) console.debug(`excludeCountryCodes`)
       if (ccLowerCase == null) continue
       const isCountryInclude = countryCodes.length === 0 || countryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
       const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
@@ -106,9 +122,12 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
     if (
       promoId != null &&
       ((promoIds != null && !promoIds.some(accountPromoId => accountPromoId === promoId)) || (installerId != null && installerId !== promoId))
-    )
+    ) {
+      if (isDuressCard) console.debug(`promoId`)
       continue
+    }
 
+    if (isDuressCard) console.debug(`SUCCESS`)
     filteredInfoData.push(card)
   }
 
@@ -122,14 +141,18 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
  * Ignores any info that doesn't contain display messages.
  */
 export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] => {
-  const filteredInfoData = filterInfoCards(props)
+  const filteredInfoData = props.cards
+  console.debug('🚀 - filteredInfoData:', filteredInfoData)
 
   const filteredInfoCards: DisplayInfoCard[] = []
   for (const card of filteredInfoData) {
     const { background, ctaButton, dismissable, localeMessages, pluginPromotions } = card
 
     // Ignore any cards with no display data
-    if (Object.keys(localeMessages).length === 0) continue
+    if (Object.keys(localeMessages).length === 0) {
+      console.debug('IGNORING CARD WITH NO DISPLAY DATA', localeMessages)
+      continue
+    }
 
     const messageId = getPromoCardMessageId(localeMessages)
     filteredInfoCards.push({
@@ -140,6 +163,7 @@ export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] =
       pluginPromotions,
       messageId
     })
+    console.debug('🚀 - filteredInfoCards:', filteredInfoCards)
   }
 
   return filteredInfoCards

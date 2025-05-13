@@ -26,6 +26,8 @@ interface Props {
 
 export const InfoCardCarousel = (props: Props) => {
   const { enterAnim, navigation, screenWidth, cards } = props
+  console.debug('🚀 - InfoCardCarousel - cards:', cards)
+
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -34,6 +36,11 @@ export const InfoCardCarousel = (props: Props) => {
   const countryCode = useSelector(state => state.ui.countryCode)
 
   const [filteredCards, setFilteredCards] = React.useState<DisplayInfoCard[]>([])
+
+  console.debug(
+    '🚀 - InfoCardCarousel - filteredCards',
+    filteredCards.map(card => card.localeMessages.en_US)
+  )
 
   // Set account funded status
   const accountFunded = useIsAccountFunded()
@@ -59,13 +66,15 @@ export const InfoCardCarousel = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
+  console.debug('🚀 - InfoCardCarousel - filteredCards:', filteredCards)
+  console.debug('🚀 - InfoCardCarousel - activeCards:', activeCards)
 
   // List rendering methods:
   const keyExtractor = useHandler((item: DisplayInfoCard) => item.messageId)
   const renderItem: ListRenderItem<DisplayInfoCard> = useHandler(({ item }) => {
     const handleClose = async (): Promise<void> => {
       // Hide the message from the home screen
-      await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
+      // await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
 
       // Only add the notification if we've never saved it before
       if (notifState[item.messageId] == null) {
@@ -84,7 +93,7 @@ export const InfoCardCarousel = (props: Props) => {
   if (activeCards == null || activeCards.length === 0) return null
   return (
     <EdgeAnim enter={enterAnim}>
-      <EdgeCarousel data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
+      <EdgeCarousel data={[...cards]} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
     </EdgeAnim>
   )
 }
