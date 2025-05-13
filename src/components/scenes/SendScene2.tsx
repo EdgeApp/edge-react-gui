@@ -62,7 +62,7 @@ import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/Ex
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
-import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
+import { AddressEntryMethod, AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -161,6 +161,7 @@ const SendComponent = (props: Props) => {
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
   const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
+  const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<AddressEntryMethod | undefined>(undefined)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -232,7 +233,7 @@ const SendComponent = (props: Props) => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { parsedUri, fioAddress } = changeAddressResult
+      const { addressEntryMethod, parsedUri, fioAddress } = changeAddressResult
 
       if (parsedUri != null) {
         if (parsedUri.metadata != null) {
@@ -247,6 +248,7 @@ const SendComponent = (props: Props) => {
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
         // should properly re-render with new spendTargets
+        setLastAddressEntryMethod(addressEntryMethod)
         setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
         setSpendInfo({ ...spendInfo })
@@ -254,6 +256,9 @@ const SendComponent = (props: Props) => {
     }
 
   const handleAddressAmountPress = (index: number) => () => {
+    // This is deleting the combo address/amount tile. If this happens, remove the
+    // lastAddressEntryMethod so we don't auto launch the camera again.
+    setLastAddressEntryMethod(undefined)
     spendInfo.spendTargets.splice(index, 1)
     setSpendInfo({ ...spendInfo })
   }
@@ -292,6 +297,9 @@ const SendComponent = (props: Props) => {
     setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
+    // This is deleting the amount tile. If this happens, remove the
+    // lastAddressEntryMethod so we don't auto launch the camera again.
+    setLastAddressEntryMethod(undefined)
   }
 
   const renderAddressTile = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -300,7 +308,7 @@ const SendComponent = (props: Props) => {
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
       const title = lstrings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
-      const doOpenCamera = openCameraRef.current
+      const doOpenCamera = openCameraRef.current || (publicAddress === '' && lastAddressEntryMethod === 'scan')
       if (openCameraRef.current) openCameraRef.current = false
 
       return (
