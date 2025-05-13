@@ -258,7 +258,7 @@ Settlement: 5 min - 24 hours",
     "deepQuery": {},
     "description": "Fee: ~2%
 Settlement: ~5 minutes
-Limit $20,000,000",
+Limit $5,000,000",
     "paymentType": "wire",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": [
