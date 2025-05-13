@@ -15,7 +15,7 @@ interface Props {
   date: Date
   message: string
   title: string
-  type: 'warning' | 'info'
+  type: 'warning' | 'info' | 'general'
   pinned?: boolean
   iconUri?: string
 
@@ -27,8 +27,7 @@ export const NotificationCenterRow = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { date, title, type, message, pinned = false, onPress, onClose } = props
-  const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
+  const { date, iconUri, title, type, message, pinned = false, onPress, onClose } = props
 
   return (
     <View style={styles.columnContainer}>
@@ -45,7 +44,7 @@ interface NotificationCenterCardProps {
   date: Date
   message: string
   title: string
-  type: 'warning' | 'info'
+  type: 'warning' | 'info' | 'general'
 
   /** If true, no close button is present, and the notification will remain
    * visible if the body is tapped. Default false. */
@@ -60,7 +59,13 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
   const styles = getStyles(theme)
 
   const { date, title, type, message, onPress, onClose } = props
-  const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
+  const {
+    iconUri = type === 'warning'
+      ? getThemedIconUri(theme, 'notifications/icon-warning')
+      : type === 'general'
+      ? getThemedIconUri(theme, 'notifications/icon-bell')
+      : getThemedIconUri(theme, 'notifications/icon-info')
+  } = props
 
   const handlePress = useHandler(async () => {
     await onPress()
@@ -76,12 +81,12 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
         <View style={styles.cardContentContainer}>
           <View style={styles.titleContainer}>
-            <EdgeText style={styles.titleText} numberOfLines={3}>
+            <EdgeText style={styles.titleText} numberOfLines={2}>
               {title}
             </EdgeText>
             <EdgeText style={styles.timeText}>{toLocaleTime(date)}</EdgeText>
           </View>
-          <EdgeText style={styles.messageText} numberOfLines={3}>
+          <EdgeText style={styles.messageText} numberOfLines={2}>
             {message}
           </EdgeText>
         </View>
