@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.28.0 (staging)
+
 - added: Dismissed promo cards added to `NotificationCenterScene`
 - added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Multiple memo support to `SendScene2`
