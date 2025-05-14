@@ -201,8 +201,8 @@ export const executePlugin = async (params: {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginEmailForm', {
           message: params.message,
-          onSubmit: async (email: string) => {
-            resolve(email)
+          onSubmit: async (email: string, firstName: string, lastName: string) => {
+            resolve({ email, firstName, lastName })
           },
           onClose: async () => {
             resolve(undefined)
