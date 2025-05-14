@@ -6,6 +6,7 @@
 - added: Toast notifications for PIN changes.
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
+- changed: Auto scroll to end of `SendScene2` when addresses or amounts change
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
 
