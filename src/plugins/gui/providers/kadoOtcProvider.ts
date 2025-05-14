@@ -422,7 +422,20 @@ export const kadoOtcProvider: FiatProviderFactory = {
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi } = approveParams
 
-            // Do something to showUi to get the user information
+            // First, show a confirmation modal asking the user if they want to proceed
+            const confirmResult = await showUi.buttonModal({
+              title: pluginDisplayName,
+              message: lstrings.otc_wire_required_message,
+              buttons: {
+                yes: { label: lstrings.yes },
+                no: { label: lstrings.no }
+              }
+            })
+
+            // If the user doesn't confirm, exit early
+            if (confirmResult !== 'yes') return
+
+            // If confirmed, proceed to get user contact information
             const userInfo = await showUi.emailForm({
               message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
             })
