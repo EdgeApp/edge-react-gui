@@ -1,9 +1,12 @@
 import { div, gt, lt, mul } from 'biggystring'
 import { asArray, asBoolean, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import Mailer from 'react-native-mail'
+import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
+import { config } from '../../../theme/appConfig'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -223,9 +226,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const { apiKeys } = params
-    const { apiKey, apiUserEmail } = asApiKeys(apiKeys)
-
-    const authToken = btoa(`${apiUserEmail}/token:${apiKey}`) // base64 encode this
+    const { apiKey } = asApiKeys(apiKeys)
 
     const instance: FiatProvider = {
       providerId,
@@ -421,63 +422,132 @@ export const kadoOtcProvider: FiatProviderFactory = {
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi } = approveParams
 
-            // Do something to showUi to get the username  and email
-            const userEmail = await showUi.emailForm({
-              message: params.direction === 'buy' ? lstrings.otc_enter_email_to_buy : lstrings.otc_enter_email_to_sell
+            // Do something to showUi to get the user information
+            const userInfo = await showUi.emailForm({
+              message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
             })
 
-            if (userEmail == null) {
+            if (userInfo == null) {
               // User canceled the form scene (navigated back).
               // There is nothing left to do.
               return
             }
 
-            const requestBody = {
-              ticket: {
-                subject: 'OTC Order Request',
-                comment: {
-                  body: `Requesting to ${params.direction} ${cryptoAmount} ${tokenOtherInfo.symbol} for ${fiatAmount} USD using ${paymentType}.`
-                },
-                requester: {
-                  // We don't care about their name
-                  // And we don't want to ask for their name to lower friction
-                  name: userEmail,
-                  email: userEmail
+            const emailSubject = `${pluginDisplayName} Order: $${fiatAmount} (${userInfo.email})`
+            const emailBody = `<h2>${pluginDisplayName} Order Request</h2>
+
+<p><strong>Customer Name:</strong> ${userInfo.firstName} ${userInfo.lastName}</p>
+<p><strong>Customer Email:</strong> ${userInfo.email}</p>
+<p><strong>Customer Location:</strong> ${params.regionCode.countryCode}${
+              params.regionCode.stateProvinceCode ? ', ' + params.regionCode.stateProvinceCode : ''
+            }</p>
+
+<h3>Transaction Details</h3>
+<p><strong>Request:</strong> ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${tokenOtherInfo.symbol}</p>
+<p><strong>For:</strong> ${fiatAmount} USD</p>
+<p><strong>Payment Method:</strong> ${paymentType}</p>
+`
+            // Pre-populate the email from the user's mail app
+            let hadEmailError = false
+            await new Promise<void>(resolve => {
+              try {
+                Mailer.mail(
+                  {
+                    subject: emailSubject,
+                    recipients: [config.otcEmail],
+                    body: emailBody,
+                    isHTML: true
+                  },
+                  async (error, event) => {
+                    try {
+                      // Handle based on error type and environment
+                      if (error != null) {
+                        const errorStr = String(error)
+                        console.log(`Email handling result: ${errorStr}`)
+
+                        // Mark that we had an error for later flow control
+                        hadEmailError = true
+
+                        // No email app available
+                        if (errorStr === 'not_available' && __DEV__) {
+                          const plainTextEmail = `To: ${config.otcEmail}
+Subject: ${emailSubject}
+
+------ CUSTOMER INFO ------
+Name: ${userInfo.firstName} ${userInfo.lastName}
+Email: ${userInfo.email}
+Location: ${params.regionCode.countryCode}${params.regionCode.stateProvinceCode ? ', ' + params.regionCode.stateProvinceCode : ''}
+
+------ TRANSACTION DETAILS ------
+Request: ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${tokenOtherInfo.symbol}
+For: ${fiatAmount} USD
+Payment Method: ${paymentType}
+
+[This email would be sent in production mode]
+`
+                          await showUi.confirmation({
+                            title: 'Debug - Email Preview',
+                            message: plainTextEmail
+                          })
+                          // In dev mode, we'll still show success confirmation
+                          hadEmailError = false
+                        } else {
+                          // Other mail-related errors - only show in production
+                          console.error(`Email error: ${errorStr}`)
+                          await showUi.confirmation({
+                            title: lstrings.exchange_generic_error_title,
+                            message: sprintf(lstrings.otc_email_error_message_1s, config.otcEmail)
+                          })
+                          // Exit the scenes after showing the error
+                          showUi.exitScene() // Exit the confirmation scene
+                          showUi.exitScene() // Exit the form scene
+                          showUi.exitScene() // Exit the amount quote scene
+                        }
+                      }
+                    } catch (error) {
+                      console.error(`Error in mail callback: ${String(error)}`)
+                      hadEmailError = true
+                    } finally {
+                      // Always resolve the promise to continue the flow
+                      resolve()
+                    }
+                  }
+                )
+              } catch (error) {
+                console.error(`Email exception: ${String(error)}`)
+                hadEmailError = true
+
+                // Only show error dialog in production
+                if (!__DEV__) {
+                  showUi
+                    .confirmation({
+                      title: lstrings.exchange_generic_error_title,
+                      message: lstrings.otc_email_error_message_1s
+                    })
+                    .catch(e => console.error(e))
+
+                  // Exit the scenes after showing the error
+                  showUi.exitScene() // Exit the form scene
+                  showUi.exitScene() // Exit the amount quote scene
                 }
+
+                // Always resolve the promise to continue the flow
+                resolve()
               }
-            }
-
-            const response = await fetch('https://edgeapp.zendesk.com/api/v2/tickets.json', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Basic ${authToken}`
-              },
-              body: JSON.stringify(requestBody)
             })
 
-            if (!response.ok) {
-              const text = await response.text()
-              // Exit the form scene
-              showUi.exitScene()
-              throw new Error(`Error creating Zendesk ticket: ${text}`)
+            // Only show success confirmation if there was no email error or we're in dev mode
+            if (!hadEmailError || __DEV__) {
+              await showUi.confirmation({
+                title: lstrings.otc_confirmation_title,
+                message: lstrings.otc_confirmation_message
+              })
+
+              // Exit the scenes after showing success confirmation
+              showUi.exitScene() // Exit the confirmation scene
+              showUi.exitScene() // Exit the form scene
+              showUi.exitScene() // Exit the amount quote scene
             }
-
-            const result = await response.json()
-
-            console.log('!@!', result)
-
-            await showUi.confirmation({
-              title: lstrings.otc_confirmation_title,
-              message: lstrings.otc_confirmation_message
-            })
-
-            // Exit the confirmation scene
-            showUi.exitScene()
-            // Exit the form scene
-            showUi.exitScene()
-            // Exit the amount quote scene
-            showUi.exitScene()
           },
           closeQuote: async (): Promise<void> => {}
         }
