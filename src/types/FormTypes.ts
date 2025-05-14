@@ -55,7 +55,7 @@ export const FORM_FIELD_DISPLAY_PROPS: {
   }
 }
 
-export const SEPA_FORM_DISKLET_NAME = 'sepaInfo'
+export const SEPA_FORM_DISKLET_NAME = 'sepaInfo.json'
 
 export const asSepaInfo = asObject({
   name: asString,
@@ -65,7 +65,16 @@ export const asSepaInfo = asObject({
 
 export type SepaInfo = ReturnType<typeof asSepaInfo>
 
-export const ADDRESS_FORM_DISKLET_NAME = 'homeAddress'
+export const ADDRESS_FORM_DISKLET_NAME = 'homeAddress.json'
+export const EMAIL_CONTACT_FORM_DISKLET_NAME = 'emailContactInfo.json'
+
+export const asEmailContactInfo = asObject({
+  email: asString,
+  firstName: asString,
+  lastName: asString
+})
+
+export type EmailContactInfo = ReturnType<typeof asEmailContactInfo>
 
 export const asHomeAddress = asObject({
   address: asString,
