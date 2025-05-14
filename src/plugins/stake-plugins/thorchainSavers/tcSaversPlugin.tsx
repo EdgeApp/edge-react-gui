@@ -12,7 +12,6 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
-import { base16 } from 'rfc4648'
 
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
@@ -144,6 +143,16 @@ const DUST_THRESHOLDS: StringMap = {
   BSC: '0',
   DOGE: '100000000',
   ETH: '0',
+  LTC: '10000'
+}
+
+const CLAIMING_DUST_THRESHOLDS: StringMap = {
+  AVAX: '10000000000',
+  BTC: '10000',
+  BCH: '10000',
+  BSC: '10000000000',
+  DOGE: '100000000',
+  ETH: '10000000000',
   LTC: '10000'
 }
 
@@ -1146,7 +1155,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { wallet, account } = request
   const { currencyCode, pluginId } = wallet.currencyInfo
-  const dustThreshold = DUST_THRESHOLDS[currencyCode]
+  const dustThreshold = CLAIMING_DUST_THRESHOLDS[currencyCode]
   if (dustThreshold == null) throw new Error('unknown dust threshold')
   const nativeAmount = add(dustThreshold, '1') // amount sent must exceed the dust threshold
 
@@ -1191,11 +1200,29 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const thorchainAddresses = await thorchainWallet.getAddresses({ tokenId: null })
   const thorchainAddress = thorchainAddresses[0].publicAddress
 
+  let router: string | undefined
   let memoValue = `tcy:${thorchainAddress}`
   let memoType: EdgeMemo['type'] = 'text'
   if (isEvm) {
+    router = inboundAddresses?.find(ia => ia.chain === chain)?.router
+    if (router == null) {
+      throw new Error('Missing router address')
+    }
+
+    const currentTimeSeconds = Math.floor(Date.now() / 1000)
+    const expiryTimeSeconds = currentTimeSeconds + 60 * 60 // 60 minutes in seconds
+
     memoType = 'hex'
-    memoValue = base16.stringify(Buffer.from(memoValue, 'utf8'))
+    memoValue = (
+      await getEvmDepositWithExpiryData({
+        assetAddress: '0x0000000000000000000000000000000000000000',
+        amountToDepositWei: Number(nativeAmount),
+        contractAddress: router,
+        vaultAddress: poolAddress,
+        memo: `tcy:${thorchainAddress}`,
+        expiry: expiryTimeSeconds
+      })
+    ).replace('0x', '')
   }
 
   const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
@@ -1205,7 +1232,7 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     tokenId,
     spendTargets: [
       {
-        publicAddress: poolAddress,
+        publicAddress: router ?? poolAddress,
         nativeAmount: nativeAmount
       }
     ],
