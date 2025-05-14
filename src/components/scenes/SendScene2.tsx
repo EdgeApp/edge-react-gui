@@ -67,6 +67,8 @@ import { ErrorTile } from '../tiles/ErrorTile'
 
 // TODO: Check contentPadding
 
+const SCROLL_TO_END_DELAY_MS = 150
+
 interface Props extends EdgeAppSceneProps<'send2'> {}
 
 export interface SendScene2Params {
@@ -126,7 +128,9 @@ const SendComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
 
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
@@ -267,12 +271,14 @@ const SendComponent = (props: Props) => {
         setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
         setSpendInfo({ ...spendInfo })
+        needsScrollToEnd.current = true
       }
     }
 
   const handleAddressAmountPress = (index: number) => () => {
     spendInfo.spendTargets.splice(index, 1)
     setSpendInfo({ ...spendInfo })
+    needsScrollToEnd.current = true
   }
 
   const renderAddressAmountTile = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -349,6 +355,7 @@ const SendComponent = (props: Props) => {
     setSpendInfo({ ...spendInfo })
     setMaxSpendSetter(-1)
     setFieldChanged(newField)
+    needsScrollToEnd.current = true
   }
 
   const handleSetMax = (index: number) => () => {
@@ -474,6 +481,7 @@ const SendComponent = (props: Props) => {
   const handleAddAddress = useHandler(() => {
     spendInfo.spendTargets.push({})
     setSpendInfo({ ...spendInfo })
+    needsScrollToEnd.current = true
   })
 
   const renderAddAddress = () => {
@@ -1097,6 +1105,19 @@ const SendComponent = (props: Props) => {
     backgroundColors[0] = scaledColor
   }
 
+  React.useEffect(() => {
+    // Hack: While you would think to use InteractionManager.runAfterInteractions,
+    // it doesn't work because several renders occur before the full height is
+    // determined and the scrollToEnd call would be effective.
+    const timeout = setTimeout(() => {
+      if (needsScrollToEnd.current) {
+        scrollViewRef.current?.scrollToEnd(true)
+        needsScrollToEnd.current = false
+      }
+    }, SCROLL_TO_END_DELAY_MS)
+    return () => clearTimeout(timeout)
+  })
+
   return (
     <SceneWrapper
       hasNotifications
@@ -1110,6 +1131,10 @@ const SendComponent = (props: Props) => {
       {({ insetStyle }) => (
         <>
           <StyledKeyboardAwareScrollView
+            innerRef={ref => {
+              const kbRef: KeyboardAwareScrollView | null = ref as any
+              scrollViewRef.current = kbRef
+            }}
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
