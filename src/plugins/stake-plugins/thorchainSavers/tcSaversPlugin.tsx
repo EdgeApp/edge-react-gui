@@ -247,6 +247,10 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 
 let inboundAddressesLastUpdate: number = 0
 
+// Track which addresses have claimed TCY during the current session. This
+// prevents the claim button from being available while the thornode updates its state
+const claimedTcyHack = new Set<string>()
+
 export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
   if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
     return
@@ -341,8 +345,14 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
   const [pool, saver] = await Promise.all([fetchPool(opts, asset), fetchSaver(opts, asset, primaryAddress)])
 
-  if (saver == null || pool == null) {
-    // We got a 404 error, so return an empty position:
+  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
+
+  // Return an empty position if:
+  // - There's no TCY to claim
+  // - TCY has already been claimed in this session
+  // - There's an issue getting the actual position
+
+  if (claimableTcy === '0' || claimedTcyHack.has(primaryAddress) || saver == null || pool == null) {
     return {
       allocations: [
         {
@@ -361,22 +371,17 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
 
   const position = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
 
-  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
-  if (claimableTcy !== '0') {
-    // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
-    position.allocations.unshift({
-      pluginId: 'thorchainrune',
-      currencyCode: 'TCY',
-      allocationType: 'earned',
-      nativeAmount: claimableTcy
-    })
-    position.canStake = false
-    position.canUnstake = false
-    position.canUnstakeAndClaim = false
-    position.canClaim = true
-  } else {
-    position.canClaim = false
-  }
+  // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
+  position.allocations.unshift({
+    pluginId: 'thorchainrune',
+    currencyCode: 'TCY',
+    allocationType: 'earned',
+    nativeAmount: claimableTcy
+  })
+  position.canStake = false
+  position.canUnstake = false
+  position.canUnstakeAndClaim = false
+  position.canClaim = true
 
   return position
 }
@@ -1346,6 +1351,7 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       const signedTx = await wallet.signTx(tx)
       const broadcastedTx = await wallet.broadcastTx(signedTx)
       await wallet.saveTx(broadcastedTx)
+      claimedTcyHack.add(primaryAddress)
     }
   }
 }
