@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError, showToast } from '../services/AirshipInstance'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -30,7 +30,6 @@ export const SpendingLimitsScene = (props: Props) => {
   const currencySymbol = useSelector(state => getFiatSymbol(state.ui.settings.defaultFiat))
   const transactionSpendingLimit = useSelector(state => state.ui.settings.spendingLimits.transaction)
 
-  const [password, setPassword] = React.useState('')
   const [transactionAmount, setTransactionAmount] = React.useState(
     !zeroString(transactionSpendingLimit.amount?.toString()) ? transactionSpendingLimit.amount.toString() : ''
   )
@@ -39,9 +38,6 @@ export const SpendingLimitsScene = (props: Props) => {
   const handleTransactionIsEnabledChanged = useHandler(() => setTransactionIsEnabled(!transactionIsEnabled))
 
   const handleSubmitAsync = async () => {
-    const isAuthorized = await account.checkPassword(password)
-    if (!isAuthorized) return showToast(lstrings.password_check_incorrect_password_title)
-
     const spendingLimits = {
       transaction: {
         isEnabled: transactionIsEnabled,
@@ -61,12 +57,9 @@ export const SpendingLimitsScene = (props: Props) => {
     handleSubmitAsync().catch(err => showError(err))
   })
 
-  const enableSlider = password.length > 8
   return (
     <SceneWrapper>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX} keyboardShouldPersistTaps="handled">
-        <FilledTextInput secureTextEntry autoFocus placeholder={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
-
         <View style={styles.switchRow}>
           <View style={styles.textBlock}>
             <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</EdgeText>
@@ -89,7 +82,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
         <View style={styles.spacer} />
 
-        <MainButton label={lstrings.save} disabled={!enableSlider} onPress={handleSubmit} />
+        <MainButton label={lstrings.save} onPress={handleSubmit} />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
