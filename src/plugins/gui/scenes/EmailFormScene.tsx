@@ -4,9 +4,13 @@ import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { Paragraph } from '../../../components/themed/EdgeText'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
+import { asEmailContactInfo, EMAIL_CONTACT_FORM_DISKLET_NAME, EmailContactInfo } from '../../../types/FormTypes'
+import { useSelector } from '../../../types/reactRedux'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
+import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
 export interface FiatPluginEmailFormParams {
@@ -34,6 +38,7 @@ export const EmailFormScene = React.memo((props: Props) => {
   const { navigation, route } = props
   const { params } = route
   const { onClose, onSubmit } = params
+  const disklet = useSelector(state => state.core.disklet)
 
   const [email, setEmail] = React.useState('')
   const [firstName, setFirstName] = React.useState('')
@@ -65,9 +70,41 @@ export const EmailFormScene = React.memo((props: Props) => {
       return
     }
 
-    // If we get here, email is valid - proceed with submission
+    // If form is valid, save the data to disklet for future use
+    try {
+      const contactInfo: EmailContactInfo = {
+        email,
+        firstName,
+        lastName
+      }
+      await setDiskletForm(disklet, EMAIL_CONTACT_FORM_DISKLET_NAME, contactInfo)
+    } catch (error) {
+      console.warn(`Error saving contact form: ${String(error)}`)
+      // Continue with submission even if saving fails
+    }
+
+    // Proceed with submission
     await onSubmit(email, firstName, lastName)
   })
+
+  // Load saved contact information when component mounts
+  useAsyncEffect(
+    async () => {
+      try {
+        const savedContactInfo = await getDiskletFormData(disklet, EMAIL_CONTACT_FORM_DISKLET_NAME, asEmailContactInfo)
+        if (savedContactInfo != null) {
+          setEmail(savedContactInfo.email)
+          setFirstName(savedContactInfo.firstName)
+          setLastName(savedContactInfo.lastName)
+        }
+      } catch (error) {
+        console.warn(`Error loading saved contact form: ${String(error)}`)
+        // Continue without saved data if loading fails
+      }
+    },
+    [],
+    'EmailFormScene'
+  )
 
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>

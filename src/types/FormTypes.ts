@@ -66,6 +66,15 @@ export const asSepaInfo = asObject({
 export type SepaInfo = ReturnType<typeof asSepaInfo>
 
 export const ADDRESS_FORM_DISKLET_NAME = 'homeAddress'
+export const EMAIL_CONTACT_FORM_DISKLET_NAME = 'emailContactInfo'
+
+export const asEmailContactInfo = asObject({
+  email: asString,
+  firstName: asString,
+  lastName: asString
+})
+
+export type EmailContactInfo = ReturnType<typeof asEmailContactInfo>
 
 export const asHomeAddress = asObject({
   address: asString,
