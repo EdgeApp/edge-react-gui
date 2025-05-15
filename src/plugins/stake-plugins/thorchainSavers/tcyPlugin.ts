@@ -82,13 +82,6 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
     headers: { 'x-client-id': ninerealmsClientId, 'Content-Type': 'application/json' }
   })
 
-  if (!tcyStakerResponse.ok) {
-    const responseText = await tcyStakerResponse.text()
-    throw new Error(`Thorchain could not fetch /tcy_staker: ${responseText}`)
-  }
-  const stakerJson = await tcyStakerResponse.json()
-  const staker = asTcyStaker(stakerJson)
-
   const position: StakePosition = {
     allocations: [],
     canStake: false,
@@ -96,6 +89,17 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
     canUnstakeAndClaim: false,
     canClaim: false
   }
+
+  if (!tcyStakerResponse.ok) {
+    const responseText = await tcyStakerResponse.text()
+    if (responseText.includes("fail to tcy staker: TCYStaker doesn't exist")) {
+      return position
+    }
+    throw new Error(`Thorchain could not fetch /tcy_staker: ${responseText}`)
+  }
+  const stakerJson = await tcyStakerResponse.json()
+  const staker = asTcyStaker(stakerJson)
+
   if (gt(staker.amount, '0')) {
     position.allocations.push({
       pluginId: 'thorchainrune',

@@ -12,7 +12,6 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
-import { base16 } from 'rfc4648'
 
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
@@ -147,6 +146,16 @@ const DUST_THRESHOLDS: StringMap = {
   LTC: '10000'
 }
 
+const CLAIMING_DUST_THRESHOLDS: StringMap = {
+  AVAX: '10000000000',
+  BTC: '10000',
+  BCH: '10000',
+  BSC: '10000000000',
+  DOGE: '100000000',
+  ETH: '10000000000',
+  LTC: '10000'
+}
+
 const asThorNodePool = asObject({
   asset: asString, // "AVAX.AVAX",
   // short_code: asString, // "a",
@@ -247,6 +256,10 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 
 let inboundAddressesLastUpdate: number = 0
 
+// Track which addresses have claimed TCY during the current session. This
+// prevents the claim button from being available while the thornode updates its state
+const claimedTcyHack = new Set<string>()
+
 export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
   if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
     return
@@ -341,8 +354,14 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
   const [pool, saver] = await Promise.all([fetchPool(opts, asset), fetchSaver(opts, asset, primaryAddress)])
 
-  if (saver == null || pool == null) {
-    // We got a 404 error, so return an empty position:
+  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
+
+  // Return an empty position if:
+  // - There's no TCY to claim
+  // - TCY has already been claimed in this session
+  // - There's an issue getting the actual position
+
+  if (claimableTcy === '0' || claimedTcyHack.has(primaryAddress) || saver == null || pool == null) {
     return {
       allocations: [
         {
@@ -361,22 +380,17 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
 
   const position = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
 
-  const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
-  if (claimableTcy !== '0') {
-    // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
-    position.allocations.unshift({
-      pluginId: 'thorchainrune',
-      currencyCode: 'TCY',
-      allocationType: 'earned',
-      nativeAmount: claimableTcy
-    })
-    position.canStake = false
-    position.canUnstake = false
-    position.canUnstakeAndClaim = false
-    position.canClaim = true
-  } else {
-    position.canClaim = false
-  }
+  // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
+  position.allocations.unshift({
+    pluginId: 'thorchainrune',
+    currencyCode: 'TCY',
+    allocationType: 'earned',
+    nativeAmount: claimableTcy
+  })
+  position.canStake = false
+  position.canUnstake = false
+  position.canUnstakeAndClaim = false
+  position.canClaim = true
 
   return position
 }
@@ -1141,7 +1155,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { wallet, account } = request
   const { currencyCode, pluginId } = wallet.currencyInfo
-  const dustThreshold = DUST_THRESHOLDS[currencyCode]
+  const dustThreshold = CLAIMING_DUST_THRESHOLDS[currencyCode]
   if (dustThreshold == null) throw new Error('unknown dust threshold')
   const nativeAmount = add(dustThreshold, '1') // amount sent must exceed the dust threshold
 
@@ -1186,11 +1200,29 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const thorchainAddresses = await thorchainWallet.getAddresses({ tokenId: null })
   const thorchainAddress = thorchainAddresses[0].publicAddress
 
+  let router: string | undefined
   let memoValue = `tcy:${thorchainAddress}`
   let memoType: EdgeMemo['type'] = 'text'
   if (isEvm) {
+    router = inboundAddresses?.find(ia => ia.chain === chain)?.router
+    if (router == null) {
+      throw new Error('Missing router address')
+    }
+
+    const currentTimeSeconds = Math.floor(Date.now() / 1000)
+    const expiryTimeSeconds = currentTimeSeconds + 60 * 60 // 60 minutes in seconds
+
     memoType = 'hex'
-    memoValue = base16.stringify(Buffer.from(memoValue, 'utf8'))
+    memoValue = (
+      await getEvmDepositWithExpiryData({
+        assetAddress: '0x0000000000000000000000000000000000000000',
+        amountToDepositWei: Number(nativeAmount),
+        contractAddress: router,
+        vaultAddress: poolAddress,
+        memo: `tcy:${thorchainAddress}`,
+        expiry: expiryTimeSeconds
+      })
+    ).replace('0x', '')
   }
 
   const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
@@ -1200,7 +1232,7 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     tokenId,
     spendTargets: [
       {
-        publicAddress: poolAddress,
+        publicAddress: router ?? poolAddress,
         nativeAmount: nativeAmount
       }
     ],
@@ -1346,6 +1378,7 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       const signedTx = await wallet.signTx(tx)
       const broadcastedTx = await wallet.broadcastTx(signedTx)
       await wallet.saveTx(broadcastedTx)
+      claimedTcyHack.add(primaryAddress)
     }
   }
 }
