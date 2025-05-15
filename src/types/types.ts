@@ -365,6 +365,7 @@ export interface AppConfig {
   ip2faSite: string
   knowledgeBase: string
   lightTheme: Theme
+  otcEmail: string
   notificationServers: string[]
   phoneNumber: string
   playStore: string
