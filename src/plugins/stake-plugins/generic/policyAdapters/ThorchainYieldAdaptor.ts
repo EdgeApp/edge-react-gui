@@ -30,6 +30,24 @@ export const makeThorchainYieldAdapter = (policyConfig: StakePolicyConfig<Thorch
     headers['x-client-id'] = ninerealmsClientId
   }
 
+  const getStakedTcyAmount = async (wallet: EdgeCurrencyWallet): Promise<string> => {
+    const addresses = await wallet.getAddresses({ tokenId: null })
+    const address = addresses[0].publicAddress
+
+    const tcyStakerResponse = await fetchWaterfall(thornodeServers, `thorchain/tcy_staker/${address}`, { headers })
+
+    if (!tcyStakerResponse.ok) {
+      const responseText = await tcyStakerResponse.text()
+      if (responseText.includes("fail to tcy staker: TCYStaker doesn't exist")) {
+        return '0'
+      }
+      throw new Error(`Thorchain could not fetch /tcy_staker: ${responseText}`)
+    }
+    const stakerJson = await tcyStakerResponse.json()
+    const staker = asTcyStaker(stakerJson)
+    return staker.amount
+  }
+
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
@@ -50,36 +68,22 @@ export const makeThorchainYieldAdapter = (policyConfig: StakePolicyConfig<Thorch
     },
 
     async fetchStakePosition(wallet: EdgeCurrencyWallet): Promise<StakePosition> {
-      const addresses = await wallet.getAddresses({ tokenId: null })
-      const address = addresses[0].publicAddress
-
-      const tcyStakerResponse = await fetchWaterfall(thornodeServers, `thorchain/tcy_staker/${address}`, { headers })
+      const balance = wallet.balanceMap.get('tcy') ?? '0'
+      const tcyStakedAmount = await getStakedTcyAmount(wallet)
 
       const position: StakePosition = {
-        allocations: [],
-        canStake: false,
-        canUnstake: false,
+        allocations: [
+          {
+            pluginId: 'thorchainrune',
+            currencyCode: 'TCY',
+            allocationType: 'staked',
+            nativeAmount: tcyStakedAmount
+          }
+        ],
+        canStake: gt(balance, '0'),
+        canUnstake: gt(tcyStakedAmount, '0'),
         canUnstakeAndClaim: false,
         canClaim: false
-      }
-
-      if (!tcyStakerResponse.ok) {
-        const responseText = await tcyStakerResponse.text()
-        if (responseText.includes("fail to tcy staker: TCYStaker doesn't exist")) {
-          return position
-        }
-        throw new Error(`Thorchain could not fetch /tcy_staker: ${responseText}`)
-      }
-      const stakerJson = await tcyStakerResponse.json()
-      const staker = asTcyStaker(stakerJson)
-
-      if (gt(staker.amount, '0')) {
-        position.allocations.push({
-          pluginId: 'thorchainrune',
-          currencyCode: 'TCY',
-          allocationType: 'staked',
-          nativeAmount: staker.amount
-        })
       }
 
       return position
