@@ -156,7 +156,7 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
     )
 
   // Pending Text and Style
-  const timeText = transaction.confirmations === 'confirmed' ? unixToLocaleDateTime(transaction.date).time : null
+  const timeText = transaction.confirmations === 'confirmed' || transaction.confirmations === 'syncing' ? unixToLocaleDateTime(transaction.date).time : null
   const confirmationText = getConfirmationText(currencyInfo, transaction)
 
   const confirmationStyle =
