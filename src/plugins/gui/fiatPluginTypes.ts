@@ -140,7 +140,7 @@ export interface FiatPluginUi {
   showError: (error: unknown) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
-  emailForm: (params: { message?: string }) => Promise<{ email: string; firstName: string; lastName: string } | undefined>
+  contactForm: (params: { message?: string }) => Promise<{ email: string; firstName: string; lastName: string } | undefined>
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress | undefined>
   requestPermission: (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean) => Promise<boolean>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>

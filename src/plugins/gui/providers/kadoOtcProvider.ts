@@ -436,7 +436,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
             if (confirmResult !== 'yes') return
 
             // If confirmed, proceed to get user contact information
-            const userInfo = await showUi.emailForm({
+            const userInfo = await showUi.contactForm({
               message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
             })
 
