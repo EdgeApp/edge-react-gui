@@ -1714,7 +1714,7 @@ const strings = {
   notifications_none: `You're all caught up!`,
   swap: 'Swap',
   update_available: 'Update Available',
-  enter_email: 'Enter Contact Information',
+  enter_contact_info: 'Enter Contact Information',
   edge_ucation: 'Edge-ucation',
   education: 'Education',
 

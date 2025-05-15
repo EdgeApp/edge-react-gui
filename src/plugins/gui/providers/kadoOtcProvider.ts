@@ -451,8 +451,6 @@ export const kadoOtcProvider: FiatProviderFactory = {
             let hadEmailError = false
             await new Promise<void>(resolve => {
               try {
-                console.log('Attempting to send email')
-
                 Mailer.mail(
                   {
                     subject: emailSubject,

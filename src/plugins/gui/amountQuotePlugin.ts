@@ -123,11 +123,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   }
 
   const providers = await initializeProviders(providerFactories, params)
-  console.debug(
-    '🚀 - constamountQuoteFiatPlugin:FiatPluginFactory= - providers:',
-    providers.map(provider => provider.providerId)
-  )
-
   if (providers.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
 
   const fiatPlugin: FiatPlugin = {

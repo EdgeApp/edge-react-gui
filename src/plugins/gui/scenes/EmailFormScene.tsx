@@ -71,7 +71,7 @@ export const EmailFormScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
-      <SceneContainer headerTitle={lstrings.enter_email}>
+      <SceneContainer headerTitle={lstrings.enter_contact_info}>
         {params.message == null ? null : <Paragraph>{params.message}</Paragraph>}
         <GuiFormField fieldType="text" autofocus label={lstrings.form_field_title_first_name} onChangeText={setFirstName} value={firstName} />
         <GuiFormField fieldType="text" label={lstrings.form_field_title_last_name} onChangeText={setLastName} value={lastName} />
