@@ -14,6 +14,7 @@ import { CoreumNativeStakeKitAdapterConfig, makeStakeKitAdapter } from './policy
 import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
+import { makeThorchainYieldAdapter, ThorchainYieldAdapterConfig } from './policyAdapters/ThorchainYieldAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
 import { StakePluginInfo, StakePolicyConfig } from './types'
 
@@ -78,6 +79,8 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
       return makeGlifInfinityPoolAdapter(policyInfo as StakePolicyConfig<GlifInfinityPoolAdapterConfig>)
     case 'tarot-velodrome-pool':
       return makeTarotPoolAdapter(policyInfo as StakePolicyConfig<TarotPoolAdapterConfig>)
+    case 'thorchain-yield':
+      return makeThorchainYieldAdapter(policyInfo as StakePolicyConfig<ThorchainYieldAdapterConfig>)
     default:
       throw new Error('Unknown policyInfo')
   }
