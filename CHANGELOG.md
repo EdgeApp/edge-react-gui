@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+- changed: Auto launch QR scanner for multi-out payments if previously used
+- changed: Auto populate amount for multi-out payments if prior amounts are similar
+- changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+
 ## 4.28.0 (staging)
 
 - added: Dismissed promo cards added to `NotificationCenterScene`
