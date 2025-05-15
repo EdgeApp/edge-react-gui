@@ -17,12 +17,12 @@ export interface CoreumNativeStakeKitAdapterConfig {
   preferredValidatorName: string
 }
 
-export const makeSkateKitAdapter = (policyConfig: StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>): StakePolicyAdapter => {
-  if (policyConfig.stakeAssets.length > 1) throw new Error(`Staking more than one assets is not supported for CoreumSkateKitAdapter`)
-  if (policyConfig.rewardAssets.length > 1) throw new Error(`Claim of more than one assets is not supported for CoreumSkateKitAdapter`)
+export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>): StakePolicyAdapter => {
+  if (policyConfig.stakeAssets.length > 1) throw new Error(`Staking more than one assets is not supported for CoreumStakeKitAdapter`)
+  if (policyConfig.rewardAssets.length > 1) throw new Error(`Claim of more than one assets is not supported for CoreumStakeKitAdapter`)
 
   if (policyConfig.stakeAssets[0].currencyCode !== policyConfig.rewardAssets[0].currencyCode)
-    throw new Error(`Stake and claim of different assets is not supported for CoreumSkateKitAdapter`)
+    throw new Error(`Stake and claim of different assets is not supported for CoreumStakeKitAdapter`)
 
   // Metadata constants:
   const metadataName = 'Coreum Native Staking'
