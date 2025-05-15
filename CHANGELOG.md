@@ -13,6 +13,7 @@
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
 - removed: Disable Fantom transaction list
 - fixed: Show the correct username in the "Forget Account" modal.
+- fixed: `TransactionListRow` missing timestamp while syncing
 
 ## 4.27.2 (staging)
 
