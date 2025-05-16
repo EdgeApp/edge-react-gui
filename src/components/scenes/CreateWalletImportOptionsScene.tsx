@@ -179,7 +179,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                       color: theme.deactivatedText
                     }}
                   >
-                    {lstrings.fragment_required}
+                    {opt.required ? lstrings.fragment_required : null}
                   </EdgeText>
                 </View>
               </EdgeRow>
