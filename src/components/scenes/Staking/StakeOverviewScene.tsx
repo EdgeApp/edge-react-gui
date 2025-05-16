@@ -21,16 +21,17 @@ import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
+import { AlertCardUi4 } from '../../cards/AlertCard'
 import { InfoCardCarousel } from '../../cards/InfoCardCarousel'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { fadeInDown10 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { SceneContainer } from '../../layout/SceneContainer'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
 interface Props extends EdgeSceneProps<'stakeOverview'> {
@@ -183,72 +184,74 @@ const StakeOverviewSceneComponent = (props: Props) => {
   if (stakePolicy == null) return null
 
   return (
-    <SceneWrapper padding={theme.rem(0.5)} scroll>
-      <SceneHeaderUi4 title={title} />
-      <InfoCardCarousel
-        enterAnim={fadeInDown10}
-        cards={(infoServerData.rollup?.stakeStatusCards ?? {})[stakePolicyId]}
-        navigation={navigation}
-        screenWidth={screenWidth}
-      />
-      <StakingReturnsCard
-        fromCurrencyLogos={policyIcons.stakeAssetUris}
-        toCurrencyLogos={policyIcons.rewardAssetUris}
-        apy={stakePolicy.apy}
-        stakeProviderInfo={stakePolicy.stakeProviderInfo}
-      />
-      {stakePosition == null || isStakeStateLoading ? (
-        <>
-          <View style={styles.shimmer}>
-            <Shimmer isShown />
-          </View>
-          <View style={styles.shimmer}>
-            <Shimmer isShown />
-          </View>
-        </>
-      ) : (
-        <FlatList
-          data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
-          renderItem={renderCFAT}
-          keyExtractor={(allocation: PositionAllocation) =>
-            `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
-          }
-          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+    <SceneWrapper scroll>
+      <SceneContainer headerTitle={title}>
+        <InfoCardCarousel
+          enterAnim={fadeInDown10}
+          cards={(infoServerData.rollup?.stakeStatusCards ?? {})[stakePolicyId]}
+          navigation={navigation}
+          screenWidth={screenWidth}
         />
-      )}
-      {waitingOnStateLoading ? null : (
-        <SceneButtons
-          primary={{
-            label: lstrings.fragment_stake_label,
-            disabled: !canStake,
-            onPress: handleModifyPress('stake')
-          }}
-          secondary={
-            stakePolicy.hideClaimAction
-              ? undefined
-              : {
-                  label: lstrings.stake_claim_rewards,
-                  disabled: !canClaim,
-                  onPress: handleModifyPress('claim')
-                }
-          }
-          tertiary={
-            stakePolicy.hideUnstakeAndClaimAction
-              ? stakePolicy.hideUnstakeAction
+        <StakingReturnsCard
+          fromCurrencyLogos={policyIcons.stakeAssetUris}
+          toCurrencyLogos={policyIcons.rewardAssetUris}
+          apy={stakePolicy.apy}
+          stakeProviderInfo={stakePolicy.stakeProviderInfo}
+        />
+        {stakePosition == null || isStakeStateLoading ? (
+          <>
+            <View style={styles.shimmer}>
+              <Shimmer isShown />
+            </View>
+            <View style={styles.shimmer}>
+              <Shimmer isShown />
+            </View>
+          </>
+        ) : (
+          <FlatList
+            data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
+            renderItem={renderCFAT}
+            keyExtractor={(allocation: PositionAllocation) =>
+              `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
+            }
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          />
+        )}
+        <AlertCardUi4 type="warning" title={lstrings.string_warning} body={lstrings.warning_earn} />
+        {waitingOnStateLoading ? null : (
+          <SceneButtons
+            primary={{
+              label: lstrings.fragment_stake_label,
+              disabled: !canStake,
+              onPress: handleModifyPress('stake')
+            }}
+            secondary={
+              stakePolicy.hideClaimAction
                 ? undefined
                 : {
-                    label: lstrings.stake_unstake,
-                    disabled: !canUnstake,
-                    onPress: handleModifyPress('unstake')
+                    label: lstrings.stake_claim_rewards,
+                    disabled: !canClaim,
+                    onPress: handleModifyPress('claim')
                   }
-              : {
-                  label: lstrings.stake_unstake_claim,
-                  disabled: !canUnstakeAndClaim,
-                  onPress: handleModifyPress('unstakeAndClaim')
-                }
-          }
-        />
-      )}
+            }
+            tertiary={
+              stakePolicy.hideUnstakeAndClaimAction
+                ? stakePolicy.hideUnstakeAction
+                  ? undefined
+                  : {
+                      label: lstrings.stake_unstake,
+                      disabled: !canUnstake,
+                      onPress: handleModifyPress('unstake')
+                    }
+                : {
+                    label: lstrings.stake_unstake_claim,
+                    disabled: !canUnstakeAndClaim,
+                    onPress: handleModifyPress('unstakeAndClaim')
+                  }
+            }
+          />
+        )}
+      </SceneContainer>
     </SceneWrapper>
   )
 }

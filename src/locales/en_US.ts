@@ -130,6 +130,8 @@ const strings = {
   warning_sending_pix_to_email_title: 'Sending PIX payment to email address',
   warning_sending_pix_to_email_body:
     'You scanned or entered an email address which is a valid Brazil PIX payment address. Continuing will create a PIX payment of Tron USDT to the email address provided.',
+  warning_earn:
+    'Staking cryptocurrency carries risks including loss of funds, smart contract failures, volatility-induced losses, and asset lock periods. Please research each Earn option thoroughly.',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
