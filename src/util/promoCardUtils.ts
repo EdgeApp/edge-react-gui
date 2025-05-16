@@ -90,7 +90,13 @@ export const isPromoCardValid = (messageId: string, currentPromoCards?: InfoCard
  * Check for expired promos from the info server data that aren't already in the notification center
  * and add them as notifications
  */
-export const checkAndAddExpiredPromos = async (account: EdgeAccount, infoCards: InfoCard[] = []): Promise<void> => {
+export const checkAndAddExpiredPromos = async (
+  account: EdgeAccount,
+  infoCards: InfoCard[] = [],
+  countryCode?: string,
+  promoIds?: Array<string | null>,
+  installerId?: string
+): Promise<void> => {
   if (infoCards.length === 0) return
 
   // Get the current notification state
@@ -111,6 +117,9 @@ export const checkAndAddExpiredPromos = async (account: EdgeAccount, infoCards: 
   // relevant to this user regardless of expiration date
   const relevantCards = filterInfoCards({
     cards: infoCards,
+    countryCode,
+    promoIds,
+    installerId,
     buildNumber,
     currentDate,
     osType,

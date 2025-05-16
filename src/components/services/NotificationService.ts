@@ -79,6 +79,8 @@ export const NotificationService = (props: Props) => {
 
   const { notifState, accountNotifDismissInfo } = useAccountSettings()
   const otpSettings = useOtpSettings()
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const accountReferral = useSelector(state => state.account.accountReferral)
 
   const wallets = useWatch(account, 'currencyWallets')
   const otpKey = useWatch(account, 'otpKey')
@@ -121,7 +123,7 @@ export const NotificationService = (props: Props) => {
 
       // Check for expired promos from the info server and add them to notifications
       if (infoServerData.rollup?.promoCards2 != null) {
-        await checkAndAddExpiredPromos(account, infoServerData.rollup.promoCards2)
+        await checkAndAddExpiredPromos(account, infoServerData.rollup.promoCards2, countryCode, accountReferral.activePromotions, accountReferral.installerId)
       }
 
       // cleanup:
