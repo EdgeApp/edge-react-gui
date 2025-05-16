@@ -246,7 +246,9 @@ exports[`TransactionListRow should render with loading props 1`] = `
               null,
             ]
           }
-        />
+        >
+          1:33 PM
+        </Text>
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
