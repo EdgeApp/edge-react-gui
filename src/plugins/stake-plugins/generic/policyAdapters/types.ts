@@ -6,6 +6,7 @@ import { CoreumNativeStakeKitAdapterConfig } from './CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig } from './EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig } from './GlifInfinityPoolAdapter'
 import { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
+import { ThorchainYieldAdapterConfig } from './ThorchainYieldAdaptor'
 
 // Union of all adapter configs
 export type StakeAdapterConfig =
@@ -14,6 +15,7 @@ export type StakeAdapterConfig =
   | EthereumPooledKilnAdapterConfig
   | GlifInfinityPoolAdapterConfig
   | TarotPoolAdapterConfig
+  | ThorchainYieldAdapterConfig
 
 export interface StakePolicyAdapter {
   stakePolicyId: string
