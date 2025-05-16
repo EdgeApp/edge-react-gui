@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- added: Thorchain TCY stake and unstake
 - added: Toast notifications for PIN changes.
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
