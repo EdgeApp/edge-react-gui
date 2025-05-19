@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- added: Use `getTokenDetails` to auto-complete fields in `EditTokenScene`
 
 ## 4.28.0 (staging)
 
