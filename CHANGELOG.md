@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Thorchain TCY stake and unstake
+
 ## 4.28.0 (staging)
 
 - added: Dismissed promo cards added to `NotificationCenterScene`
