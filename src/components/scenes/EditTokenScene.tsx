@@ -187,10 +187,38 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
+  const renderCustomTokenTemplateRows = () => {
+    return customTokenTemplate
+      .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
+      .map(item => {
+        if (item.type === 'nativeAmount') return null
+        return (
+          <FilledTextInput
+            key={item.key}
+            aroundRem={0.5}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus={false}
+            placeholder={translateDescription(item.displayName)}
+            keyboardType={item.type === 'number' ? 'numeric' : 'default'}
+            value={location.get(item.key) ?? ''}
+            onChangeText={value =>
+              setLocation(location => {
+                const out = new Map(location)
+                out.set(item.key, value.replace(/\s/g, ''))
+                return out
+              })
+            }
+          />
+        )
+      })
+  }
+
   return (
     <SceneWrapper avoidKeyboard>
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        {renderCustomTokenTemplateRows()}
         <FilledTextInput
           aroundRem={0.5}
           autoCapitalize="characters"
@@ -209,28 +237,6 @@ function EditTokenSceneComponent(props: Props) {
           value={displayName}
           onChangeText={setDisplayName}
         />
-        {customTokenTemplate.map(item => {
-          if (item.type === 'nativeAmount') return null
-          return (
-            <FilledTextInput
-              key={item.key}
-              aroundRem={0.5}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={false}
-              placeholder={translateDescription(item.displayName)}
-              keyboardType={item.type === 'number' ? 'numeric' : 'default'}
-              value={location.get(item.key) ?? ''}
-              onChangeText={value =>
-                setLocation(location => {
-                  const out = new Map(location)
-                  out.set(item.key, value.replace(/\s/g, ''))
-                  return out
-                })
-              }
-            />
-          )
-        })}
         <FilledTextInput
           aroundRem={0.5}
           autoCorrect={false}
