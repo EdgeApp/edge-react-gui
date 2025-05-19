@@ -385,6 +385,15 @@ export const SPECIAL_CURRENCY_INFO: {
     keysOnlyMode: true,
     unstoppableDomainsTicker: 'WAXP'
   },
+  ecash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecash_wallet_name,
+    chainCode: 'ECASH',
+    displayBuyCrypto: true,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    unstoppableDomainsTicker: 'ECASH'
+  },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,
     chainCode: 'ETH',
