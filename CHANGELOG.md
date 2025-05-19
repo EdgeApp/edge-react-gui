@@ -15,6 +15,7 @@
 - removed: Disable Fantom transaction list
 - fixed: Show the correct username in the "Forget Account" modal.
 - fixed: `TransactionListRow` missing timestamp while syncing
+- fixed: Don't show required text for optional import options
 
 ## 4.27.2 (2025-05-13)
 
