@@ -84,6 +84,7 @@
   "warning_battery_saver": "¡Se detectó ahorro de batería! Es posible que los saldos no se actualicen. Para disfrutar de la mejor experiencia, desactive el modo de ahorro de batería.",
   "warning_sending_pix_to_email_title": "Envío pago de PIX a dirección de correo electrónico",
   "warning_sending_pix_to_email_body": "Escaneó o ingresó una dirección de correo electrónico que es una dirección de pago PIX válida de Brasil. Si continúa, se creará un pago PIX de Tron USDT a la dirección de correo electrónico proporcionada.",
+  "warning_earn": "Staking cryptocurrency carries risks including loss of funds, smart contract failures, volatility-induced losses, and asset lock periods. Please research each Earn option thoroughly.",
   "alert_dropdown_alert": "¡Alerta! ",
   "alert_dropdown_warning": "¡Advertencia! ",
   "azteco_success": "Has canjeado una tarjeta de bitcoin Azteco. Los fondos deberían llegar pronto.",
