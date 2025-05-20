@@ -23,6 +23,7 @@ export const testConfig: AppConfig = {
   knowledgeBase: 'https://support.testy.com/knowledge',
   lightTheme: testLight,
   notificationServers: ['https://push2.edge.app'],
+  otcEmail: 'otc@testy.com',
   phoneNumber: '+1-800-100-1000',
   playStore: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   referralServers: ['https://referral1.testy.com'],
