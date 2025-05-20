@@ -6,6 +6,7 @@
 
 ## 4.28.0 (staging)
 
+- added: Warning card to `StakeOverviewScene`
 - added: Dismissed promo cards added to `NotificationCenterScene`
 - added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Multiple memo support to `SendScene2`
