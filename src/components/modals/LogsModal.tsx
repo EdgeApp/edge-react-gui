@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { useSelector } from '../../types/reactRedux'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { WarningCard } from '../cards/WarningCard'
@@ -26,6 +27,7 @@ export const LogsModal = (props: Props) => {
   const { bridge, logs } = props
   const [userMessage, setUserMessage] = React.useState('')
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
+  const account = useSelector(state => state.core.account)
 
   React.useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -72,11 +74,13 @@ export const LogsModal = (props: Props) => {
     logs.info.userMessage = userMessage
     logs.activity.userMessage = userMessage
 
+    const underDuress = account.isDuressAccount
+
     await Promise.all([
-      sendLogs(logs.activity).catch((e: any) => {
+      sendLogs(logs.activity, underDuress).catch((e: any) => {
         throw new Error(`${lstrings.settings_modal_send_logs_failure} activity logs code ${e?.message}`)
       }),
-      sendLogs(logs.info).catch((e: any) => {
+      sendLogs(logs.info, underDuress).catch((e: any) => {
         throw new Error(`${lstrings.settings_modal_send_logs_failure} info logs code ${e?.message}`)
       })
     ])
