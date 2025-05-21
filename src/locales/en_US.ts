@@ -1894,7 +1894,7 @@ const strings = {
   currency_label_ZWL: 'Zimbabwe Dollar',
 
   // Getting Started Scene
-  getting_started_already_have_an_account: 'Already have an account?',
+  getting_started_already_have_an_account: 'Already have an account? ',
   getting_started_sign_in: 'Sign in',
   getting_started_slide_1_footnote: `Users can access seed phrases within the app at their discretion.`,
   getting_started_slide_1_message: `Say goodbye to writing down insecure backups on paper. With client-side encryption, automatic account backup and 2FA, Edge simplifies self-custody for everyone.`,

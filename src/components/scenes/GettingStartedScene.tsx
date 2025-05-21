@@ -202,8 +202,7 @@ export const GettingStartedScene = (props: Props) => {
       </ButtonFadeContainer>
       <TertiaryTouchable onPress={handlePressSignIn}>
         <TertiaryText>
-          {/* eslint-disable-next-line react-native/no-raw-text */}
-          {`${lstrings.getting_started_already_have_an_account} `}
+          {lstrings.getting_started_already_have_an_account}
           <TappableText>{lstrings.getting_started_sign_in}</TappableText>
         </TertiaryText>
       </TertiaryTouchable>
