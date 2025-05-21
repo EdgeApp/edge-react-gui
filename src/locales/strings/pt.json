@@ -1657,7 +1657,7 @@
   "currency_label_YER": "Rial iemenita",
   "currency_label_ZMW": "Kwacha da Zâmbia",
   "currency_label_ZWL": "Dólar do Zimbábue",
-  "getting_started_already_have_an_account": "Already have an account?",
+  "getting_started_already_have_an_account": "Already have an account? ",
   "getting_started_sign_in": "Sign in",
   "getting_started_slide_1_footnote": "Os usuários podem acessar frases seed dentro do aplicativo a seu critério.",
   "getting_started_slide_1_message": "Diga adeus à escrita de ‘backups’ inseguros em papel. Com a criptografia do lado do cliente, backup automático de contas e 2FA, Edge simplifica a auto-custódia para todos.",
