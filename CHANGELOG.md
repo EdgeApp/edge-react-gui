@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- fixed: No longer show FIO onboarding modal while in Duress Mode.
 
 ## 4.28.0 (staging)
 
