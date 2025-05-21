@@ -167,7 +167,16 @@ const StakeOverviewSceneComponent = (props: Props) => {
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
-    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
+    // This is not the wallet we are staking from, but the asset being staked.
+    return (
+      <CryptoFiatAmountTile
+        title={title}
+        nativeCryptoAmount={nativeAmount ?? '0'}
+        tokenId={tokenId}
+        denomination={denomination}
+        currencyConfig={account.currencyConfig[pluginId]}
+      />
+    )
   }
 
   const title = React.useMemo(() => (stakePolicy == null ? '' : getPolicyTitleName(stakePolicy, countryCode)), [stakePolicy, countryCode])

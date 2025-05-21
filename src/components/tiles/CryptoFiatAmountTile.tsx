@@ -1,11 +1,10 @@
 /* eslint-disable react-native/no-raw-text */
 import { abs, div } from 'biggystring'
-import { EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, trimEnd } from '../../locales/intl'
-import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow, RowActionIcon } from '../rows/EdgeRow'
@@ -19,15 +18,14 @@ interface Props {
   maxCryptoChars?: number
   nativeCryptoAmount: string
   title: string
-  walletId: string
+  currencyConfig: EdgeCurrencyConfig
   tokenId: EdgeTokenId
   type?: RowActionIcon
   onPress?: () => Promise<void> | void
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'none', onPress } = props
-  const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
+  const { denomination, maxCryptoChars, nativeCryptoAmount, title, currencyConfig, tokenId, type = 'none', onPress } = props
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
 
@@ -52,8 +50,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
       <EdgeRow rightButtonType={type} title={title} onPress={onPress}>
         <EdgeText>
           {cryptoAmountText}
-          (
-          <FiatText currencyConfig={wallet.currencyConfig} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
+          <FiatText currencyConfig={currencyConfig} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />
         </EdgeText>
       </EdgeRow>
     </EdgeCard>
