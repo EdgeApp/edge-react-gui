@@ -5,6 +5,7 @@
 - added: Added Botanix.
 - added: Added HyperEVM.
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- added: Revolut fiat buy provider.
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
 
 ## 4.32.0 (staging)
