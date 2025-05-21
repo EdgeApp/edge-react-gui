@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- changed: Show Thorchain Savers positions associated with bech32 addresses
+- fixed: Show deprecated stake policies with allocations
 
 ## 4.28.0 (staging)
 
