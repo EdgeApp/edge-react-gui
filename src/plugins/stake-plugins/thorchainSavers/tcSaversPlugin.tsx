@@ -288,7 +288,8 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
             ...policyDefault,
             stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}`,
             rewardAssets: [{ pluginId: 'thorchainrune', currencyCode: 'TCY' }],
-            stakeAssets: [{ pluginId, currencyCode }]
+            stakeAssets: [{ pluginId, currencyCode }],
+            deprecated: true
           })
         }
       })
