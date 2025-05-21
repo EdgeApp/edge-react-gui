@@ -1650,7 +1650,7 @@
   "currency_label_YER": "Rial yemení",
   "currency_label_ZMW": "Kwacha Zambiano",
   "currency_label_ZWL": "Dólar de Zimbabwe",
-  "getting_started_already_have_an_account": "¿Ya tienes una cuenta?",
+  "getting_started_already_have_an_account": "¿Ya tienes una cuenta? ",
   "getting_started_sign_in": "Iniciar sesión",
   "getting_started_slide_1_footnote": "Los usuarios pueden acceder a las frases semilla dentro de la aplicación a su discreción.",
   "getting_started_slide_1_message": "Di adiós a las copias de seguridad inseguras en papel. Con cifrado del lado del cliente, respaldo automático de cuenta y 2FA, Edge simplifica la autocustodia para todos.",

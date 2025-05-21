@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Platform, Pressable, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
@@ -202,8 +202,7 @@ export const GettingStartedScene = (props: Props) => {
       </ButtonFadeContainer>
       <TertiaryTouchable onPress={handlePressSignIn}>
         <TertiaryText>
-          {/* eslint-disable-next-line react-native/no-raw-text */}
-          {`${lstrings.getting_started_already_have_an_account} `}
+          {lstrings.getting_started_already_have_an_account}
           <TappableText>{lstrings.getting_started_sign_in}</TappableText>
         </TertiaryText>
       </TertiaryTouchable>
@@ -309,11 +308,16 @@ export const GettingStartedScene = (props: Props) => {
 // Local Components
 // -----------------------------------------------------------------------------
 
-const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => props => ({
-  marginBottom: theme.rem(0.5),
-  marginTop: theme.rem(4.5),
-  alignItems: 'center'
-}))
+const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => {
+  const platform = Platform.OS
+  // HACK: Address iOS/Android parity mismatches when the animation fires
+  return {
+    marginVertical: platform === 'android' ? undefined : theme.rem(0.5),
+    marginBottom: platform === 'android' ? theme.rem(0.5) : undefined,
+    marginTop: platform === 'android' ? theme.rem(4.5) : undefined,
+    alignItems: 'center'
+  }
+})
 
 const TertiaryText = styled(EdgeText)(theme => props => ({
   color: theme.textInputTextColorDisabled
@@ -566,10 +570,17 @@ const Footnote = styled(EdgeText)(theme => ({
   includeFontPadding: false
 }))
 
-const ButtonFadeContainer = styled(View)(theme => ({
-  position: 'absolute',
-  bottom: theme.rem(3.25),
-  left: 0,
-  right: 0,
-  zIndex: 1
-}))
+const ButtonFadeContainer = styled(View)(theme => {
+  // HACK: Address iOS/Android parity mismatches when the animation fires
+  return Platform.OS === 'android'
+    ? {
+        position: 'absolute',
+        bottom: theme.rem(3.25),
+        left: 0,
+        right: 0,
+        zIndex: 1
+      }
+    : {
+        position: 'relative'
+      }
+})
