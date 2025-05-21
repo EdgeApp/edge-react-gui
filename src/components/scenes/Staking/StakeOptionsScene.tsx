@@ -13,7 +13,7 @@ import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getPluginFromPolicyId, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
+import { getPluginFromPolicyId, getPoliciesFromPlugins, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { AccentColors } from '../../common/DotsBackground'
@@ -39,16 +39,8 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { currencyCode } = route.params
   const [stakePlugins = []] = useAsyncValue(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
-  const stakePolicies = stakePlugins.flatMap(stakePlugin =>
-    stakePlugin
-      .getPolicies({ pluginId })
-      .filter(
-        stakePolicy =>
-          !stakePolicy.deprecated &&
-          stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)
-      )
-  )
   const stakePositionMap = useSelector(state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {})
+  const stakePolicies = getPoliciesFromPlugins(stakePlugins, stakePositionMap, wallet, currencyCode)
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)

@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- fixed: Show deprecated stake policies with allocations
 
 ## 4.28.0 (staging)
 
