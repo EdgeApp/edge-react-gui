@@ -26,6 +26,7 @@
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
 - removed: Disable Fantom transaction list
+- fixed: Refresh the tranaction list on resync
 - fixed: Show the correct username in the "Forget Account" modal.
 - fixed: `TransactionListRow` missing timestamp while syncing
 - fixed: Don't show required text for optional import options
