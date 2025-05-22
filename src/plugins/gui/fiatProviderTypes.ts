@@ -28,15 +28,30 @@ export interface FiatProviderQuote {
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
 type FiatProviderQuoteErrorTypesRegion = 'regionRestricted'
 type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'paymentUnsupported'
+type FiatProviderQuoteErrorTypesFiat = 'fiatUnsupported'
 
-export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesRegion | FiatProviderQuoteErrorTypesOther
+export type FiatProviderQuoteErrorTypes =
+  | FiatProviderQuoteErrorTypesLimit
+  | FiatProviderQuoteErrorTypesRegion
+  | FiatProviderQuoteErrorTypesOther
+  | FiatProviderQuoteErrorTypesFiat
 
 // FiatProviderQuoteError
 //
 // errorAmount must be in units of the provided FiatProviderGetQuoteParams.exchangeAmount as determined by
 // amountType
 export type FiatProviderQuoteError =
-  | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
+  | {
+      providerId: string
+      errorType: FiatProviderQuoteErrorTypesOther
+    }
+  | {
+      providerId: string
+      errorType: FiatProviderQuoteErrorTypesFiat
+      fiatCurrencyCode: string
+      paymentMethod: string
+      pluginDisplayName: string
+    }
   | {
       providerId: string
       errorType: FiatProviderQuoteErrorTypesLimit
@@ -65,6 +80,8 @@ export class FiatProviderError extends Error {
           return `Asset unsupported`
         case 'paymentUnsupported':
           return 'Payment unsupported'
+        case 'fiatUnsupported':
+          return `Fiat currency unsupported: ${info.paymentMethod} ${info.fiatCurrencyCode}`
       }
     }
     super(getMessage())

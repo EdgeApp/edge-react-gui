@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
 import { createPriorityArray } from '../plugins/gui/amountQuotePlugin'
-import { FiatProviderError } from '../plugins/gui/fiatProviderTypes'
+import { FiatProviderQuoteError } from '../plugins/gui/fiatProviderTypes'
 import { getBestError } from '../plugins/gui/pluginUtils'
 
 const FAKE_CODE = 'FAKE'
@@ -26,115 +26,115 @@ describe('creditCardPlugin', function () {
   })
   describe('getBestError', function () {
     test('overLimit', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'overLimit',
           errorAmount: 50
-        })
+        }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '50 USD'))
     })
     test('underLimit', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'underLimit',
           errorAmount: 50
-        })
+        }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '50 USD'))
     })
     test('regionRestricted', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'regionRestricted',
           displayCurrencyCode: FAKE_CODE
-        })
+        }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE))
     })
     test('assetUnsupported', function () {
-      const errors: FiatProviderError[] = [new FiatProviderError({ providerId: '', errorType: 'assetUnsupported' })]
+      const errors: FiatProviderQuoteError[] = [{ providerId: '', errorType: 'assetUnsupported' }]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(lstrings.fiat_plugin_asset_unsupported)
     })
     test('underLimit 1 2 3', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'underLimit',
           errorAmount: 1
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'underLimit',
           errorAmount: 2
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'underLimit',
           errorAmount: 3
-        })
+        }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '1 USD'))
     })
     test('overLimit 1 2 3', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'overLimit',
           errorAmount: 1
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'overLimit',
           errorAmount: 2
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'overLimit',
           errorAmount: 3
-        })
+        }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '3 USD'))
     })
     test('overLimit underLimit regionRestricted assetUnsupported', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'overLimit',
           errorAmount: 1
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'underLimit',
           errorAmount: 2
-        }),
-        new FiatProviderError({
+        },
+        {
           providerId: '',
           errorType: 'regionRestricted',
           displayCurrencyCode: FAKE_CODE
-        }),
-        new FiatProviderError({ providerId: '', errorType: 'assetUnsupported' })
+        },
+        { providerId: '', errorType: 'assetUnsupported' }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '2 USD'))
     })
     test('regionRestricted assetUnsupported', function () {
-      const errors: FiatProviderError[] = [
-        new FiatProviderError({
+      const errors: FiatProviderQuoteError[] = [
+        {
           providerId: '',
           errorType: 'regionRestricted',
           displayCurrencyCode: FAKE_CODE
-        }),
-        new FiatProviderError({ providerId: '', errorType: 'assetUnsupported' })
+        },
+        { providerId: '', errorType: 'assetUnsupported' }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE))

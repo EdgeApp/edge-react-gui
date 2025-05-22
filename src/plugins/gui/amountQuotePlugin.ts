@@ -13,7 +13,14 @@ import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
-import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import {
+  FiatProvider,
+  FiatProviderAssetMap,
+  FiatProviderError,
+  FiatProviderGetQuoteParams,
+  FiatProviderQuote,
+  FiatProviderQuoteError
+} from './fiatProviderTypes'
 import { StateManager } from './hooks/useStateManager'
 import { BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
@@ -476,7 +483,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestError = getBestError(errors as any, sourceFieldCurrencyCode, direction)
+            const fpQuoteErrors = errors.map(error => {
+              if (error instanceof FiatProviderError) {
+                return error.quoteError
+              }
+              return error as FiatProviderQuoteError
+            })
+
+            const bestError = getBestError(fpQuoteErrors, sourceFieldCurrencyCode, direction)
             return {
               bestError,
               stateManagerUpdate: {
