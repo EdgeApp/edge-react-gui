@@ -411,7 +411,7 @@ const StakeModifySceneComponent = (props: Props) => {
         title={title}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
         tokenId={tokenId}
-        walletId={wallet.id}
+        currencyConfig={account.currencyConfig[pluginId]}
         denomination={quoteDenom}
         onPress={handlePressStakingFee(modification)}
       />
@@ -438,7 +438,7 @@ const StakeModifySceneComponent = (props: Props) => {
         title={lstrings.stake_future_unstaking_fee}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
         tokenId={tokenId}
-        walletId={wallet.id}
+        currencyConfig={account.currencyConfig[pluginId]}
         denomination={quoteDenom}
         onPress={handlePressFutureUnstakingFee}
       />
@@ -513,7 +513,7 @@ const StakeModifySceneComponent = (props: Props) => {
             tokenId={null}
             title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
-            walletId={wallet.id}
+            currencyConfig={account.currencyConfig[wallet.currencyInfo.pluginId]}
             denomination={nativeAssetDenomination}
           />
         }

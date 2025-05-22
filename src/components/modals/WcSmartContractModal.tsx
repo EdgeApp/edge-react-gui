@@ -194,7 +194,7 @@ export const WcSmartContractModal = (props: Props) => {
             title={lstrings.string_amount}
             nativeCryptoAmount={nativeAmount}
             denomination={amountDenom}
-            walletId={wallet.id}
+            currencyConfig={wallet.currencyConfig}
             tokenId={tokenId}
           />
         )}
@@ -210,7 +210,7 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={networkFee}
             denomination={feeDenom}
             tokenId={null}
-            walletId={wallet.id}
+            currencyConfig={wallet.currencyConfig}
           />
         )}
         {zeroString(totalNativeCrypto) ? null : (
