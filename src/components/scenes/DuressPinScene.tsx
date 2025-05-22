@@ -31,7 +31,6 @@ export const DuressPinScene = (props: Props) => {
 
   const handleComplete = () => {
     if (!isValidPin) return
-    logActivity(`Duress PIN selected`)
     account
       .checkPin(pin)
       .then(async isConflicting => {
@@ -40,6 +39,8 @@ export const DuressPinScene = (props: Props) => {
           return
         }
         await account.changePin({ enableLogin: true, pin, forDuressAccount: true })
+        logActivity(`Duress PIN set`)
+        showToast(lstrings.duress_mode_set_pin_success)
         navigation.navigate('duressModeSetting')
       })
       .catch(err => showError(err))
