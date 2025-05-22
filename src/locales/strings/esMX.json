@@ -1321,6 +1321,8 @@
   "fiat_plugin_sell_amount_under_undef_limit": "La cantidad de venta está por debajo del mínimo",
   "fiat_plugin_asset_unsupported": "Activo No Soportado",
   "fiat_plugin_payment_unsupported": "Método de Pago No Soportado",
+  "fiat_plugin_buy_fiat_unsupported_2s": "%1$s does not support buying with %2$s",
+  "fiat_plugin_sell_fiat_unsupported_2s": "%1$s does not support selling with %2$s",
   "fiat_plugin_buy_region_restricted": "Región restringida para comprar %s",
   "fiat_plugin_buy_no_quote": "No se pudo obtener la cotización de compra",
   "fiat_plugin_sell_region_restricted": "Región restringida para vender %s",
