@@ -1721,6 +1721,7 @@
   "enable_duress_mode": "Abilita Modalità Duress",
   "disable_duress_mode": "Disabilita Modalità Duress",
   "change_duress_pin": "Cambia PIN Duress",
+  "duress_mode_set_pin_success": "Duress PIN set successfully.",
   "enable_duress_mode_description": "La tua discreta rete di sicurezza per situazioni ad alto rischio.\n\nLa Modalità Duress ti permette di accedere al PIN a un account che diventa immediatamente accessibile se ti senti mai minacciato. Tutti gli altri account scompariranno temporaneamente fino a quando non inserisci il tuo vero PIN.",
   "duress_mode_no_accounts_message": "Non hai altri account su questo dispositivo. Crea un account da usare come tuo account duress.",
   "select_duress_account": "Seleziona l'account duress",
