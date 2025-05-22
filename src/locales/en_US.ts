@@ -1970,6 +1970,7 @@ const strings = {
   enable_duress_mode: 'Enable Duress Mode',
   disable_duress_mode: 'Disable Duress Mode',
   change_duress_pin: 'Change Duress PIN',
+  duress_mode_set_pin_success: `Duress PIN set successfully.`,
   enable_duress_mode_description: `Your discreet safety net for high-risk situations.\n\nDuress Mode lets you PIN-login to a decoy account that immediately becomes accessible if you ever feel threatened. All other accounts will temporarily disappear until you enter your real PIN.`,
   duress_mode_no_accounts_message: `You have no other accounts on this device. Please create an account to use as your duress account.`,
   select_duress_account: 'Select Duress Account',
