@@ -1,7 +1,7 @@
 import pDebounce from 'p-debounce'
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, Text, TextStyle, View } from 'react-native'
+import { Image, TextStyle, View } from 'react-native'
 
 import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
@@ -10,6 +10,7 @@ import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SectionView } from '../../../components/layout/SectionView'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
@@ -299,7 +300,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           )}
           <>
             <EdgeAnim enter={fadeInDown30}>
-              <Text style={statusTextStyle}>{statusText.content}</Text>
+              <EdgeText numberOfLines={2} style={statusTextStyle}>
+                {statusText.content}
+              </EdgeText>
             </EdgeAnim>
             <EdgeAnim enter={fadeInDown60}>
               <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy?.poweredByText ?? ''} onPress={handlePoweredByPress} />

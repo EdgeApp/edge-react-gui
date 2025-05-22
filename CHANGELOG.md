@@ -10,13 +10,15 @@
 - added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Multiple memo support to `SendScene2`
 - added: Add os version to the "OS" line of logs
+- added: Informative fiat currency support errors when requesting Moonpay quotes 
 - changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
+- fixed: Incorrect type assumptions between `amountQuotePlugin` and `pluginUtils` for error parsing
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
-- removed: Disable Fantom transaction list
 - fixed: Show the correct username in the "Forget Account" modal.
 - fixed: `TransactionListRow` missing timestamp while syncing
 - fixed: Don't show required text for optional import options
+- removed: Disable Fantom transaction list
 
 ## 4.27.2 (staging)
 
