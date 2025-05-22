@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useEffect } from 'react'
 import { Image, View } from 'react-native'
 
 import illustrationImageSource from '../../assets/images/duressMode/illustration.png'
@@ -13,9 +12,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SceneContainer } from '../layout/SceneContainer'
-import { showError, showToast } from '../services/AirshipInstance'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { onPin } from './DuressPinScene'
 
 interface Props extends EdgeAppSceneProps<'duressModeSetting'> {}
 
@@ -36,26 +33,6 @@ export const DuressModeSettingScene = (props: Props) => {
   })
 
   const canDuressLogin = useWatch(account, 'canDuressLogin')
-
-  // Subscribe to pin event from VerifyPinScene
-  useEffect(
-    () =>
-      onPin(pin => {
-        account
-          .checkPin(pin)
-          .then(async isConflicting => {
-            if (isConflicting) {
-              showToast(lstrings.duress_mode_pin_match_rule_message)
-              return
-            }
-            await account.changePin({ enableLogin: true, pin, forDuressAccount: true })
-            // Navigate back to this scene
-            navigation.navigate('duressModeSetting')
-          })
-          .catch(err => showError(err))
-      }),
-    [account, navigation]
-  )
 
   return (
     <SceneWrapper scroll>
