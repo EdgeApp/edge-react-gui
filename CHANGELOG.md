@@ -4,10 +4,11 @@
 
 - added: Add eCash.
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
+- fixed: Prevent pin changes which match duress pin.
 
 ## 4.28.0 (staging)
 
-- added: Additional user information fields for Kado OTC orders 
+- added: Additional user information fields for Kado OTC orders
 - added: Warning card to `StakeOverviewScene`
 - added: Dismissed promo cards added to `NotificationCenterScene`
 - added: `Edge-ucation` section in `WalletDetailsScene`

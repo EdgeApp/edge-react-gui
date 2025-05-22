@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.23.1):
     - React-Core
-  - edge-login-ui-rn (3.26.1):
+  - edge-login-ui-rn (3.26.2):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -1105,7 +1105,7 @@ SPEC CHECKSUMS:
   edge-currency-accountbased: a948b44a3ccc82e5f873e9bf7b3feb98624f4d90
   edge-currency-plugins: 7870a65d6a49b60727abc7c19f8da19614f6bb49
   edge-exchange-plugins: 14ccf6f1398e7272afb19018be51d8a0c60952c9
-  edge-login-ui-rn: 91b4cfca94bc40f6020c88de7580fe1613229832
+  edge-login-ui-rn: 879d621365918ef9e6c4e142acf8c6ebab2b916b
   EXApplication: 9e02dde69a11d17d394bc89a9ea90c619217bada
   EXConstants: 0a70495c8b5dff454903ed9e798dbb39da9c3fd7
   EXFileSystem: 6c8c6df1f092c49cbbb97df4273eee3b619369b9
