@@ -43,8 +43,8 @@ export const DuressModeSettingScene = (props: Props) => {
       onPin(pin => {
         account
           .checkPin(pin)
-          .then(async isCorrect => {
-            if (isCorrect) {
+          .then(async isConflicting => {
+            if (isConflicting) {
               showToast(lstrings.duress_mode_pin_match_rule_message)
               return
             }
