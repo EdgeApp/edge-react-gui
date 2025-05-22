@@ -421,8 +421,28 @@ export const moonpayProvider: FiatProviderFactory = {
           return undefined
         })
 
-        if (response == null || !response.ok) {
-          throw new Error('Moonpay failed to fetch quote')
+        if (response == null) {
+          throw new Error('Moonpay failed to fetch quote: empty response')
+        }
+
+        if (!response.ok) {
+          const errorJson = await response.json()
+
+          // Check specifically for payment method/currency incompatibility
+          if (
+            errorJson?.message != null &&
+            typeof errorJson.message === 'string' &&
+            errorJson.message.includes(`is not supported for ${fiatCode.toLowerCase()}`)
+          ) {
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'fiatUnsupported',
+              fiatCurrencyCode: fiatCode.toUpperCase(),
+              paymentMethod,
+              pluginDisplayName
+            })
+          }
+          throw new Error(`Moonpay failed to fetch quote: ${errorJson.message}`)
         }
 
         const result = await response.json()

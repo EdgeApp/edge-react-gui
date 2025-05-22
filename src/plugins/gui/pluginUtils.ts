@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { FiatDirection } from './fiatPluginTypes'
-import { FiatProviderError, FiatProviderQuote, FiatProviderQuoteError, FiatProviderQuoteErrorTypes, FiatProviderStore } from './fiatProviderTypes'
+import { FiatProviderQuote, FiatProviderQuoteError, FiatProviderQuoteErrorTypes, FiatProviderStore } from './fiatProviderTypes'
 
 export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
   return {
@@ -21,7 +21,8 @@ const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } =
   overLimit: 2,
   paymentUnsupported: 3,
   regionRestricted: 4,
-  assetUnsupported: 5
+  assetUnsupported: 5,
+  fiatUnsupported: 6
 }
 
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
@@ -118,6 +119,15 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
       break
     case 'assetUnsupported':
       errorText = lstrings.fiat_plugin_asset_unsupported
+      break
+    case 'fiatUnsupported':
+      {
+        const { pluginDisplayName, fiatCurrencyCode } = error
+        errorText =
+          direction === 'buy'
+            ? sprintf(lstrings.fiat_plugin_buy_fiat_unsupported_2s, pluginDisplayName, fiatCurrencyCode)
+            : sprintf(lstrings.fiat_plugin_sell_fiat_unsupported_2s, pluginDisplayName, fiatCurrencyCode)
+      }
       break
     default:
       errorText = 'Unknown error type'
