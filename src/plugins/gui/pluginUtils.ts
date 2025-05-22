@@ -43,27 +43,26 @@ export interface BestError {
   quoteError?: FiatProviderQuoteError
 }
 
-export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): BestError => {
+export const getBestError = (fiatProviderQuoteErrors: FiatProviderQuoteError[], currencyCode: string, direction: FiatDirection): BestError => {
   let bestError: FiatProviderQuoteError | undefined
-  for (const eq of errorQuotes) {
-    const errorQuote = eq.quoteError
-    if (errorQuote == null) continue
+  for (const fiatProviderQuoteError of fiatProviderQuoteErrors) {
+    if (fiatProviderQuoteError == null) continue
     if (bestError == null) {
-      bestError = errorQuote
+      bestError = fiatProviderQuoteError
       continue
     }
-    if (ERROR_PRIORITIES[errorQuote.errorType] < ERROR_PRIORITIES[bestError.errorType]) {
-      bestError = errorQuote
+    if (ERROR_PRIORITIES[fiatProviderQuoteError.errorType] < ERROR_PRIORITIES[bestError.errorType]) {
+      bestError = fiatProviderQuoteError
       continue
     }
-    if (ERROR_PRIORITIES[errorQuote.errorType] === ERROR_PRIORITIES[bestError.errorType]) {
-      if (errorQuote.errorType === 'overLimit' && bestError.errorType === 'overLimit') {
-        if ((errorQuote.errorAmount ?? 0) > (bestError.errorAmount ?? 0)) {
-          bestError = errorQuote
+    if (ERROR_PRIORITIES[fiatProviderQuoteError.errorType] === ERROR_PRIORITIES[bestError.errorType]) {
+      if (fiatProviderQuoteError.errorType === 'overLimit' && bestError.errorType === 'overLimit') {
+        if ((fiatProviderQuoteError.errorAmount ?? 0) > (bestError.errorAmount ?? 0)) {
+          bestError = fiatProviderQuoteError
         }
-      } else if (errorQuote.errorType === 'underLimit' && bestError.errorType === 'underLimit') {
-        if ((errorQuote.errorAmount ?? Infinity) < (bestError.errorAmount ?? Infinity)) {
-          bestError = errorQuote
+      } else if (fiatProviderQuoteError.errorType === 'underLimit' && bestError.errorType === 'underLimit') {
+        if ((fiatProviderQuoteError.errorAmount ?? Infinity) < (bestError.errorAmount ?? Infinity)) {
+          bestError = fiatProviderQuoteError
         }
       }
     }
