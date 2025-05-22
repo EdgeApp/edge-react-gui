@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Add eCash.
+- added: Revolut fiat buy provider.
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
 

@@ -23,6 +23,7 @@ import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
+import { revolutProvider } from './providers/revolutProvider'
 import { simplexProvider } from './providers/simplexProvider'
 import { EnterAmountState, FiatPluginEnterAmountParams } from './scenes/FiatPluginEnterAmountScene'
 import { initializeProviders } from './util/initializeProviders'
@@ -49,7 +50,17 @@ type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
   convertValueInternal: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<ConvertValueInternalResult>
 }
 
-const providerFactories = [banxaProvider, bityProvider, kadoProvider, kadoOtcProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
+const providerFactories = [
+  banxaProvider,
+  bityProvider,
+  kadoProvider,
+  kadoOtcProvider,
+  moonpayProvider,
+  mtpelerinProvider,
+  paybisProvider,
+  revolutProvider,
+  simplexProvider
+]
 
 const DEFAULT_FIAT_AMOUNT = '500'
 const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
