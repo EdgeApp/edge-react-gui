@@ -22,7 +22,6 @@ export const edgeConfig: AppConfig = {
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,
   notificationServers: ['https://push2.edge.app'],
-  otcEmail: 'otc@edge.app',
   phoneNumber: '+1-619-777-5688',
   playStore: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   referralServers: ['https://referral1.edge.app'],
