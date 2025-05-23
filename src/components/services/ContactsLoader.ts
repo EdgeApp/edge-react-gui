@@ -102,6 +102,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Fantom/Sonic Bridge',
+    hasThumbnail: true,
+    thumbnailPath: 'fantomsonicupgrade.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'EOS Network',
     hasThumbnail: true,
     thumbnailPath: 'eos-logo-solo-64.png',
