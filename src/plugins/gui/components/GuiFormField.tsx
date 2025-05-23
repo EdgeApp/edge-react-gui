@@ -15,7 +15,6 @@ interface Props {
   returnKeyType?: FilledTextInputReturnKeyType
   fieldRef?: React.Ref<FilledTextInputRef> | undefined
   value?: string
-  error?: string
   onChangeText: ((text: string) => void) | undefined
   onFocus?: (() => void) | undefined
   onBlur?: (() => void) | undefined
@@ -30,7 +29,6 @@ export const GuiFormField = React.memo((props: Props) => {
     returnKeyType = 'next',
     fieldRef,
     value,
-    error,
     onChangeText: handleChangeText,
     onFocus: handleFocus,
     onBlur: handleBlur
@@ -58,7 +56,6 @@ export const GuiFormField = React.memo((props: Props) => {
         ref={fieldRef}
         returnKeyType={returnKeyType}
         value={value ?? ''}
-        error={error}
         onBlur={handleBlur}
         onChangeText={handleChangeText}
         onFocus={handleFocus}

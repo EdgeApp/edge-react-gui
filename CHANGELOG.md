@@ -3,8 +3,6 @@
 ## Unreleased (develop)
 
 ## 4.28.0 (staging)
-
-- added: Additional user information fields for Kado OTC orders 
 - added: Warning card to `StakeOverviewScene`
 - added: Dismissed promo cards added to `NotificationCenterScene`
 - added: `Edge-ucation` section in `WalletDetailsScene`

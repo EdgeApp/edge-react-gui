@@ -196,13 +196,13 @@ export const executePlugin = async (params: {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
     },
-    async contactForm(params) {
+    async emailForm(params) {
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
-        navigation.navigate('guiPluginContactForm', {
+        navigation.navigate('guiPluginEmailForm', {
           message: params.message,
-          onSubmit: async (email: string, firstName: string, lastName: string) => {
-            resolve({ email, firstName, lastName })
+          onSubmit: async (email: string) => {
+            resolve(email)
           },
           onClose: async () => {
             resolve(undefined)

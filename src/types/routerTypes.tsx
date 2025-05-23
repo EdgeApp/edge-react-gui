@@ -71,7 +71,7 @@ import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
 import type { FiatPluginAddressFormParams } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginConfirmationParams } from '../plugins/gui/scenes/ConfirmationScene'
-import { FiatPluginContactFormParams } from '../plugins/gui/scenes/ContactFormScene'
+import { FiatPluginEmailFormParams } from '../plugins/gui/scenes/EmailFormScene'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -100,7 +100,7 @@ export type BuyTabParamList = {} & {
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
-  guiPluginContactForm: FiatPluginContactFormParams
+  guiPluginEmailForm: FiatPluginEmailFormParams
   guiPluginConfirmation: FiatPluginConfirmationParams
   guiPluginEnterAmount: FiatPluginEnterAmountParams
   guiPluginInfoDisplay: FiatPluginSepaTransferParams
