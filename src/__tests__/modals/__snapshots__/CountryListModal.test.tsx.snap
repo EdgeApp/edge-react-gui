@@ -520,6 +520,10 @@ exports[`CountryListModal should render with a country list 1`] = `
                 "name": "Delaware",
               },
               {
+                "alpha-2": "DC",
+                "name": "District of Columbia",
+              },
+              {
                 "alpha-2": "FL",
                 "name": "Florida",
               },

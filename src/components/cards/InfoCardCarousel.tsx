@@ -4,11 +4,13 @@ import { ListRenderItem, Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
+import { useAccountSettings } from '../../actions/LocalSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { DisplayInfoCard, getDisplayInfoCards } from '../../util/infoUtils'
+import { addPromoCardToNotifications } from '../../util/promoCardUtils'
 import { getOsVersion } from '../../util/utils'
 import { Anim, EdgeAnim } from '../common/EdgeAnim'
 import { EdgeCarousel } from '../common/EdgeCarousel'
@@ -36,6 +38,8 @@ export const InfoCardCarousel = (props: Props) => {
   // Set account funded status
   const accountFunded = useIsAccountFunded()
 
+  const { notifState } = useAccountSettings()
+
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
     if (cards == null) return
@@ -52,6 +56,7 @@ export const InfoCardCarousel = (props: Props) => {
     setFilteredCards(getDisplayInfoCards({ cards, countryCode, accountFunded, promoIds, buildNumber, osType, osVersion, version, currentDate }))
   }, [accountFunded, accountReferral, cards, countryCode])
 
+  const account = useSelector(state => state.core.account)
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
 
@@ -59,7 +64,19 @@ export const InfoCardCarousel = (props: Props) => {
   const keyExtractor = useHandler((item: DisplayInfoCard) => item.messageId)
   const renderItem: ListRenderItem<DisplayInfoCard> = useHandler(({ item }) => {
     const handleClose = async (): Promise<void> => {
+      // Hide the message from the home screen
       await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
+
+      // Only add the notification if we've never saved it before
+      if (notifState[item.messageId] == null) {
+        try {
+          // Add to notification center
+          // addPromoCardToNotifications has its own validation checks
+          await addPromoCardToNotifications(account, item)
+        } catch (error) {
+          console.error('Failed to add promo card to notification center:', error)
+        }
+      }
     }
     return <InfoCarouselCard navigation={navigation} promoInfo={item} onClose={handleClose} />
   })

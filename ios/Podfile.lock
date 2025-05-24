@@ -17,11 +17,11 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.27.4):
     - React-Core
-  - edge-currency-accountbased (4.46.1):
+  - edge-currency-accountbased (4.47.1):
     - React-Core
   - edge-currency-plugins (3.7.0):
     - React-Core
-  - edge-exchange-plugins (2.22.1):
+  - edge-exchange-plugins (2.23.1):
     - React-Core
   - edge-login-ui-rn (3.26.1):
     - React-Core
@@ -394,6 +394,8 @@ PODS:
   - React-jsinspector (0.71.15)
   - React-logger (0.71.15):
     - glog
+  - react-native-adservices (0.1.3):
+    - React-Core
   - react-native-camera (1.13.1):
     - React
     - react-native-camera/RCT (= 1.13.1)
@@ -788,6 +790,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-adservices (from `../node_modules/@brigad/react-native-adservices`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - "react-native-compat (from `../node_modules/@walletconnect/react-native-compat`)"
   - react-native-contacts (from `../node_modules/react-native-contacts`)
@@ -967,6 +970,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-adservices:
+    :path: "../node_modules/@brigad/react-native-adservices"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-compat:
@@ -1097,9 +1102,9 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: d9378689e1b7304e34a001731fdcbd6affde665f
-  edge-currency-accountbased: 49759ffa870eb44fc06fe7e705d44fa260432499
+  edge-currency-accountbased: a948b44a3ccc82e5f873e9bf7b3feb98624f4d90
   edge-currency-plugins: f9fe0c22b0fa3cea0989c36e657a0f5d461552c5
-  edge-exchange-plugins: ec170f16933c9a6ac0cd86c231ff95646496ef76
+  edge-exchange-plugins: 14ccf6f1398e7272afb19018be51d8a0c60952c9
   edge-login-ui-rn: 91b4cfca94bc40f6020c88de7580fe1613229832
   EXApplication: 9e02dde69a11d17d394bc89a9ea90c619217bada
   EXConstants: 0a70495c8b5dff454903ed9e798dbb39da9c3fd7
@@ -1144,6 +1149,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 5cc0fdcf933aedb0ea9146172a9668ff38e5cac9
   React-jsinspector: 4ade58a6a355d97a53f847543b14f4cb5033cb70
   React-logger: fc6e4fa928e8773ebfb7f1d287fb6ae60715545a
+  react-native-adservices: 18087a4a5106c5133b0cde73701bf875e3163cfc
   react-native-camera: 806a323ba17579a335ee43a70622f6b8aae98de8
   react-native-compat: c5c101132cacb720def1c72b40cdf0398e34d31e
   react-native-contacts: f4efe82376487f1b87411e22b867e85cc4fb1d3c

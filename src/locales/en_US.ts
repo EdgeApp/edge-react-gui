@@ -130,6 +130,8 @@ const strings = {
   warning_sending_pix_to_email_title: 'Sending PIX payment to email address',
   warning_sending_pix_to_email_body:
     'You scanned or entered an email address which is a valid Brazil PIX payment address. Continuing will create a PIX payment of Tron USDT to the email address provided.',
+  warning_earn:
+    'Staking cryptocurrency carries risks including loss of funds, smart contract failures, volatility-induced losses, and asset lock periods. Please research each Earn option thoroughly.',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -886,12 +888,16 @@ const strings = {
   memo_comment_title: 'Comment',
   memo_destination_tag_title: 'Destination Tag',
   memo_memo_title: 'Transaction Memo',
+  memo_text_title: 'Memo Text',
+  memo_id_title: 'Memo ID',
   memo_note_title: 'Transaction Note',
   memo_op_return_title: 'OP_RETURN',
   memo_payment_id_title: 'Payment ID',
   memo_comment_label: 'comment',
   memo_destination_tag_label: 'destination tag',
   memo_memo_label: 'memo',
+  memo_text_label: 'memo text',
+  memo_id_label: 'memo id',
   memo_note_label: 'note',
   memo_op_return_label: 'OP_RETURN',
   memo_payment_id_label: 'paymentId',
@@ -1486,6 +1492,8 @@ const strings = {
   fiat_plugin_sell_amount_under_undef_limit: 'Sell amount is under minimum',
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
   fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
+  fiat_plugin_buy_fiat_unsupported_2s: '%1$s does not support buying with %2$s',
+  fiat_plugin_sell_fiat_unsupported_2s: '%1$s does not support selling with %2$s',
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_sell_region_restricted: 'Region restricted from selling %s',
@@ -1705,6 +1713,8 @@ const strings = {
   swap: 'Swap',
   update_available: 'Update Available',
   enter_email: 'Enter Email',
+  edge_ucation: 'Edge-ucation',
+  education: 'Education',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
@@ -1878,7 +1888,7 @@ const strings = {
   currency_label_ZWL: 'Zimbabwe Dollar',
 
   // Getting Started Scene
-  getting_started_already_have_an_account: 'Already have an account?',
+  getting_started_already_have_an_account: 'Already have an account? ',
   getting_started_sign_in: 'Sign in',
   getting_started_slide_1_footnote: `Users can access seed phrases within the app at their discretion.`,
   getting_started_slide_1_message: `Say goodbye to writing down insecure backups on paper. With client-side encryption, automatic account backup and 2FA, Edge simplifies self-custody for everyone.`,

@@ -15,6 +15,7 @@ import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
+import { getOsVersion } from '../util/utils'
 
 const logsUri = 'https://logs1.edge.app/v1/log/'
 
@@ -120,7 +121,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
       userMessage: '',
       deviceInfo: `${getBrand()} ${getDeviceId()}`,
       appVersion: packageJson.version,
-      OS: Platform.OS,
+      OS: `${Platform.OS} ${getOsVersion()}`,
       accounts: [],
       data: ''
     }

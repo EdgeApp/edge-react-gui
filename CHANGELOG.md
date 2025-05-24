@@ -2,6 +2,29 @@
 
 ## Unreleased (develop)
 
+- added: Add eCash.
+- added: Toast notifications for PIN changes.
+- changed: Auto launch QR scanner for multi-out payments if previously used
+- changed: Auto populate amount for multi-out payments if prior amounts are similar
+- changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+- fixed: No longer show FIO onboarding modal while in Duress Mode.
+- fixed: Prevent pin changes which match duress pin.
+
+## 4.28.0 (2025-05-24)
+
+- added: Warning card to `StakeOverviewScene`
+- added: Dismissed promo cards added to `NotificationCenterScene`
+- added: `Edge-ucation` section in `WalletDetailsScene`
+- added: Multiple memo support to `SendScene2`
+- added: Add os version to the "OS" line of logs
+- added: Informative fiat currency support errors when requesting Moonpay quotes 
+- changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
+- fixed: Incorrect type assumptions between `amountQuotePlugin` and `pluginUtils` for error parsing
+- fixed: Primary button transforming on the animation on `GettingStartedScene`
+- fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
+- fixed: Show the correct username in the "Forget Account" modal.
+- fixed: `TransactionListRow` missing timestamp while syncing
+- fixed: Don't show required text for optional import options
 - removed: Disable Fantom transaction list
 
 ## 4.27.2 (2025-05-13)
@@ -18,6 +41,7 @@
 
 ## 4.27.0 (2025-05-08)
 
+- added: Add "DC" to `STATE_PROVINCE_CODES`
 - added: Add PIVX.
 - added: Add Zano
 - added: Monero multi output support.

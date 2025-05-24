@@ -99,22 +99,23 @@ export function SideMenuComponent(props: Props) {
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
-    if (userInfo.username == null) {
+    const { loginId, username } = userInfo
+    if (username == null) {
       showBackupModal({
         navigation: navigationBase,
-        forgetLoginId: userInfo.loginId
+        forgetLoginId: loginId
       })
     } else {
       Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.forget_account_title}
-          message={sprintf(lstrings.forget_account_message_common, displayUsername)}
+          message={sprintf(lstrings.forget_account_message_common, username)}
           buttons={{
             ok: {
               label: lstrings.string_forget,
               onPress: async () => {
-                await context.forgetAccount(userInfo.loginId)
+                await context.forgetAccount(loginId)
                 return true
               },
               type: 'primary'

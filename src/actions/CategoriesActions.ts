@@ -419,7 +419,23 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'send'
             break
           }
-          case 'claim':
+          case 'claim': {
+            let subcategory
+            if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
+            else if (action.stakeAssets.length === 2)
+              subcategory = sprintf(lstrings.transaction_details_unstake_subcat_2s, ...getCurrencyCodes(action.stakeAssets))
+            else {
+              console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              break
+            }
+            edgeCategory = { category: 'transfer', subcategory }
+            if (action.stakeAssets.every(asset => asset.pluginId === currencyInfo.pluginId)) {
+              direction = 'receive'
+            } else {
+              direction = 'send'
+            }
+            break
+          }
           case 'unstake': {
             let subcategory
             if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))

@@ -104,8 +104,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingRight: theme.rem(0.5) - 2
   },
   label: {
-    textAlign: 'center',
-    marginBottom: theme.rem(0.5)
+    textAlign: 'center'
   },
   superscriptLabel: {
     fontSize: theme.rem(0.75)
