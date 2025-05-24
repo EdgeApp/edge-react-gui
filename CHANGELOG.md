@@ -2,7 +2,16 @@
 
 ## Unreleased (develop)
 
-## 4.28.0 (staging)
+- added: Add eCash.
+- added: Toast notifications for PIN changes.
+- changed: Auto launch QR scanner for multi-out payments if previously used
+- changed: Auto populate amount for multi-out payments if prior amounts are similar
+- changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+- fixed: No longer show FIO onboarding modal while in Duress Mode.
+- fixed: Prevent pin changes which match duress pin.
+
+## 4.28.0 (2025-05-24)
+
 - added: Warning card to `StakeOverviewScene`
 - added: Dismissed promo cards added to `NotificationCenterScene`
 - added: `Edge-ucation` section in `WalletDetailsScene`
@@ -18,7 +27,7 @@
 - fixed: Don't show required text for optional import options
 - removed: Disable Fantom transaction list
 
-## 4.27.2 (staging)
+## 4.27.2 (2025-05-13)
 
 - fixed: Bug preventing re-enabling duress mode.
 - fixed: Disable duress pin mistakenly disables pin-login for entire account.
