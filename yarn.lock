@@ -1195,11 +1195,6 @@
   dependencies:
     "@noble/curves" "^1.7.0"
 
-"@brigad/react-native-adservices@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@brigad/react-native-adservices/-/react-native-adservices-0.1.3.tgz#7d59ba083c2cde7cefdefbe8b920cf0953ccb86e"
-  integrity sha512-Ri9TmT2V+kpr3XaOKFvhB6ZM4irrV/2les5ozuGThrsZUhHNJMD3EjgwPOZGEQZ1JrhUCS776RUYf1pgeOttJQ==
-
 "@chain-registry/client@^1.53.59":
   version "1.53.59"
   resolved "https://registry.yarnpkg.com/@chain-registry/client/-/client-1.53.59.tgz#3d2898408be0ce5a810a4da62a0698ad52bb9297"
