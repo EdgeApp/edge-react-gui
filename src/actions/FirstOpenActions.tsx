@@ -1,36 +1,19 @@
-import { getAttributionToken } from '@brigad/react-native-adservices'
 import { asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
-import { Platform } from 'react-native'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
 import { makeUuid } from '../util/rnUtils'
-import { snooze } from '../util/utils'
 import { getCountryCodeByIp } from './AccountReferralActions'
 
 export const firstOpenDisklet = makeReactNativeDisklet()
 
-const asAppleAdsAttribution = asObject({
-  campaignId: asOptional(asString),
-  keywordId: asOptional(asString)
-})
-type AppleAdsAttribution = ReturnType<typeof asAppleAdsAttribution>
-
-interface FirstOpenInfo {
-  isFirstOpen: 'true' | 'false'
-  deviceId: string
-  firstOpenEpoch: number
-  countryCode?: string
-  appleAdsAttribution?: AppleAdsAttribution
-}
-type FirstOpenInfoFile = Omit<FirstOpenInfo, 'appleAdsAttribution'>
-
-const asFirstOpenInfoFile = asObject<FirstOpenInfoFile>({
+const asFirstOpenInfo = asObject({
   isFirstOpen: asValue('true', 'false'),
   deviceId: asString,
   firstOpenEpoch: asNumber,
   countryCode: asOptional(asString)
 })
+type FirstOpenInfo = ReturnType<typeof asFirstOpenInfo>
 
 let firstOpenInfo: FirstOpenInfo
 let firstLoadPromise: Promise<FirstOpenInfo> | undefined
@@ -57,19 +40,11 @@ const readFirstOpenInfoFromDisk = async (): Promise<FirstOpenInfo> => {
     let firstOpenText
     try {
       firstOpenText = await firstOpenDisklet.getText(FIRST_OPEN)
-      // Parse the file data using the file-specific cleaner
-      const fileData = asFirstOpenInfoFile(JSON.parse(firstOpenText))
-      // Create the full in-memory object with attribution data
-      firstOpenInfo = {
-        ...fileData,
-        isFirstOpen: 'false',
-        appleAdsAttribution: await getAppleAdsAttribution()
-      }
+      firstOpenInfo = asFirstOpenInfo(JSON.parse(firstOpenText))
+      firstOpenInfo.isFirstOpen = 'false'
     } catch (error: unknown) {
       // Generate new values.
-
-      // Create file data object (without attribution)
-      const fileData: FirstOpenInfoFile = {
+      firstOpenInfo = {
         deviceId: await makeUuid(),
         firstOpenEpoch: Date.now(),
         countryCode: await getCountryCodeByIp(),
@@ -78,78 +53,11 @@ const readFirstOpenInfoFromDisk = async (): Promise<FirstOpenInfo> => {
         // date, just created an empty file.
         // Note that 'firstOpenEpoch' won't be accurate in this case, but at
         // least make a starting point.
-
         isFirstOpen: firstOpenText != null ? 'false' : 'true'
       }
-
-      // Create the full in-memory object
-      firstOpenInfo = {
-        ...fileData,
-        appleAdsAttribution: await getAppleAdsAttribution()
-      }
-
-      // Only save the file-specific data to disk
-      await firstOpenDisklet.setText(FIRST_OPEN, JSON.stringify(fileData))
+      await firstOpenDisklet.setText(FIRST_OPEN, JSON.stringify(firstOpenInfo))
     }
   }
 
   return firstOpenInfo
-}
-
-/**
- * Get Apple Search Ads attribution data using the AdServices framework
- * and make an API call to get the actual keywordId.
- */
-export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
-  if (Platform.OS !== 'ios') {
-    return { campaignId: undefined, keywordId: undefined }
-  }
-
-  // Get the attribution token from the device. This package also handles
-  // checking for the required iOS version.
-  const attributionToken = await getAttributionToken().catch(error => {
-    console.log('Apple Ads attribution token unavailable:', error)
-    return undefined
-  })
-
-  // Send the token to Apple's API to retrieve the campaign and keyword IDs.
-  if (attributionToken != null) {
-    // Retry logic as recommended by Apple:
-    // "A 404 response can occur if you make an API call too quickly after
-    // receiving a valid token. A best practice is to initiate retries at
-    // intervals of 5 seconds, with a maximum of three attempts."
-    // https://developer.apple.com/documentation/adservices/aaattribution/attributiontoken()#Attribution-payload
-    const maxRetries = 3
-    const retryDelay = 5000 // 5 seconds
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        // Get the attribution data from Apple for the token
-        const response = await fetch('https://api-adservices.apple.com/api/v1/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain'
-          },
-          body: attributionToken
-        })
-
-        // If we get a 404, wait and retry as per Apple's recommendation
-        if (response.status === 404 && attempt < maxRetries) {
-          console.log(`Apple Ads attribution API returned 404, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`)
-          await snooze(retryDelay)
-          continue
-        }
-
-        if (!response.ok) throw new Error(`API call failed with status: ${response.status}`)
-
-        const data = await response.json()
-        return asAppleAdsAttribution(data)
-      } catch (apiError) {
-        console.warn('Error fetching Apple Ads attribution data:', apiError)
-        break
-      }
-    }
-  }
-
-  return { campaignId: undefined, keywordId: undefined }
 }
