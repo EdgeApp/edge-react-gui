@@ -1,0 +1,29 @@
+# Priority: Critical
+# Test ID: C209306
+# Title: FIO Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for FIO only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209306
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_FIO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_FIO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: FIO
+    timeout: 120000
+- tapOn: FIO
+- extendedWaitUntil:
+    visible: 123 FIO
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
