@@ -199,7 +199,7 @@ export const executePlugin = async (params: {
     async emailForm(params) {
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
-        navigation.navigate('guiPluginEmailForm', {
+        navigation.navigate('guiPluginContactForm', {
           message: params.message,
           onSubmit: async (email: string, firstName: string, lastName: string) => {
             resolve({ email, firstName, lastName })

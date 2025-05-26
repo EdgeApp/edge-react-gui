@@ -19,7 +19,7 @@ export interface FiatPluginEmailFormParams {
   onSubmit: (email: string, firstName: string, lastName: string) => Promise<void>
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginEmailForm'> {}
+interface Props extends BuyTabSceneProps<'guiPluginContactForm'> {}
 
 /**
  * Validates email format using a regular expression
@@ -34,7 +34,7 @@ const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email)
 }
 
-export const EmailFormScene = React.memo((props: Props) => {
+export const ContactFormScene = React.memo((props: Props) => {
   const { navigation, route } = props
   const { params } = route
   const { onClose, onSubmit } = params
