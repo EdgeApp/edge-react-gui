@@ -1604,6 +1604,7 @@ const strings = {
   otc_confirmation_title: 'Request Sent',
   otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
   otc_email_error_message_1s: 'There was an error opening your email app. Please email %1$s directly to facilitate this transaction.',
+  otc_wire_required_message: 'OTC transactions are done through bank wire transfers. Can your bank send wire transfers?',
 
   // #endregion GuiPlugins
 
