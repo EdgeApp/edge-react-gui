@@ -421,12 +421,12 @@ export const kadoOtcProvider: FiatProviderFactory = {
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi } = approveParams
 
-            // Do something to showUi to get the username  and email
-            const userEmail = await showUi.emailForm({
-              message: params.direction === 'buy' ? lstrings.otc_enter_email_to_buy : lstrings.otc_enter_email_to_sell
+            // Do something to showUi to get the user information
+            const userInfo = await showUi.emailForm({
+              message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
             })
 
-            if (userEmail == null) {
+            if (userInfo == null) {
               // User canceled the form scene (navigated back).
               // There is nothing left to do.
               return
@@ -434,15 +434,24 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
             const requestBody = {
               ticket: {
-                subject: 'OTC Order Request',
+                subject: `${pluginDisplayName} Order: $${fiatAmount} (${userInfo.email})`,
                 comment: {
-                  body: `Requesting to ${params.direction} ${cryptoAmount} ${tokenOtherInfo.symbol} for ${fiatAmount} USD using ${paymentType}.`
+                  body: `------ CUSTOMER INFO ------
+Name: ${userInfo.firstName} ${userInfo.lastName}
+Email: ${userInfo.email}
+Location: ${params.regionCode.countryCode}${params.regionCode.stateProvinceCode ? ', ' + params.regionCode.stateProvinceCode : ''}
+
+------ TRANSACTION DETAILS ------
+Request: ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${tokenOtherInfo.symbol}
+For: ${fiatAmount} USD
+Payment Method: ${paymentType}
+`
                 },
                 requester: {
                   // We don't care about their name
                   // And we don't want to ask for their name to lower friction
-                  name: userEmail,
-                  email: userEmail
+                  name: `${userInfo.firstName} ${userInfo.lastName}`,
+                  email: userInfo.email
                 }
               }
             }
