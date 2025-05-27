@@ -229,6 +229,10 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleSpendingLimits = useHandler((): void => {
+    if (isLocked) {
+      handleUnlock()
+      return
+    }
     navigation.navigate('spendingLimits')
   })
 
@@ -348,6 +352,7 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_pin} onPress={handleChangePin} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
+              <SettingsTappableRow disabled={isLocked} label={lstrings.spending_limits} onPress={handleSpendingLimits} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.title_duress_mode} onPress={handleDuressMode} />
               <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
             </EdgeCard>
@@ -357,7 +362,6 @@ export const SettingsScene = (props: Props) => {
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
           <EdgeCard sections>
             {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
-            <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
             <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
             <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
 

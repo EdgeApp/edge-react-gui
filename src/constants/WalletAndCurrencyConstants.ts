@@ -385,6 +385,15 @@ export const SPECIAL_CURRENCY_INFO: {
     keysOnlyMode: true,
     unstoppableDomainsTicker: 'WAXP'
   },
+  ecash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecash_wallet_name,
+    chainCode: 'ECASH',
+    displayBuyCrypto: true,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    unstoppableDomainsTicker: 'ECASH'
+  },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,
     chainCode: 'ETH',
@@ -815,6 +824,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
     noChangeMiningFee: true,
     isImportKeySupported: true,
+    maxSpendTargets: 16,
     importKeyOptions: [
       {
         optionName: 'passphrase',
