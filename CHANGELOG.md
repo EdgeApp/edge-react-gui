@@ -17,6 +17,7 @@
 - fixed: Show deprecated stake policies with allocations
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
+- fixed: Fix regex for Paybis min/max amounts
 
 ## 4.28.1 (2025-05-28)
 
