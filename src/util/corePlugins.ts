@@ -107,6 +107,7 @@ export const swapPlugins = {
   '0xgasless': ENV['0XGASLESS_INIT'],
 
   cosmosibc: true,
+  fantomsonicupgrade: true,
   transfer: true
 }
 

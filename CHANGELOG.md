@@ -4,6 +4,7 @@
 
 - added: Add eCash.
 - added: Thorchain TCY stake and unstake
+- added: Add Fantom to Sonic bridge
 - added: Toast notifications for PIN changes.
 - added: Scam warning to camera access request modal
 - changed: Auto launch QR scanner for multi-out payments if previously used
