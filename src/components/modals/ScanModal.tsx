@@ -7,12 +7,16 @@ import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import RNQRGenerator from 'rn-qr-generator'
+import { sprintf } from 'sprintf-js'
 
 import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { logActivity } from '../../util/logger'
+import { ModalButtons } from '../buttons/ModalButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -20,9 +24,9 @@ import { Airship, showDevError, showError, showToast } from '../services/Airship
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -151,65 +155,56 @@ export const ScanModal = (props: Props) => {
       return null
     }
 
-    if (cameraPermission === RNPermissions.RESULTS.GRANTED || cameraPermission === RNPermissions.RESULTS.LIMITED) {
-      const flashMode = torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
-
-      return (
-        <>
-          <View style={styles.cameraContainer} onLayout={handleLayoutCameraContainer}>
-            <RNCamera
-              style={styles.cameraArea}
-              captureAudio={false}
-              flashMode={flashMode}
-              onBarCodeRead={handleBarCodeRead}
-              type={RNCamera.Constants.Type.back}
-            />
-          </View>
-
-          <QrPeephole
-            width={cameraContainerLayout.width}
-            height={cameraContainerLayout.height}
-            holeSize={holeSize}
-            holeX={holeX}
-            holeY={holeY}
-            /* holeOffset={holeOffset} */
-          />
-
-          <View style={styles.overlayContainer}>
-            <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
-              <SceneHeader title={scanModalTitle} underline withTopMargin />
-            </View>
-            <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
-              <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
-              <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
-                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                  <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
-                  <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
-                </EdgeTouchableOpacity>
-                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
-                  <Ionicon style={styles.icon} name="albums-outline" />
-                  <EdgeText>{lstrings.fragment_send_album}</EdgeText>
-                </EdgeTouchableOpacity>
-                <EdgeTouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
-                  <Ionicon style={styles.icon} name="pencil-outline" />
-                  <EdgeText>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-                </EdgeTouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </>
-      )
-    }
+    const flashMode = torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
     return (
-      <View style={styles.cameraPermissionContainer}>
-        <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
-        <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={1} />
-      </View>
+      <>
+        <View style={styles.cameraContainer} onLayout={handleLayoutCameraContainer}>
+          <RNCamera
+            style={styles.cameraArea}
+            captureAudio={false}
+            flashMode={flashMode}
+            onBarCodeRead={handleBarCodeRead}
+            type={RNCamera.Constants.Type.back}
+          />
+        </View>
+
+        <QrPeephole
+          width={cameraContainerLayout.width}
+          height={cameraContainerLayout.height}
+          holeSize={holeSize}
+          holeX={holeX}
+          holeY={holeY}
+          /* holeOffset={holeOffset} */
+        />
+
+        <View style={styles.overlayContainer}>
+          <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
+            <SceneHeader title={scanModalTitle} underline withTopMargin />
+          </View>
+          <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
+            <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
+            <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
+              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleFlash}>
+                <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
+                <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
+              </EdgeTouchableOpacity>
+              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+                <Ionicon style={styles.icon} name="albums-outline" />
+                <EdgeText>{lstrings.fragment_send_album}</EdgeText>
+              </EdgeTouchableOpacity>
+              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+                <Ionicon style={styles.icon} name="pencil-outline" />
+                <EdgeText>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+              </EdgeTouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </>
     )
   }
 
-  return (
+  return cameraPermission === RNPermissions.RESULTS.GRANTED || cameraPermission === RNPermissions.RESULTS.LIMITED ? (
     <AirshipModal
       bridge={bridge}
       margin={[airshipMarginTop, 0, 0]}
@@ -223,6 +218,21 @@ export const ScanModal = (props: Props) => {
       <ModalFooter onPress={handleClose} />
       <View style={styles.bottomSpace} />
     </AirshipModal>
+  ) : (
+    <EdgeModal bridge={bridge} onCancel={handleClose}>
+      <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
+      <AlertCardUi4
+        title={lstrings.warning_scam_title}
+        type="warning"
+        body={[
+          sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName),
+          lstrings.warning_scam_message_irreversibility,
+          lstrings.warning_scam_message_unknown_recipients
+        ]}
+        footer={sprintf(lstrings.warning_scam_footer_s, config.supportEmail)}
+      />
+      <ModalButtons primary={{ onPress: handleSettings, label: lstrings.open_settings }} />
+    </EdgeModal>
   )
 }
 

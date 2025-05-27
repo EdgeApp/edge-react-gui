@@ -5,6 +5,7 @@
 - added: Add eCash.
 - added: Thorchain TCY stake and unstake
 - added: Toast notifications for PIN changes.
+- added: Scam warning to camera access request modal
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
 - changed: Auto scroll to end of `SendScene2` when addresses or amounts change
