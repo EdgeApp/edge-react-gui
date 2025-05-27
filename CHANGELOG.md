@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.29.0 (staging)
+
 - added: Add eCash.
 - added: Thorchain TCY stake and unstake
 - added: Add Fantom to Sonic bridge
