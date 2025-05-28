@@ -10,6 +10,10 @@
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
 
+## 4.28.1 (2025-05-28)
+
+- fixed: Do not show spurious new-transaction notifications
+
 ## 4.28.0 (2025-05-24)
 
 - added: Warning card to `StakeOverviewScene`
@@ -17,7 +21,7 @@
 - added: `Edge-ucation` section in `WalletDetailsScene`
 - added: Multiple memo support to `SendScene2`
 - added: Add os version to the "OS" line of logs
-- added: Informative fiat currency support errors when requesting Moonpay quotes 
+- added: Informative fiat currency support errors when requesting Moonpay quotes
 - changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
 - fixed: Incorrect type assumptions between `amountQuotePlugin` and `pluginUtils` for error parsing
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
