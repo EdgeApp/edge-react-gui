@@ -2162,9 +2162,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -8835,10 +8835,10 @@ edge-info-server@^3.8.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.27.0:
-  version "3.27.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.27.0.tgz#ffa4eac38032035eb8ee485ecd1294d5b0c41f38"
-  integrity sha512-bs+4qCnxdTWN7tajvr12UjqBrxXug7CGuePNN1QBSPu46RFtOlWgVEi7mlFVnB+k9FoX8Tc1B/oJ/5SZh9yUqw==
+edge-login-ui-rn@^3.27.1:
+  version "3.27.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.27.1.tgz#96e333a26f17541ee8c7ba88fe1fad3a0c32fcab"
+  integrity sha512-jAUvJRqSz5PyQk+GMbo4CaTuMSYF5Z386gFsMSIIwXyojcPneIYlolDF/2wzlO5blrNFrZNLAhtVQbjt7raXvg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -10122,9 +10122,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
