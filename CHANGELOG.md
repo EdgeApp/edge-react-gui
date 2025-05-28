@@ -18,6 +18,10 @@
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
 
+## 4.28.1 (2025-05-28)
+
+- fixed: Do not show spurious new-transaction notifications
+
 ## 4.28.0 (2025-05-24)
 
 - added: Warning card to `StakeOverviewScene`
