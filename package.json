@@ -98,6 +98,7 @@
     "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
     "deepmerge": "^4.3.1",
+    "deprecated-react-native-prop-types": "^5.0.0",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^2.33.3",
