@@ -1,0 +1,13 @@
+diff --git a/node_modules/typechain/dist/codegen/createBarrelFiles.js b/node_modules/typechain/dist/codegen/createBarrelFiles.js
+index 4bf574d..40dc55a 100644
+--- a/node_modules/typechain/dist/codegen/createBarrelFiles.js
++++ b/node_modules/typechain/dist/codegen/createBarrelFiles.js
+@@ -46,7 +46,7 @@ function createBarrelFiles(paths, { typeOnly, postfix = '', moduleSuffix = '' })
+             if (moduleSuffix) {
+                 return `export * as ${namespaceIdentifier} from './${p}/index${moduleSuffix}';`;
+             }
+-            return `export * as ${namespaceIdentifier} from './${p}';`;
++            return `import * as ${namespaceIdentifier} from './${p}';\nexport { ${namespaceIdentifier} };`;
+         })
+             .join('\n');
+         const contracts = (fileReexports[path] || []).sort();
