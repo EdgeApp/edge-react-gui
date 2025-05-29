@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Additional user information fields for Kado OTC orders
+
 ## 4.29.0 (staging)
 
 - added: Add eCash.
