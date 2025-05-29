@@ -143,12 +143,12 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
           React.forwardRef<any, PropsWithoutStyle & Props>(
             function StyledComponent(props, ref) {
               const theme = useTheme()
-              const style = stylerNarrowed(theme)(props)
+              const style = stylerNarrowed(theme)(props as any)
 
               const allProps: PropsWithoutStyle & BaseProps['style'] = {
                 ...props,
                 style
-              }
+              } as any
               return <Component {...allProps} ref={ref} />
             }
           )
@@ -168,7 +168,7 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
               const allProps: PropsWithoutStyle & BaseProps['style'] = {
                 ...props,
                 style: stylesheet.style
-              }
+              } as any
               return <Component {...allProps} ref={ref} />
             }
           )
@@ -183,7 +183,7 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
             const allProps: PropsWithoutStyle & BaseProps['style'] = {
               ...props,
               style: stylesheet.style
-            }
+            } as any
 
             return <Component {...allProps} ref={ref} />
           }

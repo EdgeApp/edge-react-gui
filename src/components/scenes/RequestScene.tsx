@@ -139,12 +139,12 @@ export class RequestSceneComponent extends React.Component<
   Props & HookProps,
   State
 > {
-  flipInputRef: React.RefObject<ExchangedFlipInputRef>
+  flipInputRef: React.RefObject<ExchangedFlipInputRef | null>
   unsubscribeAddressChanged: (() => void) | undefined
 
   constructor(props: Props) {
     super(props)
-    this.flipInputRef = React.createRef<ExchangedFlipInputRef>()
+    this.flipInputRef = React.createRef<ExchangedFlipInputRef | null>()
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
       if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
