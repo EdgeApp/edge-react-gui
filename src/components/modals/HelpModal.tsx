@@ -12,6 +12,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { openBrowserUri } from '../../util/WebUtils'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -38,6 +39,11 @@ export const HelpModal = (props: Props) => {
   const loggedIn = useWatch(account, 'loggedIn')
 
   const handleClose = useHandler(() => bridge.resolve())
+
+  const [boom, setBoom] = React.useState(false)
+  React.useEffect(() => {
+    if (boom) throw new Error('kaboom')
+  }, [boom])
 
   const handleSitePress = useHandler((title: string, uri: string) => {
     if (loggedIn) {
@@ -109,6 +115,7 @@ export const HelpModal = (props: Props) => {
         <EdgeText style={styles.version}>{versionText}</EdgeText>
         <EdgeText style={styles.version}>{buildText}</EdgeText>
       </View>
+      <EdgeButton onPress={() => setBoom(true)} label="kaboom" />
     </EdgeModal>
   )
 }
