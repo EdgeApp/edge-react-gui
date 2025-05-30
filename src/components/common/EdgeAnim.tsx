@@ -125,7 +125,7 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
+const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): React.ReactElement | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)

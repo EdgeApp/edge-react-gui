@@ -31,7 +31,7 @@ interface Props {
   route: any
 }
 
-export function GuiPluginViewScene(props: Props): JSX.Element {
+export function GuiPluginViewScene(props: Props): React.ReactElement {
   const { route, navigation } = props
   const { deepPath, deepQuery, plugin } = route.params
   const account = useSelector(state => state.core.account)

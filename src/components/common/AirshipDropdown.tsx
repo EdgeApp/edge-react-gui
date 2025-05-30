@@ -31,7 +31,7 @@ type Timeout = ReturnType<typeof setTimeout>
 /**
  * A notification that slides down from the top of the screen.
  */
-export function AirshipDropdown(props: Props): JSX.Element {
+export function AirshipDropdown(props: Props): React.ReactElement {
   const { autoHideMs = 5000, backgroundColor, bridge, children, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

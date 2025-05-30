@@ -8,6 +8,7 @@ import { trackError } from '../../util/tracking'
 import { makeErrorLog, translateError } from '../../util/translateError'
 import { AirshipToast } from '../common/AirshipToast'
 import { AlertDropdown } from '../navigation/AlertDropdown'
+
 export const Airship = makeAirship()
 
 export interface ShowErrorWarningOptions {

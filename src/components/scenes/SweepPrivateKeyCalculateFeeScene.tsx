@@ -75,7 +75,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
     const walletName = ''
     const tx = transactionState.get(key)
 
-    let rightSide: JSX.Element
+    let rightSide: React.ReactElement
     if (tx == null) {
       rightSide = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
     } else if (tx instanceof Error) {

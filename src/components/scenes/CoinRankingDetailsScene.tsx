@@ -298,7 +298,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     return `${baseString}${extendedString}`
   }
 
-  const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): JSX.Element => {
+  const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): React.ReactElement => {
     return (
       <EdgeAnim style={styles.row} key={dataKey} enter={{ type: 'fadeInDown', distance: 20 * index }}>
         <EdgeText style={styles.rowTitle}>{COINRANKINGDATA_TITLE_MAP[dataKey]}</EdgeText>
@@ -307,12 +307,12 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     )
   }
 
-  const renderRows = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[]): JSX.Element[] => {
+  const renderRows = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[]): React.ReactElement[] => {
     return renderRowsInner(coinRankingData, keysFilter, 0)
   }
 
-  const renderRowsInner = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[], index: number): JSX.Element[] => {
-    const rows: JSX.Element[] = []
+  const renderRowsInner = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[], index: number): React.ReactElement[] => {
+    const rows: React.ReactElement[] = []
 
     keysFilter.forEach((key: string) => {
       if (Object.keys(coinRankingData).some(coinRankingDataKey => coinRankingDataKey === key)) {

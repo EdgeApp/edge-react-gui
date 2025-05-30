@@ -35,7 +35,7 @@ interface IconChoice {
   name: string
 }
 
-function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
+function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): React.ReactElement {
   const { accessible, color, IconComponent, name, size } = props
   const theme = useTheme()
   const defaultColor = theme.icon
@@ -62,7 +62,7 @@ function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
   )
 }
 
-function ThemedFontIcon(props: IconProps & IconChoice): JSX.Element {
+function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
   const theme = useTheme()
   const { accessible, color = theme.icon, IconComponent, name, size = theme.rem(1) } = props
 
@@ -89,7 +89,7 @@ function makeFontIcon(IconComponent: typeof Icon, name: string): IconComponent {
 // Font Icons
 //
 
-export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): JSX.Element {
+export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): React.ReactElement {
   const { off, ...rest } = props
 
   // Swapping between two icons causes rendering glitches,

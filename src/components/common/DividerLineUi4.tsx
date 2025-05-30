@@ -22,7 +22,7 @@ const end = { x: 1, y: 0.5 }
  * A simple horizontal divider line for separating content sections.
  * Uses the theme's thinLineWidth and lineDivider color for consistent styling.
  */
-export const DividerLineUi4 = (props: Props): JSX.Element => {
+export const DividerLineUi4 = (props: Props): React.ReactElement => {
   const { extendRight = false, marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
