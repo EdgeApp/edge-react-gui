@@ -1,15 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressDetails } from '../../components/scenes/Fio/FioAddressDetailsScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressDetails', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeWallet: any = {
       blockHeight: 34,
       currencyCode: 'FIO',
@@ -22,17 +21,20 @@ describe('FioAddressDetails', () => {
       txid: '0x34346463'
     }
 
-    const actual = renderer.render(
-      <FioAddressDetails
-        {...fakeEdgeAppSceneProps('fioAddressDetails', {
-          fioAddressName: 'Fio@edge',
-          bundledTxs: 100
-        })}
-        fioWallets={[fakeWallet]}
-        theme={getTheme()}
-      />
+    const rendered = render(
+      <FakeProviders>
+        <FioAddressDetails
+          {...fakeEdgeAppSceneProps('fioAddressDetails', {
+            fioAddressName: 'Fio@edge',
+            bundledTxs: 100
+          })}
+          fioWallets={[fakeWallet]}
+          theme={getTheme()}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

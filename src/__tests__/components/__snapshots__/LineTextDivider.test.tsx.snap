@@ -22,23 +22,35 @@ exports[`LineTextDivider should render with loading props 1`] = `
       }
     }
   />
-  <EdgeText
+  <Text
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.65}
+    numberOfLines={1}
     style={
       [
         {
-          "color": "#3dd9f4",
-          "fontFamily": "Quicksand-Medium",
+          "color": "#FFFFFF",
+          "fontFamily": "Quicksand-Regular",
           "fontSize": 22,
-          "paddingHorizontal": 17,
+          "includeFontPadding": false,
         },
-        {
-          "textTransform": "lowercase",
-        },
+        [
+          {
+            "color": "#3dd9f4",
+            "fontFamily": "Quicksand-Medium",
+            "fontSize": 22,
+            "paddingHorizontal": 17,
+          },
+          {
+            "textTransform": "lowercase",
+          },
+        ],
+        null,
       ]
     }
   >
     string
-  </EdgeText>
+  </Text>
   hello
   <View
     style={
