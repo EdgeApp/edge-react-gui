@@ -26,6 +26,8 @@ interface Props {
   onPress?: () => void
 }
 
+type Timeout = ReturnType<typeof setTimeout>
+
 /**
  * A notification that slides down from the top of the screen.
  */
@@ -46,7 +48,7 @@ export function AirshipDropdown(props: Props): JSX.Element {
   //
 
   const offset = useSharedValue(-Dimensions.get('window').height / 4)
-  const timeout = React.useRef<ReturnType<typeof setTimeout>>()
+  const timeout = React.useRef<Timeout | undefined>(undefined)
   const handleClose = useHandler(() => props.bridge.resolve())
 
   //
