@@ -1,15 +1,11 @@
-plugins {
-    id "com.android.application"
-    id "io.sentry.android.gradle" version "4.6.0"
-}
-
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
 // Edge build plugins:
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android'
-apply plugin: 'tech.formatter-kt.formatter'
+apply plugin: "com.google.gms.google-services"
+apply plugin: "io.sentry.android.gradle"
+apply plugin: "kotlin-android"
+apply plugin: "tech.formatter-kt.formatter"
 
 import com.android.build.OutputFile
 
@@ -87,10 +83,11 @@ def enableProguardInReleaseBuilds = false
  * this variant is about 6MiB larger per architecture than default.
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
-def sentrySlug = "SENTRY_ORGANIZATION_SLUG"
 
+// Edge addition for Sentry:
+def sentrySlug = "SENTRY_ORGANIZATION_SLUG"
 if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
-  apply from: new File(["node", "--print", "require.resolve('@sentry/react-native/package.json')"].execute().text.trim(), "../sentry.gradle")
+  apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 }
 
 /**
@@ -336,7 +333,7 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       // Default is enabled.
       // Only available v3.1.0 and above.
       autoInstallation {
-        enabled = true
+        enabled = false
 
         // Specifies a version of the sentry-android SDK and fragment, timber and okhttp integrations.
         //
