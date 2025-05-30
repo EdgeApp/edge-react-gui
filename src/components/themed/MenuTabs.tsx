@@ -199,7 +199,7 @@ const Tab = ({
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
 
-  const icon: { readonly [key: string]: JSX.Element } = {
+  const icon: { readonly [key: string]: React.ReactElement } = {
     home: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
     walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
     buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,

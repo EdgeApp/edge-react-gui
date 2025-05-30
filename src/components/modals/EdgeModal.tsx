@@ -57,7 +57,7 @@ const duration = 300
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
+export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
   const { bridge, title, children, scroll = false, warning = false, onCancel } = props
   const theme = useTheme()
   const styles = getStyles(theme)

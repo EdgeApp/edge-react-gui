@@ -51,7 +51,7 @@ const NotificationViewComponent = (props: Props) => {
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
-  const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
+  const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.ReactElement[]>([])
 
   const handleBackupClose = useHandler(async () => {
     await hideBanner(account, 'lightAccountReminder')
@@ -100,7 +100,7 @@ const NotificationViewComponent = (props: Props) => {
 
   // Show a tokens detected notification per walletId found in newTokens
   React.useEffect(() => {
-    const newNotifs: React.JSX.Element[] = []
+    const newNotifs: React.ReactElement[] = []
     Object.keys(wallets).forEach(walletId => {
       const newTokenKey = `newToken-${walletId}`
       const newTokenIds = detectedTokensRedux[walletId]

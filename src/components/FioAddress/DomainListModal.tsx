@@ -221,7 +221,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function DomainListModal(props: OwnProps): JSX.Element {
+export function DomainListModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
   const userDomains = useSelector(state => state.ui.fioAddress.fioDomains)

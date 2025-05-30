@@ -25,10 +25,10 @@ interface Props {
  * so as two components fade past each other during an animation,
  * the last child in the list will receive any touches.
  */
-export function CrossFade(props: Props): JSX.Element {
+export function CrossFade(props: Props): React.ReactElement {
   const { activeKey, children, duration = 500 } = props
 
-  const out: JSX.Element[] = []
+  const out: React.ReactElement[] = []
   React.Children.forEach(children, child => {
     if (child != null && typeof child === 'object' && 'key' in child && typeof child.key === 'string') {
       out.push(

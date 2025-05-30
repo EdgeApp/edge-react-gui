@@ -114,7 +114,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   }
 }
 
-export function PasswordReminderModal(props: OwnProps): JSX.Element {
+export function PasswordReminderModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
   const dispatch = useDispatch()
 

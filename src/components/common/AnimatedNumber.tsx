@@ -18,7 +18,7 @@ export interface AnimatedNumberProps {
   style?: ViewStyle
 }
 
-export const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
+export const AnimatedNumber = (props: AnimatedNumberProps): React.ReactElement => {
   const { digitHeight, numberString, textStyle, animationDuration = ANIMATION_DURATION_DEFAULT, easing = Easing.inOut(Easing.quad), style } = props
   const animateToNumbersArr: string[] = Array.from(numberString, String)
 
@@ -59,7 +59,7 @@ interface AnimatedDigitProps {
   numberHeight: number
 }
 
-const AnimatedDigit = (props: AnimatedDigitProps): JSX.Element => {
+const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
   const { animationDuration, digit, easing, textStyle, index, numberHeight } = props
   const animY = useSharedValue(0)
   const textStyleProp: StyleProp<ViewStyle> = useMemo(() => [textStyle, { height: numberHeight }], [numberHeight, textStyle])

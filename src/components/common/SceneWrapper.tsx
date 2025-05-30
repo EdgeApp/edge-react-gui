@@ -110,7 +110,7 @@ interface SceneWrapperProps {
  * padding will be passed as `insetStyle` and `undoInsetStyle` will include
  * negative margin style rules to be used to offset these insets.
  */
-function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
+function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   const {
     overrideDots,
     accentColors,
