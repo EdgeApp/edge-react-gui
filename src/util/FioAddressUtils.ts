@@ -12,6 +12,7 @@ import { CcWalletMap } from '../reducers/FioReducer'
 import { EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../types/types'
 import { asIntegerString } from './cleaners/asIntegerString'
 import { getWalletName } from './CurrencyWalletHelpers'
+import { infoServerData } from './network'
 import { DECIMAL_PRECISION, truncateDecimals } from './utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -355,7 +356,10 @@ const updatePublicAddresses = async (
   try {
     edgeTx = await fioMakeSpend(fioWallet, action, {
       fioAddress,
-      publicAddresses
+      publicAddresses: publicAddresses.map(p => ({
+        ...p,
+        token_code: infoServerData.rollup?.fioTokens?.[p.token_code] ?? p.token_code.replace('.', '')
+      }))
     })
     fee = edgeTx.networkFee
   } catch (e: any) {
