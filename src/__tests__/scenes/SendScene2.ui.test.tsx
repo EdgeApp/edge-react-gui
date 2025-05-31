@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { SendScene2, SendScene2Params } from '../../components/scenes/SendScene2'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
@@ -87,7 +87,7 @@ describe('SendScene2', () => {
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2
           {...fakeEdgeAppSceneProps('send2', {
@@ -99,15 +99,15 @@ describe('SendScene2', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
   it('1 spendTarget', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2
           {...fakeEdgeAppSceneProps('send2', {
@@ -123,15 +123,15 @@ describe('SendScene2', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
   it('1 spendTarget with info tiles', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2
           {...fakeEdgeAppSceneProps('send2', {
@@ -151,15 +151,15 @@ describe('SendScene2', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
   it('2 spendTargets', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2
           {...fakeEdgeAppSceneProps('send2', {
@@ -178,8 +178,8 @@ describe('SendScene2', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('2 spendTargets hide tiles', () => {
@@ -202,30 +202,30 @@ describe('SendScene2', () => {
     }
 
     // Hide Address
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
 
     // Hide Amount
     params.hiddenFeaturesMap = { amount: true }
-    const renderer2 = TestRenderer.create(
+    const rendered2 = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer2.toJSON()).toMatchSnapshot()
+    expect(rendered2.toJSON()).toMatchSnapshot()
 
     // Hide Both
     params.hiddenFeaturesMap = { amount: true, address: true }
-    const renderer3 = TestRenderer.create(
+    const rendered3 = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer3.toJSON()).toMatchSnapshot()
+    expect(rendered3.toJSON()).toMatchSnapshot()
   })
 
   it('2 spendTargets lock tiles', () => {
@@ -247,30 +247,30 @@ describe('SendScene2', () => {
     }
 
     // Lock Address
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
 
     // Lock Amount
     params.lockTilesMap = { amount: true }
-    const renderer2 = TestRenderer.create(
+    const rendered2 = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer2.toJSON()).toMatchSnapshot()
+    expect(rendered2.toJSON()).toMatchSnapshot()
 
     // Lock Both
     params.lockTilesMap = { amount: true, address: true }
-    const renderer3 = TestRenderer.create(
+    const rendered3 = render(
       <FakeProviders initialState={rootState}>
         <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
       </FakeProviders>
     )
-    expect(renderer3.toJSON()).toMatchSnapshot()
+    expect(rendered3.toJSON()).toMatchSnapshot()
   })
 })
 

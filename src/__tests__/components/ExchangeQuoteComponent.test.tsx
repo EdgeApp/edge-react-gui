@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeSwapInfo, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import process from 'process'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { ExchangeQuote } from '../../components/themed/ExchangeQuoteComponent'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -81,7 +81,7 @@ describe('ExchangeQuote', () => {
       toWallet: ethWallet
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <ExchangeQuote
           fromTo="from"
@@ -130,8 +130,8 @@ describe('ExchangeQuote', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })
 

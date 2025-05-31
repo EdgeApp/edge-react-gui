@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletAccountSetupScene } from '../../components/scenes/CreateWalletAccountSetupScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -23,7 +23,7 @@ describe('CreateWalletAccountSelect', () => {
       }
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockState}>
         <CreateWalletAccountSetupScene
           {...fakeEdgeAppSceneProps('createWalletAccountSetup', {
@@ -35,7 +35,7 @@ describe('CreateWalletAccountSelect', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

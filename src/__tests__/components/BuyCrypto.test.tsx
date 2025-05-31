@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
 import { initialState } from '../../reducers/scenes/SettingsReducer'
@@ -25,13 +25,13 @@ describe('BuyCrypto', () => {
       syncRatio: 0.5
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockState}>
         <BuyCrypto wallet={fakeWallet} tokenId={null} navigation={fakeNavigation} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

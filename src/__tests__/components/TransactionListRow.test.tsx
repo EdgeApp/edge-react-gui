@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { TransactionCard } from '../../components/themed/TransactionListRow'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -46,7 +46,7 @@ describe('TransactionListRow', () => {
       }
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockStore}>
         <TransactionCard
           navigation={fakeNavigation}
@@ -70,7 +70,7 @@ describe('TransactionListRow', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

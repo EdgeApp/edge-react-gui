@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { HelpModal } from '../../components/modals/HelpModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
@@ -9,13 +9,13 @@ import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('HelpModal', () => {
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <HelpModal bridge={fakeAirshipBridge} navigation={fakeNavigation} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

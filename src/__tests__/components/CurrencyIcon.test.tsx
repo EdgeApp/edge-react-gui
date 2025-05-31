@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -20,13 +20,13 @@ describe('CryptoIcon', () => {
   }
 
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockState}>
         <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" marginRem={1} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })
