@@ -82,7 +82,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
         <View style={styles.spacer} />
 
-        <MainButton label={lstrings.save} onPress={handleSubmit} />
+        <MainButton label={lstrings.save} disabled={transactionIsEnabled ? zeroString(transactionAmount) : false} onPress={handleSubmit} />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
