@@ -233,7 +233,7 @@ export async function showReEnableOtpModal(account: EdgeAccount): Promise<void> 
   }
 }
 
-export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
+export function showUnlockSettingsModal(): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const passwordValid = await dispatch(validatePassword())
     if (passwordValid) {
@@ -242,6 +242,7 @@ export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
         data: false
       })
     }
+    return passwordValid
   }
 }
 
