@@ -13,6 +13,7 @@
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
 - changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+- changed: Improved unlock settings UX by removing the extra tap required after successfully unlocking settings
 - changed: Show Thorchain Savers positions associated with bech32 addresses
 - fixed: Disable save button in spending limits scene when transaction value is not set
 - fixed: Fix regex for Paybis min/max amounts

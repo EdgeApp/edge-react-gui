@@ -108,6 +108,22 @@ export const SettingsScene = (props: Props) => {
     }
   })
 
+  /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
+  const hasLock = async (): Promise<boolean> => {
+    if (isLocked) {
+      const passwordValid = await handleShowUnlockSettingsModal().catch(err => {
+        showError(err)
+        return false
+      })
+      if (!passwordValid) return true
+      dispatch({
+        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+        data: false
+      })
+    }
+    return false
+  }
+
   const handleUpdateTouchId = useHandler(async () => {
     await dispatch(updateTouchIdEnabled(!touchIdEnabled, account))
   })
@@ -147,7 +163,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleShowUnlockSettingsModal = useHandler(async () => {
-    await dispatch(showUnlockSettingsModal())
+    return await dispatch(showUnlockSettingsModal())
   })
 
   const handleToggleDisableAnimations = useHandler(async () => {
@@ -160,27 +176,28 @@ export const SettingsScene = (props: Props) => {
     dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
-  const handleChangePassword = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePassword')
+  const handleChangePassword = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('changePassword')
   })
 
-  const handleChangePin = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePin')
+  const handleChangePin = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('changePin')
   })
 
-  const handleChangeOtp = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('otpSetup')
+  const handleChangeOtp = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('otpSetup')
   })
 
-  const handleChangeRecovery = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('passwordRecovery')
+  const handleChangeRecovery = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('passwordRecovery')
   })
 
   const handleDeleteAccount = useHandler(async () => {
-    if (isLocked) {
-      handleUnlock()
-      return
-    }
+    if (await hasLock()) return
 
     const approveDelete = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
@@ -216,11 +233,8 @@ export const SettingsScene = (props: Props) => {
     ))
   })
 
-  const handleDuressMode = useHandler(() => {
-    if (isLocked) {
-      handleUnlock()
-      return
-    }
+  const handleDuressMode = useHandler(async () => {
+    if (await hasLock()) return
     navigation.navigate('duressModeSetting')
   })
 
@@ -228,11 +242,8 @@ export const SettingsScene = (props: Props) => {
     navigation.navigate('swapSettings')
   })
 
-  const handleSpendingLimits = useHandler((): void => {
-    if (isLocked) {
-      handleUnlock()
-      return
-    }
+  const handleSpendingLimits = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
     navigation.navigate('spendingLimits')
   })
 
