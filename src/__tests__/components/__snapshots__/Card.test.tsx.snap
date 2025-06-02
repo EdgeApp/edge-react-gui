@@ -216,13 +216,13 @@ exports[`Card should expand to fill its parent container 1`] = `
 </View>
 `;
 
-exports[`Card should handle press and long press events 1`] = `
+exports[`Card should handle press events 1`] = `
 <View
   accessibilityState={
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": false,
+      "disabled": true,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -260,6 +260,7 @@ exports[`Card should handle press and long press events 1`] = `
       "paddingTop": 11,
     }
   }
+  testID="card"
 >
   <View
     style={
