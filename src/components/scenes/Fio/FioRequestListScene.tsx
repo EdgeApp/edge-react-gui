@@ -5,6 +5,7 @@ import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
+import { FIO_ASSET_MAP } from '../../../constants/FioConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
@@ -377,9 +378,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
   renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
     const { account, onSelectWallet } = this.props
     const { content } = selectedFioPendingRequest
-    const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(
-      pluginId => (SPECIAL_CURRENCY_INFO[pluginId].fioChainCode ?? SPECIAL_CURRENCY_INFO[pluginId].chainCode) === content.chain_code.toUpperCase()
-    )
+    const pluginId =
+      Object.keys(FIO_ASSET_MAP).find(pluginId => FIO_ASSET_MAP[pluginId].chainCode === content.chain_code.toUpperCase()) ??
+      Object.keys(SPECIAL_CURRENCY_INFO).find(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode === content.chain_code.toUpperCase())
     if (pluginId == null) {
       showError(sprintf(lstrings.fio_request_unknown_chain_code, content.chain_code.toUpperCase()))
       return
