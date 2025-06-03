@@ -40,6 +40,7 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
 
   const { fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
 
+  const account = useSelector(state => state.core.account)
   const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
   const isConnected = useSelector(state => state.network.isConnected)
 
@@ -104,7 +105,7 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
 
       let publicAddresses = await Promise.all(promiseArray)
 
-      const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(fioWallet, fioAddressName, publicAddresses)
+      const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(account, fioWallet, fioAddressName, publicAddresses)
 
       if (updatedCcWallets.length) {
         for (const { fullCurrencyCode, walletId } of updatedCcWallets) {
@@ -124,6 +125,7 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
       publicAddresses = await Promise.all(promiseArray)
 
       const { updatedCcWallets: removedCcWallets, error: removedError } = await updatePubAddressesForFioAddress(
+        account,
         fioWallet,
         fioAddressName,
         publicAddresses,
