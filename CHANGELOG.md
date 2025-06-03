@@ -15,11 +15,13 @@
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
 - changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+- changed: Improved unlock settings UX by removing the extra tap required after successfully unlocking settings
 - changed: Show Thorchain Savers positions associated with bech32 addresses
-- fixed: Show deprecated stake policies with allocations
+- fixed: Disable save button in spending limits scene when transaction value is not set
+- fixed: Fix regex for Paybis min/max amounts
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
-- fixed: Fix regex for Paybis min/max amounts
+- fixed: Show deprecated stake policies with allocations
 
 ## 4.28.1 (2025-05-28)
 
