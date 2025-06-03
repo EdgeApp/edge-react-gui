@@ -30,5 +30,15 @@ export const FIO_ASSET_MAP: { [pluginId: string]: { chainCode: string; tokenCode
   sonic: {
     chainCode: 'SONIC',
     tokenCodes: {}
+  },
+  ripple: {
+    chainCode: 'XRP',
+    tokenCodes: {
+      'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'USDGH',
+      'EUR-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'EURGH',
+      'USD-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'USDBS',
+      'EUR-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'EURBS',
+      'USD-rEn9eRkX25wfGPLysUMAvZ84jAzFNpT5fL': 'USDST'
+    }
   }
 }

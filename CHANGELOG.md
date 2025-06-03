@@ -13,6 +13,7 @@
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
 - changed: Remove boot logo animation on Android.
+- fixed: Connecting tokens to FIO addresses failing if there was a "." in the currency code
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
 
