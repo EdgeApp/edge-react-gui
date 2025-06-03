@@ -5,7 +5,8 @@ import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, 
 import { sprintf } from 'sprintf-js'
 
 import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
-import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { FIO_ASSET_MAP } from '../constants/FioConstants'
+import { FIO_STR } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
@@ -405,8 +406,8 @@ export const makeConnectWallets = (
     if (pluginId === 'fio') continue
 
     // Look for unique FIO network chain code
-    const info = getSpecialCurrencyInfo(pluginId)
-    const currencyCode = info.fioChainCode ?? cCode
+    const fioAsset = FIO_ASSET_MAP[pluginId]
+    const currencyCode = fioAsset == null ? cCode : fioAsset.chainCode
     const walletName = getWalletName(wallet)
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
     walletItems[`${wallet.id}-${currencyCode}`] = {
@@ -1030,14 +1031,15 @@ export const refreshFioNames = async (
 }
 
 export const convertFIOToEdgeCodes = (pluginId: string, fioChainCode: string, fioTokenCode: string) => {
-  const chainCode = fioChainCode === SPECIAL_CURRENCY_INFO[pluginId].fioChainCode ? SPECIAL_CURRENCY_INFO[pluginId].chainCode : fioChainCode
+  const fioAsset = FIO_ASSET_MAP[pluginId]
+  const chainCode = fioAsset != null && fioChainCode === fioAsset.chainCode ? fioAsset.chainCode : fioChainCode
   const tokenCode = fioTokenCode === fioChainCode ? chainCode : fioTokenCode
 
   return { chainCode, tokenCode }
 }
 
 export const convertEdgeToFIOCodes = (pluginId: string, edgeChainCode: string, edgeTokenCode: string) => {
-  const fioChainCode = SPECIAL_CURRENCY_INFO[pluginId].fioChainCode ?? edgeChainCode
+  const fioChainCode = FIO_ASSET_MAP[pluginId].chainCode ?? edgeChainCode
   const fioTokenCode = edgeTokenCode === edgeChainCode ? fioChainCode : edgeTokenCode
 
   return { fioChainCode, fioTokenCode }
