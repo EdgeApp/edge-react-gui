@@ -533,7 +533,7 @@ PODS:
     - ZIPFoundation (= 0.9.11)
   - rn-id-blurview (1.2.1):
     - React
-  - RNBootSplash (4.7.4):
+  - RNBootSplash (6.3.8):
     - React-Core
   - RNCAsyncStorage (1.19.4):
     - React-Core
@@ -1176,7 +1176,7 @@ SPEC CHECKSUMS:
   ReactCommon: 8a735714dc64b08430132010a5404c95382d1c05
   ReactNativeFileAccess: 4b46f383b251dbb24d7cb9616f44676374a7d481
   rn-id-blurview: 35bf4f960b8b108d12ed8a8ff14cbc22ed908081
-  RNBootSplash: b42375998e728cde229aeabe9376cf26faa13cbf
+  RNBootSplash: efd6dbf15b2579fb86bc575b8b676d1c5ac5709f
   RNCAsyncStorage: c483708b137c90f4063675058a78b7d6d63fbf55
   RNCClipboard: 4598dae0fe33e2aa130d9d213e2007be78310266
   RNCPicker: 68cada0778c2ec65d200a3ae4b44739a0396d333

@@ -187,7 +187,6 @@ dependencies {
     }
 
     // Edge additions:
-    implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation 'androidx.work:work-runtime:2.7.1'
     implementation 'com.google.guava:guava:29.0-android'
 
