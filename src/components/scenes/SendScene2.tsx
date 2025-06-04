@@ -528,7 +528,7 @@ const SendComponent = (props: Props) => {
   }
 
   const renderFees = () => {
-    if (spendInfo.spendTargets[0].publicAddress != null) {
+    if (spendInfo.spendTargets[0].publicAddress != null && spendInfo.spendTargets[0].nativeAmount != null) {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
@@ -1022,7 +1022,7 @@ const SendComponent = (props: Props) => {
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
-        if (spendInfo.spendTargets[0].publicAddress == null) {
+        if (spendInfo.spendTargets[0].publicAddress == null || spendInfo.spendTargets[0].nativeAmount == null) {
           setEdgeTransaction(null)
           setSpendingLimitExceeded(false)
           setMaxSpendSetter(-1)
