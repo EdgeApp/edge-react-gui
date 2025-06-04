@@ -1724,6 +1724,7 @@ const strings = {
   enter_contact_info: 'Enter Contact Information',
   edge_ucation: 'Edge-ucation',
   education: 'Education',
+  enter_value: 'Enter Value',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

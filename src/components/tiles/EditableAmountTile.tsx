@@ -34,7 +34,7 @@ export const EditableAmountTile = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   if (nativeAmount === '' && !lockInputs) {
-    cryptoAmountSyntax = lstrings.string_tap_to_edit
+    cryptoAmountSyntax = lstrings.enter_value
     cryptoAmountStyle = styles.amountTextMuted
   } else if (!zeroString(nativeAmount)) {
     const displayAmount = div(nativeAmount, displayDenomination.multiplier, DECIMAL_PRECISION)
