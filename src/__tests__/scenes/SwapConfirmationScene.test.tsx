@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
@@ -12,7 +13,6 @@ import {
 } from 'edge-core-js'
 import process from 'process'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { pickBestQuote, SwapConfirmationScene } from '../../components/scenes/SwapConfirmationScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -137,7 +137,7 @@ describe('SwapConfirmationScene', () => {
       close: async () => {}
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SwapConfirmationScene
           {...fakeSwapTabSceneProps('swapConfirmation', {
@@ -149,8 +149,8 @@ describe('SwapConfirmationScene', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   let quotes: TestSwapQuote[]

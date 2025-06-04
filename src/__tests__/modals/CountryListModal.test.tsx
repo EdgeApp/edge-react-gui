@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CountryListModal } from '../../components/modals/CountryListModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
@@ -15,13 +15,13 @@ describe('CountryListModal', () => {
   }
 
   it('should render with a country list', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <CountryListModal bridge={fakeAirshipBridge} countryCode="" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletEditNameScene } from '../../components/scenes/CreateWalletEditNameScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -51,7 +51,7 @@ describe('CreateWalletEditNameComponent', () => {
   }
 
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockState}>
         <CreateWalletEditNameScene
           {...fakeEdgeAppSceneProps('createWalletEditName', {
@@ -89,7 +89,7 @@ describe('CreateWalletEditNameComponent', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

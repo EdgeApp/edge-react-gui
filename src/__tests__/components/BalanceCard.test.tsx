@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { BalanceCard } from '../../components/cards/BalanceCard'
 import { FakeProviders } from '../../util/fake/FakeProviders'
@@ -8,13 +8,13 @@ import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('BalanceCard', () => {
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <BalanceCard navigation={fakeNavigation} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

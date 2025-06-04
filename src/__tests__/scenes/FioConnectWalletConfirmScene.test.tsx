@@ -1,15 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioConnectWalletConfirm } from '../../components/scenes/Fio/FioConnectWalletConfirmScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioConnectWalletConfirm', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeWallet: any = {
       currencyCode: 'FIO',
       nativeAmount: '100',
@@ -22,22 +21,25 @@ describe('FioConnectWalletConfirm', () => {
       id: 'id'
     }
 
-    const actual = renderer.render(
-      <FioConnectWalletConfirm
-        {...fakeEdgeAppSceneProps('fioConnectToWalletsConfirm', {
-          walletId: fakeWallet.id,
-          fioAddressName: 'MyFioAddress',
-          walletsToConnect: [],
-          walletsToDisconnect: []
-        })}
-        wallet={fakeWallet}
-        ccWalletMap={['FIO'] as any}
-        isConnected
-        updateConnectedWallets={(fioAddress, ccWalletMap) => undefined}
-        theme={getTheme()}
-      />
+    const rendered = render(
+      <FakeProviders>
+        <FioConnectWalletConfirm
+          {...fakeEdgeAppSceneProps('fioConnectToWalletsConfirm', {
+            walletId: fakeWallet.id,
+            fioAddressName: 'MyFioAddress',
+            walletsToConnect: [],
+            walletsToDisconnect: []
+          })}
+          wallet={fakeWallet}
+          ccWalletMap={['FIO'] as any}
+          isConnected
+          updateConnectedWallets={(fioAddress, ccWalletMap) => undefined}
+          theme={getTheme()}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,29 +1,31 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { DefaultFiatSettingComponent } from '../../components/scenes/DefaultFiatSettingScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('DefaultFiatSettingComponent', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
-    const actual = renderer.render(
-      <DefaultFiatSettingComponent
-        {...fakeEdgeAppSceneProps('defaultFiatSetting', undefined)}
-        supportedFiats={[
-          {
-            label: 'Dollars',
-            value: 'USD'
-          }
-        ]}
-        onSelectFiat={async selectedDefaultFiat => {}}
-        theme={getTheme()}
-      />
+    const rendered = render(
+      <FakeProviders>
+        <DefaultFiatSettingComponent
+          {...fakeEdgeAppSceneProps('defaultFiatSetting', undefined)}
+          supportedFiats={[
+            {
+              label: 'Dollars',
+              value: 'USD'
+            }
+          ]}
+          onSelectFiat={async selectedDefaultFiat => {}}
+          theme={getTheme()}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

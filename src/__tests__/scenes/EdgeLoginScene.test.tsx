@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -14,7 +14,7 @@ describe('EdgeLoginScene', () => {
   it('should render with loading props', () => {
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <EdgeLoginScene
           {...fakeEdgeAppSceneProps('edgeLogin', {
@@ -24,7 +24,7 @@ describe('EdgeLoginScene', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

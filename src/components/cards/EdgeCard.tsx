@@ -31,6 +31,7 @@ interface Props {
   // Options:
   fill?: boolean // Set flex to 1 for tiling
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
+  testID?: string
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
   // Touchable area for the following span the entire card:
@@ -50,7 +51,23 @@ interface Props {
  * onClose: If specified, adds a close button
  */
 export const EdgeCard = (props: Props) => {
-  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, fill = false, onClose, onLongPress, onPress } = props
+  const {
+    children,
+    fill = false,
+    gradientBackground,
+    icon,
+    marginRem,
+    nodeBackground,
+    overlay,
+    paddingRem,
+    sections,
+    testID,
+
+    // Handlers:
+    onClose,
+    onLongPress,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -130,7 +147,7 @@ export const EdgeCard = (props: Props) => {
     )
 
   return isPressable ? (
-    <EdgeTouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={viewStyle}>
+    <EdgeTouchableOpacity accessible={false} testID={testID} style={viewStyle} onPress={handlePress} onLongPress={handleLongPress}>
       {allContent}
     </EdgeTouchableOpacity>
   ) : (

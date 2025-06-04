@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { SwapSuccessScene } from '../../components/scenes/SwapSuccessScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -62,7 +62,7 @@ describe('SwapSuccessSceneComponent', () => {
       }
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <SwapSuccessScene
           {...fakeEdgeAppSceneProps('swapSuccess', {
@@ -89,7 +89,7 @@ describe('SwapSuccessSceneComponent', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,13 +1,13 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('EdgeText', () => {
   it('should render with some props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeText ellipsizeMode="tail" numberOfLines={2} style={{}} disableFontScaling={false}>
           Hello world
@@ -15,7 +15,7 @@ describe('EdgeText', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -34,7 +34,7 @@ describe('CurrencySettings', () => {
       }
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={state}>
         <CurrencySettingsScene
           {...fakeEdgeAppSceneProps('currencySettings', {
@@ -44,7 +44,7 @@ describe('CurrencySettings', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

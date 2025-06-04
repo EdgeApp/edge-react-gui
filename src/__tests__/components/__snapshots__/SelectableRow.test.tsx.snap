@@ -1,9 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SelectableRow should render with loading props 1`] = `
-<EdgeCard
-  onPress={[Function]}
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={false}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignSelf": "stretch",
+      "borderRadius": 16,
+      "marginBottom": 11,
+      "marginLeft": 11,
+      "marginRight": 11,
+      "marginTop": 11,
+      "opacity": 1,
+      "paddingBottom": 11,
+      "paddingLeft": 11,
+      "paddingRight": 11,
+      "paddingTop": 11,
+    }
+  }
 >
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
   <View
     style={
       {
@@ -31,12 +86,26 @@ exports[`SelectableRow should render with loading props 1`] = `
         }
       }
     >
-      <EdgeText
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
         numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            undefined,
+            null,
+          ]
+        }
       >
         title
-      </EdgeText>
+      </Text>
     </View>
   </View>
-</EdgeCard>
+</View>
 `;

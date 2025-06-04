@@ -1,15 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressRegister } from '../../components/scenes/Fio/FioAddressRegisterScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressRegister', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeWallet: any = {
       currencyCode: 'FIO',
       nativeAmount: '100',
@@ -21,21 +20,24 @@ describe('FioAddressRegister', () => {
       ourReceiveAddresses: ['FioAddress']
     }
 
-    const actual = renderer.render(
-      <FioAddressRegister
-        {...fakeEdgeAppSceneProps('fioAddressRegister', undefined)}
-        fioWallets={[fakeWallet]}
-        fioPlugin={
-          {
-            currencyInfo: 'FIO plugin'
-          } as any
-        }
-        isConnected
-        createFioWallet={async () => 'myFio@fio' as any}
-        theme={getTheme()}
-      />
+    const rendered = render(
+      <FakeProviders>
+        <FioAddressRegister
+          {...fakeEdgeAppSceneProps('fioAddressRegister', undefined)}
+          fioWallets={[fakeWallet]}
+          fioPlugin={
+            {
+              currencyInfo: 'FIO plugin'
+            } as any
+          }
+          isConnected
+          createFioWallet={async () => 'myFio@fio' as any}
+          theme={getTheme()}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

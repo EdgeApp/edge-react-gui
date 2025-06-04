@@ -1,53 +1,482 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AccelerateTxModalComponent should render with loading props 1`] = `
-<EdgeModal
-  bridge={
-    {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
-    }
-  }
-  onCancel={[Function]}
-  title="Accelerate Transaction"
->
-  <Paragraph>
-    This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.
-  </Paragraph>
+[
   <View
-    style={
+    accessibilityState={
       {
-        "marginVertical": 11,
-        "maxHeight": 449,
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
       }
     }
-  >
-    <EdgeRow
-      body=" 0.000681 ($ 0.00)"
-      title="Old Fee"
-    />
-    <EdgeRow
-      body=" 0.001362 ($ 0.00)"
-      title="New Fee"
-    />
-  </View>
-  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     style={
-      {
-        "marginVertical": 11,
-        "maxHeight": 449,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
+    }
+  />,
+  <View
+    collapsable={false}
+    style={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
-    <WithTheme(SliderComponent)
-      disabled={false}
-      disabledText="Unable to Accelerate Transaction"
-      onSlidingComplete={[Function]}
-      showSpinner={false}
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
+      style={
+        [
+          {
+            "backgroundColor": undefined,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "borderRadius": 16,
+          },
+        ]
+      }
     />
-  </View>
-</EdgeModal>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
+            "borderRadius": 3,
+            "height": 6,
+            "marginTop": 6,
+            "width": 67,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Accelerate Transaction
+      </Text>
+    </View>
+    <Text
+      adjustsFontSizeToFit={false}
+      numberOfLines={0}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          false,
+          null,
+        ]
+      }
+    >
+      This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.
+    </Text>
+    <View
+      style={
+        {
+          "marginVertical": 11,
+          "maxHeight": 449,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "flexShrink": 1,
+            },
+            {
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flexDirection": "column",
+                "flexShrink": 1,
+              },
+              {
+                "flexGrow": 1,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            ellipsizeMode="tail"
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                  "paddingRight": 22,
+                },
+                null,
+              ]
+            }
+          >
+            Old Fee
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            ellipsizeMode="tail"
+            minimumFontScale={0.65}
+            numberOfLines={3}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 22,
+                },
+                null,
+              ]
+            }
+          >
+             0.000681 ($ 0.00)
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "flexShrink": 1,
+            },
+            {
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flexDirection": "column",
+                "flexShrink": 1,
+              },
+              {
+                "flexGrow": 1,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            ellipsizeMode="tail"
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                  "paddingRight": 22,
+                },
+                null,
+              ]
+            }
+          >
+            New Fee
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            ellipsizeMode="tail"
+            minimumFontScale={0.65}
+            numberOfLines={3}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 22,
+                },
+                null,
+              ]
+            }
+          >
+             0.001362 ($ 0.00)
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginVertical": 11,
+          "maxHeight": 449,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            undefined,
+            {
+              "alignItems": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#00604d",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              null,
+              {
+                "width": 295,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#494949",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            collapsable={false}
+            handlerTag={2}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                null,
+                {
+                  "transform": [
+                    {
+                      "translateX": 240,
+                    },
+                  ],
+                },
+              ]
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": undefined,
+                    "fontSize": 34,
+                  },
+                  {
+                    "color": "#1a1a1a",
+                    "fontSize": 51,
+                  },
+                  {
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "alignSelf": "center",
+                  "color": "#FFFFFF",
+                  "fontSize": 17,
+                  "lineHeight": 55,
+                  "position": "absolute",
+                  "zIndex": 1,
+                },
+                null,
+              ]
+            }
+          >
+            Slide to Confirm
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>,
+]
 `;

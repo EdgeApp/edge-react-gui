@@ -1,47 +1,949 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListSortModalComponent should render with loading props 1`] = `
-<ListModal
-  bridge={
-    {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
+[
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
     }
-  }
-  fullScreen={false}
-  rowComponent={[Function]}
-  rowsData={
-    [
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
       [
-        "manual",
-        "Manual sort",
-      ],
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
+    }
+  />,
+  <View
+    collapsable={false}
+    style={
       [
-        "name",
-        "Sort by name",
-      ],
-      [
-        "currencyCode",
-        "Sort by currency code",
-      ],
-      [
-        "currencyName",
-        "Sort by currency name",
-      ],
-      [
-        "highest",
-        "Sort by highest value",
-      ],
-      [
-        "lowest",
-        "Sort by lowest value",
-      ],
-    ]
-  }
-  textInput={false}
-  title="Sort Wallets"
-/>
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+  >
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
+      style={
+        [
+          {
+            "backgroundColor": undefined,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "borderRadius": 16,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
+            "borderRadius": 3,
+            "height": 6,
+            "marginTop": 6,
+            "width": 67,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Sort Wallets
+      </Text>
+    </View>
+    <RCTScrollView
+      collapsable={false}
+      contentContainerStyle={
+        {
+          "marginTop": 11,
+          "paddingBottom": 67,
+        }
+      }
+      data={
+        [
+          [
+            "manual",
+            "Manual sort",
+          ],
+          [
+            "name",
+            "Sort by name",
+          ],
+          [
+            "currencyCode",
+            "Sort by currency code",
+          ],
+          [
+            "currencyName",
+            "Sort by currency name",
+          ],
+          [
+            "highest",
+            "Sort by highest value",
+          ],
+          [
+            "lowest",
+            "Sort by lowest value",
+          ],
+        ]
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      handlerTag={2}
+      handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      onContentSizeChange={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={50}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
+      waitFor={
+        [
+          {
+            "current": null,
+          },
+          {
+            "current": null,
+          },
+        ]
+      }
+    >
+      <View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Manual sort
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 22,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {
+                        "fontWeight": "900",
+                      },
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Sort by name
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  accessibilityHint="On Sort by name"
+                  accessibilityRole="radio"
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 28,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Sort by currency code
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  accessibilityHint="Off Sort by currency code"
+                  accessibilityRole="radio"
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 28,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Sort by currency name
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  accessibilityHint="Off Sort by currency name"
+                  accessibilityRole="radio"
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 28,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Sort by highest value
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  accessibilityHint="Off Sort by highest value"
+                  accessibilityRole="radio"
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 28,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Sort by lowest value
+            </Text>
+            <View>
+              <View
+                pending={false}
+                style={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
+                }
+              >
+                <ActivityIndicator
+                  color="#00f1a2"
+                  style={
+                    {
+                      "height": 34,
+                      "marginHorizontal": 11,
+                    }
+                  }
+                />
+              </View>
+              <View
+                pending={false}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  accessibilityHint="Off Sort by lowest value"
+                  accessibilityRole="radio"
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 28,
+                        "marginHorizontal": 11,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>,
+]
 `;

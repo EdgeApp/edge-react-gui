@@ -1,16 +1,20 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { WalletListSortModal } from '../../components/modals/WalletListSortModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('WalletListSortModalComponent', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
+    const rendered = render(
+      <FakeProviders>
+        <WalletListSortModal bridge={fakeAirshipBridge} sortOption="name" />
+      </FakeProviders>
+    )
 
-    const actual = renderer.render(<WalletListSortModal bridge={fakeAirshipBridge} sortOption="name" />)
-
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { WalletListModal } from '../../components/modals/WalletListModal'
 import { EdgeAsset } from '../../types/types'
@@ -11,14 +11,14 @@ import { upgradeCurrencyCodes } from '../../util/tokenIdTools'
 
 describe('WalletListModal', () => {
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <WalletListModal bridge={fakeAirshipBridge} navigation={fakeNavigation} headerTitle="Wallet List" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it("Should upgrade currency codes to token ID's", () => {

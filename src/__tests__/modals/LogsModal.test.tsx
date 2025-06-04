@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { MultiLogOutput } from '../../actions/LogActions'
 import { LogsModal } from '../../components/modals/LogsModal'
@@ -49,13 +49,13 @@ describe('LogsModal', () => {
   }
 
   it('should render with a logs modal', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <LogsModal bridge={fakeAirshipBridge} logs={fakeLogs} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })
