@@ -15,7 +15,7 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText } from './EdgeText'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -47,7 +47,7 @@ interface LocalState {
   prevFioAddresses: FioAddress[]
 }
 
-export class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
+export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -262,7 +262,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 }
 
-export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
+export const SendFromFioRows = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     return {
       fioAddresses: state.ui.fioAddress.fioAddresses,
@@ -274,4 +274,4 @@ export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
       await dispatch(refreshAllFioAddresses())
     }
   })
-)(withTheme(SelectFioAddressComponent))
+)(withTheme(SendFromFioRowsComponent))

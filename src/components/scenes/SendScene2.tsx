@@ -61,7 +61,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
-import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
+import { SendFromFioRows } from '../themed/SendFromFioRows'
 import { AddressEntryMethod, AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
@@ -626,7 +626,7 @@ const SendComponent = (props: Props) => {
     if (fioPendingRequest == null && !fioTarget) return null
 
     return (
-      <SelectFioAddress2
+      <SendFromFioRows
         navigation={navigation as NavigationBase}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
