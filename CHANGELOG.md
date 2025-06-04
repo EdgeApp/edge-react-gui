@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 - added: Additional user information fields for Kado OTC orders
+- added: KeyboardAccessoryView-based `KavButton`
+- changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
 
