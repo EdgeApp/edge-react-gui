@@ -1195,10 +1195,12 @@ const SendComponent = (props: Props) => {
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
               <EdgeCard sections>
                 {renderAddressAmountPairs()}
-                {renderAddAddress()}
                 {renderTimeout()}
                 {renderError()}
               </EdgeCard>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+              <EdgeCard sections>{renderAddAddress()}</EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
               <EdgeCard sections>

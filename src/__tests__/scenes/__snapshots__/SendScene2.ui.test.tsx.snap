@@ -852,39 +852,64 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -2264,39 +2289,64 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -4090,39 +4140,64 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -5512,6 +5587,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
+        />
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
@@ -6745,6 +6824,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
+        />
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
@@ -7793,6 +7876,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -9169,6 +9256,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
+        />
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
@@ -10500,6 +10591,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
+        />
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
@@ -11765,6 +11860,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
+        />
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
@@ -12992,6 +13091,10 @@ exports[`SendScene2 Render SendScene 1`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
