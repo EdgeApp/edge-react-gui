@@ -1187,7 +1187,10 @@ const SendComponent = (props: Props) => {
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <EdgeCard>{renderSelectedWallet()}</EdgeCard>
+              <EdgeCard sections>
+                {renderSelectedWallet()}
+                {renderSelectFioAddress()}
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
               <EdgeCard sections>
@@ -1201,7 +1204,6 @@ const SendComponent = (props: Props) => {
               <EdgeCard sections>
                 {renderFees()}
                 {renderMetadataNotes()}
-                {renderSelectFioAddress()}
                 {renderMemoOptions()}
                 {renderInfoTiles()}
                 {renderAuthentication()}
