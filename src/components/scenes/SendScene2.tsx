@@ -502,7 +502,7 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
+      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_another_address} onPress={handleAddAddress} maximumHeight="small" />
     } else {
       return null
     }

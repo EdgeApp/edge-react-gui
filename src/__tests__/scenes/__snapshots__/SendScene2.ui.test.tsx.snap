@@ -939,7 +939,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
@@ -2351,7 +2351,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
@@ -4177,7 +4177,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
