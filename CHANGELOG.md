@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Additional user information fields for Kado OTC orders
+- fixed: Connecting tokens to FIO addresses failing if there was a "." in the currency code
 
 ## 4.29.0 (staging)
 

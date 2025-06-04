@@ -157,7 +157,6 @@ interface SpecialCurrencyInfo {
   importKeyOptions?: ImportKeyOption[]
 
   // Flags that could move to EdgeCurrencyInfo:
-  fioChainCode?: string
   allowZeroTx?: boolean
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
@@ -205,7 +204,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'ABSTRACT',
     initWalletName: lstrings.string_first_abstract_wallet_name,
     isImportKeySupported: true,
     noMaxSpend: true,
@@ -483,7 +481,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
     chainCode: 'ETHW',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'ETHEREUMPO',
     allowZeroTx: true,
     isImportKeySupported: true,
     isTransactionListUnsupported: true,
@@ -496,7 +493,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_optimism_wallet_name,
     chainCode: 'OP',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'OPT',
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
@@ -511,7 +507,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'BOBNETWORK',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -523,7 +518,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETH',
     chainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'ZKSYNC',
     initWalletName: lstrings.string_first_zksync_wallet_name,
     isImportKeySupported: true,
     noMaxSpend: true,
@@ -628,7 +622,6 @@ export const SPECIAL_CURRENCY_INFO: {
   binancesmartchain: {
     initWalletName: lstrings.string_first_binance_smart_chain_wallet_name,
     chainCode: 'BNB',
-    fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
@@ -977,7 +970,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_sonic_wallet_name,
     chainCode: 'S',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    fioChainCode: 'SONIC',
     allowZeroTx: true,
     displayBuyCrypto: false,
     isImportKeySupported: true,
