@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
@@ -9,6 +8,7 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../types/types'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../util/FioAddressUtils'
+import { SectionView } from '../layout/SectionView'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -254,10 +254,10 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
     }
 
     return (
-      <View>
+      <SectionView>
         {this.renderFioFromAddress()}
         {this.renderFioMemo()}
-      </View>
+      </SectionView>
     )
   }
 }
