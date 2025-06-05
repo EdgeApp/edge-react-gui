@@ -1,6 +1,5 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
+import { Platform, StyleSheet, View as BlurView } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 

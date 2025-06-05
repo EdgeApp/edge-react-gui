@@ -1,9 +1,8 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View as BlurView } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { BlurView } from 'rn-id-blurview'
 
 import { useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'

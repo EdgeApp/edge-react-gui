@@ -1,8 +1,7 @@
 import { EdgeAccount } from 'edge-core-js'
 import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Keyboard, StatusBar, View } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
+import { Keyboard, StatusBar, View as BlurView, View } from 'react-native'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
