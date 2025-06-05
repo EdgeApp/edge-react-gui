@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Remove boot logo animation on Android.
 - added: Additional user information fields for Kado OTC orders
 - added: KeyboardAccessoryView-based `KavButton`
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`

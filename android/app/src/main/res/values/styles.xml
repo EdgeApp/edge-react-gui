@@ -5,9 +5,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="postSplashScreenTheme">@style/AppTheme</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/vd_splash</item>
-        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+    <style name="BootTheme" parent="Theme.BootSplash">
+        <item name="bootSplashBackground">@color/bootsplash_background</item>
+        <item name="bootSplashLogo">@drawable/vd_splash</item>
+        <item name="postBootSplashTheme">@style/AppTheme</item>
     </style>
 </resources>
