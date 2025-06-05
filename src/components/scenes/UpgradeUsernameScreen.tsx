@@ -1,6 +1,7 @@
 import { UpgradeUsernameScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 
+import { markAccountUpgraded } from '../../actions/RequestReviewActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -18,6 +19,7 @@ export const UpgradeUsernameScene = (props: Props) => {
 
   const handleComplete = useHandler(() => {
     if (account.username != null) logActivity(`Light account backed up as: ${account.username}`)
+    dispatch(markAccountUpgraded()).catch(() => {})
     navigation.goBack()
   })
 
