@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Additional app review prompt triggers
 - added: Additional user information fields for Kado OTC orders
 - added: KeyboardAccessoryView-based `KavButton`
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`

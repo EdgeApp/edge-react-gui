@@ -9,6 +9,7 @@ import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
+import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -114,6 +115,12 @@ export function Services(props: Props) {
     [account, maybeShowFioHandleModal],
     'Services 1'
   )
+
+  React.useEffect(() => {
+    if (account != null) {
+      dispatch(trackAppUsageAfterUpgrade()).catch(err => console.warn(err))
+    }
+  }, [account, dispatch])
 
   // Methods to call once all of the currency wallets have been loaded
   useAsyncEffect(
