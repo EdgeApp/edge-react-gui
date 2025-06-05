@@ -193,6 +193,9 @@ const processReviewTrigger = async (account: any, data: ReviewTriggerData, shoul
     // Reset the counter that triggered this review
     const resetData = shouldReset(updatedData)
     await saveReviewTriggerData(account, resetData)
+  } else {
+    // Threshold reached but cannot trigger yet. Persist updated data
+    await saveReviewTriggerData(account, data)
   }
 }
 

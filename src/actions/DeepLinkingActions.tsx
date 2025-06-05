@@ -122,7 +122,8 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
         paymentType,
         providerId,
         navigation,
-        onLogEvent: (event, values) => dispatch(logEvent(event, values))
+        onLogEvent: (event, values) => dispatch(logEvent(event, values)),
+        dispatch
       })
       break
     }

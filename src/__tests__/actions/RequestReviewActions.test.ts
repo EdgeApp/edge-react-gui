@@ -1,7 +1,21 @@
 import { expect, jest, test } from '@jest/globals'
 import { Dispatch } from 'redux'
 
-import { DEPOSIT_AMOUNT_THRESHOLD, ReviewTriggerData, updateDepositAmount } from '../../actions/RequestReviewActions'
+import {
+  DEPOSIT_AMOUNT_THRESHOLD,
+  TRANSACTION_COUNT_THRESHOLD,
+  FIAT_PURCHASE_COUNT_THRESHOLD,
+  ACCOUNT_UPGRADE_DAYS_THRESHOLD,
+  ReviewTriggerData,
+  updateDepositAmount,
+  updateTransactionCount,
+  updateFiatPurchaseCount,
+  markAccountUpgraded,
+  trackAppUsageAfterUpgrade
+} from '../../actions/RequestReviewActions'
+
+// Provide a virtual env.json so importing env.ts does not fail
+jest.mock('../../../env.json', () => ({}), { virtual: true })
 import { Action } from '../../types/reduxTypes'
 
 // Mock the store dispatch function
@@ -35,35 +49,8 @@ jest.mock('react-native-in-app-review', () => ({
   isAvailable: jest.fn().mockReturnValue(false)
 }))
 
-// Create mocked versions of the key functions
-const mockRequestReview = jest.fn().mockResolvedValue(true)
-const mockRequestReviewCore = jest.fn().mockResolvedValue(undefined)
-
-// Mock the necessary functions in RequestReviewActions
-jest.mock('../../actions/RequestReviewActions', () => {
-  const actual = jest.requireActual('../../actions/RequestReviewActions')
-  
-  return {
-    ...actual,
-    // Only keep the exported constants and the function we're testing
-    DEPOSIT_AMOUNT_THRESHOLD: actual.DEPOSIT_AMOUNT_THRESHOLD,
-    updateDepositAmount: actual.updateDepositAmount,
-    // Override internal functions with mocks
-    requestReview: mockRequestReview,
-    requestReviewCore: mockRequestReviewCore,
-    // Override the shouldTriggerReview function for testing
-    shouldTriggerReview: (data: any): boolean => {
-      // For testing: only check nextTriggerDate if in the test data
-      if (data.nextTriggerDate != null) {
-        const nextTriggerDate = new Date(data.nextTriggerDate)
-        const now = new Date()
-        if (nextTriggerDate > now) return false
-      }
-      // Otherwise trigger when depositAmountUsd >= threshold
-      return data.depositAmountUsd >= actual.DEPOSIT_AMOUNT_THRESHOLD
-    }
-  }
-})
+// Capture calls to the StoreReview module
+const mockRequestReview = require('react-native-store-review').requestReview as jest.Mock
 
 describe('RequestReviewActions', () => {
   beforeEach(() => {
@@ -175,6 +162,98 @@ describe('RequestReviewActions', () => {
       const savedData = JSON.parse(savedJsonData)
       expect(savedData.depositAmountUsd).toBe(100)
       expect(savedData.swapCount).toBe(0)
+    })
+  })
+
+  describe('updateTransactionCount', () => {
+    test('triggers when transaction count reaches threshold', async () => {
+      const mockData: ReviewTriggerData = {
+        swapCount: 0,
+        depositAmountUsd: 0,
+        transactionCount: TRANSACTION_COUNT_THRESHOLD - 1,
+        fiatPurchaseCount: 0,
+        accountUpgraded: false,
+        daysSinceUpgrade: []
+      }
+      mockDisklet.getText.mockResolvedValueOnce(JSON.stringify(mockData))
+
+      const action = updateTransactionCount()
+      const getState: GetState = () => ({ core: { account: mockAccount } })
+      await action(mockDispatch, getState)
+
+      expect(mockRequestReview).toHaveBeenCalledTimes(1)
+      const saved = JSON.parse(mockDisklet.setText.mock.calls[0][1] as string)
+      expect(saved.transactionCount).toBe(0)
+    })
+  })
+
+  describe('updateFiatPurchaseCount', () => {
+    test('triggers when fiat purchase count reaches threshold', async () => {
+      const mockData: ReviewTriggerData = {
+        swapCount: 0,
+        depositAmountUsd: 0,
+        transactionCount: 0,
+        fiatPurchaseCount: FIAT_PURCHASE_COUNT_THRESHOLD - 1,
+        accountUpgraded: false,
+        daysSinceUpgrade: []
+      }
+      mockDisklet.getText.mockResolvedValueOnce(JSON.stringify(mockData))
+
+      const action = updateFiatPurchaseCount()
+      const getState: GetState = () => ({ core: { account: mockAccount } })
+      await action(mockDispatch, getState)
+
+      expect(mockRequestReview).toHaveBeenCalledTimes(1)
+      const saved = JSON.parse(mockDisklet.setText.mock.calls[0][1] as string)
+      expect(saved.fiatPurchaseCount).toBe(0)
+    })
+  })
+
+  describe('account upgrade flow', () => {
+    test('marks account upgraded', async () => {
+      const mockData: ReviewTriggerData = {
+        swapCount: 0,
+        depositAmountUsd: 0,
+        transactionCount: 0,
+        fiatPurchaseCount: 0,
+        accountUpgraded: false,
+        daysSinceUpgrade: []
+      }
+      mockDisklet.getText.mockResolvedValueOnce(JSON.stringify(mockData))
+
+      const action = markAccountUpgraded()
+      const getState: GetState = () => ({ core: { account: mockAccount } })
+      await action(mockDispatch, getState)
+
+      const saved = JSON.parse(mockDisklet.setText.mock.calls[0][1] as string)
+      expect(saved.accountUpgraded).toBe(true)
+      expect(saved.daysSinceUpgrade.length).toBe(0)
+    })
+
+    test('tracks days after upgrade and triggers after threshold', async () => {
+      jest.useFakeTimers()
+      const baseDate = new Date('2023-01-01T00:00:00Z')
+      jest.setSystemTime(baseDate)
+
+      const mockData: ReviewTriggerData = {
+        swapCount: 0,
+        depositAmountUsd: 0,
+        transactionCount: 0,
+        fiatPurchaseCount: 0,
+        accountUpgraded: true,
+        daysSinceUpgrade: ['2022-12-30', '2022-12-31']
+      }
+      mockDisklet.getText.mockResolvedValueOnce(JSON.stringify(mockData))
+
+      const action = trackAppUsageAfterUpgrade()
+      const getState: GetState = () => ({ core: { account: mockAccount } })
+      await action(mockDispatch, getState)
+
+      expect(mockRequestReview).toHaveBeenCalledTimes(1)
+      const saved = JSON.parse(mockDisklet.setText.mock.calls[0][1] as string)
+      expect(saved.daysSinceUpgrade.length).toBe(0)
+
+      jest.useRealTimers()
     })
   })
 })

@@ -8,6 +8,8 @@ import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import { updateFiatPurchaseCount } from '../../actions/RequestReviewActions'
+import { Dispatch } from '../../types/reduxTypes'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
@@ -90,6 +92,7 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
   onLogEvent: OnLogEvent
+  dispatch: Dispatch
 }): Promise<void> => {
   const {
     disablePlugins = {},
@@ -106,7 +109,8 @@ export const executePlugin = async (params: {
     pluginPromotions,
     providerId,
     regionCode,
-    onLogEvent
+    onLogEvent,
+    dispatch
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
   const isBuy = direction === 'buy'
@@ -332,6 +336,9 @@ export const executePlugin = async (params: {
     },
     trackConversion: async (event: TrackingEventName, opts: { conversionValues: BuyConversionValues | SellConversionValues }) => {
       onLogEvent(event, opts)
+      if (event === 'Buy_Success' || event === 'Sell_Success') {
+        dispatch(updateFiatPurchaseCount()).catch(() => {})
+      }
     },
     exitScene: async () => {
       navigation.pop()
