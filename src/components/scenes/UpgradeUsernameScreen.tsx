@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
+import { markAccountUpgraded } from '../../actions/RequestReviewActions'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'upgradeUsername'> {}
@@ -18,6 +19,7 @@ export const UpgradeUsernameScene = (props: Props) => {
 
   const handleComplete = useHandler(() => {
     if (account.username != null) logActivity(`Light account backed up as: ${account.username}`)
+    dispatch(markAccountUpgraded()).catch(() => {})
     navigation.goBack()
   })
 
