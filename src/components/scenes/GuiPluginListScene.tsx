@@ -310,7 +310,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         paymentType,
         pluginPromotions,
         regionCode: { countryCode, stateProvinceCode },
-        onLogEvent
+        onLogEvent,
+        dispatch
       })
     } else {
       // Launch!

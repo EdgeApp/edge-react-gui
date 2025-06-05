@@ -39,6 +39,7 @@ import { SortedWalletList } from './SortedWalletList'
 import { WalletConnectService } from './WalletConnectService'
 import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
+import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 
 interface Props {
   navigation: NavigationBase
@@ -114,6 +115,12 @@ export function Services(props: Props) {
     [account, maybeShowFioHandleModal],
     'Services 1'
   )
+
+  React.useEffect(() => {
+    if (account != null) {
+      dispatch(trackAppUsageAfterUpgrade()).catch(err => console.warn(err))
+    }
+  }, [account, dispatch])
 
   // Methods to call once all of the currency wallets have been loaded
   useAsyncEffect(
