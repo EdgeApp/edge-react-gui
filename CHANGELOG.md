@@ -5,6 +5,7 @@
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
+- changed: Autocomplete `networkLocation` fields returned from `getTokenDetails` in `EditTokenScene`
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
