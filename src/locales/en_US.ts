@@ -1335,7 +1335,7 @@ const strings = {
   send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
-  send_add_destination_address: 'Add Destination Address',
+  send_add_another_address: 'Add Another Address',
   send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
   send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
   send_scan_modal_text_modal_hint: 'Public Address',
@@ -1724,6 +1724,7 @@ const strings = {
   enter_contact_info: 'Enter Contact Information',
   edge_ucation: 'Edge-ucation',
   education: 'Education',
+  enter_value: 'Enter Value',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

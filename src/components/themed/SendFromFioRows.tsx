@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
@@ -9,13 +8,14 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../types/types'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../util/FioAddressUtils'
+import { SectionView } from '../layout/SectionView'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText } from './EdgeText'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -47,7 +47,7 @@ interface LocalState {
   prevFioAddresses: FioAddress[]
 }
 
-export class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
+export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -254,15 +254,15 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     }
 
     return (
-      <View>
+      <SectionView>
         {this.renderFioFromAddress()}
         {this.renderFioMemo()}
-      </View>
+      </SectionView>
     )
   }
 }
 
-export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
+export const SendFromFioRows = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     return {
       fioAddresses: state.ui.fioAddress.fioAddresses,
@@ -274,4 +274,4 @@ export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
       await dispatch(refreshAllFioAddresses())
     }
   })
-)(withTheme(SelectFioAddressComponent))
+)(withTheme(SendFromFioRowsComponent))

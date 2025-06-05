@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 - added: Additional user information fields for Kado OTC orders
+- changed: `SendScene2` row/card grouping updated
+- changed: Fees are no longer estimated before amounts are entered in `SendScene2`
 
 ## 4.29.0 (staging)
 

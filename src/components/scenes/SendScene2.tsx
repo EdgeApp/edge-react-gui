@@ -61,7 +61,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
-import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
+import { SendFromFioRows } from '../themed/SendFromFioRows'
 import { AddressEntryMethod, AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
@@ -502,7 +502,7 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
+      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_another_address} onPress={handleAddAddress} maximumHeight="small" />
     } else {
       return null
     }
@@ -528,7 +528,7 @@ const SendComponent = (props: Props) => {
   }
 
   const renderFees = () => {
-    if (spendInfo.spendTargets[0].publicAddress != null) {
+    if (spendInfo.spendTargets[0].publicAddress != null && spendInfo.spendTargets[0].nativeAmount != null) {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
@@ -626,7 +626,7 @@ const SendComponent = (props: Props) => {
     if (fioPendingRequest == null && !fioTarget) return null
 
     return (
-      <SelectFioAddress2
+      <SendFromFioRows
         navigation={navigation as NavigationBase}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
@@ -1022,7 +1022,7 @@ const SendComponent = (props: Props) => {
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
-        if (spendInfo.spendTargets[0].publicAddress == null) {
+        if (spendInfo.spendTargets[0].publicAddress == null || spendInfo.spendTargets[0].nativeAmount == null) {
           setEdgeTransaction(null)
           setSpendingLimitExceeded(false)
           setMaxSpendSetter(-1)
@@ -1187,21 +1187,25 @@ const SendComponent = (props: Props) => {
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <EdgeCard>{renderSelectedWallet()}</EdgeCard>
+              <EdgeCard sections>
+                {renderSelectedWallet()}
+                {renderSelectFioAddress()}
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
               <EdgeCard sections>
                 {renderAddressAmountPairs()}
-                {renderAddAddress()}
                 {renderTimeout()}
                 {renderError()}
               </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+              <EdgeCard sections>{renderAddAddress()}</EdgeCard>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
               <EdgeCard sections>
                 {renderFees()}
                 {renderMetadataNotes()}
-                {renderSelectFioAddress()}
                 {renderMemoOptions()}
                 {renderInfoTiles()}
                 {renderAuthentication()}
