@@ -54,9 +54,7 @@ function EditTokenSceneComponent(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  // Extract our initial contract address:
-  const { customTokenTemplate = [] } = wallet.currencyInfo
-  const [location, setLocation] = React.useState<Map<string, string>>(() => {
+  const emptyNetworkLocation = () => {
     const out = new Map<string, string>()
     for (const item of customTokenTemplate) {
       const value = route.params.networkLocation?.[item.key]
@@ -68,6 +66,12 @@ function EditTokenSceneComponent(props: Props) {
       // Note: Token templates don't support `item.type === 'nativeAmount'`
     }
     return out
+  }
+
+  // Extract our initial contract address:
+  const { customTokenTemplate = [] } = wallet.currencyInfo
+  const [location, setLocation] = React.useState<Map<string, string>>(() => {
+    return emptyNetworkLocation()
   })
 
   // Keep track of whether we auto-completed a token:
@@ -195,7 +199,7 @@ function EditTokenSceneComponent(props: Props) {
     if (
       // Ignore autocomplete if it's already loading
       isAutoCompleteTokenLoading.current ||
-      // and ggnore autocomplete if the scene was initialized with any of the token details prefilled,
+      // and ignore autocomplete if the scene was initialized with any of the token details prefilled,
       route.params.currencyCode != null ||
       route.params.displayName != null ||
       route.params.multiplier != null ||
@@ -212,11 +216,21 @@ function EditTokenSceneComponent(props: Props) {
       setCurrencyCode(token.currencyCode)
       setDisplayName(token.displayName)
       setDecimalPlaces((token.denominations[0].multiplier.length - 1).toString())
+      setLocation(location => {
+        const out = new Map(location)
+        for (const [key, value] of Object.entries(token.networkLocation ?? {})) {
+          out.set(key, value.replace(/\s/g, ''))
+        }
+        return out
+      })
       setDidAutoCompleteToken(true)
     } else if (token == null && didAutoCompleteToken) {
       setCurrencyCode('')
       setDisplayName('')
       setDecimalPlaces('18')
+      setLocation(location => {
+        return emptyNetworkLocation()
+      })
       setDidAutoCompleteToken(false)
     }
   }
