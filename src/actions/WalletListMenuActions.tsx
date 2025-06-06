@@ -277,13 +277,14 @@ export function walletListMenuAction(
         // Show the scam warning modal if needed
         await showScamWarningModal('firstPrivateKeyView')
 
-        const passwordValid = await dispatch(
-          validatePassword({
-            title: lstrings.fragment_wallets_get_seed_title,
-            submitLabel: lstrings.fragment_wallets_get_seed_wallet,
-            warningMessage: lstrings.fragment_wallets_get_seed_warning_message
-          })
-        )
+        const passwordValid =
+          (await dispatch(
+            validatePassword({
+              title: lstrings.fragment_wallets_get_seed_title,
+              submitLabel: lstrings.fragment_wallets_get_seed_wallet,
+              warningMessage: lstrings.fragment_wallets_get_seed_warning_message
+            })
+          )) != null
 
         if (passwordValid) {
           const { name, id, type } = wallet
@@ -322,14 +323,15 @@ export function walletListMenuAction(
 
     case 'getRawKeys': {
       return async (dispatch, getState) => {
-        const passwordValid = await dispatch(
-          validatePassword({
-            title: lstrings.fragment_wallets_get_raw_keys_title,
-            warningMessage:
-              lstrings.fragment_wallets_get_raw_keys_warning_message,
-            submitLabel: lstrings.string_get_raw_keys
-          })
-        )
+        const passwordValid =
+          (await dispatch(
+            validatePassword({
+              title: lstrings.fragment_wallets_get_raw_keys_title,
+              warningMessage:
+                lstrings.fragment_wallets_get_raw_keys_warning_message,
+              submitLabel: lstrings.string_get_raw_keys
+            })
+          )) != null
         if (passwordValid) {
           const state = getState()
           const { account } = state.core

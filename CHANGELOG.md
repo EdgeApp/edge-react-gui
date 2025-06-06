@@ -4,6 +4,7 @@
 
 ## 4.31.0 (staging)
 
+- added: "Change Username" setting
 - added: Support for Zano alias name resolution.
 - changed: Don't allow multiple pending EVM transactions.
 
