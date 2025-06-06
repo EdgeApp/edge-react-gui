@@ -57,6 +57,7 @@ function WalletListSwipeableComponent(props: Props) {
   const theme = useTheme()
   const dispatch = useDispatch()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
   const account = useSelector(state => state.core.account)
 
   // This list is shown when we're in a searching state
@@ -93,7 +94,33 @@ function WalletListSwipeableComponent(props: Props) {
   })
 
   // Filter based on the search text:
-  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searchText), [sortedWalletList, searchText])
+  const searchedWalletList = React.useMemo(() => {
+    const list = searchWalletList(sortedWalletList, searchText)
+    if (searchText === '' || mostRecentWallets.length === 0) return list
+
+    const recentIndex: Record<string, number> = {}
+    for (let i = 0; i < mostRecentWallets.length; ++i) {
+      const { id, currencyCode } = mostRecentWallets[i]
+      recentIndex[`${id}_${currencyCode.toLowerCase()}`] = i
+    }
+
+    return list
+      .map((item, index) => ({ item, index }))
+      .sort((a, b) => {
+        if (a.item.type === 'asset' && b.item.type === 'asset') {
+          const keyA = `${a.item.wallet.id}_${(a.item.token?.currencyCode ?? a.item.wallet.currencyInfo.currencyCode).toLowerCase()}`
+          const keyB = `${b.item.wallet.id}_${(b.item.token?.currencyCode ?? b.item.wallet.currencyInfo.currencyCode).toLowerCase()}`
+
+          const pa = recentIndex[keyA]
+          const pb = recentIndex[keyB]
+          if (pa != null && pb != null) return pa - pb
+          if (pa != null) return -1
+          if (pb != null) return 1
+        }
+        return a.index - b.index
+      })
+      .map(({ item }) => item)
+  }, [sortedWalletList, searchText, mostRecentWallets])
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {
