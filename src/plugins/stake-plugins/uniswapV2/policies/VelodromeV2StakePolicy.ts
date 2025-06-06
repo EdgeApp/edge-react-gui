@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
+import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import VELODROME_V2_VOTER from '../../../abi/VELODROME_V2_VOTER.json'
 import { cacheTxMetadata } from '../../metadataCache'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition, StakePositionRequest } from '../../types'
@@ -222,7 +223,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
               const totalBalance = add(balanceAmount, fromLpToken)
               const isBalanceEnough = lte(allocation.nativeAmount, totalBalance)
               if (!isBalanceEnough) {
-                throw new Error(sprintf(lstrings.stake_error_insufficient_s, allocation.currencyCode))
+                throw new HumanFriendlyError(lstrings.stake_error_insufficient_s, allocation.currencyCode)
               }
             })
         )
