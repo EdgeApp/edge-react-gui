@@ -1,4 +1,4 @@
-import { add, eq, gt, lt } from 'biggystring'
+import { add, div, eq, gt, lt, mul, round } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
@@ -170,7 +170,24 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
     async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, requestNativeAmount: string): Promise<ChangeQuote> {
       const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } = await workflowUtils(wallet)
 
-      const tx = await integrationContract.populateTransaction.requestExit(requestNativeAmount, {
+      const walletAddress = await walletSigner.getAddress()
+
+      const allPositions = await kiln.ethGetOnChainStakes(walletAddress)
+      const position = allPositions.find(position => position.integration_address.toLowerCase() === contractAddress.toLowerCase())
+      const positionBalance = position?.balance ?? '0'
+      const positionSharesBalance = position?.shares_balance ?? '0'
+
+      // Convert requestNativeAmount to shares by using the ratio of
+      // positionSharesBalance:positionBalance:
+      const ratio = div(positionSharesBalance, positionBalance, 18)
+      let sharesNativeAmount = round(mul(requestNativeAmount, ratio), 0)
+
+      // Handle rounding errors maybe possible by max-unstake
+      if (eq(sharesNativeAmount, add(positionSharesBalance, '1'))) {
+        sharesNativeAmount = positionSharesBalance
+      }
+
+      const tx = await integrationContract.populateTransaction.requestExit(sharesNativeAmount, {
         gasLimit: '500000',
         maxFeePerGas,
         maxPriorityFeePerGas,
@@ -212,7 +229,7 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       const position = allPositions.find(position => position.integration_address.toLowerCase() === contractAddress.toLowerCase())
 
       // After fully unstaking, users are left with a single wei of the liquidity token. We should ignore this.
-      const positionBalance = position?.shares_balance ?? '0'
+      const positionBalance = position?.balance ?? '0'
       const nativeStakedAmount = eq(positionBalance, '1') ? '0' : positionBalance
 
       allocations.push({

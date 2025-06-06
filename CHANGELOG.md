@@ -24,6 +24,7 @@
 - changed: Improved unlock settings UX by removing the extra tap required after successfully unlocking settings
 - changed: Show Thorchain Savers positions associated with bech32 addresses
 - fixed: Disable save button in spending limits scene when transaction value is not set
+- fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Fix regex for Paybis min/max amounts
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
