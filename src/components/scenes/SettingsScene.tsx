@@ -73,12 +73,12 @@ export const SettingsScene = (props: Props) => {
   const logSettings = useWatch(context, 'logSettings')
 
   const [localContactPermissionOn, setLocalContactsPermissionOn] = React.useState(false)
-
   const [isDarkTheme, setIsDarkTheme] = React.useState(theme === config.darkTheme)
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
   const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
   const [touchIdText, setTouchIdText] = React.useState<string>(lstrings.settings_button_use_touchID)
+  const [validatedPassword, setValidatedPassword] = React.useState<string>()
 
   const iconSize = theme.rem(1.25)
   const isLightAccount = username == null
@@ -97,25 +97,31 @@ export const SettingsScene = (props: Props) => {
     showBackupModal({ navigation: navigation as NavigationBase })
   })
 
-  const handleUnlock = useHandler(() => {
+  const handleLockUnlock = useHandler(async () => {
     if (!isLocked) {
       dispatch({
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: true
       })
+      setValidatedPassword(undefined)
     } else {
-      handleShowUnlockSettingsModal().catch(err => showError(err))
+      const password = await handleShowUnlockSettingsModal().catch(err => {
+        showError(err)
+        return undefined
+      })
+      setValidatedPassword(password)
     }
   })
 
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
     if (isLocked) {
-      const passwordValid = await handleShowUnlockSettingsModal().catch(err => {
+      const password = await handleShowUnlockSettingsModal().catch(err => {
         showError(err)
-        return false
+        return undefined
       })
-      if (!passwordValid) return true
+      if (password == null) return true
+      setValidatedPassword(password)
       dispatch({
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: false
@@ -184,6 +190,14 @@ export const SettingsScene = (props: Props) => {
   const handleChangePin = useHandler(async (): Promise<void> => {
     if (await hasLock()) return
     navigation.navigate('changePin')
+  })
+
+  const handleChangeUsername = useHandler(async (): Promise<void> => {
+    // Check if settings are locked
+    if ((await hasLock()) || validatedPassword == null) return
+
+    // Navigate to change username with the validated password
+    navigation.navigate('changeUsername', { password: validatedPassword })
   })
 
   const handleChangeOtp = useHandler(async (): Promise<void> => {
@@ -357,10 +371,11 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow
                 action={isLocked ? 'lock' : 'unlock'}
                 label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
-                onPress={handleUnlock}
+                onPress={handleLockUnlock}
               />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_change_password} onPress={handleChangePassword} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_pin} onPress={handleChangePin} />
+              <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_change_username} onPress={handleChangeUsername} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.spending_limits} onPress={handleSpendingLimits} />

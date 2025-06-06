@@ -51,6 +51,7 @@ import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/Asse
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
 import { ChangePinScene as ChangePinSceneComponent } from './scenes/ChangePinScene'
+import { ChangeUsernameScene as ChangeUsernameSceneComponent } from './scenes/ChangeUsernameScreen'
 import { CoinRankingDetailsScene as CoinRankingDetailsSceneComponent } from './scenes/CoinRankingDetailsScene'
 import { CoinRankingScene as CoinRankingSceneComponent } from './scenes/CoinRankingScene'
 import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
@@ -148,6 +149,7 @@ const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
+const ChangeUsernameScene = ifLoggedIn(ChangeUsernameSceneComponent)
 const DuressPinScene = ifLoggedIn(DuressPinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
@@ -510,6 +512,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <AppStack.Screen name="changeUsername" component={ChangeUsernameScene} />
       <AppStack.Screen
         name="duressPin"
         component={DuressPinScene}
