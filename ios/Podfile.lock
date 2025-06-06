@@ -418,7 +418,7 @@ PODS:
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.1):
+  - react-native-mymonero-core (0.3.2):
     - React-Core
   - react-native-netinfo (9.0.0):
     - React-Core
@@ -1152,7 +1152,7 @@ SPEC CHECKSUMS:
   react-native-in-app-review: b3d1eed3d1596ebf6539804778272c4c65e4a400
   react-native-keyboard-controller: d7eb26730f87cc9b27e8998dd0491a8a4da98c45
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: d22cfc9d1107daf6aab7c1631071c760509c068c
+  react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
   react-native-netinfo: 8fa5cbcb4a8e69e265ff685b9e54c175ef2bbd40
   react-native-performance: 125a96c145e29918b55b45ce25cbba54f1e24dcd
   react-native-piratechain: 45b65cf0f3ecbc994d66962514d80f6b5248f04f
