@@ -33,7 +33,7 @@ interface ValidatePasswordOptions {
 
 export function validatePassword(
   opts: ValidatePasswordOptions = {}
-): ThunkAction<Promise<boolean>> {
+): ThunkAction<Promise<string | undefined>> {
   return async (dispatch, getState) => {
     const {
       message,
@@ -64,6 +64,6 @@ export function validatePassword(
       />
     ))
 
-    return password != null
+    return password
   }
 }
