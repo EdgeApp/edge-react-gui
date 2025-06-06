@@ -1,9 +1,9 @@
 import { beforeAll, expect, it, jest } from '@jest/globals'
 import fetch from 'node-fetch'
 
-import { mswServer } from '../__mocks__/server'
 import { closestRateForTimestamp, ExchangeRateCache } from '../actions/ExchangeRateActions'
 import { getHistoricalRate } from '../util/exchangeRates'
+import { mswServer } from '../util/mswServer'
 import { snooze } from '../util/utils'
 
 // Uncomment for testing under Node w/o Jest
