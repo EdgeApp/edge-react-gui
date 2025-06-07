@@ -1,25 +1,24 @@
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import Evilicons from 'react-native-vector-icons/EvilIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { AccentColors } from '../common/DotsBackground'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { SceneContainer } from '../layout/SceneContainer'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
-import { SceneHeader } from '../themed/SceneHeader'
 
 export interface ChangeMiningFeeParams {
   maxSpendSet: boolean
@@ -118,9 +117,9 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
         backgroundGradientEnd={theme.assetBackgroundGradientEnd}
         backgroundGradientStart={theme.assetBackgroundGradientStart}
         overrideDots={theme.backgroundDots.assetOverrideDots}
+        scroll
       >
-        <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
-        <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        <SceneContainer headerTitle={lstrings.title_change_mining_fee}>
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
@@ -152,8 +151,8 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}
-          <MainButton label={lstrings.string_done_cap} marginRem={[4, 0, 2]} type="secondary" onPress={this.onSubmit} />
-        </ScrollView>
+        </SceneContainer>
+        <ButtonsView secondary={{ label: lstrings.string_done_cap, onPress: this.onSubmit }} />
       </SceneWrapper>
     )
   }
@@ -203,9 +202,6 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
 const getStyles = cacheStyles((theme: Theme) => {
   const iconSize = theme.rem(1.25)
   return {
-    container: {
-      paddingTop: theme.rem(0.5)
-    },
     view: {
       flex: 1
     },
