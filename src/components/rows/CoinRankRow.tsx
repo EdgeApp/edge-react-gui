@@ -37,7 +37,7 @@ const CoinRankRowComponent = (props: Props) => {
   const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   const mounted = React.useRef<boolean>(true)
-  const timeoutHandler = React.useRef<Timeout | undefined>()
+  const timeoutHandler = React.useRef<Timeout | undefined>(undefined)
 
   const theme = useTheme()
   const styles = getStyles(theme)

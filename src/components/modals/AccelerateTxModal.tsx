@@ -169,7 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function AccelerateTxModal(props: OwnProps): JSX.Element {
+export function AccelerateTxModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
   const exchangeRates = useSelector(state => state.exchangeRates)

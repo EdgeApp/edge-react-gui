@@ -97,7 +97,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
     onFocus,
     onNext
   } = props
-  const animatedValue = useSharedValue(forceFieldNum)
+  const animatedValue = useSharedValue<number>(forceFieldNum)
 
   // `amounts` is always a 2-tuple
   const [amounts, setAmounts] = useState<[string, string]>(startAmounts)

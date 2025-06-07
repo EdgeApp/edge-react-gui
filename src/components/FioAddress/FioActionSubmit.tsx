@@ -272,7 +272,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function FioActionSubmit(props: OwnProps): JSX.Element {
+export function FioActionSubmit(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)

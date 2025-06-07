@@ -19,7 +19,7 @@ interface Props {
   accentColors?: AccentColors
 }
 
-export function DotsBackground(props: Props): JSX.Element {
+export function DotsBackground(props: Props): React.ReactElement {
   const { accentColors, backgroundGradientColors, backgroundGradientStart, backgroundGradientEnd, overrideDots } = props
   const theme = useTheme()
   const { blurRadius, dotOpacity, dots } = theme.backgroundDots
@@ -75,7 +75,7 @@ export function DotsBackground(props: Props): JSX.Element {
    * then we can't slice off a big enough ring,
    * so we reduce the opacity towards 0 to compensate.
    */
-  function renderGradient(circle: ThemeDot, key: number): JSX.Element {
+  function renderGradient(circle: ThemeDot, key: number): React.ReactElement {
     const innerR = (circle.r - blurRadius) / blurRadius
     const totalR = 2 + Math.max(0, innerR)
     const dimming = 1 + Math.min(0, innerR)
@@ -94,7 +94,7 @@ export function DotsBackground(props: Props): JSX.Element {
     )
   }
 
-  function renderCircle(circle: ThemeDot, key: number): JSX.Element {
+  function renderCircle(circle: ThemeDot, key: number): React.ReactElement {
     const innerR = circle.r - blurRadius
     const totalR = 2 * blurRadius + Math.max(0, innerR)
 

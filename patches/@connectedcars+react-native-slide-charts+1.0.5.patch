@@ -1,80 +1,101 @@
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/XAxis.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/XAxis.tsx
+index 8b7e93e..b3631a3 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/XAxis.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/XAxis.tsx
+@@ -5,6 +5,7 @@ import {
+   XAxisComponentProps, XAxisDefaultProps, XAxisLabelAlignment,
+   LabelAndAlignment, XAxisMarkerProps
+ } from './utils/types'
++import type { JSX } from 'react'
+ 
+ class XAxis extends Component<XAxisComponentProps> {
+ 
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/YAxis.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/YAxis.tsx
+index b65fdd2..2666b94 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/YAxis.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/YAxis.tsx
+@@ -7,6 +7,7 @@ import {
+ import {
+   YAxisComponentProps, YAxisDefaultProps, YAxisMarkerProps, YAxisLabelAlignment
+ } from './utils/types'
++import type { JSX } from 'react'
+ 
+ class YAxis extends Component<YAxisComponentProps> {
+ 
 diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
-index bb9144e..2dafb12 100644
+index bb9144e..b57abba 100644
 --- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
 +++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
-@@ -1,4 +1,4 @@
--import { ScaleTime, ScaleLinear } from 'd3'
-+import { ScaleTime, ScaleLinear } from 'd3-scale'
+@@ -1,6 +1,8 @@
++// @ts-ignore
+ import { ScaleTime, ScaleLinear } from 'd3'
  import { TSpanProps, TextAnchor, AlignmentBaseline } from 'react-native-svg'
  import { GradientProps } from '../../charts/utils/types'
++import type { JSX } from 'react'
  
+ type AxisProps = {
+   data: Array<{ x: number | Date; y: number }>
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/BarChart.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/BarChart.tsx
+index fef6833..f7b8caf 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/BarChart.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/BarChart.tsx
+@@ -7,6 +7,7 @@ import AnimatedPath from '../../AnimatedPath'
+ import YAxis from '../axis/YAxis'
+ import XAxis from '../axis/XAxis'
+ import { BarChartProps } from './utils/types'
++import type { JSX } from 'react'
+ 
+ type State = {
+   y: Animated.Value
 diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
-index 39735cc..328bd81 100644
+index 39735cc..d79a5f6 100644
 --- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
 +++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
-@@ -1,4 +1,4 @@
--import { ScaleLinear, ScaleTime } from 'd3'
-+import { ScaleLinear, ScaleTime } from 'd3-scale'
+@@ -1,5 +1,7 @@
++// @ts-ignore
+ import { ScaleLinear, ScaleTime } from 'd3'
  import { YAxisProps, XAxisProps } from '../../axis/utils/types'
++import type { JSX } from 'react'
  
  export type GradientProps = {
+   id: string
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/ToolTip.tsx b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/ToolTip.tsx
+index 841fead..eebadf4 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/ToolTip.tsx
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/ToolTip.tsx
+@@ -3,6 +3,7 @@ import { StyleSheet, View, Platform, TextInput, Animated, LayoutChangeEvent } fr
+ import { Svg, Polygon } from 'react-native-svg'
+ import { isAndroid } from '../../utils/platform'
+ import { ToolTipDefaultProps, ToolTipComponentProps } from './utils/types'
++import type { JSX } from 'react'
+ 
+ type State = {
+   height: number
 diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
-index 716ecb7..d4b9d65 100644
+index 716ecb7..b1b98e0 100644
 --- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
 +++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
-@@ -1,5 +1,5 @@
+@@ -1,4 +1,5 @@
  import { TextStyle } from 'react-native'
--import { ScaleTime, ScaleLinear } from 'd3'
-+import { ScaleTime, ScaleLinear } from 'd3-scale'
++// @ts-ignore
+ import { ScaleTime, ScaleLinear } from 'd3'
  
  export type ToolTipTextRenderersInput = {
-   x: number
-diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig
-new file mode 100644
-index 0000000..716ecb7
---- /dev/null
-+++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig
-@@ -0,0 +1,43 @@
-+import { TextStyle } from 'react-native'
-+import { ScaleTime, ScaleLinear } from 'd3'
-+
-+export type ToolTipTextRenderersInput = {
-+  x: number
-+  y: number
-+  scaleX: ScaleTime<number, number> | ScaleLinear<number, number>
-+  scaleY: ScaleLinear<number, number>
-+  selectedBarNumber: number
-+}
-+
-+type ToolTipPartialProps = {
-+  height?: number
-+  width?: number
-+}
-+
-+export type ToolTipProps = ToolTipPartialProps & {
-+  borderRadius?: number
-+  fontSize?: number
-+  textStyles?: TextStyle[]
-+  toolTipTextRenderers?: Array<
-+    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => { text: string }
-+  >
-+  backgroundColor?: string
-+  displayTriangle?: boolean
-+  lockTriangleCenter?: boolean
-+  displayToolTip?: boolean
-+}
-+
-+export type ToolTipDefaultProps = {
-+  borderRadius: number
-+  fontSize: number
-+  textStyles: TextStyle[]
-+  toolTipTextRenderers: Array<
-+    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => { text: string }
-+  >
-+  backgroundColor: string
-+  displayTriangle: boolean
-+  lockTriangleCenter: boolean
-+  displayToolTip: boolean
-+}
-+
-+export type ToolTipComponentProps = ToolTipDefaultProps & ToolTipPartialProps
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/utils/types.ts
+index 9631f43..3c78f86 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/utils/types.ts
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/utils/types.ts
+@@ -1,4 +1,5 @@
+ import { StyleProp, ViewStyle, Animated } from 'react-native'
++// @ts-ignore
+ import * as shape from 'd3-shape'
+ import { GradientProps } from '../components/chartComponents/charts/utils/types'
+ import {
+@@ -7,6 +8,7 @@ import {
+ } from '../components/chartComponents/axis/utils/types'
+ import { ToolTipProps } from '../components/toolTip/utils/types'
+ import { CursorProps } from '../components/cursor/utils/types'
++import type { JSX } from 'react'
+ 
+ export type ExtendedAnimatedValue = Animated.Value & {
+   // __getValue is a unexposed method on Animated.Value
