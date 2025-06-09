@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import InAppReview from 'react-native-in-app-review'
@@ -9,9 +10,10 @@ import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
+import { ReviewTriggerData } from '../types/types'
+import { readLocalAccountSettings, writeReviewTriggerData } from './LocalSettingsActions'
 
-// File to store all review trigger data
-export const REVIEW_TRIGGER_DATA_FILE = 'reviewTriggerData.json'
+// Legacy file for backward compatibility
 export const SWAP_COUNT_DATA_FILE = 'swapCountData.json' // Legacy file for backward compatibility
 
 // Trigger thresholds
@@ -21,31 +23,7 @@ export const TRANSACTION_COUNT_THRESHOLD = 10
 export const FIAT_PURCHASE_COUNT_THRESHOLD = 6
 export const ACCOUNT_UPGRADE_DAYS_THRESHOLD = 3
 
-/**
- * Interface for the data structure saved to disk
- */
-export interface ReviewTriggerData {
-  /** Review status */
-  nextTriggerDate?: string // ISO date string for when the next review can be requested
-
-  /** Swap trigger */
-  swapCount: number
-
-  /** Deposit trigger */
-  depositAmountUsd: number // Tracks total deposits in USD
-
-  /** Transaction trigger */
-  transactionCount: number
-
-  /** Fiat purchase trigger */
-  fiatPurchaseCount: number
-
-  /** Account upgrade trigger */
-  accountUpgraded: boolean
-
-  /** List of logged in day timestamps after upgrading */
-  daysSinceUpgrade: string[]
-}
+// ReviewTriggerData interface is now defined in types.ts
 
 /**
  * Initialize review trigger data with default values
@@ -56,7 +34,8 @@ const initReviewTriggerData = (): ReviewTriggerData => ({
   transactionCount: 0,
   fiatPurchaseCount: 0,
   accountUpgraded: false,
-  daysSinceUpgrade: []
+  daysSinceUpgrade: [],
+  nextTriggerDate: undefined
 })
 
 /**
@@ -97,19 +76,24 @@ const requestReview = async (): Promise<boolean> => {
 }
 
 /**
- * Read the current review trigger data from disk
+ * Read the current review trigger data from account settings
  * Handles migration from old data file if necessary
  */
-const readReviewTriggerData = async (account: any): Promise<ReviewTriggerData> => {
+export const readReviewTriggerData = async (account: EdgeAccount): Promise<ReviewTriggerData> => {
   try {
-    // Try to read from the new data file
-    const dataStr = await account.disklet.getText(REVIEW_TRIGGER_DATA_FILE)
-    return JSON.parse(dataStr)
-  } catch (e: any) {
-    // File doesn't exist yet, so check for legacy file
+    // Get settings from account
+    const settings = await readLocalAccountSettings(account)
+
+    // If review trigger data exists in settings, use it
+    if (settings.reviewTrigger != null) {
+      return settings.reviewTrigger
+    }
+
+    // Settings exists but no review trigger data yet
+    // Check for legacy file
     try {
       // Check if old swap count file exists and migrate data
-      const swapCountDataStr = await account.disklet.getText(SWAP_COUNT_DATA_FILE)
+      const swapCountDataStr = await account.localDisklet.getText(SWAP_COUNT_DATA_FILE)
       const swapCountData = JSON.parse(swapCountDataStr)
 
       // Initialize new data structure with old swap count data
@@ -126,26 +110,41 @@ const readReviewTriggerData = async (account: any): Promise<ReviewTriggerData> =
         migratedData.nextTriggerDate = nextYear.toISOString()
       }
 
-      // Save the migrated data to the new file
-      await saveReviewTriggerData(account, migratedData)
+      // Save the migrated data to settings
+      await writeReviewTriggerData(account, migratedData)
 
       // Return the migrated data
       return migratedData
     } catch (err: any) {
-      // Neither file exists, so initialize with defaults
+      // Legacy file doesn't exist either, initialize with defaults
       return initReviewTriggerData()
     }
+  } catch (e: any) {
+    // Error reading settings, return defaults
+    return initReviewTriggerData()
   }
 }
 
 /**
- * Save review trigger data to disk
+ * Save review trigger data to account settings
+ * First reads existing data and merges with provided data
  */
-const saveReviewTriggerData = async (account: any, data: ReviewTriggerData): Promise<void> => {
-  const dataStr = JSON.stringify(data)
-  await account.disklet.setText(REVIEW_TRIGGER_DATA_FILE, dataStr).catch((e: unknown) => {
-    console.log(`RequestReviewActions: Error writing file ${REVIEW_TRIGGER_DATA_FILE}:`, e)
-  })
+const saveReviewTriggerData = async (account: EdgeAccount, data: Partial<ReviewTriggerData>): Promise<void> => {
+  try {
+    // Read existing data first to ensure we preserve any fields not included in the update
+    const existingData = await readReviewTriggerData(account)
+
+    // Merge existing data with updates
+    const mergedData: ReviewTriggerData = {
+      ...existingData,
+      ...data
+    }
+
+    // Save the merged data to settings
+    await writeReviewTriggerData(account, mergedData)
+  } catch (e: unknown) {
+    console.log('RequestReviewActions: Error writing review trigger data to settings:', e)
+  }
 }
 
 /**
@@ -185,13 +184,17 @@ const setNextTriggerDate = (data: ReviewTriggerData, reviewed: boolean): ReviewT
 /**
  * Process a potential review trigger
  */
-const processReviewTrigger = async (account: any, data: ReviewTriggerData, shouldReset: (data: ReviewTriggerData) => ReviewTriggerData): Promise<void> => {
+const processReviewTrigger = async (
+  account: EdgeAccount,
+  data: ReviewTriggerData,
+  resetFunction: (data: ReviewTriggerData) => Partial<ReviewTriggerData>
+): Promise<void> => {
   if (shouldTriggerReview(data)) {
     const reviewed = await requestReview()
     // Set next trigger date appropriately
     const updatedData = setNextTriggerDate(data, reviewed)
     // Reset the counter that triggered this review
-    const resetData = shouldReset(updatedData)
+    const resetData = resetFunction(updatedData)
     await saveReviewTriggerData(account, resetData)
   } else {
     // Threshold reached but cannot trigger yet. Persist updated data
@@ -203,30 +206,33 @@ const processReviewTrigger = async (account: any, data: ReviewTriggerData, shoul
  * Handle the swap trigger
  */
 export const updateSwapCount = (): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // Increment swap count
-    const updatedData = {
-      ...data,
-      swapCount: data.swapCount + 1
-    }
+      // Increment swap count
+      const updatedData = {
+        ...data,
+        swapCount: data.swapCount + 1
+      }
 
-    // Check if threshold reached
-    if (updatedData.swapCount >= SWAP_COUNT_THRESHOLD) {
-      await processReviewTrigger(
-        account,
-        updatedData,
-        // Reset function to clear swap count
-        data => ({ ...data, swapCount: 0 })
-      )
-    } else {
-      // Just save the updated count
-      await saveReviewTriggerData(account, updatedData)
+      // Check if threshold has been reached
+      if (updatedData.swapCount >= SWAP_COUNT_THRESHOLD) {
+        // Process potential review trigger
+        await processReviewTrigger(account, updatedData, data => ({
+          ...data,
+          swapCount: 0 // Reset swap count after triggering review
+        }))
+      } else {
+        // Just update the data without triggering
+        await saveReviewTriggerData(account, updatedData)
+      }
+    } catch (e: unknown) {
+      console.log('Error updating swap count:', e)
     }
   }
 }
@@ -235,30 +241,33 @@ export const updateSwapCount = (): ThunkAction<Promise<void>> => {
  * Handle the deposit trigger - tracks deposits in USD
  */
 export const updateDepositAmount = (amountUsd: number): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // Add deposit amount (in USD)
-    const updatedData = {
-      ...data,
-      depositAmountUsd: data.depositAmountUsd + amountUsd
-    }
+      // Add deposit amount (in USD)
+      const updatedData = {
+        ...data,
+        depositAmountUsd: data.depositAmountUsd + amountUsd
+      }
 
-    // Check if threshold reached
-    if (updatedData.depositAmountUsd >= DEPOSIT_AMOUNT_THRESHOLD) {
-      await processReviewTrigger(
-        account,
-        updatedData,
-        // Reset function to clear deposit amount
-        data => ({ ...data, depositAmountUsd: 0 })
-      )
-    } else {
-      // Just save the updated amount
-      await saveReviewTriggerData(account, updatedData)
+      // Check if threshold has been reached
+      if (updatedData.depositAmountUsd >= DEPOSIT_AMOUNT_THRESHOLD) {
+        // Process potential review trigger
+        await processReviewTrigger(account, updatedData, data => ({
+          ...data,
+          depositAmountUsd: 0 // Reset deposit amount after triggering review
+        }))
+      } else {
+        // Just update the data without triggering
+        await saveReviewTriggerData(account, updatedData)
+      }
+    } catch (e: unknown) {
+      console.log('Error updating deposit amount:', e)
     }
   }
 }
@@ -269,30 +278,34 @@ export const updateDepositAmount = (amountUsd: number): ThunkAction<Promise<void
  * or send operation, avoiding double counting for swaps/sells.
  */
 export const updateTransactionCount = (): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // Increment transaction count
-    const updatedData = {
-      ...data,
-      transactionCount: data.transactionCount + 1
-    }
+      // Increment transaction count
+      const updatedData = {
+        ...data,
+        transactionCount: data.transactionCount + 1
+      }
 
-    // Check if threshold reached
-    if (updatedData.transactionCount >= TRANSACTION_COUNT_THRESHOLD) {
-      await processReviewTrigger(
-        account,
-        updatedData,
-        // Reset function to clear transaction count
-        data => ({ ...data, transactionCount: 0 })
-      )
-    } else {
-      // Just save the updated count
-      await saveReviewTriggerData(account, updatedData)
+      // Check if threshold reached
+      if (updatedData.transactionCount >= TRANSACTION_COUNT_THRESHOLD) {
+        await processReviewTrigger(
+          account,
+          updatedData,
+          // Reset function to clear transaction count
+          data => ({ ...data, transactionCount: 0 })
+        )
+      } else {
+        // Just save the updated count
+        await saveReviewTriggerData(account, updatedData)
+      }
+    } catch (e: unknown) {
+      console.log('Error updating transaction count:', e)
     }
   }
 }
@@ -301,30 +314,34 @@ export const updateTransactionCount = (): ThunkAction<Promise<void>> => {
  * Handle the fiat purchase trigger - counts fiat purchases/sells
  */
 export const updateFiatPurchaseCount = (): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // Increment fiat purchase count
-    const updatedData = {
-      ...data,
-      fiatPurchaseCount: data.fiatPurchaseCount + 1
-    }
+      // Increment fiat purchase count
+      const updatedData = {
+        ...data,
+        fiatPurchaseCount: data.fiatPurchaseCount + 1
+      }
 
-    // Check if threshold reached
-    if (updatedData.fiatPurchaseCount >= FIAT_PURCHASE_COUNT_THRESHOLD) {
-      await processReviewTrigger(
-        account,
-        updatedData,
-        // Reset function to clear fiat purchase count
-        data => ({ ...data, fiatPurchaseCount: 0 })
-      )
-    } else {
-      // Just save the updated count
-      await saveReviewTriggerData(account, updatedData)
+      // Check if threshold reached
+      if (updatedData.fiatPurchaseCount >= FIAT_PURCHASE_COUNT_THRESHOLD) {
+        await processReviewTrigger(
+          account,
+          updatedData,
+          // Reset function to clear fiat purchase count
+          data => ({ ...data, fiatPurchaseCount: 0 })
+        )
+      } else {
+        // Just save the updated count
+        await saveReviewTriggerData(account, updatedData)
+      }
+    } catch (e: unknown) {
+      console.log('Error updating fiat purchase count:', e)
     }
   }
 }
@@ -333,22 +350,28 @@ export const updateFiatPurchaseCount = (): ThunkAction<Promise<void>> => {
  * Mark account as upgraded from light to full account
  */
 export const markAccountUpgraded = (): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // Mark account as upgraded if it wasn't already
-    if (!data.accountUpgraded) {
+      // Skip if already marked as upgraded
+      if (data.accountUpgraded) return
+
+      // Mark as upgraded and reset days counter
       const updatedData = {
         ...data,
         accountUpgraded: true,
         daysSinceUpgrade: []
       }
 
+      // Save the updated data
       await saveReviewTriggerData(account, updatedData)
+    } catch (e: unknown) {
+      console.log('Error marking account as upgraded:', e)
     }
   }
 }
@@ -358,43 +381,47 @@ export const markAccountUpgraded = (): ThunkAction<Promise<void>> => {
  * Call this when app is launched to potentially record a new day
  */
 export const trackAppUsageAfterUpgrade = (): ThunkAction<Promise<void>> => {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
-    // Read current data
-    const data = await readReviewTriggerData(account)
+    try {
+      // Get review trigger data (handles initialization if needed)
+      const data = await readReviewTriggerData(account)
 
-    // If account is not upgraded, nothing to do
-    if (!data.accountUpgraded) {
-      return
-    }
+      // If account is not upgraded, nothing to do
+      if (!data.accountUpgraded) return
 
-    // Get today's date as YYYY-MM-DD string for comparison
-    const today = new Date().toISOString().split('T')[0]
+      // Get today's date as YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0]
 
-    // Check if we already recorded this day
-    const days = data.daysSinceUpgrade != null ? data.daysSinceUpgrade : []
-    if (!days.includes(today)) {
-      // Add today to the list of days
-      const updatedDays = [...days, today]
+      // Skip if we already recorded usage for today
+      if (data.daysSinceUpgrade.includes(today)) return
+
+      // Add today to the list of days since upgrade
       const updatedData = {
         ...data,
-        daysSinceUpgrade: updatedDays
+        daysSinceUpgrade: [...data.daysSinceUpgrade, today]
       }
 
       // Check if threshold reached
-      if (updatedDays.length >= ACCOUNT_UPGRADE_DAYS_THRESHOLD) {
+      if (updatedData.daysSinceUpgrade.length >= ACCOUNT_UPGRADE_DAYS_THRESHOLD) {
         await processReviewTrigger(
           account,
           updatedData,
-          // Reset function to clear days since upgrade but keep account as upgraded
-          data => ({ ...data, daysSinceUpgrade: [] })
+          // Reset function to clear days counter
+          data => ({
+            ...data,
+            accountUpgraded: false, // Reset upgrade flag
+            daysSinceUpgrade: [] // Clear days list
+          })
         )
       } else {
-        // Just save the updated days
+        // Just save the updated days list
         await saveReviewTriggerData(account, updatedData)
       }
+    } catch (e: unknown) {
+      console.log('Error tracking app usage after upgrade:', e)
     }
   }
 }

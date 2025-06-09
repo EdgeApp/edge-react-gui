@@ -9,6 +9,7 @@ import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
+import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -39,7 +40,6 @@ import { SortedWalletList } from './SortedWalletList'
 import { WalletConnectService } from './WalletConnectService'
 import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
-import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 
 interface Props {
   navigation: NavigationBase

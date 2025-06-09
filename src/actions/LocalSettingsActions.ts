@@ -5,7 +5,16 @@ import { makeEvent } from 'yavent'
 import { showError } from '../components/services/AirshipInstance'
 import { useSelector } from '../types/reactRedux'
 import { ThunkAction } from '../types/reduxTypes'
-import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, NotifState, PasswordReminder, SpendingLimits } from '../types/types'
+import {
+  asLocalAccountSettings,
+  asNotifInfo,
+  LocalAccountSettings,
+  NotifInfo,
+  NotifState,
+  PasswordReminder,
+  ReviewTriggerData,
+  SpendingLimits
+} from '../types/types'
 import { logActivity } from '../util/logger'
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
@@ -180,14 +189,37 @@ export const writeAccountNotifInfo = async (
  * warning will not be shown again for that currency plugin.
  */
 export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
-  // Use a Set to ensure there's no duplicates when adding to this info
-  const updatedSettings = {
-    ...settings,
-    tokenWarningsShown: Array.from(new Set([...settings.tokenWarningsShown, pluginId]))
-  }
+  try {
+    const settings = await readLocalAccountSettings(account)
+    const tokenWarningsShown = settings.tokenWarningsShown ?? []
+    if (tokenWarningsShown.includes(pluginId)) {
+      return settings
+    }
+    const updatedTokenWarningsShown = [...tokenWarningsShown, pluginId]
 
-  return await writeLocalAccountSettings(account, updatedSettings)
+    const updatedSettings = { ...settings, tokenWarningsShown: updatedTokenWarningsShown }
+    return await writeLocalAccountSettings(account, updatedSettings)
+  } catch (e: any) {
+    showError(`Error updating settings: ${String(e)}`)
+    throw e
+  }
+}
+
+/**
+ * Updates the review trigger data in account settings
+ */
+export const writeReviewTriggerData = async (account: EdgeAccount, reviewTriggerData: Partial<ReviewTriggerData>): Promise<LocalAccountSettings> => {
+  try {
+    const settings = await readLocalAccountSettings(account)
+    const currentReviewTrigger = settings.reviewTrigger ?? {}
+    const updatedReviewTrigger = { ...currentReviewTrigger, ...reviewTriggerData }
+
+    const updatedSettings = { ...settings, reviewTrigger: updatedReviewTrigger }
+    return await writeLocalAccountSettings(account, updatedSettings)
+  } catch (e: any) {
+    console.log(`Error updating review trigger data: ${String(e)}`)
+    throw e
+  }
 }
 
 export const readLocalAccountSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {

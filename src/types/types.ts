@@ -199,6 +199,16 @@ export const asNotifInfo = asObject<NotifInfo>({
 const asNotifState = asObject(asNotifInfo)
 export type NotifState = ReturnType<typeof asNotifState>
 
+const asReviewTriggerData = asObject({
+  nextTriggerDate: asOptional(asString),
+  swapCount: asMaybe(asNumber, 0),
+  depositAmountUsd: asMaybe(asNumber, 0),
+  transactionCount: asMaybe(asNumber, 0),
+  fiatPurchaseCount: asMaybe(asNumber, 0),
+  accountUpgraded: asMaybe(asBoolean, false),
+  daysSinceUpgrade: asMaybe(asArray(asString), [])
+})
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
@@ -208,7 +218,8 @@ const asLocalAccountSettingsInner = asObject({
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
   accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({})),
-  tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
+  tokenWarningsShown: asMaybe(asTokenWarningsShown, []),
+  reviewTrigger: asMaybe(asReviewTriggerData, () => asReviewTriggerData({}))
 })
 
 export const asDefaultScreen = asValue('home', 'assets')
@@ -229,6 +240,7 @@ export type PasswordReminder = ReturnType<typeof asPasswordReminder>
 export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
 export type DeviceSettings = ReturnType<typeof asDeviceSettings>
 export type SpendingLimits = ReturnType<typeof asSpendingLimits>
+export type ReviewTriggerData = ReturnType<typeof asReviewTriggerData>
 
 export type SpendAuthType = 'pin' | 'none'
 

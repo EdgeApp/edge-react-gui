@@ -6,8 +6,6 @@ import {
   DEPOSIT_AMOUNT_THRESHOLD,
   FIAT_PURCHASE_COUNT_THRESHOLD,
   markAccountUpgraded,
-  REVIEW_TRIGGER_DATA_FILE,
-  ReviewTriggerData,
   trackAppUsageAfterUpgrade,
   TRANSACTION_COUNT_THRESHOLD,
   updateDepositAmount,
@@ -15,9 +13,12 @@ import {
   updateTransactionCount
 } from '../../actions/RequestReviewActions'
 import { RootState } from '../../reducers/RootReducer'
+import { ReviewTriggerData } from '../../types/types'
 
 // Provide a virtual env.json so importing env.ts does not fail
 jest.mock('../../../env.json', () => ({}), { virtual: true })
+
+const REVIEW_TRIGGER_DATA_FILE = 'review-trigger-data-test.json'
 
 // Mock the store dispatch function
 const mockDispatch = jest.fn() as jest.MockedFunction<Dispatch<Action>>
@@ -78,6 +79,7 @@ describe('RequestReviewActions', () => {
     test('accumulates deposit amounts correctly', async () => {
       // Set up initial data in the disklet
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: 100, // Starting with $100 already deposited
         transactionCount: 0,
@@ -104,6 +106,7 @@ describe('RequestReviewActions', () => {
       const initialAmount = DEPOSIT_AMOUNT_THRESHOLD - 10
 
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: initialAmount,
         transactionCount: 0,
@@ -172,6 +175,7 @@ describe('RequestReviewActions', () => {
   describe('updateTransactionCount', () => {
     test('triggers when transaction count reaches threshold', async () => {
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: 0,
         transactionCount: TRANSACTION_COUNT_THRESHOLD - 1,
@@ -194,6 +198,7 @@ describe('RequestReviewActions', () => {
   describe('updateFiatPurchaseCount', () => {
     test('triggers when fiat purchase count reaches threshold', async () => {
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: 0,
         transactionCount: 0,
@@ -216,6 +221,7 @@ describe('RequestReviewActions', () => {
   describe('account upgrade flow', () => {
     test('marks account upgraded', async () => {
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: 0,
         transactionCount: 0,
@@ -240,6 +246,7 @@ describe('RequestReviewActions', () => {
       jest.setSystemTime(baseDate)
 
       const initialData: ReviewTriggerData = {
+        nextTriggerDate: undefined,
         swapCount: 0,
         depositAmountUsd: 0,
         transactionCount: 0,
