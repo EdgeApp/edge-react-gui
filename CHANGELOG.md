@@ -9,6 +9,7 @@
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
+- fixed: (ETH) Improper Kiln staking balance shown.
 
 ## 4.29.0 (staging)
 
