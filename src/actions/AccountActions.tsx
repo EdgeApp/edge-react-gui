@@ -28,7 +28,7 @@ interface ValidatePasswordOptions {
   warningMessage?: string
 }
 
-export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkAction<Promise<boolean>> {
+export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkAction<Promise<string | undefined>> {
   return async (dispatch, getState) => {
     const { message, submitLabel, title = lstrings.confirm_password_text, warningMessage } = opts
     const state = getState()
@@ -54,6 +54,6 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
       />
     ))
 
-    return password != null
+    return password
   }
 }
