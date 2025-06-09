@@ -2,10 +2,11 @@
 
 ## Unreleased (develop)
 
-- changed: Remove boot logo animation on Android.
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
+- changed: Recent wallets added to the top of the Wallet List when searching
+- changed: Remove boot logo animation on Android.
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
