@@ -2,14 +2,15 @@
 
 ## Unreleased (develop)
 
-- changed: Remove boot logo animation on Android.
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
+- changed: Remove boot logo animation on Android.
 - fixed: (ETH) Improper Kiln staking balance shown.
+- fixed: Informative insufficient funds error message for Velo staking
 
 ## 4.29.0 (staging)
 
