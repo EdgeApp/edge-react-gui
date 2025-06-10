@@ -66,7 +66,7 @@ let mockAccount = {
 }
 
 // Mock settings data storage
-let mockSettings = { ...defaultSettings }
+let mockSettings: LocalAccountSettings = { ...defaultSettings }
 
 // Create a minimal mock state that satisfies what our actions need
 const makeMockRootState = (): RootState => {
@@ -95,7 +95,10 @@ const mockWriteReviewTriggerData = jest.fn().mockImplementation(async (_account:
   // Update the mock settings with the new review trigger data
   mockSettings = { ...mockSettings, reviewTrigger: completeData }
   return mockSettings
-})
+}) as jest.MockedFunction<(
+  account: any,
+  data: Partial<ReviewTriggerData>
+) => Promise<LocalAccountSettings>>
 
 // Mock the LocalSettingsActions functions
 jest.mock('../../actions/LocalSettingsActions', () => ({
@@ -152,10 +155,10 @@ describe('RequestReviewActions', () => {
     await mockDisklet.setText('swapCountData.json', JSON.stringify(mockSwapCountData))
 
     // Setup settings without review trigger data
-    mockSettings = { ...defaultSettings, reviewTrigger: undefined }
+    mockSettings = { ...defaultSettings, reviewTrigger: undefined as any } as LocalAccountSettings
 
     // Mock readLocalAccountSettings to return settings with reviewTrigger
-    mockReadLocalAccountSettings.mockResolvedValueOnce({ ...mockSettings } as LocalAccountSettings)
+    mockReadLocalAccountSettings.mockResolvedValueOnce({ ...mockSettings } as any)
 
     // Setup mock account with disklet
     const testMockAccount = {
@@ -269,10 +272,10 @@ describe('RequestReviewActions', () => {
 
     test('handles legacy file errors gracefully', async () => {
       // Setup settings without review trigger data
-      mockSettings = { ...defaultSettings, reviewTrigger: undefined }
+    mockSettings = { ...defaultSettings, reviewTrigger: undefined as any } as LocalAccountSettings
 
       // Mock readLocalAccountSettings to return settings without reviewTrigger
-      mockReadLocalAccountSettings.mockResolvedValueOnce(mockSettings as LocalAccountSettings)
+      mockReadLocalAccountSettings.mockResolvedValueOnce(mockSettings as any)
 
       // Setup a corrupt legacy file
       await mockDisklet.setText('swapCountData.json', '{invalid:json')
