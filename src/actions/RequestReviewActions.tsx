@@ -10,9 +10,10 @@ import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
+import { asReviewTriggerData, LocalAccountSettings, ReviewTriggerData } from '../types/types'
+import { readLocalAccountSettings, writeLocalAccountSettings } from './LocalSettingsActions'
 
-// File to store all review trigger data
-export const REVIEW_TRIGGER_DATA_FILE = 'reviewTriggerData.json'
+// Legacy file for backward compatibility
 export const SWAP_COUNT_DATA_FILE = 'swapCountData.json' // Legacy file for backward compatibility
 
 // Trigger thresholds
@@ -22,31 +23,7 @@ export const TRANSACTION_COUNT_THRESHOLD = 10
 export const FIAT_PURCHASE_COUNT_THRESHOLD = 6
 export const ACCOUNT_UPGRADE_DAYS_THRESHOLD = 3
 
-/**
- * Interface for the data structure saved to disk
- */
-export interface ReviewTriggerData {
-  /** Review status */
-  nextTriggerDate?: string // ISO date string for when the next review can be requested
-
-  /** Swap trigger */
-  swapCount: number
-
-  /** Deposit trigger */
-  depositAmountUsd: number // Tracks total deposits in USD
-
-  /** Transaction trigger */
-  transactionCount: number
-
-  /** Fiat purchase trigger */
-  fiatPurchaseCount: number
-
-  /** Account upgrade trigger */
-  accountUpgraded: boolean
-
-  /** List of logged in day timestamps after upgrading */
-  daysSinceUpgrade: string[]
-}
+// ReviewTriggerData interface is now defined in types.ts
 
 /**
  * Initialize review trigger data with default values
@@ -57,7 +34,8 @@ const initReviewTriggerData = (): ReviewTriggerData => ({
   transactionCount: 0,
   fiatPurchaseCount: 0,
   accountUpgraded: false,
-  daysSinceUpgrade: []
+  daysSinceUpgrade: [],
+  nextTriggerDate: undefined
 })
 
 /**
@@ -98,16 +76,20 @@ const requestReview = async (): Promise<boolean> => {
 }
 
 /**
- * Read the current review trigger data from disk
+ * Read the current review trigger data from account settings
  * Handles migration from old data file if necessary
  */
-const readReviewTriggerData = async (account: EdgeAccount): Promise<ReviewTriggerData> => {
+export const readReviewTriggerData = async (account: EdgeAccount): Promise<ReviewTriggerData> => {
   try {
-    // Try to read from the new data file
-    const dataStr = await account.disklet.getText(REVIEW_TRIGGER_DATA_FILE)
-    return JSON.parse(dataStr)
-  } catch (e: unknown) {
-    // File doesn't exist yet, so check for legacy file
+    // Get settings from account
+    const settings = await readLocalAccountSettings(account)
+
+    // If review trigger data exists in settings, use it
+    if (settings.reviewTrigger != null) {
+      return settings.reviewTrigger
+    }
+
+    // No review trigger data exists. Check for legacy file
     try {
       // Check if old swap count file exists and migrate data
       const swapCountDataStr = await account.disklet.getText(SWAP_COUNT_DATA_FILE)
@@ -127,26 +109,41 @@ const readReviewTriggerData = async (account: EdgeAccount): Promise<ReviewTrigge
         migratedData.nextTriggerDate = nextYear.toISOString()
       }
 
-      // Save the migrated data to the new file
-      await saveReviewTriggerData(account, migratedData)
+      // Save the migrated data to settings
+      await writeReviewTriggerData(account, migratedData)
 
       // Return the migrated data
       return migratedData
-    } catch (err: unknown) {
-      // Neither file exists, so initialize with defaults
+    } catch (err: any) {
+      // Legacy file doesn't exist either, initialize with defaults
       return initReviewTriggerData()
     }
+  } catch (e: any) {
+    // Error reading settings, return defaults
+    return initReviewTriggerData()
   }
 }
 
 /**
- * Save review trigger data to disk
+ * Save review trigger data to account settings
+ * First reads existing data and merges with provided data
  */
-const saveReviewTriggerData = async (account: EdgeAccount, data: ReviewTriggerData): Promise<void> => {
-  const dataStr = JSON.stringify(data)
-  await account.disklet.setText(REVIEW_TRIGGER_DATA_FILE, dataStr).catch((e: unknown) => {
-    console.log(`RequestReviewActions: Error writing file ${REVIEW_TRIGGER_DATA_FILE}:`, e)
-  })
+const saveReviewTriggerData = async (account: EdgeAccount, data: Partial<ReviewTriggerData>): Promise<void> => {
+  try {
+    // Read existing data first to ensure we preserve any fields not included in the update
+    const existingData = await readReviewTriggerData(account)
+
+    // Merge existing data with updates
+    const mergedData: ReviewTriggerData = {
+      ...existingData,
+      ...data
+    }
+
+    // Save the merged data to settings
+    await writeReviewTriggerData(account, mergedData)
+  } catch (e: unknown) {
+    console.error('saveReviewTriggerData: Error writing review trigger data to settings:', JSON.stringify(e))
+  }
 }
 
 /**
@@ -402,4 +399,14 @@ export const trackAppUsageAfterUpgrade = (): ThunkAction<Promise<void>> => {
       }
     }
   }
+}
+
+/**
+ * Updates the review trigger data in account settings
+ */
+export const writeReviewTriggerData = async (account: EdgeAccount, reviewTriggerData: Partial<ReviewTriggerData>): Promise<LocalAccountSettings> => {
+  const settings = await readLocalAccountSettings(account)
+
+  const updatedSettings: LocalAccountSettings = { ...settings, reviewTrigger: asReviewTriggerData({ ...settings.reviewTrigger, ...reviewTriggerData }) }
+  return await writeLocalAccountSettings(account, updatedSettings)
 }
