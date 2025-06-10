@@ -34,7 +34,14 @@ import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { getBestApyText, getFioStakingBalances, getPluginFromPolicyId, getPositionAllocations, isStakingSupported } from '../../util/stakeUtils'
+import {
+  getBestApyText,
+  getFioStakingBalances,
+  getPluginFromPolicyId,
+  getPoliciesFromPlugins,
+  getPositionAllocations,
+  isStakingSupported
+} from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { convertNativeToDenomination, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
@@ -738,15 +745,7 @@ export function TransactionListTop(props: OwnProps) {
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
-  const stakePolicies = stakePlugins.flatMap(stakePlugin =>
-    stakePlugin
-      .getPolicies({ wallet, pluginId: wallet.currencyInfo.pluginId, currencyCode })
-      .filter(
-        stakePolicy =>
-          !stakePolicy.deprecated &&
-          stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)
-      )
-  )
+  const stakePolicies = getPoliciesFromPlugins(stakePlugins, stakePositionMap, wallet, currencyCode)
 
   const displayDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode))
   const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)

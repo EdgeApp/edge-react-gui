@@ -55,7 +55,7 @@ const TC_SAVERS_WITHDRAWAL_SCALE_UNITS = '10000'
 const DIVIDE_PRECISION = 18
 
 // Thorchain max units per 1 unit of any supported currency
-export const THOR_LIMIT_UNITS = '100000000'
+const THOR_LIMIT_UNITS = '100000000'
 const EVM_SEND_GAS = '80000'
 
 interface PolicyCurrencyInfo {
@@ -127,12 +127,7 @@ const asQuoteDeposit = asEither(
 )
 
 const tcChainCodePluginIdMap: StringMap = {
-  AVAX: 'avalanche',
   BTC: 'bitcoin',
-  BCH: 'bitcoincash',
-  BSC: 'binancesmartchain',
-  DOGE: 'dogecoin',
-  ETH: 'ethereum',
   LTC: 'litecoin'
 }
 
@@ -215,9 +210,9 @@ const policyCurrencyInfos: { [pluginId: string]: PolicyCurrencyInfo } = {
 }
 
 const stakeProviderInfo: StakeProviderInfo = {
-  displayName: 'Thorchain Savers',
-  pluginId: 'thorchain',
-  stakeProviderId: 'tcsavers'
+  displayName: 'Thorchain Savers (Bech32)',
+  pluginId: 'thorchain-bech32',
+  stakeProviderId: 'tcsavers-bech32'
 }
 
 const policyDefault = {
@@ -260,7 +255,7 @@ let inboundAddressesLastUpdate: number = 0
 // prevents the claim button from being available while the thornode updates its state
 const claimedTcyHack = new Set<string>()
 
-export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
+export const makeTcSaversPluginSegwit = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
   if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
     return
   }
@@ -286,7 +281,7 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
 
           policies.push({
             ...policyDefault,
-            stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}`,
+            stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}-bech32`,
             rewardAssets: [{ pluginId: 'thorchainrune', currencyCode: 'TCY' }],
             stakeAssets: [{ pluginId, currencyCode }],
             deprecated: true
@@ -1530,10 +1525,13 @@ const getPrimaryAddress = async (
   parentBalance: string
 }> => {
   const tokenId = getWalletTokenId(wallet, currencyCode)
-  const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({
-    forceIndex: 0,
-    tokenId
-  })
+  const edgeAddresses = await wallet.getAddresses({ tokenId: null, forceIndex: 0 })
+  const edgeAddress = edgeAddresses.find(eAddress => eAddress.addressType === 'segwitAddress')
+  if (edgeAddress == null) {
+    throw new Error('No segwit address found')
+  }
+
+  const { publicAddress, nativeBalance } = edgeAddress
 
   // If this is a single address chain (ie ETH, AVAX)
   // then the address balance is always the wallet balance

@@ -1,7 +1,7 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { mul } from 'biggystring'
 import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
+import { EdgeAssetAction, EdgeMemo, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -174,23 +174,45 @@ const NETWORK_CODE_PLUGINID_MAP: StringMap = {
   arbitrum: 'arbitrum',
   avalanche_c_chain: 'avalanche',
   base: 'base',
+  binance_smart_chain: 'binancesmartchain',
   bitcoin: 'bitcoin',
   bitcoin_cash: 'bitcoincash',
   cardano: 'cardano',
   cosmos: 'cosmoshub',
   dogecoin: 'dogecoin',
   ethereum: 'ethereum',
+  hedera: 'hedera',
   litecoin: 'litecoin',
   optimism: 'optimism',
   osmosis: 'osmosis',
   polygon: 'polygon',
   ripple: 'ripple',
   solana: 'solana',
+  s_sonic: 'sonic',
   stellar: 'stellar',
   sui: 'sui',
+  tezos: 'tezos',
   tron: 'tron',
   ton: 'ton',
   zksync: 'zksync'
+}
+
+// Special case memo creation for plugins
+// Memo type is not documented by Moonpay but can be inferred from /currencies response field "addressTagRegex"
+const createMemo = (pluginId: string, value: string): EdgeMemo => {
+  const memo: EdgeMemo = {
+    type: 'text',
+    value,
+    hidden: true
+  }
+
+  switch (pluginId) {
+    case 'ripple': {
+      memo.type = 'number'
+      memo.memoName = 'destination tag'
+    }
+  }
+  return memo
 }
 
 const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefined>> = {
@@ -616,13 +638,7 @@ export const moonpayProvider: FiatProviderFactory = {
                         }
 
                         if (depositWalletAddressTag != null) {
-                          spendInfo.memos = [
-                            {
-                              type: 'text',
-                              value: depositWalletAddressTag,
-                              hidden: true
-                            }
-                          ]
+                          spendInfo.memos = [createMemo(coreWallet.currencyInfo.pluginId, depositWalletAddressTag)]
                         }
 
                         const sendParams: SendScene2Params = {

@@ -108,6 +108,22 @@ export const SettingsScene = (props: Props) => {
     }
   })
 
+  /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
+  const hasLock = async (): Promise<boolean> => {
+    if (isLocked) {
+      const passwordValid = await handleShowUnlockSettingsModal().catch(err => {
+        showError(err)
+        return false
+      })
+      if (!passwordValid) return true
+      dispatch({
+        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+        data: false
+      })
+    }
+    return false
+  }
+
   const handleUpdateTouchId = useHandler(async () => {
     await dispatch(updateTouchIdEnabled(!touchIdEnabled, account))
   })
@@ -147,7 +163,7 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleShowUnlockSettingsModal = useHandler(async () => {
-    await dispatch(showUnlockSettingsModal())
+    return await dispatch(showUnlockSettingsModal())
   })
 
   const handleToggleDisableAnimations = useHandler(async () => {
@@ -160,27 +176,28 @@ export const SettingsScene = (props: Props) => {
     dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
-  const handleChangePassword = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePassword')
+  const handleChangePassword = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('changePassword')
   })
 
-  const handleChangePin = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('changePin')
+  const handleChangePin = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('changePin')
   })
 
-  const handleChangeOtp = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('otpSetup')
+  const handleChangeOtp = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('otpSetup')
   })
 
-  const handleChangeRecovery = useHandler((): void => {
-    isLocked ? handleUnlock() : navigation.navigate('passwordRecovery')
+  const handleChangeRecovery = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
+    navigation.navigate('passwordRecovery')
   })
 
   const handleDeleteAccount = useHandler(async () => {
-    if (isLocked) {
-      handleUnlock()
-      return
-    }
+    if (await hasLock()) return
 
     const approveDelete = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
@@ -216,11 +233,8 @@ export const SettingsScene = (props: Props) => {
     ))
   })
 
-  const handleDuressMode = useHandler(() => {
-    if (isLocked) {
-      handleUnlock()
-      return
-    }
+  const handleDuressMode = useHandler(async () => {
+    if (await hasLock()) return
     navigation.navigate('duressModeSetting')
   })
 
@@ -228,7 +242,8 @@ export const SettingsScene = (props: Props) => {
     navigation.navigate('swapSettings')
   })
 
-  const handleSpendingLimits = useHandler((): void => {
+  const handleSpendingLimits = useHandler(async (): Promise<void> => {
+    if (await hasLock()) return
     navigation.navigate('spendingLimits')
   })
 
@@ -348,6 +363,7 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_pin} onPress={handleChangePin} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
+              <SettingsTappableRow disabled={isLocked} label={lstrings.spending_limits} onPress={handleSpendingLimits} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.title_duress_mode} onPress={handleDuressMode} />
               <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
             </EdgeCard>
@@ -357,7 +373,6 @@ export const SettingsScene = (props: Props) => {
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
           <EdgeCard sections>
             {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
-            <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
             <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
             <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
 

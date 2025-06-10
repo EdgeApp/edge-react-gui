@@ -71,6 +71,11 @@ export function Services(props: Props) {
     if (isFioModalShown) return
     isFioModalShown = true
 
+    // Duress accounts don't need to create a FIO handle:
+    if (account.isDuressAccount) {
+      return
+    }
+
     const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
     const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
 

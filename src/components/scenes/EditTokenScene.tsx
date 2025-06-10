@@ -70,6 +70,10 @@ function EditTokenSceneComponent(props: Props) {
     return out
   })
 
+  // Keep track of whether we auto-completed a token:
+  const [didAutoCompleteToken, setDidAutoCompleteToken] = React.useState<boolean>(false)
+  const isAutoCompleteTokenLoading = React.useRef<boolean>(false)
+
   const handleDelete = useHandler(async () => {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
@@ -187,10 +191,72 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
+  const autoCompleteToken = async (searchString: string) => {
+    if (
+      // Ignore autocomplete if it's already loading
+      isAutoCompleteTokenLoading.current ||
+      // and ggnore autocomplete if the scene was initialized with any of the token details prefilled,
+      route.params.currencyCode != null ||
+      route.params.displayName != null ||
+      route.params.multiplier != null ||
+      route.params.networkLocation != null
+    ) {
+      return
+    }
+
+    isAutoCompleteTokenLoading.current = true
+    const [token] = await wallet.currencyConfig.getTokenDetails({ contractAddress: searchString }).catch(() => [])
+    isAutoCompleteTokenLoading.current = false
+
+    if (token != null) {
+      setCurrencyCode(token.currencyCode)
+      setDisplayName(token.displayName)
+      setDecimalPlaces((token.denominations[0].multiplier.length - 1).toString())
+      setDidAutoCompleteToken(true)
+    } else if (token == null && didAutoCompleteToken) {
+      setCurrencyCode('')
+      setDisplayName('')
+      setDecimalPlaces('18')
+      setDidAutoCompleteToken(false)
+    }
+  }
+
+  const renderCustomTokenTemplateRows = () => {
+    return customTokenTemplate
+      .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
+      .map(item => {
+        if (item.type === 'nativeAmount') return null
+        return (
+          <FilledTextInput
+            key={item.key}
+            aroundRem={0.5}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus={false}
+            placeholder={translateDescription(item.displayName)}
+            keyboardType={item.type === 'number' ? 'numeric' : 'default'}
+            value={location.get(item.key) ?? ''}
+            onChangeText={value => {
+              setLocation(location => {
+                const out = new Map(location)
+                out.set(item.key, value.replace(/\s/g, ''))
+                return out
+              })
+
+              if (item.key === 'contractAddress') {
+                autoCompleteToken(value).catch(() => {})
+              }
+            }}
+          />
+        )
+      })
+  }
+
   return (
     <SceneWrapper avoidKeyboard>
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        {renderCustomTokenTemplateRows()}
         <FilledTextInput
           aroundRem={0.5}
           autoCapitalize="characters"
@@ -209,28 +275,6 @@ function EditTokenSceneComponent(props: Props) {
           value={displayName}
           onChangeText={setDisplayName}
         />
-        {customTokenTemplate.map(item => {
-          if (item.type === 'nativeAmount') return null
-          return (
-            <FilledTextInput
-              key={item.key}
-              aroundRem={0.5}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={false}
-              placeholder={translateDescription(item.displayName)}
-              keyboardType={item.type === 'number' ? 'numeric' : 'default'}
-              value={location.get(item.key) ?? ''}
-              onChangeText={value =>
-                setLocation(location => {
-                  const out = new Map(location)
-                  out.set(item.key, value.replace(/\s/g, ''))
-                  return out
-                })
-              }
-            />
-          )
-        })}
         <FilledTextInput
           aroundRem={0.5}
           autoCorrect={false}

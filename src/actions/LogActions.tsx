@@ -235,8 +235,12 @@ function getRepoId(key: string): string {
   return 'Invalid syncKey type'
 }
 
-export const sendLogs = async (logs: LogOutput) => {
+export const sendLogs = async (logs: LogOutput, underDuress: boolean) => {
   console.log('====== SENDING LOGS REQUEST ======')
+
+  if (underDuress) {
+    logs.userMessage += ' (DURESS MODE)'
+  }
 
   return await fetch(logsUri, {
     method: 'PUT',

@@ -157,7 +157,7 @@ export const optimismContractInfoMap = {
 // Ecosystem
 // -----------------------------------------------------------------------------
 
-const rpcProviderUrls = ['https://mainnet.optimism.io', 'https://rpc.ankr.com/optimism']
+const rpcProviderUrls = ['https://mainnet.optimism.io', 'https://optimism-rpc.publicnode.com', 'https://optimism.drpc.org']
 const eco = makeEcosystem(optimismContractInfoMap, rpcProviderUrls)
 export const optimismEcosystem = eco
 

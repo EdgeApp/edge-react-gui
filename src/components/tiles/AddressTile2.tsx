@@ -30,9 +30,12 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
+export type AddressEntryMethod = 'scan' | 'other'
+
 export interface ChangeAddressResult {
   fioAddress?: string
   parsedUri?: EdgeParsedUri
+  addressEntryMethod: AddressEntryMethod
 }
 
 export interface AddressTileRef {
@@ -90,7 +93,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // Handlers
   // ---------------------------------------------------------------------------
 
-  const changeAddress = useHandler(async (address: string) => {
+  const changeAddress = useHandler(async (address: string, addressEntryMethod: AddressEntryMethod) => {
     if (address == null || address === '') return
 
     setLoading(true)
@@ -164,7 +167,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       }
 
       // set address
-      await onChangeAddress({ fioAddress, parsedUri })
+      await onChangeAddress({ fioAddress, parsedUri, addressEntryMethod })
     } catch (e: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
@@ -196,7 +199,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     try {
       // Will throw in case uri is invalid
       await coreWallet.parseUri(clipboard, currencyCode)
-      await changeAddress(clipboard)
+      await changeAddress(clipboard, 'other')
     } catch (error) {
       showError(error, { trackError: false })
     }
@@ -216,7 +219,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     ))
       .then(async (result: string | undefined) => {
         if (result) {
-          await changeAddress(result)
+          await changeAddress(result, 'scan')
         }
       })
       .catch(error => {
@@ -230,7 +233,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     ))
       .then(async result => {
         if (result) {
-          await changeAddress(result)
+          await changeAddress(result, 'other')
         }
       })
       .catch(error => {
@@ -263,7 +266,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         // Prefer segwit address if the selected wallet has one
         const { segwitAddress, publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
         const address = segwitAddress != null ? segwitAddress : publicAddress
-        await changeAddress(address)
+        await changeAddress(address, 'other')
       })
       .catch(err => showError(err))
   })
@@ -282,7 +285,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
 
   React.useImperativeHandle(ref, () => ({
     async onChangeAddress(address: string) {
-      await changeAddress(address)
+      await changeAddress(address, 'other')
     }
   }))
 

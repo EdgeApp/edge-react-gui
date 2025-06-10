@@ -10,10 +10,11 @@ import {
   StakePositionRequest
 } from '../types'
 import { CardanoPooledKilnAdapterConfig, makeCardanoKilnAdapter } from './policyAdapters/CardanoKilnAdaptor'
-import { CoreumNativeStakeKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
+import { CoreumNativeStakeKitAdapterConfig, makeStakeKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
 import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
+import { makeThorchainYieldAdapter, ThorchainYieldAdapterConfig } from './policyAdapters/ThorchainYieldAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
 import { StakePluginInfo, StakePolicyConfig } from './types'
 
@@ -71,13 +72,15 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
     case 'cardano-pooled-kiln':
       return makeCardanoKilnAdapter(policyInfo as StakePolicyConfig<CardanoPooledKilnAdapterConfig>)
     case 'coreum-native-stake-kit':
-      return makeSkateKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>)
+      return makeStakeKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>)
     case 'ethereum-pooled-kiln':
       return makeEthereumKilnAdapter(policyInfo as StakePolicyConfig<EthereumPooledKilnAdapterConfig>)
     case 'glif-infinity-pool':
       return makeGlifInfinityPoolAdapter(policyInfo as StakePolicyConfig<GlifInfinityPoolAdapterConfig>)
     case 'tarot-velodrome-pool':
       return makeTarotPoolAdapter(policyInfo as StakePolicyConfig<TarotPoolAdapterConfig>)
+    case 'thorchain-yield':
+      return makeThorchainYieldAdapter(policyInfo as StakePolicyConfig<ThorchainYieldAdapterConfig>)
     default:
       throw new Error('Unknown policyInfo')
   }

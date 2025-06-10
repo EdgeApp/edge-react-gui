@@ -1,4 +1,4 @@
-import { add, round } from 'biggystring'
+import { add, gt, round } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -6,6 +6,7 @@ import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { PositionAllocation, StakeAssetInfo, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
+import { StakePositionMap } from '../reducers/StakingReducer'
 import { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
 import { getTokenId } from './CurrencyInfoHelpers'
@@ -177,4 +178,28 @@ export const getBestApyText = (stakePolicies?: StakePolicy[]): string | undefine
  */
 export const isStakingSupported = (pluginId: string): boolean => {
   return SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true
+}
+
+/**
+ * Returns all policies relevant to the wallet and currency code, including deprecated policies that have non-zero allocations.
+ */
+export const getPoliciesFromPlugins = (
+  stakePlugins: StakePlugin[],
+  stakePositionMap: StakePositionMap,
+  wallet: EdgeCurrencyWallet,
+  currencyCode: string
+): StakePolicy[] => {
+  return stakePlugins.flatMap(stakePlugin =>
+    stakePlugin
+      .getPolicies({ wallet, pluginId: wallet.currencyInfo.pluginId, currencyCode })
+      .filter(
+        stakePolicy =>
+          (!stakePolicy.deprecated &&
+            stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)) ||
+          (stakePolicy.deprecated &&
+            stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
+              allocation => allocation.pluginId === wallet.currencyInfo.pluginId && allocation.currencyCode === currencyCode && gt(allocation.nativeAmount, '0')
+            ))
+      )
+  )
 }

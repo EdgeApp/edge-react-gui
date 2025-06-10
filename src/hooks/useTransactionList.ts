@@ -83,16 +83,35 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     // Don't restart the stream if a transaction changes,
     // but just overlay the new transactions over the old ones:
     const cleanupChanged = wallet.on('transactionsChanged', txs => {
-      let relevant = false
+      // Make a set of existing transactions:
       const existingTxidsSet = new Set<string>()
       streamedTxs.forEach(tx => existingTxidsSet.add(tx.txid))
+      const oldestTx = streamedTxs[streamedTxs.length - 1]
+
+      // Figure out what type of change this is:
+      let resync = false
+      let relevant = false
       for (const tx of txs) {
-        if (tx.tokenId === tokenId && existingTxidsSet.has(tx.txid)) {
+        if (!existingTxidsSet.has(tx.txid)) {
+          // If we don't have this transaction,
+          // but it's above the bottom of our list,
+          // then we have problem and need a refresh.
+          if (oldestTx == null || tx.date >= oldestTx.date) {
+            resync = true
+          }
+        } else if (tx.tokenId === tokenId) {
+          // Stomp our existing transaction with the same id:
           relevant = true
           changedTxs.set(tx.txid, tx)
         }
       }
-      if (relevant) requestRender()
+
+      if (resync) restartStream()
+      else if (relevant) requestRender()
+    })
+
+    const cleanupRemoved = wallet.on('transactionsRemoved', () => {
+      restartStream()
     })
 
     // Constructs a new stream, then updates `cleanupStream` and `requestMore`:
@@ -160,6 +179,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
     return () => {
       cleanupNew()
       cleanupChanged()
+      cleanupRemoved()
       cleanupStream()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

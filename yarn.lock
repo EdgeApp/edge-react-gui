@@ -2162,9 +2162,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -8695,10 +8695,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.27.4:
-  version "2.27.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.27.4.tgz#e1b8d5edfd6c12c07bcc3e6d7bd274a86528c377"
-  integrity sha512-/uj1X5w2LfiCXiYsOKEPHclBH8D1f3kIB3WGQq4r0Itr78ksMbsUS/ow5kwqqnNtuEvcIG6EMkQmb/GppAueag==
+edge-core-js@^2.31.1:
+  version "2.31.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.31.1.tgz#90eebb68eb1d1e080957533f291a0749e03ac6b4"
+  integrity sha512-VLlvpVZgbK19Z9yc2EoE/nCgfS89s/0MtiRpig4fM/S0NgTzvSZJ3uaNRHCszSEwxyYXh5upvMrNZSCXgpS83g==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -8720,10 +8720,10 @@ edge-core-js@^2.27.4:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@4.47.2:
-  version "4.47.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.47.2.tgz#5d2c5898b81106b10cd79e8cf53d49d2611be4f2"
-  integrity sha512-WDlDtl59H9ZHIPcyqWGML7YJ2ikOnRA6HWiSoCeIEKbNAkOfYiEy17n5nAUP6JkfGnQPj9BnGLWDHLPUDU6toQ==
+edge-currency-accountbased@^4.48.3:
+  version "4.48.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.48.3.tgz#394312e377283770d624cf10af8afe61505b454b"
+  integrity sha512-aoEb8jGwX9QnCWcWbHJ33ed1mOAFvC45AQKG0B6t2e+wwXYhT0KLi6mcGXN9eFRij9tigjtzgONF/9OlDnCkoA==
   dependencies:
     "@chain-registry/client" "^1.53.59"
     "@cosmjs/stargate" "^0.32.3"
@@ -8783,10 +8783,10 @@ edge-currency-monero@^1.5.0:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.7.0.tgz#ab0c2ae59e60371dc7886ed86b29a1dd3d15e4fc"
-  integrity sha512-V7fz588MOxaqkUEA7iFFRlWUenOs5KBlO4I4OY3+0EgmYbNaH7c+R9AX6TtaaPYwuxtaW+t4Bu1PmHa0FTomVQ==
+edge-currency-plugins@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.8.2.tgz#2f7cac797263f370b459449134428472fe999713"
+  integrity sha512-6YU9SYQLk/6izgZf3nX2IGN/W0SGXvGfuhy3w6zarGUXm87Ds7KEWu6yvrPiNZFUKnftCSqParIOtThKZjUNVg==
   dependencies:
     "@bitcoinerlab/secp256k1" "^1.2.0"
     altcoin-js "^1.0.0"
@@ -8813,10 +8813,10 @@ edge-currency-plugins@^3.7.0:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.23.1:
-  version "2.23.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.23.1.tgz#70ef0a481ae39c09bc8c935970ad81fbc5807b3c"
-  integrity sha512-Mr7B6j7hRFeI4BOgD1sWXdGkHW1xrsIXxgL9ufmkLLP0Z4YFiBXw/s2GNix4900RNH8SZ/7nX39T8oXU7ndgYA==
+edge-exchange-plugins@^2.25.2:
+  version "2.25.2"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.25.2.tgz#124abdc45bdb529afc1ec8b71dcab388928f9280"
+  integrity sha512-ujtPnxdyXOTkeLl7Q4+mpFFjap3XUyx7GJRLWNslOsE4DZWXNlqnn2ibwMlrFrfWh1pcoPo3w7H2rs0z2F309Q==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@unizen-io/unizen-contract-addresses" "^0.0.15"
@@ -8835,10 +8835,10 @@ edge-info-server@^3.8.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.26.1:
-  version "3.26.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.26.1.tgz#4f3dc9b1f01933cb7ea15434c6e7d6ce42977f0c"
-  integrity sha512-ULni9DHxCA+i5r/wJRdNg04r5eLbwTLJjv1+8TDx/zrh/ZbL9+reAyeNp6QGr0GIWtevnITcNc17Lwokgr4MoA==
+edge-login-ui-rn@^3.27.1:
+  version "3.27.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.27.1.tgz#96e333a26f17541ee8c7ba88fe1fad3a0c32fcab"
+  integrity sha512-jAUvJRqSz5PyQk+GMbo4CaTuMSYF5Z386gFsMSIIwXyojcPneIYlolDF/2wzlO5blrNFrZNLAhtVQbjt7raXvg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -10122,9 +10122,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -15372,10 +15372,10 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-mymonero-core@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.1.tgz#5ef77034d2eec9f494e3a4cba78b7f91bf115901"
-  integrity sha512-FD0ePHvF3udSYvGMktQ8SruQ882+cOhlxp6plSCaqtI/Q/D+LTLFLYZ9bukA7iFA4AJ24Y3mkN8Aj5WZjSOOnw==
+react-native-mymonero-core@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.2.tgz#89ab2a13a23abaf9c00b96282651ef08ba3747e2"
+  integrity sha512-Zy9WOUO4yyyO35fjmGFTgt/hDr+2Ga9AunsIS4Y8e+10McEGsPBI5aSeafekjTYKJFAtddYwYPDdEZ56wgS0kg==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -15396,10 +15396,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.9.tgz#b9911fcb3da88008ff86d1bbcffa4195f12dd194"
-  integrity sha512-Hd0gKesWDXf1zEqNVZ3GGa2OUGQW2tr3DClZCGS92jkVVdXf+6ugRlxcA/c46l5P7uznHiwhCoqs3fbU3ptxzg==
+react-native-piratechain@^0.5.10:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.10.tgz#38db920084006c5432d8f2692bfb6420b490ed67"
+  integrity sha512-rezKZ0iDDTVHR3dz6iPJeh7rY8jnyjlSQJxkf24g8cZjlc7E4QqjFLBA7l7GNlV/k99kL+loCc32BZoJgDqO/w==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15518,10 +15518,10 @@ react-native-wheel-picker-android@^2.0.6:
   dependencies:
     moment "^2.22.0"
 
-react-native-zano@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.1.3.tgz#16abcb38dba5aeaad053da084b26cd2946b60035"
-  integrity sha512-bPdZ6FDCK11xvsuBeL5Bw9YXGRHKVY/sXE5SdzhdXdt+rHwwEUFKJEOaSsz/+rt/Fqu92gk10ksNHZq77Sa4ng==
+react-native-zano@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.2.0.tgz#a9ed73ebe72a39009869f0a7eebd9194b4528fd1"
+  integrity sha512-Pk0li1nDjh77v/ef82UHwcAyWDiLmmr+4WcBimsZk17uEk+nbZQPETImW28s5kekv9LNWr6ZoIsjomAeLxWDPg==
   dependencies:
     cleaners "^0.3.17"
 
@@ -16993,9 +16993,9 @@ strip-ansi@^6.0.0, strip-ansi@^6.0.1:
     ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-7.0.1.tgz#61740a08ce36b61e50e65653f07060d000975fb2"
-  integrity sha512-cXNxvT8dFNRVfhVME3JAe98mkXDYN2O1l7jmcwMnOslDeESg1rF/OZMtK0nRAhiari1unG5cD4jG3rapUAkLbw==
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-7.1.0.tgz#d5b6568ca689d8561370b0707685d22434faff45"
+  integrity sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==
   dependencies:
     ansi-regex "^6.0.1"
 

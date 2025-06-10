@@ -581,8 +581,8 @@ export const paybisProvider: FiatProviderFactory = {
           let lastError
           for (const e of pmErrors) {
             lastError = e
-            const maxMatch = e.error.message.match(/^Amount must be less than (\d+\.\d+) ([A-Z]+)/)
-            const minMatch = e.error.message.match(/^Minimum amount is (\d+\.\d+) ([A-Z]+)/)
+            const maxMatch = e.error.message.match(/^Amount must be less than (\d+(?:\.\d+)?) ([A-Z]+)/)
+            const minMatch = e.error.message.match(/^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/)
             if (maxMatch != null) {
               throw new FiatProviderError({
                 providerId,

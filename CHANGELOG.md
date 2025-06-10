@@ -2,13 +2,24 @@
 
 ## Unreleased (develop)
 
+## 4.29.0 (staging)
+
 - added: Add eCash.
+- added: Thorchain TCY stake and unstake
+- added: Add Fantom to Sonic bridge
+- added: Use `getTokenDetails` to auto-complete fields in `EditTokenScene`
 - added: Toast notifications for PIN changes.
+- added: Scam warning to camera access request modal
 - changed: Auto launch QR scanner for multi-out payments if previously used
 - changed: Auto populate amount for multi-out payments if prior amounts are similar
 - changed: Auto scroll to end of `SendScene2` when addresses or amounts change
+- changed: Improved unlock settings UX by removing the extra tap required after successfully unlocking settings
+- changed: Show Thorchain Savers positions associated with bech32 addresses
+- fixed: Disable save button in spending limits scene when transaction value is not set
+- fixed: Fix regex for Paybis min/max amounts
 - fixed: No longer show FIO onboarding modal while in Duress Mode.
 - fixed: Prevent pin changes which match duress pin.
+- fixed: Show deprecated stake policies with allocations
 
 ## 4.28.1 (2025-05-28)
 
@@ -23,13 +34,14 @@
 - added: Add os version to the "OS" line of logs
 - added: Informative fiat currency support errors when requesting Moonpay quotes
 - changed: "MAX" button in `FlipInput` restyled to tertiary and moved next to the text input field
-- fixed: Incorrect type assumptions between `amountQuotePlugin` and `pluginUtils` for error parsing
+- changed: Moved spending limits settings to password-locked account settings section.
 - fixed: Primary button transforming on the animation on `GettingStartedScene`
 - fixed: `NotificationCenterScene` could crash if there was an undismissed new token notification and the associated wallet no longer existed
+- removed: Disable Fantom transaction list
+- fixed: Refresh the tranaction list on resync
 - fixed: Show the correct username in the "Forget Account" modal.
 - fixed: `TransactionListRow` missing timestamp while syncing
 - fixed: Don't show required text for optional import options
-- removed: Disable Fantom transaction list
 
 ## 4.27.2 (2025-05-13)
 

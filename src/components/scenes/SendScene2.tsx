@@ -1,4 +1,4 @@
-import { add, div, gte, lt, mul } from 'biggystring'
+import { abs, add, div, gte, lt, lte, mul, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
@@ -62,12 +62,14 @@ import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/Ex
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
-import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
+import { AddressEntryMethod, AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 
 // TODO: Check contentPadding
+
+const SCROLL_TO_END_DELAY_MS = 150
 
 interface Props extends EdgeAppSceneProps<'send2'> {}
 
@@ -110,12 +112,15 @@ interface FioSenderInfo {
   skipRecord?: boolean
 }
 
-// TODO: For now, do not allow multiple targets to be added via GUI. UX is very poor until
-// animation is added. Waiting for reanimated v3 which fixes crashes in Layout animations.
-// Note: multiple targets can be added via JSON payment protocol to fix payments to Anypay
-// invoices.
 const ALLOW_MULTIPLE_TARGETS = true
 
+/**
+ * If the prior two spend targets of a multi-out payment have the same amount
+ * within 0.5%, then use the same amount for the new spend target.
+ * This makes it MUCH easier to load many gift cards without having to enter
+ * amounts manually.
+ */
+const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
@@ -125,7 +130,9 @@ const SendComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
 
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
@@ -161,6 +168,7 @@ const SendComponent = (props: Props) => {
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
   const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
+  const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<AddressEntryMethod | undefined>(undefined)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -232,7 +240,7 @@ const SendComponent = (props: Props) => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { parsedUri, fioAddress } = changeAddressResult
+      const { addressEntryMethod, parsedUri, fioAddress } = changeAddressResult
 
       if (parsedUri != null) {
         if (parsedUri.metadata != null) {
@@ -241,21 +249,41 @@ const SendComponent = (props: Props) => {
         spendTarget.uniqueIdentifier = parsedUri?.uniqueIdentifier
         spendTarget.publicAddress = parsedUri?.publicAddress
         spendTarget.nativeAmount = parsedUri?.nativeAmount
+
+        if (spendInfo.spendTargets.length > 2 && spendTarget.nativeAmount == null) {
+          // Check if the last two spend targets have the same amount within 0.5%
+          const prevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 2].nativeAmount
+          const pprevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 3].nativeAmount
+
+          if (prevAmount != null && pprevAmount != null) {
+            const diff = abs(sub(prevAmount, pprevAmount))
+            const diffPercent = div(diff, prevAmount, DECIMAL_PRECISION)
+            if (lte(diffPercent, MULTI_OUT_DIFF_PERCENT)) {
+              spendTarget.nativeAmount = prevAmount
+            }
+          }
+        }
         spendTarget.otherParams = {
           fioAddress
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
         // should properly re-render with new spendTargets
+        setLastAddressEntryMethod(addressEntryMethod)
         setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
         setSpendInfo({ ...spendInfo })
+        needsScrollToEnd.current = true
       }
     }
 
   const handleAddressAmountPress = (index: number) => () => {
+    // This is deleting the combo address/amount tile. If this happens, remove the
+    // lastAddressEntryMethod so we don't auto launch the camera again.
+    setLastAddressEntryMethod(undefined)
     spendInfo.spendTargets.splice(index, 1)
     setSpendInfo({ ...spendInfo })
+    needsScrollToEnd.current = true
   }
 
   const renderAddressAmountTile = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -292,6 +320,9 @@ const SendComponent = (props: Props) => {
     setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
+    // This is deleting the amount tile. If this happens, remove the
+    // lastAddressEntryMethod so we don't auto launch the camera again.
+    setLastAddressEntryMethod(undefined)
   }
 
   const renderAddressTile = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -300,7 +331,7 @@ const SendComponent = (props: Props) => {
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
       const title = lstrings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
-      const doOpenCamera = openCameraRef.current
+      const doOpenCamera = openCameraRef.current || (publicAddress === '' && lastAddressEntryMethod === 'scan')
       if (openCameraRef.current) openCameraRef.current = false
 
       return (
@@ -332,6 +363,7 @@ const SendComponent = (props: Props) => {
     setSpendInfo({ ...spendInfo })
     setMaxSpendSetter(-1)
     setFieldChanged(newField)
+    needsScrollToEnd.current = true
   }
 
   const handleSetMax = (index: number) => () => {
@@ -457,6 +489,7 @@ const SendComponent = (props: Props) => {
   const handleAddAddress = useHandler(() => {
     spendInfo.spendTargets.push({})
     setSpendInfo({ ...spendInfo })
+    needsScrollToEnd.current = true
   })
 
   const renderAddAddress = () => {
@@ -1114,6 +1147,19 @@ const SendComponent = (props: Props) => {
     backgroundColors[0] = scaledColor
   }
 
+  React.useEffect(() => {
+    // Hack: While you would think to use InteractionManager.runAfterInteractions,
+    // it doesn't work because several renders occur before the full height is
+    // determined and the scrollToEnd call would be effective.
+    const timeout = setTimeout(() => {
+      if (needsScrollToEnd.current) {
+        scrollViewRef.current?.scrollToEnd(true)
+        needsScrollToEnd.current = false
+      }
+    }, SCROLL_TO_END_DELAY_MS)
+    return () => clearTimeout(timeout)
+  })
+
   return (
     <SceneWrapper
       hasNotifications
@@ -1127,6 +1173,10 @@ const SendComponent = (props: Props) => {
       {({ insetStyle }) => (
         <>
           <StyledKeyboardAwareScrollView
+            innerRef={ref => {
+              const kbRef: KeyboardAwareScrollView | null = ref as any
+              scrollViewRef.current = kbRef
+            }}
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
