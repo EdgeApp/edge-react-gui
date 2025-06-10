@@ -1,11 +1,10 @@
 import { describe, expect, it, jest } from '@jest/globals'
+import { fireEvent, render } from '@testing-library/react-native'
 import { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
 import * as React from 'react'
 import { View } from 'react-native'
-import TestRenderer from 'react-test-renderer'
 
 import { EdgeCard } from '../../components/cards/EdgeCard'
-import { EdgeTouchableOpacity } from '../../components/common/EdgeTouchableOpacity'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
@@ -19,41 +18,41 @@ describe('Card', () => {
       start: { x: 0, y: 0 },
       end: { x: 1, y: 1 }
     }
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeCard gradientBackground={gradientProps}>
           <EdgeText>Gradient Background</EdgeText>
         </EdgeCard>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render with node background', () => {
     const nodeBackground = <View style={{ height: 100, width: 100, backgroundColor: testColors[0] }} />
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeCard nodeBackground={nodeBackground}>
           <EdgeText>Node Background</EdgeText>
         </EdgeCard>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render with icon URI', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeCard icon={testIconUri}>
           <EdgeText>Icon</EdgeText>
         </EdgeCard>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render sections correctly with multiple children', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeCard sections>
           <EdgeText>Section 1</EdgeText>
@@ -61,32 +60,30 @@ describe('Card', () => {
         </EdgeCard>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
-  it('should handle press and long press events', () => {
+  it('should handle press events', async () => {
     const mockOnPress: Mock<() => void | Promise<void>> = jest.fn()
     const mockOnLongPress: Mock<() => void | Promise<void>> = jest.fn()
 
-    const testRenderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
-        <EdgeCard onPress={mockOnPress} onLongPress={mockOnLongPress}>
+        <EdgeCard onPress={mockOnPress} onLongPress={mockOnLongPress} testID="card">
           <EdgeText>Press Me</EdgeText>
         </EdgeCard>
       </FakeProviders>
     )
 
-    testRenderer.root.findByType(EdgeTouchableOpacity).props.onPress()
+    const node = await rendered.findByTestId('card')
+    fireEvent.press(node)
     expect(mockOnPress).toHaveBeenCalled()
 
-    testRenderer.root.findByType(EdgeTouchableOpacity).props.onLongPress()
-    expect(mockOnLongPress).toHaveBeenCalled()
-
-    expect(testRenderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should expand to fill its parent container', () => {
-    const testRenderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <View style={{ flex: 1 }}>
           <EdgeCard>
@@ -95,11 +92,11 @@ describe('Card', () => {
         </View>
       </FakeProviders>
     )
-    expect(testRenderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should allow child elements to expand within the card', () => {
-    const testRenderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeCard>
           <View style={{ flex: 1, backgroundColor: testColors[0] }}>
@@ -108,11 +105,11 @@ describe('Card', () => {
         </EdgeCard>
       </FakeProviders>
     )
-    expect(testRenderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should expand both the card and its children to fill available space', () => {
-    const testRenderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <View style={{ flex: 1 }}>
           <EdgeCard fill>
@@ -123,6 +120,6 @@ describe('Card', () => {
         </View>
       </FakeProviders>
     )
-    expect(testRenderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 })

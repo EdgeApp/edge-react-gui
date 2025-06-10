@@ -1,13 +1,13 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { AdvancedDetailsCard } from '../../components/cards/AdvancedDetailsCard'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('AdvancedDetailsCard', () => {
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <AdvancedDetailsCard
           transaction={{
@@ -30,7 +30,7 @@ describe('AdvancedDetailsCard', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { MenuTabs } from '../../components/themed/MenuTabs'
 import { FakeProviders } from '../../util/fake/FakeProviders'
@@ -8,7 +8,7 @@ import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('MenuTabs', () => {
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <MenuTabs
           // @ts-expect-error
@@ -18,7 +18,7 @@ describe('MenuTabs', () => {
         />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

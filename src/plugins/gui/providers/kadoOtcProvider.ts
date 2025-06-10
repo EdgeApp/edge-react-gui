@@ -20,7 +20,7 @@ import { validateExactRegion } from './common'
 
 // All OTC trades must at least/most meet these amounts in fiat
 const MIN_QUOTE_AMOUNT = '10000'
-const MAX_QUOTE_AMOUNT = '20000000'
+const MAX_QUOTE_AMOUNT = '5000000'
 
 const providerId = 'kadoOtc'
 const storeId = 'money.kado'
@@ -421,12 +421,25 @@ export const kadoOtcProvider: FiatProviderFactory = {
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi } = approveParams
 
-            // Do something to showUi to get the username  and email
-            const userEmail = await showUi.emailForm({
-              message: params.direction === 'buy' ? lstrings.otc_enter_email_to_buy : lstrings.otc_enter_email_to_sell
+            // First, show a confirmation modal asking the user if they want to proceed
+            const confirmResult = await showUi.buttonModal({
+              title: pluginDisplayName,
+              message: lstrings.otc_wire_required_message,
+              buttons: {
+                yes: { label: lstrings.yes },
+                no: { label: lstrings.no }
+              }
             })
 
-            if (userEmail == null) {
+            // If the user doesn't confirm, exit early
+            if (confirmResult !== 'yes') return
+
+            // If confirmed, proceed to get user contact information
+            const userInfo = await showUi.emailForm({
+              message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
+            })
+
+            if (userInfo == null) {
               // User canceled the form scene (navigated back).
               // There is nothing left to do.
               return
@@ -434,15 +447,24 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
             const requestBody = {
               ticket: {
-                subject: 'OTC Order Request',
+                subject: `${pluginDisplayName} Order: $${fiatAmount} (${userInfo.email})`,
                 comment: {
-                  body: `Requesting to ${params.direction} ${cryptoAmount} ${tokenOtherInfo.symbol} for ${fiatAmount} USD using ${paymentType}.`
+                  body: `------ CUSTOMER INFO ------
+Name: ${userInfo.firstName} ${userInfo.lastName}
+Email: ${userInfo.email}
+Location: ${params.regionCode.countryCode}${params.regionCode.stateProvinceCode ? ', ' + params.regionCode.stateProvinceCode : ''}
+
+------ TRANSACTION DETAILS ------
+Request: ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${tokenOtherInfo.symbol}
+For: ${fiatAmount} USD
+Payment Method: ${paymentType}
+`
                 },
                 requester: {
                   // We don't care about their name
                   // And we don't want to ask for their name to lower friction
-                  name: userEmail,
-                  email: userEmail
+                  name: `${userInfo.firstName} ${userInfo.lastName}`,
+                  email: userInfo.email
                 }
               }
             }

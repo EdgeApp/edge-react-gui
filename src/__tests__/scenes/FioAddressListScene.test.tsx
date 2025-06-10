@@ -1,15 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressList } from '../../components/scenes/Fio/FioAddressListScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressList', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeWallet: any = {
       currencyCode: 'FIO',
       nativeAmount: '100',
@@ -21,32 +20,35 @@ describe('FioAddressList', () => {
       ourReceiveAddresses: ['FioAddress']
     }
 
-    const actual = renderer.render(
-      <FioAddressList
-        {...fakeEdgeAppSceneProps('fioAddressList', undefined)}
-        fioAddresses={[
-          {
-            name: 'fio@edge',
-            bundledTxs: 100,
-            walletId: '0x374236418'
-          }
-        ]}
-        fioDomains={[
-          {
-            name: 'myFio@fio',
-            expiration: '12-10-23',
-            isPublic: true,
-            walletId: '0x24623872138'
-          }
-        ]}
-        fioWallets={[fakeWallet]}
-        loading
-        isConnected
-        refreshAllFioAddresses={async () => {}}
-        theme={getTheme()}
-      />
+    const rendered = render(
+      <FakeProviders>
+        <FioAddressList
+          {...fakeEdgeAppSceneProps('fioAddressList', undefined)}
+          fioAddresses={[
+            {
+              name: 'fio@edge',
+              bundledTxs: 100,
+              walletId: '0x374236418'
+            }
+          ]}
+          fioDomains={[
+            {
+              name: 'myFio@fio',
+              expiration: '12-10-23',
+              isPublic: true,
+              walletId: '0x24623872138'
+            }
+          ]}
+          fioWallets={[fakeWallet]}
+          loading
+          isConnected
+          refreshAllFioAddresses={async () => {}}
+          theme={getTheme()}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

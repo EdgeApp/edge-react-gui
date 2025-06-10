@@ -1,24 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
-<ForwardRef(AnimatedComponentWrapper)
+<View
+  collapsable={false}
   style={
-    [
-      {
-        "alignItems": "center",
-        "bottom": 0,
-        "flexDirection": "column",
-        "justifyContent": "center",
-        "left": 0,
-        "padding": 18.25950704225352,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      },
-      {
-        "opacity": 0,
-      },
-    ]
+    {
+      "alignItems": "center",
+      "bottom": 0,
+      "flexDirection": "column",
+      "justifyContent": "center",
+      "left": 0,
+      "opacity": 0,
+      "padding": 18.25950704225352,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
   }
 >
   <View
@@ -61,5 +58,5 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
       string
     </Text>
   </View>
-</ForwardRef(AnimatedComponentWrapper)>
+</View>
 `;

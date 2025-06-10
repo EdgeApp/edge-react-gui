@@ -1,6 +1,6 @@
 import { describe, expect, it, jest } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -30,7 +30,7 @@ describe('CreateWalletImportScene', () => {
   }
 
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockState}>
         <CreateWalletImportScene
           {...fakeEdgeAppSceneProps('createWalletImport', {
@@ -51,7 +51,7 @@ describe('CreateWalletImportScene', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

@@ -43,7 +43,7 @@ class MainActivity : ReactActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Keep the splash screen around until we are ready to hide it:
-        RNBootSplash.init(this)
+        RNBootSplash.init(this, R.style.BootTheme);
         super.onCreate(null)
 
         // Hide app contents in the background:

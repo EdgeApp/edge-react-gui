@@ -1,20 +1,20 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { WalletListSortableRow } from '../../components/themed/WalletListSortableRow'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListSortableRow', () => {
   it('should render with loading wallet', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <WalletListSortableRow wallet={undefined} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('should render with fake wallet', () => {
@@ -46,12 +46,12 @@ describe('WalletListSortableRow', () => {
       balanceMap: new Map()
     }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <WalletListSortableRow wallet={fakeWallet} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

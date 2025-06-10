@@ -1,9 +1,878 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
-<Memo(SceneWrapperComponent)
-  avoidKeyboard={true}
+<View
+  style={
+    [
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      {
+        "height": 1334,
+        "width": 750,
+      },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "maxHeight": 1334,
+      },
+      {
+        "padding": 0,
+      },
+    ]
+  }
 >
-  [Function]
-</Memo(SceneWrapperComponent)>
+  <BVLinearGradient
+    colors={
+      [
+        4279900698,
+        4279900698,
+      ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={0}
+      bbWidth={0}
+      focusable={false}
+      height={0}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        }
+      }
+      vbHeight={0}
+      vbWidth={0}
+      width={0}
+    >
+      <RNSVGGroup
+        fill={
+          {
+            "payload": 4278190080,
+            "type": 0,
+          }
+        }
+      >
+        <RNSVGDefs>
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -1,
+                0.125,
+                -167772161,
+                0.25,
+                -637534209,
+                0.75,
+                654311423,
+                0.875,
+                184549375,
+                1,
+                16777215,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad0"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -216279,
+                0.0588,
+                -216279,
+                0.1765,
+                -167988439,
+                0.29410000000000003,
+                -637750487,
+                0.7646999999999999,
+                654095145,
+                0.8824,
+                184333097,
+                1,
+                16560937,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad1"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -16719740,
+                0.4667,
+                -16719740,
+                0.5333,
+                -184491900,
+                0.6,
+                -654253948,
+                0.8667,
+                637591684,
+                0.9333,
+                167829636,
+                1,
+                57476,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad2"
+            rx="50%"
+            ry="50%"
+          />
+        </RNSVGDefs>
+        <RNSVGGroup
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          opacity={0.1}
+        >
+          <RNSVGCircle
+            cx="10%"
+            cy="10%"
+            fill={
+              {
+                "brushRef": "grad0",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={224.73239436619718}
+          />
+          <RNSVGCircle
+            cx="95%"
+            cy="30%"
+            fill={
+              {
+                "brushRef": "grad1",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={238.7781690140845}
+          />
+          <RNSVGCircle
+            cx="-15%"
+            cy="100%"
+            fill={
+              {
+                "brushRef": "grad2",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={421.37323943661977}
+          />
+        </RNSVGGroup>
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </BVLinearGradient>
+  <View
+    style={
+      {
+        "flex": 1,
+        "marginBottom": -0,
+        "marginLeft": -0,
+        "marginRight": -0,
+        "marginTop": 0,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "justifyContent": "center",
+            "marginHorizontal": 22,
+            "paddingBottom": 22,
+          },
+          {
+            "marginTop": 22,
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
+          }
+        >
+          Select Fiat
+        </Text>
+      </View>
+      <View
+        marginRemProps={
+          {
+            "horizontalRem": 0.5,
+            "topRem": 1,
+          }
+        }
+        style={
+          [
+            {
+              "marginBottom": 0,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 22,
+            },
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessible={false}
+          disableAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          scale={
+            {
+              "value": 1,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
+              },
+              {
+                "backgroundColor": undefined,
+                "borderColor": undefined,
+                "opacity": undefined,
+                "transform": [
+                  {
+                    "scale": undefined,
+                  },
+                ],
+              },
+            ]
+          }
+        >
+          <View
+            size={
+              {
+                "value": undefined,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": undefined,
+                  "width": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "anticon",
+                  "fontSize": 22,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                }
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={17}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+            testID="undefined.doneButton"
+          >
+            <View
+              size={
+                {
+                  "value": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Material Icons",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  }
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          >
+            <TextInput
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              autoCapitalize="words"
+              autoCorrect={false}
+              autoFocus={false}
+              defaultValue=""
+              disableAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              focusAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onSubmitEditing={[Function]}
+              placeholder="Choose a fiat currency"
+              placeholderTextColor="rgba(255, 255, 255, .5)"
+              returnKeyType="search"
+              selectionColor="rgba(255, 255, 255, .25)"
+              style={
+                [
+                  {
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
+                  {
+                    "color": undefined,
+                  },
+                ]
+              }
+              testID="undefined.textInput"
+              textAlignVertical="top"
+            />
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={17}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "margin": -22,
+                "opacity": 1,
+                "padding": 22,
+              }
+            }
+            testID="undefined.clearIcon"
+          >
+            <View
+              size={
+                {
+                  "value": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "anticon",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  }
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        [
+          {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 22,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
+    <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      collapsable={false}
+      contentContainerStyle={
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
+        }
+      }
+      data={
+        [
+          {
+            "label": "Dollars",
+            "value": "USD",
+          },
+        ]
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      handlerTag={1}
+      handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      onContentSizeChange={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={50}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
+      waitFor={
+        [
+          {
+            "current": null,
+          },
+          {
+            "current": null,
+          },
+        ]
+      }
+    >
+      <View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "margin": 11,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "borderRadius": 22,
+                        "height": 45,
+                        "marginLeft": 6,
+                        "width": 45,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  USD
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  United States Dollar
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
 `;

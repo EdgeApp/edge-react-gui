@@ -31,7 +31,7 @@ interface Props {
   label?: string
 
   // Parent container layout
-  layout?: 'row' | 'column' | 'solo'
+  layout?: 'row' | 'column' | 'solo' | 'fullWidth'
 
   // True to show a spinner after the contents:
   spinner?: boolean
@@ -119,6 +119,7 @@ export function EdgeButton(props: Props) {
     const retStyle: ViewStyle[] = [styles.touchContainerCommon]
 
     if (layout === 'column') retStyle.push(styles.touchContainerColumn)
+    if (layout === 'fullWidth') retStyle.push(styles.touchContainerFullWidth)
     if (layout === 'row') retStyle.push(styles.touchContainerRow)
     if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
 
@@ -131,6 +132,7 @@ export function EdgeButton(props: Props) {
     const retStyle: ViewStyle[] = [styles.visibleContainerCommon]
 
     if (layout === 'column') retStyle.push(styles.visibleContainerColumn)
+    if (layout === 'fullWidth') retStyle.push(styles.visibleContainerFullWidth)
     if (layout === 'row') retStyle.push(styles.visibleContainerRow)
     if (layout === 'solo') retStyle.push(styles.visibleContainerSolo)
     if (type === 'tertiary') retStyle.push(styles.visibleContainerTertiary)
@@ -195,6 +197,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexGrow: 0,
       flexShrink: 0
     },
+    touchContainerFullWidth: {
+      alignSelf: 'stretch',
+      flexGrow: 1,
+      flexShrink: 0
+    },
     touchContainerSolo: {
       alignSelf: 'center',
       flexBasis: 'auto',
@@ -224,6 +231,11 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     visibleContainerColumn: {
       alignSelf: 'stretch'
+    },
+    visibleContainerFullWidth: {
+      alignSelf: 'stretch',
+      marginHorizontal: theme.rem(1),
+      marginBottom: theme.rem(0.5)
     },
     visibleContainerRow: {
       alignSelf: 'stretch'

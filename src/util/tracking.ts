@@ -139,6 +139,7 @@ export interface TrackingValues extends LoginTrackingValues {
   numAccounts?: number // Number of full accounts saved on the device
   surveyCategory2?: string // User's answer to a survey (first tier response)
   surveyResponse2?: string // User's answer to a survey
+  appleAdsKeywordId?: string // Apple Search Ads attribution keyword ID
 
   // Conversion values
   conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues | SwapConversionValues
@@ -206,7 +207,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
-        const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
+        const { isFirstOpen, deviceId, firstOpenEpoch, appleAdsAttribution } = await getFirstOpenInfo()
 
         const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
         const params: any = {
@@ -215,6 +216,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           isFirstOpen,
           deviceId,
           firstOpenEpoch,
+          appleAdsAttribution,
           ...restValue
         }
 

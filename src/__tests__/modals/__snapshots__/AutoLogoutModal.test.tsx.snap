@@ -1,378 +1,723 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
-<EdgeModal
-  bridge={
-    {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
-    }
-  }
-  onCancel={[Function]}
-  title="Set Auto Logoff time"
->
+[
   <View
-    style={
+    accessibilityState={
       {
-        "flexDirection": "row",
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
       }
+    }
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
+    }
+  />,
+  <View
+    collapsable={false}
+    style={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
-    <React.Fragment>
-      <Picker
-        mode="dialog"
-        onValueChange={[Function]}
-        selectedValue={11}
-        style={
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
+      style={
+        [
           {
-            "flex": 1,
-          }
-        }
-      >
-        <PickerItem
-          color="#FFFFFF"
-          label="Disabled"
-          value={0}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="1"
-          value={1}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="2"
-          value={2}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="3"
-          value={3}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="4"
-          value={4}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="5"
-          value={5}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="6"
-          value={6}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="7"
-          value={7}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="8"
-          value={8}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="9"
-          value={9}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="10"
-          value={10}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="11"
-          value={11}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="12"
-          value={12}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="13"
-          value={13}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="14"
-          value={14}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="15"
-          value={15}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="16"
-          value={16}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="17"
-          value={17}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="18"
-          value={18}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="19"
-          value={19}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="20"
-          value={20}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="21"
-          value={21}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="22"
-          value={22}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="23"
-          value={23}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="24"
-          value={24}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="25"
-          value={25}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="26"
-          value={26}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="27"
-          value={27}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="28"
-          value={28}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="29"
-          value={29}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="30"
-          value={30}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="31"
-          value={31}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="32"
-          value={32}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="33"
-          value={33}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="34"
-          value={34}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="35"
-          value={35}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="36"
-          value={36}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="37"
-          value={37}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="38"
-          value={38}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="39"
-          value={39}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="40"
-          value={40}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="41"
-          value={41}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="42"
-          value={42}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="43"
-          value={43}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="44"
-          value={44}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="45"
-          value={45}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="46"
-          value={46}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="47"
-          value={47}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="48"
-          value={48}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="49"
-          value={49}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="50"
-          value={50}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="51"
-          value={51}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="52"
-          value={52}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="53"
-          value={53}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="54"
-          value={54}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="55"
-          value={55}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="56"
-          value={56}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="57"
-          value={57}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="58"
-          value={58}
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="59"
-          value={59}
-        />
-      </Picker>
-      <Picker
-        mode="dialog"
-        onValueChange={[Function]}
-        selectedValue="seconds"
-        style={
+            "backgroundColor": undefined,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
           {
-            "flex": 1,
-          }
-        }
-      >
-        <PickerItem
-          color="#FFFFFF"
-          label="Second(s)"
-          value="seconds"
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="Minute(s)"
-          value="minutes"
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="Hour(s)"
-          value="hours"
-        />
-        <PickerItem
-          color="#FFFFFF"
-          label="Day(s)"
-          value="days"
-        />
-      </Picker>
-    </React.Fragment>
-  </View>
-  <ModalButtons
-    primary={
-      {
-        "label": "Save",
-        "onPress": [Function],
+            "borderRadius": 16,
+          },
+        ]
       }
-    }
-  />
-</EdgeModal>
+    />
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
+            "borderRadius": 3,
+            "height": 6,
+            "marginTop": 6,
+            "width": 67,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Set Auto Logoff time
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      >
+        <RNCPicker
+          items={
+            [
+              {
+                "label": "Disabled",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 0,
+              },
+              {
+                "label": "1",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 1,
+              },
+              {
+                "label": "2",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 2,
+              },
+              {
+                "label": "3",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 3,
+              },
+              {
+                "label": "4",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 4,
+              },
+              {
+                "label": "5",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 5,
+              },
+              {
+                "label": "6",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 6,
+              },
+              {
+                "label": "7",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 7,
+              },
+              {
+                "label": "8",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 8,
+              },
+              {
+                "label": "9",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 9,
+              },
+              {
+                "label": "10",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 10,
+              },
+              {
+                "label": "11",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 11,
+              },
+              {
+                "label": "12",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 12,
+              },
+              {
+                "label": "13",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 13,
+              },
+              {
+                "label": "14",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 14,
+              },
+              {
+                "label": "15",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 15,
+              },
+              {
+                "label": "16",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 16,
+              },
+              {
+                "label": "17",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 17,
+              },
+              {
+                "label": "18",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 18,
+              },
+              {
+                "label": "19",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 19,
+              },
+              {
+                "label": "20",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 20,
+              },
+              {
+                "label": "21",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 21,
+              },
+              {
+                "label": "22",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 22,
+              },
+              {
+                "label": "23",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 23,
+              },
+              {
+                "label": "24",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 24,
+              },
+              {
+                "label": "25",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 25,
+              },
+              {
+                "label": "26",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 26,
+              },
+              {
+                "label": "27",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 27,
+              },
+              {
+                "label": "28",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 28,
+              },
+              {
+                "label": "29",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 29,
+              },
+              {
+                "label": "30",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 30,
+              },
+              {
+                "label": "31",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 31,
+              },
+              {
+                "label": "32",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 32,
+              },
+              {
+                "label": "33",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 33,
+              },
+              {
+                "label": "34",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 34,
+              },
+              {
+                "label": "35",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 35,
+              },
+              {
+                "label": "36",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 36,
+              },
+              {
+                "label": "37",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 37,
+              },
+              {
+                "label": "38",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 38,
+              },
+              {
+                "label": "39",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 39,
+              },
+              {
+                "label": "40",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 40,
+              },
+              {
+                "label": "41",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 41,
+              },
+              {
+                "label": "42",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 42,
+              },
+              {
+                "label": "43",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 43,
+              },
+              {
+                "label": "44",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 44,
+              },
+              {
+                "label": "45",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 45,
+              },
+              {
+                "label": "46",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 46,
+              },
+              {
+                "label": "47",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 47,
+              },
+              {
+                "label": "48",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 48,
+              },
+              {
+                "label": "49",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 49,
+              },
+              {
+                "label": "50",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 50,
+              },
+              {
+                "label": "51",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 51,
+              },
+              {
+                "label": "52",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 52,
+              },
+              {
+                "label": "53",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 53,
+              },
+              {
+                "label": "54",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 54,
+              },
+              {
+                "label": "55",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 55,
+              },
+              {
+                "label": "56",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 56,
+              },
+              {
+                "label": "57",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 57,
+              },
+              {
+                "label": "58",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 58,
+              },
+              {
+                "label": "59",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": 59,
+              },
+            ]
+          }
+          numberOfLines={1}
+          onChange={[Function]}
+          selectedIndex={11}
+          style={
+            [
+              {
+                "height": 216,
+              },
+              undefined,
+            ]
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      >
+        <RNCPicker
+          items={
+            [
+              {
+                "label": "Second(s)",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": "seconds",
+              },
+              {
+                "label": "Minute(s)",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": "minutes",
+              },
+              {
+                "label": "Hour(s)",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": "hours",
+              },
+              {
+                "label": "Day(s)",
+                "testID": undefined,
+                "textColor": 4294967295,
+                "value": "days",
+              },
+            ]
+          }
+          numberOfLines={1}
+          onChange={[Function]}
+          selectedIndex={0}
+          style={
+            [
+              {
+                "height": 216,
+              },
+              undefined,
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      absolute={false}
+      layout="column"
+      parentType="modal"
+      style={
+        {
+          "alignItems": "stretch",
+          "alignSelf": "center",
+          "flexDirection": "column",
+          "margin": 11,
+          "marginBottom": 22,
+          "marginTop": 45,
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "flexBasis": "auto",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "margin": -11,
+            "opacity": 1,
+            "padding": 11,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            [
+              4280299823,
+              4278214733,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 0,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 34,
+                "flexDirection": "row",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "justifyContent": "center",
+              },
+              {
+                "alignSelf": "stretch",
+              },
+              {
+                "height": 67,
+                "paddingHorizontal": 34,
+              },
+              {
+                "opacity": 1,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
+                null,
+              ]
+            }
+          >
+            Save
+          </Text>
+        </BVLinearGradient>
+      </View>
+    </View>
+  </View>,
+]
 `;

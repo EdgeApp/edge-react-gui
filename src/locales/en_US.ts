@@ -90,6 +90,7 @@ const strings = {
   // Error messages:
 
   error_no_email_account: 'No email account setup on phone. Please setup an email account on your phone to use this feature.',
+  invalid_email: 'Please enter a valid email address.',
   error_paymentprotocol_empty_output_invoice: 'Received no output in payment request',
   error_paymentprotocol_empty_verification_hex_req: 'Generated empty transaction hex(es)',
   error_paymentprotocol_currency_not_supported: 'Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.',
@@ -1334,7 +1335,7 @@ const strings = {
   send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
-  send_add_destination_address: 'Add Destination Address',
+  send_add_another_address: 'Add Another Address',
   send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
   send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
   send_scan_modal_text_modal_hint: 'Public Address',
@@ -1579,6 +1580,8 @@ const strings = {
   form_field_title_address_state_province_region: 'Province',
   form_field_title_address_zip_postal_code: 'Postal Code/Zip',
   form_field_title_email_address: 'Email Address',
+  form_field_title_first_name: 'First Name',
+  form_field_title_last_name: 'Last Name',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
 
@@ -1594,10 +1597,14 @@ const strings = {
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
 
-  otc_enter_email_to_buy: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) purchase.',
-  otc_enter_email_to_sell: 'Please enter your email to be contacted by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
+  otc_enter_contact_to_buy:
+    'Please enter your contact information to be reached by one of our exchange partners to coordinate an OTC (Over the Counter) purchase.',
+  otc_enter_contact_to_sell:
+    'Please enter your contact information to be reached by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
   otc_confirmation_title: 'Request Sent',
   otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
+  otc_email_error_message_1s: 'There was an error opening your email app. Please email %1$s directly to facilitate this transaction.',
+  otc_wire_required_message: 'OTC transactions are done through bank wire transfers. Can your bank send wire transfers?',
 
   // #endregion GuiPlugins
 
@@ -1714,8 +1721,10 @@ const strings = {
   swap: 'Swap',
   update_available: 'Update Available',
   enter_email: 'Enter Email',
+  enter_contact_info: 'Enter Contact Information',
   edge_ucation: 'Edge-ucation',
   education: 'Education',
+  enter_value: 'Enter Value',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

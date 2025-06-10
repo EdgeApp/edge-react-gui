@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -21,7 +21,7 @@ describe('CurrencyNotificationComponent', () => {
   }
 
   it('should render with loading props', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={mockStore}>
         <CurrencyNotificationScene
           {...fakeEdgeAppSceneProps('currencyNotificationSettings', {
@@ -59,7 +59,7 @@ describe('CurrencyNotificationComponent', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

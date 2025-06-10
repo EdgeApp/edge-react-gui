@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { defaultCategories } from '../../actions/CategoriesActions'
 import { CategoryModal } from '../../components/modals/CategoryModal'
@@ -19,24 +19,24 @@ describe('CategoryModal', () => {
   }
 
   it('should render with an empty subcategory', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <CategoryModal bridge={fakeAirshipBridge} initialCategory="Exchange:" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('should render with a subcategory', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <CategoryModal bridge={fakeAirshipBridge} initialCategory="Income:Paycheck" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })
