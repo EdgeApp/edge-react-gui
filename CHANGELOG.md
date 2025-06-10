@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.30.0 (staging)
+
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
@@ -13,7 +15,7 @@
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
 
-## 4.29.0 (staging)
+## 4.29.0 (2025-06-10)
 
 - added: Add eCash.
 - added: Thorchain TCY stake and unstake
