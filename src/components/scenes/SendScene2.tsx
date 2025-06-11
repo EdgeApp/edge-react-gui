@@ -366,10 +366,6 @@ const SendComponent = (props: Props) => {
     needsScrollToEnd.current = true
   }
 
-  const handleSetMax = (index: number) => () => {
-    setMaxSpendSetter(index)
-  }
-
   const handleFeesChange = useHandler(() => {
     if (coreWallet == null) return
 
@@ -395,7 +391,7 @@ const SendComponent = (props: Props) => {
         feeTokenId={null}
         forceField={fieldChanged}
         onAmountsChanged={handleAmountsChanged(spendTarget)}
-        onMaxSet={handleSetMax(index)}
+        onMaxSet={() => setMaxSpendSetter(index)}
         onFeesChange={noChangeMiningFee ? undefined : handleFeesChange}
         wallet={coreWallet}
         tokenId={tokenId}
@@ -1022,7 +1018,7 @@ const SendComponent = (props: Props) => {
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
-        if (spendInfo.spendTargets[0].publicAddress == null || spendInfo.spendTargets[0].nativeAmount == null) {
+        if (spendInfo.spendTargets[0].publicAddress == null) {
           setEdgeTransaction(null)
           setSpendingLimitExceeded(false)
           setMaxSpendSetter(-1)
