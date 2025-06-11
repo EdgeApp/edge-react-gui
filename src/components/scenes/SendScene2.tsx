@@ -1102,6 +1102,10 @@ const SendComponent = (props: Props) => {
           }
         }
 
+        if (e instanceof Error && e.message === 'Unexpected pending transactions') {
+          e.message = lstrings.unexpected_pending_transactions_error
+        }
+
         setError(e)
         setEdgeTransaction(null)
         flipInputModalRef.current?.setError(e.message)

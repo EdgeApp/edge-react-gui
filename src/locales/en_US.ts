@@ -1711,6 +1711,7 @@ const strings = {
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
+  unexpected_pending_transactions_error: 'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
