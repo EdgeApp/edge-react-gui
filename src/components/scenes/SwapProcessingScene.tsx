@@ -120,6 +120,14 @@ function processSwapQuoteError({
     }
   }
 
+  if (error instanceof Error && error.message === 'Unexpected pending transactions') {
+    return {
+      title: lstrings.exchange_insufficient_funds_title,
+      message: lstrings.exchange_pending_funds_error,
+      error
+    }
+  }
+
   const aboveLimit = asMaybeSwapAboveLimitError(error)
   if (aboveLimit != null) {
     const currentCurrencyDenomination = aboveLimit.direction === 'to' ? toDenomination : fromDenomination

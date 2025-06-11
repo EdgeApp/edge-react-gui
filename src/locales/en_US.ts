@@ -1350,6 +1350,7 @@ const strings = {
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
   exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
+  exchange_pending_funds_error: 'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to fully confirm.',
   exchange_select_sending_wallet: 'Please select a wallet to swap from',
   exchange_select_receiving_wallet: 'Please select a wallet to swap to',
   exchange_title_receiving: 'I want',
@@ -1711,7 +1712,7 @@ const strings = {
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
-  unexpected_pending_transactions_error: 'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm',
+  unexpected_pending_transactions_error: 'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
