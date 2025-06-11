@@ -293,6 +293,13 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
+          <EdgeButton
+            label="Review Trigger Test"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('reviewTriggerTest')
+            }}
+          />
         </>
         <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
         <ModalFilledTextInput
