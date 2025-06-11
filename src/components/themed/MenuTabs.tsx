@@ -13,7 +13,6 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
-import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
@@ -62,9 +61,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     () =>
       state.routes.filter(route => {
         if (config.extraTab == null && route.name === 'extraTab') {
-          return false
-        }
-        if (!ENV.DEV_TAB && route.name === 'devTab') {
           return false
         }
         if (config.disableSwaps === true && route.name === 'swapTab') {
