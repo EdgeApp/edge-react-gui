@@ -37,6 +37,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { FioRequest, GuiExchangeRates } from '../../types/types'
+import { asMaybeUnexpectedPendingTxsError } from '../../util/cleaners/asMaybeUnexpectedPendingTxsError'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
@@ -1104,6 +1105,10 @@ const SendComponent = (props: Props) => {
               await showInsufficientFees(insufficientFunds).catch(error => showError(error))
             }
           }
+        }
+
+        if (asMaybeUnexpectedPendingTxsError(e) != null) {
+          e.message = lstrings.unexpected_pending_transactions_error
         }
 
         setError(e)
