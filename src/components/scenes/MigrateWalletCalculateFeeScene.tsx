@@ -69,7 +69,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     const walletName = getWalletName(wallet)
     const fee = feeState.get(key)
 
-    let rightSide: JSX.Element
+    let rightSide: React.ReactElement
     if (fee == null || !migrateWalletsSynced) {
       rightSide = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
     } else if (fee instanceof Error) {

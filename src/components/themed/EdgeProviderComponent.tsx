@@ -35,7 +35,7 @@ interface WebViewEvent {
   canGoBack: boolean
 }
 
-export function EdgeProviderComponent(props: Props): JSX.Element {
+export function EdgeProviderComponent(props: Props): React.ReactElement {
   const { navigation, deepPath, deepQuery, plugin } = props
 
   const {

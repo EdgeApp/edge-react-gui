@@ -435,7 +435,7 @@ const SendComponent = (props: Props) => {
   }
 
   const renderAddressAmountPairs = () => {
-    const out: Array<JSX.Element | null> = []
+    const out: Array<React.ReactElement | null> = []
     for (let i = 0; i < spendInfo.spendTargets.length; i++) {
       const spendTarget = spendInfo.spendTargets[i]
       let element
@@ -710,7 +710,7 @@ const SendComponent = (props: Props) => {
 
     let legacyUniqueIdentifier = getLegacyUniqueIdentifier(spendTarget)
 
-    const rows: Array<JSX.Element | null> = []
+    const rows: Array<React.ReactElement | null> = []
     for (let i = 0; i < memoOptions.length; i++) {
       if (memoOptions[i].hidden) continue
 

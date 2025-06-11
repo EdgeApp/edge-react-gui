@@ -689,8 +689,7 @@ const getStyles = cacheStyles((theme: Theme) => {
  * Natively center align a component across the Y axis origin
  */
 const nativeCenterAlignLayout =
-  (widthRef: React.MutableRefObject<number>, ref: React.RefObject<View | Animated.View | undefined>, offset?: number) =>
-  (layoutChangeEvent: LayoutChangeEvent) => {
+  (widthRef: React.MutableRefObject<number>, ref: React.RefObject<View | Animated.View | null>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
     if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
       // Store measurements and avoid over-updating if the size of the component
       // doesn't change significantly
