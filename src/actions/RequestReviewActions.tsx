@@ -358,7 +358,7 @@ export const markAccountUpgraded = (): ThunkAction<Promise<void>> => {
  * Track app usage after account upgrade
  * Call this when app is launched to potentially record a new day
  */
-export const trackAppUsageAfterUpgrade = (): ThunkAction<Promise<void>> => {
+export const trackAppUsageAfterUpgrade = (testDate?: Date): ThunkAction<Promise<void>> => {
   return async (_dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -372,7 +372,7 @@ export const trackAppUsageAfterUpgrade = (): ThunkAction<Promise<void>> => {
     }
 
     // Get today's date as YYYY-MM-DD string for comparison
-    const today = new Date().toISOString().split('T')[0]
+    const today = testDate?.toISOString().split('T')[0] ?? new Date().toISOString().split('T')[0]
 
     // Check if we already recorded this day
     const days = data.daysSinceUpgrade != null ? data.daysSinceUpgrade : []
