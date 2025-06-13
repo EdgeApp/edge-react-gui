@@ -22,6 +22,7 @@ import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { Airship } from '../services/AirshipInstance'
+import { updateNotificationInfo } from '../services/NotificationService'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -61,9 +62,17 @@ const NotificationViewComponent = (props: Props) => {
     await showBackupModal({ navigation: navigationDebounced })
   })
 
+  // For this specific notification, we overload the close button to also
+  // directly modify state.ui.passwordReminder.needsPasswordCheck.
+  // This is fine, because we have extensive logic to re-trigger the password
+  // reminder when needed, anyway.
   const handlePasswordReminderClose = useHandler(async () => {
-    await hideBanner(account, 'pwReminder')
+    await updateNotificationInfo(account, 'pwReminder', false)
+    dispatch({
+      type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
+    })
   })
+
   const handlePasswordReminderPress = useHandler(async () => {
     await handlePasswordReminderClose()
     await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />)
