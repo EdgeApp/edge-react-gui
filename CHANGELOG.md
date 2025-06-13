@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Support for Zano alias name resolution.
+
 ## 4.30.0 (staging)
 
 - added: Additional user information fields for Kado OTC orders
