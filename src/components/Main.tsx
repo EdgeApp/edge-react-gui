@@ -111,6 +111,7 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
+import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
@@ -792,6 +793,7 @@ const EdgeAppStack = () => {
         }}
       />
       <AppStack.Screen name="request" component={RequestScene} />
+      <AppStack.Screen name="reviewTriggerTest" component={ReviewTriggerTestScene} />
       <AppStack.Screen name="securityAlerts" component={SecurityAlertsScene} options={{ headerShown: false }} />
       <AppStack.Screen name="send2" component={SendScene2} />
       <AppStack.Screen

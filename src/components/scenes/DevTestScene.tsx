@@ -158,6 +158,13 @@ export function DevTestScene(props: Props) {
         <>
           <SectionHeader leftTitle="Scenes" />
           <EdgeButton label="AddressFormScene" onPress={handleAddressFormPress} marginRem={0.5} />
+          <EdgeButton
+            label="Review Trigger Test"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('reviewTriggerTest')
+            }}
+          />
         </>
         <>
           <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />

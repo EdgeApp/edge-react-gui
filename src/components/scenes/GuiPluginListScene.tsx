@@ -29,6 +29,7 @@ import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { Dispatch } from '../../types/reduxTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
@@ -118,6 +119,7 @@ interface StateProps {
   insetStyle: InsetStyle
   forcedWalletResult?: WalletListResult
   stateProvinceCode?: string
+  dispatch: Dispatch
   onCountryPress: () => Promise<void>
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
@@ -234,6 +236,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       defaultIsoFiat,
       deviceId,
       disablePlugins,
+      dispatch,
       forcedWalletResult,
       navigation,
       stateProvinceCode,
@@ -310,7 +313,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         paymentType,
         pluginPromotions,
         regionCode: { countryCode, stateProvinceCode },
-        onLogEvent
+        onLogEvent,
+        dispatch
       })
     } else {
       // Launch!
@@ -699,6 +703,7 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
               insetStyle={insetStyle}
               stateProvinceCode={stateProvinceCode}
               theme={theme}
+              dispatch={dispatch}
               onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
               onPluginOpened={handlePluginOpened}

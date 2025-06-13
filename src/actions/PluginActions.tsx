@@ -21,7 +21,8 @@ export function executePluginAction(navigation: NavigationBase, pluginId: string
       guiPlugin: guiPlugins[pluginId],
       navigation,
       regionCode: { countryCode: 'US' },
-      onLogEvent: (event, values) => dispatch(logEvent(event, values))
+      onLogEvent: (event, values) => dispatch(logEvent(event, values)),
+      dispatch
     })
   }
 }

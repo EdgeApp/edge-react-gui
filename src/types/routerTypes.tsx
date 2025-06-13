@@ -199,6 +199,7 @@ export type EdgeAppStackParamList = {} & {
   pluginView: PluginViewParams
   promotionSettings: undefined
   request: RequestParams
+  reviewTriggerTest: undefined
   securityAlerts: undefined
   send2: SendScene2Params
   settingsOverview: undefined

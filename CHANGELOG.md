@@ -4,6 +4,7 @@
 
 ## 4.30.0 (staging)
 
+- added: Additional app review prompt triggers
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
