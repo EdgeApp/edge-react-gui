@@ -3,6 +3,7 @@ import fetch from 'node-fetch'
 
 import { closestRateForTimestamp, ExchangeRateCache } from '../actions/ExchangeRateActions'
 import { getHistoricalRate } from '../util/exchangeRates'
+import { mswServer } from '../util/mswServer'
 import { snooze } from '../util/utils'
 
 // Uncomment for testing under Node w/o Jest
@@ -13,6 +14,10 @@ import { snooze } from '../util/utils'
 
 beforeAll(() => {
   jest.useRealTimers()
+  mswServer.listen()
+})
+afterAll(() => {
+  mswServer.close()
 })
 
 const TEST_MAX_QUERY_SIZE = 2
