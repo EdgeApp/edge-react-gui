@@ -4,7 +4,6 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
@@ -18,12 +17,7 @@ export const ChangeUsernameScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
 
-  const handleComplete = useHandler((result?: { username?: string | undefined }) => {
-    if (result?.username == null) return
-
-    account.changeUsername({ username: result.username, password }).catch(error => console.error(error))
-    logActivity(`Username changed to: ${result.username}`)
-
+  const handleComplete = useHandler(() => {
     navigation.goBack()
   })
 
@@ -32,8 +26,8 @@ export const ChangeUsernameScene = (props: Props) => {
   })
 
   return (
-    <SceneWrapper hasHeader={false}>
-      <ChangeUsernameScreen account={account} context={context} onComplete={handleComplete} onLogEvent={handleLogEvent} />
+    <SceneWrapper>
+      <ChangeUsernameScreen account={account} context={context} password={password} onComplete={handleComplete} onLogEvent={handleLogEvent} />
     </SceneWrapper>
   )
 }

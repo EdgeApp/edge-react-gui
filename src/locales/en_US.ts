@@ -651,6 +651,7 @@ const strings = {
   title_change_mining_fee: 'Change Mining Fee',
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
+  title_change_username: 'Change Username',
   title_set_duress_pin: 'Set Duress PIN',
   title_create_wallet: 'Create Wallet',
   title_create_wallet_from_seed: 'Create Wallet From Seed',
