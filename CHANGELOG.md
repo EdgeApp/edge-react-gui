@@ -10,6 +10,7 @@
 - added: Additional user information fields for Kado OTC orders
 - added: Apple AdServices integration and reporting
 - added: KeyboardAccessoryView-based `KavButton`
+- changed: Dismissing Password Reminder banner now behaves the same as dismissing the `PasswordReminderModal`
 - changed: Autocomplete `networkLocation` fields returned from `getTokenDetails` in `EditTokenScene`
 - changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
 - changed: `SendScene2` row/card grouping updated
