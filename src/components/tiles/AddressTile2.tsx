@@ -18,6 +18,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -197,9 +198,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const handlePasteFromClipboard = useHandler(async () => {
     const clipboard = await Clipboard.getString()
     try {
+      const resolvedAddress = await resolveName(coreWallet, clipboard).catch(() => undefined)
+      const address = resolvedAddress ?? clipboard
       // Will throw in case uri is invalid
-      await coreWallet.parseUri(clipboard, currencyCode)
-      await changeAddress(clipboard, 'other')
+      await coreWallet.parseUri(address, currencyCode)
+      await changeAddress(address, 'other')
     } catch (error) {
       showError(error, { trackError: false })
     }
@@ -218,8 +221,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       />
     ))
       .then(async (result: string | undefined) => {
-        if (result) {
-          await changeAddress(result, 'scan')
+        if (result == null) return
+        const resolvedAddress = await resolveName(coreWallet, result).catch(() => undefined)
+        const address = resolvedAddress ?? result
+        if (address) {
+          await changeAddress(address, 'scan')
         }
       })
       .catch(error => {

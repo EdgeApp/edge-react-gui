@@ -16,6 +16,7 @@ import { Dispatch } from '../../types/reduxTypes'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
+import { resolveName } from '../../util/resolveName'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { showDevError, showError } from '../services/AirshipInstance'
@@ -129,7 +130,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     try {
       const { currencyCode } = this.props
       if (this.checkIfDomain(domain)) {
-        await this.resolveAddress(domain, currencyCode)
+        await this.resolveName(domain, currencyCode)
       }
       this.updateUri(domain)
       await this.checkIfFioAddress(domain)
@@ -138,8 +139,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
   }
 
+  checkIfAlias = (domain: string): boolean => {
+    return domain.startsWith('@')
+  }
+
   checkIfDomain = (domain: string): boolean => {
-    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain) || this.checkIfAlias(domain)
   }
 
   checkIfUnstoppableDomain = (name: string): boolean => UNSTOPPABLE_DOMAINS.some(domain => name.endsWith(domain))
@@ -179,29 +184,31 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return address
   }
 
-  resolveAddress = async (domain: string, currencyTicker: string) => {
+  resolveName = async (name: string, currencyTicker: string) => {
     this.setState({ errorLabel: undefined })
-    if (!domain) return
+    if (!name) return
     this.setState({ showSpinner: true })
     try {
       this.setState({ errorLabel: undefined, validLabel: lstrings.resolving })
-      let addr: string
-      if (this.checkIfUnstoppableDomain(domain) && ENV.UNSTOPPABLE_DOMAINS_API_KEY != null) {
-        addr = await this.fetchUnstoppableDomainAddress(
+      let address: string | undefined = await resolveName(this.props.coreWallet, name).catch(() => undefined)
+      if (this.checkIfUnstoppableDomain(name) && ENV.UNSTOPPABLE_DOMAINS_API_KEY != null) {
+        address = await this.fetchUnstoppableDomainAddress(
           new Resolver({ apiKey: ENV.UNSTOPPABLE_DOMAINS_API_KEY }),
-          domain,
+          name,
           unstoppableDomainsPluginIds[this.props.coreWallet.currencyInfo.pluginId]
         )
-      } else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
-      else {
-        throw new ResolutionError('UnsupportedDomain', { domain })
+      } else if (this.checkIfEnsDomain(name)) {
+        address = await this.fetchEnsAddress(name)
       }
-      this.setState({ cryptoAddress: addr, validLabel: addr })
+      if (address == null) {
+        throw new ResolutionError('UnsupportedDomain', { domain: name })
+      }
+      this.setState({ cryptoAddress: address, validLabel: address })
     } catch (err: any) {
       this.setState({ cryptoAddress: undefined, validLabel: undefined })
 
       if (err instanceof ResolutionError) {
-        const message = sprintf(lstrings[err.code], domain, currencyTicker)
+        const message = sprintf(lstrings[err.code], name, currencyTicker)
         this.setState({ errorLabel: message })
       }
     }
