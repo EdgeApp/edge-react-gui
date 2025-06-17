@@ -1,0 +1,85 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://rates1.edge.app/v2/exchangeRates",
+    "body": "{\"data\":[{\"currency_pair\":\"BTC_iso:USD\",\"date\":\"2022-06-01T04:00:00.000Z\"},{\"currency_pair\":\"ETH_iso:USD\",\"date\":\"2022-06-02T04:00:00.000Z\"},{\"currency_pair\":\"XMR_iso:EUR\",\"date\":\"2022-06-03T04:00:00.000Z\"},{\"currency_pair\":\"BTC_iso:PHP\",\"date\":\"2022-06-04T04:00:00.000Z\"},{\"currency_pair\":\"DOGE_iso:MXN\",\"date\":\"2022-06-04T04:00:00.000Z\"}]}",
+    "headers": [
+      [
+        "accept",
+        "*/*"
+      ],
+      [
+        "accept-encoding",
+        "gzip,deflate"
+      ],
+      [
+        "connection",
+        "close"
+      ],
+      [
+        "content-length",
+        "341"
+      ],
+      [
+        "content-type",
+        "application/json"
+      ],
+      [
+        "host",
+        "rates1.edge.app"
+      ],
+      [
+        "user-agent",
+        "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"
+      ]
+    ],
+    "cookies": []
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "body": "{\"data\":[{\"currency_pair\":\"BTC_iso:USD\",\"date\":\"2022-06-01T04:00:00.000Z\",\"exchangeRate\":\"31616.87039234788244357333\"},{\"currency_pair\":\"ETH_iso:USD\",\"date\":\"2022-06-02T04:00:00.000Z\",\"exchangeRate\":\"1814.46024698976771105663\"},{\"currency_pair\":\"XMR_iso:EUR\",\"date\":\"2022-06-03T04:00:00.000Z\",\"exchangeRate\":\"184.82369193454304080736\"},{\"currency_pair\":\"BTC_iso:PHP\",\"date\":\"2022-06-04T04:00:00.000Z\",\"exchangeRate\":\"1553326.22872584574950798905\"},{\"currency_pair\":\"DOGE_iso:MXN\",\"date\":\"2022-06-04T04:00:00.000Z\",\"exchangeRate\":\"1.56164120620374275198\"}]}",
+    "headers": [
+      [
+        "access-control-allow-origin",
+        "*"
+      ],
+      [
+        "alt-svc",
+        "h3=\":443\"; ma=2592000"
+      ],
+      [
+        "connection",
+        "close"
+      ],
+      [
+        "content-length",
+        "556"
+      ],
+      [
+        "content-type",
+        "application/json; charset=utf-8"
+      ],
+      [
+        "date",
+        "Tue, 03 Jun 2025 01:21:23 GMT"
+      ],
+      [
+        "etag",
+        "W/\"22c-RGhPM+ynBEMz65VOLOSTYTu53U4\""
+      ],
+      [
+        "server",
+        "Caddy, Caddy"
+      ],
+      [
+        "vary",
+        "Accept-Encoding"
+      ],
+      [
+        "x-powered-by",
+        "Express"
+      ]
+    ]
+  }
+}
