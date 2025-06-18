@@ -18,6 +18,7 @@
 - fixed: Connecting tokens to FIO addresses failing if there was a "." in the currency code
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
+- fixed: Chart price data not updating when `assetId` changes
 
 ## 4.29.0 (2025-06-10)
 

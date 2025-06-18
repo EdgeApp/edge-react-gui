@@ -80,6 +80,13 @@ const PULSE_CURSOR_RADIUS = 6
 
 const BUTTON_MARGINS = [0, 0.5, 0, 0.5]
 
+const DEFAULT_CHART_DATA: Array<[Timespan, ChartDataPoint[] | undefined]> = [
+  ['hour', undefined],
+  ['week', undefined],
+  ['month', undefined],
+  ['year', undefined]
+]
+
 // Gives the formatted timestamp per timespan, using locale-specific formatting,
 // i.e. 'MM/DD' vs 'DD/MM'
 const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xRange: string } => {
@@ -130,16 +137,24 @@ const SwipeChartComponent = (params: Props) => {
   const styles = getStyles(theme)
   const { assetId } = params
 
+  // Clear chart data and cache when assetId changes.
+  React.useEffect(() => {
+    setChartData([])
+    setCachedChartData(new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA))
+    setIsFetching(false)
+
+    // Fetch the chart data for the new assetId
+    setFetchAssetId(assetId)
+  }, [assetId])
+
   // #region Chart setup
 
+  // Maintain a separate fetchAssetId to ensure fetching can react to changes to
+  // assetId **after** the chart data and cache are cleared.
+  const [fetchAssetId, setFetchAssetId] = React.useState<string>(assetId)
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
-    new Map<Timespan, ChartDataPoint[] | undefined>([
-      ['hour', undefined],
-      ['week', undefined],
-      ['month', undefined],
-      ['year', undefined]
-    ])
+    new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA)
   )
   const [selectedTimespan, setSelectedTimespan] = React.useState<Timespan>('month')
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
@@ -207,7 +222,7 @@ const SwipeChartComponent = (params: Props) => {
         } else {
           const unixNow = Math.trunc(new Date().getTime() / 1000)
           const fromParam = unixNow - queryFromTimeOffset
-          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, coingeckoFiat, fromParam, unixNow)
+          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, fetchAssetId, coingeckoFiat, fromParam, unixNow)
           // Start with the free base URL
           let fetchUrl = `${COINGECKO_URL}${fetchPath}`
           do {
@@ -255,7 +270,7 @@ const SwipeChartComponent = (params: Props) => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [selectedTimespan, isConnected],
+    [selectedTimespan, isConnected, fetchAssetId],
     'swipeChart'
   )
 
