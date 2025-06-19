@@ -18,6 +18,7 @@ const defaultContext: EdgeContext = flowHack
 const defaultDisklet: Disklet = flowHack
 
 const accountHack: any = {
+  allKeys: [],
   activeWalletIds: [],
   currencyConfig: {},
   currencyWallets: {},
