@@ -2209,9 +2209,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -2813,6 +2813,69 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
+
+"@metaplex-foundation/mpl-token-metadata@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-3.4.0.tgz#03a2ab3b90ac30973407565e07cc570c8897385d"
+  integrity sha512-AxBAYCK73JWxY3g9//z/C9krkR0t1orXZDknUPS4+GjwGH2vgPfsk04yfZ31Htka2AdS9YE/3wH7sMUBHKn9Rg==
+  dependencies:
+    "@metaplex-foundation/mpl-toolbox" "^0.10.0"
+
+"@metaplex-foundation/mpl-toolbox@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-toolbox/-/mpl-toolbox-0.10.0.tgz#c7d2f27259e69ab86cc4b7dd55b7bfef11bbed13"
+  integrity sha512-84KD1L5cFyw5xnntHwL4uPwfcrkKSiwuDeypiVr92qCUFuF3ZENa2zlFVPu+pQcjTlod2LmEX3MhBmNjRMpdKg==
+
+"@metaplex-foundation/umi-options@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-options/-/umi-options-1.2.0.tgz#934fae509b15de9a02d8c06315a7fc24defe35bd"
+  integrity sha512-dNEfhDg9PUoosU46SnmB8PzdhgAF7qJ0RUkn5keLKU2s0Xy2DKZVtdaELTfMZZckhaDvOzRTKdphTRrEwIjbyw==
+
+"@metaplex-foundation/umi-public-keys@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-public-keys/-/umi-public-keys-1.2.0.tgz#ce970035b0975ca6728cc85dd084163b328898e8"
+  integrity sha512-UZISKLcrsAQ3M17JCkNIXtacoKHpSNEgXHGcxyJp7zfJkdLDq5Qlvd7KeyZoYC7A7XuA3lAlVY14qhhIwC5p5w==
+  dependencies:
+    "@metaplex-foundation/umi-serializers-encodings" "^1.2.0"
+
+"@metaplex-foundation/umi-serializers-core@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-serializers-core/-/umi-serializers-core-1.2.0.tgz#6efd22ac44f8f531f8decfcb3ed3a4c843a62004"
+  integrity sha512-9scqhjkjW8tJ+/q1veh73jQjo9vvgTN5iN4OfOYFMtFVTT8/y2AVxGmniV/DbQC5wIgx7WTZkAnJmqOMs2904Q==
+
+"@metaplex-foundation/umi-serializers-encodings@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-serializers-encodings/-/umi-serializers-encodings-1.2.0.tgz#59283ccd7c364e8ed701d61484e7361a9c22bd4f"
+  integrity sha512-Yo3TPI9ei8Z5eTJ1UeT12+pYaQ1zMSn57/M/3r4WAOTFtTCOuKsDRKg8eBQCpBuffH8yGUbRs0poy1n25IzeNg==
+  dependencies:
+    "@metaplex-foundation/umi-serializers-core" "^1.2.0"
+
+"@metaplex-foundation/umi-serializers-numbers@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-serializers-numbers/-/umi-serializers-numbers-1.2.0.tgz#9d9b3af100b3026311731947954d9f53d814bc62"
+  integrity sha512-ZBVb498GHYlfB+1JzOcczJ1LrCYWr0IiiXjeEAf+64mSSp3IFwK7D3rjL6RZ05bjxBzuWDJVRzI+mFVFC9UgtQ==
+  dependencies:
+    "@metaplex-foundation/umi-serializers-core" "^1.2.0"
+
+"@metaplex-foundation/umi-serializers@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi-serializers/-/umi-serializers-1.2.0.tgz#1038d609cc2a5037c210e4d96760b317eff9e931"
+  integrity sha512-7ivgqVP6ZouN13EBN5aMirjoX2x0Ja7IuzrBeIa8YYrxGcy7YQp+fUj4YCPtMClzsETgJ5jL8EZnZPpZX4dxaQ==
+  dependencies:
+    "@metaplex-foundation/umi-options" "^1.2.0"
+    "@metaplex-foundation/umi-public-keys" "^1.2.0"
+    "@metaplex-foundation/umi-serializers-core" "^1.2.0"
+    "@metaplex-foundation/umi-serializers-encodings" "^1.2.0"
+    "@metaplex-foundation/umi-serializers-numbers" "^1.2.0"
+
+"@metaplex-foundation/umi@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/umi/-/umi-1.2.0.tgz#905ce9efb4c5baa3ab451cd2ca8545ebdc76b791"
+  integrity sha512-SIcDO8O9gRYL2C5ntsedVfpRBICK7ZoMB5ap8P5N2TEJ/QC205UxDzhdQsImdWQG1DQ7XJsDXWiiFzccpFZcSg==
+  dependencies:
+    "@metaplex-foundation/umi-options" "^1.2.0"
+    "@metaplex-foundation/umi-public-keys" "^1.2.0"
+    "@metaplex-foundation/umi-serializers" "^1.2.0"
 
 "@mymonero/mymonero-bigint@^1.4.2":
   version "1.4.2"
@@ -8869,10 +8932,10 @@ edge-core-js@^2.31.1:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.48.3:
-  version "4.48.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.48.3.tgz#394312e377283770d624cf10af8afe61505b454b"
-  integrity sha512-aoEb8jGwX9QnCWcWbHJ33ed1mOAFvC45AQKG0B6t2e+wwXYhT0KLi6mcGXN9eFRij9tigjtzgONF/9OlDnCkoA==
+edge-currency-accountbased@4.48.4:
+  version "4.48.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.48.4.tgz#bf61fc743a19ae6c2db5960bb38c2ac38a70b5bf"
+  integrity sha512-YIu6CqiIrmkhDgPpxPej1+jMnQwOPCRZnZp9UfNyrXK5F2xczzVNnDMkjmdZ4h0gqe52PhtR1qoEMKCM7MAylw==
   dependencies:
     "@chain-registry/client" "^1.53.59"
     "@cosmjs/stargate" "^0.32.3"
@@ -8884,6 +8947,8 @@ edge-currency-accountbased@^4.48.3:
     "@greymass/eosio-resources" "^0.7.0"
     "@hashgraph/sdk" "^2.44.0"
     "@haverstack/axios-fetch-adapter" "^0.12.0"
+    "@metaplex-foundation/mpl-token-metadata" "^3.4.0"
+    "@metaplex-foundation/umi" "^1.2.0"
     "@mysten/sui" "^1.18.0"
     "@polkadot/api" "^12.1.1"
     "@solana/spl-token" "^0.4.6"
@@ -10276,9 +10341,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
