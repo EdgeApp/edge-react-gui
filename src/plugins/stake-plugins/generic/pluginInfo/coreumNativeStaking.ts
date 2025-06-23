@@ -12,19 +12,23 @@ const adaptors: CoreumNativeStakeKitAdapterConfig[] = [
   {
     type: 'coreum-native-stake-kit',
     integrationId: 'coreum-core-native-staking',
-    preferredValidatorAddress: 'corevaloper1k0rllvenwr02gvm52fh5056g5m3hly2lpf63z5', // StakeLab
+    preferredValidatorAddress:
+      'corevaloper1k0rllvenwr02gvm52fh5056g5m3hly2lpf63z5', // StakeLab
     preferredValidatorName: 'StakeLab'
   },
 
   {
     type: 'coreum-native-stake-kit',
     integrationId: 'coreum-core-native-staking',
-    preferredValidatorAddress: 'corevaloper1puge9crcxvq02jguql4vp2dhglvjll3wzdcggq', // Bware Labs
+    preferredValidatorAddress:
+      'corevaloper1puge9crcxvq02jguql4vp2dhglvjll3wzdcggq', // Bware Labs
     preferredValidatorName: 'Bware Labs'
   }
 ]
 
-const coreumPolicyConfig: Array<StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>> = adaptors.map(adapterConfig => {
+const coreumPolicyConfig: Array<
+  StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>
+> = adaptors.map(adapterConfig => {
   return {
     stakePolicyId: `coreum_native_${adapterConfig.preferredValidatorAddress}`,
     stakeProviderInfo: {

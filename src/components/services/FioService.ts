@@ -113,12 +113,16 @@ export const FioService = (props: Props) => {
   useAsyncEffect(
     async () => {
       await account.waitForAllWallets()
-      const task = makePeriodicTask(refreshNamesToCheckExpired, EXPIRE_CHECK_TIMEOUT, {
-        onError(e: unknown) {
-          console.error('refreshNamesToCheckExpired error:', e)
-          showDevError(e)
+      const task = makePeriodicTask(
+        refreshNamesToCheckExpired,
+        EXPIRE_CHECK_TIMEOUT,
+        {
+          onError(e: unknown) {
+            console.error('refreshNamesToCheckExpired error:', e)
+            showDevError(e)
+          }
         }
-      })
+      )
       task.start()
 
       return () => task.stop()

@@ -8,7 +8,14 @@ import { scheduleActionProgram } from '../../action-queue/redux/actions'
 import { ActionProgram } from '../../action-queue/types'
 import { borrowPluginMap } from '../borrowPluginConfig'
 import { makeLoanAccount } from '../LoanAccount'
-import { asLoanAccountMapRecord, LOAN_ACCOUNT_MAP, LOAN_MANAGER_STORE_ID, LoanAccountEntry, LoanProgramEdge, LoanProgramType } from '../store'
+import {
+  asLoanAccountMapRecord,
+  LOAN_ACCOUNT_MAP,
+  LOAN_MANAGER_STORE_ID,
+  LoanAccountEntry,
+  LoanProgramEdge,
+  LoanProgramType
+} from '../store'
 import { LoanAccount } from '../types'
 import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
 import { waitForBorrowEngineSync } from '../util/waitForLoanAccountSync'
@@ -27,13 +34,19 @@ interface UpdateSyncRatio {
   syncRatio: number
 }
 
-export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction | UpdateSyncRatio
+export type LoanManagerActions =
+  | SetLoanAccountAction
+  | DeleteLoanAccountAction
+  | UpdateSyncRatio
 
 /**
  * Returns a loan account selected from the redux store, or creates a new loan
  * account and return it if it doesn't exists.
  */
-export function getOrCreateLoanAccount(borrowPlugin: BorrowPlugin, wallet: EdgeCurrencyWallet): ThunkAction<Promise<LoanAccount>> {
+export function getOrCreateLoanAccount(
+  borrowPlugin: BorrowPlugin,
+  wallet: EdgeCurrencyWallet
+): ThunkAction<Promise<LoanAccount>> {
   return async (_dispatch, getState) => {
     const state = getState()
     const existingLoanAccount = selectLoanAccount(state, wallet.id)
@@ -48,12 +61,17 @@ export function getOrCreateLoanAccount(borrowPlugin: BorrowPlugin, wallet: EdgeC
  * Save a new LoanAccount to disk and sets it in the Redux state.
  * It will throw if specified LoanAccount exists already.
  */
-export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<void>> {
+export function saveLoanAccount(
+  loanAccount: LoanAccount
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account: EdgeAccount = state.core.account
     const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
-    const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
+    const loanAccountMapRecord = await store.initRecord(
+      LOAN_ACCOUNT_MAP,
+      asLoanAccountMapRecord
+    )
     const existingLoanAccountEntry = loanAccountMapRecord.data[loanAccount.id]
 
     // Create loan account if it doesn't exist
@@ -93,14 +111,21 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
  * Load all LoanAccounts from disk to the redux store and initializes
  * associated BorrowEngines.
  */
-export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void>> {
+export function loadLoanAccounts(
+  account: EdgeAccount
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
-    const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
+    const loanAccountMapRecord = await store.initRecord(
+      LOAN_ACCOUNT_MAP,
+      asLoanAccountMapRecord
+    )
 
     for (const key of Object.keys(loanAccountMapRecord.data)) {
       const loanAccountEntry = loanAccountMapRecord.data[key]
-      const wallet = await account.waitForCurrencyWallet(loanAccountEntry.walletId)
+      const wallet = await account.waitForCurrencyWallet(
+        loanAccountEntry.walletId
+      )
       const borrowPlugin = borrowPluginMap[loanAccountEntry.borrowPluginId]
 
       // Instantiate loan account from loanAccountEntry
@@ -124,16 +149,23 @@ export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void
  * Delete an existing LoanAccount.
  * It will throw if specified LoanAccount is not found.
  */
-export function deleteLoanAccount(loanAccountOrId: LoanAccount | string): ThunkAction<Promise<void>> {
+export function deleteLoanAccount(
+  loanAccountOrId: LoanAccount | string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account: EdgeAccount = state.core.account
     const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
-    const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
+    const loanAccountMapRecord = await store.initRecord(
+      LOAN_ACCOUNT_MAP,
+      asLoanAccountMapRecord
+    )
 
-    const loanAccountId = typeof loanAccountOrId === 'string' ? loanAccountOrId : loanAccountOrId.id
+    const loanAccountId =
+      typeof loanAccountOrId === 'string' ? loanAccountOrId : loanAccountOrId.id
     if (loanAccountMapRecord.data[loanAccountId] != null) {
-      const { [loanAccountId]: _, ...loanAccountMapRecordUpdated } = loanAccountMapRecord.data
+      const { [loanAccountId]: _, ...loanAccountMapRecordUpdated } =
+        loanAccountMapRecord.data
       await loanAccountMapRecord.update(loanAccountMapRecordUpdated)
     } else {
       throw new Error('Could not find LoanAccount id: ' + loanAccountId)
@@ -151,7 +183,11 @@ export function deleteLoanAccount(loanAccountOrId: LoanAccount | string): ThunkA
 /**
  * Execute action program, and update associated LoanAccount.
  */
-export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: ActionProgram, programType: LoanProgramType): ThunkAction<Promise<LoanAccount>> {
+export function runLoanActionProgram(
+  loanAccount: LoanAccount,
+  actionProgram: ActionProgram,
+  programType: LoanProgramType
+): ThunkAction<Promise<LoanAccount>> {
   return async dispatch => {
     await dispatch(scheduleActionProgram(actionProgram))
     const programEdge: LoanProgramEdge = {
@@ -170,7 +206,9 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
   }
 }
 
-export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void>> {
+export function resyncLoanAccounts(
+  account: EdgeAccount
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const typeHack: any = Object.values(borrowPluginMap)
     const borrowPlugins: BorrowPlugin[] = typeHack
@@ -191,7 +229,10 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
         const wallet = await account.waitForCurrencyWallet(loanAccountId)
 
         const currencyPluginId = wallet.currencyConfig.currencyInfo.pluginId
-        const borrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
+        const borrowPlugin = borrowPlugins.find(
+          borrowPlugin =>
+            borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId
+        )
 
         if (borrowPlugin == null) return
 

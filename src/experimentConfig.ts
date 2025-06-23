@@ -27,20 +27,28 @@ const experimentDistribution = {
  * Generate a random index value according to the experiment distribution to
  * determine which variant gets used.
  */
-const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution, configVals: T[]): T => {
+const generateExperimentConfigVal = <T>(
+  key: keyof typeof experimentDistribution,
+  configVals: T[]
+): T => {
   const variantNominations = experimentDistribution[key]
 
   if (variantNominations.length !== configVals.length) {
     console.error(`Misconfigured experimentDistribution for: '${key}'`)
   } else {
     // Distribute the probability of each config value
-    const variantDenomination = variantNominations.reduce((sum, probability) => sum + probability, 0)
+    const variantDenomination = variantNominations.reduce(
+      (sum, probability) => sum + probability,
+      0
+    )
     if (variantDenomination === 0) {
       throw new Error(`Config values for '${key}' do not add up to 100%`)
     } else if (variantDenomination > 101 || variantDenomination < 99) {
       console.warn(`Config values for '${key}' do not add up to 100% +/- 1%`)
     }
-    const distributedProbabilities = variantNominations.map(variantNomination => variantNomination / variantDenomination)
+    const distributedProbabilities = variantNominations.map(
+      variantNomination => variantNomination / variantDenomination
+    )
 
     // Generate a random number between 0 and 1
     const random = Math.random()
@@ -60,28 +68,40 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 }
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
-  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
+  signupCaptcha: asMaybe(
+    asValue('withoutCaptcha', 'withCaptcha'),
+    generateExperimentConfigVal('signupCaptcha', [
+      'withoutCaptcha',
+      'withCaptcha'
+    ])
+  )
 })
 
 /**
  * Immediately initialize the experiment config as soon as the module loads.
  * This config value is available through the module's getter functions.
  */
-const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<ExperimentConfig> => {
-  let currentConfig: ExperimentConfig
-  try {
-    const experimentConfigJson = await experimentConfigDisklet.getText(LOCAL_EXPERIMENT_CONFIG)
-    currentConfig = asExperimentConfig(JSON.parse(experimentConfigJson))
-  } catch (err) {
-    console.log('Experiment config not found/out of date. Regenerating...')
-    // Not found or incompatible. Re-generate with random values according to
-    // the defined distribution.
-    currentConfig = asExperimentConfig({})
-  }
+const experimentConfigPromise: Promise<ExperimentConfig> =
+  (async (): Promise<ExperimentConfig> => {
+    let currentConfig: ExperimentConfig
+    try {
+      const experimentConfigJson = await experimentConfigDisklet.getText(
+        LOCAL_EXPERIMENT_CONFIG
+      )
+      currentConfig = asExperimentConfig(JSON.parse(experimentConfigJson))
+    } catch (err) {
+      console.log('Experiment config not found/out of date. Regenerating...')
+      // Not found or incompatible. Re-generate with random values according to
+      // the defined distribution.
+      currentConfig = asExperimentConfig({})
+    }
 
-  await experimentConfigDisklet.setText(LOCAL_EXPERIMENT_CONFIG, JSON.stringify(currentConfig))
-  return currentConfig
-})()
+    await experimentConfigDisklet.setText(
+      LOCAL_EXPERIMENT_CONFIG,
+      JSON.stringify(currentConfig)
+    )
+    return currentConfig
+  })()
 
 /**
  * Initializes the local experiment config file containing the randomly
@@ -93,12 +113,18 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
  */
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
   if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
-  else if (ENV.EXPERIMENT_CONFIG_OVERRIDE != null && Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0) {
+  else if (
+    ENV.EXPERIMENT_CONFIG_OVERRIDE != null &&
+    Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0
+  ) {
     try {
       console.log('ENV.EXPERIMENT_CONFIG_OVERRIDE set')
       return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
     } catch (err) {
-      console.error('Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ', String(err))
+      console.error(
+        'Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ',
+        String(err)
+      )
       console.warn('Reverting to default experiment config.')
       return DEFAULT_EXPERIMENT_CONFIG
     }
@@ -109,7 +135,11 @@ export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
 /**
  * Returns the experiment config value
  */
-export const getExperimentConfigValue = async <K extends keyof ExperimentConfig>(key: K): Promise<ExperimentConfig[K]> => {
+export const getExperimentConfigValue = async <
+  K extends keyof ExperimentConfig
+>(
+  key: K
+): Promise<ExperimentConfig[K]> => {
   const config = await getExperimentConfig()
   return config[key]
 }

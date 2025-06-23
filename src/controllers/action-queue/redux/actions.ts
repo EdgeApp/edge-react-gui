@@ -2,7 +2,12 @@ import { ThunkAction } from '../../../types/reduxTypes'
 import { logActivity } from '../../../util/logger'
 import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { uploadPushEvents } from '../push'
-import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from '../types'
+import {
+  ActionProgram,
+  ActionProgramState,
+  ActionQueueItem,
+  ActionQueueMap
+} from '../types'
 import { getEffectPushEventIds } from '../util/getEffectPushEventIds'
 import { makeExecutionContext } from '../util/makeExecutionContext'
 
@@ -22,13 +27,21 @@ interface UpdateProgramStateAction {
   state: ActionProgramState
 }
 
-export type ActionQueueAction = LoadActionQueueStateAction | ScheduleProgramAction | UpdateProgramStateAction
+export type ActionQueueAction =
+  | LoadActionQueueStateAction
+  | ScheduleProgramAction
+  | UpdateProgramStateAction
 
-export function scheduleActionProgram(program: ActionProgram): ThunkAction<Promise<void>> {
+export function scheduleActionProgram(
+  program: ActionProgram
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const clientId = state.core.context.clientId
-    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+    const store: ActionQueueStore = makeActionQueueStore(
+      state.core.account,
+      clientId
+    )
     const programId = program.programId
 
     // Persist the ActionProgram to the ActionQueueStore
@@ -47,11 +60,16 @@ export function scheduleActionProgram(program: ActionProgram): ThunkAction<Promi
   }
 }
 
-export function updateActionProgramState(programState: ActionProgramState): ThunkAction<Promise<void>> {
+export function updateActionProgramState(
+  programState: ActionProgramState
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const clientId = state.core.context.clientId
-    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+    const store: ActionQueueStore = makeActionQueueStore(
+      state.core.account,
+      clientId
+    )
 
     await store.updateActionQueueItem(programState)
 
@@ -59,12 +77,17 @@ export function updateActionProgramState(programState: ActionProgramState): Thun
   }
 }
 
-export function cancelActionProgram(programId: string): ThunkAction<Promise<void>> {
+export function cancelActionProgram(
+  programId: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
     const clientId = state.core.context.clientId
-    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+    const store: ActionQueueStore = makeActionQueueStore(
+      state.core.account,
+      clientId
+    )
     const { state: programState } = state.actionQueue.actionQueueMap[programId]
 
     const pushEventIds = getEffectPushEventIds(programState.effect)

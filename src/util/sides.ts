@@ -21,7 +21,10 @@ export interface Padding {
  * Interprets an array of 0-4 numbers as a web CSS sides shorthand
  * (top, right, bottom, left).
  */
-export function fixSides(sides: number[] | number | undefined, fallback: number): SideList {
+export function fixSides(
+  sides: number[] | number | undefined,
+  fallback: number
+): SideList {
   if (sides == null) {
     return [fallback, fallback, fallback, fallback]
   }
@@ -36,7 +39,10 @@ export function fixSides(sides: number[] | number | undefined, fallback: number)
   return [top, right, bottom, left]
 }
 
-export function mapSides(sides: SideList, f: (side: number) => number): SideList {
+export function mapSides(
+  sides: SideList,
+  f: (side: number) => number
+): SideList {
   return [f(sides[0]), f(sides[1]), f(sides[2]), f(sides[3])]
 }
 

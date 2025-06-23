@@ -4,10 +4,23 @@ import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { infoServerData } from '../../../../util/network'
 import { DECIMAL_PRECISION, snooze } from '../../../../util/utils'
-import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
+import {
+  ChangeQuote,
+  PositionAllocation,
+  QuoteAllocation,
+  StakeAssetInfo,
+  StakePosition
+} from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
-import { actionEnter, actionExit, actionPending, transactionConstruct, transactionSubmitHash, yieldGetSingleYieldBalances } from '../util/stakeKitUtils'
+import {
+  actionEnter,
+  actionExit,
+  actionPending,
+  transactionConstruct,
+  transactionSubmitHash,
+  yieldGetSingleYieldBalances
+} from '../util/stakeKitUtils'
 import { StakePolicyAdapter } from './types'
 
 export interface CoreumNativeStakeKitAdapterConfig {
@@ -17,12 +30,25 @@ export interface CoreumNativeStakeKitAdapterConfig {
   preferredValidatorName: string
 }
 
-export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>): StakePolicyAdapter => {
-  if (policyConfig.stakeAssets.length > 1) throw new Error(`Staking more than one assets is not supported for CoreumStakeKitAdapter`)
-  if (policyConfig.rewardAssets.length > 1) throw new Error(`Claim of more than one assets is not supported for CoreumStakeKitAdapter`)
+export const makeStakeKitAdapter = (
+  policyConfig: StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>
+): StakePolicyAdapter => {
+  if (policyConfig.stakeAssets.length > 1)
+    throw new Error(
+      `Staking more than one assets is not supported for CoreumStakeKitAdapter`
+    )
+  if (policyConfig.rewardAssets.length > 1)
+    throw new Error(
+      `Claim of more than one assets is not supported for CoreumStakeKitAdapter`
+    )
 
-  if (policyConfig.stakeAssets[0].currencyCode !== policyConfig.rewardAssets[0].currencyCode)
-    throw new Error(`Stake and claim of different assets is not supported for CoreumStakeKitAdapter`)
+  if (
+    policyConfig.stakeAssets[0].currencyCode !==
+    policyConfig.rewardAssets[0].currencyCode
+  )
+    throw new Error(
+      `Stake and claim of different assets is not supported for CoreumStakeKitAdapter`
+    )
 
   // Metadata constants:
   const metadataName = 'Coreum Native Staking'
@@ -37,7 +63,10 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
     edgeTxs: EdgeTransaction[],
     allocations: QuoteAllocation[]
   ): Promise<ChangeQuote> {
-    const networkFee = edgeTxs.reduce((prev, curr) => add(prev, curr.networkFee), '0')
+    const networkFee = edgeTxs.reduce(
+      (prev, curr) => add(prev, curr.networkFee),
+      '0'
+    )
 
     allocations.push({
       allocationType: 'networkFee',
@@ -66,14 +95,19 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
     }
   }
 
-  async function getUnsignedTransactions(transactions: TransactionDto[]): Promise<TransactionDto[]> {
+  async function getUnsignedTransactions(
+    transactions: TransactionDto[]
+  ): Promise<TransactionDto[]> {
     const unsignedTxs: TransactionDto[] = []
     for (const txFromStakeKit of transactions) {
       // The transactions aren't always ready immediately so we need to retry a few times before giving up
       let attempt = 0
       while (true) {
         try {
-          const rawTxResponse = await transactionConstruct(txFromStakeKit.id, {})
+          const rawTxResponse = await transactionConstruct(
+            txFromStakeKit.id,
+            {}
+          )
           unsignedTxs.push(rawTxResponse)
           break
         } catch (e) {
@@ -100,7 +134,10 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
       }
     }
 
-    const multiplier = wallet.currencyInfo.denominations.find(denom => denom.name === stakeAsset.currencyCode)?.multiplier ?? '1'
+    const multiplier =
+      wallet.currencyInfo.denominations.find(
+        denom => denom.name === stakeAsset.currencyCode
+      )?.multiplier ?? '1'
 
     return { exchangeDenomMultiplier: multiplier, stakeKitAddresses }
   }
@@ -108,16 +145,31 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
-      const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
+    async fetchClaimQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> {
+      const { exchangeDenomMultiplier, stakeKitAddresses } =
+        await workflowUtils(wallet)
 
-      const yieldBalanceRes = await yieldGetSingleYieldBalances(adapterConfig.integrationId, {
-        addresses: stakeKitAddresses
-      })
+      const yieldBalanceRes = await yieldGetSingleYieldBalances(
+        adapterConfig.integrationId,
+        {
+          addresses: stakeKitAddresses
+        }
+      )
 
-      const rewardsActions = yieldBalanceRes.find(action => action.validatorAddress === adapterConfig.preferredValidatorAddress && action.type === 'rewards')
-      const claimAction = rewardsActions?.pendingActions.find(action => action.type === 'CLAIM_REWARDS')
-      if (claimAction == null) throw new Error('Did not find pending claim action')
+      const rewardsActions = yieldBalanceRes.find(
+        action =>
+          action.validatorAddress === adapterConfig.preferredValidatorAddress &&
+          action.type === 'rewards'
+      )
+      const claimAction = rewardsActions?.pendingActions.find(
+        action => action.type === 'CLAIM_REWARDS'
+      )
+      if (claimAction == null)
+        throw new Error('Did not find pending claim action')
 
       const actionPendingRes = await actionPending({
         integrationId: adapterConfig.integrationId,
@@ -129,10 +181,15 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         }
       })
 
-      const unsignedTransactions = await getUnsignedTransactions(actionPendingRes.transactions)
+      const unsignedTransactions = await getUnsignedTransactions(
+        actionPendingRes.transactions
+      )
 
       const edgeTxs = unsignedTransactions.map(tx => {
-        const networkFee = mul(exchangeDenomMultiplier, tx.gasEstimate?.amount ?? '0')
+        const networkFee = mul(
+          exchangeDenomMultiplier,
+          tx.gasEstimate?.amount ?? '0'
+        )
 
         const edgeTx: EdgeTransaction = {
           blockHeight: 0,
@@ -166,14 +223,28 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         }
       ]
 
-      return await prepareChangeQuote(wallet, unsignedTransactions, edgeTxs, allocations)
+      return await prepareChangeQuote(
+        wallet,
+        unsignedTransactions,
+        edgeTxs,
+        allocations
+      )
     },
 
-    async fetchStakeQuote(wallet, requestAssetId, requestNativeAmount): Promise<ChangeQuote> {
-      const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
+    async fetchStakeQuote(
+      wallet,
+      requestAssetId,
+      requestNativeAmount
+    ): Promise<ChangeQuote> {
+      const { exchangeDenomMultiplier, stakeKitAddresses } =
+        await workflowUtils(wallet)
 
       const args: ActionRequestDto['args'] = {
-        amount: div(requestNativeAmount, exchangeDenomMultiplier, DECIMAL_PRECISION),
+        amount: div(
+          requestNativeAmount,
+          exchangeDenomMultiplier,
+          DECIMAL_PRECISION
+        ),
         validatorAddress: adapterConfig.preferredValidatorAddress
       }
 
@@ -182,10 +253,15 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         addresses: stakeKitAddresses,
         args
       })
-      const unsignedTransactions = await getUnsignedTransactions(actionEnterRes.transactions)
+      const unsignedTransactions = await getUnsignedTransactions(
+        actionEnterRes.transactions
+      )
 
       const edgeTxs = unsignedTransactions.map(tx => {
-        const networkFee = mul(exchangeDenomMultiplier, tx.gasEstimate?.amount ?? '0')
+        const networkFee = mul(
+          exchangeDenomMultiplier,
+          tx.gasEstimate?.amount ?? '0'
+        )
 
         const edgeTx: EdgeTransaction = {
           blockHeight: 0,
@@ -231,14 +307,28 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         }
       ]
 
-      return await prepareChangeQuote(wallet, unsignedTransactions, edgeTxs, allocations)
+      return await prepareChangeQuote(
+        wallet,
+        unsignedTransactions,
+        edgeTxs,
+        allocations
+      )
     },
 
-    async fetchUnstakeQuote(wallet, requestAssetId, requestNativeAmount): Promise<ChangeQuote> {
-      const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
+    async fetchUnstakeQuote(
+      wallet,
+      requestAssetId,
+      requestNativeAmount
+    ): Promise<ChangeQuote> {
+      const { exchangeDenomMultiplier, stakeKitAddresses } =
+        await workflowUtils(wallet)
 
       const args: ActionRequestDto['args'] = {
-        amount: div(requestNativeAmount, exchangeDenomMultiplier, DECIMAL_PRECISION),
+        amount: div(
+          requestNativeAmount,
+          exchangeDenomMultiplier,
+          DECIMAL_PRECISION
+        ),
         validatorAddress: adapterConfig.preferredValidatorAddress
       }
 
@@ -247,10 +337,15 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         addresses: stakeKitAddresses,
         args
       })
-      const unsignedTransactions = await getUnsignedTransactions(actionExitRes.transactions)
+      const unsignedTransactions = await getUnsignedTransactions(
+        actionExitRes.transactions
+      )
 
       const edgeTxs = unsignedTransactions.map(tx => {
-        const networkFee = mul(exchangeDenomMultiplier, tx.gasEstimate?.amount ?? '0')
+        const networkFee = mul(
+          exchangeDenomMultiplier,
+          tx.gasEstimate?.amount ?? '0'
+        )
 
         const edgeTx: EdgeTransaction = {
           blockHeight: 0,
@@ -295,15 +390,25 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
         }
       ]
 
-      return await prepareChangeQuote(wallet, unsignedTransactions, edgeTxs, allocations)
+      return await prepareChangeQuote(
+        wallet,
+        unsignedTransactions,
+        edgeTxs,
+        allocations
+      )
     },
 
-    async fetchUnstakeExactQuote(wallet, requestAssetId, nativeAmount): Promise<ChangeQuote> {
+    async fetchUnstakeExactQuote(
+      wallet,
+      requestAssetId,
+      nativeAmount
+    ): Promise<ChangeQuote> {
       throw new Error('fetchUnstakeExactQuote not implemented for StakeKit')
     },
 
     async fetchStakePosition(wallet): Promise<StakePosition> {
-      const { exchangeDenomMultiplier, stakeKitAddresses } = await workflowUtils(wallet)
+      const { exchangeDenomMultiplier, stakeKitAddresses } =
+        await workflowUtils(wallet)
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const walletBalance = wallet.balanceMap.get(null) ?? '0'
@@ -311,12 +416,15 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
       let canUnstakeAndClaim = false
       let canClaim = false
 
-      const yieldBalancesRes = await yieldGetSingleYieldBalances(adapterConfig.integrationId, {
-        addresses: stakeKitAddresses,
-        args: {
-          validatorAddresses: [adapterConfig.preferredValidatorAddress]
+      const yieldBalancesRes = await yieldGetSingleYieldBalances(
+        adapterConfig.integrationId,
+        {
+          addresses: stakeKitAddresses,
+          args: {
+            validatorAddresses: [adapterConfig.preferredValidatorAddress]
+          }
         }
-      })
+      )
 
       const allocations: PositionAllocation[] = []
       for (const balance of yieldBalancesRes) {
@@ -332,7 +440,8 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
           // validatorAddresses
         } = balance
         if (adapterConfig.preferredValidatorAddress != null) {
-          if (validatorAddress !== adapterConfig.preferredValidatorAddress) continue
+          if (validatorAddress !== adapterConfig.preferredValidatorAddress)
+            continue
         }
 
         const nativeAmount = floor(mul(amount, exchangeDenomMultiplier), 0)
@@ -410,7 +519,9 @@ export const makeStakeKitAdapter = (policyConfig: StakePolicyConfig<CoreumNative
     },
 
     async fetchYieldInfo() {
-      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const infoServerResponse = asInfoServerResponse(
+        infoServerData.rollup?.apyValues ?? { policies: {} }
+      )
       const apy = infoServerResponse.policies[stakePolicyId] ?? 0
       return { apy }
     }

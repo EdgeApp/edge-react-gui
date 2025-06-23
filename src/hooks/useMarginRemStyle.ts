@@ -23,11 +23,22 @@ export interface MarginRemProps {
   verticalRem?: number
 }
 
-export type MarginRemStyle = Pick<ViewStyle, 'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight'>
+export type MarginRemStyle = Pick<
+  ViewStyle,
+  'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight'
+>
 
 export const useMarginRemStyle = (props: MarginRemProps): MarginRemStyle => {
   const theme = useTheme()
-  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem } = props
+  const {
+    aroundRem,
+    horizontalRem,
+    verticalRem,
+    topRem,
+    bottomRem,
+    leftRem,
+    rightRem
+  } = props
 
   const topUnits = topRem ?? verticalRem ?? aroundRem ?? 0
   const bottomUnits = bottomRem ?? verticalRem ?? aroundRem ?? 0

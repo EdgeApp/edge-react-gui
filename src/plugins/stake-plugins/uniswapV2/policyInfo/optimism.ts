@@ -157,7 +157,11 @@ export const optimismContractInfoMap = {
 // Ecosystem
 // -----------------------------------------------------------------------------
 
-const rpcProviderUrls = ['https://mainnet.optimism.io', 'https://optimism-rpc.publicnode.com', 'https://optimism.drpc.org']
+const rpcProviderUrls = [
+  'https://mainnet.optimism.io',
+  'https://optimism-rpc.publicnode.com',
+  'https://optimism.drpc.org'
+]
 const eco = makeEcosystem(optimismContractInfoMap, rpcProviderUrls)
 export const optimismEcosystem = eco
 
@@ -173,10 +177,13 @@ const velodromeProviderInfo: StakeProviderInfo = {
 
 export const optimismPolicyInfo: StakePolicyInfo[] = [
   // Velodrome V2 Stake Policies:
-  ...Object.keys(optimismContractInfoMap).reduce((allInfo: StakePolicyInfo[], key) => {
-    const info = generateVelodromeV2StakePolicyInfo(key)
-    return info == null ? allInfo : [...allInfo, info]
-  }, [])
+  ...Object.keys(optimismContractInfoMap).reduce(
+    (allInfo: StakePolicyInfo[], key) => {
+      const info = generateVelodromeV2StakePolicyInfo(key)
+      return info == null ? allInfo : [...allInfo, info]
+    },
+    []
+  )
 ]
 
 /**
@@ -189,7 +196,9 @@ export const optimismPolicyInfo: StakePolicyInfo[] = [
  *
  * A incorrectly formatted `poolContractKey` will return `null`.
  */
-function generateVelodromeV2StakePolicyInfo(poolContractKey: string): StakePolicyInfo | null {
+function generateVelodromeV2StakePolicyInfo(
+  poolContractKey: string
+): StakePolicyInfo | null {
   const [keyType, poolType, tokenA, tokenB] = poolContractKey.split('_')
   if (keyType !== 'POOL') return null
   const isStablePool = poolType[0] === 's'
@@ -205,7 +214,9 @@ function generateVelodromeV2StakePolicyInfo(poolContractKey: string): StakePolic
     policy: makeVelodromeV2StakePolicy({
       isStablePool,
       lpTokenContract,
-      stakingContract: eco.makeContract(`GAUGE_${poolType}_${tokenA}_${tokenB}`),
+      stakingContract: eco.makeContract(
+        `GAUGE_${poolType}_${tokenA}_${tokenB}`
+      ),
       swapRouterContract: eco.makeContract(`ROUTER_VELODROME_V2`),
       tokenAContract: eco.makeContract(tokenA),
       tokenBContract: eco.makeContract(tokenB)

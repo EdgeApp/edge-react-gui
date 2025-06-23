@@ -23,7 +23,10 @@ interface Props {
 
 export const FiatAmountTile = (props: Props) => {
   const { fiatAmount, nativeCryptoAmount, title, tokenId, wallet } = props
-  if (fiatAmount == null && nativeCryptoAmount == null) throw new Error('Either fiat or crypto amount must be given to FiatAmountTile')
+  if (fiatAmount == null && nativeCryptoAmount == null)
+    throw new Error(
+      'Either fiat or crypto amount must be given to FiatAmountTile'
+    )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const amountValue =
@@ -32,7 +35,11 @@ export const FiatAmountTile = (props: Props) => {
         fiatAmount
       })}`
     ) : nativeCryptoAmount != null ? (
-      <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} currencyConfig={wallet.currencyConfig} />
+      <FiatText
+        tokenId={tokenId}
+        nativeCryptoAmount={nativeCryptoAmount}
+        currencyConfig={wallet.currencyConfig}
+      />
     ) : null
 
   return (

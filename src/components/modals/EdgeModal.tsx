@@ -7,9 +7,18 @@ import * as React from 'react'
 import { BackHandler, Dimensions, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import DeviceInfo from 'react-native-device-info'
-import { Gesture, GestureDetector, ScrollView } from 'react-native-gesture-handler'
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView
+} from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -58,11 +67,22 @@ const duration = 300
  * and dims the rest of the app.
  */
 export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
-  const { bridge, title, children, scroll = false, warning = false, onCancel } = props
+  const {
+    bridge,
+    title,
+    children,
+    scroll = false,
+    warning = false,
+    onCancel
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const isDesktop = Platform.OS === 'windows' || Platform.OS === 'macos' || Platform.OS === 'web' || DeviceInfo.getDeviceType() === 'Desktop'
+  const isDesktop =
+    Platform.OS === 'windows' ||
+    Platform.OS === 'macos' ||
+    Platform.OS === 'web' ||
+    DeviceInfo.getDeviceType() === 'Desktop'
   const isShowCloseButton = isDesktop && onCancel != null
   const halfRem = theme.rem(0.5)
   const closeThreshold = theme.rem(6)
@@ -83,7 +103,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
   // Effects
   //
 
-  React.useEffect(() => bridge.on('clear', handleCancel), [bridge, handleCancel])
+  React.useEffect(
+    () => bridge.on('clear', handleCancel),
+    [bridge, handleCancel]
+  )
 
   React.useEffect(() => {
     // Animate in:
@@ -93,15 +116,22 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     // Animate out:
     bridge.on('result', () => {
       opacity.value = withTiming(0, { duration })
-      offset.value = withTiming(Dimensions.get('window').height, { duration }, () => runOnJS(bridge.remove)())
+      offset.value = withTiming(
+        Dimensions.get('window').height,
+        { duration },
+        () => runOnJS(bridge.remove)()
+      )
     })
   }, [bridge, opacity, offset])
 
   React.useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      handleCancel()
-      return true
-    })
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        handleCancel()
+        return true
+      }
+    )
     return () => backHandler.remove()
   }, [handleCancel])
 
@@ -164,8 +194,19 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
                 title ?? undefined
               )}
               {!isShowCloseButton ? null : (
-                <EdgeTouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
-                  <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1.25)} />
+                <EdgeTouchableOpacity
+                  style={
+                    isCustomTitle
+                      ? styles.closeIconContainerAbsolute
+                      : styles.closeIconContainer
+                  }
+                  onPress={onCancel}
+                >
+                  <AntDesignIcon
+                    name="close"
+                    color={theme.deactivatedText}
+                    size={theme.rem(1.25)}
+                  />
                 </EdgeTouchableOpacity>
               )}
             </View>

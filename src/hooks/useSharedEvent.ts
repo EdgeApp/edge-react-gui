@@ -7,7 +7,10 @@ import { SharedValue, useAnimatedReaction } from 'react-native-reanimated'
  * @param handler An event handler to invoke when the event changes
  * @returns void
  */
-export const useSharedEvent = <T>(sharedEvent: SharedValue<T> | undefined, handler: (event: T) => void) =>
+export const useSharedEvent = <T>(
+  sharedEvent: SharedValue<T> | undefined,
+  handler: (event: T) => void
+) =>
   useAnimatedReaction(
     () => {
       'worklet'

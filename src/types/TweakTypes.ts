@@ -1,9 +1,20 @@
-import { asArray, asBoolean, asDate, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asDate,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
  */
-export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase()
+export const asCurrencyCode: Cleaner<string> = raw =>
+  asString(raw).toUpperCase()
 
 /**
  * An message card to show the user.
@@ -42,7 +53,9 @@ export const asMessageTweak = asObject<MessageTweak>({
   exactBuildNum: asOptional(asString),
   minBuildNum: asOptional(asString),
   maxBuildNum: asOptional(asString),
-  osTypes: asOptional(asArray(asValue('ios', 'android', 'windows', 'macos', 'web'))),
+  osTypes: asOptional(
+    asArray(asValue('ios', 'android', 'windows', 'macos', 'web'))
+  ),
 
   startDate: asOptional(asDate),
   durationDays: asNumber,

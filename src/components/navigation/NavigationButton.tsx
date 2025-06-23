@@ -34,7 +34,11 @@ export const NavigationButton = (props: Props) => {
   )
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={touchableStyle} onPress={onPress}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      style={touchableStyle}
+      onPress={onPress}
+    >
       {children}
     </EdgeTouchableOpacity>
   )

@@ -30,24 +30,33 @@ export function useBackButtonToast() {
   const navigation: NavigationBase = useNavigation()
 
   useFocusEffect(() => {
-    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-      // Allow back if logged out or this is the second back press:
-      if (account === defaultAccount || backPressedOnce.current) {
-        dispatch(logoutRequest(navigation)).catch(err => showError(err))
-        return
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Allow back if logged out or this is the second back press:
+        if (account === defaultAccount || backPressedOnce.current) {
+          dispatch(logoutRequest(navigation)).catch(err => showError(err))
+          return
+        }
+        backPressedOnce.current = true
+
+        // Show the toast for 3 seconds, and then clear the flag:
+        Airship.show(bridge => (
+          <AirshipToast
+            bridge={bridge}
+            autoHideMs={3000}
+            message={lstrings.back_button_tap_again_to_exit}
+          />
+        ))
+          .then(() => {
+            backPressedOnce.current = false
+          })
+          .catch(err => showError(err))
+
+        // Prevent the default behavior:
+        return true
       }
-      backPressedOnce.current = true
-
-      // Show the toast for 3 seconds, and then clear the flag:
-      Airship.show(bridge => <AirshipToast bridge={bridge} autoHideMs={3000} message={lstrings.back_button_tap_again_to_exit} />)
-        .then(() => {
-          backPressedOnce.current = false
-        })
-        .catch(err => showError(err))
-
-      // Prevent the default behavior:
-      return true
-    })
+    )
 
     return () => subscription.remove()
   })

@@ -1,10 +1,38 @@
-import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
-import { asArray, asMaybe, asNumber, asObject, asString, asTuple } from 'cleaners'
+import {
+  CursorProps,
+  GradientProps,
+  SlideAreaChart,
+  ToolTipProps,
+  ToolTipTextRenderersInput,
+  YAxisProps
+} from '@connectedcars/react-native-slide-charts'
+import {
+  asArray,
+  asMaybe,
+  asNumber,
+  asObject,
+  asString,
+  asTuple
+} from 'cleaners'
 import * as React from 'react'
 import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated'
-import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
+import Animated, {
+  Easing,
+  SharedValue,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withTiming
+} from 'react-native-reanimated'
+import Svg, {
+  Circle,
+  CircleProps,
+  LinearGradient,
+  Stop
+} from 'react-native-svg'
 import { sprintf } from 'sprintf-js'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -55,7 +83,8 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
-const MARKET_CHART_ENDPOINT_4S = '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
+const MARKET_CHART_ENDPOINT_4S =
+  '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
 
 const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
 const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
@@ -89,7 +118,10 @@ const DEFAULT_CHART_DATA: Array<[Timespan, ChartDataPoint[] | undefined]> = [
 
 // Gives the formatted timestamp per timespan, using locale-specific formatting,
 // i.e. 'MM/DD' vs 'DD/MM'
-const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xRange: string } => {
+const formatTimestamp = (
+  date: Date,
+  timespan: Timespan
+): { xTooltip: string; xRange: string } => {
   const dateWithYear = formatDate(date, 'P')
   const time = formatDate(date, 'p')
   const dateTime = `${dateWithYear} ${time}`
@@ -109,7 +141,10 @@ const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xR
 }
 
 // Reduce the number of datapoints to improve loading performance
-const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): ChartDataPoint[] => {
+const reduceChartData = (
+  chartData: ChartDataPoint[],
+  timespan: Timespan
+): ChartDataPoint[] => {
   // Reduce 'candle' size
   let everyNPoints = 1
   switch (timespan) {
@@ -129,7 +164,9 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
       everyNPoints = 1
   }
 
-  return chartData.filter((dataPoint: ChartDataPoint, index: number) => index % everyNPoints === 0)
+  return chartData.filter(
+    (dataPoint: ChartDataPoint, index: number) => index % everyNPoints === 0
+  )
 }
 
 const SwipeChartComponent = (params: Props) => {
@@ -140,7 +177,9 @@ const SwipeChartComponent = (params: Props) => {
   // Clear chart data and cache when assetId changes.
   React.useEffect(() => {
     setChartData([])
-    setCachedChartData(new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA))
+    setCachedChartData(
+      new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA)
+    )
     setIsFetching(false)
 
     // Fetch the chart data for the new assetId
@@ -153,21 +192,30 @@ const SwipeChartComponent = (params: Props) => {
   // assetId **after** the chart data and cache are cleared.
   const [fetchAssetId, setFetchAssetId] = React.useState<string>(assetId)
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
-  const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
-    new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA)
+  const [cachedTimespanChartData, setCachedChartData] = React.useState<
+    Map<Timespan, ChartDataPoint[] | undefined>
+  >(new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA))
+  const [selectedTimespan, setSelectedTimespan] =
+    React.useState<Timespan>('month')
+  const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(
+    UNIX_SECONDS_MONTH_OFFSET
   )
-  const [selectedTimespan, setSelectedTimespan] = React.useState<Timespan>('month')
-  const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isFetching, setIsFetching] = React.useState(false)
 
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
   const isConnected = useSelector(state => state.network.isConnected)
-  const fiatSymbol = React.useMemo(() => getFiatSymbol(coingeckoFiat), [coingeckoFiat])
+  const fiatSymbol = React.useMemo(
+    () => getFiatSymbol(coingeckoFiat),
+    [coingeckoFiat]
+  )
 
   const isLoading = isFetching || !isConnected
 
   // Min/Max Price Calcs
-  const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
+  const prices = React.useMemo(
+    () => chartData.map(dataPoint => dataPoint.y),
+    [chartData]
+  )
   const minPrice = Math.min(...prices)
   const maxPrice = Math.max(...prices)
 
@@ -177,17 +225,28 @@ const SwipeChartComponent = (params: Props) => {
   const sMinPriceString = useSharedValue(``)
   const sMaxPriceString = useSharedValue(``)
 
-  const chartYRange = React.useMemo<[number, number]>(() => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice], [minPrice, maxPrice])
+  const chartYRange = React.useMemo<[number, number]>(
+    () => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice],
+    [minPrice, maxPrice]
+  )
 
-  const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
-  const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
+  const minPriceDataPoint = React.useMemo(
+    () => chartData.find(point => point.y === minPrice),
+    [chartData, minPrice]
+  )
+  const maxPriceDataPoint = React.useMemo(
+    () => chartData.find(point => point.y === maxPrice),
+    [chartData, maxPrice]
+  )
 
   // The chart component defaults to the phone width.
   // To fit the chart into its parent view,
   // we measure the parent and pass that width in.
   // The chart will freeze the whole app if the width is too narrow,
   // so start with the window width:
-  const [chartWidth, setChartWidth] = React.useState(Dimensions.get('window').width)
+  const [chartWidth, setChartWidth] = React.useState(
+    Dimensions.get('window').width
+  )
   const chartHeight = theme.rem(CHART_HEIGHT_REM)
 
   // Fetch/cache chart data, set shared animation transition values
@@ -206,7 +265,10 @@ const SwipeChartComponent = (params: Props) => {
         const delayShowMinMaxLabels = () => {
           // Delay the appearance of the min/max price labels while the chart
           // price line finishes its entering animation
-          sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
+          sMinMaxOpacity.value = withDelay(
+            ANIMATION_DURATION.maxMinFadeInDelay,
+            withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn })
+          )
         }
 
         if (cachedChartData != null) {
@@ -222,7 +284,13 @@ const SwipeChartComponent = (params: Props) => {
         } else {
           const unixNow = Math.trunc(new Date().getTime() / 1000)
           const fromParam = unixNow - queryFromTimeOffset
-          const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, fetchAssetId, coingeckoFiat, fromParam, unixNow)
+          const fetchPath = sprintf(
+            MARKET_CHART_ENDPOINT_4S,
+            fetchAssetId,
+            coingeckoFiat,
+            fromParam,
+            unixNow
+          )
           // Start with the free base URL
           let fetchUrl = `${COINGECKO_URL}${fetchPath}`
           do {
@@ -234,7 +302,10 @@ const SwipeChartComponent = (params: Props) => {
               if (apiError != null) {
                 if (apiError.status.error_code === 429) {
                   // Rate limit error, use our API key as a fallback
-                  if (!fetchUrl.includes('x_cg_pro_api_key') && ENV.COINGECKO_API_KEY !== '') {
+                  if (
+                    !fetchUrl.includes('x_cg_pro_api_key') &&
+                    ENV.COINGECKO_API_KEY !== ''
+                  ) {
                     fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                   }
                   // Wait 2 second before retrying. It typically takes 1 minute
@@ -242,7 +313,9 @@ const SwipeChartComponent = (params: Props) => {
                   await snooze(2000)
                   continue
                 }
-                throw new Error(`Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`)
+                throw new Error(
+                  `Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`
+                )
               }
 
               const marketChartRange = asCoinGeckoMarketChartRange(result)
@@ -252,7 +325,10 @@ const SwipeChartComponent = (params: Props) => {
                   y: rawDataPoint[1]
                 }
               })
-              const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+              const reducedChartData = reduceChartData(
+                rawChartData,
+                selectedTimespan
+              )
 
               setChartData(reducedChartData)
               cachedTimespanChartData.set(selectedTimespan, reducedChartData)
@@ -320,7 +396,10 @@ const SwipeChartComponent = (params: Props) => {
 
   // A delayed fadein for the max/min labels, to ensure the labels don't get
   // rendered before the price line. Also hidden when gesture is active
-  const minPriceLabelY = Platform.OS === 'ios' ? chartHeight - theme.rem(2.5) : chartHeight - theme.rem(2.75)
+  const minPriceLabelY =
+    Platform.OS === 'ios'
+      ? chartHeight - theme.rem(2.5)
+      : chartHeight - theme.rem(2.75)
   const aMinLabelStyle = useAnimatedStyle(() => ({
     left: sMinPriceLabelX.value,
     top: minPriceLabelY,
@@ -344,14 +423,18 @@ const SwipeChartComponent = (params: Props) => {
     )
   }, [sPulseRMultiplier])
 
-  const aInnerPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(() => ({
-    r: sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
-    opacity: sCursorOpacity.value
-  }))
-  const aOuterPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(() => ({
-    r: PULSE_CURSOR_RADIUS + sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
-    opacity: (1 - sPulseRMultiplier.value) * sCursorOpacity.value
-  }))
+  const aInnerPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(
+    () => ({
+      r: sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
+      opacity: sCursorOpacity.value
+    })
+  )
+  const aOuterPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(
+    () => ({
+      r: PULSE_CURSOR_RADIUS + sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
+      opacity: (1 - sPulseRMultiplier.value) * sCursorOpacity.value
+    })
+  )
 
   // X axis labels
   const aXTooltipStyle = useAnimatedStyle(() => ({
@@ -363,12 +446,30 @@ const SwipeChartComponent = (params: Props) => {
   }))
 
   // Dynamic styles
-  const cursorOuterStyle = React.useMemo(() => [aGestureFadeStyle, styles.baseCursor], [aGestureFadeStyle, styles.baseCursor])
-  const cursorPriceStyle = React.useMemo(() => [aGestureFadeStyle, styles.labelPrimary], [aGestureFadeStyle, styles.labelPrimary])
-  const cursorXTooltipStyle = React.useMemo(() => [styles.xTooltip, aXTooltipStyle, aGestureFadeStyle], [aGestureFadeStyle, aXTooltipStyle, styles.xTooltip])
-  const minPriceLabelStyle = React.useMemo(() => [aMinLabelStyle, styles.minMaxPriceLabel], [aMinLabelStyle, styles.minMaxPriceLabel])
-  const maxPriceLabelStyle = React.useMemo(() => [aMaxLabelStyle, styles.minMaxPriceLabel], [aMaxLabelStyle, styles.minMaxPriceLabel])
-  const xRangeLabelStyle = React.useMemo(() => [styles.xEndLabels, aXEndLabelStyle], [aXEndLabelStyle, styles.xEndLabels])
+  const cursorOuterStyle = React.useMemo(
+    () => [aGestureFadeStyle, styles.baseCursor],
+    [aGestureFadeStyle, styles.baseCursor]
+  )
+  const cursorPriceStyle = React.useMemo(
+    () => [aGestureFadeStyle, styles.labelPrimary],
+    [aGestureFadeStyle, styles.labelPrimary]
+  )
+  const cursorXTooltipStyle = React.useMemo(
+    () => [styles.xTooltip, aXTooltipStyle, aGestureFadeStyle],
+    [aGestureFadeStyle, aXTooltipStyle, styles.xTooltip]
+  )
+  const minPriceLabelStyle = React.useMemo(
+    () => [aMinLabelStyle, styles.minMaxPriceLabel],
+    [aMinLabelStyle, styles.minMaxPriceLabel]
+  )
+  const maxPriceLabelStyle = React.useMemo(
+    () => [aMaxLabelStyle, styles.minMaxPriceLabel],
+    [aMaxLabelStyle, styles.minMaxPriceLabel]
+  )
+  const xRangeLabelStyle = React.useMemo(
+    () => [styles.xEndLabels, aXEndLabelStyle],
+    [aXEndLabelStyle, styles.xEndLabels]
+  )
 
   // #endregion Animations
 
@@ -403,27 +504,36 @@ const SwipeChartComponent = (params: Props) => {
     const isShowIndicator = opacity === 1
     rIsShowCursor.current = isShowIndicator
     sCursorOpacity.value = withTiming(isShowIndicator ? 1 : 0, {
-      duration: isShowIndicator ? ANIMATION_DURATION.cursorFadeIn : ANIMATION_DURATION.cursorFadeOut
+      duration: isShowIndicator
+        ? ANIMATION_DURATION.cursorFadeIn
+        : ANIMATION_DURATION.cursorFadeOut
     })
   })
 
   /**
    * Update a shared X position equal to that of the active slide gesture
    */
-  const handleToolTipTextRenderer = useHandler((toolTipTextRenderersInput: ToolTipTextRenderersInput) => {
-    if (rIsShowCursor.current) sXTooltipPos.value = toolTipTextRenderersInput.x
+  const handleToolTipTextRenderer = useHandler(
+    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => {
+      if (rIsShowCursor.current)
+        sXTooltipPos.value = toolTipTextRenderersInput.x
 
-    // The SDK's API requires this return value even though we're not using it.
-    return { text: '' }
-  })
+      // The SDK's API requires this return value even though we're not using it.
+      return { text: '' }
+    }
+  )
 
   /**
    * X axis date tooltip display value updates
    */
   const handleDateCallbackWithX = useHandler((x: number | Date) => {
     if (rIsShowCursor.current) {
-      const newXTooltipText = formatTimestamp(new Date(x), selectedTimespan).xTooltip
-      if (sXTooltipString.value !== newXTooltipText) sXTooltipString.value = newXTooltipText
+      const newXTooltipText = formatTimestamp(
+        new Date(x),
+        selectedTimespan
+      ).xTooltip
+      if (sXTooltipString.value !== newXTooltipText)
+        sXTooltipString.value = newXTooltipText
     }
   })
 
@@ -437,7 +547,8 @@ const SwipeChartComponent = (params: Props) => {
         noGrouping: false,
         autoPrecision: true
       })}`
-      if (newDisplayPrice !== sPriceValString.value) sPriceValString.value = newDisplayPrice
+      if (newDisplayPrice !== sPriceValString.value)
+        sPriceValString.value = newDisplayPrice
     }
   })
 
@@ -445,22 +556,42 @@ const SwipeChartComponent = (params: Props) => {
    * Set the X axis position of the min/max labels. Left or right justify the
    * label according to its horizontal position on the chart
    */
-  const setMinMaxLabelsX = (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) => (layoutChangeEvent: LayoutChangeEvent) => {
-    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null && minPriceDataPoint != null && chartData != null && priceDatapoint != null) {
-      const xIndex = chartData.indexOf(priceDatapoint)
-      const xPosition = (chartWidth / (chartData.length - 1)) * xIndex
-      const labelWidth = layoutChangeEvent.nativeEvent.layout.width
-      const isRightJustified = xPosition > chartData.length / 2
+  const setMinMaxLabelsX =
+    (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) =>
+    (layoutChangeEvent: LayoutChangeEvent) => {
+      if (
+        layoutChangeEvent != null &&
+        layoutChangeEvent.nativeEvent != null &&
+        minPriceDataPoint != null &&
+        chartData != null &&
+        priceDatapoint != null
+      ) {
+        const xIndex = chartData.indexOf(priceDatapoint)
+        const xPosition = (chartWidth / (chartData.length - 1)) * xIndex
+        const labelWidth = layoutChangeEvent.nativeEvent.layout.width
+        const isRightJustified = xPosition > chartData.length / 2
 
-      xSharedVal.value = isRightJustified ? xPosition - labelWidth : xPosition
+        xSharedVal.value = isRightJustified ? xPosition - labelWidth : xPosition
+      }
     }
-  }
 
-  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorWidth, rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
-  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipWidth, rXTooltipView))
+  const handleAlignCursorLayout = useHandler(
+    nativeCenterAlignLayout(
+      rPriceCursorWidth,
+      rPriceCursorView,
+      PULSE_CURSOR_RADIUS * 2
+    )
+  )
+  const handleAlignXTooltipLayout = useHandler(
+    nativeCenterAlignLayout(rXTooltipWidth, rXTooltipView)
+  )
 
-  const handleAlignMinPriceLabelLayout = useHandler(setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint))
-  const handleAlignMaxPriceLabelLayout = useHandler(setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint))
+  const handleAlignMinPriceLabelLayout = useHandler(
+    setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint)
+  )
+  const handleAlignMaxPriceLabelLayout = useHandler(
+    setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint)
+  )
 
   const handleSetTimespanH = useHandler(() => {
     setSelectedTimespan('hour')
@@ -485,39 +616,53 @@ const SwipeChartComponent = (params: Props) => {
 
   // #region Memoized SlideAreaChart props
 
-  const renderCursor = useHandler((props: CursorProps & { ref: React.RefObject<any> }) => {
-    const { ref } = props
-    const circleRadius = PULSE_CURSOR_RADIUS * 2
+  const renderCursor = useHandler(
+    (props: CursorProps & { ref: React.RefObject<any> }) => {
+      const { ref } = props
+      const circleRadius = PULSE_CURSOR_RADIUS * 2
 
-    return (
-      <Animated.View ref={ref} style={cursorOuterStyle}>
-        <View
-          ref={rPriceCursorView}
-          // An adjustment is needed for this center layout because the whole
-          // view is already shifted left to center the animated circle by the
-          // 'cursorMarkerWidth' SlideChart prop
-          onLayout={handleAlignCursorLayout}
-        >
-          <ReText text={sPriceValString} style={cursorPriceStyle} />
-        </View>
-        <Svg style={styles.cursorDot}>
-          <AnimatedCircle x={circleRadius} y={circleRadius} fill={theme.iconTappable} animatedProps={aInnerPulseStyle} />
-          <AnimatedCircle x={circleRadius} y={circleRadius} fill={theme.iconTappable} animatedProps={aOuterPulseStyle} />
-        </Svg>
-      </Animated.View>
+      return (
+        <Animated.View ref={ref} style={cursorOuterStyle}>
+          <View
+            ref={rPriceCursorView}
+            // An adjustment is needed for this center layout because the whole
+            // view is already shifted left to center the animated circle by the
+            // 'cursorMarkerWidth' SlideChart prop
+            onLayout={handleAlignCursorLayout}
+          >
+            <ReText text={sPriceValString} style={cursorPriceStyle} />
+          </View>
+          <Svg style={styles.cursorDot}>
+            <AnimatedCircle
+              x={circleRadius}
+              y={circleRadius}
+              fill={theme.iconTappable}
+              animatedProps={aInnerPulseStyle}
+            />
+            <AnimatedCircle
+              x={circleRadius}
+              y={circleRadius}
+              fill={theme.iconTappable}
+              animatedProps={aOuterPulseStyle}
+            />
+          </Svg>
+        </Animated.View>
+      )
+    }
+  )
+
+  const renderTimespanButton = useHandler(
+    (label: string, timespanKey: Timespan, onPress: () => void) => (
+      <MinimalButton
+        key={timespanKey}
+        marginRem={BUTTON_MARGINS}
+        label={label}
+        highlighted={selectedTimespan === timespanKey}
+        onPress={onPress}
+        disabled={isLoading}
+      />
     )
-  })
-
-  const renderTimespanButton = useHandler((label: string, timespanKey: Timespan, onPress: () => void) => (
-    <MinimalButton
-      key={timespanKey}
-      marginRem={BUTTON_MARGINS}
-      label={label}
-      highlighted={selectedTimespan === timespanKey}
-      onPress={onPress}
-      disabled={isLoading}
-    />
-  ))
+  )
 
   const cursorProps = React.useMemo<CursorProps>(
     () => ({
@@ -526,7 +671,8 @@ const SwipeChartComponent = (params: Props) => {
       // Offsets to apply to our custom cursor to ensure it stays centered
       // over the vertical line that appears during gestures:
       cursorMarkerWidth: 24, // Pulsing dot dimensions
-      cursorMarkerHeight: Platform.OS === 'android' ? theme.rem(4.25) : theme.rem(3.5),
+      cursorMarkerHeight:
+        Platform.OS === 'android' ? theme.rem(4.25) : theme.rem(3.5),
       cursorWidth: 1, // Vertical line dimensions
 
       renderCursorMarker: renderCursor
@@ -551,11 +697,31 @@ const SwipeChartComponent = (params: Props) => {
     <View style={styles.container} onLayout={handleLayout}>
       {/* Timespan control bar */}
       <View style={styles.controlBar}>
-        {renderTimespanButton(lstrings.coin_rank_hour, 'hour', handleSetTimespanH)}
-        {renderTimespanButton(lstrings.coin_rank_day, 'day', handleSetTimespanD)}
-        {renderTimespanButton(lstrings.coin_rank_week, 'week', handleSetTimespanW)}
-        {renderTimespanButton(lstrings.coin_rank_month, 'month', handleSetTimespanM)}
-        {renderTimespanButton(lstrings.coin_rank_year, 'year', handleSetTimespanY)}
+        {renderTimespanButton(
+          lstrings.coin_rank_hour,
+          'hour',
+          handleSetTimespanH
+        )}
+        {renderTimespanButton(
+          lstrings.coin_rank_day,
+          'day',
+          handleSetTimespanD
+        )}
+        {renderTimespanButton(
+          lstrings.coin_rank_week,
+          'week',
+          handleSetTimespanW
+        )}
+        {renderTimespanButton(
+          lstrings.coin_rank_month,
+          'month',
+          handleSetTimespanM
+        )}
+        {renderTimespanButton(
+          lstrings.coin_rank_year,
+          'year',
+          handleSetTimespanY
+        )}
       </View>
 
       {/* Chart */}
@@ -595,10 +761,18 @@ const SwipeChartComponent = (params: Props) => {
           />
 
           {/* Min/Max price labels */}
-          <Animated.View ref={rMinPriceView} onLayout={handleAlignMinPriceLabelLayout} style={minPriceLabelStyle}>
+          <Animated.View
+            ref={rMinPriceView}
+            onLayout={handleAlignMinPriceLabelLayout}
+            style={minPriceLabelStyle}
+          >
             <ReText style={styles.labelPrice} text={sMinPriceString} />
           </Animated.View>
-          <Animated.View ref={rMaxPriceView} onLayout={handleAlignMaxPriceLabelLayout} style={maxPriceLabelStyle}>
+          <Animated.View
+            ref={rMaxPriceView}
+            onLayout={handleAlignMaxPriceLabelLayout}
+            style={maxPriceLabelStyle}
+          >
             <ReText style={styles.labelPrice} text={sMaxPriceString} />
           </Animated.View>
         </View>
@@ -608,7 +782,13 @@ const SwipeChartComponent = (params: Props) => {
       <View>
         {/* X-Axis Cursor Timestamp Tooltip */}
         <Animated.View style={cursorXTooltipStyle}>
-          <View ref={rXTooltipView} onLayout={handleAlignXTooltipLayout} style={Platform.OS === 'ios' ? { marginTop: theme.rem(1.25) } : undefined}>
+          <View
+            ref={rXTooltipView}
+            onLayout={handleAlignXTooltipLayout}
+            style={
+              Platform.OS === 'ios' ? { marginTop: theme.rem(1.25) } : undefined
+            }
+          >
             <ReText text={sXTooltipString} style={styles.label} />
           </View>
         </Animated.View>
@@ -616,8 +796,20 @@ const SwipeChartComponent = (params: Props) => {
         {/* X-Axis Time Range Static End Labels */}
         {!isLoading && chartData.length > 0 ? (
           <Animated.View style={xRangeLabelStyle}>
-            <EdgeText style={styles.labelSecondary}>{formatTimestamp(new Date(chartData[0].x), selectedTimespan).xRange}</EdgeText>
-            <EdgeText style={styles.labelSecondary}>{formatTimestamp(new Date(chartData[chartData.length - 1].x), selectedTimespan).xRange}</EdgeText>
+            <EdgeText style={styles.labelSecondary}>
+              {
+                formatTimestamp(new Date(chartData[0].x), selectedTimespan)
+                  .xRange
+              }
+            </EdgeText>
+            <EdgeText style={styles.labelSecondary}>
+              {
+                formatTimestamp(
+                  new Date(chartData[chartData.length - 1].x),
+                  selectedTimespan
+                ).xRange
+              }
+            </EdgeText>
           </Animated.View>
         ) : null}
       </View>
@@ -704,14 +896,20 @@ const getStyles = cacheStyles((theme: Theme) => {
  * Natively center align a component across the Y axis origin
  */
 const nativeCenterAlignLayout =
-  (widthRef: React.MutableRefObject<number>, ref: React.RefObject<View | Animated.View | null>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
+  (
+    widthRef: React.MutableRefObject<number>,
+    ref: React.RefObject<View | Animated.View | null>,
+    offset?: number
+  ) =>
+  (layoutChangeEvent: LayoutChangeEvent) => {
     if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
       // Store measurements and avoid over-updating if the size of the component
       // doesn't change significantly
       const newWidth = layoutChangeEvent.nativeEvent.layout.width
       if (Math.abs(widthRef.current - newWidth) > 1) {
         widthRef.current = newWidth
-        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
+        if (ref.current != null)
+          ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
       }
     }
   }

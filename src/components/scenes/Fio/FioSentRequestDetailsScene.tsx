@@ -7,11 +7,20 @@ import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { FioRequest, FioRequestStatus, GuiExchangeRates } from '../../../types/types'
+import {
+  FioRequest,
+  FioRequestStatus,
+  GuiExchangeRates
+} from '../../../types/types'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
@@ -46,17 +55,32 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     } = route.params
     const { amount } = content
     const tokenCode = content.token_code.toUpperCase()
-    const text = `${amount} ${tokenCode} (${fiatSymbol} ${this.fiatAmount(tokenCode, amount)})`
+    const text = `${amount} ${tokenCode} (${fiatSymbol} ${this.fiatAmount(
+      tokenCode,
+      amount
+    )})`
     return <EdgeRow title={lstrings.fio_request_amount} body={text} />
   }
 
   statusField = (status: FioRequestStatus) => {
     const styles = getStyles(this.props.theme)
-    let statusLabel = <EdgeText style={styles.status}>{lstrings.fragment_wallet_unconfirmed}</EdgeText>
+    let statusLabel = (
+      <EdgeText style={styles.status}>
+        {lstrings.fragment_wallet_unconfirmed}
+      </EdgeText>
+    )
     if (status === 'sent_to_blockchain') {
-      statusLabel = <EdgeText style={[styles.status, styles.statusReceived]}>{lstrings.received}</EdgeText>
+      statusLabel = (
+        <EdgeText style={[styles.status, styles.statusReceived]}>
+          {lstrings.received}
+        </EdgeText>
+      )
     } else if (status === 'rejected') {
-      statusLabel = <EdgeText style={[styles.status, styles.statusRejected]}>{lstrings.fio_reject_status}</EdgeText>
+      statusLabel = (
+        <EdgeText style={[styles.status, styles.statusRejected]}>
+          {lstrings.fio_reject_status}
+        </EdgeText>
+      )
     }
     return <EdgeRow title={lstrings.string_status}>{statusLabel}</EdgeRow>
   }
@@ -68,15 +92,33 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader title={lstrings.title_fio_sent_request_details} underline />
+        <SceneHeader
+          title={lstrings.title_fio_sent_request_details}
+          underline
+        />
         <View style={styles.headerSpace}>
           <EdgeCard sections>
             {this.amountField()}
-            <EdgeRow title={lstrings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
-            <EdgeRow title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
+            <EdgeRow
+              title={lstrings.fio_request_sent_details_from}
+              body={selectedFioSentRequest.payee_fio_address}
+            />
+            <EdgeRow
+              title={lstrings.fio_request_sent_details_to}
+              body={selectedFioSentRequest.payer_fio_address}
+            />
             {this.statusField(selectedFioSentRequest.status)}
-            <EdgeRow title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
-            <EdgeRow title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
+            <EdgeRow
+              title={lstrings.fio_date_label}
+              body={formatDate(
+                new Date(selectedFioSentRequest.time_stamp),
+                SHORT_DATE_FMT
+              )}
+            />
+            <EdgeRow
+              title={lstrings.memo_memo_title}
+              body={selectedFioSentRequest.content.memo}
+            />
           </EdgeCard>
         </View>
       </SceneWrapper>

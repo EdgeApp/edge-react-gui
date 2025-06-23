@@ -55,7 +55,16 @@ const asCryptoKey = asString
 const asProviderSupportObject = asJSON<ProviderSupportObject>(
   asObjectIn(
     asDirectionKey,
-    asObjectInOrTrue(asRegionKey, asObjectInOrTrue(asFiatKey, asObjectInOrTrue(asPaymentKey, asObjectInOrTrue(asCryptoKey, asValue(true)))))
+    asObjectInOrTrue(
+      asRegionKey,
+      asObjectInOrTrue(
+        asFiatKey,
+        asObjectInOrTrue(
+          asPaymentKey,
+          asObjectInOrTrue(asCryptoKey, asValue(true))
+        )
+      )
+    )
   )
 )
 const wasProviderSupportObject = uncleaner(asProviderSupportObject)
@@ -107,8 +116,17 @@ export class ProviderSupportStore {
 
   constructor(providerId: string) {
     this.providerId = providerId
-    this.add = makeAddApi(this.supportTree, ['direction', 'region', 'fiat', 'payment', 'crypto']) as any
-    this.is = makeQueryApi([this.supportTree], ['direction', 'region', 'fiat', 'payment', 'crypto']) as any
+    this.add = makeAddApi(this.supportTree, [
+      'direction',
+      'region',
+      'fiat',
+      'payment',
+      'crypto'
+    ]) as any
+    this.is = makeQueryApi(
+      [this.supportTree],
+      ['direction', 'region', 'fiat', 'payment', 'crypto']
+    ) as any
   }
 
   addCryptoInfo(crypto: CryptoKey, otherInfo: unknown): void {
@@ -127,7 +145,9 @@ export class ProviderSupportStore {
     return this.fiatAssetInfo.get(fiat)
   }
 
-  getFiatProviderAssetMap(query: FiatProviderAssetMapQuery): FiatProviderAssetMap {
+  getFiatProviderAssetMap(
+    query: FiatProviderAssetMapQuery
+  ): FiatProviderAssetMap {
     const fiatProviderAssetMap: FiatProviderAssetMap = {
       providerId: this.providerId,
       crypto: {},
@@ -172,14 +192,17 @@ export class ProviderSupportStore {
       for (const cryptoKey of cryptoNode.keys()) {
         if (cryptoKey === '*') continue
         const [pluginId, tokenIdString] = cryptoKey.split(':')
-        const tokenId: EdgeTokenId = tokenIdString === 'null' ? null : tokenIdString
+        const tokenId: EdgeTokenId =
+          tokenIdString === 'null' ? null : tokenIdString
 
         // Add fiat to crypto array for pluginId:
         ;(tokenIdMap[pluginId] = tokenIdMap[pluginId] ?? new Set()).add(tokenId)
       }
     }
     for (const [pluginId, tokenSet] of Object.entries(tokenIdMap)) {
-      fiatProviderAssetMap.crypto[pluginId] = Array.from(tokenSet).map(tokenId => ({ tokenId }))
+      fiatProviderAssetMap.crypto[pluginId] = Array.from(tokenSet).map(
+        tokenId => ({ tokenId })
+      )
     }
 
     return fiatProviderAssetMap
@@ -233,7 +256,11 @@ function fromJsonObject(tree: InternalTree, obj: any): void {
 interface GenericAddApi {
   [method: string]: (key: string) => GenericAddApi | undefined
 }
-function makeAddApi(tree: InternalTree, levels: string[], level: number = 0): GenericAddApi {
+function makeAddApi(
+  tree: InternalTree,
+  levels: string[],
+  level: number = 0
+): GenericAddApi {
   const method = levels[level]
   return {
     [method]: (key: string) => {
@@ -252,7 +279,12 @@ interface GenericQueryApi {
   supported?: boolean
   fn?: (key: string) => GenericQueryApi | undefined
 }
-function makeQueryApi(trees: InternalTree[], levels: string[], level: number = 0, supported?: boolean): GenericQueryApi {
+function makeQueryApi(
+  trees: InternalTree[],
+  levels: string[],
+  level: number = 0,
+  supported?: boolean
+): GenericQueryApi {
   const method = levels[level] as 'fn' // this is the magical hack to make TypeScript happy
   return {
     supported,
@@ -279,7 +311,10 @@ function makeQueryApi(trees: InternalTree[], levels: string[], level: number = 0
  * @param query A query string used to search for nested nodes (e.g. 'US:CA', 'US:*', '*', etc)
  * @returns an array of nodes that match the query
  */
-export function queryNodes(nodes: InternalTree[], query: string): InternalTree[] {
+export function queryNodes(
+  nodes: InternalTree[],
+  query: string
+): InternalTree[] {
   let matchFound = false
   const result: InternalTree[] = []
 

@@ -6,7 +6,11 @@ import { WebView, WebViewMessageEvent } from 'react-native-webview'
 import { EdgeProviderServer } from '../../controllers/edgeProvider/EdgeProviderServer'
 import { javascript } from '../../controllers/edgeProvider/injectThisInWebView'
 import { methodCleaners } from '../../controllers/edgeProvider/types/edgeProviderCleaners'
-import { asRpcCall, rpcErrorCodes, RpcReturn } from '../../controllers/edgeProvider/types/jsonRpcCleaners'
+import {
+  asRpcCall,
+  rpcErrorCodes,
+  RpcReturn
+} from '../../controllers/edgeProvider/types/jsonRpcCleaners'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
@@ -51,16 +55,26 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const disklet = useSelector(state => state.core.disklet)
-  const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
+  const accountPlugins = useSelector(
+    state => state.account.referralCache.accountPlugins
+  )
   const accountReferral = useSelector(state => state.account.accountReferral)
-  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
-  const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const selectedWalletId = useSelector(
+    state => state.ui.wallets.selectedWalletId
+  )
+  const selectedCurrencyCode = useSelector(
+    state => state.ui.wallets.selectedCurrencyCode
+  )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
 
   // Get the promo information:
   const { promoCode, promoMessage } = React.useMemo(() => {
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      undefined
+    )
     return {
       promoCode: activePlugins.promoCodes[pluginId],
       promoMessage: activePlugins.promoMessages[pluginId]
@@ -71,7 +85,12 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   useAsyncEffect(
     async () => {
       for (const permission of permissions) {
-        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatoryPermissions)
+        const deniedPermission = await requestPermissionOnSettings(
+          disklet,
+          permission,
+          displayName,
+          mandatoryPermissions
+        )
         if (deniedPermission) {
           navigation.goBack()
           return
@@ -81,7 +100,14 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
       // Now show the promo message, if we have one:
       if (promoMessage != null) showToast(promoMessage)
     },
-    [displayName, mandatoryPermissions, navigation, permissions, promoMessage, disklet],
+    [
+      displayName,
+      mandatoryPermissions,
+      navigation,
+      permissions,
+      promoMessage,
+      disklet
+    ],
     'EdgeProviderComponent'
   )
 
@@ -101,10 +127,12 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
     })
   }, [navigation])
 
-  const handleLoadProgress = useHandler((event: NativeSyntheticEvent<WebViewEvent>) => {
-    console.log('Plugin navigation: ', event.nativeEvent)
-    canGoBack.current = event.nativeEvent.canGoBack
-  })
+  const handleLoadProgress = useHandler(
+    (event: NativeSyntheticEvent<WebViewEvent>) => {
+      console.log('Plugin navigation: ', event.nativeEvent)
+      canGoBack.current = event.nativeEvent.canGoBack
+    }
+  )
 
   const handleNavigationStateChange = useHandler((event: WebViewEvent) => {
     console.log('Plugin navigation: ', event)
@@ -118,7 +146,14 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {
     const selectedWallet = account.currencyWallets[selectedWalletId]
-    const selectedTokenId = selectedWallet == null ? null : getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode)
+    const selectedTokenId =
+      selectedWallet == null
+        ? null
+        : getTokenIdForced(
+            account,
+            selectedWallet.currencyInfo.pluginId,
+            selectedCurrencyCode
+          )
     return new EdgeProviderServer({
       account,
       defaultIsoFiat,
@@ -155,7 +190,9 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
             jsonrpc: '2.0',
             result: wasReturn(out)
           }
-          const js = `window.edgeProviderBridge.postReturn(${JSON.stringify(message)})`
+          const js = `window.edgeProviderBridge.postReturn(${JSON.stringify(
+            message
+          )})`
           webView.current?.injectJavaScript(js)
         })
         .catch(error => {
@@ -169,7 +206,9 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
             jsonrpc: '2.0',
             result: undefined
           }
-          const js = `window.edgeProviderBridge.postReturn(${JSON.stringify(message)})`
+          const js = `window.edgeProviderBridge.postReturn(${JSON.stringify(
+            message
+          )})`
           webView.current?.injectJavaScript(js)
         })
     } catch (e) {

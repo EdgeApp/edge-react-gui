@@ -9,12 +9,30 @@ import {
   StakePosition,
   StakePositionRequest
 } from '../types'
-import { CardanoPooledKilnAdapterConfig, makeCardanoKilnAdapter } from './policyAdapters/CardanoKilnAdaptor'
-import { CoreumNativeStakeKitAdapterConfig, makeStakeKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
-import { EthereumPooledKilnAdapterConfig, makeEthereumKilnAdapter } from './policyAdapters/EthereumKilnAdaptor'
-import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
-import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
-import { makeThorchainYieldAdapter, ThorchainYieldAdapterConfig } from './policyAdapters/ThorchainYieldAdaptor'
+import {
+  CardanoPooledKilnAdapterConfig,
+  makeCardanoKilnAdapter
+} from './policyAdapters/CardanoKilnAdaptor'
+import {
+  CoreumNativeStakeKitAdapterConfig,
+  makeStakeKitAdapter
+} from './policyAdapters/CoreumStakeKitAdaptor'
+import {
+  EthereumPooledKilnAdapterConfig,
+  makeEthereumKilnAdapter
+} from './policyAdapters/EthereumKilnAdaptor'
+import {
+  GlifInfinityPoolAdapterConfig,
+  makeGlifInfinityPoolAdapter
+} from './policyAdapters/GlifInfinityPoolAdapter'
+import {
+  makeTarotPoolAdapter,
+  TarotPoolAdapterConfig
+} from './policyAdapters/TarotPoolAdaptor'
+import {
+  makeThorchainYieldAdapter,
+  ThorchainYieldAdapterConfig
+} from './policyAdapters/ThorchainYieldAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
 import { StakePluginInfo, StakePolicyConfig } from './types'
 
@@ -36,30 +54,69 @@ export const makeGenericStakePlugin =
         return filterStakePolicies(policies, filter)
       },
 
-      async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-        const policyAdapter = policyAdapters.find(p => p.stakePolicyId === request.stakePolicyId)
-        if (policyAdapter == null) throw new Error(`Stake policy adapter '${request.stakePolicyId}' not found`)
+      async fetchChangeQuote(
+        request: ChangeQuoteRequest
+      ): Promise<ChangeQuote> {
+        const policyAdapter = policyAdapters.find(
+          p => p.stakePolicyId === request.stakePolicyId
+        )
+        if (policyAdapter == null)
+          throw new Error(
+            `Stake policy adapter '${request.stakePolicyId}' not found`
+          )
 
-        const policy = policies.find(policy => policy.stakePolicyId === request.stakePolicyId)
-        if (policy == null) throw new Error(`Policy '${request.stakePolicyId}' not found`)
+        const policy = policies.find(
+          policy => policy.stakePolicyId === request.stakePolicyId
+        )
+        if (policy == null)
+          throw new Error(`Policy '${request.stakePolicyId}' not found`)
 
-        const requestAsset = [...policy.stakeAssets, ...policy.rewardAssets].find(asset => asset.currencyCode === request.currencyCode)
-        if (requestAsset == null) throw new Error(`Asset '${request.currencyCode}' not found in policy '${policy.stakePolicyId}'`)
+        const requestAsset = [
+          ...policy.stakeAssets,
+          ...policy.rewardAssets
+        ].find(asset => asset.currencyCode === request.currencyCode)
+        if (requestAsset == null)
+          throw new Error(
+            `Asset '${request.currencyCode}' not found in policy '${policy.stakePolicyId}'`
+          )
 
         switch (request.action) {
           case 'claim':
-            return await policyAdapter.fetchClaimQuote(request.wallet, requestAsset, request.nativeAmount)
+            return await policyAdapter.fetchClaimQuote(
+              request.wallet,
+              requestAsset,
+              request.nativeAmount
+            )
           case 'stake':
-            return await policyAdapter.fetchStakeQuote(request.wallet, requestAsset, request.nativeAmount)
+            return await policyAdapter.fetchStakeQuote(
+              request.wallet,
+              requestAsset,
+              request.nativeAmount
+            )
           case 'unstake':
-            return await policyAdapter.fetchUnstakeQuote(request.wallet, requestAsset, request.nativeAmount)
+            return await policyAdapter.fetchUnstakeQuote(
+              request.wallet,
+              requestAsset,
+              request.nativeAmount
+            )
           case 'unstakeExact':
-            return await policyAdapter.fetchUnstakeExactQuote(request.wallet, requestAsset, request.nativeAmount)
+            return await policyAdapter.fetchUnstakeExactQuote(
+              request.wallet,
+              requestAsset,
+              request.nativeAmount
+            )
         }
       },
-      async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-        const policyAdapter = policyAdapters.find(p => p.stakePolicyId === request.stakePolicyId)
-        if (policyAdapter == null) throw new Error(`Stake policy adapter '${request.stakePolicyId}' not found`)
+      async fetchStakePosition(
+        request: StakePositionRequest
+      ): Promise<StakePosition> {
+        const policyAdapter = policyAdapters.find(
+          p => p.stakePolicyId === request.stakePolicyId
+        )
+        if (policyAdapter == null)
+          throw new Error(
+            `Stake policy adapter '${request.stakePolicyId}' not found`
+          )
 
         return await policyAdapter.fetchStakePosition(request.wallet)
       }
@@ -67,26 +124,43 @@ export const makeGenericStakePlugin =
     return instance
   }
 
-const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): StakePolicyAdapter => {
+const makePolicyAdapter = (
+  policyInfo: StakePolicyConfig<StakeAdapterConfig>
+): StakePolicyAdapter => {
   switch (policyInfo.adapterConfig.type) {
     case 'cardano-pooled-kiln':
-      return makeCardanoKilnAdapter(policyInfo as StakePolicyConfig<CardanoPooledKilnAdapterConfig>)
+      return makeCardanoKilnAdapter(
+        policyInfo as StakePolicyConfig<CardanoPooledKilnAdapterConfig>
+      )
     case 'coreum-native-stake-kit':
-      return makeStakeKitAdapter(policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>)
+      return makeStakeKitAdapter(
+        policyInfo as StakePolicyConfig<CoreumNativeStakeKitAdapterConfig>
+      )
     case 'ethereum-pooled-kiln':
-      return makeEthereumKilnAdapter(policyInfo as StakePolicyConfig<EthereumPooledKilnAdapterConfig>)
+      return makeEthereumKilnAdapter(
+        policyInfo as StakePolicyConfig<EthereumPooledKilnAdapterConfig>
+      )
     case 'glif-infinity-pool':
-      return makeGlifInfinityPoolAdapter(policyInfo as StakePolicyConfig<GlifInfinityPoolAdapterConfig>)
+      return makeGlifInfinityPoolAdapter(
+        policyInfo as StakePolicyConfig<GlifInfinityPoolAdapterConfig>
+      )
     case 'tarot-velodrome-pool':
-      return makeTarotPoolAdapter(policyInfo as StakePolicyConfig<TarotPoolAdapterConfig>)
+      return makeTarotPoolAdapter(
+        policyInfo as StakePolicyConfig<TarotPoolAdapterConfig>
+      )
     case 'thorchain-yield':
-      return makeThorchainYieldAdapter(policyInfo as StakePolicyConfig<ThorchainYieldAdapterConfig>)
+      return makeThorchainYieldAdapter(
+        policyInfo as StakePolicyConfig<ThorchainYieldAdapterConfig>
+      )
     default:
       throw new Error('Unknown policyInfo')
   }
 }
 
-const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfig>, policyAdapter: StakePolicyAdapter): Promise<StakePolicy> => {
+const makeStakePolicy = async (
+  policyConfig: StakePolicyConfig<StakeAdapterConfig>,
+  policyAdapter: StakePolicyAdapter
+): Promise<StakePolicy> => {
   const {
     disableMaxStake = false,
     hideClaimAction = false,
@@ -104,8 +178,10 @@ const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfi
     mustMaxUnstake = false
   } = policyConfig
   const stakePolicyId = policyConfig.stakePolicyId
-  const defaultYieldType = isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
-  const { apy, yieldType = defaultYieldType } = await policyAdapter.fetchYieldInfo()
+  const defaultYieldType =
+    isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
+  const { apy, yieldType = defaultYieldType } =
+    await policyAdapter.fetchYieldInfo()
 
   return {
     stakePolicyId,

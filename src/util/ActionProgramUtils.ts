@@ -4,9 +4,18 @@ import { sprintf } from 'sprintf-js'
 
 import { MAX_AMOUNT } from '../constants/valueConstants'
 import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
-import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import {
+  ActionOp,
+  ActionProgram,
+  ParActionOp,
+  SeqActionOp
+} from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
-import { BorrowCollateral, BorrowDebt, BorrowEngine } from '../plugins/borrow-plugins/types'
+import {
+  BorrowCollateral,
+  BorrowDebt,
+  BorrowEngine
+} from '../plugins/borrow-plugins/types'
 import { config } from '../theme/appConfig'
 import { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
@@ -51,7 +60,9 @@ interface AaveBorrowActionParams {
   destination: LoanAsset
 }
 
-export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams): Promise<ActionProgram> => {
+export const makeAaveCreateActionProgram = async (
+  params: AaveCreateActionParams
+): Promise<ActionProgram> => {
   const { borrowEngineWallet, borrowPluginId, source, destination } = params
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
 
@@ -68,11 +79,17 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   const depositToken = getToken(borrowEngineWallet, source.tokenId)
 
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
-  const depositTokenCc = depositToken == null ? 'WBTC' : depositToken.currencyCode
+  const depositTokenCc =
+    depositToken == null ? 'WBTC' : depositToken.currencyCode
   await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
 
-  const toTokenId = source.tokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
-  if (toTokenId == null) throw new Error(`makeAaveCreateActionProgram: Cannot find toTokenId`)
+  const toTokenId =
+    source.tokenId ??
+    Object.keys(allTokens).find(
+      tokenId => allTokens[tokenId].currencyCode === 'WBTC'
+    )
+  if (toTokenId == null)
+    throw new Error(`makeAaveCreateActionProgram: Cannot find toTokenId`)
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
 
@@ -117,7 +134,8 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
       destination
     })) as SeqActionOp
   ).actions[0] as ParActionOp
-  if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
+  if (borrowAction.actions.length > 0)
+    loanParallelActions.push(...borrowAction.actions)
 
   // Special complete message for withdraw to bank
   return await makeActionProgram(actionOp, {
@@ -125,11 +143,18 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
     message:
       destination.paymentMethodId != null
         ? lstrings.action_display_message_complete_bank
-        : sprintf(lstrings.action_display_message_complete_wallet_2s, getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ?? 'NA', config.appName)
+        : sprintf(
+            lstrings.action_display_message_complete_wallet_2s,
+            getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ??
+              'NA',
+            config.appName
+          )
   })
 }
 
-export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Promise<ActionOp> => {
+export const makeAaveBorrowAction = async (
+  params: AaveBorrowActionParams
+): Promise<ActionOp> => {
   const { borrowEngineWallet, borrowPluginId, destination } = params
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
 
@@ -159,10 +184,16 @@ export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Prom
   // TODO: ASSUMPTION: The only borrow destinations are:
   // 1. USDC
   // 2. Bank (sell/fiat off-ramp), to be handled in a separate method
-  if (borrowTokenCc !== 'USDC') throw new Error('Non-USDC token borrowing not yet implemented') // Should not happen...
+  if (borrowTokenCc !== 'USDC')
+    throw new Error('Non-USDC token borrowing not yet implemented') // Should not happen...
 
-  const defaultTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === borrowTokenCc)
-  if (defaultTokenId == null) throw new Error(`Could not find default token ${borrowTokenCc} for borrow request`)
+  const defaultTokenId = Object.keys(allTokens).find(
+    tokenId => allTokens[tokenId].currencyCode === borrowTokenCc
+  )
+  if (defaultTokenId == null)
+    throw new Error(
+      `Could not find default token ${borrowTokenCc} for borrow request`
+    )
 
   // Construct the borrow action
   if (destination.tokenId != null || defaultTokenId != null)
@@ -207,11 +238,17 @@ export const makeAaveDepositAction = async ({
   const depositToken = getToken(borrowEngineWallet, depositTokenId)
 
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
-  const depositTokenCc = depositToken == null ? 'WBTC' : depositToken.currencyCode
+  const depositTokenCc =
+    depositToken == null ? 'WBTC' : depositToken.currencyCode
   await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
-  const tokenId = depositTokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
-  if (tokenId == null) throw new Error(`makeAaveDepositAction: Cannot find tokenId`)
+  const tokenId =
+    depositTokenId ??
+    Object.keys(allTokens).find(
+      tokenId => allTokens[tokenId].currencyCode === 'WBTC'
+    )
+  if (tokenId == null)
+    throw new Error(`makeAaveDepositAction: Cannot find tokenId`)
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
   if (srcWallet.id !== borrowEngineWallet.id) {
@@ -255,13 +292,18 @@ export const makeAaveCloseAction = async ({
   const evmActions: ActionOp[] = []
 
   // Only accept this request if the user has only singular debt/collateral assets
-  const collaterals = borrowEngine.collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
-  const debts = borrowEngine.debts.filter(debt => !zeroString(debt.nativeAmount))
+  const collaterals = borrowEngine.collaterals.filter(
+    collateral => !zeroString(collateral.nativeAmount)
+  )
+  const debts = borrowEngine.debts.filter(
+    debt => !zeroString(debt.nativeAmount)
+  )
 
   // Closing loans with more than 1 debt/collateral is not supported because
   // we cannot make a judgement to determine which collateral asset to use to
   // repay debts.
-  if (collaterals.length > 1 || debts.length > 1) throw new Error(lstrings.loan_close_multiple_asset_error)
+  if (collaterals.length > 1 || debts.length > 1)
+    throw new Error(lstrings.loan_close_multiple_asset_error)
 
   const collateral: BorrowCollateral | undefined = collaterals[0]
   const debt: BorrowDebt | undefined = debts[0]
@@ -270,9 +312,13 @@ export const makeAaveCloseAction = async ({
     const collateralTokenId = collateral.tokenId
 
     const collateralToken = getToken(wallet, collateralTokenId)
-    if (collateralToken == null) throw new Error('Unable to find collateral EdgeToken')
+    if (collateralToken == null)
+      throw new Error('Unable to find collateral EdgeToken')
 
-    const { currencyCode: collateralCurrencyCode, denominations: collateralDenoms } = collateralToken
+    const {
+      currencyCode: collateralCurrencyCode,
+      denominations: collateralDenoms
+    } = collateralToken
 
     // We must ensure the token is enabled to get the user's token balance and
     // calculate exchange rates
@@ -283,7 +329,8 @@ export const makeAaveCloseAction = async ({
       const debtToken = getToken(wallet, debtTokenId)
       if (debtToken == null) throw new Error('Unable to find debt EdgeToken')
 
-      const { currencyCode: debtCurrencyCode, denominations: debtDenoms } = debtToken
+      const { currencyCode: debtCurrencyCode, denominations: debtDenoms } =
+        debtToken
 
       // We must ensure the token is enabled to get the user's token balance
       // and calculate exchange rates
@@ -296,7 +343,9 @@ export const makeAaveCloseAction = async ({
         exchangeRates,
         collateralCurrencyCode,
         defaultIsoFiat,
-        convertNativeToExchange(collateralDenom.multiplier)(collateral.nativeAmount)
+        convertNativeToExchange(collateralDenom.multiplier)(
+          collateral.nativeAmount
+        )
       )
       const debtDenom = debtDenoms[0]
       const principalFiat = convertCurrencyFromExchangeRates(
@@ -316,7 +365,11 @@ export const makeAaveCloseAction = async ({
       // Find maximum amount of principal that can remain in the loan such that
       // a repay with collateral pays off the entirety of the loan AND remains
       // above the LIQUIDATION_THRESHOLD.
-      const maxRemainingPrincipalFiat = div(mul(collateralFiat, LIQUIDATION_THRESHOLD), add('1', LIQUIDATION_THRESHOLD), DECIMAL_PRECISION)
+      const maxRemainingPrincipalFiat = div(
+        mul(collateralFiat, LIQUIDATION_THRESHOLD),
+        add('1', LIQUIDATION_THRESHOLD),
+        DECIMAL_PRECISION
+      )
 
       // Check if the user has enough to bring the principal down to the
       // maxRemainingPrincipal
@@ -324,20 +377,36 @@ export const makeAaveCloseAction = async ({
       if (gt(remainingPrincipalFiat, maxRemainingPrincipalFiat)) {
         // Inform the user of the deficit that must be covered with either
         // an additional deposit or debt balance in order to close the loan
-        const debtBalanceDeficitFiat = sub(remainingPrincipalFiat, maxRemainingPrincipalFiat)
+        const debtBalanceDeficitFiat = sub(
+          remainingPrincipalFiat,
+          maxRemainingPrincipalFiat
+        )
 
         const collateralDeficitFiat = sub(
-          div(mul(add('1', LIQUIDATION_THRESHOLD), remainingPrincipalFiat), LIQUIDATION_THRESHOLD, DECIMAL_PRECISION),
+          div(
+            mul(add('1', LIQUIDATION_THRESHOLD), remainingPrincipalFiat),
+            LIQUIDATION_THRESHOLD,
+            DECIMAL_PRECISION
+          ),
           collateralFiat
         )
-        const collateralDeficitAmount = div(collateralDeficitFiat, exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`], DECIMAL_PRECISION)
+        const collateralDeficitAmount = div(
+          collateralDeficitFiat,
+          exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`],
+          DECIMAL_PRECISION
+        )
 
         const collateralPrecisionAdjust = precisionAdjust({
           primaryExchangeMultiplier: collateralDenom.multiplier,
-          secondaryExchangeMultiplier: getDenomFromIsoCode(defaultIsoFiat).multiplier,
-          exchangeSecondaryToPrimaryRatio: exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`]
+          secondaryExchangeMultiplier:
+            getDenomFromIsoCode(defaultIsoFiat).multiplier,
+          exchangeSecondaryToPrimaryRatio:
+            exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`]
         })
-        const collateralMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(collateralDenom.multiplier), collateralPrecisionAdjust)
+        const collateralMaxPrecision = maxPrimaryCurrencyConversionDecimals(
+          log10(collateralDenom.multiplier),
+          collateralPrecisionAdjust
+        )
 
         throw new Error(
           sprintf(
@@ -363,13 +432,21 @@ export const makeAaveCloseAction = async ({
         // If the user does not have enough debt balance to fully cover the principal,
         // first repay with the maximum debt balance such that the following repay
         // with collateral will not fail due to not meeting paraswap minimums
-        repayWithCollateralNativeAmount = max(sub(debt.nativeAmount, debtBalanceNativeAmount), MINIMUM_PARASWAP_AMOUNT)
-        repayWithBalanceNativeAmount = sub(debt.nativeAmount, repayWithCollateralNativeAmount)
+        repayWithCollateralNativeAmount = max(
+          sub(debt.nativeAmount, debtBalanceNativeAmount),
+          MINIMUM_PARASWAP_AMOUNT
+        )
+        repayWithBalanceNativeAmount = sub(
+          debt.nativeAmount,
+          repayWithCollateralNativeAmount
+        )
       }
 
       // Repay with balance actions
       if (!zeroString(repayWithBalanceNativeAmount)) {
-        throw new Error('Need to revisit what fromTokenId should be assigned to due to core2.0')
+        throw new Error(
+          'Need to revisit what fromTokenId should be assigned to due to core2.0'
+        )
         // evmActions.push({
         //   type: 'loan-repay',
         //   nativeAmount: repayWithBalanceNativeAmount,

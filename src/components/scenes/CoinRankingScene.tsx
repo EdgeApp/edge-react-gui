@@ -10,7 +10,12 @@ import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
-import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
+import {
+  asCoinranking,
+  AssetSubText,
+  CoinRanking,
+  PercentChangeTimeFrame
+} from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
@@ -42,7 +47,13 @@ enableDebugLogType(LOG_COINRANK & 0)
 
 interface Props extends EdgeAppSceneProps<'coinRanking'> {}
 
-const percentChangeOrder: PercentChangeTimeFrame[] = ['hours1', 'hours24', 'days7', 'days30', 'year1']
+const percentChangeOrder: PercentChangeTimeFrame[] = [
+  'hours1',
+  'hours24',
+  'days7',
+  'days30',
+  'year1'
+]
 const percentChangeStrings: { [pc: string]: string } = {
   hours1: '1hr',
   hours24: '24hr',
@@ -65,12 +76,17 @@ const CoinRankingComponent = (props: Props) => {
 
   const lastStartIndex = React.useRef<number>(1)
 
-  const [requestDataSize, setRequestDataSize] = React.useState<number>(QUERY_PAGE_SIZE)
-  const [dataSize, setDataSize] = React.useState<number>(coinRankingDatas.length)
+  const [requestDataSize, setRequestDataSize] =
+    React.useState<number>(QUERY_PAGE_SIZE)
+  const [dataSize, setDataSize] = React.useState<number>(
+    coinRankingDatas.length
+  )
   const [searchText, setSearchText] = React.useState<string>('')
   const [isSearching, setIsSearching] = React.useState<boolean>(false)
-  const [percentChangeTimeFrame, setPercentChangeTimeFrame] = React.useState<PercentChangeTimeFrame>('hours24')
-  const [assetSubText, setPriceSubText] = React.useState<AssetSubText>('marketCap')
+  const [percentChangeTimeFrame, setPercentChangeTimeFrame] =
+    React.useState<PercentChangeTimeFrame>('hours24')
+  const [assetSubText, setPriceSubText] =
+    React.useState<AssetSubText>('marketCap')
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   /** The user's fiat setting, falling back to USD if not supported. */
@@ -94,19 +110,28 @@ const CoinRankingComponent = (props: Props) => {
   const handleScroll = useSceneScrollHandler()
 
   const extraData = React.useMemo(
-    () => ({ assetSubText, supportedFiatSetting: coingeckoFiat, percentChangeTimeFrame }),
+    () => ({
+      assetSubText,
+      supportedFiatSetting: coingeckoFiat,
+      percentChangeTimeFrame
+    }),
     [assetSubText, coingeckoFiat, percentChangeTimeFrame]
   )
 
   const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
-    const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
+    const currencyCode =
+      coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
     const key = `${index}-${item}-${rank}-${currencyCode}-${coingeckoFiat}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
-      <EdgeAnim key={key} disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+      <EdgeAnim
+        key={key}
+        disableAnimation={index >= MAX_LIST_ITEMS_ANIM}
+        enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}
+      >
         <CoinRankRow
           navigation={navigation}
           index={item}
@@ -120,7 +145,12 @@ const CoinRankingComponent = (props: Props) => {
   }
 
   const handleEndReached = useHandler(() => {
-    debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${requestDataSize + QUERY_PAGE_SIZE}`)
+    debugLog(
+      LOG_COINRANK,
+      `handleEndReached. setRequestDataSize ${
+        requestDataSize + QUERY_PAGE_SIZE
+      }`
+    )
     setRequestDataSize(requestDataSize + QUERY_PAGE_SIZE)
   })
 
@@ -138,7 +168,8 @@ const CoinRankingComponent = (props: Props) => {
   })
 
   const handlePriceSubText = useHandler(() => {
-    const newPriceSubText = assetSubText === 'marketCap' ? 'volume24h' : 'marketCap'
+    const newPriceSubText =
+      assetSubText === 'marketCap' ? 'volume24h' : 'marketCap'
     setPriceSubText(newPriceSubText)
   })
 
@@ -186,12 +217,17 @@ const CoinRankingComponent = (props: Props) => {
           const rankIndex = startIndex - 1 + i
           const row = listings.data[i]
           coinRankingDatas[rankIndex] = row
-          debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+          debugLog(
+            LOG_COINRANK,
+            `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`
+          )
         }
         startIndex += QUERY_PAGE_SIZE
       }
     } catch (e: any) {
-      console.warn(`Error during data fetch: ${e.message}, ${coingeckoFiat}, ${startIndex}, ${requestDataSize}`)
+      console.warn(
+        `Error during data fetch: ${e.message}, ${coingeckoFiat}, ${startIndex}, ${requestDataSize}`
+      )
     }
 
     setDataSize(coinRankingDatas.length)
@@ -236,14 +272,20 @@ const CoinRankingComponent = (props: Props) => {
   }, [coingeckoFiat /* reset subscription on fiat change */, queryLoop])
 
   const listData: number[] = React.useMemo(() => {
-    debugLog(LOG_COINRANK, `Updating listData dataSize=${dataSize} searchText=${searchText}`)
+    debugLog(
+      LOG_COINRANK,
+      `Updating listData dataSize=${dataSize} searchText=${searchText}`
+    )
     const out = []
     for (let i = 0; i < dataSize; i++) {
       const cr = coinRankingDatas[i]
       if (searchText === '') {
         out.push(i)
       } else {
-        if (cr.currencyCode.toLowerCase().includes(searchText.toLowerCase()) || cr.currencyName.toLowerCase().includes(searchText.toLowerCase())) {
+        if (
+          cr.currencyCode.toLowerCase().includes(searchText.toLowerCase()) ||
+          cr.currencyName.toLowerCase().includes(searchText.toLowerCase())
+        ) {
           out.push(i)
         }
       }
@@ -274,25 +316,49 @@ const CoinRankingComponent = (props: Props) => {
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+    [
+      handleChangeText,
+      handleDoneSearching,
+      handleFooterLayoutHeight,
+      handleStartSearching,
+      isSearching,
+      searchText
+    ]
   )
 
   return (
-    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasNotifications renderFooter={renderFooter}>
+    <SceneWrapper
+      avoidKeyboard
+      footerHeight={footerHeight}
+      hasNotifications
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <View style={styles.headerContainer}>
             <View style={styles.rankView}>
-              <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
+              <EdgeText style={styles.rankText}>
+                {lstrings.coin_rank_rank}
+              </EdgeText>
             </View>
-            <EdgeTouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
+            <EdgeTouchableOpacity
+              style={styles.assetView}
+              onPress={handlePriceSubText}
+            >
               <EdgeText style={styles.assetText}>{assetSubTextString}</EdgeText>
             </EdgeTouchableOpacity>
-            <EdgeTouchableOpacity style={styles.percentChangeView} onPress={handlePercentChange}>
-              <EdgeText style={styles.percentChangeText}>{timeFrameString}</EdgeText>
+            <EdgeTouchableOpacity
+              style={styles.percentChangeView}
+              onPress={handlePercentChange}
+            >
+              <EdgeText style={styles.percentChangeText}>
+                {timeFrameString}
+              </EdgeText>
             </EdgeTouchableOpacity>
             <View style={styles.priceView}>
-              <EdgeText style={styles.priceText}>{lstrings.coin_rank_price}</EdgeText>
+              <EdgeText style={styles.priceText}>
+                {lstrings.coin_rank_price}
+              </EdgeText>
             </View>
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />

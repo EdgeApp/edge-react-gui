@@ -29,16 +29,34 @@ interface Props {
  */
 const CustomAssetRowComponent = (props: Props) => {
   const { customAsset, marginRem } = props
-  const { wallet, referenceTokenId, displayName, currencyCode, nativeBalance } = customAsset
+  const { wallet, referenceTokenId, displayName, currencyCode, nativeBalance } =
+    customAsset
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Balance stuff:
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={referenceTokenId} nativeAmount={nativeBalance} withSymbol /> : null
-  const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeBalance} tokenId={referenceTokenId} currencyConfig={wallet.currencyConfig} /> : null
+  const showBalance = useSelector(
+    state => state.ui.settings.isAccountBalanceVisible
+  )
+  const cryptoText = showBalance ? (
+    <CryptoText
+      wallet={wallet}
+      tokenId={referenceTokenId}
+      nativeAmount={nativeBalance}
+      withSymbol
+    />
+  ) : null
+  const fiatText = showBalance ? (
+    <FiatText
+      nativeCryptoAmount={nativeBalance}
+      tokenId={referenceTokenId}
+      currencyConfig={wallet.currencyConfig}
+    />
+  ) : null
 
-  const icon = <CryptoIcon sizeRem={2} tokenId={referenceTokenId} pluginId={pluginId} />
+  const icon = (
+    <CryptoIcon sizeRem={2} tokenId={referenceTokenId} pluginId={pluginId} />
+  )
 
   let displayCurrencyCode = currencyCode
   const tokenFromId = wallet.currencyConfig.allTokens[referenceTokenId]
@@ -47,7 +65,14 @@ const CustomAssetRowComponent = (props: Props) => {
   }
 
   return (
-    <IconDataRow icon={icon} leftText={displayCurrencyCode} leftSubtext={displayName} rightText={cryptoText} rightSubText={fiatText} marginRem={marginRem} />
+    <IconDataRow
+      icon={icon}
+      leftText={displayCurrencyCode}
+      leftSubtext={displayName}
+      rightText={cryptoText}
+      rightSubText={fiatText}
+      marginRem={marginRem}
+    />
   )
 }
 

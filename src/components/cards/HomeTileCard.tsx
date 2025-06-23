@@ -29,10 +29,19 @@ export const HomeTileCard = (props: Props) => {
   })
 
   return (
-    <EdgeCard gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
+    <EdgeCard
+      gradientBackground={gradientBackground}
+      nodeBackground={nodeBackground}
+      onPress={handlePress}
+      fill
+    >
       <View style={styles.verticalSplitContainer}>
         <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
-        <EdgeText style={styles.footerText} numberOfLines={3} disableFontScaling>
+        <EdgeText
+          style={styles.footerText}
+          numberOfLines={3}
+          disableFontScaling
+        >
           {footer}
         </EdgeText>
       </View>

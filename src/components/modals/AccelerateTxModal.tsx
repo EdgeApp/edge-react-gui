@@ -1,17 +1,29 @@
 import { abs, lt, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeTransaction
+} from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  useTheme
+} from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
 import { EdgeModal } from './EdgeModal'
@@ -85,7 +97,12 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    const { exchangeRates, feeDisplayDenomination, wallet, isoFiatCurrencyCode } = this.props
+    const {
+      exchangeRates,
+      feeDisplayDenomination,
+      wallet,
+      isoFiatCurrencyCode
+    } = this.props
 
     const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
     const transactionFee = convertTransactionFeeToDisplayFee(
@@ -97,7 +114,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
       feeDefaultDenomination
     )
 
-    const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
+    const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
+      transactionFee.cryptoAmount
+    } (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
 
     return feeSyntax
   }
@@ -111,20 +130,45 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const oldFee = this.getTxFeeDisplay(replacedTx)
     const newFee = this.getTxFeeDisplay(acceleratedTx)
 
-    const isLowerAmount = lt(getTxSendAmount(acceleratedTx), getTxSendAmount(replacedTx))
+    const isLowerAmount = lt(
+      getTxSendAmount(acceleratedTx),
+      getTxSendAmount(replacedTx)
+    )
     const isSending = status === 'sending'
 
     return (
-      <EdgeModal bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
-        <Paragraph>{lstrings.transaction_details_accelerate_transaction_instructional}</Paragraph>
+      <EdgeModal
+        bridge={bridge}
+        onCancel={this.handleCancel}
+        title={lstrings.transaction_details_accelerate_transaction_header}
+      >
+        <Paragraph>
+          {lstrings.transaction_details_accelerate_transaction_instructional}
+        </Paragraph>
         <View style={styles.container}>
-          <EdgeRow title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <EdgeRow title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <EdgeRow
+            title={
+              lstrings.transaction_details_accelerate_transaction_old_fee_title
+            }
+            body={oldFee}
+          />
+          {newFee == null ? null : (
+            <EdgeRow
+              title={
+                lstrings.transaction_details_accelerate_transaction_new_fee_title
+              }
+              body={newFee}
+            />
+          )}
         </View>
         {isLowerAmount ? (
           <WarningCard
-            title={lstrings.transaction_details_accelerate_transaction_lower_amount_tx_title}
-            points={[lstrings.transaction_details_accelerate_transaction_lower_amount_tx_message]}
+            title={
+              lstrings.transaction_details_accelerate_transaction_lower_amount_tx_title
+            }
+            points={[
+              lstrings.transaction_details_accelerate_transaction_lower_amount_tx_message
+            ]}
             marginRem={[1.5, 1]}
           />
         ) : null}
@@ -140,7 +184,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabled={isSending || !!error}
             onSlidingComplete={this.handleConfirmation}
             showSpinner={isSending}
-            disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
+            disabledText={
+              lstrings.transaction_details_accelerate_transaction_slider_disabled
+            }
           />
         </View>
       </EdgeModal>
@@ -173,8 +219,12 @@ export function AccelerateTxModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const feeDisplayDenomination = useSelector(state => selectDisplayDenom(state, props.wallet.currencyConfig, null))
-  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const feeDisplayDenomination = useSelector(state =>
+    selectDisplayDenom(state, props.wallet.currencyConfig, null)
+  )
+  const isoFiatCurrencyCode = useSelector(
+    state => state.ui.settings.defaultIsoFiat
+  )
 
   return (
     <AccelerateTxModalComponent
@@ -191,6 +241,7 @@ function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
   // Transaction amounts are negative for send transactions
   const nativeAmount = abs(edgeTransaction.nativeAmount)
   // Parent network fee is used for token sends
-  const feeAmount = edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+  const feeAmount =
+    edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
   return sub(nativeAmount, feeAmount)
 }

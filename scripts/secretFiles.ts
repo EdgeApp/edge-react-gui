@@ -22,7 +22,9 @@ const filePaths = [
 
 async function main() {
   if (argv.length < 4) {
-    mylog('Usage: node -r sucrase/register secretFiles.ts [branch] [secret files path]')
+    mylog(
+      'Usage: node -r sucrase/register secretFiles.ts [branch] [secret files path]'
+    )
     mylog('  branch options: master, develop, beta')
   }
 
@@ -35,7 +37,9 @@ async function main() {
     filesDir = './jenkins-files'
     chdir(baseDir)
     fs.rmSync(filesDir, { recursive: true, force: true })
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${filesArg} ${filesDir}`)
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${filesArg} ${filesDir}`
+    )
   } else {
     filesDir = filesArg
   }

@@ -1,4 +1,12 @@
-import { asArray, asJSON, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asJSON,
+  asMaybe,
+  asObject,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 export class KilnError extends Error {
   name: string
@@ -22,15 +30,27 @@ export interface KilnApi {
     currentPage?: number
     pageSize?: number
   }) => Promise<AdaStake[]>
-  adaStakeTransaction: (walletAddress: string, poolId: string, accountId: string) => Promise<AdaStakeTransaction>
-  adaUnstakeTransaction: (walletAddress: string) => Promise<AdaUnstakeTransaction>
-  adaWithdrawRewards: (walletAddress: string, amountLovelace?: string) => Promise<AdaStakeTransaction>
+  adaStakeTransaction: (
+    walletAddress: string,
+    poolId: string,
+    accountId: string
+  ) => Promise<AdaStakeTransaction>
+  adaUnstakeTransaction: (
+    walletAddress: string
+  ) => Promise<AdaUnstakeTransaction>
+  adaWithdrawRewards: (
+    walletAddress: string,
+    amountLovelace?: string
+  ) => Promise<AdaStakeTransaction>
   ethGetOnChainStakes: (address: string) => Promise<EthOnChainStake[]>
   ethGetOnChainOperations: (address: string) => Promise<ExitOperation[]>
 }
 
 export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
-  const fetchKiln = async (path: string, init?: RequestInit): Promise<unknown> => {
+  const fetchKiln = async (
+    path: string,
+    init?: RequestInit
+  ): Promise<unknown> => {
     const headers = {
       'Content-Type': 'application/json; charset=utf-8',
       accept: 'application/json; charset=utf-8',
@@ -42,7 +62,8 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
     if (!res.ok) {
       const message = await res.text()
       const errorResponse = asMaybe(asKilnErrorResponse)(message)
-      if (errorResponse != null) throw new KilnError(errorResponse.message, errorResponse.error)
+      if (errorResponse != null)
+        throw new KilnError(errorResponse.message, errorResponse.error)
       throw new Error(`Kiln fetch error: ${message}`)
     }
     const json = await res.json()
@@ -51,9 +72,18 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
 
   const instance: KilnApi = {
     // https://docs.api.kiln.fi/reference/getadastakes
-    async adaGetStakes({ stakeAddresses, walletAddresses, poolIds, accountIds, currentPage, pageSize }) {
+    async adaGetStakes({
+      stakeAddresses,
+      walletAddresses,
+      poolIds,
+      accountIds,
+      currentPage,
+      pageSize
+    }) {
       if (walletAddresses == null && stakeAddresses == null) {
-        throw new Error('Must provide at least one stake address or wallet address')
+        throw new Error(
+          'Must provide at least one stake address or wallet address'
+        )
       }
       const query = new URLSearchParams()
       if (accountIds != null) {
@@ -121,15 +151,21 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
 
     // https://docs.api.kiln.fi/reference/getethonchainv2stakes
     async ethGetOnChainStakes(address) {
-      const raw = await fetchKiln(`/v1/eth/onchain/v2/stakes?wallets=${address}`)
+      const raw = await fetchKiln(
+        `/v1/eth/onchain/v2/stakes?wallets=${address}`
+      )
       const response = asKilnResponse(asArray(asEthOnChainStake))(raw)
       return response.data
     },
     // https://docs.api.kiln.fi/reference/getethonchainv2operations
     async ethGetOnChainOperations(address) {
-      const raw = await fetchKiln(`/v1/eth/onchain/v2/operations?wallets=${address}`)
+      const raw = await fetchKiln(
+        `/v1/eth/onchain/v2/operations?wallets=${address}`
+      )
       const response = asKilnResponse(asArray(asMaybe(asExitOperation)))(raw)
-      const filteredOps = response.data.filter((op): op is ExitOperation => op != null)
+      const filteredOps = response.data.filter(
+        (op): op is ExitOperation => op != null
+      )
       return filteredOps
     }
   }

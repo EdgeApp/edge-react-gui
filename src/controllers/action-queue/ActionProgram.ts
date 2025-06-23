@@ -4,7 +4,10 @@ import { ActionOp, ActionProgram, ActionProgramCompleteMessage } from './types'
 
 // TODO: Move handling from ActionProgramUtil methods here, use this instead of
 // creating individual ActionOps via ActionProgramUtil methods on the manage scenes
-export async function makeActionProgram(actionOp: ActionOp, completeMessage?: ActionProgramCompleteMessage): Promise<ActionProgram> {
+export async function makeActionProgram(
+  actionOp: ActionOp,
+  completeMessage?: ActionProgramCompleteMessage
+): Promise<ActionProgram> {
   const programId = Date.now().toString()
 
   return {

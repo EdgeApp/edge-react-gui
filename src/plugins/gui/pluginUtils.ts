@@ -5,27 +5,41 @@ import { sprintf } from 'sprintf-js'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { FiatDirection } from './fiatPluginTypes'
-import { FiatProviderQuote, FiatProviderQuoteError, FiatProviderQuoteErrorTypes, FiatProviderStore } from './fiatProviderTypes'
+import {
+  FiatProviderQuote,
+  FiatProviderQuoteError,
+  FiatProviderQuoteErrorTypes,
+  FiatProviderStore
+} from './fiatProviderTypes'
 
-export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
+export const createStore = (
+  storeId: string,
+  store: EdgeDataStore
+): FiatProviderStore => {
   return {
-    deleteItem: async (itemId: string) => await store.deleteItem(storeId, itemId),
+    deleteItem: async (itemId: string) =>
+      await store.deleteItem(storeId, itemId),
     listItemIds: async () => await store.listItemIds(storeId),
     getItem: async (itemId: string) => await store.getItem(storeId, itemId),
-    setItem: async (itemId: string, value: string) => await store.setItem(storeId, itemId, value)
+    setItem: async (itemId: string, value: string) =>
+      await store.setItem(storeId, itemId, value)
   }
 }
 
-const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } = {
-  underLimit: 1,
-  overLimit: 2,
-  paymentUnsupported: 3,
-  regionRestricted: 4,
-  assetUnsupported: 5,
-  fiatUnsupported: 6
-}
+const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } =
+  {
+    underLimit: 1,
+    overLimit: 2,
+    paymentUnsupported: 3,
+    regionRestricted: 4,
+    assetUnsupported: 5,
+    fiatUnsupported: 6
+  }
 
-export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
+export const getRateFromQuote = (
+  quote: FiatProviderQuote,
+  fiatCode: string
+): string => {
   const { isEstimate } = quote
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
@@ -43,7 +57,11 @@ export interface BestError {
   quoteError?: FiatProviderQuoteError
 }
 
-export const getBestError = (fiatProviderQuoteErrors: FiatProviderQuoteError[], currencyCode: string, direction: FiatDirection): BestError => {
+export const getBestError = (
+  fiatProviderQuoteErrors: FiatProviderQuoteError[],
+  currencyCode: string,
+  direction: FiatDirection
+): BestError => {
   let bestError: FiatProviderQuoteError | undefined
   for (const fiatProviderQuoteError of fiatProviderQuoteErrors) {
     if (fiatProviderQuoteError == null) continue
@@ -51,17 +69,35 @@ export const getBestError = (fiatProviderQuoteErrors: FiatProviderQuoteError[], 
       bestError = fiatProviderQuoteError
       continue
     }
-    if (ERROR_PRIORITIES[fiatProviderQuoteError.errorType] < ERROR_PRIORITIES[bestError.errorType]) {
+    if (
+      ERROR_PRIORITIES[fiatProviderQuoteError.errorType] <
+      ERROR_PRIORITIES[bestError.errorType]
+    ) {
       bestError = fiatProviderQuoteError
       continue
     }
-    if (ERROR_PRIORITIES[fiatProviderQuoteError.errorType] === ERROR_PRIORITIES[bestError.errorType]) {
-      if (fiatProviderQuoteError.errorType === 'overLimit' && bestError.errorType === 'overLimit') {
-        if ((fiatProviderQuoteError.errorAmount ?? 0) > (bestError.errorAmount ?? 0)) {
+    if (
+      ERROR_PRIORITIES[fiatProviderQuoteError.errorType] ===
+      ERROR_PRIORITIES[bestError.errorType]
+    ) {
+      if (
+        fiatProviderQuoteError.errorType === 'overLimit' &&
+        bestError.errorType === 'overLimit'
+      ) {
+        if (
+          (fiatProviderQuoteError.errorAmount ?? 0) >
+          (bestError.errorAmount ?? 0)
+        ) {
           bestError = fiatProviderQuoteError
         }
-      } else if (fiatProviderQuoteError.errorType === 'underLimit' && bestError.errorType === 'underLimit') {
-        if ((fiatProviderQuoteError.errorAmount ?? Infinity) < (bestError.errorAmount ?? Infinity)) {
+      } else if (
+        fiatProviderQuoteError.errorType === 'underLimit' &&
+        bestError.errorType === 'underLimit'
+      ) {
+        if (
+          (fiatProviderQuoteError.errorAmount ?? Infinity) <
+          (bestError.errorAmount ?? Infinity)
+        ) {
           bestError = fiatProviderQuoteError
         }
       }
@@ -74,7 +110,11 @@ export const getBestError = (fiatProviderQuoteErrors: FiatProviderQuoteError[], 
   }
 }
 
-const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {
+const getErrorText = (
+  error: FiatProviderQuoteError,
+  currencyCode: string,
+  direction: FiatDirection
+): string => {
   let errorText = ''
 
   switch (error.errorType) {
@@ -83,14 +123,21 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
         errorText =
           error.errorAmount == null
             ? lstrings.fiat_plugin_buy_amount_under_undef_limit
-            : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+            : sprintf(
+                lstrings.fiat_plugin_buy_amount_under_limit,
+                `${formatNumber(error.errorAmount.toString())} ${
+                  error.displayCurrencyCode ?? currencyCode
+                }`
+              )
       } else {
         errorText =
           error.errorAmount == null
             ? lstrings.fiat_plugin_sell_amount_under_undef_limit
             : sprintf(
                 lstrings.fiat_plugin_sell_amount_under_limit,
-                `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`
+                `${formatNumber(error.errorAmount.toString())} ${
+                  error.displayCurrencyCode ?? currencyCode
+                }`
               )
       }
       break
@@ -99,12 +146,22 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
         errorText =
           error.errorAmount == null
             ? lstrings.fiat_plugin_buy_amount_over_undef_limit
-            : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+            : sprintf(
+                lstrings.fiat_plugin_buy_amount_over_limit,
+                `${formatNumber(error.errorAmount.toString())} ${
+                  error.displayCurrencyCode ?? currencyCode
+                }`
+              )
       } else {
         errorText =
           error.errorAmount == null
             ? lstrings.fiat_plugin_sell_amount_over_undef_limit
-            : sprintf(lstrings.fiat_plugin_sell_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+            : sprintf(
+                lstrings.fiat_plugin_sell_amount_over_limit,
+                `${formatNumber(error.errorAmount.toString())} ${
+                  error.displayCurrencyCode ?? currencyCode
+                }`
+              )
       }
       break
     case 'paymentUnsupported':
@@ -112,7 +169,9 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
       break
     case 'regionRestricted':
       errorText = sprintf(
-        direction === 'buy' ? lstrings.fiat_plugin_buy_region_restricted : lstrings.fiat_plugin_sell_region_restricted,
+        direction === 'buy'
+          ? lstrings.fiat_plugin_buy_region_restricted
+          : lstrings.fiat_plugin_sell_region_restricted,
         error.displayCurrencyCode
       )
       break
@@ -124,8 +183,16 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
         const { pluginDisplayName, fiatCurrencyCode } = error
         errorText =
           direction === 'buy'
-            ? sprintf(lstrings.fiat_plugin_buy_fiat_unsupported_2s, pluginDisplayName, fiatCurrencyCode)
-            : sprintf(lstrings.fiat_plugin_sell_fiat_unsupported_2s, pluginDisplayName, fiatCurrencyCode)
+            ? sprintf(
+                lstrings.fiat_plugin_buy_fiat_unsupported_2s,
+                pluginDisplayName,
+                fiatCurrencyCode
+              )
+            : sprintf(
+                lstrings.fiat_plugin_sell_fiat_unsupported_2s,
+                pluginDisplayName,
+                fiatCurrencyCode
+              )
       }
       break
     default:

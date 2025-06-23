@@ -26,13 +26,21 @@ export const RewardsCardWelcomeScene = (props: Props) => {
         <WelcomeContainer>
           <IllustrationImage source={visaCardSayAnythingIllustration} />
           <VisaBrandImage source={visaBrandImage} />
-          <WelcomeInto adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={4}>
+          <WelcomeInto
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}
+            numberOfLines={4}
+          >
             {lstrings.rewards_card_welcome_intro}
           </WelcomeInto>
         </WelcomeContainer>
         <MainButton onPress={onNewCard} label={lstrings.buy_new_card_button} />
         <Space verticalRem={1}>
-          <MainButton type="secondary" label={lstrings.learn_more_button} onPress={onMoreInfo} />
+          <MainButton
+            type="secondary"
+            label={lstrings.learn_more_button}
+            onPress={onMoreInfo}
+          />
         </Space>
       </SceneContainer>
     </SceneWrapper>

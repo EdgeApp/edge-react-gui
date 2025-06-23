@@ -1,5 +1,10 @@
 import { add } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeMemoryWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeMemoryWallet,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -28,7 +33,8 @@ interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCompletion'> {}
 
 const SweepPrivateKeyCompletionComponent = (props: Props) => {
   const { navigation, route } = props
-  const { memoryWallet, receivingWallet, unsignedEdgeTransactions } = route.params
+  const { memoryWallet, receivingWallet, unsignedEdgeTransactions } =
+    route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -37,7 +43,10 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
 
   // State to manage row status icons
   const [itemStatus, setItemStatus] = React.useState(() => {
-    const itemStatusMap = new Map<EdgeTokenId, 'pending' | 'complete' | 'error'>()
+    const itemStatusMap = new Map<
+      EdgeTokenId,
+      'pending' | 'complete' | 'error'
+    >()
     for (const tx of unsignedEdgeTransactions) {
       itemStatusMap.set(tx.tokenId, 'pending')
     }
@@ -46,13 +55,18 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
 
   const flatListRef = React.useRef<FlatList<EdgeTransaction>>(null)
 
-  const handleTxStatus = (tx: EdgeTransaction, status: 'complete' | 'error') => {
+  const handleTxStatus = (
+    tx: EdgeTransaction,
+    status: 'complete' | 'error'
+  ) => {
     setItemStatus(currentState => {
       const newState = new Map(currentState)
       newState.set(tx.tokenId, status)
       return newState
     })
-    const index = unsignedEdgeTransactions.findIndex(asset => asset.tokenId === tx.tokenId)
+    const index = unsignedEdgeTransactions.findIndex(
+      asset => asset.tokenId === tx.tokenId
+    )
     flatListRef.current?.scrollToIndex({
       animated: true,
       index,
@@ -63,8 +77,11 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
   // Sweep the funds and enable the tokens
   useAsyncEffect(
     async () => {
-      const mainnetTransaction = unsignedEdgeTransactions[unsignedEdgeTransactions.length - 1]
-      const tokenTransactions = unsignedEdgeTransactions.filter(tx => tx.tokenId != null)
+      const mainnetTransaction =
+        unsignedEdgeTransactions[unsignedEdgeTransactions.length - 1]
+      const tokenTransactions = unsignedEdgeTransactions.filter(
+        tx => tx.tokenId != null
+      )
 
       // Send tokens
       let feeTotal = '0'
@@ -86,7 +103,10 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
       if (!hasError) {
         // Send mainnet
         try {
-          const tx = await signBroadcastAndSave(memoryWallet, mainnetTransaction)
+          const tx = await signBroadcastAndSave(
+            memoryWallet,
+            mainnetTransaction
+          )
           handleTxStatus(tx, 'complete')
         } catch (e) {
           showError(e)
@@ -112,10 +132,29 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
   )
 
   const renderStatus = useHandler((tx: EdgeTransaction) => {
-    let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
-    if (itemStatus.get(tx.tokenId) === 'complete') icon = <IonIcon name="checkmark-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+    let icon = (
+      <ActivityIndicator
+        style={{ paddingRight: theme.rem(0.3125) }}
+        color={theme.iconTappable}
+      />
+    )
+    if (itemStatus.get(tx.tokenId) === 'complete')
+      icon = (
+        <IonIcon
+          name="checkmark-circle-outline"
+          size={theme.rem(1.5)}
+          color={theme.iconTappable}
+        />
+      )
     if (itemStatus.get(tx.tokenId) === 'error')
-      icon = <IonIcon name="warning-outline" style={{ paddingRight: theme.rem(0.0625) }} size={theme.rem(1.5)} color={theme.dangerText} />
+      icon = (
+        <IonIcon
+          name="warning-outline"
+          style={{ paddingRight: theme.rem(0.0625) }}
+          size={theme.rem(1.5)}
+          color={theme.dangerText}
+        />
+      )
     return icon
   })
 
@@ -152,13 +191,18 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
     )
   }, [done, navigation, styles.bottomButton])
 
-  const keyExtractor = useHandler((tx: EdgeTransaction) => tx.walletId + tx.tokenId)
+  const keyExtractor = useHandler(
+    (tx: EdgeTransaction) => tx.walletId + tx.tokenId
+  )
 
   return (
     <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <SceneHeader title={lstrings.drawer_sweep_private_key} withTopMargin />
+          <SceneHeader
+            title={lstrings.drawer_sweep_private_key}
+            withTopMargin
+          />
           <FlatList
             automaticallyAdjustContentInsets={false}
             data={unsignedEdgeTransactions}
@@ -191,11 +235,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const signBroadcastAndSave = async (wallet: EdgeMemoryWallet, unsignedSignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
+const signBroadcastAndSave = async (
+  wallet: EdgeMemoryWallet,
+  unsignedSignedTransaction: EdgeTransaction
+): Promise<EdgeTransaction> => {
   const edgeSignedTransaction = await wallet.signTx(unsignedSignedTransaction)
-  const edgeBroadcastedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+  const edgeBroadcastedTransaction = await wallet.broadcastTx(
+    edgeSignedTransaction
+  )
   await wallet.saveTx(edgeBroadcastedTransaction)
   return edgeBroadcastedTransaction
 }
 
-export const SweepPrivateKeyCompletionScene = React.memo(SweepPrivateKeyCompletionComponent)
+export const SweepPrivateKeyCompletionScene = React.memo(
+  SweepPrivateKeyCompletionComponent
+)

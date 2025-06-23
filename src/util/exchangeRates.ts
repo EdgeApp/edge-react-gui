@@ -36,7 +36,8 @@ const resolverMap: {
 } = {}
 let inQuery = false
 
-const makePairDate = (currencyPair: string, date: string) => `${currencyPair}_${date}`
+const makePairDate = (currencyPair: string, date: string) =>
+  `${currencyPair}_${date}`
 
 export const roundHalfMinute = (dateStr: string) => {
   const date = new Date(dateStr)
@@ -70,7 +71,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
     body: JSON.stringify({ data })
   }
   try {
-    const response = await fetchRates('v2/exchangeRates', options, 5000, doFetch)
+    const response = await fetchRates(
+      'v2/exchangeRates',
+      options,
+      5000,
+      doFetch
+    )
     if (response.ok) {
       const json = await response.json()
       const cleanedRates = asRatesResponse(json)
@@ -120,7 +126,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   }
 }
 
-const addToQueue = (entry: RateQueueEntry, resolve: Function, maxQuerySize: number, doFetch?: EdgeFetchFunction) => {
+const addToQueue = (
+  entry: RateQueueEntry,
+  resolve: Function,
+  maxQuerySize: number,
+  doFetch?: EdgeFetchFunction
+) => {
   const { currency_pair: pair, date } = entry
   const pairDate = makePairDate(pair, date)
 
@@ -155,7 +166,12 @@ export const getHistoricalRate = async (
     const reverse = pair !== codePair
     const rate = rateMap[makePairDate(pair, roundDate)]
     if (rate == null) {
-      addToQueue({ currency_pair: pair, date: roundDate }, resolve, maxQuerySize, doFetch)
+      addToQueue(
+        { currency_pair: pair, date: roundDate },
+        resolve,
+        maxQuerySize,
+        doFetch
+      )
       return
     }
 

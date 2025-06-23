@@ -2,7 +2,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -30,7 +35,14 @@ interface Props {
  *  | This is the footer text   |
  *  |___________________________|
  */
-export function WarningCard({ title, header, points, footer, marginRem, paddingRem }: Props) {
+export function WarningCard({
+  title,
+  header,
+  points,
+  footer,
+  marginRem,
+  paddingRem
+}: Props) {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 1), theme.rem))
@@ -50,7 +62,12 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
   return (
     <View style={[styles.warning, margin, padding]}>
       <View style={styles.titleContainer}>
-        <IonIcon name="warning-outline" style={styles.icon} color={theme.warningText} size={theme.rem(0.8)} />
+        <IonIcon
+          name="warning-outline"
+          style={styles.icon}
+          color={theme.warningText}
+          size={theme.rem(0.8)}
+        />
         <EdgeText style={styles.title}>{title}</EdgeText>
       </View>
       {header != null && (
@@ -58,7 +75,11 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
           {header}
         </EdgeText>
       )}
-      {points != null && points.length > 0 && <View style={styles.bulletpoints}>{points?.map(point => renderBulletpoint(point))}</View>}
+      {points != null && points.length > 0 && (
+        <View style={styles.bulletpoints}>
+          {points?.map(point => renderBulletpoint(point))}
+        </View>
+      )}
       {footer != null && (
         <EdgeText style={styles.text} numberOfLines={0}>
           {footer}

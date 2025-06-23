@@ -56,7 +56,11 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   }
 }
 
-export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, OwnProps>(
+export const EdgeContextCallbackManager = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   state => ({
     account: state.core.account,
     context: state.core.context

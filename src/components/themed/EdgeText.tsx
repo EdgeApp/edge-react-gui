@@ -34,7 +34,16 @@ export const Paragraph = (props: {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
   return (
-    <Text style={[styles.common, margin, center && styles.alignCenter, androidAdjustTextStyle(theme)]} numberOfLines={0} adjustsFontSizeToFit={false}>
+    <Text
+      style={[
+        styles.common,
+        margin,
+        center && styles.alignCenter,
+        androidAdjustTextStyle(theme)
+      ]}
+      numberOfLines={0}
+      adjustsFontSizeToFit={false}
+    >
       {children}
     </Text>
   )
@@ -86,7 +95,11 @@ export const SmallText = (props: { children: React.ReactNode }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}>{children}</Text>
+  return (
+    <Text style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}>
+      {children}
+    </Text>
+  )
 }
 
 /** Makes the contents of an `EdgeText` or `Paragraph` orange, for warnings.
@@ -96,7 +109,11 @@ export const WarningText = (props: { children: React.ReactNode }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.colorWarning, androidAdjustTextStyle(theme)]}>{children}</Text>
+  return (
+    <Text style={[styles.colorWarning, androidAdjustTextStyle(theme)]}>
+      {children}
+    </Text>
+  )
 }
 
 /** Makes the contents of an `EdgeText` or `Paragraph` large (1.5rem).
@@ -106,7 +123,11 @@ export const HeaderText = (props: { children: React.ReactNode }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}>{children}</Text>
+  return (
+    <Text style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}>
+      {children}
+    </Text>
+  )
 }
 
 // #endregion Typography

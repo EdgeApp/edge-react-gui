@@ -10,8 +10,15 @@ import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
-import { asReviewTriggerData, LocalAccountSettings, ReviewTriggerData } from '../types/types'
-import { readLocalAccountSettings, writeLocalAccountSettings } from './LocalSettingsActions'
+import {
+  asReviewTriggerData,
+  LocalAccountSettings,
+  ReviewTriggerData
+} from '../types/types'
+import {
+  readLocalAccountSettings,
+  writeLocalAccountSettings
+} from './LocalSettingsActions'
 
 // Legacy file for backward compatibility
 export const SWAP_COUNT_DATA_FILE = 'swapCountData.json' // Legacy file for backward compatibility
@@ -51,7 +58,10 @@ export const requestReview = async (): Promise<boolean> => {
       await InAppReview.RequestInAppReview()
       return true
     } else {
-      const title = sprintf(lstrings.request_review_question_title, config.appNameShort)
+      const title = sprintf(
+        lstrings.request_review_question_title,
+        config.appNameShort
+      )
       const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
@@ -70,7 +80,9 @@ export const requestReview = async (): Promise<boolean> => {
       return false
     }
   } else {
-    console.warn(`Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`)
+    console.warn(
+      `Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`
+    )
     return false
   }
 }
@@ -79,7 +91,9 @@ export const requestReview = async (): Promise<boolean> => {
  * Read the current review trigger data from account settings
  * Handles migration from old data file if necessary
  */
-export const readReviewTriggerData = async (account: EdgeAccount): Promise<ReviewTriggerData> => {
+export const readReviewTriggerData = async (
+  account: EdgeAccount
+): Promise<ReviewTriggerData> => {
   try {
     // Get settings from account
     const settings = await readLocalAccountSettings(account)
@@ -92,7 +106,9 @@ export const readReviewTriggerData = async (account: EdgeAccount): Promise<Revie
     // No review trigger data exists. Check for legacy file
     try {
       // Check if old swap count file exists and migrate data
-      const swapCountDataStr = await account.disklet.getText(SWAP_COUNT_DATA_FILE)
+      const swapCountDataStr = await account.disklet.getText(
+        SWAP_COUNT_DATA_FILE
+      )
       const swapCountData = JSON.parse(swapCountDataStr)
 
       // Initialize new data structure with old swap count data
@@ -128,7 +144,10 @@ export const readReviewTriggerData = async (account: EdgeAccount): Promise<Revie
  * Save review trigger data to account settings
  * First reads existing data and merges with provided data
  */
-const saveReviewTriggerData = async (account: EdgeAccount, data: Partial<ReviewTriggerData>): Promise<void> => {
+const saveReviewTriggerData = async (
+  account: EdgeAccount,
+  data: Partial<ReviewTriggerData>
+): Promise<void> => {
   try {
     // Read existing data first to ensure we preserve any fields not included in the update
     const existingData = await readReviewTriggerData(account)
@@ -142,7 +161,10 @@ const saveReviewTriggerData = async (account: EdgeAccount, data: Partial<ReviewT
     // Save the merged data to settings
     await writeReviewTriggerData(account, mergedData)
   } catch (e: unknown) {
-    console.error('saveReviewTriggerData: Error writing review trigger data to settings:', JSON.stringify(e))
+    console.error(
+      'saveReviewTriggerData: Error writing review trigger data to settings:',
+      JSON.stringify(e)
+    )
   }
 }
 
@@ -161,7 +183,10 @@ const shouldTriggerReview = (data: ReviewTriggerData): boolean => {
 /**
  * Set the next trigger date based on user response
  */
-const setNextTriggerDate = (data: ReviewTriggerData, reviewed: boolean): ReviewTriggerData => {
+const setNextTriggerDate = (
+  data: ReviewTriggerData,
+  reviewed: boolean
+): ReviewTriggerData => {
   const now = new Date()
   const nextTriggerDate = new Date(now)
 
@@ -192,7 +217,8 @@ const processReviewTrigger = async (
     // Set next trigger date appropriately
     const updatedData = setNextTriggerDate(data, reviewed)
     // Reset the counter that triggered this review
-    const resetData = shouldReset == null ? updatedData : shouldReset(updatedData)
+    const resetData =
+      shouldReset == null ? updatedData : shouldReset(updatedData)
     await saveReviewTriggerData(account, resetData)
   } else {
     // Threshold reached but cannot trigger yet. Persist updated data
@@ -235,7 +261,9 @@ export const updateSwapCount = (): ThunkAction<Promise<void>> => {
 /**
  * Handle the deposit trigger - tracks deposits in USD
  */
-export const updateDepositAmount = (amountUsd: number): ThunkAction<Promise<void>> => {
+export const updateDepositAmount = (
+  amountUsd: number
+): ThunkAction<Promise<void>> => {
   return async (_dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -358,7 +386,9 @@ export const markAccountUpgraded = (): ThunkAction<Promise<void>> => {
  * Track app usage after account upgrade
  * Call this when app is launched to potentially record a new day
  */
-export const trackAppUsageAfterUpgrade = (testDate?: Date): ThunkAction<Promise<void>> => {
+export const trackAppUsageAfterUpgrade = (
+  testDate?: Date
+): ThunkAction<Promise<void>> => {
   return async (_dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -372,7 +402,9 @@ export const trackAppUsageAfterUpgrade = (testDate?: Date): ThunkAction<Promise<
     }
 
     // Get today's date as YYYY-MM-DD string for comparison
-    const today = testDate?.toISOString().split('T')[0] ?? new Date().toISOString().split('T')[0]
+    const today =
+      testDate?.toISOString().split('T')[0] ??
+      new Date().toISOString().split('T')[0]
 
     // Check if we already recorded this day
     const days = data.daysSinceUpgrade != null ? data.daysSinceUpgrade : []
@@ -402,9 +434,18 @@ export const trackAppUsageAfterUpgrade = (testDate?: Date): ThunkAction<Promise<
 /**
  * Updates the review trigger data in account settings
  */
-export const writeReviewTriggerData = async (account: EdgeAccount, reviewTriggerData: Partial<ReviewTriggerData>): Promise<LocalAccountSettings> => {
+export const writeReviewTriggerData = async (
+  account: EdgeAccount,
+  reviewTriggerData: Partial<ReviewTriggerData>
+): Promise<LocalAccountSettings> => {
   const settings = await readLocalAccountSettings(account)
 
-  const updatedSettings: LocalAccountSettings = { ...settings, reviewTrigger: asReviewTriggerData({ ...settings.reviewTrigger, ...reviewTriggerData }) }
+  const updatedSettings: LocalAccountSettings = {
+    ...settings,
+    reviewTrigger: asReviewTriggerData({
+      ...settings.reviewTrigger,
+      ...reviewTriggerData
+    })
+  }
   return await writeLocalAccountSettings(account, updatedSettings)
 }

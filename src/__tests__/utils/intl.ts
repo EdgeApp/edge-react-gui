@@ -1,4 +1,8 @@
-import { formatNumberInput, formatToNativeNumber, isValidInput } from '../../locales/intl'
+import {
+  formatNumberInput,
+  formatToNativeNumber,
+  isValidInput
+} from '../../locales/intl'
 
 describe('locales/intl.ts', function () {
   test('formatNumberInput', function () {
@@ -15,7 +19,9 @@ describe('locales/intl.ts', function () {
     expect(formatToNativeNumber('0')).toBe('0')
     expect(formatToNativeNumber('1,000')).toBe('1000')
     expect(formatToNativeNumber('1.000')).toBe('1.000')
-    expect(formatToNativeNumber('', { minDecimals: 1, maxDecimals: 1 })).toBe('')
+    expect(formatToNativeNumber('', { minDecimals: 1, maxDecimals: 1 })).toBe(
+      ''
+    )
     // odd but valid
     expect(formatToNativeNumber('1.000,00')).toBe('1.00000')
   })

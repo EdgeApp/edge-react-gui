@@ -22,7 +22,10 @@ export interface PushClient {
   uploadPushEvents: (payload: LoginUpdatePayload) => Promise<void>
 }
 
-export const makePushClient = (account: EdgeAccount, clientId: string): PushClient => {
+export const makePushClient = (
+  account: EdgeAccount,
+  clientId: string
+): PushClient => {
   const instance: PushClient = {
     async getPushEvents(): Promise<LoginPayload> {
       const requestBody = this.getPushRequestBody()

@@ -32,7 +32,12 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const contacts = useSelector(state => state.contacts)
   const dispatch = useDispatch()
 
-  const rowComponent = ({ givenName, familyName, hasThumbnail, thumbnailPath }: GuiContact) => {
+  const rowComponent = ({
+    givenName,
+    familyName,
+    hasThumbnail,
+    thumbnailPath
+  }: GuiContact) => {
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
     return (
       <SelectableRow
@@ -40,7 +45,11 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
           hasThumbnail && thumbnailPath != null ? (
             <Image style={styles.image} source={{ uri: thumbnailPath }} />
           ) : (
-            <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(1.5)} />
+            <IonIcon
+              style={styles.tileAvatarIcon}
+              name="person"
+              size={theme.rem(1.5)}
+            />
           )
         }
         title={fullName}
@@ -52,11 +61,14 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const rowDataFilter = (searchText: string, contact: GuiContact) => {
     const formattedSearchText = normalizeForSearch(searchText)
     const { givenName, familyName } = contact
-    const fullName = normalizeForSearch(`${givenName ?? ''}${familyName ?? ''} `)
+    const fullName = normalizeForSearch(
+      `${givenName ?? ''}${familyName ?? ''} `
+    )
     return fullName.includes(formattedSearchText)
   }
 
-  const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
+  const handleSubmitEditing = (contactName: string) =>
+    bridge.resolve({ contactName, thumbnailPath: null })
 
   useAsyncEffect(
     async () => {

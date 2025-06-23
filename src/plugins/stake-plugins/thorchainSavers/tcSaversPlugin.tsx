@@ -1,5 +1,13 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   EdgeAccount,
@@ -18,9 +26,18 @@ import { Airship } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
-import { getCurrencyCodeMultiplier, getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCodeMultiplier,
+  getTokenId,
+  getWalletTokenId
+} from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
-import { cleanMultiFetch, fetchInfo, fetchWaterfall, infoServerData } from '../../../util/network'
+import {
+  cleanMultiFetch,
+  fetchInfo,
+  fetchWaterfall,
+  infoServerData
+} from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
 import {
   ChangeQuote,
@@ -38,12 +55,19 @@ import {
   StakePositionRequest,
   StakeProviderInfo
 } from '../types'
-import { asInfoServerResponse, EdgeGuiPluginOptions, InfoServerResponse } from '../util/internalTypes'
+import {
+  asInfoServerResponse,
+  EdgeGuiPluginOptions,
+  InfoServerResponse
+} from '../util/internalTypes'
 import { getEvmApprovalData, getEvmDepositWithExpiryData } from './defiUtils'
 
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
-const MIDGARD_SERVERS_DEFAULT = ['https://midgard.ninerealms.com', 'https://midgard.thorchain.info']
+const MIDGARD_SERVERS_DEFAULT = [
+  'https://midgard.ninerealms.com',
+  'https://midgard.thorchain.info'
+]
 const THORNODE_SERVERS_DEFAULT = ['https://thornode.ninerealms.com']
 const EVM_WITHDRAWAL_MIN_AMOUNT = '1000000000000'
 
@@ -260,7 +284,10 @@ let inboundAddressesLastUpdate: number = 0
 // prevents the claim button from being available while the thornode updates its state
 const claimedTcyHack = new Set<string>()
 
-export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
+export const makeTcSaversPlugin = async (
+  pluginId: string,
+  opts: EdgeGuiPluginOptions
+): Promise<StakePlugin | undefined> => {
   if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
     return
   }
@@ -269,11 +296,17 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
   if (!policiesInitialized && !initializingPolicies) {
     try {
       initializingPolicies = true
-      const poolsResponse = await fetchWaterfall(thornodeServers, `thorchain/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
+      const poolsResponse = await fetchWaterfall(
+        thornodeServers,
+        `thorchain/pools`,
+        { headers: { 'x-client-id': ninerealmsClientId } }
+      )
 
       if (!poolsResponse.ok) {
         const responseText = await poolsResponse.text()
-        throw new Error(`Thorchain could not fetch thornode pools: ${responseText}`)
+        throw new Error(
+          `Thorchain could not fetch thornode pools: ${responseText}`
+        )
       }
       const poolsJson = await poolsResponse.json()
       const pools = asThorNodePools(poolsJson)
@@ -302,7 +335,9 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
   }
 
   try {
-    const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues)
+    const infoServerResponse = asInfoServerResponse(
+      infoServerData.rollup?.apyValues
+    )
     updatePolicyApys(infoServerResponse)
   } catch (err: any) {
     const msg = `Parsing Fetch APY failed`
@@ -338,7 +373,9 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
           throw new Error(lstrings.stake_tc_unavailable)
       }
     },
-    async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
+    async fetchStakePosition(
+      request: StakePositionRequest
+    ): Promise<StakePosition> {
       await updateInboundAddresses(opts)
       return await getStakePosition(opts, request)
     }
@@ -346,14 +383,24 @@ export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOp
   return instance
 }
 
-const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest): Promise<StakePosition> => {
+const getStakePosition = async (
+  opts: EdgeGuiPluginOptions,
+  request: StakePositionRequest
+): Promise<StakePosition> => {
   const { stakePolicyId, wallet, account } = request
   const policy = getPolicyFromId(stakePolicyId)
   const { currencyCode } = policy.stakeAssets[0]
-  const { primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
+  const { primaryAddress } = await getPrimaryAddress(
+    account,
+    wallet,
+    currencyCode
+  )
 
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
-  const [pool, saver] = await Promise.all([fetchPool(opts, asset), fetchSaver(opts, asset, primaryAddress)])
+  const [pool, saver] = await Promise.all([
+    fetchPool(opts, asset),
+    fetchSaver(opts, asset, primaryAddress)
+  ])
 
   const claimableTcy = await fetchClaimableTcy(opts, primaryAddress)
 
@@ -362,7 +409,12 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   // - TCY has already been claimed in this session
   // - There's an issue getting the actual position
 
-  if (claimableTcy === '0' || claimedTcyHack.has(primaryAddress) || saver == null || pool == null) {
+  if (
+    claimableTcy === '0' ||
+    claimedTcyHack.has(primaryAddress) ||
+    saver == null ||
+    pool == null
+  ) {
     return {
       allocations: [
         {
@@ -379,7 +431,12 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
     }
   }
 
-  const position = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
+  const position = saverToPosition(
+    wallet.currencyConfig,
+    currencyCode,
+    saver,
+    pool
+  )
 
   // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
   position.allocations.unshift({
@@ -396,7 +453,10 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   return position
 }
 
-async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Pool | undefined> {
+async function fetchPool(
+  opts: EdgeGuiPluginOptions,
+  asset: string
+): Promise<Pool | undefined> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const response = await fetchWaterfall(midgardServers, `v2/pool/${asset}`, {
     headers: { 'x-client-id': ninerealmsClientId }
@@ -405,17 +465,27 @@ async function fetchPool(opts: EdgeGuiPluginOptions, asset: string): Promise<Poo
   if (response.status === 404) return undefined
   if (!response.ok) {
     const responseText = await response.text()
-    throw new Error(`Thorchain could not fetch /v2/pool/${asset}: ${responseText}`)
+    throw new Error(
+      `Thorchain could not fetch /v2/pool/${asset}: ${responseText}`
+    )
   }
   const poolsJson = await response.json()
   return asPool(poolsJson)
 }
 
-async function fetchSaver(opts: EdgeGuiPluginOptions, asset: string, address: string): Promise<Saver | undefined> {
+async function fetchSaver(
+  opts: EdgeGuiPluginOptions,
+  asset: string,
+  address: string
+): Promise<Saver | undefined> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const response = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/saver/${address}`, {
-    headers: { 'x-client-id': ninerealmsClientId }
-  })
+  const response = await fetchWaterfall(
+    thornodeServers,
+    `thorchain/pool/${asset}/saver/${address}`,
+    {
+      headers: { 'x-client-id': ninerealmsClientId }
+    }
+  )
 
   if (response.status === 404) return
   if (!response.ok) {
@@ -426,11 +496,18 @@ async function fetchSaver(opts: EdgeGuiPluginOptions, asset: string, address: st
   return asSaver(saversJson)
 }
 
-async function fetchSavers(opts: EdgeGuiPluginOptions, asset: string): Promise<Saver[]> {
+async function fetchSavers(
+  opts: EdgeGuiPluginOptions,
+  asset: string
+): Promise<Saver[]> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const response = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, {
-    headers: { 'x-client-id': ninerealmsClientId }
-  })
+  const response = await fetchWaterfall(
+    thornodeServers,
+    `thorchain/pool/${asset}/savers`,
+    {
+      headers: { 'x-client-id': ninerealmsClientId }
+    }
+  )
 
   if (!response.ok) {
     const responseText = await response.text()
@@ -440,12 +517,21 @@ async function fetchSavers(opts: EdgeGuiPluginOptions, asset: string): Promise<S
   return asSavers(saversJson)
 }
 
-function saverToPosition(currencyConfig: EdgeCurrencyConfig, currencyCode: string, saver: Saver, pool: Pool): StakePosition {
+function saverToPosition(
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string,
+  saver: Saver,
+  pool: Pool
+): StakePosition {
   const pluginId = currencyConfig.currencyInfo.pluginId
 
   const multiplier = getCurrencyCodeMultiplier(currencyConfig, currencyCode)
   function thorToNative(amount: string): string {
-    return toFixed(mul(div(amount, THOR_LIMIT_UNITS, DIVIDE_PRECISION), multiplier), 0, 0)
+    return toFixed(
+      mul(div(amount, THOR_LIMIT_UNITS, DIVIDE_PRECISION), multiplier),
+      0,
+      0
+    )
   }
 
   const { units, asset_deposit_value: assetDepositValue } = saver
@@ -453,7 +539,11 @@ function saverToPosition(currencyConfig: EdgeCurrencyConfig, currencyCode: strin
   const canUnstake = gt(stakedAmount, '0')
 
   const { saversDepth, saversUnits } = pool
-  const redeemableValue = div(mul(units, saversDepth), saversUnits, DIVIDE_PRECISION)
+  const redeemableValue = div(
+    mul(units, saversDepth),
+    saversUnits,
+    DIVIDE_PRECISION
+  )
   const earnedThorAmount = max(sub(redeemableValue, assetDepositValue), '0')
   const earnedAmount = thorToNative(earnedThorAmount)
 
@@ -479,12 +569,19 @@ function saverToPosition(currencyConfig: EdgeCurrencyConfig, currencyCode: strin
   }
 }
 
-async function fetchClaimableTcy(opts: EdgeGuiPluginOptions, address: string): Promise<string> {
+async function fetchClaimableTcy(
+  opts: EdgeGuiPluginOptions,
+  address: string
+): Promise<string> {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
-  const response = await fetchWaterfall(thornodeServers, `thorchain/tcy_claimer/${address}`, {
-    headers: { 'x-client-id': ninerealmsClientId }
-  })
+  const response = await fetchWaterfall(
+    thornodeServers,
+    `thorchain/tcy_claimer/${address}`,
+    {
+      headers: { 'x-client-id': ninerealmsClientId }
+    }
+  )
 
   if (!response.ok) {
     const text = await response.text()
@@ -516,11 +613,17 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+const stakeRequest = async (
+  opts: EdgeGuiPluginOptions,
+  request: ChangeQuoteRequest
+): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
   const { wallet, nativeAmount, currencyCode, stakePolicyId, account } = request
-  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+  const multiplier = getCurrencyCodeMultiplier(
+    wallet.currencyConfig,
+    currencyCode
+  )
   const { pluginId } = wallet.currencyInfo
 
   const tokenId = getWalletTokenId(wallet, currencyCode)
@@ -533,9 +636,15 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   let parentToTokenRate: number = 1
   if (currencyCode !== parentCurrencyCode) {
-    parentToTokenRate = await getHistoricalRate(`${parentCurrencyCode}_${currencyCode}`, new Date().toISOString())
+    parentToTokenRate = await getHistoricalRate(
+      `${parentCurrencyCode}_${currencyCode}`,
+      new Date().toISOString()
+    )
   }
-  const parentMultiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, parentCurrencyCode)
+  const parentMultiplier = getCurrencyCodeMultiplier(
+    wallet.currencyConfig,
+    parentCurrencyCode
+  )
 
   if (lt(walletBalance, nativeAmount)) {
     throw new InsufficientFundsError({ tokenId })
@@ -547,12 +656,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   await updateInboundAddresses(opts)
 
-  const { primaryAddress, parentBalance, addressBalance } = await getPrimaryAddress(account, wallet, currencyCode)
+  const { primaryAddress, parentBalance, addressBalance } =
+    await getPrimaryAddress(account, wallet, currencyCode)
 
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
-  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
+  const quoteDeposit = await cleanMultiFetch(
+    asQuoteDeposit,
+    thornodeServers,
+    path,
+    { headers: { 'x-client-id': ninerealmsClientId } }
+  )
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
     if (error.includes('not enough fee')) {
@@ -564,10 +679,19 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     throw new Error(error)
   }
 
-  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, expiry, memo } = quoteDeposit
+  const {
+    inbound_address: poolAddress,
+    expected_amount_out: expectedAmountOut,
+    expiry,
+    memo
+  } = quoteDeposit
 
   const slippageThorAmount = sub(thorAmount, expectedAmountOut)
-  const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+  const slippageDisplayAmount = div(
+    slippageThorAmount,
+    THOR_LIMIT_UNITS,
+    DIVIDE_PRECISION
+  )
   const slippageNativeAmount = await mul(slippageDisplayAmount, multiplier)
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
@@ -575,7 +699,10 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   let networkFee = '0'
 
   const sourceTokenContractAddressAllCaps = asset.split('-')[1]
-  const sourceTokenContractAddress = sourceTokenContractAddressAllCaps != null ? sourceTokenContractAddressAllCaps.toLowerCase() : undefined
+  const sourceTokenContractAddress =
+    sourceTokenContractAddressAllCaps != null
+      ? sourceTokenContractAddressAllCaps.toLowerCase()
+      : undefined
 
   let memoValue: string | undefined
   let memoType: EdgeMemo['type'] | undefined
@@ -584,7 +711,8 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   let routerAmount: string | undefined
 
   if (isEvm && isToken) {
-    if (sourceTokenContractAddress == null) throw new Error(`Missing sourceTokenContractAddress for ${asset}`)
+    if (sourceTokenContractAddress == null)
+      throw new Error(`Missing sourceTokenContractAddress for ${asset}`)
 
     const [chain] = asset.split('.')
     router = inboundAddresses?.find(ia => ia.chain === chain)?.router
@@ -741,9 +869,15 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
     // The actual funding transaction will need to fund enought for the staking amount
     // plus the fees for the staking transaction
-    fundingSpendInfo.spendTargets[0].nativeAmount = add(networkFee, nativeAmount)
+    fundingSpendInfo.spendTargets[0].nativeAmount = add(
+      networkFee,
+      nativeAmount
+    )
 
-    const remainingBalance = sub(sub(walletBalance, mul(networkFee, '2')), nativeAmount)
+    const remainingBalance = sub(
+      sub(walletBalance, mul(networkFee, '2')),
+      nativeAmount
+    )
     if (lt(remainingBalance, '0')) {
       throw new InsufficientFundsError({ tokenId: null })
     }
@@ -784,7 +918,10 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     approvalFee = approvalTx.parentNetworkFee ?? approvalTx.networkFee
   }
 
-  const fee = add(approvalFee, needsFundingPrimary ? mul(networkFee, '2') : networkFee)
+  const fee = add(
+    approvalFee,
+    needsFundingPrimary ? mul(networkFee, '2') : networkFee
+  )
 
   let quoteInfo: QuoteInfo | undefined
   const allocations: QuoteAllocation[] = [
@@ -808,7 +945,13 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     }
   ]
 
-  const futureUnstakeFee = await estimateUnstakeFee(opts, request, asset, parentToTokenRate, parentBalance).catch(e => {
+  const futureUnstakeFee = await estimateUnstakeFee(
+    opts,
+    request,
+    asset,
+    parentToTokenRate,
+    parentBalance
+  ).catch(e => {
     console.error(e.message)
   })
 
@@ -822,12 +965,24 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
     // Calculate the amount of time needed to break even from just fees
 
-    const feeInParentExchangeAmount = div(fee, parentMultiplier, parentMultiplier.length)
-    const feeInTokenExchangeAmount = mul(feeInParentExchangeAmount, parentToTokenRate.toString())
+    const feeInParentExchangeAmount = div(
+      fee,
+      parentMultiplier,
+      parentMultiplier.length
+    )
+    const feeInTokenExchangeAmount = mul(
+      feeInParentExchangeAmount,
+      parentToTokenRate.toString()
+    )
     const feeInTokenNativeAmount = mul(feeInTokenExchangeAmount, multiplier)
 
-    const totalFee = add(add(feeInTokenNativeAmount, slippageNativeAmount), futureUnstakeFee)
-    const policy = policies.find(policy => policy.stakePolicyId === stakePolicyId)
+    const totalFee = add(
+      add(feeInTokenNativeAmount, slippageNativeAmount),
+      futureUnstakeFee
+    )
+    const policy = policies.find(
+      policy => policy.stakePolicyId === stakePolicyId
+    )
     if (policy == null) {
       throw new Error(`Cannot find policy ${stakePolicyId}`)
     }
@@ -850,7 +1005,10 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     quoteInfo,
     approve: async () => {
       if (fundingSpendInfo != null) {
-        assert(approvalTx == null, 'Cannot have both funding tx and approval tx')
+        assert(
+          approvalTx == null,
+          'Cannot have both funding tx and approval tx'
+        )
         // Transfer funds into the primary address
         const tx = await wallet.makeSpend(fundingSpendInfo)
         const signedTx = await wallet.signTx(tx)
@@ -871,19 +1029,26 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   }
 }
 
-const tcAssetToEdge = (asset: string): { pluginId: string; currencyCode: string } | undefined => {
+const tcAssetToEdge = (
+  asset: string
+): { pluginId: string; currencyCode: string } | undefined => {
   const [chainCode, currency] = asset.split('.')
   const [currencyCode] = currency.split('-')
   const pluginId = tcChainCodePluginIdMap[chainCode]
 
-  if (pluginId != null && currencyCode != null) return { currencyCode, pluginId }
+  if (pluginId != null && currencyCode != null)
+    return { currencyCode, pluginId }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+const unstakeRequest = async (
+  opts: EdgeGuiPluginOptions,
+  request: ChangeQuoteRequest
+): Promise<ChangeQuote> => {
   const { allocations } = await getStakePosition(opts, request)
   const { wallet, currencyCode, account } = request
-  const { addressBalance, parentBalance, primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
+  const { addressBalance, parentBalance, primaryAddress } =
+    await getPrimaryAddress(account, wallet, currencyCode)
   return await unstakeRequestInner(opts, request, {
     addressBalance,
     allocations,
@@ -899,11 +1064,24 @@ interface UnstakeRequestParams {
   parentBalance: string
 }
 
-const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, params: UnstakeRequestParams): Promise<ChangeQuote> => {
+const unstakeRequestInner = async (
+  opts: EdgeGuiPluginOptions,
+  request: ChangeQuoteRequest,
+  params: UnstakeRequestParams
+): Promise<ChangeQuote> => {
   const { allocations, primaryAddress, parentBalance, addressBalance } = params
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
-  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+  const {
+    action,
+    wallet,
+    nativeAmount: requestNativeAmount,
+    currencyCode,
+    account
+  } = request
+  const multiplier = getCurrencyCodeMultiplier(
+    wallet.currencyConfig,
+    currencyCode
+  )
   const { pluginId } = wallet.currencyInfo
 
   const tokenId = getTokenId(wallet.currencyConfig, currencyCode) ?? null
@@ -928,7 +1106,9 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     return prev
   }, '0')
 
-  const nativeAmount = gt(requestNativeAmount, stakedAmount) ? stakedAmount : requestNativeAmount
+  const nativeAmount = gt(requestNativeAmount, stakedAmount)
+    ? stakedAmount
+    : requestNativeAmount
 
   let totalUnstakeNativeAmount = '0'
   if (action === 'unstake') {
@@ -947,19 +1127,40 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 
   // Get a percent of redeemableValue from what user entered +
-  let fractionToUnstake = div(totalUnstakeNativeAmount, redeemableValue, DIVIDE_PRECISION)
+  let fractionToUnstake = div(
+    totalUnstakeNativeAmount,
+    redeemableValue,
+    DIVIDE_PRECISION
+  )
   if (gt(fractionToUnstake, '1')) {
     fractionToUnstake = '1'
   }
 
-  const totalUnstakeExchangeAmount = div(totalUnstakeNativeAmount, multiplier, multiplier.length)
-  const totalUnstakeThorAmount = toFixed(mul(totalUnstakeExchangeAmount, THOR_LIMIT_UNITS), 0, 0)
+  const totalUnstakeExchangeAmount = div(
+    totalUnstakeNativeAmount,
+    multiplier,
+    multiplier.length
+  )
+  const totalUnstakeThorAmount = toFixed(
+    mul(totalUnstakeExchangeAmount, THOR_LIMIT_UNITS),
+    0,
+    0
+  )
 
-  const withdrawBps = toFixed(mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS), 0, 0)
+  const withdrawBps = toFixed(
+    mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS),
+    0,
+    0
+  )
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
 
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
-  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
+  const quoteDeposit = await cleanMultiFetch(
+    asQuoteDeposit,
+    thornodeServers,
+    path,
+    { headers: { 'x-client-id': ninerealmsClientId } }
+  )
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
     if (error.includes('not enough fee')) {
@@ -967,12 +1168,24 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     }
     throw new Error(error)
   }
-  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut, memo } = quoteDeposit
+  const {
+    inbound_address: poolAddress,
+    expected_amount_out: expectedAmountOut,
+    memo
+  } = quoteDeposit
 
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
-  const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+  const slippageDisplayAmount = div(
+    slippageThorAmount,
+    THOR_LIMIT_UNITS,
+    DIVIDE_PRECISION
+  )
   const slippageNativeAmount = mul(slippageDisplayAmount, multiplier)
-  const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(account, wallet, currencyCode)
+  const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(
+    account,
+    wallet,
+    currencyCode
+  )
   const forceChangeAddress = utxoSourceAddress
 
   let needsFundingPrimary = false
@@ -998,7 +1211,9 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // For unstaking we always send just the mainnet coin since we are only sending a message
     // to the Thorchain pool to withdraw the funds
     tokenId: null,
-    spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
+    spendTargets: [
+      { publicAddress: poolAddress, nativeAmount: sendNativeAmount }
+    ],
     otherParams: {
       enableRbf: false,
       outputSort: 'targets',
@@ -1065,7 +1280,9 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 
     const estimateTx = await wallet.makeSpend({
       tokenId: null,
-      spendTargets: [{ publicAddress: primaryAddress, nativeAmount: sendNativeAmount }],
+      spendTargets: [
+        { publicAddress: primaryAddress, nativeAmount: sendNativeAmount }
+      ],
       memos: [
         {
           type: memoType,
@@ -1087,7 +1304,10 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     })
     networkFee = estimateTx.networkFee
 
-    const remainingBalance = sub(sub(parentBalance, mul(networkFee, '2')), sendNativeAmount)
+    const remainingBalance = sub(
+      sub(parentBalance, mul(networkFee, '2')),
+      sendNativeAmount
+    )
     if (lt(remainingBalance, '0')) {
       throw new InsufficientFundsError({ tokenId: null })
     }
@@ -1153,7 +1373,10 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 }
 
-const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+const claimRequest = async (
+  opts: EdgeGuiPluginOptions,
+  request: ChangeQuoteRequest
+): Promise<ChangeQuote> => {
   const { wallet, account } = request
   const { currencyCode, pluginId } = wallet.currencyInfo
   const dustThreshold = CLAIMING_DUST_THRESHOLDS[currencyCode]
@@ -1171,7 +1394,11 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   await updateInboundAddresses(opts)
 
-  const { primaryAddress, addressBalance } = await getPrimaryAddress(account, wallet, currencyCode)
+  const { primaryAddress, addressBalance } = await getPrimaryAddress(
+    account,
+    wallet,
+    currencyCode
+  )
 
   const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
   const [chain] = asset.split('.')
@@ -1183,22 +1410,32 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
 
-  let thorchainWallet = Object.values(account.currencyWallets).find(wallet => wallet.currencyInfo.pluginId === 'thorchainrune')
+  let thorchainWallet = Object.values(account.currencyWallets).find(
+    wallet => wallet.currencyInfo.pluginId === 'thorchainrune'
+  )
 
   if (thorchainWallet == null) {
     // Make sure the user has a Thorchain wallet to receive the TCY
     console.log('Thorchain wallet not found, creating one')
-    thorchainWallet = await account.createCurrencyWallet('wallet:thorchainrune', {
-      fiatCurrencyCode: wallet.fiatCurrencyCode,
-      name: lstrings.string_first_thorchainrune_wallet_name,
-      enabledTokenIds: ['tcy']
-    })
+    thorchainWallet = await account.createCurrencyWallet(
+      'wallet:thorchainrune',
+      {
+        fiatCurrencyCode: wallet.fiatCurrencyCode,
+        name: lstrings.string_first_thorchainrune_wallet_name,
+        enabledTokenIds: ['tcy']
+      }
+    )
   }
 
   if (!thorchainWallet.enabledTokenIds.includes('tcy')) {
-    await thorchainWallet.changeEnabledTokenIds([...thorchainWallet.enabledTokenIds, 'tcy'])
+    await thorchainWallet.changeEnabledTokenIds([
+      ...thorchainWallet.enabledTokenIds,
+      'tcy'
+    ])
   }
-  const thorchainAddresses = await thorchainWallet.getAddresses({ tokenId: null })
+  const thorchainAddresses = await thorchainWallet.getAddresses({
+    tokenId: null
+  })
   const thorchainAddress = thorchainAddresses[0].publicAddress
 
   let router: string | undefined
@@ -1339,9 +1576,15 @@ const claimRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
     // The actual funding transaction will need to fund enough for the staking amount
     // plus the fees for the staking transaction
-    fundingSpendInfo.spendTargets[0].nativeAmount = add(networkFee, nativeAmount)
+    fundingSpendInfo.spendTargets[0].nativeAmount = add(
+      networkFee,
+      nativeAmount
+    )
 
-    const remainingBalance = sub(sub(walletBalance, mul(networkFee, '2')), nativeAmount)
+    const remainingBalance = sub(
+      sub(walletBalance, mul(networkFee, '2')),
+      nativeAmount
+    )
     if (lt(remainingBalance, '0')) {
       throw new InsufficientFundsError({ tokenId: null })
     }
@@ -1404,13 +1647,24 @@ const estimateUnstakeFee = async (
   parentBalance: string
 ): Promise<string> => {
   const { currencyCode, nativeAmount, wallet } = request
-  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+  const multiplier = getCurrencyCodeMultiplier(
+    wallet.currencyConfig,
+    currencyCode
+  )
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  const parentMultiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, parentCurrencyCode)
+  const parentMultiplier = getCurrencyCodeMultiplier(
+    wallet.currencyConfig,
+    parentCurrencyCode
+  )
 
-  const [pool, savers] = await Promise.all([fetchPool(opts, asset), fetchSavers(opts, asset)])
-  if (pool == null) throw new Error('Cannot estimate unstake fee: No pool found')
-  if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
+  const [pool, savers] = await Promise.all([
+    fetchPool(opts, asset),
+    fetchSavers(opts, asset)
+  ])
+  if (pool == null)
+    throw new Error('Cannot estimate unstake fee: No pool found')
+  if (savers.length === 0)
+    throw new Error('Cannot estimate unstake fee: No savers found')
 
   // Loop over all the Savers and find the one that has a position just higher
   // than the requested stake amount
@@ -1419,13 +1673,21 @@ const estimateUnstakeFee = async (
   let bestNativeAmount = '0'
   for (const saver of savers) {
     primaryAddress = saver.asset_address
-    stakePosition = saverToPosition(wallet.currencyConfig, currencyCode, saver, pool)
+    stakePosition = saverToPosition(
+      wallet.currencyConfig,
+      currencyCode,
+      saver,
+      pool
+    )
     const { allocations } = stakePosition
     for (const alloc of allocations) {
       if (alloc.allocationType !== 'staked') continue
       if (lt(alloc.nativeAmount, nativeAmount)) continue
 
-      if (eq(bestNativeAmount, '0') || lt(alloc.nativeAmount, bestNativeAmount)) {
+      if (
+        eq(bestNativeAmount, '0') ||
+        lt(alloc.nativeAmount, bestNativeAmount)
+      ) {
         bestNativeAmount = alloc.nativeAmount
         break
       }
@@ -1433,13 +1695,21 @@ const estimateUnstakeFee = async (
 
     // Early exit once we have a position that's no more than 10x larger than the
     // requested stake amount. Continuing could cost 10s of seconds to complete
-    const bestAmtMultiplier = div(bestNativeAmount, nativeAmount, DIVIDE_PRECISION)
+    const bestAmtMultiplier = div(
+      bestNativeAmount,
+      nativeAmount,
+      DIVIDE_PRECISION
+    )
     if (lt(bestAmtMultiplier, '10')) {
       break
     }
   }
-  if (eq(bestNativeAmount, '0')) throw new Error('Could not find sufficient current staker to estimate unstake')
-  if (stakePosition == null) throw new Error('Could not get stakePosition. Should not happen')
+  if (eq(bestNativeAmount, '0'))
+    throw new Error(
+      'Could not find sufficient current staker to estimate unstake'
+    )
+  if (stakePosition == null)
+    throw new Error('Could not get stakePosition. Should not happen')
 
   const { allocations } = stakePosition
 
@@ -1456,15 +1726,27 @@ const estimateUnstakeFee = async (
     }
   )
 
-  const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'networkFee')
-  const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'deductedFee')
+  const networkFee = unstakeQuote.allocations.find(
+    a => a.allocationType === 'networkFee'
+  )
+  const stakeFee = unstakeQuote.allocations.find(
+    a => a.allocationType === 'deductedFee'
+  )
 
-  if (networkFee == null || stakeFee == null) throw new Error('Cannot estimate unstake fee: No fees found')
+  if (networkFee == null || stakeFee == null)
+    throw new Error('Cannot estimate unstake fee: No fees found')
 
   // If staking a token, convert the networkFree from the parent currency to the staked currency
   if (currencyCode !== parentCurrencyCode) {
-    const parentFeeExchangeAmount = div(networkFee.nativeAmount, parentMultiplier, parentMultiplier.length)
-    const feeInTokenExchangeAmount = mul(parentFeeExchangeAmount, parentToTokenRate.toString())
+    const parentFeeExchangeAmount = div(
+      networkFee.nativeAmount,
+      parentMultiplier,
+      parentMultiplier.length
+    )
+    const feeInTokenExchangeAmount = mul(
+      parentFeeExchangeAmount,
+      parentToTokenRate.toString()
+    )
     const feeInTokenNativeAmount = mul(feeInTokenExchangeAmount, multiplier)
     return add(stakeFee.nativeAmount, feeInTokenNativeAmount)
   } else {
@@ -1472,10 +1754,15 @@ const estimateUnstakeFee = async (
   }
 }
 
-const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void> => {
+const updateInboundAddresses = async (
+  opts: EdgeGuiPluginOptions
+): Promise<void> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const now = Date.now()
-  if (now - exchangeInfoLastUpdate > EXCHANGE_INFO_UPDATE_FREQ_MS || exchangeInfo == null) {
+  if (
+    now - exchangeInfoLastUpdate > EXCHANGE_INFO_UPDATE_FREQ_MS ||
+    exchangeInfo == null
+  ) {
     try {
       const exchangeInfoResponse = await fetchInfo('v1/exchangeInfo/edge')
 
@@ -1485,20 +1772,29 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
         exchangeInfoLastUpdate = now
       } else {
         // Error is ok. We just use defaults
-        console.warn('Error getting info server exchangeInfo. Using defaults...')
+        console.warn(
+          'Error getting info server exchangeInfo. Using defaults...'
+        )
       }
     } catch (e: any) {
-      console.log('Error getting info server exchangeInfo. Using defaults...', e.message)
+      console.log(
+        'Error getting info server exchangeInfo. Using defaults...',
+        e.message
+      )
     }
   }
 
   try {
     if (exchangeInfo != null) {
       midgardServers = exchangeInfo.swap.plugins.thorchain.midgardServers
-      thornodeServers = exchangeInfo.swap.plugins.thorchain.thornodeServers ?? thornodeServers
+      thornodeServers =
+        exchangeInfo.swap.plugins.thorchain.thornodeServers ?? thornodeServers
     }
 
-    if (now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS || inboundAddresses == null) {
+    if (
+      now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS ||
+      inboundAddresses == null
+    ) {
       // Get current pool
       const [iaResponse] = await Promise.all([
         fetchWaterfall(thornodeServers, 'thorchain/inbound_addresses', {
@@ -1508,7 +1804,9 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
 
       if (!iaResponse.ok) {
         const responseText = await iaResponse.text()
-        throw new Error(`Thorchain could not fetch inbound_addresses: ${responseText}`)
+        throw new Error(
+          `Thorchain could not fetch inbound_addresses: ${responseText}`
+        )
       }
 
       const iaJson = await iaResponse.json()
@@ -1538,7 +1836,8 @@ const getPrimaryAddress = async (
   // If this is a single address chain (ie ETH, AVAX)
   // then the address balance is always the wallet balance
   const displayPublicKey = await account.getDisplayPublicKey(wallet.id)
-  const hasSingleAddress = displayPublicKey.toLowerCase() === publicAddress.toLowerCase()
+  const hasSingleAddress =
+    displayPublicKey.toLowerCase() === publicAddress.toLowerCase()
   const assetBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   return {
@@ -1548,7 +1847,10 @@ const getPrimaryAddress = async (
   }
 }
 
-const edgeToTcAsset = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): string => {
+const edgeToTcAsset = (
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string
+): string => {
   const { pluginId } = currencyConfig.currencyInfo
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
   const asset = `${mainnetCode}.${currencyCode}`
@@ -1563,16 +1865,23 @@ const edgeToTcAsset = (currencyConfig: EdgeCurrencyConfig, currencyCode: string)
     }
     const tokenId = getTokenId(currencyConfig, currencyCode)
     if (tokenId == null) {
-      throw new Error(`getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`)
+      throw new Error(
+        `getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`
+      )
     }
     const edgeToken = currencyConfig.allTokens[tokenId]
     if (edgeToken == null) {
-      throw new Error(`getStakePositionInner: Cannot find edgeToken for ${pluginId}:${tokenId}`)
+      throw new Error(
+        `getStakePositionInner: Cannot find edgeToken for ${pluginId}:${tokenId}`
+      )
     }
 
-    const { contractAddress } = asMaybeContractLocation(edgeToken.networkLocation) ?? {}
+    const { contractAddress } =
+      asMaybeContractLocation(edgeToken.networkLocation) ?? {}
     if (contractAddress == null) {
-      throw new Error(`getStakePositionInner: No contractAddress for ${pluginId}:${tokenId}`)
+      throw new Error(
+        `getStakePositionInner: No contractAddress for ${pluginId}:${tokenId}`
+      )
     }
 
     return `${asset}-${contractAddress.toLocaleUpperCase()}`
@@ -1599,5 +1908,8 @@ async function showDisabledModal(): Promise<void> {
       }}
     />
   ))
-  if (result === 'info') await Linking.openURL('https://edge.app/blog/company-news/thorchain-savers-halts/?af=edge-app')
+  if (result === 'info')
+    await Linking.openURL(
+      'https://edge.app/blog/company-news/thorchain-savers-halts/?af=edge-app'
+    )
 }

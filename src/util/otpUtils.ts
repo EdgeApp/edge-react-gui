@@ -40,14 +40,21 @@ export function useOtpSettings(): OtpSettings {
 }
 
 // Read settings from disk
-export async function readOtpSettings(account: EdgeAccount): Promise<OtpSettings> {
+export async function readOtpSettings(
+  account: EdgeAccount
+): Promise<OtpSettings> {
   const [lastCheckedStr, dontAskStr] = await Promise.all([
-    account.dataStore.getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED).catch(() => null),
-    account.dataStore.getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_DONT_ASK).catch(() => null)
+    account.dataStore
+      .getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED)
+      .catch(() => null),
+    account.dataStore
+      .getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_DONT_ASK)
+      .catch(() => null)
   ])
 
   const settings: OtpSettings = {
-    lastChecked: lastCheckedStr != null ? new Date(parseInt(lastCheckedStr)) : null,
+    lastChecked:
+      lastCheckedStr != null ? new Date(parseInt(lastCheckedStr)) : null,
     dontAsk: dontAskStr === 'true'
   }
 
@@ -56,17 +63,32 @@ export async function readOtpSettings(account: EdgeAccount): Promise<OtpSettings
 }
 
 // Write settings to disk
-export async function writeOtpSettings(account: EdgeAccount, settings: Partial<OtpSettings>): Promise<void> {
+export async function writeOtpSettings(
+  account: EdgeAccount,
+  settings: Partial<OtpSettings>
+): Promise<void> {
   const newSettings = { ...localOtpSettings, ...settings }
 
   const promises: Array<Promise<void>> = []
 
   if (settings.lastChecked !== undefined) {
-    promises.push(account.dataStore.setItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED, settings.lastChecked?.toString() ?? '0'))
+    promises.push(
+      account.dataStore.setItem(
+        OTP_REMINDER_STORE_NAME,
+        OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
+        settings.lastChecked?.toString() ?? '0'
+      )
+    )
   }
 
   if (settings.dontAsk !== undefined) {
-    promises.push(account.dataStore.setItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_DONT_ASK, settings.dontAsk?.toString() ?? 'false'))
+    promises.push(
+      account.dataStore.setItem(
+        OTP_REMINDER_STORE_NAME,
+        OTP_REMINDER_KEY_NAME_DONT_ASK,
+        settings.dontAsk?.toString() ?? 'false'
+      )
+    )
   }
 
   await Promise.all(promises)

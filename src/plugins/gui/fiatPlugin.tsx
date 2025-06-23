@@ -7,25 +7,48 @@ import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
-import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
-import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import {
+  DisablePluginMap,
+  NestedDisableMap
+} from '../../actions/ExchangeInfoActions'
+import {
+  launchPaymentProto,
+  LaunchPaymentProtoParams
+} from '../../actions/PaymentProtoActions'
 import { updateFiatPurchaseCount } from '../../actions/RequestReviewActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
-import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import {
+  WalletListModal,
+  WalletListResult
+} from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
-import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
+import {
+  Airship,
+  showError,
+  showToast,
+  showToastSpinner
+} from '../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
 import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
-import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
+import {
+  BuyTabSceneProps,
+  NavigationBase,
+  SellTabSceneProps
+} from '../../types/routerTypes'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { BuyConversionValues, OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import {
+  BuyConversionValues,
+  OnLogEvent,
+  SellConversionValues,
+  TrackingEventName
+} from '../../util/tracking'
 import { datelog } from '../../util/utils'
 import {
   FiatDirection,
@@ -55,17 +78,23 @@ const deeplinkListeners: {
 
 export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (deeplinkListeners.listener == null) {
-    showError(`No buy/sell interface currently open to handle fiatProvider deeplink`)
+    showError(
+      `No buy/sell interface currently open to handle fiatProvider deeplink`
+    )
     return
   }
   const { direction, providerId, deeplinkHandler } = deeplinkListeners.listener
   if (link.providerId !== providerId) {
-    showError(`Deeplink providerId ${link.providerId} does not match expected providerId ${providerId}`)
+    showError(
+      `Deeplink providerId ${link.providerId} does not match expected providerId ${providerId}`
+    )
     return
   }
 
   if (link.direction !== direction) {
-    showError(`Deeplink direction ${link.direction} does not match expected direction ${direction}`)
+    showError(
+      `Deeplink direction ${link.direction} does not match expected direction ${direction}`
+    )
     return
   }
 
@@ -125,10 +154,12 @@ export const executePlugin = async (params: {
 
       // Then navigate to the correct list scene based on direction
       if (isBuy) {
-        const buyNavigation = navigation as BuyTabSceneProps<'pluginListBuy'>['navigation']
+        const buyNavigation =
+          navigation as BuyTabSceneProps<'pluginListBuy'>['navigation']
         buyNavigation.navigate('pluginListBuy', {})
       } else {
-        const sellNavigation = navigation as SellTabSceneProps<'pluginListSell'>['navigation']
+        const sellNavigation =
+          navigation as SellTabSceneProps<'pluginListSell'>['navigation']
         sellNavigation.navigate('pluginListSell', {})
       }
     }
@@ -137,7 +168,9 @@ export const executePlugin = async (params: {
   const showUi: FiatPluginUi = {
     addressWarnings,
     buttonModal: async params => {
-      return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
+      return await Airship.show(bridge => (
+        <ButtonsModal bridge={bridge} {...params} />
+      ))
     },
     confirmation: async params => {
       return await new Promise(resolve => {
@@ -159,9 +192,12 @@ export const executePlugin = async (params: {
 
     openExternalWebView: async (params): Promise<void> => {
       const { deeplinkHandler, providerId, redirectExternal, url } = params
-      datelog(`**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`)
+      datelog(
+        `**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`
+      )
       if (deeplinkHandler != null) {
-        if (providerId == null) throw new Error('providerId is required for deeplinkHandler')
+        if (providerId == null)
+          throw new Error('providerId is required for deeplinkHandler')
         deeplinkListeners.listener = { direction, providerId, deeplinkHandler }
       }
       if (redirectExternal === true) {
@@ -171,7 +207,9 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') await SafariView.show({ url })
       else await CustomTabs.openURL(params.url)
     },
-    walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
+    walletPicker: async (
+      params
+    ): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
 
       const result =
@@ -190,9 +228,16 @@ export const executePlugin = async (params: {
       if (result?.type === 'wallet') return result
     },
     showError: async (e: unknown): Promise<void> => showError(e),
-    listModal: async (params: FiatPluginListModalParams): Promise<string | undefined> => {
+    listModal: async (
+      params: FiatPluginListModalParams
+    ): Promise<string | undefined> => {
       const result = await Airship.show<string | undefined>(bridge => (
-        <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />
+        <RadioListModal
+          bridge={bridge}
+          title={params.title}
+          selected={params.selected}
+          items={params.items}
+        />
       ))
       return result
     },
@@ -205,7 +250,11 @@ export const executePlugin = async (params: {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginContactForm', {
           message: params.message,
-          onSubmit: async (email: string, firstName: string, lastName: string) => {
+          onSubmit: async (
+            email: string,
+            firstName: string,
+            lastName: string
+          ) => {
             resolve({ email, firstName, lastName })
           },
           onClose: async () => {
@@ -232,9 +281,18 @@ export const executePlugin = async (params: {
         })
       })
     },
-    requestPermission: async (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean = true) => {
+    requestPermission: async (
+      permissions: FiatPluginPermissions,
+      displayName: string,
+      mandatory: boolean = true
+    ) => {
       for (const permission of permissions) {
-        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatory)
+        const deniedPermission = await requestPermissionOnSettings(
+          disklet,
+          permission,
+          displayName,
+          mandatory
+        )
         if (deniedPermission) {
           return false
         }
@@ -269,7 +327,13 @@ export const executePlugin = async (params: {
     },
     sepaTransferInfo: async params => {
       return await new Promise((resolve, reject) => {
-        const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
+        const {
+          headerTitle,
+          headerIconUri,
+          promptMessage,
+          transferInfo,
+          onDone
+        } = params
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginInfoDisplay', {
           headerTitle,
@@ -283,7 +347,12 @@ export const executePlugin = async (params: {
         })
       })
     },
-    saveTxMetadata: async ({ txid, walletId, tokenId, metadata }: SaveTxMetadataParams) => {
+    saveTxMetadata: async ({
+      txid,
+      walletId,
+      tokenId,
+      metadata
+    }: SaveTxMetadataParams) => {
       const wallet = account.currencyWallets[walletId]
       if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
 
@@ -291,7 +360,13 @@ export const executePlugin = async (params: {
         await wallet.saveTxMetadata({ txid, tokenId, metadata })
       }
     },
-    saveTxAction: async ({ txid, walletId, tokenId, assetAction, savedAction }: SaveTxActionParams) => {
+    saveTxAction: async ({
+      txid,
+      walletId,
+      tokenId,
+      assetAction,
+      savedAction
+    }: SaveTxActionParams) => {
       const wallet = account.currencyWallets[walletId]
       if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
       await wallet.saveTxAction({ txid, tokenId, assetAction, savedAction })
@@ -321,7 +396,10 @@ export const executePlugin = async (params: {
         })
       })
     },
-    sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
+    sendPaymentProto: async (params: {
+      uri: string
+      params: LaunchPaymentProtoParams
+    }) => {
       // Always avoid the scam warning with plugins since we trust our plugins
       await launchPaymentProto(navigation, account, params.uri, {
         ...params.params,
@@ -334,7 +412,10 @@ export const executePlugin = async (params: {
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)
     },
-    trackConversion: async (event: TrackingEventName, opts: { conversionValues: BuyConversionValues | SellConversionValues }) => {
+    trackConversion: async (
+      event: TrackingEventName,
+      opts: { conversionValues: BuyConversionValues | SellConversionValues }
+    ) => {
       onLogEvent(event, opts)
       if (event === 'Buy_Success' || event === 'Sell_Success') {
         dispatch(updateFiatPurchaseCount()).catch(() => {})

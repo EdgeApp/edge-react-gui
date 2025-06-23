@@ -1,7 +1,23 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { mul } from 'biggystring'
-import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeAssetAction, EdgeMemo, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'edge-core-js'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue
+} from 'cleaners'
+import {
+  EdgeAssetAction,
+  EdgeMemo,
+  EdgeSpendInfo,
+  EdgeTokenId,
+  EdgeTxActionFiat
+} from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -12,7 +28,11 @@ import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
+import {
+  FiatDirection,
+  FiatPaymentType,
+  SaveTxActionParams
+} from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -25,14 +45,23 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { addExactRegion, isDailyCheckDue, NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_PAYMENT, validateExactRegion } from './common'
+import {
+  addExactRegion,
+  isDailyCheckDue,
+  NOT_SUCCESS_TOAST_HIDE_MS,
+  RETURN_URL_PAYMENT,
+  validateExactRegion
+} from './common'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
 const pluginDisplayName = 'Moonpay'
 const supportEmail = 'support@moonpay.com'
 
-const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
+const allowedCurrencyCodes: Record<
+  FiatDirection,
+  { [F in FiatPaymentType]?: FiatProviderAssetMap }
+> = {
   buy: {
     credit: { providerId, fiat: {}, crypto: {} },
     paypal: { providerId, fiat: {}, crypto: {} },
@@ -119,7 +148,11 @@ const asApiKeys = asString
 
 const asMoonpayCountries = asArray(asMoonpayCountry)
 
-type MoonpayPaymentMethod = 'ach_bank_transfer' | 'credit_debit_card' | 'paypal' | 'venmo'
+type MoonpayPaymentMethod =
+  | 'ach_bank_transfer'
+  | 'credit_debit_card'
+  | 'paypal'
+  | 'venmo'
 
 interface MoonpayWidgetQueryParams {
   apiKey: string
@@ -160,7 +193,9 @@ type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
   baseCurrencyAmount?: number
 }
 
-const MOONPAY_PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, MoonpayPaymentMethod>> = {
+const MOONPAY_PAYMENT_TYPE_MAP: Partial<
+  Record<FiatPaymentType, MoonpayPaymentMethod>
+> = {
   applepay: 'credit_debit_card',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
@@ -215,7 +250,9 @@ const createMemo = (pluginId: string, value: string): EdgeMemo => {
   return memo
 }
 
-const PAYMENT_TYPE_MAP: Partial<Record<FiatPaymentType, FiatPaymentType | undefined>> = {
+const PAYMENT_TYPE_MAP: Partial<
+  Record<FiatPaymentType, FiatPaymentType | undefined>
+> = {
   ach: 'ach',
   applepay: 'credit',
   credit: 'credit',
@@ -229,7 +266,9 @@ let lastChecked = 0
 export const moonpayProvider: FiatProviderFactory = {
   providerId,
   storeId,
-  makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+  makeProvider: async (
+    params: FiatProviderFactoryParams
+  ): Promise<FiatProvider> => {
     const { apiKeys, getTokenIdFromContract } = params
     const apiKey = asApiKeys(apiKeys)
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
@@ -237,7 +276,11 @@ export const moonpayProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({
+        direction,
+        paymentTypes,
+        regionCode
+      }): Promise<FiatProviderAssetMap> => {
         const paymentType = PAYMENT_TYPE_MAP[paymentTypes[0]] ?? paymentTypes[0]
 
         // Return nothing if paymentTypes are not supported by this provider
@@ -248,8 +291,13 @@ export const moonpayProvider: FiatProviderFactory = {
             errorType: 'paymentUnsupported'
           })
 
-        if (Object.keys(assetMap.crypto).length === 0 || isDailyCheckDue(lastChecked)) {
-          const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
+        if (
+          Object.keys(assetMap.crypto).length === 0 ||
+          isDailyCheckDue(lastChecked)
+        ) {
+          const response = await fetch(
+            `https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`
+          ).catch(e => undefined)
           if (response == null || !response.ok) return assetMap
 
           const result = await response.json()
@@ -259,7 +307,10 @@ export const moonpayProvider: FiatProviderFactory = {
 
             // HACK: Moonpay API returns the burn address for EVM chain native currency
             moonpayCurrencies = moonpayCurrencies.map(currency => {
-              if (currency.metadata?.contractAddress === '0x0000000000000000000000000000000000000000') {
+              if (
+                currency.metadata?.contractAddress ===
+                '0x0000000000000000000000000000000000000000'
+              ) {
                 currency.metadata.contractAddress = null
               }
               return currency
@@ -275,7 +326,10 @@ export const moonpayProvider: FiatProviderFactory = {
             }
 
             if (currency.type === 'crypto') {
-              if (regionCode.countryCode === 'US' && currency.isSupportedInUS !== true) {
+              if (
+                regionCode.countryCode === 'US' &&
+                currency.isSupportedInUS !== true
+              ) {
                 continue
               }
               if (currency.isSuspended) continue
@@ -296,15 +350,22 @@ export const moonpayProvider: FiatProviderFactory = {
               } else {
                 tokenId = null
               }
-              if (assetMap.crypto[pluginId] == null) assetMap.crypto[pluginId] = []
-              addTokenToArray({ tokenId, otherInfo: currency }, assetMap.crypto[pluginId])
+              if (assetMap.crypto[pluginId] == null)
+                assetMap.crypto[pluginId] = []
+              addTokenToArray(
+                { tokenId, otherInfo: currency },
+                assetMap.crypto[pluginId]
+              )
             } else {
               assetMap.fiat['iso:' + currency.code.toUpperCase()] = currency
             }
           }
 
-          const response2 = await fetch(`https://api.moonpay.com/v3/countries?apiKey=${apiKey}`).catch(e => undefined)
-          if (response2 == null || !response2.ok) throw new Error('Moonpay failed to fetch countries')
+          const response2 = await fetch(
+            `https://api.moonpay.com/v3/countries?apiKey=${apiKey}`
+          ).catch(e => undefined)
+          if (response2 == null || !response2.ok)
+            throw new Error('Moonpay failed to fetch countries')
 
           const result2 = await response2.json()
           const countries = asMoonpayCountries(result2)
@@ -327,10 +388,18 @@ export const moonpayProvider: FiatProviderFactory = {
                     const stateProvinceCode = state.code
 
                     if (state.isBuyAllowed) {
-                      addExactRegion(allowedCountryCodes.buy, countryCode, stateProvinceCode)
+                      addExactRegion(
+                        allowedCountryCodes.buy,
+                        countryCode,
+                        stateProvinceCode
+                      )
                     }
                     if (state.isSellAllowed) {
-                      addExactRegion(allowedCountryCodes.sell, countryCode, stateProvinceCode)
+                      addExactRegion(
+                        allowedCountryCodes.sell,
+                        countryCode,
+                        stateProvinceCode
+                      )
                     }
                   }
                 }
@@ -339,12 +408,29 @@ export const moonpayProvider: FiatProviderFactory = {
           }
           lastChecked = Date.now()
         }
-        validateExactRegion(providerId, regionCode, allowedCountryCodes[direction])
+        validateExactRegion(
+          providerId,
+          regionCode,
+          allowedCountryCodes[direction]
+        )
         return assetMap
       },
-      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { direction, fiatCurrencyCode, regionCode, paymentTypes, displayCurrencyCode, tokenId } = params
-        validateExactRegion(providerId, regionCode, allowedCountryCodes[direction])
+      getQuote: async (
+        params: FiatProviderGetQuoteParams
+      ): Promise<FiatProviderQuote> => {
+        const {
+          direction,
+          fiatCurrencyCode,
+          regionCode,
+          paymentTypes,
+          displayCurrencyCode,
+          tokenId
+        } = params
+        validateExactRegion(
+          providerId,
+          regionCode,
+          allowedCountryCodes[direction]
+        )
 
         const paymentType = PAYMENT_TYPE_MAP[paymentTypes[0]] ?? paymentTypes[0]
         const assetMap = allowedCurrencyCodes[direction][paymentType]
@@ -363,10 +449,15 @@ export const moonpayProvider: FiatProviderFactory = {
 
         let amountParam = ''
         const tokens = assetMap.crypto[params.pluginId]
-        const moonpayCurrency = tokens.find(token => token.tokenId === params.tokenId)
+        const moonpayCurrency = tokens.find(
+          token => token.tokenId === params.tokenId
+        )
         const cryptoCurrencyObj = asMoonpayCurrency(moonpayCurrency?.otherInfo)
-        const fiatCurrencyObj = asMoonpayCurrency(assetMap.fiat[params.fiatCurrencyCode])
-        if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Moonpay could not query supported currencies')
+        const fiatCurrencyObj = asMoonpayCurrency(
+          assetMap.fiat[params.fiatCurrencyCode]
+        )
+        if (cryptoCurrencyObj == null || fiatCurrencyObj == null)
+          throw new Error('Moonpay could not query supported currencies')
 
         let maxFiat: number
         let minFiat: number
@@ -374,15 +465,31 @@ export const moonpayProvider: FiatProviderFactory = {
         let minCrypto: number
 
         if (direction === 'buy') {
-          maxFiat = fiatCurrencyObj.maxBuyAmount ?? fiatCurrencyObj.maxAmount ?? 0
-          minFiat = fiatCurrencyObj.minBuyAmount ?? fiatCurrencyObj.minAmount ?? Infinity
-          maxCrypto = cryptoCurrencyObj.maxBuyAmount ?? cryptoCurrencyObj.maxAmount ?? 0
-          minCrypto = cryptoCurrencyObj.minBuyAmount ?? cryptoCurrencyObj.minAmount ?? Infinity
+          maxFiat =
+            fiatCurrencyObj.maxBuyAmount ?? fiatCurrencyObj.maxAmount ?? 0
+          minFiat =
+            fiatCurrencyObj.minBuyAmount ??
+            fiatCurrencyObj.minAmount ??
+            Infinity
+          maxCrypto =
+            cryptoCurrencyObj.maxBuyAmount ?? cryptoCurrencyObj.maxAmount ?? 0
+          minCrypto =
+            cryptoCurrencyObj.minBuyAmount ??
+            cryptoCurrencyObj.minAmount ??
+            Infinity
         } else {
-          maxFiat = fiatCurrencyObj.maxSellAmount ?? fiatCurrencyObj.maxAmount ?? 0
-          minFiat = fiatCurrencyObj.minSellAmount ?? fiatCurrencyObj.minAmount ?? Infinity
-          maxCrypto = cryptoCurrencyObj.maxSellAmount ?? cryptoCurrencyObj.maxAmount ?? 0
-          minCrypto = cryptoCurrencyObj.minSellAmount ?? cryptoCurrencyObj.minAmount ?? Infinity
+          maxFiat =
+            fiatCurrencyObj.maxSellAmount ?? fiatCurrencyObj.maxAmount ?? 0
+          minFiat =
+            fiatCurrencyObj.minSellAmount ??
+            fiatCurrencyObj.minAmount ??
+            Infinity
+          maxCrypto =
+            cryptoCurrencyObj.maxSellAmount ?? cryptoCurrencyObj.maxAmount ?? 0
+          minCrypto =
+            cryptoCurrencyObj.minSellAmount ??
+            cryptoCurrencyObj.minAmount ??
+            Infinity
         }
 
         const exchangeAmount = parseFloat(params.exchangeAmount)
@@ -454,7 +561,9 @@ export const moonpayProvider: FiatProviderFactory = {
           if (
             errorJson?.message != null &&
             typeof errorJson.message === 'string' &&
-            errorJson.message.includes(`is not supported for ${fiatCode.toLowerCase()}`)
+            errorJson.message.includes(
+              `is not supported for ${fiatCode.toLowerCase()}`
+            )
           ) {
             throw new FiatProviderError({
               providerId,
@@ -473,8 +582,14 @@ export const moonpayProvider: FiatProviderFactory = {
         console.log('Got Moonpay quote')
         console.log(JSON.stringify(moonpayQuote, null, 2))
 
-        const fiatAmount = 'totalAmount' in moonpayQuote ? moonpayQuote.totalAmount.toString() : moonpayQuote.quoteCurrencyAmount.toString()
-        const cryptoAmount = direction === 'buy' ? moonpayQuote.quoteCurrencyAmount.toString() : moonpayQuote.baseCurrencyAmount.toString()
+        const fiatAmount =
+          'totalAmount' in moonpayQuote
+            ? moonpayQuote.totalAmount.toString()
+            : moonpayQuote.quoteCurrencyAmount.toString()
+        const cryptoAmount =
+          direction === 'buy'
+            ? moonpayQuote.quoteCurrencyAmount.toString()
+            : moonpayQuote.baseCurrencyAmount.toString()
 
         const paymentQuote: FiatProviderQuote = {
           providerId,
@@ -489,7 +604,9 @@ export const moonpayProvider: FiatProviderFactory = {
           cryptoAmount,
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
-          approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+          approveQuote: async (
+            approveParams: FiatProviderApproveQuoteParams
+          ): Promise<void> => {
             const { coreWallet, showUi } = approveParams
             const receiveAddress = await coreWallet.getReceiveAddress({
               tokenId: null
@@ -510,7 +627,10 @@ export const moonpayProvider: FiatProviderFactory = {
               if (params.amountType === 'crypto') {
                 queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
               } else {
-                queryObj.baseCurrencyAmount = 'totalAmount' in moonpayQuote ? moonpayQuote.totalAmount : undefined
+                queryObj.baseCurrencyAmount =
+                  'totalAmount' in moonpayQuote
+                    ? moonpayQuote.totalAmount
+                    : undefined
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay buy quote url=' + urlObj.href)
@@ -543,9 +663,19 @@ export const moonpayProvider: FiatProviderFactory = {
                   })
 
                   const message =
-                    sprintf(lstrings.fiat_plugin_buy_complete_message_s, cryptoAmount, displayCurrencyCode, fiatAmount, displayFiatCurrencyCode, '1') +
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_s,
+                      cryptoAmount,
+                      displayCurrencyCode,
+                      fiatAmount,
+                      displayFiatCurrencyCode,
+                      '1'
+                    ) +
                     '\n\n' +
-                    sprintf(lstrings.fiat_plugin_buy_complete_message_2_hour_s, '1') +
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                      '1'
+                    ) +
                     '\n\n' +
                     lstrings.fiat_plugin_sell_complete_message_3
                   await showUi.buttonModal({
@@ -589,15 +719,32 @@ export const moonpayProvider: FiatProviderFactory = {
                       console.log('Moonpay WebView launch payment: ' + uri)
                       const urlObj = new URL(uri, true)
                       const { query } = urlObj
-                      const { baseCurrencyAmount, baseCurrencyCode, depositWalletAddress, depositWalletAddressTag, transactionId } = query
+                      const {
+                        baseCurrencyAmount,
+                        baseCurrencyCode,
+                        depositWalletAddress,
+                        depositWalletAddressTag,
+                        transactionId
+                      } = query
                       if (inPayment) return
                       inPayment = true
                       try {
-                        if (baseCurrencyAmount == null || baseCurrencyCode == null || depositWalletAddress == null || transactionId == null) {
+                        if (
+                          baseCurrencyAmount == null ||
+                          baseCurrencyCode == null ||
+                          depositWalletAddress == null ||
+                          transactionId == null
+                        ) {
                           throw new Error('Moonpay missing parameters')
                         }
 
-                        const nativeAmount = mul(baseCurrencyAmount, getCurrencyCodeMultiplier(coreWallet.currencyConfig, displayCurrencyCode))
+                        const nativeAmount = mul(
+                          baseCurrencyAmount,
+                          getCurrencyCodeMultiplier(
+                            coreWallet.currencyConfig,
+                            displayCurrencyCode
+                          )
+                        )
 
                         const assetAction: EdgeAssetAction = {
                           assetActionType: 'sell'
@@ -638,7 +785,12 @@ export const moonpayProvider: FiatProviderFactory = {
                         }
 
                         if (depositWalletAddressTag != null) {
-                          spendInfo.memos = [createMemo(coreWallet.currencyInfo.pluginId, depositWalletAddressTag)]
+                          spendInfo.memos = [
+                            createMemo(
+                              coreWallet.currencyInfo.pluginId,
+                              depositWalletAddressTag
+                            )
+                          ]
                         }
 
                         const sendParams: SendScene2Params = {
@@ -690,9 +842,19 @@ export const moonpayProvider: FiatProviderFactory = {
                         await showUi.exitScene()
 
                         const message =
-                          sprintf(lstrings.fiat_plugin_sell_complete_message_s, cryptoAmount, displayCurrencyCode, fiatAmount, displayFiatCurrencyCode, '1') +
+                          sprintf(
+                            lstrings.fiat_plugin_sell_complete_message_s,
+                            cryptoAmount,
+                            displayCurrencyCode,
+                            fiatAmount,
+                            displayFiatCurrencyCode,
+                            '1'
+                          ) +
                           '\n\n' +
-                          sprintf(lstrings.fiat_plugin_sell_complete_message_2_hour_s, '1') +
+                          sprintf(
+                            lstrings.fiat_plugin_sell_complete_message_2_hour_s,
+                            '1'
+                          ) +
                           '\n\n' +
                           lstrings.fiat_plugin_sell_complete_message_3
                         await showUi.buttonModal({
@@ -706,9 +868,18 @@ export const moonpayProvider: FiatProviderFactory = {
                         await showUi.exitScene()
                         // Reopen the webivew on the Paybis payment screen
                         await openWebView()
-                        if (e instanceof Error && e.message === SendErrorNoTransaction) {
-                          await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
-                        } else if (e instanceof Error && e.message === SendErrorBackPressed) {
+                        if (
+                          e instanceof Error &&
+                          e.message === SendErrorNoTransaction
+                        ) {
+                          await showUi.showToast(
+                            lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                        } else if (
+                          e instanceof Error &&
+                          e.message === SendErrorBackPressed
+                        ) {
                           // Do nothing
                         } else {
                           await showUi.showError(e)

@@ -28,9 +28,21 @@ export const DividerLineUi4 = (props: Props): React.ReactElement => {
   const styles = getStyles(theme)
   const { colors = theme.dividerLineColors } = props
 
-  const margin = marginRem != null ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)) : extendRight ? styles.extendRight : styles.default
+  const margin =
+    marginRem != null
+      ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+      : extendRight
+      ? styles.extendRight
+      : styles.default
 
-  return <LinearGradient colors={colors} start={start} end={end} style={[styles.divider, margin]} />
+  return (
+    <LinearGradient
+      colors={colors}
+      start={start}
+      end={end}
+      style={[styles.divider, margin]}
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

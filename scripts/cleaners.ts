@@ -1,4 +1,11 @@
-import { asJSON, asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import {
+  asJSON,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asUnknown
+} from 'cleaners'
 
 /**
  * The deploy-config file holds a map of these entries inside itself.

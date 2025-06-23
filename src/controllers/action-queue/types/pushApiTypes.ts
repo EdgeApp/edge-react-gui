@@ -1,7 +1,26 @@
-import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, Cleaner, uncleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asJSON,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asUnknown,
+  Cleaner,
+  uncleaner
+} from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
-import { asBroadcastTx, asPushEventState, asPushMessage, asPushTrigger, asPushTriggerState } from './pushCleaners'
+import {
+  asBroadcastTx,
+  asPushEventState,
+  asPushMessage,
+  asPushTrigger,
+  asPushTriggerState
+} from './pushCleaners'
 import { BroadcastTx, PushEvent, PushMessage, PushTrigger } from './pushTypes'
 
 // ---------------------------------------------------------------------------
@@ -123,7 +142,9 @@ const asPushServerResponse =
  */
 
 export type PushEventStatus = ReturnType<typeof asPushEventStatus>
-export const asPushEventStatus = asObject<Omit<PushEvent, 'created' | 'deviceId' | 'loginId'>>({
+export const asPushEventStatus = asObject<
+  Omit<PushEvent, 'created' | 'deviceId' | 'loginId'>
+>({
   eventId: asString,
 
   broadcastTxs: asOptional(asArray(asBroadcastTx)),

@@ -56,284 +56,384 @@ interface Props {
   navigation: NavigationBase
 }
 
-export const AddressTile2 = React.forwardRef((props: Props, ref: React.ForwardedRef<AddressTileRef>) => {
-  const {
-    coreWallet,
-    currencyCode, // Token currency code
-    fioToAddress,
-    isCameraOpen,
-    lockInputs,
-    navigation,
-    onChangeAddress,
-    recipientAddress,
-    resetSendTransaction,
-    title
-  } = props
+export const AddressTile2 = React.forwardRef(
+  (props: Props, ref: React.ForwardedRef<AddressTileRef>) => {
+    const {
+      coreWallet,
+      currencyCode, // Token currency code
+      fioToAddress,
+      isCameraOpen,
+      lockInputs,
+      navigation,
+      onChangeAddress,
+      recipientAddress,
+      resetSendTransaction,
+      title
+    } = props
 
-  const theme = useTheme()
-  const styles = getStyles(theme)
+    const theme = useTheme()
+    const styles = getStyles(theme)
 
-  // State:
-  const [loading, setLoading] = React.useState(false)
+    // State:
+    const [loading, setLoading] = React.useState(false)
 
-  // Selectors:
-  const account = useSelector(state => state.core.account)
-  const fioPlugin = account.currencyConfig.fio
+    // Selectors:
+    const account = useSelector(state => state.core.account)
+    const fioPlugin = account.currencyConfig.fio
 
-  const tokenId = getTokenId(coreWallet.currencyConfig, currencyCode)
+    const tokenId = getTokenId(coreWallet.currencyConfig, currencyCode)
 
-  const { currencyWallets } = account
-  const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
-    if (walletId === coreWallet.id) return false
-    if (currencyWallets[walletId].type !== coreWallet.type) return false
-    if (tokenId == null) return true
-    return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
-  })
+    const { currencyWallets } = account
+    const canSelfTransfer: boolean = Object.keys(currencyWallets).some(
+      walletId => {
+        if (walletId === coreWallet.id) return false
+        if (currencyWallets[walletId].type !== coreWallet.type) return false
+        if (tokenId == null) return true
+        return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
+      }
+    )
 
-  // ---------------------------------------------------------------------------
-  // Handlers
-  // ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // Handlers
+    // ---------------------------------------------------------------------------
 
-  const changeAddress = useHandler(async (address: string, addressEntryMethod: AddressEntryMethod) => {
-    if (address == null || address === '') return
+    const changeAddress = useHandler(
+      async (address: string, addressEntryMethod: AddressEntryMethod) => {
+        if (address == null || address === '') return
 
-    setLoading(true)
-    let fioAddress
-    if (fioPlugin) {
-      try {
-        const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
-        fioAddress = address.toLowerCase()
-        address = publicAddress
-      } catch (e: any) {
-        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS) {
+        setLoading(true)
+        let fioAddress
+        if (fioPlugin) {
+          try {
+            const publicAddress = await checkPubAddress(
+              fioPlugin,
+              address.toLowerCase(),
+              coreWallet.currencyInfo.currencyCode,
+              currencyCode
+            )
+            fioAddress = address.toLowerCase()
+            address = publicAddress
+          } catch (e: any) {
+            if (
+              !e.code ||
+              e.code !==
+                fioPlugin.currencyInfo.defaultSettings?.errorCodes
+                  .INVALID_FIO_ADDRESS
+            ) {
+              setLoading(false)
+              return showError(e)
+            }
+          }
+        }
+
+        // Check if this is an email for Tron USDT and show warning for potential
+        // PIX send
+        if (
+          isEmail(address) &&
+          coreWallet.currencyInfo.pluginId === 'tron' &&
+          tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+        ) {
+          const approved = await Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              title={lstrings.warning_sending_pix_to_email_title}
+              body={lstrings.warning_sending_pix_to_email_body}
+              warning
+              isSkippable
+            />
+          ))
+          if (!approved) {
+            setLoading(false)
+            return
+          }
+        }
+
+        // Try resolving address by ENS domain for ethereum wallets only
+        if (
+          coreWallet.currencyInfo.pluginId === 'ethereum' &&
+          /^.*\.eth$/.test(address)
+        ) {
+          const chainId = 1 // Hard-coded to Ethereum mainnet
+          const network = ethers.providers.getNetwork(chainId)
+          if (network.name !== 'unknown') {
+            try {
+              const ethersProvider = ethers.getDefaultProvider(network)
+              const resolvedAddress = await ethersProvider.resolveName(address)
+              if (resolvedAddress != null) address = resolvedAddress
+            } catch (_) {}
+          }
+        }
+
+        try {
+          const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
+            await coreWallet.parseUri(address, currencyCode)
           setLoading(false)
-          return showError(e)
+
+          // Check if the URI requires a warning to the user
+          const approved = await addressWarnings(parsedUri, currencyCode)
+          if (!approved) return
+
+          // Missing isPrivateKeyUri Modal
+          // Check is PaymentProtocolUri
+          if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
+            await launchPaymentProto(
+              navigation,
+              account,
+              parsedUri.paymentProtocolUrl,
+              {
+                tokenId,
+                navigateReplace: true,
+                wallet: coreWallet
+              }
+            ).catch(error => showError(error))
+
+            return
+          }
+
+          if (!parsedUri.publicAddress) {
+            return showError(lstrings.scan_invalid_address_error_title)
+          }
+
+          // set address
+          await onChangeAddress({ fioAddress, parsedUri, addressEntryMethod })
+        } catch (e: any) {
+          const currencyInfo = coreWallet.currencyInfo
+          const ercTokenStandard =
+            currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
+          const parsedLink = { ...parseDeepLink(address) }
+          if (parsedLink.type === 'paymentProto') {
+            if (ercTokenStandard === 'ERC20') {
+              showError(
+                new PaymentProtoError('CurrencyNotSupported', {
+                  text: currencyInfo.currencyCode
+                })
+              )
+            } else {
+              await launchPaymentProto(navigation, account, parsedLink.uri, {
+                tokenId,
+                navigateReplace: true,
+                wallet: coreWallet
+              }).catch(error => showError(error))
+            }
+          } else {
+            showToast(
+              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
+            )
+          }
+
+          setLoading(false)
         }
       }
-    }
+    )
 
-    // Check if this is an email for Tron USDT and show warning for potential
-    // PIX send
-    if (isEmail(address) && coreWallet.currencyInfo.pluginId === 'tron' && tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') {
-      const approved = await Airship.show<boolean>(bridge => (
-        <ConfirmContinueModal
+    const handlePasteFromClipboard = useHandler(async () => {
+      const clipboard = await Clipboard.getString()
+      try {
+        const resolvedAddress = await resolveName(coreWallet, clipboard).catch(
+          () => undefined
+        )
+        const address = resolvedAddress ?? clipboard
+        // Will throw in case uri is invalid
+        await coreWallet.parseUri(address, currencyCode)
+        await changeAddress(address, 'other')
+      } catch (error) {
+        showError(error, { trackError: false })
+      }
+    })
+
+    const handleScan = useHandler(() => {
+      const title = sprintf(
+        lstrings.send_scan_modal_text_modal_title_s,
+        currencyCode
+      )
+      const message = sprintf(
+        lstrings.send_scan_modal_text_modal_message_s,
+        currencyCode
+      )
+      Airship.show<string | undefined>(bridge => (
+        <ScanModal
           bridge={bridge}
-          title={lstrings.warning_sending_pix_to_email_title}
-          body={lstrings.warning_sending_pix_to_email_body}
-          warning
-          isSkippable
+          scanModalTitle={lstrings.scan_qr_label}
+          textModalHint={lstrings.send_scan_modal_text_modal_hint}
+          textModalBody={message}
+          textModalTitle={title}
         />
       ))
-      if (!approved) {
-        setLoading(false)
-        return
-      }
-    }
-
-    // Try resolving address by ENS domain for ethereum wallets only
-    if (coreWallet.currencyInfo.pluginId === 'ethereum' && /^.*\.eth$/.test(address)) {
-      const chainId = 1 // Hard-coded to Ethereum mainnet
-      const network = ethers.providers.getNetwork(chainId)
-      if (network.name !== 'unknown') {
-        try {
-          const ethersProvider = ethers.getDefaultProvider(network)
-          const resolvedAddress = await ethersProvider.resolveName(address)
-          if (resolvedAddress != null) address = resolvedAddress
-        } catch (_) {}
-      }
-    }
-
-    try {
-      const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await coreWallet.parseUri(address, currencyCode)
-      setLoading(false)
-
-      // Check if the URI requires a warning to the user
-      const approved = await addressWarnings(parsedUri, currencyCode)
-      if (!approved) return
-
-      // Missing isPrivateKeyUri Modal
-      // Check is PaymentProtocolUri
-      if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchPaymentProto(navigation, account, parsedUri.paymentProtocolUrl, {
-          tokenId,
-          navigateReplace: true,
-          wallet: coreWallet
-        }).catch(error => showError(error))
-
-        return
-      }
-
-      if (!parsedUri.publicAddress) {
-        return showError(lstrings.scan_invalid_address_error_title)
-      }
-
-      // set address
-      await onChangeAddress({ fioAddress, parsedUri, addressEntryMethod })
-    } catch (e: any) {
-      const currencyInfo = coreWallet.currencyInfo
-      const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
-      const parsedLink = { ...parseDeepLink(address) }
-      if (parsedLink.type === 'paymentProto') {
-        if (ercTokenStandard === 'ERC20') {
-          showError(
-            new PaymentProtoError('CurrencyNotSupported', {
-              text: currencyInfo.currencyCode
-            })
+        .then(async (result: string | undefined) => {
+          if (result == null) return
+          const resolvedAddress = await resolveName(coreWallet, result).catch(
+            () => undefined
           )
-        } else {
-          await launchPaymentProto(navigation, account, parsedLink.uri, {
-            tokenId,
-            navigateReplace: true,
-            wallet: coreWallet
-          }).catch(error => showError(error))
-        }
-      } else {
-        showToast(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
-      }
-
-      setLoading(false)
-    }
-  })
-
-  const handlePasteFromClipboard = useHandler(async () => {
-    const clipboard = await Clipboard.getString()
-    try {
-      const resolvedAddress = await resolveName(coreWallet, clipboard).catch(() => undefined)
-      const address = resolvedAddress ?? clipboard
-      // Will throw in case uri is invalid
-      await coreWallet.parseUri(address, currencyCode)
-      await changeAddress(address, 'other')
-    } catch (error) {
-      showError(error, { trackError: false })
-    }
-  })
-
-  const handleScan = useHandler(() => {
-    const title = sprintf(lstrings.send_scan_modal_text_modal_title_s, currencyCode)
-    const message = sprintf(lstrings.send_scan_modal_text_modal_message_s, currencyCode)
-    Airship.show<string | undefined>(bridge => (
-      <ScanModal
-        bridge={bridge}
-        scanModalTitle={lstrings.scan_qr_label}
-        textModalHint={lstrings.send_scan_modal_text_modal_hint}
-        textModalBody={message}
-        textModalTitle={title}
-      />
-    ))
-      .then(async (result: string | undefined) => {
-        if (result == null) return
-        const resolvedAddress = await resolveName(coreWallet, result).catch(() => undefined)
-        const address = resolvedAddress ?? result
-        if (address) {
-          await changeAddress(address, 'scan')
-        }
-      })
-      .catch(error => {
-        showError(error)
-      })
-  })
-
-  const handleChangeAddress = useHandler(async () => {
-    Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={lstrings.scan_address_modal_title} />
-    ))
-      .then(async result => {
-        if (result) {
-          await changeAddress(result, 'other')
-        }
-      })
-      .catch(error => {
-        showError(error)
-      })
-  })
-
-  const handleSelfTransfer = useHandler(() => {
-    const { currencyWallets } = account
-    const { pluginId } = coreWallet.currencyInfo
-    Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        headerTitle={lstrings.your_wallets}
-        navigation={navigation}
-        allowedAssets={[
-          {
-            pluginId,
-            tokenId: getTokenIdForced(account, pluginId, currencyCode)
+          const address = resolvedAddress ?? result
+          if (address) {
+            await changeAddress(address, 'scan')
           }
-        ]}
-        excludeWalletIds={[coreWallet.id]}
-      />
-    ))
-      .then(async result => {
-        if (result?.type !== 'wallet') return
-        const { walletId } = result
-        const wallet = currencyWallets[walletId]
+        })
+        .catch(error => {
+          showError(error)
+        })
+    })
 
-        // Prefer segwit address if the selected wallet has one
-        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
-        const address = segwitAddress != null ? segwitAddress : publicAddress
+    const handleChangeAddress = useHandler(async () => {
+      Airship.show<string | undefined>(bridge => (
+        <AddressModal
+          bridge={bridge}
+          walletId={coreWallet.id}
+          currencyCode={currencyCode}
+          title={lstrings.scan_address_modal_title}
+        />
+      ))
+        .then(async result => {
+          if (result) {
+            await changeAddress(result, 'other')
+          }
+        })
+        .catch(error => {
+          showError(error)
+        })
+    })
+
+    const handleSelfTransfer = useHandler(() => {
+      const { currencyWallets } = account
+      const { pluginId } = coreWallet.currencyInfo
+      Airship.show<WalletListResult>(bridge => (
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={lstrings.your_wallets}
+          navigation={navigation}
+          allowedAssets={[
+            {
+              pluginId,
+              tokenId: getTokenIdForced(account, pluginId, currencyCode)
+            }
+          ]}
+          excludeWalletIds={[coreWallet.id]}
+        />
+      ))
+        .then(async result => {
+          if (result?.type !== 'wallet') return
+          const { walletId } = result
+          const wallet = currencyWallets[walletId]
+
+          // Prefer segwit address if the selected wallet has one
+          const { segwitAddress, publicAddress } =
+            await wallet.getReceiveAddress({ tokenId: null })
+          const address = segwitAddress != null ? segwitAddress : publicAddress
+          await changeAddress(address, 'other')
+        })
+        .catch(err => showError(err))
+    })
+
+    const handleTilePress = useHandler(async () => {
+      resetSendTransaction()
+    })
+
+    // ---------------------------------------------------------------------------
+    // Side-Effects
+    // ---------------------------------------------------------------------------
+
+    useMount(() => {
+      if (isCameraOpen) handleScan()
+    })
+
+    React.useImperativeHandle(ref, () => ({
+      async onChangeAddress(address: string) {
         await changeAddress(address, 'other')
-      })
-      .catch(err => showError(err))
-  })
+      }
+    }))
 
-  const handleTilePress = useHandler(async () => {
-    resetSendTransaction()
-  })
+    // ---------------------------------------------------------------------------
+    // Rendering
+    // ---------------------------------------------------------------------------
 
-  // ---------------------------------------------------------------------------
-  // Side-Effects
-  // ---------------------------------------------------------------------------
+    const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
-  useMount(() => {
-    if (isCameraOpen) handleScan()
-  })
-
-  React.useImperativeHandle(ref, () => ({
-    async onChangeAddress(address: string) {
-      await changeAddress(address, 'other')
-    }
-  }))
-
-  // ---------------------------------------------------------------------------
-  // Rendering
-  // ---------------------------------------------------------------------------
-
-  const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
-
-  return (
-    <EdgeRow rightButtonType={tileType} loading={loading} title={title} onPress={!lockInputs && !!recipientAddress ? handleTilePress : undefined}>
-      {!recipientAddress && (
-        <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
-            <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-          </EdgeTouchableOpacity>
-          {canSelfTransfer ? (
-            <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
-              <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
+    return (
+      <EdgeRow
+        rightButtonType={tileType}
+        loading={loading}
+        title={title}
+        onPress={
+          !lockInputs && !!recipientAddress ? handleTilePress : undefined
+        }
+      >
+        {!recipientAddress && (
+          <EdgeAnim
+            style={styles.buttonsContainer}
+            enter={{ type: 'stretchInY' }}
+            exit={{ type: 'stretchOutY' }}
+          >
+            <EdgeTouchableOpacity
+              style={styles.buttonContainer}
+              onPress={handleChangeAddress}
+            >
+              <FontAwesome
+                name="edit"
+                size={theme.rem(2)}
+                color={theme.iconTappable}
+              />
+              <EdgeText style={styles.buttonText}>
+                {lstrings.enter_as_in_enter_address_with_keyboard}
+              </EdgeText>
             </EdgeTouchableOpacity>
-          ) : null}
-          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
-            <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
-          </EdgeTouchableOpacity>
-          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
-            <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-          </EdgeTouchableOpacity>
-        </EdgeAnim>
-      )}
-      {recipientAddress == null || recipientAddress === '' ? null : (
-        <EdgeAnim enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-          <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
-        </EdgeAnim>
-      )}
-    </EdgeRow>
-  )
-})
+            {canSelfTransfer ? (
+              <EdgeTouchableOpacity
+                style={styles.buttonContainer}
+                onPress={handleSelfTransfer}
+              >
+                <AntDesign
+                  name="wallet"
+                  size={theme.rem(2)}
+                  color={theme.iconTappable}
+                />
+                <EdgeText style={styles.buttonText}>
+                  {lstrings.fragment_send_myself}
+                </EdgeText>
+              </EdgeTouchableOpacity>
+            ) : null}
+            <EdgeTouchableOpacity
+              style={styles.buttonContainer}
+              onPress={handleScan}
+            >
+              <FontAwesome5
+                name="expand"
+                size={theme.rem(2)}
+                color={theme.iconTappable}
+              />
+              <EdgeText style={styles.buttonText}>
+                {lstrings.scan_as_in_scan_barcode}
+              </EdgeText>
+            </EdgeTouchableOpacity>
+            <EdgeTouchableOpacity
+              style={styles.buttonContainer}
+              onPress={handlePasteFromClipboard}
+            >
+              <FontAwesome5
+                name="clipboard"
+                size={theme.rem(2)}
+                color={theme.iconTappable}
+              />
+              <EdgeText style={styles.buttonText}>
+                {lstrings.string_paste}
+              </EdgeText>
+            </EdgeTouchableOpacity>
+          </EdgeAnim>
+        )}
+        {recipientAddress == null || recipientAddress === '' ? null : (
+          <EdgeAnim
+            enter={{ type: 'stretchInY' }}
+            exit={{ type: 'stretchOutY' }}
+          >
+            {fioToAddress == null ? null : (
+              <EdgeText>{fioToAddress + '\n'}</EdgeText>
+            )}
+            <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
+          </EdgeAnim>
+        )}
+      </EdgeRow>
+    )
+  }
+)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: {

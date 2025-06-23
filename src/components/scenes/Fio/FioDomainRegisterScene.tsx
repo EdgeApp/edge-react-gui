@@ -16,7 +16,12 @@ import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -87,10 +92,18 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   handleNextButton = (): void => {
     const { isConnected, navigation } = this.props
-    const { fioDomain, selectedWallet, isValid, isAvailable, loading, walletLoading } = this.state
+    const {
+      fioDomain,
+      selectedWallet,
+      isValid,
+      isAvailable,
+      loading,
+      walletLoading
+    } = this.state
     if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
-        if (!selectedWallet) return showError(lstrings.create_wallet_failed_message)
+        if (!selectedWallet)
+          return showError(lstrings.create_wallet_failed_message)
         navigation.navigate('fioDomainRegisterSelectWallet', {
           fioDomain,
           walletId: selectedWallet.id
@@ -132,7 +145,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
       try {
         const { fioPlugin } = this.props
-        const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioDomain, true) : false
+        const isAvailable = fioPlugin.otherMethods
+          ? await fioPlugin.otherMethods.validateAccount(fioDomain, true)
+          : false
         this.setState({
           isAvailable,
           isValid: true,
@@ -166,7 +181,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   handleFioWalletChange = (walletId: string) => {
     this.setState({
       // @ts-expect-error
-      selectedWallet: this.props.fioWallets.find(fioWallet => fioWallet.id === walletId)
+      selectedWallet: this.props.fioWallets.find(
+        fioWallet => fioWallet.id === walletId
+      )
     })
   }
 
@@ -228,7 +245,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           rightButtonType="touchable"
           title={lstrings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
-          body={selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}
+          body={
+            selectedWallet == null
+              ? lstrings.fio_address_register_no_wallet_name
+              : getWalletName(selectedWallet)
+          }
         />
       )
     }
@@ -236,14 +257,16 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   render() {
     const { theme } = this.props
-    const { fioDomain, isAvailable, loading, errorMessage, isValid } = this.state
+    const { fioDomain, isAvailable, loading, errorMessage, isValid } =
+      this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
     if (fioDomain && !this.props.isConnected) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_cant_check
     }
     if (fioDomain && isAvailable === false) {
-      chooseHandleErrorMessage = lstrings.fio_address_register_screen_not_available
+      chooseHandleErrorMessage =
+        lstrings.fio_address_register_screen_not_available
     }
 
     if (fioDomain && !isValid && errorMessage) {
@@ -252,27 +275,53 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain} underline withTopMargin>
-          <IonIcon name="at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
+        <SceneHeader
+          style={styles.header}
+          title={lstrings.title_register_fio_domain}
+          underline
+          withTopMargin
+        >
+          <IonIcon
+            name="at"
+            style={styles.iconIon}
+            color={theme.icon}
+            size={theme.rem(1.5)}
+          />
         </SceneHeader>
         <View style={styles.container}>
-          <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
+          <EdgeText
+            style={[styles.paddings, styles.instructionalText, styles.title]}
+            numberOfLines={3}
+          >
             {lstrings.fio_domain_reg_text}
           </EdgeText>
-          <EdgeText style={[styles.paddings, styles.instructionalText]} numberOfLines={8}>
+          <EdgeText
+            style={[styles.paddings, styles.instructionalText]}
+            numberOfLines={8}
+          >
             {lstrings.fio_domain_reg_descr}
           </EdgeText>
 
           <EdgeCard>
-            <EdgeRow rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.fio_domain_choose_label}
+              onPress={this.onDomainPress}
+            >
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
-                <EdgeText style={styles.loadingText}>{loading ? `(${lstrings.loading})` : ''}</EdgeText>
+                <EdgeText style={styles.loadingText}>
+                  {loading ? `(${lstrings.loading})` : ''}
+                </EdgeText>
               </View>
             </EdgeRow>
           </EdgeCard>
 
-          <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={fadeIn} exit={fadeOut}>
+          <EdgeAnim
+            visible={chooseHandleErrorMessage !== ''}
+            enter={fadeIn}
+            exit={fadeOut}
+          >
             <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
           </EdgeAnim>
 
@@ -322,7 +371,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioDomainRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
+export const FioDomainRegisterScene = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio ?? typeHack,

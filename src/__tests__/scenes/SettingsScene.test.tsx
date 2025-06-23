@@ -25,7 +25,9 @@ describe('SettingsScene', () => {
   it('should render SettingsScene', () => {
     const rendered = render(
       <FakeProviders initialState={mockState}>
-        <SettingsScene {...fakeEdgeAppSceneProps('settingsOverview', undefined)} />
+        <SettingsScene
+          {...fakeEdgeAppSceneProps('settingsOverview', undefined)}
+        />
       </FakeProviders>
     )
 

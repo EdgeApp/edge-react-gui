@@ -1,4 +1,9 @@
-import { EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeMetadata,
+  EdgeNetworkFee,
+  EdgeReceiveAddress,
+  EdgeTransaction
+} from 'edge-core-js'
 
 import { asExtendedCurrencyCode } from './edgeProviderCleaners'
 
@@ -68,12 +73,22 @@ export interface EdgeProviderMethods {
 
   // ---- Wallet methods ----------------
 
-  chooseCurrencyWallet: (allowedCurrencyCodes?: ExtendedCurrencyCode[]) => Promise<ExtendedCurrencyCode>
-  getReceiveAddress: (options?: EdgeGetReceiveAddressOptions) => Promise<EdgeReceiveAddress>
+  chooseCurrencyWallet: (
+    allowedCurrencyCodes?: ExtendedCurrencyCode[]
+  ) => Promise<ExtendedCurrencyCode>
+  getReceiveAddress: (
+    options?: EdgeGetReceiveAddressOptions
+  ) => Promise<EdgeReceiveAddress>
   getCurrentWalletInfo: () => Promise<WalletDetails>
   getWalletHistory: () => Promise<EdgeGetWalletHistoryResult>
-  requestSpend: (providerSpendTargets: EdgeProviderSpendTarget[], options?: EdgeRequestSpendOptions) => Promise<EdgeTransaction | undefined>
-  requestSpendUri: (uri: string, options?: EdgeRequestSpendOptions) => Promise<EdgeTransaction | undefined>
+  requestSpend: (
+    providerSpendTargets: EdgeProviderSpendTarget[],
+    options?: EdgeRequestSpendOptions
+  ) => Promise<EdgeTransaction | undefined>
+  requestSpendUri: (
+    uri: string,
+    options?: EdgeRequestSpendOptions
+  ) => Promise<EdgeTransaction | undefined>
   signMessage: (message: string) => Promise<string>
 
   // ---- Storage methods ----------------
@@ -114,4 +129,6 @@ export interface EdgeProviderMethods {
   restartPlugin: () => Promise<void>
 }
 
-export interface EdgeProvider extends EdgeProviderMethods, EdgeProviderDeepLink {}
+export interface EdgeProvider
+  extends EdgeProviderMethods,
+    EdgeProviderDeepLink {}

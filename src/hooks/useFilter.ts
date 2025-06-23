@@ -2,7 +2,10 @@ import * as React from 'react'
 
 const CACHE_MAX_SIZE = 10
 
-export function useFilter<T>(allData: T[], filterData: (filter: string, item: T, index: number) => boolean = () => true): [T[], (filter: string) => void] {
+export function useFilter<T>(
+  allData: T[],
+  filterData: (filter: string, item: T, index: number) => boolean = () => true
+): [T[], (filter: string) => void] {
   const [filteredData, setFilteredData] = React.useState(allData)
   const [filteredDataCache, setFilteredDataCache] = React.useState<{
     [search: string]: T[]
@@ -15,7 +18,9 @@ export function useFilter<T>(allData: T[], filterData: (filter: string, item: T,
       setFilteredData(filteredDataCache[filter])
     } else {
       // Create the new filtered Array
-      const newFilteredData = allData.filter((item, index) => filterData(filter, item, index))
+      const newFilteredData = allData.filter((item, index) =>
+        filterData(filter, item, index)
+      )
       // Updated the cache
       filteredDataCache[filter] = newFilteredData
       fifoCache.unshift(filter)

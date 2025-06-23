@@ -6,7 +6,13 @@ import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import { getCurrencyCodeMultiplier } from '../../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../../util/network'
 import { snooze } from '../../../../util/utils'
-import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
+import {
+  ChangeQuote,
+  PositionAllocation,
+  QuoteAllocation,
+  StakeAssetInfo,
+  StakePosition
+} from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { KilnError, makeKilnApi } from '../util/KilnApi'
@@ -26,29 +32,45 @@ export interface CardanoPooledKilnAdapterConfig {
   poolId: string
 }
 
-export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPooledKilnAdapterConfig>): StakePolicyAdapter => {
+export const makeCardanoKilnAdapter = (
+  policyConfig: StakePolicyConfig<CardanoPooledKilnAdapterConfig>
+): StakePolicyAdapter => {
   const { stakePolicyId, adapterConfig } = policyConfig
 
-  if (adapterConfig.apiKey == null) throw new Error(`Kiln api key is required for ${stakePolicyId}`)
+  if (adapterConfig.apiKey == null)
+    throw new Error(`Kiln api key is required for ${stakePolicyId}`)
 
   const { accountId } = adapterConfig
-  if (accountId == null) throw new Error(`Kiln account ID  is required for ${stakePolicyId}`)
+  if (accountId == null)
+    throw new Error(`Kiln account ID  is required for ${stakePolicyId}`)
 
   const kiln = makeKilnApi(adapterConfig.baseUrl, adapterConfig.apiKey)
 
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchClaimQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
         tokenId: null
       })
 
       let edgeTx: EdgeTransaction
       do {
-        const stakeTransaction = await kiln.adaWithdrawRewards(walletAddress, nativeAmount)
-        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
-      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
+        const stakeTransaction = await kiln.adaWithdrawRewards(
+          walletAddress,
+          nativeAmount
+        )
+        edgeTx = await wallet.otherMethods.decodeStakingTx(
+          stakeTransaction.unsigned_tx_serialized
+        )
+      } while (
+        edgeTx.otherParams?.isSpendable === false &&
+        (await snooze(2000)) == null
+      )
 
       const allocations: QuoteAllocation[] = [
         {
@@ -75,7 +97,11 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
+    async fetchStakeQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      _requestNativeAmount: string
+    ): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
         tokenId: null
       })
@@ -84,28 +110,61 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       if (eq(walletBalance, '0')) {
         throw new Error('Insufficient funds')
       }
-      const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, wallet.currencyInfo.currencyCode)
+      const multiplier = getCurrencyCodeMultiplier(
+        wallet.currencyConfig,
+        wallet.currencyInfo.currencyCode
+      )
       if (lt(walletBalance, MIN_STAKE_LOVELACE_AMOUNT)) {
-        const balanceDisplayAmount = div(walletBalance, multiplier, multiplier.length)
-        const minimumDisplayAmount = div(MIN_STAKE_LOVELACE_AMOUNT, multiplier, multiplier.length)
+        const balanceDisplayAmount = div(
+          walletBalance,
+          multiplier,
+          multiplier.length
+        )
+        const minimumDisplayAmount = div(
+          MIN_STAKE_LOVELACE_AMOUNT,
+          multiplier,
+          multiplier.length
+        )
         const balanceDisplayString = `${balanceDisplayAmount} ${wallet.currencyInfo.currencyCode}`
         const minimumDisplayString = `${minimumDisplayAmount} ${wallet.currencyInfo.currencyCode}`
-        throw new HumanFriendlyError(lstrings.error_balance_below_minimum_to_stake_2s, balanceDisplayString, minimumDisplayString)
+        throw new HumanFriendlyError(
+          lstrings.error_balance_below_minimum_to_stake_2s,
+          balanceDisplayString,
+          minimumDisplayString
+        )
       }
 
       let edgeTx: EdgeTransaction
       do {
-        const stakeTransaction = await kiln.adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId).catch(error => {
-          if (error instanceof KilnError) {
-            if (/Value \d+ less than the minimum UTXO value \d+/.test(error.error)) {
-              const displayBalance = div(walletBalance, multiplier, multiplier.length)
-              throw new HumanFriendlyError(lstrings.error_amount_too_low_to_stake_s, `${displayBalance} ${wallet.currencyInfo.currencyCode}`)
+        const stakeTransaction = await kiln
+          .adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId)
+          .catch(error => {
+            if (error instanceof KilnError) {
+              if (
+                /Value \d+ less than the minimum UTXO value \d+/.test(
+                  error.error
+                )
+              ) {
+                const displayBalance = div(
+                  walletBalance,
+                  multiplier,
+                  multiplier.length
+                )
+                throw new HumanFriendlyError(
+                  lstrings.error_amount_too_low_to_stake_s,
+                  `${displayBalance} ${wallet.currencyInfo.currencyCode}`
+                )
+              }
             }
-          }
-          throw error
-        })
-        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
-      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
+            throw error
+          })
+        edgeTx = await wallet.otherMethods.decodeStakingTx(
+          stakeTransaction.unsigned_tx_serialized
+        )
+      } while (
+        edgeTx.otherParams?.isSpendable === false &&
+        (await snooze(2000)) == null
+      )
 
       const allocations: QuoteAllocation[] = [
         {
@@ -132,7 +191,11 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, _requestNativeAmount: string): Promise<ChangeQuote> {
+    async fetchUnstakeQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      _requestNativeAmount: string
+    ): Promise<ChangeQuote> {
       const { publicAddress: walletAddress } = await wallet.getReceiveAddress({
         tokenId: null
       })
@@ -145,8 +208,13 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       let edgeTx: EdgeTransaction
       do {
         const stakeTransaction = await kiln.adaUnstakeTransaction(walletAddress)
-        edgeTx = await wallet.otherMethods.decodeStakingTx(stakeTransaction.unsigned_tx_serialized)
-      } while (edgeTx.otherParams?.isSpendable === false && (await snooze(2000)) == null)
+        edgeTx = await wallet.otherMethods.decodeStakingTx(
+          stakeTransaction.unsigned_tx_serialized
+        )
+      } while (
+        edgeTx.otherParams?.isSpendable === false &&
+        (await snooze(2000)) == null
+      )
 
       const allocations: QuoteAllocation[] = [
         {
@@ -173,11 +241,17 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
       }
     },
 
-    async fetchUnstakeExactQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchUnstakeExactQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> {
       throw new Error('fetchUnstakeExactQuote not implemented')
     },
 
-    async fetchStakePosition(wallet: EdgeCurrencyWallet): Promise<StakePosition> {
+    async fetchStakePosition(
+      wallet: EdgeCurrencyWallet
+    ): Promise<StakePosition> {
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const allocations: PositionAllocation[] = []
@@ -188,7 +262,12 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
         stakeAddresses: [stakeAddress]
       })
       const hasActiveStake = stakes.some(stake => stake.state === 'active')
-      const stakeInPool = stakes.find(stake => stake.stake_address === stakeAddress && stake.pool_id === adapterConfig.poolId && stake.state === 'active')
+      const stakeInPool = stakes.find(
+        stake =>
+          stake.stake_address === stakeAddress &&
+          stake.pool_id === adapterConfig.poolId &&
+          stake.state === 'active'
+      )
 
       const stakedAmount = stakeInPool?.balance ?? '0'
       allocations.push({
@@ -216,7 +295,9 @@ export const makeCardanoKilnAdapter = (policyConfig: StakePolicyConfig<CardanoPo
     },
 
     async fetchYieldInfo() {
-      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const infoServerResponse = asInfoServerResponse(
+        infoServerData.rollup?.apyValues ?? { policies: {} }
+      )
       const apy = infoServerResponse.policies[stakePolicyId] ?? 0
 
       return {

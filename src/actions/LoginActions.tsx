@@ -1,5 +1,11 @@
 import { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
-import { getSupportedBiometryType, hasSecurityAlerts, isTouchEnabled, refreshTouchId, showNotificationPermissionReminder } from 'edge-login-ui-rn'
+import {
+  getSupportedBiometryType,
+  hasSecurityAlerts,
+  isTouchEnabled,
+  refreshTouchId,
+  showNotificationPermissionReminder
+} from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
@@ -14,7 +20,10 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
-import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
+import {
+  AccountInitPayload,
+  initialState
+} from '../reducers/scenes/SettingsReducer'
 import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
@@ -23,11 +32,20 @@ import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
-import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
+import {
+  loadAccountReferral,
+  refreshAccountReferral
+} from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
-import { getDeviceSettings, writeIsSurveyDiscoverShown } from './DeviceSettingsActions'
+import {
+  getDeviceSettings,
+  writeIsSurveyDiscoverShown
+} from './DeviceSettingsActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
-import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
+import {
+  registerNotificationsV2,
+  updateNotificationSettings
+} from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
 
 const PER_WALLET_TIMEOUT = 5000
@@ -55,7 +73,10 @@ function getFirstActiveWalletInfo(account: EdgeAccount): {
   return { walletId: '', currencyCode: '' }
 }
 
-export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
+export function initializeAccount(
+  navigation: NavigationBase,
+  account: EdgeAccount
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const rootNavigation = getRootNavigation(navigation)
 
@@ -79,8 +100,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         defaultFiat = phoneCurrency
       }
       // Ensure the creation reason is available before creating wallets:
-      const accountReferralCurrencyCodes = getState().account.accountReferral.currencyCodes
-      const defaultSelection = accountReferralCurrencyCodes != null ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes) : config.defaultWallets
+      const accountReferralCurrencyCodes =
+        getState().account.accountReferral.currencyCodes
+      const defaultSelection =
+        accountReferralCurrencyCodes != null
+          ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes)
+          : config.defaultWallets
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       // Ensure we have initialized the account settings first so we can begin
@@ -89,17 +114,30 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await readLocalAccountSettings(account)
 
       const newAccountFlow = async (
-        navigation: EdgeAppSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>['navigation'],
+        navigation: EdgeAppSceneProps<
+          'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
+        >['navigation'],
         items: WalletCreateItem[]
       ) => {
         navigation.replace('edgeTabs', { screen: 'home' })
-        const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
+        const createWalletsPromise = createCustomWallets(
+          account,
+          fiatCurrencyCode,
+          items,
+          dispatch
+        ).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
-        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+        const { freeRegApiToken = '', freeRegRefCode = '' } =
+          typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
         if (freeRegApiToken !== '' && freeRegRefCode !== '') {
           hideSurvey = true
-          const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
+          const isCreateHandle = await Airship.show<boolean>(bridge => (
+            <FioCreateHandleModal
+              bridge={bridge}
+              createWalletsPromise={createWalletsPromise}
+            />
+          ))
           if (isCreateHandle) {
             navigation.navigate('fioCreateHandle', {
               freeRegApiToken,
@@ -135,10 +173,15 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         screen: 'edgeAppStack',
         params: {
           screen: 'edgeTabs',
-          params: defaultScreen === 'home' ? { screen: 'home' } : { screen: 'walletsTab', params: { screen: 'walletList' } }
+          params:
+            defaultScreen === 'home'
+              ? { screen: 'home' }
+              : { screen: 'walletsTab', params: { screen: 'walletList' } }
         }
       })
-      referralPromise.catch(() => console.log(`Failed to load account referral info`))
+      referralPromise.catch(() =>
+        console.log(`Failed to load account referral info`)
+      )
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     }
@@ -149,7 +192,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const currencyConfig = account.currencyConfig[pluginId]
       const { userSettings } = currencyConfig
       if (userSettings == null) continue
-      if (userSettings.disableFetchingServers === true && userSettings.enableCustomServers == null) {
+      if (
+        userSettings.disableFetchingServers === true &&
+        userSettings.enableCustomServers == null
+      ) {
         userSettings.enableCustomServers = true
         userSettings.blockbookServers = []
         userSettings.electrumServers = []
@@ -162,7 +208,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         <ConfirmContinueModal
           bridge={bridge}
           title={lstrings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(lstrings.update_notice_deprecate_electrum_servers_message, config.appName)}
+          body={sprintf(
+            lstrings.update_notice_deprecate_electrum_servers_message,
+            config.appName
+          )}
         />
       ))
         .finally(async () => {
@@ -219,13 +268,17 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
 
       for (const userInfo of context.localUsers) {
-        if (userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled) {
+        if (
+          userInfo.loginId === account.rootLoginId &&
+          userInfo.pinLoginEnabled
+        ) {
           accountInitObject.pinLoginEnabled = true
         }
       }
 
       const defaultDenominationSettings = state.ui.settings.denominationSettings
-      const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}
+      const syncedDenominationSettings =
+        syncedSettings?.denominationSettings ?? {}
       const mergedDenominationSettings = {}
 
       for (const plugin of Object.keys(defaultDenominationSettings)) {
@@ -260,10 +313,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
             dispatch(logEvent(event, values))
           },
           onNotificationPermit(info) {
-            dispatch(updateNotificationSettings(info.notificationOptIns)).catch(error => {
-              trackError(error, 'LoginScene:onLogin:setDeviceSettings')
-              console.error(error)
-            })
+            dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
+              error => {
+                trackError(error, 'LoginScene:onLogin:setDeviceSettings')
+                console.error(error)
+              }
+            )
           }
         })
       ) {
@@ -274,7 +329,12 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     }
 
     // Post login stuff:
-    if (!newAccount && !hideSurvey && !getDeviceSettings().isSurveyDiscoverShown && config.disableSurveyModal !== true) {
+    if (
+      !newAccount &&
+      !hideSurvey &&
+      !getDeviceSettings().isSurveyDiscoverShown &&
+      config.disableSurveyModal !== true
+    ) {
       // Show the survey modal once per app install, only if this isn't the
       // first login of a newly created account and the user didn't get any
       // other modals or scene changes immediately after login.
@@ -319,7 +379,12 @@ export function logoutRequest(
 /**
  * Creates wallets inside a new account.
  */
-async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, items: WalletCreateItem[], dispatch: Dispatch): Promise<void> {
+async function createCustomWallets(
+  account: EdgeAccount,
+  fiatCurrencyCode: string,
+  items: WalletCreateItem[],
+  dispatch: Dispatch
+): Promise<void> {
   // Maps pluginId's to core options:
   const optionsMap = new Map<string, EdgeCreateCurrencyWallet>()
   for (const item of items) {
@@ -347,8 +412,15 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
 
   // Actually create the wallets:
   const options = [...optionsMap.values()]
-  const timeoutMs = Math.max(options.length * PER_WALLET_TIMEOUT, MIN_CREATE_WALLET_TIMEOUT)
-  const results = await runWithTimeout(account.createCurrencyWallets(options), timeoutMs, new Error(lstrings.error_creating_wallets)).catch(error => {
+  const timeoutMs = Math.max(
+    options.length * PER_WALLET_TIMEOUT,
+    MIN_CREATE_WALLET_TIMEOUT
+  )
+  const results = await runWithTimeout(
+    account.createCurrencyWallets(options),
+    timeoutMs,
+    new Error(lstrings.error_creating_wallets)
+  ).catch(error => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })
@@ -357,7 +429,11 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     const result = results[i]
     if (!result.ok) continue
     const { walletType, name } = options[i]
-    logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
+    logActivity(
+      `Create Wallet (login): ${account.username} -- ${walletType} -- ${
+        fiatCurrencyCode ?? ''
+      } -- ${name}`
+    )
   }
 
   dispatch(logEvent('Signup_Wallets_Created_Success'))

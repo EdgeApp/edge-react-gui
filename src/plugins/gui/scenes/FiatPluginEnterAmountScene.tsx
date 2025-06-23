@@ -5,12 +5,22 @@ import { Image, TextStyle, View } from 'react-native'
 
 import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
-import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInUp30, fadeInUp60 } from '../../../components/common/EdgeAnim'
+import {
+  EdgeAnim,
+  fadeInDown30,
+  fadeInDown60,
+  fadeInUp30,
+  fadeInUp60
+} from '../../../components/common/EdgeAnim'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { KavButton } from '../../../components/keyboard/KavButton'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { showError } from '../../../components/services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  useTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { useHandler } from '../../../hooks/useHandler'
@@ -27,11 +37,26 @@ export interface FiatPluginEnterAmountParams {
   headerTitle: string
   label1: string
   label2: string
-  onChangeText?: (event: { fieldNum: number; value: string }, stateManager: StateManager<EnterAmountState>) => Promise<void>
-  convertValue: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<string | undefined>
-  onMax?: (sourceFieldNum: number, stateManager: StateManager<EnterAmountState>) => Promise<void>
-  onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
-  onSubmit: (event: { response: FiatPluginEnterAmountResponse }, stateManager: StateManager<EnterAmountState>) => Promise<void>
+  onChangeText?: (
+    event: { fieldNum: number; value: string },
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<void>
+  convertValue: (
+    sourceFieldNum: number,
+    value: string,
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<string | undefined>
+  onMax?: (
+    sourceFieldNum: number,
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<void>
+  onPoweredByClick: (
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<void>
+  onSubmit: (
+    event: { response: FiatPluginEnterAmountResponse },
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<void>
   headerIconUri?: string
   swapInputLocations?: boolean
   disableInput?: 1 | 2
@@ -96,7 +121,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     ...defaultEnterAmountState,
     ...initState
   })
-  const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
+  const { value1, value2, poweredBy, spinner1, spinner2, statusText } =
+    stateManager.state
   const convertValueDebounced = React.useMemo(() => {
     return pDebounce(convertValue, 500)
   }, [convertValue])
@@ -135,7 +161,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => showError(err))
+    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err =>
+      showError(err)
+    )
     stateManager.update({ value1: value, spinner2: true })
     convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
@@ -150,7 +178,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => showError(err))
+    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err =>
+      showError(err)
+    )
     stateManager.update({ value2: value, spinner1: true })
     convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
@@ -163,15 +193,22 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         stateManager.update({ spinner1: false })
       })
   })
-  const handlePoweredByPress = useHandler(async () => await onPoweredByClick(stateManager))
+  const handlePoweredByPress = useHandler(
+    async () => await onPoweredByClick(stateManager)
+  )
   const handleSubmit = useHandler(async () => {
-    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(error => showError(error))
+    await onSubmit(
+      { response: { lastUsed: lastUsed.current, value1, value2 } },
+      stateManager
+    ).catch(error => showError(error))
   })
 
   const handleMax = useHandler(async () => {
     if (onMax != null) {
       stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(error => showError(error))
+      await onMax(lastUsed.current, stateManager).catch(error =>
+        showError(error)
+      )
       stateManager.update({ spinner1: false, spinner2: false })
     }
   })
@@ -183,12 +220,21 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     statusTextStyle = styles.textError
   }
 
-  const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
+  const poweredByIconPath =
+    poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
 
   return (
     <>
-      <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications hasTabs>
-        <SceneContainer headerTitle={headerTitle} headerTitleChildren={headerIcon}>
+      <SceneWrapper
+        scroll
+        keyboardShouldPersistTaps="handled"
+        hasNotifications
+        hasTabs
+      >
+        <SceneContainer
+          headerTitle={headerTitle}
+          headerTitleChildren={headerIcon}
+        >
           <View style={styles.container}>
             {swapInputLocations ? (
               <View style={styles.textFields}>
@@ -298,13 +344,23 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                 </EdgeText>
               </EdgeAnim>
               <EdgeAnim enter={fadeInDown60}>
-                <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy?.poweredByText ?? ''} onPress={handlePoweredByPress} />
+                <PoweredByCard
+                  iconUri={poweredByIconPath}
+                  poweredByText={poweredBy?.poweredByText ?? ''}
+                  onPress={handlePoweredByPress}
+                />
               </EdgeAnim>
             </>
           </View>
         </SceneContainer>
       </SceneWrapper>
-      <KavButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} onPress={handleSubmit} hasTabs hasNotifications />
+      <KavButton
+        disabled={spinner1 || spinner2}
+        label={lstrings.string_next_capitalized}
+        onPress={handleSubmit}
+        hasTabs
+        hasNotifications
+      />
     </>
   )
 })

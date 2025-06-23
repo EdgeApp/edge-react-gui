@@ -1,10 +1,23 @@
 import { add, mul } from 'biggystring'
 
-import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
+import {
+  ApprovableAction,
+  BorrowEngine,
+  BorrowPlugin
+} from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
 import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
-import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
+import {
+  ActionEffect,
+  ActionProgram,
+  ActionProgramState,
+  BroadcastTx,
+  ExecutableAction,
+  ExecutionContext,
+  ExecutionOutput,
+  PendingTxMap
+} from '../types'
 
 /**
  * Evaluates an ActionProgram against an ActionProgramState and returns the
@@ -20,15 +33,21 @@ import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, Executabl
  * be valid except for some special cases which must be specified by the
  * developer (via comments).
  */
-export async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+export async function evaluateAction(
+  context: ExecutionContext,
+  program: ActionProgram,
+  state: ActionProgramState
+): Promise<ExecutableAction> {
   const { account, dispatch } = context
   const { actionOp } = program
   const { effect } = state
 
   switch (actionOp.type) {
     case 'seq': {
-      const nextOpIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
-      const prevChildEffects = effect != null && effect.type === 'seq' ? effect.childEffects : []
+      const nextOpIndex =
+        effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const prevChildEffects =
+        effect != null && effect.type === 'seq' ? effect.childEffects : []
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
@@ -46,13 +65,17 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childExecutableAction: ExecutableAction = await context.evaluateAction(nextProgram, state)
+      const childExecutableAction: ExecutableAction =
+        await context.evaluateAction(nextProgram, state)
 
       return {
         dryrun: async pendingTxMap => {
-          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
-          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
-          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
+          const childOutput: ExecutionOutput | null =
+            await childExecutableAction.dryrun(pendingTxMap)
+          const childEffect: ActionEffect | null =
+            childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] =
+            childOutput != null ? childOutput.broadcastTxs : []
 
           return {
             effect: {
@@ -99,14 +122,19 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
             // Add broadcastTxs to localPendingTxMap to be used in the next iteration of this loop
             for (const broadcastTx of output.broadcastTxs) {
               const walletId = broadcastTx.walletId
-              pendingTxMapLocal[walletId] = [...(pendingTxMapLocal[walletId] ?? []), broadcastTx.tx]
+              pendingTxMapLocal[walletId] = [
+                ...(pendingTxMapLocal[walletId] ?? []),
+                broadcastTx.tx
+              ]
             }
             // Add output to childOutputs
             childOutputs.push(output)
           }
 
           const childEffects = childOutputs.flatMap(output => output.effect)
-          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
+          const broadcastTxs = childOutputs.flatMap(
+            output => output.broadcastTxs
+          )
 
           return {
             effect: {
@@ -128,7 +156,9 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
           }
 
           const childEffects = childOutputs.flatMap(output => output.effect)
-          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
+          const broadcastTxs = childOutputs.flatMap(
+            output => output.broadcastTxs
+          )
 
           return {
             effect: {
@@ -177,9 +207,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
         borrowPluginId
       })[0]
-      if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
+      if (borrowPlugin == null)
+        throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+      const { borrowEngine } = await dispatch(
+        getOrCreateLoanAccount(borrowPlugin, wallet)
+      )
 
       // Do the thing
       const approvableAction = await borrowEngine.borrow({
@@ -187,7 +220,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         tokenId
       })
 
-      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
+      return await approvableActionToExecutableAction(
+        borrowEngine,
+        approvableAction
+      )
     }
     case 'loan-deposit': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -198,9 +234,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
         borrowPluginId
       })[0]
-      if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
+      if (borrowPlugin == null)
+        throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+      const { borrowEngine } = await dispatch(
+        getOrCreateLoanAccount(borrowPlugin, wallet)
+      )
 
       // Do the thing
       const approvableAction = await borrowEngine.deposit({
@@ -208,10 +247,14 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         tokenId
       })
 
-      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
+      return await approvableActionToExecutableAction(
+        borrowEngine,
+        approvableAction
+      )
     }
     case 'loan-repay': {
-      const { borrowPluginId, nativeAmount, walletId, tokenId, fromTokenId } = actionOp
+      const { borrowPluginId, nativeAmount, walletId, tokenId, fromTokenId } =
+        actionOp
 
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
@@ -219,9 +262,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
         borrowPluginId
       })[0]
-      if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
+      if (borrowPlugin == null)
+        throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+      const { borrowEngine } = await dispatch(
+        getOrCreateLoanAccount(borrowPlugin, wallet)
+      )
 
       // Do the thing
       const approvableAction = await borrowEngine.repay({
@@ -230,7 +276,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         fromTokenId
       })
 
-      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
+      return await approvableActionToExecutableAction(
+        borrowEngine,
+        approvableAction
+      )
     }
     case 'loan-withdraw': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -241,9 +290,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({
         borrowPluginId
       })[0]
-      if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
+      if (borrowPlugin == null)
+        throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+      const { borrowEngine } = await dispatch(
+        getOrCreateLoanAccount(borrowPlugin, wallet)
+      )
 
       // Do the thing
       const approvableAction = await borrowEngine.withdraw({
@@ -251,16 +303,29 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         tokenId
       })
 
-      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
+      return await approvableActionToExecutableAction(
+        borrowEngine,
+        approvableAction
+      )
     }
     case 'swap': {
-      const { fromTokenId, fromWalletId, nativeAmount, expectedPayoutNativeAmount: payoutNativeAmount, toTokenId, toWalletId, amountFor } = actionOp
+      const {
+        fromTokenId,
+        fromWalletId,
+        nativeAmount,
+        expectedPayoutNativeAmount: payoutNativeAmount,
+        toTokenId,
+        toWalletId,
+        amountFor
+      } = actionOp
 
       const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
-      if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
+      if (fromWallet == null)
+        throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
 
       const toWallet = await account.waitForCurrencyWallet(toWalletId)
-      if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
+      if (toWallet == null)
+        throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
 
       const execute = async (): Promise<ExecutionOutput> => {
         const swapQuote = await account.fetchSwapQuote({
@@ -275,7 +340,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         const { transaction } = swapResult
         const { swapData } = transaction
 
-        if (swapData == null) throw new Error(`Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`)
+        if (swapData == null)
+          throw new Error(
+            `Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`
+          )
 
         // We can only assume the wallet balance and the address balance are the same for account-based currencies.
         // So we must assert the currency type matches a whitelist of plugins which are account-based.
@@ -295,8 +363,14 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
           'celo',
           'avalanche'
         ]
-        if (!supportedDestniationPlugins.includes(toWallet.currencyInfo.pluginId))
-          throw new Error(`SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(', ')}`)
+        if (
+          !supportedDestniationPlugins.includes(toWallet.currencyInfo.pluginId)
+        )
+          throw new Error(
+            `SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(
+              ', '
+            )}`
+          )
 
         /*
         // TODO: For UTXO-based currency support, pass the payoutAddress to a
@@ -310,7 +384,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         // effective, or add a buffer for margin of error when requesting 'from'
         // quotes since the swap payout amount is not guaranteed.
         const swapPayoutNativeAmount =
-          payoutNativeAmount != null ? payoutNativeAmount : amountFor === 'from' ? mul(swapData.payoutNativeAmount, '0.9') : swapData.payoutNativeAmount
+          payoutNativeAmount != null
+            ? payoutNativeAmount
+            : amountFor === 'from'
+            ? mul(swapData.payoutNativeAmount, '0.9')
+            : swapData.payoutNativeAmount
         const walletBalance = toWallet.balanceMap.get(toTokenId) ?? '0'
         const aboveAmount = add(walletBalance, swapPayoutNativeAmount)
 
@@ -345,7 +423,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
   }
 }
 
-async function approvableActionToExecutableAction(borrowEngine: BorrowEngine, approvableAction: ApprovableAction): Promise<ExecutableAction> {
+async function approvableActionToExecutableAction(
+  borrowEngine: BorrowEngine,
+  approvableAction: ApprovableAction
+): Promise<ExecutableAction> {
   // Execute:
   const execute = async (): Promise<ExecutionOutput> => {
     await waitForBorrowEngineSync(borrowEngine)
@@ -364,7 +445,9 @@ async function approvableActionToExecutableAction(borrowEngine: BorrowEngine, ap
   }
 
   // Dryrun:
-  const dryrun = async (pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
+  const dryrun = async (
+    pendingTxMap: Readonly<PendingTxMap>
+  ): Promise<ExecutionOutput> => {
     const broadcastTxs = await approvableAction.dryrun(pendingTxMap)
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
@@ -391,7 +474,10 @@ async function approvableActionToExecutableAction(borrowEngine: BorrowEngine, ap
  */
 async function makeExecutableAction(
   context: ExecutionContext,
-  fn: (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput>
+  fn: (
+    dryrun: boolean,
+    pendingTxMap: Readonly<PendingTxMap>
+  ) => Promise<ExecutionOutput>
 ): Promise<ExecutableAction> {
   const { account } = context
   return {
@@ -401,7 +487,9 @@ async function makeExecutableAction(
 
       await Promise.all(
         output.broadcastTxs.map(async broadcastTx => {
-          const wallet = await account.waitForCurrencyWallet(broadcastTx.walletId)
+          const wallet = await account.waitForCurrencyWallet(
+            broadcastTx.walletId
+          )
           const { tx } = broadcastTx
           await wallet.broadcastTx(tx)
           await wallet.saveTx(tx)

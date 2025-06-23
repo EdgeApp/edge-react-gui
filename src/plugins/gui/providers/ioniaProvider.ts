@@ -25,7 +25,13 @@ import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
-import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
+import {
+  FiatProvider,
+  FiatProviderAssetMap,
+  FiatProviderFactory,
+  FiatProviderGetQuoteParams,
+  FiatProviderQuote
+} from '../fiatProviderTypes'
 import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
 const providerId = 'ionia'
@@ -140,7 +146,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       },
-      asRequest: asOptional(asString, `grant_type=client_credentials&scope=${pluginKeys.scope}`),
+      asRequest: asOptional(
+        asString,
+        `grant_type=client_credentials&scope=${pluginKeys.scope}`
+      ),
       asResponse: asJSON(
         asObject({
           access_token: asString,
@@ -240,7 +249,9 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     // Fetch Access Token From OAuth Protocol:
     if (ACCESS_TOKEN == null) {
       const credentialsString = `${pluginKeys.clientId}:${pluginKeys.clientSecret}`
-      const credentialsBytes = Uint8Array.from(credentialsString.split('').map(char => char.charCodeAt(0)))
+      const credentialsBytes = Uint8Array.from(
+        credentialsString.split('').map(char => char.charCodeAt(0))
+      )
       const base64Credentials = wasBase64(credentialsBytes)
 
       const accessTokenResponse = await fetchAccessToken({
@@ -266,15 +277,26 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         requestedUUID: params.deviceId
       }
     }
-    const fetchCreateUser = fetcherWithOptions(fetchCreateUserBase, authorizedFetchOptions)
-    const fetchGetGiftCards = fetcherWithOptions(fetchGetGiftCardsBase, authorizedFetchOptions)
-    const fetchPurchaseGiftCard = fetcherWithOptions(fetchPurchaseGiftCardBase, userAuthenticatedFetchOptions)
+    const fetchCreateUser = fetcherWithOptions(
+      fetchCreateUserBase,
+      authorizedFetchOptions
+    )
+    const fetchGetGiftCards = fetcherWithOptions(
+      fetchGetGiftCardsBase,
+      authorizedFetchOptions
+    )
+    const fetchPurchaseGiftCard = fetcherWithOptions(
+      fetchPurchaseGiftCardBase,
+      userAuthenticatedFetchOptions
+    )
 
     //
     // State:
     //
 
-    let hiddenCardIds: number[] = asStoreHiddenCards(await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined))
+    let hiddenCardIds: number[] = asStoreHiddenCards(
+      await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined)
+    )
     let purchaseCardTimeoutId: NodeJS.Timeout
     const ratesCache: {
       [currencyCode: string]: {
@@ -287,7 +309,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     // Private methods:
     //
 
-    async function getPurchaseCard(currencyCode: string, cardAmount: number): Promise<IoniaPurchaseCard | null> {
+    async function getPurchaseCard(
+      currencyCode: string,
+      cardAmount: number
+    ): Promise<IoniaPurchaseCard | null> {
       return await new Promise<IoniaPurchaseCard | null>((resolve, reject) => {
         // Hastily invoke the task promise with a debounce:
         const newPurchaseCardTimeoutId = setTimeout(() => {
@@ -308,7 +333,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
      * Get the purchase rate for a card in units of crypto amount per fiat unit
      * (e.g. 3700 sats per 1 USD).
      */
-    async function getCardPurchaseRateAmount(currencyCode: string, cardAmount: number): Promise<number> {
+    async function getCardPurchaseRateAmount(
+      currencyCode: string,
+      cardAmount: number
+    ): Promise<number> {
       // Return cached value:
       if (ratesCache[currencyCode] != null) {
         const { expiry, rateQueryPromise } = ratesCache[currencyCode]
@@ -322,23 +350,37 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         rateQueryPromise: ratePromise
       }
       const rate = await ratePromise
-      logActivity(`Ionia rates a $${cardAmount} card at ${rate} ${currencyCode}`)
+      logActivity(
+        `Ionia rates a $${cardAmount} card at ${rate} ${currencyCode}`
+      )
       return rate
     }
 
     function checkAmountMinMax(fiatAmount: number) {
       if (fiatAmount > MAX_FIAT_CARD_PURCHASE_AMOUNT) {
-        throw new Error(sprintf(lstrings.card_amount_max_error_message_s, MAX_FIAT_CARD_PURCHASE_AMOUNT))
+        throw new Error(
+          sprintf(
+            lstrings.card_amount_max_error_message_s,
+            MAX_FIAT_CARD_PURCHASE_AMOUNT
+          )
+        )
       }
       if (fiatAmount < MIN_FIAT_CARD_PURCHASE_AMOUNT) {
-        throw new Error(sprintf(lstrings.card_amount_min_error_message_s, MIN_FIAT_CARD_PURCHASE_AMOUNT))
+        throw new Error(
+          sprintf(
+            lstrings.card_amount_min_error_message_s,
+            MIN_FIAT_CARD_PURCHASE_AMOUNT
+          )
+        )
       }
     }
 
     async function createUser(): Promise<string> {
       const uuid = await makeUuid()
       const uuidEmail = `${uuid}@edge.app`
-      logActivity(`Creating Ionia User: requestedUUID=${params.deviceId} Email=${uuidEmail}`)
+      logActivity(
+        `Creating Ionia User: requestedUUID=${params.deviceId} Email=${uuidEmail}`
+      )
       const createUserResponse = await fetchCreateUser({
         payload: {
           requestedUUID: params.deviceId,
@@ -346,7 +388,8 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         }
       })
 
-      const ErrorMessage = createUserResponse.ErrorMessage ?? createUserResponse.Data?.ErrorMessage
+      const ErrorMessage =
+        createUserResponse.ErrorMessage ?? createUserResponse.Data?.ErrorMessage
       if (!createUserResponse.Successful || createUserResponse.Data == null) {
         throw new Error(`Failed to create user: ${ErrorMessage}`)
       }
@@ -361,26 +404,40 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       logActivity(`Ionia user info saved to store.`)
       return userName
     }
-    async function queryCardPurchaseRateAmount(currencyCode: string, cardAmount: number): Promise<number> {
+    async function queryCardPurchaseRateAmount(
+      currencyCode: string,
+      cardAmount: number
+    ): Promise<number> {
       const cardPurchase = await queryPurchaseCard(currencyCode, cardAmount)
       const paymentUrl = new URL(cardPurchase.uri, true)
       const paymentRequestUrl = paymentUrl.query.r
 
-      if (paymentRequestUrl == null) throw new Error(`Missing or invalid payment URI from purchase gift card API`)
+      if (paymentRequestUrl == null)
+        throw new Error(
+          `Missing or invalid payment URI from purchase gift card API`
+        )
 
       const paymentProtocolResponse = await fetchPaymentOptions({
         endpoint: paymentRequestUrl
       })
       const paymentOption = paymentProtocolResponse.paymentOptions.find(
-        paymentOption => paymentOption.chain === currencyCode && paymentOption.currency === currencyCode
+        paymentOption =>
+          paymentOption.chain === currencyCode &&
+          paymentOption.currency === currencyCode
       )
 
-      if (paymentOption == null) throw new Error(`Missing payment option for currencyCode '${currencyCode}'`)
+      if (paymentOption == null)
+        throw new Error(
+          `Missing payment option for currencyCode '${currencyCode}'`
+        )
 
       return paymentOption.estimatedAmount
     }
 
-    async function queryPurchaseCard(currencyCode: string, cardAmount: number): Promise<IoniaPurchaseCard> {
+    async function queryPurchaseCard(
+      currencyCode: string,
+      cardAmount: number
+    ): Promise<IoniaPurchaseCard> {
       checkAmountMinMax(cardAmount)
       const purchaseResponse = await fetchPurchaseGiftCard({
         payload: {
@@ -389,7 +446,8 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           Currency: currencyCode
         }
       })
-      if (purchaseResponse.Data == null) throw new Error(purchaseResponse.ErrorMessage)
+      if (purchaseResponse.Data == null)
+        throw new Error(purchaseResponse.ErrorMessage)
       return purchaseResponse.Data
     }
 
@@ -421,16 +479,35 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       async getQuote(quoteParams: FiatProviderGetQuoteParams) {
         if (quoteParams.wallet == null) throw new Error('missing wallet')
 
-        const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
-        const multiplier = getCurrencyCodeMultiplier(quoteParams.wallet.currencyConfig, quoteParams.displayCurrencyCode)
-        const rateExchangeAmount = div(rateAmount, multiplier, multiplier.length)
+        const rateAmount = await getCardPurchaseRateAmount(
+          quoteParams.displayCurrencyCode,
+          RATE_QUOTE_CARD_AMOUNT
+        )
+        const multiplier = getCurrencyCodeMultiplier(
+          quoteParams.wallet.currencyConfig,
+          quoteParams.displayCurrencyCode
+        )
+        const rateExchangeAmount = div(
+          rateAmount,
+          multiplier,
+          multiplier.length
+        )
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
-        const cryptoAmount = quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, price, HARD_CURRENCY_PRECISION)
-        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, price)
+        const cryptoAmount =
+          quoteParams.amountType === 'crypto'
+            ? quoteParams.exchangeAmount
+            : div(quoteParams.exchangeAmount, price, HARD_CURRENCY_PRECISION)
+        const fiatAmount =
+          quoteParams.amountType === 'fiat'
+            ? quoteParams.exchangeAmount
+            : mul(quoteParams.exchangeAmount, price)
 
         // Concurrently get the latest purchase card promise
-        const purchaseCardPromise = getPurchaseCard(quoteParams.displayCurrencyCode, parseFloat(fiatAmount))
+        const purchaseCardPromise = getPurchaseCard(
+          quoteParams.displayCurrencyCode,
+          parseFloat(fiatAmount)
+        )
 
         checkAmountMinMax(parseFloat(fiatAmount))
 
@@ -453,21 +530,31 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
             // Unbox the latest purchase card:
             const purchaseCard = await purchaseCardPromise
 
-            if (purchaseCard == null) throw new Error('Cannot approve replaced quote')
+            if (purchaseCard == null)
+              throw new Error('Cannot approve replaced quote')
 
             // Use the purchase card URI to complete the payment over the Payment Protocol:
-            const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await wallet.parseUri(purchaseCard.uri, quoteParams.displayCurrencyCode)
+            const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
+              await wallet.parseUri(
+                purchaseCard.uri,
+                quoteParams.displayCurrencyCode
+              )
             const { paymentProtocolUrl } = parsedUri
             if (paymentProtocolUrl == null) {
               throw new Error(lstrings.missing_provider_payment_address_message)
             }
 
             // Check if the URI requires a warning to the user:
-            const approved = await showUi.addressWarnings(parsedUri, quoteParams.displayCurrencyCode)
+            const approved = await showUi.addressWarnings(
+              parsedUri,
+              quoteParams.displayCurrencyCode
+            )
             if (!approved) return
 
             // Log this user activity:
-            logActivity(`Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`)
+            logActivity(
+              `Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`
+            )
 
             return await new Promise((resolve, reject) => {
               showUi
@@ -500,18 +587,26 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
       otherMethods: {
         async authenticate(shouldCreate = false) {
-          const localUserName = await store.getItem(STORE_USERNAME_KEY).catch(_ => undefined)
+          const localUserName = await store
+            .getItem(STORE_USERNAME_KEY)
+            .catch(_ => undefined)
 
           if (localUserName == null && !shouldCreate) return false
 
           // Use local username for authentication header, or create new user
-          userAuthenticatedFetchOptions.headers.UserName = localUserName ?? (await createUser())
+          userAuthenticatedFetchOptions.headers.UserName =
+            localUserName ?? (await createUser())
 
           // Only log the first 4 and last 4 characters in the UserName UUID
-          const safeUserName = userAuthenticatedFetchOptions.headers.UserName.split('')
-            .map((char, index, chars) => (index > 4 && index < chars.length - 4 ? 'x' : char))
-            .join('')
-          logActivity(`Ionia authenticated user: UserName=${safeUserName} requestedUUID=${userAuthenticatedFetchOptions.headers.requestedUUID}`)
+          const safeUserName =
+            userAuthenticatedFetchOptions.headers.UserName.split('')
+              .map((char, index, chars) =>
+                index > 4 && index < chars.length - 4 ? 'x' : char
+              )
+              .join('')
+          logActivity(
+            `Ionia authenticated user: UserName=${safeUserName} requestedUUID=${userAuthenticatedFetchOptions.headers.requestedUUID}`
+          )
 
           return true
         },
@@ -519,7 +614,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           const set = new Set(hiddenCardIds)
           set.add(cardId)
           hiddenCardIds = Array.from(set)
-          await store.setItem(STORE_HIDDEN_CARDS_KEY, wasStoreHiddenCards(hiddenCardIds))
+          await store.setItem(
+            STORE_HIDDEN_CARDS_KEY,
+            wasStoreHiddenCards(hiddenCardIds)
+          )
         },
         async getRewardsCards() {
           const giftCardsResponse = await fetchGetGiftCards({

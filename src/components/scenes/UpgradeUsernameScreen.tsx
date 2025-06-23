@@ -18,7 +18,8 @@ export const UpgradeUsernameScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const handleComplete = useHandler(() => {
-    if (account.username != null) logActivity(`Light account backed up as: ${account.username}`)
+    if (account.username != null)
+      logActivity(`Light account backed up as: ${account.username}`)
     dispatch(markAccountUpgraded()).catch(() => {})
     navigation.goBack()
   })
@@ -29,7 +30,12 @@ export const UpgradeUsernameScene = (props: Props) => {
 
   return (
     <SceneWrapper hasHeader={false}>
-      <UpgradeUsernameScreen account={account} context={context} onComplete={handleComplete} onLogEvent={handleLogEvent} />
+      <UpgradeUsernameScreen
+        account={account}
+        context={context}
+        onComplete={handleComplete}
+        onLogEvent={handleLogEvent}
+      />
     </SceneWrapper>
   )
 }

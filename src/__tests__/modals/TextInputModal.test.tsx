@@ -17,7 +17,11 @@ describe('TextInputModal', () => {
   it('should render with a blank input field', () => {
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <TextInputModal bridge={fakeAirshipBridge} title="title" message="message" />
+        <TextInputModal
+          bridge={fakeAirshipBridge}
+          title="title"
+          message="message"
+        />
       </FakeProviders>
     )
 
@@ -28,7 +32,12 @@ describe('TextInputModal', () => {
   it('should render with a populated input field', () => {
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <TextInputModal bridge={fakeAirshipBridge} title="title" message="message" initialValue="initialValue" />
+        <TextInputModal
+          bridge={fakeAirshipBridge}
+          title="title"
+          message="message"
+          initialValue="initialValue"
+        />
       </FakeProviders>
     )
 

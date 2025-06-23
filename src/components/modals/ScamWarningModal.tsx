@@ -16,7 +16,9 @@ import { EdgeModal } from './EdgeModal'
  * account creation, etc, the first time they interact with or open those
  * features.
  */
-export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | undefined> }) => {
+export const ScamWarningModal = (props: {
+  bridge: AirshipBridge<'yes' | 'no' | undefined>
+}) => {
   const { bridge } = props
 
   const handleYesPress = useHandler(async () => {
@@ -24,7 +26,10 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
       <ConfirmContinueModal
         bridge={bridge}
         title={lstrings.warning_scam_title}
-        body={sprintf(lstrings.warning_scam_message_yes_1s, config.supportEmail)}
+        body={sprintf(
+          lstrings.warning_scam_message_yes_1s,
+          config.supportEmail
+        )}
         warning
       />
     ))
@@ -42,7 +47,9 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
           bridge.resolve('no')
         }}
       >
-        <Paragraph>{sprintf(lstrings.warning_scam_message_no_1s, config.supportEmail)}</Paragraph>
+        <Paragraph>
+          {sprintf(lstrings.warning_scam_message_no_1s, config.supportEmail)}
+        </Paragraph>
       </EdgeModal>
     ))
 

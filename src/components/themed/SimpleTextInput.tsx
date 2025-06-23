@@ -14,16 +14,28 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { MarginRemProps, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
+import {
+  MarginRemProps,
+  useMarginRemStyle
+} from '../../hooks/useMarginRemStyle'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, ChevronBackAnimated, CloseIconAnimated } from '../icons/ThemedIcons'
+import {
+  AnimatedIconComponent,
+  ChevronBackAnimated,
+  CloseIconAnimated
+} from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
-export type SimpleTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+export type SimpleTextInputReturnKeyType =
+  | 'done'
+  | 'go'
+  | 'next'
+  | 'search'
+  | 'send' // Defaults to 'done'
 
 export interface SimpleTextInputProps extends MarginRemProps {
   // Contents:
@@ -46,7 +58,13 @@ export interface SimpleTextInputProps extends MarginRemProps {
   autoCorrect?: boolean // Defaults to 'true'
   blurOnSubmit?: boolean // Defaults to 'true'
   inputAccessoryViewID?: string
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
+  keyboardType?:
+    | 'default'
+    | 'number-pad'
+    | 'decimal-pad'
+    | 'numeric'
+    | 'email-address'
+    | 'phone-pad' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: SimpleTextInputReturnKeyType // Defaults to 'done'
@@ -85,7 +103,10 @@ export interface SimpleTextInputRef {
   setNativeProps: (nativeProps: Object) => void
 }
 
-export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextInputProps>((props: SimpleTextInputProps, ref) => {
+export const SimpleTextInput = React.forwardRef<
+  SimpleTextInputRef,
+  SimpleTextInputProps
+>((props: SimpleTextInputProps, ref) => {
   const {
     // Contents:
     placeholder,
@@ -189,7 +210,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const animationDelay = 0.4 * baseDuration
 
   const handleBlur = useHandler(() => {
-    if (active == null) focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+    if (active == null)
+      focusAnimation.value = withDelay(
+        animationDelay,
+        withTiming(0, { duration: baseDuration })
+      )
 
     if (onBlur != null) onBlur()
     setIsFocused(false)
@@ -203,7 +228,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (props.onCancel != null) props.onCancel()
   })
   const handleFocus = useHandler(() => {
-    if (active == null) focusAnimation.value = withTiming(1, { duration: baseDuration })
+    if (active == null)
+      focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (onFocus != null) onFocus()
     setIsFocused(true)
   })
@@ -211,10 +237,16 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const backIconSize = useDerivedValue(() => (isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])))
+  const backIconSize = useDerivedValue(() =>
+    isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])
+  )
   const leftIconSize = useDerivedValue(() => {
     const hasValue = valueRef.value !== ''
-    return hasIcon ? (hasValue && (active == null || !active) ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0
+    return hasIcon
+      ? hasValue && (active == null || !active)
+        ? 0
+        : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])
+      : 0
   })
   const rightIconSize = useDerivedValue(() => {
     const hasValue = valueRef.value !== ''
@@ -223,24 +255,59 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
-  const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
-  const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
+  const interpolateIconColor = useAnimatedColorInterpolateFn(
+    theme.textInputIconColor,
+    theme.textInputIconColorFocused,
+    theme.textInputIconColorDisabled
+  )
+  const iconColor = useDerivedValue(() =>
+    interpolateIconColor(focusAnimation, disableAnimation)
+  )
 
   const placeholderTextColor = useMemo(() => {
-    return disabled ? theme.textInputPlaceholderColorDisabled : isFocused ? theme.textInputPlaceholderColorFocused : theme.textInputPlaceholderColor
-  }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
+    return disabled
+      ? theme.textInputPlaceholderColorDisabled
+      : isFocused
+      ? theme.textInputPlaceholderColorFocused
+      : theme.textInputPlaceholderColor
+  }, [
+    disabled,
+    isFocused,
+    theme.textInputPlaceholderColor,
+    theme.textInputPlaceholderColorDisabled,
+    theme.textInputPlaceholderColorFocused
+  ])
 
   React.useEffect(() => {
     if (active == null) return
-    focusAnimation.value = active ? withTiming(1, { duration: baseDuration }) : withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+    focusAnimation.value = active
+      ? withTiming(1, { duration: baseDuration })
+      : withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
   }, [active, focusAnimation, baseDuration, animationDelay])
 
   return (
     <ContainerView marginRemProps={marginRemProps}>
-      <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
-          <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
-          <TouchableOpacity hitSlop={theme.rem(0.75)} accessible onPress={handleCancelPress} testID={`${testID}.doneButton`}>
+      <EdgeTouchableWithoutFeedback
+        accessible={false}
+        testID={testID}
+        onPress={() => focus()}
+      >
+        <InputContainerView
+          disableAnimation={disableAnimation}
+          focusAnimation={focusAnimation}
+          scale={scale}
+        >
+          <SideContainer size={leftIconSize}>
+            {Icon == null ? null : (
+              <Icon color={iconColor} size={leftIconSize} />
+            )}
+          </SideContainer>
+          <TouchableOpacity
+            hitSlop={theme.rem(0.75)}
+            accessible
+            onPress={handleCancelPress}
+            testID={`${testID}.doneButton`}
+          >
             <SideContainer size={backIconSize}>
               <ChevronBackAnimated color={iconColor} size={backIconSize} />
             </SideContainer>
@@ -277,7 +344,12 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
             />
           </InnerContainer>
 
-          <TouchContainer hitSlop={theme.rem(0.75)} accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer
+            hitSlop={theme.rem(0.75)}
+            accessible
+            onPress={handleClearPress}
+            testID={`${testID}.clearIcon`}
+          >
             <SideContainer size={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
@@ -285,7 +357,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
       {isIos && (isFocused || active === true) && (
-        <TouchableOpacity accessible onPress={handleCancelPress} testID={`${testID}.cancelButton`}>
+        <TouchableOpacity
+          accessible
+          onPress={handleCancelPress}
+          testID={`${testID}.cancelButton`}
+        >
           <CancelButton>
             <CancelText numberOfLines={1} ellipsizeMode="clip">
               {lstrings.string_cancel_cap}
@@ -341,7 +417,10 @@ const InputContainerView = styled(Animated.View)<{
     useAnimatedStyle(() => {
       'worklet'
       return {
-        backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
+        backgroundColor: interpolateInputBackgroundColor(
+          focusAnimation,
+          disableAnimation
+        ),
         borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
         opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
         transform: [
@@ -354,18 +433,21 @@ const InputContainerView = styled(Animated.View)<{
   ]
 })
 
-const SideContainer = styled(Animated.View)<{ size: SharedValue<number> }>(theme => ({ size }) => {
-  return [
-    {
-      alignItems: 'stretch',
-      aspectRatio: 1
-    },
-    useAnimatedStyle(() => ({
-      width: size.value,
-      opacity: size.value
-    }))
-  ]
-})
+const SideContainer = styled(Animated.View)<{ size: SharedValue<number> }>(
+  theme =>
+    ({ size }) => {
+      return [
+        {
+          alignItems: 'stretch',
+          aspectRatio: 1
+        },
+        useAnimatedStyle(() => ({
+          width: size.value,
+          opacity: size.value
+        }))
+      ]
+    }
+)
 
 const InnerContainer = styled(View)({
   flex: 1
@@ -375,7 +457,11 @@ const InputField = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
 }>(theme => ({ disableAnimation, focusAnimation }) => {
-  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+  const interpolateTextColor = useAnimatedColorInterpolateFn(
+    theme.textInputTextColor,
+    theme.textInputTextColorFocused,
+    theme.textInputTextColorDisabled
+  )
 
   return [
     {
@@ -421,12 +507,27 @@ const CancelText = styled(Text)(theme => {
   }
 })
 
-function useAnimatedColorInterpolateFn(fromColor: string, toColor: string, disabledColor: string) {
+function useAnimatedColorInterpolateFn(
+  fromColor: string,
+  toColor: string,
+  disabledColor: string
+) {
   const interpolateFn = useMemo(() => {
-    return (focusValue: SharedValue<number>, disabledValue: SharedValue<number>) => {
+    return (
+      focusValue: SharedValue<number>,
+      disabledValue: SharedValue<number>
+    ) => {
       'worklet'
-      const interFocusColor = interpolateColor(focusValue.value, [0, 1], [fromColor, toColor])
-      return interpolateColor(disabledValue.value, [0, 1], [interFocusColor, disabledColor])
+      const interFocusColor = interpolateColor(
+        focusValue.value,
+        [0, 1],
+        [fromColor, toColor]
+      )
+      return interpolateColor(
+        disabledValue.value,
+        [0, 1],
+        [interFocusColor, disabledColor]
+      )
     }
   }, [fromColor, toColor, disabledColor])
 

@@ -50,7 +50,9 @@ const InterestRateChangeTileComponent = (props: Props) => {
   }, [])
 
   const exchangeRateMap = React.useRef<GuiExchangeRates>({})
-  const exchangeRates = useHandler((pair: string) => exchangeRateMap.current[pair] ?? '0')
+  const exchangeRates = useHandler(
+    (pair: string) => exchangeRateMap.current[pair] ?? '0'
+  )
   useSelector(state => {
     necessaryExchangeRates.forEach(pair => {
       exchangeRateMap.current[pair] = state.exchangeRates[pair]
@@ -61,26 +63,49 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const currentAprs = debts.map(debt => debt.apr.toString())
   const currentFiatAmounts = debts.map(debt => {
     const { tokenId } = debt
-    const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
+    const { currencyCode, denominations } =
+      tokenId == null ? currencyInfo : allTokens[tokenId]
     const denom = denominations.find(denom => denom.name === currencyCode)
     const multiplier = denom?.multiplier ?? '1'
-    return mul(div(debt.nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${defaultIsoFiat}`))
+    return mul(
+      div(debt.nativeAmount, multiplier, mulToPrecision(multiplier)),
+      exchangeRates(`${currencyCode}_${defaultIsoFiat}`)
+    )
   })
 
   // Incoming debt
   const { tokenId, nativeAmount, apr } = newDebt
-  const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
+  const { currencyCode, denominations } =
+    tokenId == null ? currencyInfo : allTokens[tokenId]
   const denom = denominations.find(denom => denom.name === currencyCode)
   const multiplier = denom?.multiplier ?? '1'
-  const incomingDebtFiatAmount = mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${defaultIsoFiat}`))
+  const incomingDebtFiatAmount = mul(
+    div(nativeAmount, multiplier, mulToPrecision(multiplier)),
+    exchangeRates(`${currencyCode}_${defaultIsoFiat}`)
+  )
 
-  const currentWeightedApr = React.useMemo(() => weightedAverage(currentAprs, currentFiatAmounts), [currentAprs, currentFiatAmounts])
+  const currentWeightedApr = React.useMemo(
+    () => weightedAverage(currentAprs, currentFiatAmounts),
+    [currentAprs, currentFiatAmounts]
+  )
   const futureWeightedApr = React.useMemo(
-    () => weightedAverage([...currentAprs, apr.toString()], [...currentFiatAmounts, incomingDebtFiatAmount]),
+    () =>
+      weightedAverage(
+        [...currentAprs, apr.toString()],
+        [...currentFiatAmounts, incomingDebtFiatAmount]
+      ),
     [currentAprs, apr, currentFiatAmounts, incomingDebtFiatAmount]
   )
 
-  return <PercentageChangeArrowTile title={lstrings.loan_interest_rate} currentValue={currentWeightedApr} futureValue={futureWeightedApr} />
+  return (
+    <PercentageChangeArrowTile
+      title={lstrings.loan_interest_rate}
+      currentValue={currentWeightedApr}
+      futureValue={futureWeightedApr}
+    />
+  )
 }
 
-export const InterestRateChangeTile = React.memo(InterestRateChangeTileComponent)
+export const InterestRateChangeTile = React.memo(
+  InterestRateChangeTileComponent
+)

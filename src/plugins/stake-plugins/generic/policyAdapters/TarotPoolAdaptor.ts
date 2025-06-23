@@ -13,7 +13,13 @@ import {
   VelodromeLPToken__factory,
   VelodromeRouterV2__factory
 } from '../../../contracts'
-import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
+import {
+  ChangeQuote,
+  PositionAllocation,
+  QuoteAllocation,
+  StakeAssetInfo,
+  StakePosition
+} from '../../types'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
@@ -54,16 +60,27 @@ const SLIPPAGE = 0.02 // 2%
 const SLIPPAGE_FACTOR = 1 + SLIPPAGE // A multiplier to get a minimum amount
 const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-type ChainableTransaction = (previousTx?: ethers.providers.TransactionResponse) => Promise<ethers.PopulatedTransaction>
+type ChainableTransaction = (
+  previousTx?: ethers.providers.TransactionResponse
+) => Promise<ethers.PopulatedTransaction>
 
-export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAdapterConfig>): StakePolicyAdapter => {
-  if (policyConfig.stakeAssets.length !== 2) throw new Error(`Staking more or less than two assets is not supported for TarotPoolAdapter`)
+export const makeTarotPoolAdapter = (
+  policyConfig: StakePolicyConfig<TarotPoolAdapterConfig>
+): StakePolicyAdapter => {
+  if (policyConfig.stakeAssets.length !== 2)
+    throw new Error(
+      `Staking more or less than two assets is not supported for TarotPoolAdapter`
+    )
 
   if (
-    policyConfig.stakeAssets[0].currencyCode !== policyConfig.rewardAssets[0].currencyCode ||
-    policyConfig.stakeAssets[1].currencyCode !== policyConfig.rewardAssets[1].currencyCode
+    policyConfig.stakeAssets[0].currencyCode !==
+      policyConfig.rewardAssets[0].currencyCode ||
+    policyConfig.stakeAssets[1].currencyCode !==
+      policyConfig.rewardAssets[1].currencyCode
   )
-    throw new Error(`Stake and claim of different assets is not supported for TarotPoolAdapter`)
+    throw new Error(
+      `Stake and claim of different assets is not supported for TarotPoolAdapter`
+    )
 
   const { adapterConfig, stakePolicyId } = policyConfig
   const {
@@ -90,7 +107,9 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
   const metadataName = `Tarot LP Token ${leverage}X Leveraged Pool`
   const metadataPoolAssetName = `${policyConfig.stakeAssets[0].currencyCode}/${policyConfig.stakeAssets[1].currencyCode}`
 
-  const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
+  const provider = new ethers.providers.FallbackProvider(
+    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
+  )
 
   // L1 fee utils ported from edge-currency-accountbased:
 
@@ -101,27 +120,39 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
     fixedOverhead: '2100',
     dynamicOverhead: '1000000',
     oracleContractAddress: '0x420000000000000000000000000000000000000F',
-    dynamicOverheadMethod: '0xf45e65d800000000000000000000000000000000000000000000000000000000',
+    dynamicOverheadMethod:
+      '0xf45e65d800000000000000000000000000000000000000000000000000000000',
     proxyContract: '0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f'
   }
   async function updateL1RollupParams(): Promise<void> {
     try {
-      const oracleContract = OptimismFeeOracle__factory.connect(l1RollupParams.proxyContract, provider)
+      const oracleContract = OptimismFeeOracle__factory.connect(
+        l1RollupParams.proxyContract,
+        provider
+      )
       const scalar = await oracleContract.scalar()
       const feeRes = await oracleContract.l1BaseFee()
-      const bigNumberSafeGasPriceMultiplier = mul(l1RollupParams.maxGasPriceL1Multiplier, '100')
+      const bigNumberSafeGasPriceMultiplier = mul(
+        l1RollupParams.maxGasPriceL1Multiplier,
+        '100'
+      )
       const bigNumberSafeGasPriceDivisor = '100'
 
       l1RollupParams = {
         ...l1RollupParams,
         dynamicOverhead: scalar.toString(),
-        gasPriceL1Wei: feeRes.mul(bigNumberSafeGasPriceMultiplier).div(bigNumberSafeGasPriceDivisor).toString()
+        gasPriceL1Wei: feeRes
+          .mul(bigNumberSafeGasPriceMultiplier)
+          .div(bigNumberSafeGasPriceDivisor)
+          .toString()
       }
     } catch (e: any) {
       console.warn('makeTarotPoolAdapter Failed to update L1RollupParams', e)
     }
   }
-  const calcL1RollupFees = (populatedTx: ethers.PopulatedTransaction): string => {
+  const calcL1RollupFees = (
+    populatedTx: ethers.PopulatedTransaction
+  ): string => {
     const txCopy = { ...populatedTx }
     delete txCopy.customData
 
@@ -143,14 +174,21 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
     const { dynamicOverhead, fixedOverhead, gasPriceL1Wei } = l1RollupParams
     const MAX_SIGNATURE_COST = '1040' // (32 + 32 + 1) * 16 max cost for adding r, s, v signatures to raw transaction
 
-    const gasUsed = add(add(rawTxCost.toString(), fixedOverhead), MAX_SIGNATURE_COST)
+    const gasUsed = add(
+      add(rawTxCost.toString(), fixedOverhead),
+      MAX_SIGNATURE_COST
+    )
     const scalar = div(dynamicOverhead, '1000000', 18)
     const total = ceil(mul(mul(gasPriceL1Wei, gasUsed), scalar), 0)
 
     return total
   }
 
-  async function prepareChangeQuote(walletSigner: EdgeWalletSigner, txs: ChainableTransaction[], allocations: QuoteAllocation[]): Promise<ChangeQuote> {
+  async function prepareChangeQuote(
+    walletSigner: EdgeWalletSigner,
+    txs: ChainableTransaction[],
+    allocations: QuoteAllocation[]
+  ): Promise<ChangeQuote> {
     await updateL1RollupParams()
     let networkFee = BigNumber.from(0)
 
@@ -208,14 +246,31 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
   const instance = {
     stakePolicyId,
-    fetchStakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
-      const { gasPrice, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
+    fetchStakeQuote: async (
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> => {
+      const { gasPrice, txs, walletAddress, walletSigner } =
+        await workflowUtils(wallet)
 
       // determine both amounts
-      const velodromeRouterContract = VelodromeRouterV2__factory.connect(velodromeRouterContractAddress, provider)
-      const lpTokenContract = VelodromeLPToken__factory.connect(lpToken.contractAddress, provider)
-      const token0Contract = Erc20__factory.connect(token0.contractAddress, provider)
-      const token1Contract = Erc20__factory.connect(token1.contractAddress, provider)
+      const velodromeRouterContract = VelodromeRouterV2__factory.connect(
+        velodromeRouterContractAddress,
+        provider
+      )
+      const lpTokenContract = VelodromeLPToken__factory.connect(
+        lpToken.contractAddress,
+        provider
+      )
+      const token0Contract = Erc20__factory.connect(
+        token0.contractAddress,
+        provider
+      )
+      const token1Contract = Erc20__factory.connect(
+        token1.contractAddress,
+        provider
+      )
       const [reserve0, reserve1] = await lpTokenContract.getReserves()
 
       let token0Amount: BigNumber
@@ -233,42 +288,57 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       // check if we have enough balance to cover amounts
       const token0Balance = wallet.balanceMap.get(token0.tokenId) ?? '0'
       const token1Balance = wallet.balanceMap.get(token1.tokenId) ?? '0'
-      if (token0Amount.gt(token0Balance) || token1Amount.gt(token1Balance)) throw new InsufficientFundsError({ tokenId: null })
+      if (token0Amount.gt(token0Balance) || token1Amount.gt(token1Balance))
+        throw new InsufficientFundsError({ tokenId: null })
 
       // see if we need to add approval transactions
-      const token0ApprovedAmount = await token0Contract.allowance(walletAddress, velodromeRouterContractAddress)
+      const token0ApprovedAmount = await token0Contract.allowance(
+        walletAddress,
+        velodromeRouterContractAddress
+      )
       if (token0ApprovedAmount.lt(token0Amount)) {
         txs.push(
           async () =>
-            await token0Contract.populateTransaction.approve(velodromeRouterContractAddress, token0Amount, {
-              gasPrice,
-              gasLimit: '60000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+            await token0Contract.populateTransaction.approve(
+              velodromeRouterContractAddress,
+              token0Amount,
+              {
+                gasPrice,
+                gasLimit: '60000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${token0.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
 
-      const token1ApprovedAmount = await token1Contract.allowance(walletAddress, velodromeRouterContractAddress)
+      const token1ApprovedAmount = await token1Contract.allowance(
+        walletAddress,
+        velodromeRouterContractAddress
+      )
       if (token1ApprovedAmount.lt(token1Amount)) {
         txs.push(
           async () =>
-            await token1Contract.populateTransaction.approve(velodromeRouterContractAddress, token1Amount, {
-              gasPrice,
-              gasLimit: '60000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+            await token1Contract.populateTransaction.approve(
+              velodromeRouterContractAddress,
+              token1Amount,
+              {
+                gasPrice,
+                gasLimit: '60000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${token1.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
 
@@ -276,31 +346,39 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       const amountToken0Min = token0Amount.mul(100).div(100 * SLIPPAGE_FACTOR)
       const amountToken1Min = token1Amount.mul(100).div(100 * SLIPPAGE_FACTOR)
 
-      const [amountA, amountB, estimateMinLiquidity] = await velodromeRouterContract.quoteAddLiquidity(
-        token0.contractAddress,
-        token1.contractAddress,
-        isStable,
-        velodromeFactoryContractAddress,
-        token0Amount,
-        token1Amount
-      )
+      const [amountA, amountB, estimateMinLiquidity] =
+        await velodromeRouterContract.quoteAddLiquidity(
+          token0.contractAddress,
+          token1.contractAddress,
+          isStable,
+          velodromeFactoryContractAddress,
+          token0Amount,
+          token1Amount
+        )
 
       // approve lp token spending to router contract
-      const lpTokenAllowance = await lpTokenContract.allowance(walletAddress, tarotRouterContractAddress)
+      const lpTokenAllowance = await lpTokenContract.allowance(
+        walletAddress,
+        tarotRouterContractAddress
+      )
       if (lpTokenAllowance.lt(estimateMinLiquidity)) {
         txs.push(
           async () =>
-            await lpTokenContract.populateTransaction.approve(tarotRouterContractAddress, estimateMinLiquidity, {
-              gasPrice,
-              gasLimit: '60000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+            await lpTokenContract.populateTransaction.approve(
+              tarotRouterContractAddress,
+              estimateMinLiquidity,
+              {
+                gasPrice,
+                gasLimit: '60000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${lpToken.symbol} for ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
 
@@ -333,79 +411,124 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       )
 
       // mint collateral
-      const tarotRouterContract = TarotRouter__factory.connect(tarotRouterContractAddress, provider)
+      const tarotRouterContract = TarotRouter__factory.connect(
+        tarotRouterContractAddress,
+        provider
+      )
       txs.push(async (prevTx?: ethers.providers.TransactionResponse) => {
         let addedLiquidityAmount = estimateMinLiquidity
         if (prevTx != null) {
           const receipt = await prevTx.wait(1)
 
-          const eventLogs = receipt.logs.filter(log => log.address.toLowerCase() === lpTokenContract.address.toLowerCase())
+          const eventLogs = receipt.logs.filter(
+            log =>
+              log.address.toLowerCase() ===
+              lpTokenContract.address.toLowerCase()
+          )
           const log = eventLogs.filter(
-            log => log.topics[0] === lpTokenContract.interface.getEventTopic(lpTokenContract.interface.events['Transfer(address,address,uint256)'])
+            log =>
+              log.topics[0] ===
+              lpTokenContract.interface.getEventTopic(
+                lpTokenContract.interface.events[
+                  'Transfer(address,address,uint256)'
+                ]
+              )
           )[0]
 
           if (log == null) throw new Error('Cannot find log with amount')
 
-          const decodedData = ethers.utils.defaultAbiCoder.decode(['uint256'], log.data)[0]
+          const decodedData = ethers.utils.defaultAbiCoder.decode(
+            ['uint256'],
+            log.data
+          )[0]
 
           if (BigNumber.isBigNumber(decodedData)) {
             addedLiquidityAmount = decodedData
           }
         }
-        return await tarotRouterContract.populateTransaction.mintCollateral(collateralContractAddress, addedLiquidityAmount, walletAddress, deadline, '0x', {
-          gasPrice,
-          gasLimit: '500000',
-          customData: {
-            metadata: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+        return await tarotRouterContract.populateTransaction.mintCollateral(
+          collateralContractAddress,
+          addedLiquidityAmount,
+          walletAddress,
+          deadline,
+          '0x',
+          {
+            gasPrice,
+            gasLimit: '500000',
+            customData: {
+              metadata: {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Mint collateral to ${metadataPoolAssetName} liquidity pool contract`
+              }
             }
           }
-        })
+        )
       })
 
       // approve borrow tokens
-      const token0BorrowableContract = TarotBorrowable__factory.connect(token0BorrowableContractAddress, provider)
-      const [token0BorrowableAllowance, token0BorrowableTotalSupply] = await Promise.all([
-        await token0BorrowableContract.allowance(walletAddress, tarotRouterContractAddress),
-        await token0BorrowableContract.totalSupply()
-      ])
+      const token0BorrowableContract = TarotBorrowable__factory.connect(
+        token0BorrowableContractAddress,
+        provider
+      )
+      const [token0BorrowableAllowance, token0BorrowableTotalSupply] =
+        await Promise.all([
+          await token0BorrowableContract.allowance(
+            walletAddress,
+            tarotRouterContractAddress
+          ),
+          await token0BorrowableContract.totalSupply()
+        ])
       if (token0BorrowableAllowance.lt(token0BorrowableTotalSupply)) {
         txs.push(
           async () =>
-            await token0BorrowableContract.populateTransaction.borrowApprove(tarotRouterContractAddress, ethers.constants.MaxUint256, {
-              gasPrice,
-              gasLimit: '1000000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+            await token0BorrowableContract.populateTransaction.borrowApprove(
+              tarotRouterContractAddress,
+              ethers.constants.MaxUint256,
+              {
+                gasPrice,
+                gasLimit: '1000000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve bTarot for ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
-      const token1BorrowableContract = TarotBorrowable__factory.connect(token1BorrowableContractAddress, provider)
-      const [token1BorrowableAllowance, token1BorrowableTotalSupply] = await Promise.all([
-        await token1BorrowableContract.allowance(walletAddress, tarotRouterContractAddress),
-        await token1BorrowableContract.totalSupply()
-      ])
+      const token1BorrowableContract = TarotBorrowable__factory.connect(
+        token1BorrowableContractAddress,
+        provider
+      )
+      const [token1BorrowableAllowance, token1BorrowableTotalSupply] =
+        await Promise.all([
+          await token1BorrowableContract.allowance(
+            walletAddress,
+            tarotRouterContractAddress
+          ),
+          await token1BorrowableContract.totalSupply()
+        ])
       if (token1BorrowableAllowance.lt(token1BorrowableTotalSupply)) {
         txs.push(
           async () =>
-            await token1BorrowableContract.populateTransaction.borrowApprove(tarotRouterContractAddress, ethers.constants.MaxUint256, {
-              gasPrice,
-              gasLimit: '1000000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+            await token1BorrowableContract.populateTransaction.borrowApprove(
+              tarotRouterContractAddress,
+              ethers.constants.MaxUint256,
+              {
+                gasPrice,
+                gasLimit: '1000000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve bTarot ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
 
@@ -456,38 +579,58 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
-    fetchUnstakeQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
-      const { gasPrice, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
-      const collateralContract = TarotCollateral__factory.connect(collateralContractAddress, provider)
-      const tarotRouterContract = TarotRouter__factory.connect(tarotRouterContractAddress, provider)
+    fetchUnstakeQuote: async (
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> => {
+      const { gasPrice, txs, walletAddress, walletSigner } =
+        await workflowUtils(wallet)
+      const collateralContract = TarotCollateral__factory.connect(
+        collateralContractAddress,
+        provider
+      )
+      const tarotRouterContract = TarotRouter__factory.connect(
+        tarotRouterContractAddress,
+        provider
+      )
 
       const tarot = tarotUtils(adapterConfig, provider, walletAddress)
 
       // approve collateral token
       const [collateralAllowance, collateralTotalSupply] = await Promise.all([
-        await collateralContract.allowance(walletAddress, tarotRouterContractAddress),
+        await collateralContract.allowance(
+          walletAddress,
+          tarotRouterContractAddress
+        ),
         await collateralContract.totalSupply()
       ])
       if (collateralAllowance.lt(collateralTotalSupply)) {
         txs.push(
           async () =>
-            await collateralContract.populateTransaction.approve(tarotRouterContractAddress, ethers.constants.MaxUint256, {
-              gasPrice,
-              gasLimit: '60000',
-              customData: {
-                metadata: {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+            await collateralContract.populateTransaction.approve(
+              tarotRouterContractAddress,
+              ethers.constants.MaxUint256,
+              {
+                gasPrice,
+                gasLimit: '60000',
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve cTarot for ${metadataPoolAssetName} liquidity pool contract`
+                  }
                 }
               }
-            })
+            )
         )
       }
 
       const max = await tarot.getMaxDeleverage()
       const amounts = await tarot.getDeleverageAmounts(max)
-      const collateralBalance = await collateralContract.balanceOf(walletAddress)
+      const collateralBalance = await collateralContract.balanceOf(
+        walletAddress
+      )
       const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
       const bAmountAMin = tarot.decimalToBalance(amounts.bAmountAMin)
@@ -495,17 +638,25 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       txs.push(
         async () =>
-          await tarotRouterContract.populateTransaction.deleverage(poolContractAddress, collateralBalance, bAmountAMin, bAmountBMin, deadline, '0x', {
-            gasPrice,
-            gasLimit: '1000000',
-            customData: {
-              metadata: {
-                name: metadataName,
-                category: 'Transfer:Staking',
-                notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+          await tarotRouterContract.populateTransaction.deleverage(
+            poolContractAddress,
+            collateralBalance,
+            bAmountAMin,
+            bAmountBMin,
+            deadline,
+            '0x',
+            {
+              gasPrice,
+              gasLimit: '1000000',
+              customData: {
+                metadata: {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: `Deleverage ${metadataPoolAssetName} liquidity pool contract`
+                }
               }
             }
-          })
+          )
       )
 
       const allocations: QuoteAllocation[] = [
@@ -525,21 +676,42 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
 
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
-    fetchClaimQuote: (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string) => {
+    fetchClaimQuote: (
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ) => {
       throw new Error('fetchClaimQuote not implemented for TarotPoolAdapter')
     },
-    fetchUnstakeExactQuote: async (wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> => {
-      throw new Error('fetchUnstakeExactQuote not implemented for TarotPoolAdapter')
+    fetchUnstakeExactQuote: async (
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> => {
+      throw new Error(
+        'fetchUnstakeExactQuote not implemented for TarotPoolAdapter'
+      )
     },
-    fetchStakePosition: async (wallet: EdgeCurrencyWallet): Promise<StakePosition> => {
-      const token0BorrowableContract = TarotBorrowable__factory.connect(token0BorrowableContractAddress, provider)
-      const token1BorrowableContract = TarotBorrowable__factory.connect(token1BorrowableContractAddress, provider)
+    fetchStakePosition: async (
+      wallet: EdgeCurrencyWallet
+    ): Promise<StakePosition> => {
+      const token0BorrowableContract = TarotBorrowable__factory.connect(
+        token0BorrowableContractAddress,
+        provider
+      )
+      const token1BorrowableContract = TarotBorrowable__factory.connect(
+        token1BorrowableContractAddress,
+        provider
+      )
       const [token0Asset, token1Asset] = policyConfig.stakeAssets
       const { walletAddress } = await workflowUtils(wallet)
 
       const tarot = tarotUtils(adapterConfig, provider, walletAddress)
 
-      function getPositionAllocation(token: StakeAssetInfo, nativeAmount: string): PositionAllocation {
+      function getPositionAllocation(
+        token: StakeAssetInfo,
+        nativeAmount: string
+      ): PositionAllocation {
         return {
           pluginId: token.pluginId,
           currencyCode: token.currencyCode,
@@ -556,11 +728,17 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       let token0NativeAmount = '0'
       let token1NativeAmount = '0'
       if (leverageInt === leverage) {
-        const token0AccruedBalance = await tarot.getAccruedBalance(token0BorrowableContract, walletAddress)
+        const token0AccruedBalance = await tarot.getAccruedBalance(
+          token0BorrowableContract,
+          walletAddress
+        )
         token0NativeAmount = token0AccruedBalance.div(leverage - 1).toString()
         allocations.push(getPositionAllocation(token0Asset, token0NativeAmount))
 
-        const token1AccruedBalance = await tarot.getAccruedBalance(token1BorrowableContract, walletAddress)
+        const token1AccruedBalance = await tarot.getAccruedBalance(
+          token1BorrowableContract,
+          walletAddress
+        )
         token1NativeAmount = token1AccruedBalance.div(leverage - 1).toString()
         allocations.push(getPositionAllocation(token1Asset, token1NativeAmount))
       } else {
@@ -576,10 +754,15 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       const token1WalletBalance = wallet.balanceMap.get(token1.tokenId) ?? '0'
 
       // Can stake if wallet has balances for each token and they don't currently any of the borrowable
-      const canStake = !eq(token0WalletBalance, '0') && !eq(token1WalletBalance, '0') && eq(token0NativeAmount, '0') && eq(token1NativeAmount, '0')
+      const canStake =
+        !eq(token0WalletBalance, '0') &&
+        !eq(token1WalletBalance, '0') &&
+        eq(token0NativeAmount, '0') &&
+        eq(token1NativeAmount, '0')
 
       // Can unstakeAndClaim if they have borrowable balances
-      const canUnstake = !eq(token0NativeAmount, '0') && !eq(token1NativeAmount, '0')
+      const canUnstake =
+        !eq(token0NativeAmount, '0') && !eq(token1NativeAmount, '0')
 
       return {
         allocations,

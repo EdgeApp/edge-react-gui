@@ -27,21 +27,33 @@ export const SpendingLimitsScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const currencySymbol = useSelector(state => getFiatSymbol(state.ui.settings.defaultFiat))
-  const transactionSpendingLimit = useSelector(state => state.ui.settings.spendingLimits.transaction)
+  const currencySymbol = useSelector(state =>
+    getFiatSymbol(state.ui.settings.defaultFiat)
+  )
+  const transactionSpendingLimit = useSelector(
+    state => state.ui.settings.spendingLimits.transaction
+  )
 
   const [transactionAmount, setTransactionAmount] = React.useState(
-    !zeroString(transactionSpendingLimit.amount?.toString()) ? transactionSpendingLimit.amount.toString() : ''
+    !zeroString(transactionSpendingLimit.amount?.toString())
+      ? transactionSpendingLimit.amount.toString()
+      : ''
   )
-  const [transactionIsEnabled, setTransactionIsEnabled] = React.useState(transactionSpendingLimit.isEnabled)
+  const [transactionIsEnabled, setTransactionIsEnabled] = React.useState(
+    transactionSpendingLimit.isEnabled
+  )
 
-  const handleTransactionIsEnabledChanged = useHandler(() => setTransactionIsEnabled(!transactionIsEnabled))
+  const handleTransactionIsEnabledChanged = useHandler(() =>
+    setTransactionIsEnabled(!transactionIsEnabled)
+  )
 
   const handleSubmitAsync = async () => {
     const spendingLimits = {
       transaction: {
         isEnabled: transactionIsEnabled,
-        amount: zeroString(transactionAmount) ? 0 : parseFloat(transactionAmount)
+        amount: zeroString(transactionAmount)
+          ? 0
+          : parseFloat(transactionAmount)
       }
     }
     await writeSpendingLimits(account, spendingLimits)
@@ -59,13 +71,24 @@ export const SpendingLimitsScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scene}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.switchRow}>
           <View style={styles.textBlock}>
-            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</EdgeText>
-            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</EdgeText>
+            <EdgeText style={styles.bodyText}>
+              {lstrings.spending_limits_tx_title}
+            </EdgeText>
+            <EdgeText style={styles.bodyText}>
+              {lstrings.spending_limits_tx_description}
+            </EdgeText>
           </View>
-          <SettingsSwitchRow value={transactionIsEnabled} onPress={handleTransactionIsEnabledChanged} />
+          <SettingsSwitchRow
+            value={transactionIsEnabled}
+            onPress={handleTransactionIsEnabledChanged}
+          />
         </View>
 
         <FilledTextInput
@@ -82,7 +105,13 @@ export const SpendingLimitsScene = (props: Props) => {
 
         <View style={styles.spacer} />
 
-        <MainButton label={lstrings.save} disabled={transactionIsEnabled ? zeroString(transactionAmount) : false} onPress={handleSubmit} />
+        <MainButton
+          label={lstrings.save}
+          disabled={
+            transactionIsEnabled ? zeroString(transactionAmount) : false
+          }
+          onPress={handleSubmit}
+        />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )

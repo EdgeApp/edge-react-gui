@@ -65,21 +65,35 @@ export class PaymentProtoError extends Error {
 export function translatePaymentProtoError(error: PaymentProtoError): string {
   switch (error.code) {
     case 'CurrencyNotSupported':
-      return sprintf(lstrings.error_paymentprotocol_currency_not_supported, error.text)
+      return sprintf(
+        lstrings.error_paymentprotocol_currency_not_supported,
+        error.text
+      )
     case 'EmptyOutputInvoice':
       return lstrings.error_paymentprotocol_empty_output_invoice
     case 'EmptyVerificationHexReq':
       return lstrings.error_paymentprotocol_empty_verification_hex_req
     case 'FetchFailed':
-      return sprintf(lstrings.error_paymentprotocol_fetch, error.header, error.statusCode, error.text)
+      return sprintf(
+        lstrings.error_paymentprotocol_fetch,
+        error.header,
+        error.statusCode,
+        error.text
+      )
     case 'InvalidPaymentOption':
-      return sprintf(lstrings.error_paymentprotocol_invalid_payment_option, error.text)
+      return sprintf(
+        lstrings.error_paymentprotocol_invalid_payment_option,
+        error.text
+      )
     case 'MultiOutputInvoice':
       return lstrings.error_paymentprotocol_multi_output_invoice
     case 'MultiInstructionInvoice':
       return lstrings.error_paymentprotocol_multi_tx_invoice
     case 'NoPaymentOption':
-      return sprintf(lstrings.error_paymentprotocol_no_payment_option, error.text)
+      return sprintf(
+        lstrings.error_paymentprotocol_no_payment_option,
+        error.text
+      )
     case 'TxVerificationMismatch':
       return sprintf(lstrings.error_paymentprotocol_tx_verification_failed)
     default:

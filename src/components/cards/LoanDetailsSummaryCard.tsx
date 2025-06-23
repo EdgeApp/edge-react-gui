@@ -37,11 +37,18 @@ export const LoanDetailsSummaryCard = (props: Props) => {
         </View>
         <View style={styles.details}>
           {details.map((detail, index) => {
-            const alignment = index === 0 ? 'flex-start' : index === details.length - 1 ? 'flex-end' : 'center'
+            const alignment =
+              index === 0
+                ? 'flex-start'
+                : index === details.length - 1
+                ? 'flex-end'
+                : 'center'
 
             return (
               <View key={detail.label} style={styles.detail}>
-                <View style={[styles.detailContainer, { alignItems: alignment }]}>
+                <View
+                  style={[styles.detailContainer, { alignItems: alignment }]}
+                >
                   <EdgeText style={styles.detailLabel}>{detail.label}</EdgeText>
                   <EdgeText style={styles.detailValue}>{detail.value}</EdgeText>
                 </View>
@@ -51,7 +58,9 @@ export const LoanDetailsSummaryCard = (props: Props) => {
         </View>
         {ltv != null ? (
           <View style={styles.ltvContainer}>
-            <EdgeText style={styles.detailLabel}>{lstrings.loan_loan_to_value_ratio}</EdgeText>
+            <EdgeText style={styles.detailLabel}>
+              {lstrings.loan_loan_to_value_ratio}
+            </EdgeText>
             <Thermostat ratio={ltv} textColor={getLtvColorValue(ltv, theme)} />
           </View>
         ) : null}

@@ -13,9 +13,13 @@ interface Props {
 export const CountdownTile = (props: Props) => {
   const { isoExpireDate, maximumHeight, onDone, title } = props
 
-  const timeoutHandler = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const timeoutHandler = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
   const [tick, setTick] = useState<number>(0)
-  const [expireSeconds, setExpireSeconds] = useState<number | undefined>(undefined)
+  const [expireSeconds, setExpireSeconds] = useState<number | undefined>(
+    undefined
+  )
 
   React.useEffect(() => {
     if (timeoutHandler.current != null) {

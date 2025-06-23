@@ -42,20 +42,24 @@ export function WalletRestoreScene(props: Props) {
     })
 
   const [searchText, setSearchText] = React.useState('')
-  const [selectedWalletInfos, setSelectedWalletInfos] = React.useState<EdgeWalletInfoFull[]>([])
+  const [selectedWalletInfos, setSelectedWalletInfos] = React.useState<
+    EdgeWalletInfoFull[]
+  >([])
 
   const handlePressDone = useHandler(async () => {
-    const response = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.restore_wallets_modal_title}
-        message={lstrings.restore_wallets_modal_body}
-        buttons={{
-          confirm: { label: lstrings.restore_wallets_modal_confirm },
-          cancel: { label: lstrings.restore_wallets_modal_cancel }
-        }}
-      />
-    ))
+    const response = await Airship.show<'confirm' | 'cancel' | undefined>(
+      bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.restore_wallets_modal_title}
+          message={lstrings.restore_wallets_modal_body}
+          buttons={{
+            confirm: { label: lstrings.restore_wallets_modal_confirm },
+            cancel: { label: lstrings.restore_wallets_modal_cancel }
+          }}
+        />
+      )
+    )
     if (response === 'confirm') {
       const states: EdgeWalletStates = {}
       for (const info of selectedWalletInfos) {
@@ -75,13 +79,19 @@ export function WalletRestoreScene(props: Props) {
     setSearchText('')
   })
 
-  const handleSelectionChanged = useHandler((walletInfo: EdgeWalletInfoFull, isSelected: boolean) => {
-    if (isSelected) {
-      setSelectedWalletInfos([...selectedWalletInfos, walletInfo])
-    } else {
-      setSelectedWalletInfos(selectedWalletInfos.filter(selectedWalletInfo => selectedWalletInfo.id !== walletInfo.id))
+  const handleSelectionChanged = useHandler(
+    (walletInfo: EdgeWalletInfoFull, isSelected: boolean) => {
+      if (isSelected) {
+        setSelectedWalletInfos([...selectedWalletInfos, walletInfo])
+      } else {
+        setSelectedWalletInfos(
+          selectedWalletInfos.filter(
+            selectedWalletInfo => selectedWalletInfo.id !== walletInfo.id
+          )
+        )
+      }
     }
-  })
+  )
 
   return (
     <SceneWrapper avoidKeyboard>
@@ -98,7 +108,12 @@ export function WalletRestoreScene(props: Props) {
             value={searchText}
             iconComponent={SearchIconAnimated}
           />
-          <RestoreList insetStyle={insetStyle} restoreWalletInfos={restoreWalletInfos} searchText={searchText} onSelectionChanged={handleSelectionChanged} />
+          <RestoreList
+            insetStyle={insetStyle}
+            restoreWalletInfos={restoreWalletInfos}
+            searchText={searchText}
+            onSelectionChanged={handleSelectionChanged}
+          />
           <SceneButtons
             primary={{
               label: lstrings.restore,
@@ -117,9 +132,13 @@ const RestoreList = (props: {
   insetStyle: InsetStyle
   restoreWalletInfos: EdgeWalletInfoFull[]
   searchText: string
-  onSelectionChanged: (walletInfo: EdgeWalletInfoFull, isSelected: boolean) => void
+  onSelectionChanged: (
+    walletInfo: EdgeWalletInfoFull,
+    isSelected: boolean
+  ) => void
 }) => {
-  const { insetStyle, restoreWalletInfos, searchText, onSelectionChanged } = props
+  const { insetStyle, restoreWalletInfos, searchText, onSelectionChanged } =
+    props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -137,9 +156,14 @@ const RestoreList = (props: {
 
       const { currencyCode, displayName } = currencyInfo
 
-      if (searchTarget.trim() === '' || normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
+      if (
+        searchTarget.trim() === '' ||
+        normalizeForSearch(currencyCode).includes(searchTarget) ||
+        normalizeForSearch(displayName).includes(searchTarget)
+      ) {
         // TODO: Potentially add oldest recorded date cutoff to `older_date` case
-        const dateSectionHeader = created == null ? lstrings.older_date : toLocaleDate(created)
+        const dateSectionHeader =
+          created == null ? lstrings.older_date : toLocaleDate(created)
         if (dateSectionHeader !== lastSection) {
           out.push(dateSectionHeader)
           lastSection = dateSectionHeader
@@ -155,7 +179,8 @@ const RestoreList = (props: {
   const contentContainerStyle = React.useMemo(
     () => ({
       paddingTop: theme.rem(0.5),
-      paddingBottom: insetStyle.paddingBottom + theme.rem(SCENE_BUTTONS_MARGIN_REM)
+      paddingBottom:
+        insetStyle.paddingBottom + theme.rem(SCENE_BUTTONS_MARGIN_REM)
     }),
     [insetStyle.paddingBottom, theme]
   )

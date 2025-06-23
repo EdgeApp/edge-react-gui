@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react'
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
@@ -24,7 +28,12 @@ export interface SceneFooterProps {
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
+  const {
+    children,
+    noBackgroundBlur = false,
+    sceneWrapperInfo,
+    onLayoutHeight
+  } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
@@ -71,27 +80,34 @@ const ContainerAnimatedView = styled(Animated.View)<{
   footerOpenRatio: SharedValue<number>
   isKeyboardOpen: boolean
   insetBottom: number
-}>(() => ({ containerHeight, footerOpenRatio, isKeyboardOpen, insetBottom }) => {
-  // Exclude inset if the keyboard is open
-  const maybeInsetBottom = !isKeyboardOpen ? insetBottom : 0
+}>(
+  () =>
+    ({ containerHeight, footerOpenRatio, isKeyboardOpen, insetBottom }) => {
+      // Exclude inset if the keyboard is open
+      const maybeInsetBottom = !isKeyboardOpen ? insetBottom : 0
 
-  return [
-    {
-      overflow: 'hidden',
-      paddingBottom: maybeInsetBottom
-    },
-    useAnimatedStyle(() => {
-      if (containerHeight == null) return {}
-      const openRatioInverted = interpolate(footerOpenRatio.value, [0, 1], [1, 0])
-      const offsetFooterHeight = openRatioInverted * containerHeight
-      const offsetInsetBottom = openRatioInverted * maybeInsetBottom
-      return {
-        transform: [
-          {
-            translateY: offsetFooterHeight - offsetInsetBottom
+      return [
+        {
+          overflow: 'hidden',
+          paddingBottom: maybeInsetBottom
+        },
+        useAnimatedStyle(() => {
+          if (containerHeight == null) return {}
+          const openRatioInverted = interpolate(
+            footerOpenRatio.value,
+            [0, 1],
+            [1, 0]
+          )
+          const offsetFooterHeight = openRatioInverted * containerHeight
+          const offsetInsetBottom = openRatioInverted * maybeInsetBottom
+          return {
+            transform: [
+              {
+                translateY: offsetFooterHeight - offsetInsetBottom
+              }
+            ]
           }
-        ]
-      }
-    })
-  ]
-})
+        })
+      ]
+    }
+)

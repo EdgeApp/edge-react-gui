@@ -30,7 +30,17 @@ interface KavButtonProps {
  * inset logic
  */
 export const KavButton = (props: KavButtonProps) => {
-  const { children, disabled = false, label, onPress, spinner = false, visible = true, testID, hasTabs = false, hasNotifications = false } = props
+  const {
+    children,
+    disabled = false,
+    label,
+    onPress,
+    spinner = false,
+    visible = true,
+    testID,
+    hasTabs = false,
+    hasNotifications = false
+  } = props
   const isIos = Platform.OS === 'ios'
 
   const safeAreaInsets = useSafeAreaInsets()
@@ -41,12 +51,18 @@ export const KavButton = (props: KavButtonProps) => {
   React.useEffect(() => {
     // Listening event is different between iOS and Android, but actually mean
     // the same thing: when the keyboard begins its movement
-    const keyboardDidShowListener = Keyboard.addListener(isIos ? 'keyboardWillShow' : 'keyboardDidShow', () => {
-      setKeyboardVisible(true)
-    })
-    const keyboardDidHideListener = Keyboard.addListener(isIos ? 'keyboardWillHide' : 'keyboardDidHide', () => {
-      setKeyboardVisible(false)
-    })
+    const keyboardDidShowListener = Keyboard.addListener(
+      isIos ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true)
+      }
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      isIos ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false)
+      }
+    )
 
     return () => {
       keyboardDidShowListener.remove()
@@ -60,14 +76,34 @@ export const KavButton = (props: KavButtonProps) => {
   const keyboardAccessoryStyle = React.useMemo(
     () => ({
       backgroundColor: 'transparent',
-      marginBottom: isKeyboardVisible ? 0 : safeAreaInsets.bottom + maybeTabBarHeight + maybeNotificationHeight
+      marginBottom: isKeyboardVisible
+        ? 0
+        : safeAreaInsets.bottom + maybeTabBarHeight + maybeNotificationHeight
     }),
-    [isKeyboardVisible, safeAreaInsets.bottom, maybeTabBarHeight, maybeNotificationHeight]
+    [
+      isKeyboardVisible,
+      safeAreaInsets.bottom,
+      maybeTabBarHeight,
+      maybeNotificationHeight
+    ]
   )
 
   return !visible ? null : (
-    <KeyboardAccessoryView style={keyboardAccessoryStyle} avoidKeyboard alwaysVisible hideBorder>
-      <EdgeButton type="primary" disabled={disabled} label={label} onPress={onPress} spinner={spinner} testID={testID} layout="fullWidth">
+    <KeyboardAccessoryView
+      style={keyboardAccessoryStyle}
+      avoidKeyboard
+      alwaysVisible
+      hideBorder
+    >
+      <EdgeButton
+        type="primary"
+        disabled={disabled}
+        label={label}
+        onPress={onPress}
+        spinner={spinner}
+        testID={testID}
+        layout="fullWidth"
+      >
         {children}
       </EdgeButton>
     </KeyboardAccessoryView>

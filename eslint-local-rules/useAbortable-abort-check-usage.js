@@ -2,7 +2,8 @@ module.exports = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Ensure awaited promises within useAbortable are followed by .then(maybeAbort)',
+      description:
+        'Ensure awaited promises within useAbortable are followed by .then(maybeAbort)',
       category: 'Possible Errors',
       recommended: false
     },
@@ -32,7 +33,10 @@ module.exports = {
                   const arrowFunctionText = sourceCode.getText(arrowFunction)
 
                   // Replace the empty params () with (maybeAbort)
-                  const newText = arrowFunctionText.replace(/^\(\s*\)/, '(maybeAbort)')
+                  const newText = arrowFunctionText.replace(
+                    /^\(\s*\)/,
+                    '(maybeAbort)'
+                  )
 
                   return fixer.replaceText(arrowFunction, newText)
                 }
@@ -71,7 +75,10 @@ module.exports = {
           fix: function (fixer) {
             const sourceCode = context.getSourceCode()
             const awaitedExpression = sourceCode.getText(awaitedExpr)
-            return fixer.replaceText(node, `await ${awaitedExpression}.then(${abortParamName})`)
+            return fixer.replaceText(
+              node,
+              `await ${awaitedExpression}.then(${abortParamName})`
+            )
           }
         })
       }

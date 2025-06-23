@@ -34,30 +34,53 @@ const CurrencyRowComponent = (props: Props) => {
 
   // Currency code for display:
   const allTokens = wallet.currencyConfig.allTokens
-  const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
-  const { currencyCode } = tokenFromId == null ? wallet.currencyInfo : tokenFromId
+  const tokenFromId =
+    token != null ? token : tokenId == null ? null : allTokens[tokenId]
+  const { currencyCode } =
+    tokenFromId == null ? wallet.currencyInfo : tokenFromId
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
   const compromised = useSelector(state => {
-    const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
+    const { modalShown = 0 } =
+      state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
     return modalShown > 0
   })
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>{lstrings.compromised_key_label}</Text> {name}
+        <Text style={{ color: theme.warningText }}>
+          {lstrings.compromised_key_label}
+        </Text>{' '}
+        {name}
       </>
     )
   }
 
   // Balance stuff:
-  const hideBalanceSetting = useSelector(state => (hideBalance == null ? !state.ui.settings.isAccountBalanceVisible : hideBalance))
+  const hideBalanceSetting = useSelector(state =>
+    hideBalance == null
+      ? !state.ui.settings.isAccountBalanceVisible
+      : hideBalance
+  )
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
-  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalanceSetting} />
+  const cryptoText = (
+    <CryptoText
+      wallet={wallet}
+      tokenId={tokenId}
+      nativeAmount={nativeAmount ?? balance}
+      withSymbol
+      hideBalance={hideBalanceSetting}
+    />
+  )
   const fiatText = (
-    <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} currencyConfig={wallet.currencyConfig} hideBalance={hideBalanceSetting} />
+    <FiatText
+      nativeCryptoAmount={nativeAmount ?? balance}
+      tokenId={tokenId}
+      currencyConfig={wallet.currencyConfig}
+      hideBalance={hideBalanceSetting}
+    />
   )
 
   let displayCurrencyCode = currencyCode
@@ -65,7 +88,16 @@ const CurrencyRowComponent = (props: Props) => {
     displayCurrencyCode = `${tokenFromId.displayName}`
   }
 
-  return <IconDataRow icon={icon} leftText={displayCurrencyCode} leftSubtext={name} rightText={cryptoText} rightSubText={fiatText} marginRem={marginRem} />
+  return (
+    <IconDataRow
+      icon={icon}
+      leftText={displayCurrencyCode}
+      leftSubtext={name}
+      rightText={cryptoText}
+      rightSubText={fiatText}
+      marginRem={marginRem}
+    />
+  )
 }
 
 export const CurrencyRow = React.memo(CurrencyRowComponent)

@@ -1,11 +1,23 @@
 import { add, gt, round } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeStakingStatus, EdgeTokenId } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeStakingStatus,
+  EdgeTokenId
+} from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { PositionAllocation, StakeAssetInfo, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition } from '../plugins/stake-plugins/types'
+import {
+  PositionAllocation,
+  StakeAssetInfo,
+  StakePlugin,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition
+} from '../plugins/stake-plugins/types'
 import { StakePositionMap } from '../reducers/StakingReducer'
 import { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
@@ -16,7 +28,10 @@ import { getUkCompliantString } from './ukComplianceUtils'
 /**
  * Returns an array of all display names for a particular asset type
  */
-const getAssetDisplayName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') =>
+const getAssetDisplayName = (
+  stakePolicy: StakePolicy,
+  assetType: 'stakeAssets' | 'rewardAssets'
+) =>
   stakePolicy[assetType].map(asset => asset.displayName ?? asset.currencyCode)
 
 /**
@@ -24,44 +39,81 @@ const getAssetDisplayName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' 
  */
 export const getPositionAllocations = (stakePosition: StakePosition) => {
   return {
-    staked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'staked'),
-    earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned'),
-    unstaked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'unstaked')
+    staked: stakePosition.allocations.filter(
+      positionAllocation => positionAllocation.allocationType === 'staked'
+    ),
+    earned: stakePosition.allocations.filter(
+      positionAllocation => positionAllocation.allocationType === 'earned'
+    ),
+    unstaked: stakePosition.allocations.filter(
+      positionAllocation => positionAllocation.allocationType === 'unstaked'
+    )
   }
 }
 
 /**
  * Returns the asset display name. Converts multiple assets into their LP name
  */
-export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets'): string => {
+export const getPolicyAssetName = (
+  stakePolicy: StakePolicy,
+  assetType: 'stakeAssets' | 'rewardAssets'
+): string => {
   const assetCurrencyCodes = getAssetDisplayName(stakePolicy, assetType)
-  const lpOrAssetCode = assetCurrencyCodes.length > 1 ? `${assetCurrencyCodes.join(' - ')} - LP` : assetCurrencyCodes[0]
+  const lpOrAssetCode =
+    assetCurrencyCodes.length > 1
+      ? `${assetCurrencyCodes.join(' - ')} - LP`
+      : assetCurrencyCodes[0]
   return lpOrAssetCode
 }
 
 /**
  * Returns the policy title
  */
-export const getPolicyTitleName = (stakePolicy: StakePolicy, countryCode?: string) => {
+export const getPolicyTitleName = (
+  stakePolicy: StakePolicy,
+  countryCode?: string
+) => {
   const stakeCurrencyCodes = getAssetDisplayName(stakePolicy, 'stakeAssets')
   const rewardCurrencyCodes = getAssetDisplayName(stakePolicy, 'rewardAssets')
 
-  const stakeName = stakeCurrencyCodes.length > 1 ? `${stakeCurrencyCodes.join(' + ')}` : stakeCurrencyCodes[0]
-  const rewardName = rewardCurrencyCodes.length > 1 ? `${rewardCurrencyCodes.join(' + ')}` : rewardCurrencyCodes[0]
+  const stakeName =
+    stakeCurrencyCodes.length > 1
+      ? `${stakeCurrencyCodes.join(' + ')}`
+      : stakeCurrencyCodes[0]
+  const rewardName =
+    rewardCurrencyCodes.length > 1
+      ? `${rewardCurrencyCodes.join(' + ')}`
+      : rewardCurrencyCodes[0]
 
   const { yieldType } = stakePolicy
 
-  const yieldText = yieldType === 'stable' ? ` ${lstrings.stake_stable_yield}` : yieldType === 'variable' ? ` ${lstrings.stake_variable_yield}` : ''
+  const yieldText =
+    yieldType === 'stable'
+      ? ` ${lstrings.stake_stable_yield}`
+      : yieldType === 'variable'
+      ? ` ${lstrings.stake_variable_yield}`
+      : ''
 
-  return `${getUkCompliantString(countryCode, 'stake_x_to_earn_y', stakeName, rewardName)}${yieldText}`
+  return `${getUkCompliantString(
+    countryCode,
+    'stake_x_to_earn_y',
+    stakeName,
+    rewardName
+  )}${yieldText}`
 }
 
 /**
  * Returns a formatted locked until timestamp, if it exists and is a future date.
  */
-export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => {
-  return allocation.locktime != null && new Date(allocation.locktime) > new Date()
-    ? ` (${sprintf(lstrings.stake_lock_message, formatTimeDate(allocation.locktime))})`
+export const getAllocationLocktimeMessage = (
+  allocation: PositionAllocation
+) => {
+  return allocation.locktime != null &&
+    new Date(allocation.locktime) > new Date()
+    ? ` (${sprintf(
+        lstrings.stake_lock_message,
+        formatTimeDate(allocation.locktime)
+      )})`
     : ''
 }
 
@@ -85,7 +137,10 @@ export const getPolicyIconUris = (
         edgeAssets.push({ pluginId, tokenId: null })
         continue
       }
-      const tokenId = Object.keys(currencyConfig.allTokens).find(tokenId => currencyConfig.allTokens[tokenId].currencyCode === currencyCode)
+      const tokenId = Object.keys(currencyConfig.allTokens).find(
+        tokenId =>
+          currencyConfig.allTokens[tokenId].currencyCode === currencyCode
+      )
       if (tokenId == null) continue
 
       edgeAssets.push({ pluginId, tokenId })
@@ -97,17 +152,35 @@ export const getPolicyIconUris = (
   const rewardAssets = assetInfosToEdgeTokens(stakePolicy.rewardAssets)
 
   const stakeAssetUris = stakeAssets.map(
-    asset => getCurrencyIconUris(asset.pluginId, asset.tokenId, SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false).symbolImage
+    asset =>
+      getCurrencyIconUris(
+        asset.pluginId,
+        asset.tokenId,
+        SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false
+      ).symbolImage
   )
   const rewardAssetUris = rewardAssets.map(
-    asset => getCurrencyIconUris(asset.pluginId, asset.tokenId, SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false).symbolImage
+    asset =>
+      getCurrencyIconUris(
+        asset.pluginId,
+        asset.tokenId,
+        SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false
+      ).symbolImage
   )
 
   return { stakeAssetUris, rewardAssetUris }
 }
 
-export const getPluginFromPolicyId = (stakePlugins: StakePlugin[], stakePolicyId: string, filter?: StakePolicyFilter): StakePlugin | undefined => {
-  return stakePlugins.find(plugin => plugin.getPolicies(filter).find(policy => policy.stakePolicyId === stakePolicyId))
+export const getPluginFromPolicyId = (
+  stakePlugins: StakePlugin[],
+  stakePolicyId: string,
+  filter?: StakePolicyFilter
+): StakePlugin | undefined => {
+  return stakePlugins.find(plugin =>
+    plugin
+      .getPolicies(filter)
+      .find(policy => policy.stakePolicyId === stakePolicyId)
+  )
 }
 
 /**
@@ -124,7 +197,9 @@ export const getPluginFromPolicyId = (stakePlugins: StakePlugin[], stakePolicyId
 export type FioStakingBalanceType = 'staked' | 'locked'
 export type FioStakingBalances = Record<FioStakingBalanceType, string>
 
-export const getFioStakingBalances = (stakingStatus?: EdgeStakingStatus): FioStakingBalances => {
+export const getFioStakingBalances = (
+  stakingStatus?: EdgeStakingStatus
+): FioStakingBalances => {
   const stakingBalances: FioStakingBalances = {
     staked: '0',
     locked: '0'
@@ -133,19 +208,35 @@ export const getFioStakingBalances = (stakingStatus?: EdgeStakingStatus): FioSta
   for (const stakedAmount of stakingStatus?.stakedAmounts ?? []) {
     const type = stakedAmount.otherParams?.type
     if (type === 'STAKED') {
-      stakingBalances.staked = add(stakingBalances.staked, stakedAmount.nativeAmount)
+      stakingBalances.staked = add(
+        stakingBalances.staked,
+        stakedAmount.nativeAmount
+      )
     } else if (type === 'LOCKED') {
-      stakingBalances.locked = add(stakingBalances.locked, stakedAmount.nativeAmount)
+      stakingBalances.locked = add(
+        stakingBalances.locked,
+        stakedAmount.nativeAmount
+      )
     }
   }
   return stakingBalances
 }
 
-export const enableStakeTokens = async (account: EdgeAccount, wallet: EdgeCurrencyWallet, stakePolicy: StakePolicy) => {
+export const enableStakeTokens = async (
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet,
+  stakePolicy: StakePolicy
+) => {
   const requiredTokenIds: EdgeTokenId[] = []
-  for (const stakeAssetInfo of [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets]) {
+  for (const stakeAssetInfo of [
+    ...stakePolicy.stakeAssets,
+    ...stakePolicy.rewardAssets
+  ]) {
     const pluginId = wallet.currencyInfo.pluginId
-    const tokenId = getTokenId(account.currencyConfig[pluginId], stakeAssetInfo.currencyCode)
+    const tokenId = getTokenId(
+      account.currencyConfig[pluginId],
+      stakeAssetInfo.currencyCode
+    )
     if (tokenId != null) {
       requiredTokenIds.push(tokenId)
     }
@@ -163,9 +254,14 @@ export const getBestApy = (stakePolicies: StakePolicy[]) => {
  * nearest whole number if >= 10, and truncating to '>99%' if greater than 99%.
  * Only returns a value if `stakePolicies` is available.
  */
-export const getBestApyText = (stakePolicies?: StakePolicy[]): string | undefined => {
+export const getBestApyText = (
+  stakePolicies?: StakePolicy[]
+): string | undefined => {
   if (stakePolicies == null || stakePolicies.length === 0) return
-  const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
+  const bestApy = stakePolicies.reduce(
+    (prev, curr) => Math.max(prev, curr.apy ?? 0),
+    0
+  )
   if (bestApy === 0) return
 
   const precision = Math.log10(bestApy) > 1 ? 0 : -1
@@ -191,14 +287,25 @@ export const getPoliciesFromPlugins = (
 ): StakePolicy[] => {
   return stakePlugins.flatMap(stakePlugin =>
     stakePlugin
-      .getPolicies({ wallet, pluginId: wallet.currencyInfo.pluginId, currencyCode })
+      .getPolicies({
+        wallet,
+        pluginId: wallet.currencyInfo.pluginId,
+        currencyCode
+      })
       .filter(
         stakePolicy =>
           (!stakePolicy.deprecated &&
-            stakePolicy.stakeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId && asset.currencyCode === currencyCode)) ||
+            stakePolicy.stakeAssets.some(
+              asset =>
+                asset.pluginId === wallet.currencyInfo.pluginId &&
+                asset.currencyCode === currencyCode
+            )) ||
           (stakePolicy.deprecated &&
             stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
-              allocation => allocation.pluginId === wallet.currencyInfo.pluginId && allocation.currencyCode === currencyCode && gt(allocation.nativeAmount, '0')
+              allocation =>
+                allocation.pluginId === wallet.currencyInfo.pluginId &&
+                allocation.currencyCode === currencyCode &&
+                gt(allocation.nativeAmount, '0')
             ))
       )
   )

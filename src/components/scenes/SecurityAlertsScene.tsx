@@ -23,7 +23,12 @@ export const SecurityAlertsScene = (props: Props) => {
 
   return (
     <SceneWrapper hasHeader={false}>
-      <SecurityAlertsScreen account={account} context={context} onLogEvent={handleLogEvent} onComplete={handleComplete} />
+      <SecurityAlertsScreen
+        account={account}
+        context={context}
+        onLogEvent={handleLogEvent}
+        onComplete={handleComplete}
+      />
     </SceneWrapper>
   )
 }

@@ -38,7 +38,11 @@ export const DuressPinScene = (props: Props) => {
           showToast(lstrings.duress_mode_pin_match_rule_message)
           return
         }
-        await account.changePin({ enableLogin: true, pin, forDuressAccount: true })
+        await account.changePin({
+          enableLogin: true,
+          pin,
+          forDuressAccount: true
+        })
         logActivity(`Duress PIN set`)
         showToast(lstrings.duress_mode_set_pin_success)
         navigation.navigate('duressModeSetting')
@@ -61,14 +65,22 @@ export const DuressPinScene = (props: Props) => {
   return (
     <SceneWrapper scroll={false}>
       <SceneContainer expand headerTitle={lstrings.title_set_duress_pin}>
-        <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+        >
           <EdgeAnim enter={{ type: 'fadeInUp' }}>
             <EdgeText style={styles.description} numberOfLines={0}>
               {lstrings.duress_mode_set_pin_message}
             </EdgeText>
           </EdgeAnim>
           <EdgeAnim enter={{ type: 'fadeInDown' }}>
-            <DigitInput pin={pin} testID="pinInput" onChangePin={handleChangePin} />
+            <DigitInput
+              pin={pin}
+              testID="pinInput"
+              onChangePin={handleChangePin}
+            />
           </EdgeAnim>
         </ScrollView>
         <SceneButtons

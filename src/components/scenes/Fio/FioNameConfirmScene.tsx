@@ -7,8 +7,15 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils'
-import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import {
+  fioMakeSpend,
+  fioSignAndBroadcast
+} from '../../../util/FioAddressUtils'
+import {
+  logEvent,
+  TrackingEventName,
+  TrackingValues
+} from '../../../util/tracking'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
@@ -16,7 +23,12 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 export interface FioNameConfirmParams {
@@ -31,7 +43,8 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
+interface OwnProps
+  extends EdgeAppSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 
@@ -77,10 +90,19 @@ class FioNameConfirm extends React.PureComponent<Props> {
           true
         )
         if (response.error) {
-          if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
-            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings?.fallbackRef)
+          if (
+            response.errorCode &&
+            response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR &&
+            response.code === 400
+          ) {
+            const publicDomains = await fioPlugin.otherMethods.getDomains(
+              fioPlugin.currencyInfo.defaultSettings?.fallbackRef
+            )
             // @ts-expect-error
-            const domainExists = publicDomains.find(domain => domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1])
+            const domainExists = publicDomains.find(
+              domain =>
+                domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1]
+            )
             if (domainExists && !domainExists.free) {
               await Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
@@ -186,12 +208,28 @@ class FioNameConfirm extends React.PureComponent<Props> {
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline withTopMargin />
+        <SceneHeader
+          title={
+            this.isFioAddress()
+              ? lstrings.title_fio_address_confirmation
+              : lstrings.title_register_fio_domain
+          }
+          underline
+          withTopMargin
+        />
         <View style={styles.scene}>
           <EdgeCard>
             <EdgeRow
-              title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
-              body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
+              title={
+                this.isFioAddress()
+                  ? lstrings.fio_address_confirm_screen_label
+                  : lstrings.fio_domain_label
+              }
+              body={
+                this.isFioAddress()
+                  ? fioName
+                  : `${FIO_ADDRESS_DELIMITER}${fioName}`
+              }
             />
           </EdgeCard>
           <FioActionSubmit

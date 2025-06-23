@@ -17,7 +17,8 @@ describe('FioConnectWalletConfirm', () => {
     signedTx: '0xdgs3442',
     ourReceiveAddresses: ['FioAddress'],
     id: 'wallet-fio-id',
-    getAddresses: async () => await Promise.resolve([{ publicAddress: 'address123' }])
+    getAddresses: async () =>
+      await Promise.resolve([{ publicAddress: 'address123' }])
   }
 
   const mockState: FakeState = {

@@ -374,7 +374,10 @@ class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (this.props.contactsPermission !== 'granted' && contactsPermission === 'granted') {
+    if (
+      this.props.contactsPermission !== 'granted' &&
+      contactsPermission === 'granted'
+    ) {
       this.loadContacts().catch(err => {
         console.warn(err)
         showError(sprintf(lstrings.contacts_load_failed_message_s))
@@ -389,7 +392,9 @@ class ContactsLoaderComponent extends React.Component<Props> {
           .filter(item => item.givenName)
           // @ts-expect-error
           .concat(merchantPartners)
-          .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
+          .sort((a, b) =>
+            a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+          )
 
         // @ts-expect-error
         this.props.loadContactsSuccess(cleanContacts)

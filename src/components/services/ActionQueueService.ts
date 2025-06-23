@@ -6,7 +6,11 @@ import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueue
 import { asCleanError } from '../../controllers/action-queue/cleaners'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
-import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
+import {
+  ActionProgramState,
+  ActionQueueMap,
+  ExecutionResults
+} from '../../controllers/action-queue/types'
 import { wasPushRequestBody } from '../../controllers/action-queue/types/pushApiTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useExecutionContext } from '../../hooks/useExecutionContext'
@@ -27,35 +31,46 @@ export const ActionQueueService = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
-  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
-  const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
+  const actionQueueMap: ActionQueueMap = useSelector(
+    state => state.actionQueue.actionQueueMap
+  )
+  const activeProgramIds = useSelector(
+    state => state.actionQueue.activeProgramIds
+  )
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
 
   const executionContext = useExecutionContext()
   const executionContextMock = useExecutionContext(true)
 
-  const updateProgramState = useHandler(async (state: ActionProgramState, executing: boolean) => {
-    const { programId } = state
-    // Update service level state
-    const serviceProgramStates = serviceProgramStatesRef.current
-    serviceProgramStates[programId] = {
-      ...serviceProgramStates[programId],
-      executing
+  const updateProgramState = useHandler(
+    async (state: ActionProgramState, executing: boolean) => {
+      const { programId } = state
+      // Update service level state
+      const serviceProgramStates = serviceProgramStatesRef.current
+      serviceProgramStates[programId] = {
+        ...serviceProgramStates[programId],
+        executing
+      }
+      // Update action queue level state
+      await dispatch(
+        updateActionProgramState({
+          ...state,
+          executing: executing
+        })
+      )
     }
-    // Update action queue level state
-    await dispatch(
-      updateActionProgramState({
-        ...state,
-        executing: executing
-      })
-    )
-  })
+  )
 
   //
   // Log Dev Info
   //
   React.useEffect(() => {
-    if (__DEV__ && account != null && account.rootLoginId != null && clientId != null) {
+    if (
+      __DEV__ &&
+      account != null &&
+      account.rootLoginId != null &&
+      clientId != null
+    ) {
       const pushClient = makePushClient(account, clientId)
       const requestBody = pushClient.getPushRequestBody()
       console.log('***********************')
@@ -105,7 +120,11 @@ export const ActionQueueService = () => {
         }
         // Detect program interruption if service is not evaluating the program
         // and program evaluation was executing an action op.
-        if (state.executing && !serviceProgramStates[programId] && state.effective) {
+        if (
+          state.executing &&
+          !serviceProgramStates[programId] &&
+          state.effective
+        ) {
           dispatch(
             updateActionProgramState({
               ...state,
@@ -118,7 +137,8 @@ export const ActionQueueService = () => {
           return false
         }
         // Don't execute programs which have not reached their scheduled time
-        if (!state.effective && state.nextExecutionTime > Date.now()) return false
+        if (!state.effective && state.nextExecutionTime > Date.now())
+          return false
         // Otherwise, it's safe to execute
         return true
       })
@@ -130,11 +150,19 @@ export const ActionQueueService = () => {
         await updateProgramState(state, true)
 
         // Use mock execution function if program is marked as mockMode
-        const context = program.mockMode ? executionContextMock : executionContext
+        const context = program.mockMode
+          ? executionContextMock
+          : executionContext
 
-        const { nextState } = await executeActionProgram(context, program, state).catch((error): ExecutionResults => {
+        const { nextState } = await executeActionProgram(
+          context,
+          program,
+          state
+        ).catch((error): ExecutionResults => {
           const cleanError = asCleanError(error)
-          console.warn(new Error('Action Program Exception: ' + cleanError.message))
+          console.warn(
+            new Error('Action Program Exception: ' + cleanError.message)
+          )
           console.error(cleanError)
           return {
             nextState: {
@@ -156,7 +184,9 @@ export const ActionQueueService = () => {
     const periodicTask = makePeriodicTask(task, EXECUTION_INTERVAL, {
       onError: error => {
         const errorMessage = String(error)
-        console.warn(new Error('Unexpected error in ActionQueueService: ' + errorMessage))
+        console.warn(
+          new Error('Unexpected error in ActionQueueService: ' + errorMessage)
+        )
         console.error(error)
       }
     })
@@ -165,7 +195,16 @@ export const ActionQueueService = () => {
 
     // Cleanup loop
     return () => periodicTask.stop()
-  }, [account, clientId, dispatch, updateProgramState, actionQueueMap, activeProgramIds, executionContextMock, executionContext])
+  }, [
+    account,
+    clientId,
+    dispatch,
+    updateProgramState,
+    actionQueueMap,
+    activeProgramIds,
+    executionContextMock,
+    executionContext
+  ])
 
   // Return no component/view
   return null

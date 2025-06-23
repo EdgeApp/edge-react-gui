@@ -76,7 +76,10 @@ const CoinRow = (props: CoinRowProps) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
+  const fiatSymbol = React.useMemo(
+    () => getFiatSymbol(fiatCurrencyCode),
+    [fiatCurrencyCode]
+  )
 
   const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
   const key = `${index}-${currencyCode}`
@@ -89,7 +92,9 @@ const CoinRow = (props: CoinRowProps) => {
     plusSign: true,
     intlOpts: { noGrouping: true }
   })
-  const percentStyle = lt(percentChangeRaw, '0') ? styles.negativeText : styles.positiveText
+  const percentStyle = lt(percentChangeRaw, '0')
+    ? styles.negativeText
+    : styles.positiveText
 
   const priceString = `${fiatSymbol}${formatFiatString({
     fiatAmount: price.toString()
@@ -138,9 +143,12 @@ export const MarketsCard = (props: Props) => {
   const { numRows } = props
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
-  const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
+  const [coinRankingDatas, setCoinRankingDatas] = React.useState<
+    CoinRankingData[]
+  >([])
   // Detect change to fiat to allow refresh
-  const [lastFetchedFiat, setLastFetchedFiat] = React.useState<string>(coingeckoFiat)
+  const [lastFetchedFiat, setLastFetchedFiat] =
+    React.useState<string>(coingeckoFiat)
 
   /**
    * Fetch Markets Data
@@ -156,7 +164,9 @@ export const MarketsCard = (props: Props) => {
     const task = makePeriodicTask(
       async () => {
         const fetchedData = []
-        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${1}&length=${numRows - 1}`
+        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${1}&length=${
+          numRows - 1
+        }`
         const response = await fetchRates(url)
         if (!response.ok) {
           const text = await response.text()
@@ -193,7 +203,13 @@ export const MarketsCard = (props: Props) => {
   return (
     <EdgeCard sections>
       {coinRankingDatas.map((coinRow, index) => (
-        <CoinRow key={`${coinRow.assetId}-${coingeckoFiat}`} coinRow={coinRow} fiatCurrencyCode={coingeckoFiat} index={index} {...props} />
+        <CoinRow
+          key={`${coinRow.assetId}-${coingeckoFiat}`}
+          coinRow={coinRow}
+          fiatCurrencyCode={coingeckoFiat}
+          index={index}
+          {...props}
+        />
       ))}
     </EdgeCard>
   )

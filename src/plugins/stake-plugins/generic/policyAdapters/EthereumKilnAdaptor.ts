@@ -4,7 +4,13 @@ import { BigNumber, ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
 import { KilnLiquid20A__factory } from '../../../contracts'
-import { ChangeQuote, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition } from '../../types'
+import {
+  ChangeQuote,
+  PositionAllocation,
+  QuoteAllocation,
+  StakeAssetInfo,
+  StakePosition
+} from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
@@ -22,23 +28,41 @@ export interface EthereumPooledKilnAdapterConfig {
   rpcProviderUrls: string[]
 }
 
-export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>): StakePolicyAdapter => {
+export const makeEthereumKilnAdapter = (
+  policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>
+): StakePolicyAdapter => {
   const { stakePolicyId, adapterConfig } = policyConfig
-  const { apiKey, baseUrl, contractAddress, exitQueueAddress, rpcProviderUrls } = adapterConfig
+  const {
+    apiKey,
+    baseUrl,
+    contractAddress,
+    exitQueueAddress,
+    rpcProviderUrls
+  } = adapterConfig
 
-  if (apiKey == null) throw new Error(`Kiln apiKey is required for ${stakePolicyId}`)
+  if (apiKey == null)
+    throw new Error(`Kiln apiKey is required for ${stakePolicyId}`)
 
   const kiln = makeKilnApi(baseUrl, apiKey)
 
-  const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
-  const integrationContract = KilnLiquid20A__factory.connect(contractAddress, provider)
+  const provider = new ethers.providers.FallbackProvider(
+    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
+  )
+  const integrationContract = KilnLiquid20A__factory.connect(
+    contractAddress,
+    provider
+  )
 
   // Metadata constants:
   const metadataName = 'Kiln Pooled Staking'
   const stakeAsset = policyConfig.stakeAssets[0]
   const metadataPoolAssetName = stakeAsset.currencyCode
 
-  async function prepareChangeQuote(walletSigner: EdgeWalletSigner, tx: ethers.PopulatedTransaction, allocations: QuoteAllocation[]): Promise<ChangeQuote> {
+  async function prepareChangeQuote(
+    walletSigner: EdgeWalletSigner,
+    tx: ethers.PopulatedTransaction,
+    allocations: QuoteAllocation[]
+  ): Promise<ChangeQuote> {
     if (tx.gasLimit == null) {
       const estimatedGasLimit = await walletSigner.estimateGas(tx)
       tx.gasLimit = estimatedGasLimit.mul(2)
@@ -77,8 +101,12 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
     }
 
     const feeData = await provider.getFeeData()
-    const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
-    const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
+    const maxFeePerGas =
+      feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
+    const maxPriorityFeePerGas =
+      feeData.maxPriorityFeePerGas !== null
+        ? feeData.maxPriorityFeePerGas
+        : undefined
 
     return {
       maxFeePerGas,
@@ -92,8 +120,18 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
   const instance: StakePolicyAdapter = {
     stakePolicyId,
 
-    async fetchClaimQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
-      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner, walletAddress } = await workflowUtils(wallet)
+    async fetchClaimQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> {
+      const {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nextNonce,
+        walletSigner,
+        walletAddress
+      } = await workflowUtils(wallet)
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const allocations: QuoteAllocation[] = []
@@ -104,11 +142,16 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       const ticketIds: string[] = []
       const caskIds: string[] = []
       for (const operation of operations) {
-        if (operation.type === 'exit' && operation.ticket_status === 'fulfillable') {
+        if (
+          operation.type === 'exit' &&
+          operation.ticket_status === 'fulfillable'
+        ) {
           claimableTotal = add(claimableTotal, operation.size)
           ticketIds.push(operation.ticket_id)
           // use lowest uint32 per ticket https://docs.kiln.fi/v1/kiln-products/on-chain/pooled-staking/how-to-integrate/staking-interactions/unstaking-and-withdrawals#claim-tickets-once-their-fulfillable
-          const lowestCaskId = operation.cask_ids.reduce((a, b) => (lt(a, b) ? a : b))
+          const lowestCaskId = operation.cask_ids.reduce((a, b) =>
+            lt(a, b) ? a : b
+          )
           caskIds.push(lowestCaskId)
         }
       }
@@ -120,25 +163,35 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         nativeAmount: claimableTotal
       })
 
-      const tx = await integrationContract.populateTransaction.multiClaim([exitQueueAddress], [ticketIds], [caskIds], {
-        gasLimit: '500000',
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-        nonce: await nextNonce(),
-        customData: {
-          metadata: {
-            name: metadataName,
-            category: 'Income:Claim',
-            notes: `Claim ${metadataPoolAssetName} rewards`
+      const tx = await integrationContract.populateTransaction.multiClaim(
+        [exitQueueAddress],
+        [ticketIds],
+        [caskIds],
+        {
+          gasLimit: '500000',
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+          nonce: await nextNonce(),
+          customData: {
+            metadata: {
+              name: metadataName,
+              category: 'Income:Claim',
+              notes: `Claim ${metadataPoolAssetName} rewards`
+            }
           }
         }
-      })
+      )
 
       return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
-    async fetchStakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, requestNativeAmount: string): Promise<ChangeQuote> {
-      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } = await workflowUtils(wallet)
+    async fetchStakeQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      requestNativeAmount: string
+    ): Promise<ChangeQuote> {
+      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } =
+        await workflowUtils(wallet)
 
       const tx = await integrationContract.populateTransaction.stake({
         gasLimit: '250000', // Typically uses 190000-225000 gas
@@ -167,13 +220,22 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
-    async fetchUnstakeQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, requestNativeAmount: string): Promise<ChangeQuote> {
-      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } = await workflowUtils(wallet)
+    async fetchUnstakeQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      requestNativeAmount: string
+    ): Promise<ChangeQuote> {
+      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, walletSigner } =
+        await workflowUtils(wallet)
 
       const walletAddress = await walletSigner.getAddress()
 
       const allPositions = await kiln.ethGetOnChainStakes(walletAddress)
-      const position = allPositions.find(position => position.integration_address.toLowerCase() === contractAddress.toLowerCase())
+      const position = allPositions.find(
+        position =>
+          position.integration_address.toLowerCase() ===
+          contractAddress.toLowerCase()
+      )
       const positionBalance = position?.balance ?? '0'
       const positionSharesBalance = position?.shares_balance ?? '0'
 
@@ -187,19 +249,22 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
         sharesNativeAmount = positionSharesBalance
       }
 
-      const tx = await integrationContract.populateTransaction.requestExit(sharesNativeAmount, {
-        gasLimit: '500000',
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-        nonce: await nextNonce(),
-        customData: {
-          metadata: {
-            name: metadataName,
-            category: 'Transfer:Unstaking',
-            notes: `Unstake ${metadataPoolAssetName}`
+      const tx = await integrationContract.populateTransaction.requestExit(
+        sharesNativeAmount,
+        {
+          gasLimit: '500000',
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+          nonce: await nextNonce(),
+          customData: {
+            metadata: {
+              name: metadataName,
+              category: 'Transfer:Unstaking',
+              notes: `Unstake ${metadataPoolAssetName}`
+            }
           }
         }
-      })
+      )
 
       const allocations: QuoteAllocation[] = [
         {
@@ -213,11 +278,17 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       return await prepareChangeQuote(walletSigner, tx, allocations)
     },
 
-    async fetchUnstakeExactQuote(wallet: EdgeCurrencyWallet, requestAssetId: StakeAssetInfo, nativeAmount: string): Promise<ChangeQuote> {
+    async fetchUnstakeExactQuote(
+      wallet: EdgeCurrencyWallet,
+      requestAssetId: StakeAssetInfo,
+      nativeAmount: string
+    ): Promise<ChangeQuote> {
       throw new Error('fetchUnstakeExactQuote not implemented')
     },
 
-    async fetchStakePosition(wallet: EdgeCurrencyWallet): Promise<StakePosition> {
+    async fetchStakePosition(
+      wallet: EdgeCurrencyWallet
+    ): Promise<StakePosition> {
       const { walletAddress } = await workflowUtils(wallet)
       const { currencyCode, pluginId } = wallet.currencyInfo
 
@@ -226,11 +297,17 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
       const allocations: PositionAllocation[] = []
 
       const allPositions = await kiln.ethGetOnChainStakes(walletAddress)
-      const position = allPositions.find(position => position.integration_address.toLowerCase() === contractAddress.toLowerCase())
+      const position = allPositions.find(
+        position =>
+          position.integration_address.toLowerCase() ===
+          contractAddress.toLowerCase()
+      )
 
       // After fully unstaking, users are left with a single wei of the liquidity token. We should ignore this.
       const positionBalance = position?.balance ?? '0'
-      const nativeStakedAmount = eq(positionBalance, '1') ? '0' : positionBalance
+      const nativeStakedAmount = eq(positionBalance, '1')
+        ? '0'
+        : positionBalance
 
       allocations.push({
         allocationType: 'staked',
@@ -285,7 +362,9 @@ export const makeEthereumKilnAdapter = (policyConfig: StakePolicyConfig<Ethereum
     },
 
     async fetchYieldInfo() {
-      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const infoServerResponse = asInfoServerResponse(
+        infoServerData.rollup?.apyValues ?? { policies: {} }
+      )
       const apy = infoServerResponse.policies[stakePolicyId] ?? 0
 
       return {

@@ -5,7 +5,10 @@ import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
-import { getLocalAccountSettings, writeAccountNotifInfo } from '../actions/LocalSettingsActions'
+import {
+  getLocalAccountSettings,
+  writeAccountNotifInfo
+} from '../actions/LocalSettingsActions'
 import { getLocaleOrDefaultString } from '../locales/intl'
 import { DisplayInfoCard, filterInfoCards } from './infoUtils'
 import { getOsVersion } from './utils'
@@ -17,7 +20,9 @@ export const getPromoCardNotificationKey = (messageId: string): string => {
   return `promoCard-${messageId}`
 }
 
-export const getPromoCardMessageId = (localeMessages: InfoCard['localeMessages']): string => {
+export const getPromoCardMessageId = (
+  localeMessages: InfoCard['localeMessages']
+): string => {
   const cardContent = localeMessages.en_US ?? JSON.stringify(localeMessages)
   return shajs('sha256').update(cardContent, 'utf8').digest('base64')
 }
@@ -25,7 +30,10 @@ export const getPromoCardMessageId = (localeMessages: InfoCard['localeMessages']
 /**
  * Add a dismissed promo card to the notification center
  */
-export const addPromoCardToNotifications = async (account: EdgeAccount, promoCard: DisplayInfoCard): Promise<void> => {
+export const addPromoCardToNotifications = async (
+  account: EdgeAccount,
+  promoCard: DisplayInfoCard
+): Promise<void> => {
   const { ctaButton, messageId, localeMessages } = promoCard
 
   if (ctaButton == null) return
@@ -63,7 +71,10 @@ export const addPromoCardToNotifications = async (account: EdgeAccount, promoCar
  * Check if a promo card is valid in the current context
  * To be used when a user taps on a promo card notification
  */
-export const isPromoCardValid = (messageId: string, currentPromoCards?: InfoCard[]): boolean => {
+export const isPromoCardValid = (
+  messageId: string,
+  currentPromoCards?: InfoCard[]
+): boolean => {
   // If we have no current promo cards, we can't validate
   if (currentPromoCards == null || currentPromoCards.length === 0) {
     return false
@@ -90,7 +101,10 @@ export const isPromoCardValid = (messageId: string, currentPromoCards?: InfoCard
  * Check for expired promos from the info server data that aren't already in the notification center
  * and add them as notifications
  */
-export const checkAndAddExpiredPromos = async (account: EdgeAccount, infoCards: InfoCard[] = []): Promise<void> => {
+export const checkAndAddExpiredPromos = async (
+  account: EdgeAccount,
+  infoCards: InfoCard[] = []
+): Promise<void> => {
   if (infoCards.length === 0) return
 
   // Get the current notification state
@@ -173,7 +187,9 @@ export const checkAndAddExpiredPromos = async (account: EdgeAccount, infoCards: 
  */
 const getLocaleContent = (card: InfoCard): string | null => {
   const localeContent = getLocaleOrDefaultString(card.localeMessages)
-  return localeContent != null && localeContent.trim() !== '' ? localeContent : null
+  return localeContent != null && localeContent.trim() !== ''
+    ? localeContent
+    : null
 }
 
 /**

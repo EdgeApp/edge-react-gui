@@ -36,7 +36,10 @@ export const EdgeLoginScene = (props: Props) => {
 
   const warningMessage =
     lobby?.loginRequest?.appId === ''
-      ? sprintf(lstrings.edge_description_warning, lobby?.loginRequest?.displayName)
+      ? sprintf(
+          lstrings.edge_description_warning,
+          lobby?.loginRequest?.displayName
+        )
       : sprintf(lstrings.access_wallet_description, config.appName)
 
   useAsyncEffect(
@@ -45,7 +48,10 @@ export const EdgeLoginScene = (props: Props) => {
         setLobby(await account.fetchLobby(lobbyId))
       } catch (error: any) {
         if (error.message.includes('Account does not')) {
-          await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
+          await showOkModal(
+            lstrings.edge_login_failed,
+            lstrings.edge_login_fail_stale_qr
+          )
         } else {
           showError(error)
         }
@@ -62,11 +68,17 @@ export const EdgeLoginScene = (props: Props) => {
     try {
       await loginRequest.approve()
       navigation.pop()
-      await showOkModal(lstrings.send_scan_edge_login_success_title, lstrings.send_scan_edge_login_success_message)
+      await showOkModal(
+        lstrings.send_scan_edge_login_success_title,
+        lstrings.send_scan_edge_login_success_message
+      )
     } catch (error: any) {
       navigation.pop()
       if (error.message.includes('Could not reach')) {
-        await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_message)
+        await showOkModal(
+          lstrings.edge_login_failed,
+          lstrings.edge_login_fail_message
+        )
       } else {
         showError(error)
       }
@@ -74,18 +86,31 @@ export const EdgeLoginScene = (props: Props) => {
   })
 
   const handleDecline = useHandler(() => navigation.goBack())
-  const logoUri = theme.isDark ? lobby?.loginRequest?.displayImageDarkUrl : lobby?.loginRequest?.displayImageLightUrl
+  const logoUri = theme.isDark
+    ? lobby?.loginRequest?.displayImageDarkUrl
+    : lobby?.loginRequest?.displayImageLightUrl
 
   return (
     <SceneWrapper>
       <View style={styles.topArea}>
         <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
           <View key="loader" style={styles.header}>
-            <ActivityIndicator color={theme.iconTappable} size="large" accessibilityHint={lstrings.spinner_hint} />
+            <ActivityIndicator
+              color={theme.iconTappable}
+              size="large"
+              accessibilityHint={lstrings.spinner_hint}
+            />
           </View>
           <View key="logo" style={styles.header}>
-            <Image style={styles.logo} source={{ uri: logoUri }} resizeMode="contain" accessibilityHint={lstrings.app_logo_hint} />
-            <TitleText style={styles.appName}>{lobby?.loginRequest?.displayName}</TitleText>
+            <Image
+              style={styles.logo}
+              source={{ uri: logoUri }}
+              resizeMode="contain"
+              accessibilityHint={lstrings.app_logo_hint}
+            />
+            <TitleText style={styles.appName}>
+              {lobby?.loginRequest?.displayName}
+            </TitleText>
           </View>
         </CrossFade>
       </View>
@@ -93,16 +118,30 @@ export const EdgeLoginScene = (props: Props) => {
         <WarningCard title={lstrings.string_warning} header={warningMessage} />
       </Fade>
       <Fade visible={lobby != null} delay={250}>
-        <MainButton label={lstrings.accept_button_text} onPress={handleAccept} marginRem={1} />
+        <MainButton
+          label={lstrings.accept_button_text}
+          onPress={handleAccept}
+          marginRem={1}
+        />
       </Fade>
-      <MainButton label={lstrings.string_cancel_cap} onPress={handleDecline} type="escape" marginRem={[0, 1, 1]} />
+      <MainButton
+        label={lstrings.string_cancel_cap}
+        onPress={handleDecline}
+        type="escape"
+        marginRem={[0, 1, 1]}
+      />
     </SceneWrapper>
   )
 }
 
 const showOkModal = async (title: string, message: string) => {
   return await Airship.show<'ok' | undefined>(bridge => (
-    <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok } }} message={message + '\n'} title={title} />
+    <ButtonsModal
+      bridge={bridge}
+      buttons={{ ok: { label: lstrings.string_ok } }}
+      message={message + '\n'}
+      title={title}
+    />
   ))
 }
 

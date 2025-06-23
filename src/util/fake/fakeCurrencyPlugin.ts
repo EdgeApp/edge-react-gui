@@ -71,7 +71,11 @@ class FakeCurrencyEngine {
   enabledTokensMap: { [currencyCode: string]: boolean }
   defaultSettings: FakeSettings
 
-  constructor(walletInfo: EdgeWalletInfo, currencyInfo: EdgeCurrencyInfo, opts: EdgeCurrencyEngineOptions) {
+  constructor(
+    walletInfo: EdgeWalletInfo,
+    currencyInfo: EdgeCurrencyInfo,
+    opts: EdgeCurrencyEngineOptions
+  ) {
     this.callbacks = opts.callbacks
     this.running = false
     this.currencyInfo = currencyInfo
@@ -84,7 +88,8 @@ class FakeCurrencyEngine {
       progress: 0,
       txs: {}
     }
-    this.enabledTokens = currencyInfo.metaTokens?.map(token => token.currencyCode) ?? []
+    this.enabledTokens =
+      currencyInfo.metaTokens?.map(token => token.currencyCode) ?? []
     this.enabledTokensMap = this.enabledTokens.reduce((prev, token) => {
       return { ...prev, [token]: true }
     }, {})
@@ -126,17 +131,29 @@ class FakeCurrencyEngine {
     // Balance callback:
     if (settings.balances != null) {
       // Convert exchange amounts to native amounts
-      const balances = Object.entries(settings.balances).reduce((prev, [currencyCode, balance]) => {
-        if (currencyCode === this.currencyInfo.currencyCode) {
-          const nativeBalance = mul(balance, this.currencyInfo.denominations[0].multiplier)
-          return { ...prev, [currencyCode]: nativeBalance }
-        }
+      const balances = Object.entries(settings.balances).reduce(
+        (prev, [currencyCode, balance]) => {
+          if (currencyCode === this.currencyInfo.currencyCode) {
+            const nativeBalance = mul(
+              balance,
+              this.currencyInfo.denominations[0].multiplier
+            )
+            return { ...prev, [currencyCode]: nativeBalance }
+          }
 
-        const metaToken = this.currencyInfo.metaTokens?.find(token => token.currencyCode === currencyCode)
-        if (metaToken == null) throw new Error(`Invalid token ${currencyCode}`)
-        const nativeBalance = mul(balance, metaToken.denominations[0].multiplier)
-        return { ...prev, [currencyCode]: nativeBalance }
-      }, {})
+          const metaToken = this.currencyInfo.metaTokens?.find(
+            token => token.currencyCode === currencyCode
+          )
+          if (metaToken == null)
+            throw new Error(`Invalid token ${currencyCode}`)
+          const nativeBalance = mul(
+            balance,
+            metaToken.denominations[0].multiplier
+          )
+          return { ...prev, [currencyCode]: nativeBalance }
+        },
+        {}
+      )
       state.balances = balances
 
       Object.keys(state.balances).forEach(key => {
@@ -232,7 +249,9 @@ class FakeCurrencyEngine {
     return Object.keys(this.state.txs).length
   }
 
-  async getTransactions(opts: EdgeGetTransactionsOptions): Promise<EdgeTransaction[]> {
+  async getTransactions(
+    opts: EdgeGetTransactionsOptions
+  ): Promise<EdgeTransaction[]> {
     return Object.keys(this.state.txs).map(txid => this.state.txs[txid])
   }
 
@@ -301,7 +320,9 @@ class FakeCurrencyEngine {
       networkFees: [],
       otherParams: {},
       ourReceiveAddresses: [],
-      parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
+      parentNetworkFee: tokenSpend
+        ? this.defaultSettings.parentNetworkFee
+        : undefined,
       signedTx: '',
       tokenId,
       txid: 'spend',
@@ -336,7 +357,10 @@ class FakeCurrencyTools {
     this.currencyInfo = currencyInfo
   }
 
-  async createPrivateKey(walletType: string, opts?: JsonObject): Promise<JsonObject> {
+  async createPrivateKey(
+    walletType: string,
+    opts?: JsonObject
+  ): Promise<JsonObject> {
     if (walletType !== this.currencyInfo.walletType) {
       throw new Error('Unsupported key type')
     }
@@ -363,12 +387,19 @@ class FakeCurrencyTools {
   }
 }
 
-export const makeFakePlugin = (currencyInfo: EdgeCurrencyInfo): EdgeCurrencyPlugin => {
+export const makeFakePlugin = (
+  currencyInfo: EdgeCurrencyInfo
+): EdgeCurrencyPlugin => {
   return {
     currencyInfo,
 
-    async makeCurrencyEngine(walletInfo: EdgeWalletInfo, opts: EdgeCurrencyEngineOptions): Promise<EdgeCurrencyEngine> {
-      return await Promise.resolve(new FakeCurrencyEngine(walletInfo, currencyInfo, opts))
+    async makeCurrencyEngine(
+      walletInfo: EdgeWalletInfo,
+      opts: EdgeCurrencyEngineOptions
+    ): Promise<EdgeCurrencyEngine> {
+      return await Promise.resolve(
+        new FakeCurrencyEngine(walletInfo, currencyInfo, opts)
+      )
     },
 
     async makeCurrencyTools(): Promise<EdgeCurrencyTools> {

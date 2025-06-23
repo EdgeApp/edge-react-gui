@@ -1,5 +1,10 @@
 import { div } from 'biggystring'
-import { EdgeAssetAction, EdgeCurrencyWallet, EdgeTransaction, EdgeTxActionFiat } from 'edge-core-js'
+import {
+  EdgeAssetAction,
+  EdgeCurrencyWallet,
+  EdgeTransaction,
+  EdgeTxActionFiat
+} from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, View } from 'react-native'
 import Mailer from 'react-native-mail'
@@ -55,14 +60,30 @@ export function FiatExchangeDetailsCard(props: Props) {
       [lstrings.transaction_details_exchange_order_id, orderId],
       [isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote, undefined]
     ]
-    if (payinAddress != null) exchangeData.push([lstrings.transaction_details_exchange_exchange_address, payinAddress])
-    if (payoutAddress != null) exchangeData.push([lstrings.transaction_details_exchange_payout_address, payoutAddress])
+    if (payinAddress != null)
+      exchangeData.push([
+        lstrings.transaction_details_exchange_exchange_address,
+        payinAddress
+      ])
+    if (payoutAddress != null)
+      exchangeData.push([
+        lstrings.transaction_details_exchange_payout_address,
+        payoutAddress
+      ])
 
-    return exchangeData.map(([key, value]) => (value == null ? key : `${key}: ${value}`)).join(nl)
+    return exchangeData
+      .map(([key, value]) => (value == null ? key : `${key}: ${value}`))
+      .join(nl)
   }
 
   const handleExchangeDetails = useHandler(async () => {
-    await Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={lstrings.transaction_details_exchange_details} />)
+    await Airship.show(bridge => (
+      <RawTextModal
+        bridge={bridge}
+        body={createExchangeDataString()}
+        title={lstrings.transaction_details_exchange_details}
+      />
+    ))
   })
 
   const handleEmail = useHandler(() => {
@@ -71,7 +92,10 @@ export function FiatExchangeDetailsCard(props: Props) {
 
     Mailer.mail(
       {
-        subject: sprintf(lstrings.transaction_details_exchange_support_request, providerDisplayName),
+        subject: sprintf(
+          lstrings.transaction_details_exchange_support_request,
+          providerDisplayName
+        ),
         // @ts-expect-error
         recipients: [email],
         body,
@@ -112,9 +136,12 @@ export function FiatExchangeDetailsCard(props: Props) {
     destinationCurrencyCode = fiatAsset.fiatCurrencyCode
   }
   const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
-  const exchangeAmount = nativeAmount != null ? div(nativeAmount, multiplier, multiplier.length) : ''
-  const sourceAmount = direction === 'buy' ? fiatAsset.fiatAmount : exchangeAmount
-  const destinationAmount = direction === 'buy' ? exchangeAmount : fiatAsset.fiatAmount
+  const exchangeAmount =
+    nativeAmount != null ? div(nativeAmount, multiplier, multiplier.length) : ''
+  const sourceAmount =
+    direction === 'buy' ? fiatAsset.fiatAmount : exchangeAmount
+  const destinationAmount =
+    direction === 'buy' ? exchangeAmount : fiatAsset.fiatAmount
 
   if (pluginId !== wallet.currencyInfo.pluginId) return null
   if (action.actionType !== 'fiat') return null
@@ -122,19 +149,51 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   return (
     <EdgeCard sections>
-      <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
+      <EdgeRow
+        rightButtonType="touchable"
+        title={lstrings.transaction_details_exchange_details}
+        onPress={handleExchangeDetails}
+      >
         <View style={styles.tileColumn}>
-          <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + sourceCurrencyCode}</EdgeText>
-          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
-          <EdgeText>{isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
+          <EdgeText>
+            {lstrings.title_exchange +
+              ' ' +
+              sourceAmount +
+              ' ' +
+              sourceCurrencyCode}
+          </EdgeText>
+          <EdgeText>
+            {lstrings.string_to_capitalize +
+              ' ' +
+              destinationAmount +
+              ' ' +
+              destinationCurrencyCode}
+          </EdgeText>
+          <EdgeText>
+            {isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}
+          </EdgeText>
         </View>
       </EdgeRow>
-      <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_exchange_order_id} body={orderId} />
+      <EdgeRow
+        rightButtonType="copy"
+        title={lstrings.transaction_details_exchange_order_id}
+        body={orderId}
+      />
       {orderUri == null ? null : (
-        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={orderUri} />
+        <EdgeRow
+          rightButtonType="touchable"
+          title={lstrings.transaction_details_exchange_status_page}
+          onPress={handleLink}
+          body={orderUri}
+        />
       )}
       {supportEmail == null ? null : (
-        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={supportEmail} />
+        <EdgeRow
+          rightButtonType="touchable"
+          title={lstrings.transaction_details_exchange_support}
+          onPress={handleEmail}
+          body={supportEmail}
+        />
       )}
     </EdgeCard>
   )

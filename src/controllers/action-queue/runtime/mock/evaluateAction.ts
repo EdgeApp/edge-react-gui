@@ -1,16 +1,34 @@
-import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeNetworkFee,
+  EdgeTransaction
+} from 'edge-core-js'
 
-import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput } from '../../types'
+import {
+  ActionEffect,
+  ActionProgram,
+  ActionProgramState,
+  BroadcastTx,
+  ExecutableAction,
+  ExecutionContext,
+  ExecutionOutput
+} from '../../types'
 
-export async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+export async function evaluateAction(
+  context: ExecutionContext,
+  program: ActionProgram,
+  state: ActionProgramState
+): Promise<ExecutableAction> {
   const { account } = context
   const { actionOp } = program
   const { effect } = state
 
   switch (actionOp.type) {
     case 'seq': {
-      const nextOpIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
-      const prevChildEffects = effect != null && effect.type === 'seq' ? effect.childEffects : []
+      const nextOpIndex =
+        effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const prevChildEffects =
+        effect != null && effect.type === 'seq' ? effect.childEffects : []
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
@@ -28,13 +46,20 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childExecutableAction = await evaluateAction(context, nextProgram, state)
+      const childExecutableAction = await evaluateAction(
+        context,
+        nextProgram,
+        state
+      )
 
       return {
         dryrun: async pendingTxMap => {
-          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
-          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
-          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
+          const childOutput: ExecutionOutput | null =
+            await childExecutableAction.dryrun(pendingTxMap)
+          const childEffect: ActionEffect | null =
+            childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] =
+            childOutput != null ? childOutput.broadcastTxs : []
           return {
             effect: {
               type: 'seq',
@@ -69,9 +94,17 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       return {
         dryrun: async pendingTxMap => {
-          const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun(pendingTxMap)))
+          const childOutputs = await Promise.all(
+            childExecutableActions.map(
+              async executableAciton =>
+                await executableAciton.dryrun(pendingTxMap)
+            )
+          )
           const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
-            (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
+            (effects: Array<ActionEffect | null>, output) => [
+              ...effects,
+              output?.effect ?? null
+            ],
             []
           )
           return {
@@ -79,18 +112,35 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
               type: 'par',
               childEffects
             },
-            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+            broadcastTxs: childOutputs.reduce(
+              (broadcastTxs: BroadcastTx[], output) => [
+                ...broadcastTxs,
+                ...(output?.broadcastTxs ?? [])
+              ],
+              []
+            )
           }
         },
         execute: async () => {
-          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
-          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
+          const outputs = await Promise.all(
+            childExecutableActions.map(async output => await output.execute())
+          )
+          const effects = outputs.reduce(
+            (effects: ActionEffect[], output) => [...effects, output.effect],
+            []
+          )
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output.broadcastTxs ?? [])], [])
+            broadcastTxs: outputs.reduce(
+              (broadcastTxs: BroadcastTx[], output) => [
+                ...broadcastTxs,
+                ...(output.broadcastTxs ?? [])
+              ],
+              []
+            )
           }
         }
       }
@@ -190,7 +240,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
   }
 }
 
-async function mockExecutableAction(_context: ExecutionContext, fn: () => ExecutionOutput): Promise<ExecutableAction> {
+async function mockExecutableAction(
+  _context: ExecutionContext,
+  fn: () => ExecutionOutput
+): Promise<ExecutableAction> {
   return {
     dryrun: async () => fn(),
     execute: async () => {
@@ -203,7 +256,9 @@ function mockBroadcastTxs(wallet: EdgeCurrencyWallet): BroadcastTx[] {
   return [
     {
       walletId: wallet.id,
-      networkFee: mockNetworkFee(wallet.currencyConfig.currencyInfo.currencyCode),
+      networkFee: mockNetworkFee(
+        wallet.currencyConfig.currencyInfo.currencyCode
+      ),
       tx: mockTx()
     }
   ]

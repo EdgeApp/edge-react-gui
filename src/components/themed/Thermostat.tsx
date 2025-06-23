@@ -22,15 +22,33 @@ export const Thermostat = ({ ratio, textColor }: Props) => {
         <Svg width="100%" height="12">
           <Defs>
             <LinearGradient id="gradosaur">
-              <Stop offset="0.55" stopColor={theme.positiveText} stopOpacity="1" />
-              <Stop offset="0.90" stopColor={theme.negativeText} stopOpacity="1" />
+              <Stop
+                offset="0.55"
+                stopColor={theme.positiveText}
+                stopOpacity="1"
+              />
+              <Stop
+                offset="0.90"
+                stopColor={theme.negativeText}
+                stopOpacity="1"
+              />
             </LinearGradient>
           </Defs>
           <Rect x="0" y="2" width="100%" height="8" fill="url(#gradosaur)" />
-          <Rect x={`${percent}%`} y="0" width="3" height="12" fill="white" rx="1" ry="1" />
+          <Rect
+            x={`${percent}%`}
+            y="0"
+            width="3"
+            height="12"
+            fill="white"
+            rx="1"
+            ry="1"
+          />
         </Svg>
       </View>
-      <EdgeText style={{ ...styles.percentText, color: textColor }}>{percentText}</EdgeText>
+      <EdgeText style={{ ...styles.percentText, color: textColor }}>
+        {percentText}
+      </EdgeText>
     </View>
   )
 }

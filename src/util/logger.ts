@@ -15,7 +15,9 @@ const padZeros = (n: number): string => {
 const makePaths = (type: LogType): string[] => {
   const fileArray: string[] = []
   for (let i = 0; i < NUM_FILES; i++) {
-    fileArray.push(`${RNFS.DocumentDirectoryPath}/logs_${type}.${padZeros(i)}.txt`)
+    fileArray.push(
+      `${RNFS.DocumentDirectoryPath}/logs_${type}.${padZeros(i)}.txt`
+    )
   }
   return fileArray
 }
@@ -31,7 +33,15 @@ const isObject = (item: any) => typeof item === 'object' && item !== null
 const isError = (item: any): item is Error => item instanceof Error
 
 const normalize = (...info: any[]) =>
-  `${getTime()} | ${info.map(item => (isError(item) ? item.stack ?? item.message : isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
+  `${getTime()} | ${info
+    .map(item =>
+      isError(item)
+        ? item.stack ?? item.message
+        : isObject(item)
+        ? JSON.stringify(item)
+        : item
+    )
+    .join(' ')}`
 
 const lock = new AsyncLock({ maxPending: 100000 })
 
@@ -75,13 +85,22 @@ async function rotateLogs(type: LogType): Promise<void> {
 
 async function migrateLogs(): Promise<void> {
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs1.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs1.txt', RNFS.DocumentDirectoryPath + '/logs_info.000.txt')
+    await RNFS.moveFile(
+      RNFS.DocumentDirectoryPath + '/logs1.txt',
+      RNFS.DocumentDirectoryPath + '/logs_info.000.txt'
+    )
   }
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs2.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs2.txt', RNFS.DocumentDirectoryPath + '/logs_info.001.txt')
+    await RNFS.moveFile(
+      RNFS.DocumentDirectoryPath + '/logs2.txt',
+      RNFS.DocumentDirectoryPath + '/logs_info.001.txt'
+    )
   }
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs3.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs3.txt', RNFS.DocumentDirectoryPath + '/logs_info.002.txt')
+    await RNFS.moveFile(
+      RNFS.DocumentDirectoryPath + '/logs3.txt',
+      RNFS.DocumentDirectoryPath + '/logs_info.002.txt'
+    )
   }
 }
 
@@ -139,7 +158,10 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
   }
 }
 
-export async function logWithType(type: LogType, ...info: Array<number | string | null | {}>): Promise<void> {
+export async function logWithType(
+  type: LogType,
+  ...info: Array<number | string | null | {}>
+): Promise<void> {
   const logs = normalize(...info)
 
   const now = Date.now()
@@ -167,14 +189,17 @@ export function logActivity(...info: Array<number | string | null | {}>): void {
 
 async function request(data: string) {
   // @ts-expect-error
-  return await global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ data })
-  })
+  return await global.fetch(
+    `${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data })
+    }
+  )
 }
 
 export function logToServer(...info: any[]) {

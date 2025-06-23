@@ -22,7 +22,9 @@ import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { matchJson } from '../../util/matchJson'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
-export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
+export const LAYOUT_ANIMATION = LinearTransition.duration(
+  DEFAULT_ANIMATION_DURATION_MS
+)
 export const MAX_LIST_ITEMS_ANIM = 10
 
 // Commonly used enter/exit animations. Use these to prevent
@@ -59,11 +61,25 @@ export const fadeInRight: Anim = { type: 'fadeInRight' }
 export const fadeOut: Anim = { type: 'fadeOut' }
 
 type AnimBuilder = typeof ComplexAnimationBuilder
-type AnimTypeFadeIns = 'fadeIn' | 'fadeInDown' | 'fadeInUp' | 'fadeInLeft' | 'fadeInRight'
-type AnimTypeFadeOuts = 'fadeOut' | 'fadeOutDown' | 'fadeOutUp' | 'fadeOutLeft' | 'fadeOutRight'
+type AnimTypeFadeIns =
+  | 'fadeIn'
+  | 'fadeInDown'
+  | 'fadeInUp'
+  | 'fadeInLeft'
+  | 'fadeInRight'
+type AnimTypeFadeOuts =
+  | 'fadeOut'
+  | 'fadeOutDown'
+  | 'fadeOutUp'
+  | 'fadeOutLeft'
+  | 'fadeOutRight'
 type AnimTypeStretchIns = 'stretchInY'
 type AnimTypeStretchOuts = 'stretchOutY'
-type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts | AnimTypeStretchIns | AnimTypeStretchOuts
+type AnimType =
+  | AnimTypeFadeIns
+  | AnimTypeFadeOuts
+  | AnimTypeStretchIns
+  | AnimTypeStretchOuts
 
 export interface Anim {
   type: AnimType
@@ -101,17 +117,26 @@ const builderMap: Record<AnimType, AnimBuilder> = {
 
 const getAnimBuilder = (anim?: Anim) => {
   if (anim == null) return
-  const { type, delay = 0, duration = DEFAULT_ANIMATION_DURATION_MS, distance } = anim
+  const {
+    type,
+    delay = 0,
+    duration = DEFAULT_ANIMATION_DURATION_MS,
+    distance
+  } = anim
   const animBuilder = builderMap[type]
 
-  let builder = animBuilder.delay(delay).duration(duration).easing(Easing.inOut(Easing.quad))
+  let builder = animBuilder
+    .delay(delay)
+    .duration(duration)
+    .easing(Easing.inOut(Easing.quad))
 
   // Allow initialValue distance for fadeIn transitions only as we
   // can only specify an initial value. fadeOut transitions would
   // need to specify a "final" value which we can't do
   if (distance != null && type.includes('In')) {
     // For fadeInLeft and fadeInUp, initialValues need to be negative
-    const translateDistance = type.endsWith('Left') || type.endsWith('Up') ? -distance : distance
+    const translateDistance =
+      type.endsWith('Left') || type.endsWith('Up') ? -distance : distance
     if (type.endsWith('Left') || type.endsWith('Right')) {
       builder = builder.withInitialValues({
         transform: [{ translateX: translateDistance }]
@@ -125,7 +150,14 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): React.ReactElement | null => {
+const EdgeAnimInner = ({
+  children,
+  disableAnimation,
+  enter,
+  exit,
+  visible = true,
+  ...rest
+}: Props): React.ReactElement | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
@@ -136,7 +168,12 @@ const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true
   }
 
   return (
-    <Animated.View layout={LAYOUT_ANIMATION} entering={entering} exiting={exiting} {...rest}>
+    <Animated.View
+      layout={LAYOUT_ANIMATION}
+      entering={entering}
+      exiting={exiting}
+      {...rest}
+    >
       {children}
     </Animated.View>
   )
@@ -153,7 +190,11 @@ const edgeAnimPropsAreEqual = (prevProps: Props, nextProps: Props): boolean => {
   ) {
     return false
   }
-  if (prevRest.style !== nextRest.style || prevRest.enter !== nextRest.enter || prevRest.exit !== nextRest.exit) {
+  if (
+    prevRest.style !== nextRest.style ||
+    prevRest.enter !== nextRest.enter ||
+    prevRest.exit !== nextRest.exit
+  ) {
     return matchJson(prevRest, nextRest)
   }
   return true

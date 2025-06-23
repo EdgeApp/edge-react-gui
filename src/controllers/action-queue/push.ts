@@ -2,9 +2,24 @@ import { lstrings } from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { makePushClient } from '../../util/PushClient/PushClient'
 import { filterNull } from '../../util/safeFilters'
-import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
-import { LoginUpdatePayload, NewPushEvent, PushEventStatus } from './types/pushApiTypes'
-import { BroadcastTx, PushEventState, PushMessage, PushTrigger } from './types/pushTypes'
+import {
+  ActionEffect,
+  ActionProgram,
+  ExecutionContext,
+  ExecutionOutput,
+  PushEventEffect
+} from './types'
+import {
+  LoginUpdatePayload,
+  NewPushEvent,
+  PushEventStatus
+} from './types/pushApiTypes'
+import {
+  BroadcastTx,
+  PushEventState,
+  PushMessage,
+  PushTrigger
+} from './types/pushTypes'
 
 export interface PushEventInfo {
   newPushEvent: NewPushEvent
@@ -45,13 +60,16 @@ export async function prepareNewPushEvents(
 
   const pushEventInfos: PushEventInfo[] = await Promise.all(
     dryrunOutputs.map(async (output, index) => {
-      const triggeringEffect = index > 0 ? dryrunOutputs[index - 1].effect : initEffect
+      const triggeringEffect =
+        index > 0 ? dryrunOutputs[index - 1].effect : initEffect
 
       const callStackId = getCallStackId(output.effect)
       const eventId = `${programId}:${callStackId}`
       const broadcastTxs: BroadcastTx[] = await Promise.all(
         output.broadcastTxs.map(async executionTx => {
-          const wallet = await account.waitForCurrencyWallet(executionTx.walletId)
+          const wallet = await account.waitForCurrencyWallet(
+            executionTx.walletId
+          )
           const { pluginId } = wallet.currencyConfig.currencyInfo
           const rawTx = asHex(executionTx.tx.signedTx)
 
@@ -64,14 +82,17 @@ export async function prepareNewPushEvents(
 
       // Assert that the given prevEffect is a convertible to a PushTrigger
       if (trigger == null) {
-        throw new Error(`Unsupported effect type ${triggeringEffect.type} in conversion to PushTrigger`)
+        throw new Error(
+          `Unsupported effect type ${triggeringEffect.type} in conversion to PushTrigger`
+        )
       }
 
       const newPushEvent: NewPushEvent = {
         eventId,
         broadcastTxs,
         // Include pushMessage only for the last event because device should only wake up when the server finishes all push events.
-        pushMessage: index === dryrunOutputs.length - 1 ? pushMessage : undefined,
+        pushMessage:
+          index === dryrunOutputs.length - 1 ? pushMessage : undefined,
         trigger
       }
 
@@ -91,19 +112,30 @@ export async function prepareNewPushEvents(
   return pushEventInfos
 }
 
-export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
+export async function checkPushEvent(
+  context: ExecutionContext,
+  eventId: string
+): Promise<boolean> {
   const { account, clientId } = context
   const pushClient = makePushClient(account, clientId)
   const loginPayload = await pushClient.getPushEvents()
-  const eventStatusMap: { [eventId: string]: PushEventStatus } = loginPayload.events.reduce(
-    (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
-    {}
-  )
+  const eventStatusMap: { [eventId: string]: PushEventStatus } =
+    loginPayload.events.reduce(
+      (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
+      {}
+    )
 
   const status: PushEventStatus = eventStatusMap[eventId]
   const pushEventState: PushEventState = status.state
-  if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
-    throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+  if (
+    status.broadcastTxErrors != null &&
+    status.broadcastTxErrors.some(error => error != null)
+  ) {
+    throw new Error(
+      `Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join(
+        '\n\t'
+      )}`
+    )
   }
 
   const isEffective = status != null && pushEventState === 'triggered'
@@ -111,25 +143,36 @@ export async function checkPushEvent(context: ExecutionContext, eventId: string)
   return isEffective
 }
 
-export async function effectCanBeATrigger(context: ExecutionContext, effect: ActionEffect): Promise<boolean> {
+export async function effectCanBeATrigger(
+  context: ExecutionContext,
+  effect: ActionEffect
+): Promise<boolean> {
   return (await actionEffectToPushTrigger(context, effect)) != null
 }
 
-export async function uploadPushEvents(context: ExecutionContext, payload: LoginUpdatePayload): Promise<void> {
+export async function uploadPushEvents(
+  context: ExecutionContext,
+  payload: LoginUpdatePayload
+): Promise<void> {
   const { account, clientId } = context
   const pushClient = makePushClient(account, clientId)
   return await pushClient.uploadPushEvents(payload)
 }
 
-async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | null> {
+async function actionEffectToPushTrigger(
+  context: ExecutionContext,
+  effect: ActionEffect
+): Promise<PushTrigger | null> {
   const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
-    `Unexpected null effect while converting to PushTrigger. ` + `This could be caused by a partial dryrun not properly short-circuiting.`
+    `Unexpected null effect while converting to PushTrigger. ` +
+    `This could be caused by a partial dryrun not properly short-circuiting.`
 
   switch (effect.type) {
     case 'seq': {
       const checkedEffects = filterNull(effect.childEffects)
-      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+      if (checkedEffects.length !== effect.childEffects.length)
+        throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
@@ -175,7 +218,8 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
-      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+      if (checkedEffects.length !== effect.childEffects.length)
+        throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Get an array of triggers for every child effect
       const triggers: PushTrigger[] = []
@@ -202,7 +246,8 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
 
 function getCallStackId(effect: ActionEffect): string {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
-    `Unexpected null effect while converting to CallStackId. ` + `This could be caused by a partial dryrun not properly short-circuiting.`
+    `Unexpected null effect while converting to CallStackId. ` +
+    `This could be caused by a partial dryrun not properly short-circuiting.`
 
   switch (effect.type) {
     case 'seq': {
@@ -212,7 +257,8 @@ function getCallStackId(effect: ActionEffect): string {
     case 'par': {
       const childCallStackIds = effect.childEffects
         .map(childEffect => {
-          if (childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+          if (childEffect === null)
+            throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
           return getCallStackId(childEffect)
         })
         .join('_')

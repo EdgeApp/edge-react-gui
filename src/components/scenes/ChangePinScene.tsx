@@ -27,7 +27,12 @@ export const ChangePinScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={handleLogEvent} />
+      <ChangePinScreen
+        account={account}
+        context={context}
+        onComplete={handleComplete}
+        onLogEvent={handleLogEvent}
+      />
     </SceneWrapper>
   )
 }

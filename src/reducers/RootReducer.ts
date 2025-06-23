@@ -1,11 +1,22 @@
 import { combineReducers } from 'redux'
 
 import { NotificationSettings } from '../actions/NotificationActions'
-import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
-import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
+import {
+  actionQueue,
+  ActionQueueState
+} from '../controllers/action-queue/redux/reducers'
+import {
+  loanManager,
+  LoanManagerState
+} from '../controllers/loan-manager/redux/reducers'
 import { Action } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
-import { GuiContact, GuiExchangeRates, GuiExchangeRatesMap, WalletListItem } from '../types/types'
+import {
+  GuiContact,
+  GuiExchangeRates,
+  GuiExchangeRatesMap,
+  WalletListItem
+} from '../types/types'
 import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
 import { network, NetworkState } from './NetworkReducer'
@@ -44,10 +55,15 @@ export interface RootState {
 
 export const rootReducer = combineReducers<RootState, Action>({
   contacts(state: GuiContact[] = [], action: Action): GuiContact[] {
-    return action.type === 'CONTACTS/LOAD_CONTACTS_SUCCESS' ? action.data.contacts : state
+    return action.type === 'CONTACTS/LOAD_CONTACTS_SUCCESS'
+      ? action.data.contacts
+      : state
   },
 
-  deviceReferral(state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
+  deviceReferral(
+    state: DeviceReferral = defaultDeviceReferral,
+    action: Action
+  ): DeviceReferral {
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
@@ -62,7 +78,10 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  exchangeRatesMap: (state = new Map(), action: Action): GuiExchangeRatesMap => {
+  exchangeRatesMap: (
+    state = new Map(),
+    action: Action
+  ): GuiExchangeRatesMap => {
     switch (action.type) {
       case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
         return action.data.exchangeRatesMap
@@ -98,7 +117,10 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {
+  sortedWalletList(
+    state: WalletListItem[] = [],
+    action: Action
+  ): WalletListItem[] {
     switch (action.type) {
       case 'UPDATE_SORTED_WALLET_LIST':
         return action.data

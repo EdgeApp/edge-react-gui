@@ -25,7 +25,11 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../../util/utils'
+import {
+  DECIMAL_PRECISION,
+  removeIsoPrefix,
+  zeroString
+} from '../../../util/utils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
@@ -78,18 +82,35 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   // Running action program display
   const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
     const actionQueueItem = actionQueueMap[programEdge.programId]
-    return actionQueueItem != null && !checkEffectIsDone(actionQueueItem.state.effect)
+    return (
+      actionQueueItem != null &&
+      !checkEffectIsDone(actionQueueItem.state.effect)
+    )
   })
-  const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
-  const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
+  const runningActionQueueItem =
+    runningProgramEdge != null
+      ? actionQueueMap[runningProgramEdge.programId]
+      : null
+  const [runningProgramMessage, setRunningProgramMessage] = React.useState<
+    string | undefined
+  >(undefined)
   const isActionProgramRunning = runningProgramMessage != null
 
   useAsyncEffect(
     async () => {
       if (runningActionQueueItem != null) {
-        const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
-        const activeStep = displayInfo.steps.find(step => step.status === 'active')
-        setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
+        const displayInfo: ActionDisplayInfo =
+          await getActionProgramDisplayInfo(
+            account,
+            runningActionQueueItem.program,
+            runningActionQueueItem.state
+          )
+        const activeStep = displayInfo.steps.find(
+          step => step.status === 'active'
+        )
+        setRunningProgramMessage(
+          activeStep != null ? activeStep.title : undefined
+        )
       } else {
         setRunningProgramMessage(undefined)
       }
@@ -108,11 +129,19 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     {
       label: lstrings.loan_available_equity,
       value: displayFiatTotal(defaultIsoFiat, availableEquity),
-      icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
+      icon: (
+        <Ionicon
+          name="information-circle-outline"
+          size={theme.rem(1)}
+          color={theme.iconTappable}
+        />
+      )
     }
   ]
 
-  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details'))
+  const handleInfoIconPress = useUrlHandler(
+    sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details')
+  )
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', {
@@ -124,10 +153,15 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
-        <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
+        <EdgeTouchableOpacity
+          onPress={() => handleProgramStatusCardPress(runningProgramEdge)}
+        >
           <EdgeCard marginRem={[0, 0, 1]}>
             <Space row>
-              <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
+              <ActivityIndicator
+                color={theme.iconTappable}
+                style={styles.activityIndicator}
+              />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
               </EdgeText>
@@ -140,8 +174,15 @@ export const LoanDetailsSceneComponent = (props: Props) => {
 
   // #region Loan Action Cards
 
-  const collateralPositions = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
-  const debtPositions = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
+  const collateralPositions = React.useMemo(
+    () =>
+      collaterals.filter(collateral => !zeroString(collateral.nativeAmount)),
+    [collaterals]
+  )
+  const debtPositions = React.useMemo(
+    () => debts.filter(debt => !zeroString(debt.nativeAmount)),
+    [debts]
+  )
 
   const actionCards = React.useMemo(() => {
     const isOpenCollaterals = collateralPositions.length > 0
@@ -209,13 +250,31 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     return (
       <>
         {actionCardConfigs.map(actionCardConfigData => {
-          const { title, iconName, handlePress, isDisabled } = actionCardConfigData
+          const { title, iconName, handlePress, isDisabled } =
+            actionCardConfigData
           return (
-            <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
+            <TappableCard
+              marginRem={[0, 0, 1, 0]}
+              onPress={handlePress}
+              disabled={isDisabled}
+              key={iconName}
+            >
               <Space rightRem={1}>
-                <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
+                <Fontello
+                  name={iconName}
+                  size={theme.rem(2)}
+                  color={
+                    isDisabled ? theme.deactivatedText : theme.iconTappable
+                  }
+                />
               </Space>
-              <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
+              <EdgeText
+                style={
+                  isDisabled ? styles.actionLabelDisabled : styles.actionLabel
+                }
+              >
+                {title}
+              </EdgeText>
             </TappableCard>
           )
         })}
@@ -242,14 +301,24 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       <SceneHeader
         tertiary={
           <EdgeTouchableOpacity onPress={handleInfoIconPress}>
-            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+            <Ionicon
+              name="information-circle-outline"
+              size={theme.rem(1.25)}
+              color={theme.iconTappable}
+            />
           </EdgeTouchableOpacity>
         }
-        title={`${lstrings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
+        title={`${lstrings.loan_details_title}${
+          isDevMode ? ` (${wallet.name})` : ''
+        }`}
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <KeyboardAwareScrollView
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         <Space aroundRem={1} topRem={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
@@ -262,22 +331,37 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         </Space>
         <Space horizontalRem={1}>
           <Space bottomRem={1}>
-            <SectionHeading>{lstrings.loan_loan_breakdown_title}</SectionHeading>
+            <SectionHeading>
+              {lstrings.loan_loan_breakdown_title}
+            </SectionHeading>
           </Space>
           {debts.map(debt => {
             if (zeroString(debt.nativeAmount)) return null
-            const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
+            const aprText = sprintf(
+              lstrings.loan_apr_s,
+              toPercentString(debt.apr)
+            )
             return (
               <EdgeCard key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space row>
                   <Space rightRem={1}>
-                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
+                    <CryptoIcon
+                      hideSecondary
+                      pluginId={pluginId}
+                      tokenId={debt.tokenId}
+                    />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>
-                      <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
+                      <CryptoText
+                        wallet={wallet}
+                        tokenId={debt.tokenId}
+                        nativeAmount={debt.nativeAmount}
+                      />
                     </EdgeText>
-                    <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
+                    <EdgeText style={styles.breakdownSubText}>
+                      {aprText}
+                    </EdgeText>
                   </Space>
                 </Space>
               </EdgeCard>
@@ -290,7 +374,12 @@ export const LoanDetailsSceneComponent = (props: Props) => {
           <Space bottomRem={1}>
             <SectionHeading>{lstrings.loan_actions_title}</SectionHeading>
             {isActionProgramRunning ? (
-              <Alert type="warning" title={lstrings.warning_please_wait_title} message={lstrings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
+              <Alert
+                type="warning"
+                title={lstrings.warning_please_wait_title}
+                message={lstrings.loan_action_program_running}
+                marginRem={[0.5, 0, 0, 0]}
+              />
             ) : null}
           </Space>
           {actionCards}
@@ -333,17 +422,29 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
-export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>): string => {
+export const useFiatTotal = (
+  wallet: EdgeCurrencyWallet,
+  tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>
+): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
-    const fiatAmount = calculateFiatAmount(wallet, defaultIsoFiat, exchangeRates, tokenAmount.tokenId, tokenAmount.nativeAmount)
+    const fiatAmount = calculateFiatAmount(
+      wallet,
+      defaultIsoFiat,
+      exchangeRates,
+      tokenAmount.tokenId,
+      tokenAmount.nativeAmount
+    )
     return add(sum, fiatAmount)
   }, '0')
 }
 
-export const displayFiatTotal = (isoFiatCurrencyCode: string, fiatAmount: string) => {
+export const displayFiatTotal = (
+  isoFiatCurrencyCode: string,
+  fiatAmount: string
+) => {
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
@@ -369,6 +470,10 @@ export const calculateFiatAmount = (
   }
 
   const [denomination] = denominations
-  const fiatAmount = div(mul(nativeAmount, assetFiatPrice), denomination.multiplier, DECIMAL_PRECISION)
+  const fiatAmount = div(
+    mul(nativeAmount, assetFiatPrice),
+    denomination.multiplier,
+    DECIMAL_PRECISION
+  )
   return gt(fiatAmount, '0') ? max('0.01', div(fiatAmount, '1', 2)) : '0'
 }

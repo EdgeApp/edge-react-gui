@@ -1,6 +1,18 @@
-import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asEither,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 
-import { asFiatPaymentType, FiatPaymentType, FiatPluginFactory } from '../plugins/gui/fiatPluginTypes'
+import {
+  asFiatPaymentType,
+  FiatPaymentType,
+  FiatPluginFactory
+} from '../plugins/gui/fiatPluginTypes'
 import { Permission } from '../reducers/PermissionsReducer'
 import { EdgeAsset } from '../types/types'
 import { UriQueryMap } from './WebTypes'

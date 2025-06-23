@@ -6,7 +6,11 @@ import { WheelPicker } from 'react-native-wheel-picker-android'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime'
+import {
+  DisplayTime,
+  displayToSeconds,
+  secondsToDisplay
+} from '../../util/displayTime'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeModal } from './EdgeModal'
@@ -26,7 +30,9 @@ const unitLabelValueList: Array<{ label: string; value: UnitOptionValue }> = [
   { label: lstrings.settings_days, value: 'days' }
 ]
 
-const unitLabelsAndroid: string[] = unitLabelValueList.map(option => option.label)
+const unitLabelsAndroid: string[] = unitLabelValueList.map(
+  option => option.label
+)
 
 export const AutoLogoutModal = (props: Props) => {
   const { autoLogoutTimeInSeconds, bridge } = props
@@ -35,12 +41,18 @@ export const AutoLogoutModal = (props: Props) => {
 
   const isAndroid = Platform.OS === 'android'
 
-  const [displayTime, setDisplayTime] = React.useState<DisplayTime>(secondsToDisplay(autoLogoutTimeInSeconds))
+  const [displayTime, setDisplayTime] = React.useState<DisplayTime>(
+    secondsToDisplay(autoLogoutTimeInSeconds)
+  )
 
   // Android-specific picker stuff
   const [initPositionNumber] = React.useState(displayTime.value)
   const [initPositionUnit] = React.useState(() =>
-    unitLabelValueList.findIndex(option => option.value === (displayTime.value === 0 ? 'hours' : displayTime.measurement))
+    unitLabelValueList.findIndex(
+      option =>
+        option.value ===
+        (displayTime.value === 0 ? 'hours' : displayTime.measurement)
+    )
   )
   const [numberLabelsAndroid] = React.useState<string[]>(() => {
     const out: string[] = []
@@ -53,9 +65,23 @@ export const AutoLogoutModal = (props: Props) => {
   // iOS
   const numberOptionsIos: React.ReactElement[] = []
   for (let i = 0; i < 60; i++) {
-    numberOptionsIos.push(<Picker.Item key={i} label={i === 0 ? lstrings.string_disable : `${i}`} value={i} color={theme.pickerText} />)
+    numberOptionsIos.push(
+      <Picker.Item
+        key={i}
+        label={i === 0 ? lstrings.string_disable : `${i}`}
+        value={i}
+        color={theme.pickerText}
+      />
+    )
   }
-  const unitOptionsIos = unitLabelValueList.map(option => <Picker.Item key={option.value} label={option.label} value={option.value} color={theme.pickerText} />)
+  const unitOptionsIos = unitLabelValueList.map(option => (
+    <Picker.Item
+      key={option.value}
+      label={option.label}
+      value={option.value}
+      color={theme.pickerText}
+    />
+  ))
 
   const handleDone = useHandler(() => {
     bridge.resolve(displayToSeconds(displayTime))
@@ -67,12 +93,17 @@ export const AutoLogoutModal = (props: Props) => {
 
   // Default to hours if it's disabled:
   React.useEffect(() => {
-    if (displayTime.value === 0) setDisplayTime({ ...displayTime, measurement: 'hours' })
+    if (displayTime.value === 0)
+      setDisplayTime({ ...displayTime, measurement: 'hours' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.dialog_title}>
+    <EdgeModal
+      bridge={bridge}
+      onCancel={handleCancel}
+      title={lstrings.dialog_title}
+    >
       <View style={styles.pickerContainer}>
         {isAndroid ? (
           <>
@@ -84,7 +115,9 @@ export const AutoLogoutModal = (props: Props) => {
                 initPosition={initPositionNumber}
                 itemTextFontFamily={theme.fontFaceDefault}
                 itemTextSize={theme.rem(1)}
-                onItemSelected={(index: number) => setDisplayTime({ ...displayTime, value: index })}
+                onItemSelected={(index: number) =>
+                  setDisplayTime({ ...displayTime, value: index })
+                }
                 selectedItemTextColor={theme.pickerText}
                 style={styles.androidPicker}
               />
@@ -110,20 +143,28 @@ export const AutoLogoutModal = (props: Props) => {
           </>
         ) : (
           <>
-            <Picker style={styles.picker} selectedValue={displayTime.value} onValueChange={value => setDisplayTime({ ...displayTime, value })}>
+            <Picker
+              style={styles.picker}
+              selectedValue={displayTime.value}
+              onValueChange={value => setDisplayTime({ ...displayTime, value })}
+            >
               {numberOptionsIos}
             </Picker>
             <Picker
               style={styles.picker}
               selectedValue={displayTime.measurement}
-              onValueChange={measurement => setDisplayTime({ ...displayTime, measurement })}
+              onValueChange={measurement =>
+                setDisplayTime({ ...displayTime, measurement })
+              }
             >
               {unitOptionsIos}
             </Picker>
           </>
         )}
       </View>
-      <ModalButtons primary={{ label: lstrings.string_save, onPress: handleDone }} />
+      <ModalButtons
+        primary={{ label: lstrings.string_save, onPress: handleDone }}
+      />
     </EdgeModal>
   )
 }

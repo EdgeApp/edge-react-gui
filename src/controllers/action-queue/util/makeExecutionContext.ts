@@ -14,7 +14,10 @@ export interface ExecutionContextProperties {
   getState: GetState
 }
 
-export const makeExecutionContext = (properties: ExecutionContextProperties, mockMode: boolean = false): ExecutionContext => {
+export const makeExecutionContext = (
+  properties: ExecutionContextProperties,
+  mockMode: boolean = false
+): ExecutionContext => {
   const out: ExecutionContext = {
     ...properties,
     async evaluateAction(program, state) {

@@ -1,4 +1,13 @@
-import { asArray, asBoolean, asCodec, asObject, asOptional, asString, Cleaner, uncleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asCodec,
+  asObject,
+  asOptional,
+  asString,
+  Cleaner,
+  uncleaner
+} from 'cleaners'
 import * as React from 'react'
 import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,7 +16,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
+import {
+  CurrencySettingProps,
+  maybeCurrencySetting
+} from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -28,15 +40,25 @@ function CustomServersSettingComponent(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const titleText = extraInfo == null ? lstrings.settings_custom_nodes_title : sprintf(lstrings.settings_custom_servers_title, extraInfo)
+  const titleText =
+    extraInfo == null
+      ? lstrings.settings_custom_nodes_title
+      : sprintf(lstrings.settings_custom_servers_title, extraInfo)
   const customServerSet = new Set(customServers)
 
   const handleToggleEnabled = useHandler(async (): Promise<void> => {
     await onUpdate({
       enableCustomServers: !enableCustomServers,
-      customServers: customServerSet.size > 0 ? Array.from(customServerSet) : defaultSetting.customServers
+      customServers:
+        customServerSet.size > 0
+          ? Array.from(customServerSet)
+          : defaultSetting.customServers
     })
-    logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServerSet.size}`)
+    logActivity(
+      `Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${
+        customServerSet.size
+      }`
+    )
   })
 
   async function handleDeleteNode(server: string): Promise<void> {
@@ -78,17 +100,32 @@ function CustomServersSettingComponent(props: Props) {
   return (
     <>
       <SettingsHeaderRow label={titleText} />
-      <SettingsSwitchRow label={lstrings.settings_enable_custom_nodes} value={enableCustomServers} onPress={handleToggleEnabled} />
+      <SettingsSwitchRow
+        label={lstrings.settings_enable_custom_nodes}
+        value={enableCustomServers}
+        onPress={handleToggleEnabled}
+      />
       {!enableCustomServers ? null : (
         <>
           {Array.from(customServerSet).map(server => (
-            <SettingsTappableRow key={server} action="delete" onPress={async () => await handleDeleteNode(server)}>
-              <EdgeTouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
+            <SettingsTappableRow
+              key={server}
+              action="delete"
+              onPress={async () => await handleDeleteNode(server)}
+            >
+              <EdgeTouchableOpacity
+                onPress={() => handleEditNode(server)}
+                style={styles.labelContainer}
+              >
                 <Text style={styles.labelText}>{server}</Text>
               </EdgeTouchableOpacity>
             </SettingsTappableRow>
           ))}
-          <SettingsTappableRow action="add" label={lstrings.settings_add_custom_node} onPress={handleEditNode} />
+          <SettingsTappableRow
+            action="add"
+            label={lstrings.settings_add_custom_node}
+            onPress={handleEditNode}
+          />
         </>
       )}
     </>
@@ -174,8 +211,20 @@ const asElectrumServersSetting: Cleaner<CustomServersSetting> = asCodec(
 // Individual settings sections:
 //
 
-export const MaybeBlockbookSetting = maybeCurrencySetting(CustomServersSettingComponent, asBlockbookServersSetting, lstrings.settings_blockbook)
+export const MaybeBlockbookSetting = maybeCurrencySetting(
+  CustomServersSettingComponent,
+  asBlockbookServersSetting,
+  lstrings.settings_blockbook
+)
 
-export const MaybeCustomServersSetting = maybeCurrencySetting(CustomServersSettingComponent, asCustomServersSetting, undefined)
+export const MaybeCustomServersSetting = maybeCurrencySetting(
+  CustomServersSettingComponent,
+  asCustomServersSetting,
+  undefined
+)
 
-export const MaybeElectrumSetting = maybeCurrencySetting(CustomServersSettingComponent, asElectrumServersSetting, lstrings.settings_electrum)
+export const MaybeElectrumSetting = maybeCurrencySetting(
+  CustomServersSettingComponent,
+  asElectrumServersSetting,
+  lstrings.settings_electrum
+)

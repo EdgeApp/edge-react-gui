@@ -20,7 +20,13 @@ interface Props {
 }
 
 export function DotsBackground(props: Props): React.ReactElement {
-  const { accentColors, backgroundGradientColors, backgroundGradientStart, backgroundGradientEnd, overrideDots } = props
+  const {
+    accentColors,
+    backgroundGradientColors,
+    backgroundGradientStart,
+    backgroundGradientEnd,
+    overrideDots
+  } = props
   const theme = useTheme()
   const { blurRadius, dotOpacity, dots } = theme.backgroundDots
 
@@ -81,14 +87,36 @@ export function DotsBackground(props: Props): React.ReactElement {
     const dimming = 1 + Math.min(0, innerR)
 
     const stops = samples.map(([offset, opacity], key) => (
-      <Stop key={`stop${key}`} offset={percent((offset + totalR - 2) / totalR)} stopColor={circle.color} stopOpacity={opacity * dimming * dimming} />
+      <Stop
+        key={`stop${key}`}
+        offset={percent((offset + totalR - 2) / totalR)}
+        stopColor={circle.color}
+        stopOpacity={opacity * dimming * dimming}
+      />
     ))
     if (innerR > 0) {
-      stops.unshift(<Stop key="center" offset="0%" stopColor={circle.color} stopOpacity="1" />)
+      stops.unshift(
+        <Stop
+          key="center"
+          offset="0%"
+          stopColor={circle.color}
+          stopOpacity="1"
+        />
+      )
     }
 
     return (
-      <RadialGradient id={`grad${key}`} key={`grad${key}`} gradientUnits="objectBoundingBox" cx="50%" cy="50%" fx="50%" fy="50%" rx="50%" ry="50%">
+      <RadialGradient
+        id={`grad${key}`}
+        key={`grad${key}`}
+        gradientUnits="objectBoundingBox"
+        cx="50%"
+        cy="50%"
+        fx="50%"
+        fy="50%"
+        rx="50%"
+        ry="50%"
+      >
         {stops}
       </RadialGradient>
     )
@@ -98,7 +126,15 @@ export function DotsBackground(props: Props): React.ReactElement {
     const innerR = circle.r - blurRadius
     const totalR = 2 * blurRadius + Math.max(0, innerR)
 
-    return <Circle key={`dot${key}`} cx={circle.cx} cy={circle.cy} r={totalR} fill={`url(#grad${key})`} />
+    return (
+      <Circle
+        key={`dot${key}`}
+        cx={circle.cx}
+        cy={circle.cy}
+        r={totalR}
+        fill={`url(#grad${key})`}
+      />
+    )
   }
 
   return (

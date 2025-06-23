@@ -12,7 +12,11 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
-import { StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
+import {
+  StakePlugin,
+  StakePolicy,
+  StakePosition
+} from '../../../plugins/stake-plugins/types'
 import { FooterRender } from '../../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -92,7 +96,9 @@ export const EarnScene = (props: Props) => {
     PORTFOLIO_MAP = {}
   }
 
-  const currencyConfigMap = useSelector(state => state.core.account.currencyConfig)
+  const currencyConfigMap = useSelector(
+    state => state.core.account.currencyConfig
+  )
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallets = Object.values(currencyWallets)
 
@@ -134,14 +140,18 @@ export const EarnScene = (props: Props) => {
       for (const pluginId of pluginIds) {
         setIsLoadingDiscover(true)
 
-        const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING
+        const isStakingSupported =
+          SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true &&
+          ENV.ENABLE_STAKING
         if (!isStakingSupported) continue
 
         const stakePlugins = await getStakePlugins(pluginId)
 
         updateMaps(() => {
           for (const stakePlugin of stakePlugins) {
-            for (const stakePolicy of stakePlugin.getPolicies({ pluginId }).filter(stakePolicy => !stakePolicy.deprecated)) {
+            for (const stakePolicy of stakePlugin
+              .getPolicies({ pluginId })
+              .filter(stakePolicy => !stakePolicy.deprecated)) {
               DISCOVER_MAP[stakePolicy.stakePolicyId] = {
                 stakePlugin,
                 stakePolicy
@@ -179,32 +189,47 @@ export const EarnScene = (props: Props) => {
 
             // Find matching wallets based on the first stake asset's pluginId
             const pluginId = stakePolicy.stakeAssets[0].pluginId
-            const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === pluginId)
+            const matchingWallets = wallets.filter(
+              (wallet: EdgeCurrencyWallet) =>
+                wallet.currencyInfo.pluginId === pluginId
+            )
 
-            const walletStakeInfoPromises = matchingWallets.map(async wallet => {
-              if (signal.aborted) return null
-              try {
-                const stakePosition = await stakePlugin.fetchStakePosition({
-                  stakePolicyId: stakePolicy.stakePolicyId,
-                  wallet,
-                  account
-                })
-                const allocations = getPositionAllocations(stakePosition)
-                const { staked, earned, unstaked } = allocations
-                const isPositionOpen = [...staked, ...earned, ...unstaked].some(positionAllocation => !zeroString(positionAllocation.nativeAmount))
+            const walletStakeInfoPromises = matchingWallets.map(
+              async wallet => {
+                if (signal.aborted) return null
+                try {
+                  const stakePosition = await stakePlugin.fetchStakePosition({
+                    stakePolicyId: stakePolicy.stakePolicyId,
+                    wallet,
+                    account
+                  })
+                  const allocations = getPositionAllocations(stakePosition)
+                  const { staked, earned, unstaked } = allocations
+                  const isPositionOpen = [
+                    ...staked,
+                    ...earned,
+                    ...unstaked
+                  ].some(
+                    positionAllocation =>
+                      !zeroString(positionAllocation.nativeAmount)
+                  )
 
-                if (isPositionOpen) {
-                  return { wallet, stakePosition }
+                  if (isPositionOpen) {
+                    return { wallet, stakePosition }
+                  }
+                } catch (e) {
+                  showDevError(e)
                 }
-              } catch (e) {
-                showDevError(e)
+                return null
               }
-              return null
-            })
+            )
 
             if (!signal.aborted) {
-              const walletStakeInfos = (await Promise.all(walletStakeInfoPromises)).filter(
-                (info: WalletStakeInfo | null): info is WalletStakeInfo => info != null
+              const walletStakeInfos = (
+                await Promise.all(walletStakeInfoPromises)
+              ).filter(
+                (info: WalletStakeInfo | null): info is WalletStakeInfo =>
+                  info != null
               )
 
               updateMaps(() => {
@@ -231,31 +256,46 @@ export const EarnScene = (props: Props) => {
     'EarnScene Refresh Portfolio Data'
   )
 
-  const filterStakeInfo = (info: DiscoverStakeInfo | PortfolioStakeInfo): boolean => {
+  const filterStakeInfo = (
+    info: DiscoverStakeInfo | PortfolioStakeInfo
+  ): boolean => {
     if (!searchText) return true
     const searchLower = searchText.toLowerCase()
 
     // Match against policy provider name
-    if (info.stakePolicy.stakeProviderInfo.displayName.toLowerCase().includes(searchLower)) return true
+    if (
+      info.stakePolicy.stakeProviderInfo.displayName
+        .toLowerCase()
+        .includes(searchLower)
+    )
+      return true
 
     // Match against stake assets
     for (const stakeAsset of info.stakePolicy.stakeAssets) {
       const currencyInfo = currencyConfigMap[stakeAsset.pluginId].currencyInfo
-      if (currencyInfo.displayName.toLowerCase().includes(searchLower)) return true
-      if (currencyInfo.currencyCode.toLowerCase().includes(searchLower)) return true
+      if (currencyInfo.displayName.toLowerCase().includes(searchLower))
+        return true
+      if (currencyInfo.currencyCode.toLowerCase().includes(searchLower))
+        return true
       // Also check asset's own display name if available
-      if (stakeAsset.displayName?.toLowerCase().includes(searchLower)) return true
-      if (stakeAsset.currencyCode?.toLowerCase().includes(searchLower)) return true
+      if (stakeAsset.displayName?.toLowerCase().includes(searchLower))
+        return true
+      if (stakeAsset.currencyCode?.toLowerCase().includes(searchLower))
+        return true
     }
 
     // Match against reward assets
     for (const rewardAsset of info.stakePolicy.rewardAssets) {
       const currencyInfo = currencyConfigMap[rewardAsset.pluginId].currencyInfo
-      if (currencyInfo.displayName.toLowerCase().includes(searchLower)) return true
-      if (currencyInfo.currencyCode.toLowerCase().includes(searchLower)) return true
+      if (currencyInfo.displayName.toLowerCase().includes(searchLower))
+        return true
+      if (currencyInfo.currencyCode.toLowerCase().includes(searchLower))
+        return true
       // Also check asset's own display name if available
-      if (rewardAsset.displayName?.toLowerCase().includes(searchLower)) return true
-      if (rewardAsset.currencyCode?.toLowerCase().includes(searchLower)) return true
+      if (rewardAsset.displayName?.toLowerCase().includes(searchLower))
+        return true
+      if (rewardAsset.currencyCode?.toLowerCase().includes(searchLower))
+        return true
     }
 
     return false
@@ -268,7 +308,10 @@ export const EarnScene = (props: Props) => {
       const handlePress = async () => {
         let walletId: string | undefined
 
-        const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === currencyInfo.pluginId)
+        const matchingWallets = wallets.filter(
+          (wallet: EdgeCurrencyWallet) =>
+            wallet.currencyInfo.pluginId === currencyInfo.pluginId
+        )
         if (matchingWallets.length === 1) {
           // Only one compatible wallet, auto-select it
           const wallet = matchingWallets[0]
@@ -309,7 +352,12 @@ export const EarnScene = (props: Props) => {
 
       return (
         <EdgeAnim key={stakePolicy.stakePolicyId} enter={fadeInUp20}>
-          <EarnOptionCard currencyConfig={currencyConfigMap} stakePolicy={stakePolicy} isOpenPosition={false} onPress={handlePress} />
+          <EarnOptionCard
+            currencyConfig={currencyConfigMap}
+            stakePolicy={stakePolicy}
+            isOpenPosition={false}
+            onPress={handlePress}
+          />
         </EdgeAnim>
       )
     },
@@ -317,7 +365,10 @@ export const EarnScene = (props: Props) => {
   )
 
   const renderPortfolioItem = React.useCallback(
-    (portfolioStakeInfo: PortfolioStakeInfo, currencyInfo: EdgeCurrencyInfo) => {
+    (
+      portfolioStakeInfo: PortfolioStakeInfo,
+      currencyInfo: EdgeCurrencyInfo
+    ) => {
       const { stakePlugin, stakePolicy, walletStakeInfos } = portfolioStakeInfo
       if (walletStakeInfos.length === 0) return null
 
@@ -325,15 +376,21 @@ export const EarnScene = (props: Props) => {
         let walletId: string | undefined
         let stakePosition: StakePosition | undefined
 
-        const matchingWallets = wallets.filter((wallet: EdgeCurrencyWallet) => wallet.currencyInfo.pluginId === currencyInfo.pluginId)
+        const matchingWallets = wallets.filter(
+          (wallet: EdgeCurrencyWallet) =>
+            wallet.currencyInfo.pluginId === currencyInfo.pluginId
+        )
         if (matchingWallets.length === 1) {
           // Only one wallet with an open position, auto-select it
-          const { wallet, stakePosition: existingStakePosition } = walletStakeInfos[0]
+          const { wallet, stakePosition: existingStakePosition } =
+            walletStakeInfos[0]
           walletId = wallet.id
           stakePosition = existingStakePosition
         } else {
           // Select from wallets that have an open position
-          const allowedWalletIds = walletStakeInfos.map(walletStakePosition => walletStakePosition.wallet.id)
+          const allowedWalletIds = walletStakeInfos.map(
+            walletStakePosition => walletStakePosition.wallet.id
+          )
 
           const result = await Airship.show<WalletListResult>(bridge => (
             <WalletListModal
@@ -347,14 +404,21 @@ export const EarnScene = (props: Props) => {
 
           if (result?.type === 'wallet') {
             walletId = result.walletId
-            stakePosition = walletStakeInfos.find(walletStakeInfo => walletStakeInfo.wallet.id === result.walletId)?.stakePosition
+            stakePosition = walletStakeInfos.find(
+              walletStakeInfo => walletStakeInfo.wallet.id === result.walletId
+            )?.stakePosition
           }
         }
 
         // User backed out of the WalletListModal
         if (walletId == null || stakePosition == null) return
 
-        dispatch({ type: 'STAKING/UPDATE', walletId, stakePolicy, stakePosition })
+        dispatch({
+          type: 'STAKING/UPDATE',
+          walletId,
+          stakePolicy,
+          stakePosition
+        })
 
         navigation.push('stakeOverview', {
           walletId,
@@ -365,7 +429,12 @@ export const EarnScene = (props: Props) => {
 
       return (
         <EdgeAnim key={stakePolicy.stakePolicyId} enter={fadeInUp20}>
-          <EarnOptionCard currencyConfig={currencyConfigMap} stakePolicy={stakePolicy} isOpenPosition onPress={handlePress} />
+          <EarnOptionCard
+            currencyConfig={currencyConfigMap}
+            stakePolicy={stakePolicy}
+            isOpenPosition
+            onPress={handlePress}
+          />
         </EdgeAnim>
       )
     },
@@ -388,49 +457,90 @@ export const EarnScene = (props: Props) => {
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+    [
+      handleChangeText,
+      handleDoneSearching,
+      handleFooterLayoutHeight,
+      handleStartSearching,
+      isSearching,
+      searchText
+    ]
   )
 
   const filteredPortfolioItems = React.useMemo(() => {
-    const items: Array<PortfolioStakeInfo | null> = Object.values(portfolioMap).filter(filterStakeInfo)
+    const items: Array<PortfolioStakeInfo | null> =
+      Object.values(portfolioMap).filter(filterStakeInfo)
     if (isLoadingPortfolio) items.push(null)
     return items
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [portfolioMap, filterStakeInfo, searchText, isLoadingPortfolio])
 
   const filteredDiscoverItems = React.useMemo(() => {
-    const items: Array<DiscoverStakeInfo | null> = Object.values(discoverMap).filter(filterStakeInfo)
+    const items: Array<DiscoverStakeInfo | null> =
+      Object.values(discoverMap).filter(filterStakeInfo)
     if (isLoadingDiscover) items.push(null)
     return items
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discoverMap, filterStakeInfo, searchText, isLoadingDiscover])
 
   const renderItem = React.useCallback(
-    (info: ListRenderItemInfo<DiscoverStakeInfo | PortfolioStakeInfo | null>) => {
+    (
+      info: ListRenderItemInfo<DiscoverStakeInfo | PortfolioStakeInfo | null>
+    ) => {
       if (info.item === null) {
-        return <ActivityIndicator style={styles.loader} size="large" color={theme.primaryText} />
+        return (
+          <ActivityIndicator
+            style={styles.loader}
+            size="large"
+            color={theme.primaryText}
+          />
+        )
       }
-      const currencyInfo = currencyConfigMap[info.item.stakePolicy.stakeAssets[0].pluginId].currencyInfo
+      const currencyInfo =
+        currencyConfigMap[info.item.stakePolicy.stakeAssets[0].pluginId]
+          .currencyInfo
       return isPortfolioSelected
         ? renderPortfolioItem(info.item as PortfolioStakeInfo, currencyInfo)
         : renderDiscoverItem(info.item as DiscoverStakeInfo, currencyInfo)
     },
-    [currencyConfigMap, isPortfolioSelected, renderPortfolioItem, renderDiscoverItem, styles.loader, theme.primaryText]
+    [
+      currencyConfigMap,
+      isPortfolioSelected,
+      renderPortfolioItem,
+      renderDiscoverItem,
+      styles.loader,
+      theme.primaryText
+    ]
   )
 
   const handleScroll = useSceneScrollHandler()
 
   return (
-    <SceneWrapper avoidKeyboard renderFooter={renderFooter} footerHeight={footerHeight}>
+    <SceneWrapper
+      avoidKeyboard
+      renderFooter={renderFooter}
+      footerHeight={footerHeight}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <>
-          <EdgeSwitch labelA={lstrings.staking_discover} labelB={lstrings.staking_portfolio} onSelectA={handleSelectEarn} onSelectB={handleSelectPortfolio} />
+          <EdgeSwitch
+            labelA={lstrings.staking_discover}
+            labelB={lstrings.staking_portfolio}
+            onSelectA={handleSelectEarn}
+            onSelectB={handleSelectPortfolio}
+          />
           <SectionHeader leftTitle={lstrings.staking_earning_pools} />
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <Animated.FlatList
               contentContainerStyle={{ ...insetStyle, ...styles.list }}
-              data={isPortfolioSelected ? filteredPortfolioItems : filteredDiscoverItems}
-              keyExtractor={(item, index) => item?.stakePolicy.stakePolicyId ?? `loader-${index}`}
+              data={
+                isPortfolioSelected
+                  ? filteredPortfolioItems
+                  : filteredDiscoverItems
+              }
+              keyExtractor={(item, index) =>
+                item?.stakePolicy.stakePolicyId ?? `loader-${index}`
+              }
               onScroll={handleScroll}
               renderItem={renderItem}
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}

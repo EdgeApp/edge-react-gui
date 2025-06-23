@@ -13,7 +13,11 @@ export interface MetadataCache {
 
 export const stakeMetadataCache: MetadataCache = {}
 
-export const cacheTxMetadata = (txid: string, currencyCode: string, metadata: EdgeMetadata) => {
+export const cacheTxMetadata = (
+  txid: string,
+  currencyCode: string,
+  metadata: EdgeMetadata
+) => {
   // Add metadata cache entry:
   const key = txid.toLowerCase()
   stakeMetadataCache[key] = stakeMetadataCache[key] ?? []

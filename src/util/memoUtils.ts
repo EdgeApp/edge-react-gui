@@ -10,7 +10,10 @@ import { asIntegerString } from './cleaners/asIntegerString'
 /**
  * Creates an EdgeMemo from a memo option and text
  */
-export const createEdgeMemo = (memoOptions: EdgeMemoOption[], text: string): EdgeMemo => {
+export const createEdgeMemo = (
+  memoOptions: EdgeMemoOption[],
+  text: string
+): EdgeMemo => {
   const [memoOption] = memoOptions.filter(option => option.hidden !== true)
   return {
     type: memoOption.type,
@@ -28,8 +31,15 @@ export const getLegacyUniqueIdentifier = (spendTarget?: EdgeSpendTarget) => {
  * Checks a memo against a memo option.
  * Returns `undefined` if valid, or an error string if invalid.
  */
-export function getMemoError(memo: EdgeMemo, option: EdgeMemoOption): string | undefined {
-  if (option.type === 'text' && option.maxLength != null && memo.value.length > option.maxLength) {
+export function getMemoError(
+  memo: EdgeMemo,
+  option: EdgeMemoOption
+): string | undefined {
+  if (
+    option.type === 'text' &&
+    option.maxLength != null &&
+    memo.value.length > option.maxLength
+  ) {
     return sprintf(lstrings.memo_error_text_too_long_s, option.maxLength)
   }
 

@@ -3,7 +3,12 @@ import React from 'react'
 import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -53,13 +58,18 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   /**
    * Shuffle the categories, then append an “other” category at the end:
    */
-  const [options] = React.useState<SurveyCategory[]>(() => [...shuffleArray(SURVEY_CATS), { catKey: 'other', label: lstrings.survey_opt_other_specify }])
+  const [options] = React.useState<SurveyCategory[]>(() => [
+    ...shuffleArray(SURVEY_CATS),
+    { catKey: 'other', label: lstrings.survey_opt_other_specify }
+  ])
 
   /**
    * Store the user's selection here (rather than on each item).
    * This can be `undefined`, or one of the category keys (like "ads", "other", etc.)
    */
-  const [selectedCatKey, setSelectedCatKey] = React.useState<SurveyOption2Keys | 'other' | undefined>()
+  const [selectedCatKey, setSelectedCatKey] = React.useState<
+    SurveyOption2Keys | 'other' | undefined
+  >()
 
   /**
    * “Other” custom text response:
@@ -74,22 +84,24 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
    * - Update the selected catKey
    * - Animate the “Other” text input if necessary
    */
-  const handleOptionPress = useHandler((catKey: SurveyOption2Keys | 'other') => {
-    setSelectedCatKey(catKey)
+  const handleOptionPress = useHandler(
+    (catKey: SurveyOption2Keys | 'other') => {
+      setSelectedCatKey(catKey)
 
-    // Expand the text input if “Other” was selected:
-    if (catKey === 'other') {
-      inputHeight.value = withTiming(theme.rem(3.25), {
-        duration: 300,
-        easing: Easing.inOut(Easing.ease)
-      })
-    } else {
-      inputHeight.value = withTiming(0, {
-        duration: 300,
-        easing: Easing.inOut(Easing.ease)
-      })
+      // Expand the text input if “Other” was selected:
+      if (catKey === 'other') {
+        inputHeight.value = withTiming(theme.rem(3.25), {
+          duration: 300,
+          easing: Easing.inOut(Easing.ease)
+        })
+      } else {
+        inputHeight.value = withTiming(0, {
+          duration: 300,
+          easing: Easing.inOut(Easing.ease)
+        })
+      }
     }
-  })
+  )
 
   /**
    * If the user picks something *besides* “Other,” we open the second modal:
@@ -98,7 +110,11 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
     if (selectedCatKey == null || selectedCatKey === 'other') return // Shouldn't happen if the button is disabled, and if "other" is selected, the next button is unavailable
 
     // Show the second modal:
-    const isSurveyCompleted = await Airship.show((bridge: AirshipBridge<boolean>) => <SurveyModal2 bridge={bridge} category={selectedCatKey} />)
+    const isSurveyCompleted = await Airship.show(
+      (bridge: AirshipBridge<boolean>) => (
+        <SurveyModal2 bridge={bridge} category={selectedCatKey} />
+      )
+    )
     if (isSurveyCompleted) {
       // If they completed it, close the first modal:
       props.bridge.resolve()
@@ -136,7 +152,9 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
       title={
         <View style={styles.titleContainer}>
           <Paragraph center>
-            <HeaderText>{sprintf(lstrings.survey_discover_title_1s, config.appName)}</HeaderText>
+            <HeaderText>
+              {sprintf(lstrings.survey_discover_title_1s, config.appName)}
+            </HeaderText>
           </Paragraph>
           <Paragraph center>
             <SmallText>{lstrings.survey_discover_subtitle}</SmallText>
@@ -146,7 +164,9 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
     >
       {/** HACK: iOS and Android use extraScrollHeight differently... */}
       <KeyboardAwareScrollView
-        extraScrollHeight={Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)}
+        extraScrollHeight={
+          Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)
+        }
         enableOnAndroid
         contentContainerStyle={styles.contentContainerStyle}
         keyboardShouldPersistTaps="handled"
@@ -155,22 +175,39 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
         <EdgeCard>
           <View style={styles.radioContainer}>
             {options.map((option, index) => (
-              <Radio key={option.catKey} value={selectedCatKey === option.catKey} onPress={() => handleOptionPress(option.catKey)}>
+              <Radio
+                key={option.catKey}
+                value={selectedCatKey === option.catKey}
+                onPress={() => handleOptionPress(option.catKey)}
+              >
                 <EdgeText style={styles.radioLabel}>{option.label}</EdgeText>
               </Radio>
             ))}
             <Animated.View style={[styles.baseAnimatedStyle, animatedStyle]}>
-              <SimpleTextInput value={otherText} onChangeText={setOtherText} placeholder={lstrings.specify_placeholder} horizontalRem={0.5} bottomRem={0.5} />
+              <SimpleTextInput
+                value={otherText}
+                onChangeText={setOtherText}
+                placeholder={lstrings.specify_placeholder}
+                horizontalRem={0.5}
+                bottomRem={0.5}
+              />
             </Animated.View>
           </View>
         </EdgeCard>
       </KeyboardAwareScrollView>
       <ModalButtons
         primary={{
-          label: isOtherSelected ? lstrings.survey_opt_submit : lstrings.string_next_capitalized,
+          label: isOtherSelected
+            ? lstrings.survey_opt_submit
+            : lstrings.string_next_capitalized,
           // Only enable if a selection is made; if “Other,” require text:
-          disabled: selectedCatKey == null || (isOtherSelected && otherText.trim() === ''),
-          onPress: isOtherSelected && otherText.trim() !== '' ? handleSubmitPress : handleNextPress,
+          disabled:
+            selectedCatKey == null ||
+            (isOtherSelected && otherText.trim() === ''),
+          onPress:
+            isOtherSelected && otherText.trim() !== ''
+              ? handleSubmitPress
+              : handleNextPress,
           spinner: false
         }}
         secondary={{
@@ -183,7 +220,10 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   )
 }
 
-const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyOption2Keys }) => {
+const SurveyModal2 = (props: {
+  bridge: AirshipBridge<boolean>
+  category: SurveyOption2Keys
+}) => {
   const { bridge, category } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -193,7 +233,8 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
   //    - enValue: the raw English string from the data
   //    - displayedValue: the result of getLocaleOrDefaultString()
   const [subOptions] = React.useState(() => {
-    const subItems: LocaleSubcategory[] = infoServerData.rollup?.installSurvey2?.surveyOptions2[category] ?? []
+    const subItems: LocaleSubcategory[] =
+      infoServerData.rollup?.installSurvey2?.surveyOptions2[category] ?? []
     const coreOptions = shuffleArray(subItems).map(localeObj => ({
       enValue: localeObj.en, // This is what we will log
       displayedValue: getLocaleOrDefaultString(localeObj) // This is what we show in the UI
@@ -206,7 +247,9 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
     return coreOptions
   })
 
-  const [selectedSubCatEnVal, setSelectedSubCatEnVal] = React.useState<string | undefined>()
+  const [selectedSubCatEnVal, setSelectedSubCatEnVal] = React.useState<
+    string | undefined
+  >()
 
   const [otherText, setOtherText] = React.useState('')
   const inputHeight = useSharedValue(0)
@@ -234,7 +277,10 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
     dispatch(
       logEvent('Survey_Discover2', {
         surveyCategory2: category,
-        surveyResponse2: selectedSubCatEnVal === 'Other' ? `Other: ${otherText}` : selectedSubCatEnVal
+        surveyResponse2:
+          selectedSubCatEnVal === 'Other'
+            ? `Other: ${otherText}`
+            : selectedSubCatEnVal
       })
     )
     bridge.resolve(true)
@@ -257,7 +303,9 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
       title={
         <View style={styles.titleContainer}>
           <Paragraph center>
-            <HeaderText>{sprintf(lstrings.survey_discover_title_1s, config.appName)}</HeaderText>
+            <HeaderText>
+              {sprintf(lstrings.survey_discover_title_1s, config.appName)}
+            </HeaderText>
           </Paragraph>
           <Paragraph center>
             <SmallText>{lstrings.survey_discover_subtitle}</SmallText>
@@ -266,7 +314,9 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
       }
     >
       <KeyboardAwareScrollView
-        extraScrollHeight={Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)}
+        extraScrollHeight={
+          Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)
+        }
         enableOnAndroid
         contentContainerStyle={styles.contentContainerStyle}
         keyboardShouldPersistTaps="handled"
@@ -275,12 +325,24 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
         <EdgeCard>
           <View style={styles.radioContainer}>
             {subOptions.map((option, index) => (
-              <Radio key={index} value={selectedSubCatEnVal === option.enValue} onPress={() => handleOptionPress(option.enValue)}>
-                <EdgeText style={styles.radioLabel}>{option.displayedValue}</EdgeText>
+              <Radio
+                key={index}
+                value={selectedSubCatEnVal === option.enValue}
+                onPress={() => handleOptionPress(option.enValue)}
+              >
+                <EdgeText style={styles.radioLabel}>
+                  {option.displayedValue}
+                </EdgeText>
               </Radio>
             ))}
             <Animated.View style={[styles.baseAnimatedStyle, animatedStyle]}>
-              <SimpleTextInput value={otherText} onChangeText={setOtherText} placeholder={lstrings.specify_placeholder} horizontalRem={0.5} bottomRem={0.5} />
+              <SimpleTextInput
+                value={otherText}
+                onChangeText={setOtherText}
+                placeholder={lstrings.specify_placeholder}
+                horizontalRem={0.5}
+                bottomRem={0.5}
+              />
             </Animated.View>
           </View>
         </EdgeCard>
@@ -288,7 +350,9 @@ const SurveyModal2 = (props: { bridge: AirshipBridge<boolean>; category: SurveyO
       <ModalButtons
         primary={{
           label: lstrings.survey_opt_submit,
-          disabled: selectedSubCatEnVal == null || (isOtherSelected && otherText.trim() === ''),
+          disabled:
+            selectedSubCatEnVal == null ||
+            (isOtherSelected && otherText.trim() === ''),
           onPress: handleSubmitPress,
           spinner: false
         }}

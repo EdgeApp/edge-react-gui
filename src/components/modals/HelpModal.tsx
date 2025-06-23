@@ -23,7 +23,9 @@ const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
 
 export async function showHelpModal(navigation: NavigationBase): Promise<void> {
-  return await Airship.show(bridge => <HelpModal bridge={bridge} navigation={navigation} />)
+  return await Airship.show(bridge => (
+    <HelpModal bridge={bridge} navigation={navigation} />
+  ))
 }
 
 interface Props {
@@ -57,15 +59,25 @@ export const HelpModal = (props: Props) => {
   const styles = getStyles(theme)
   const versionText = `${lstrings.help_version} ${versionNumber}`
   const buildText = `${lstrings.help_build} ${buildNumber}`
-  const helpModalTitle = sprintf(lstrings.help_modal_title_thanks, config.appName)
-  const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
+  const helpModalTitle = sprintf(
+    lstrings.help_modal_title_thanks,
+    config.appName
+  )
+  const helpSiteMoreInfoText = sprintf(
+    lstrings.help_site_more_info_text,
+    config.appName
+  )
 
   return (
     <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
-          <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
+          <Image
+            source={theme.primaryLogo}
+            style={styles.logo}
+            resizeMode="contain"
+          />
           <ModalTitle center>{helpModalTitle}</ModalTitle>
         </View>
       }
@@ -73,37 +85,76 @@ export const HelpModal = (props: Props) => {
       scroll
     >
       <SelectableRow
-        icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
+        icon={
+          <Fontello
+            name="help_idea"
+            color={theme.iconTappable}
+            size={theme.rem(1.5)}
+          />
+        }
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
-        onPress={() => handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)}
+        onPress={() =>
+          handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)
+        }
       />
 
       <SelectableRow
-        icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
+        icon={
+          <Fontello
+            name="help_headset"
+            color={theme.iconTappable}
+            size={theme.rem(1.5)}
+          />
+        }
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
-        onPress={() => handleSitePress(lstrings.help_support, config.supportSite)}
+        onPress={() =>
+          handleSitePress(lstrings.help_support, config.supportSite)
+        }
       />
 
       <SelectableRow
-        icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
+        icon={
+          <Fontello
+            name="help_call"
+            color={theme.iconTappable}
+            size={theme.rem(1.5)}
+          />
+        }
         subTitle={lstrings.help_call_text}
         title={lstrings.help_call}
         onPress={async () => await Linking.openURL(`tel:${config.phoneNumber}`)}
       />
 
       <SelectableRow
-        icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
+        icon={
+          <Fontello
+            name="globe"
+            color={theme.iconTappable}
+            size={theme.rem(1.5)}
+          />
+        }
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
         onPress={() => handleSitePress(helpSiteMoreInfoText, config.website)}
       />
       <SelectableRow
-        icon={<Fontello name="doc-text" color={theme.iconTappable} size={theme.rem(1.5)} />}
+        icon={
+          <Fontello
+            name="doc-text"
+            color={theme.iconTappable}
+            size={theme.rem(1.5)}
+          />
+        }
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
-        onPress={() => handleSitePress(lstrings.title_terms_of_service, config.termsOfServiceSite)}
+        onPress={() =>
+          handleSitePress(
+            lstrings.title_terms_of_service,
+            config.termsOfServiceSite
+          )
+        }
       />
       <View style={styles.footer}>
         <EdgeText style={styles.version}>{versionText}</EdgeText>

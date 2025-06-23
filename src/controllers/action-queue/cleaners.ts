@@ -1,7 +1,19 @@
 //
 // Action Operations
 //
-import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asMaybe,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 import { asEdgeTokenId } from '../../types/types'
 import { asBase64 } from '../../util/cleaners/asBase64'
@@ -76,7 +88,12 @@ const asParActionOp = asObject<ParActionOp>({
   actions: asArray((raw: any) => asActionOp(raw)),
   displayKey: (raw: unknown) => asOptional(asParActionOpDisplayKey)(raw)
 })
-const asParActionOpDisplayKey = asValue('borrow', 'close', 'create', 'swap-deposit-fees')
+const asParActionOpDisplayKey = asValue(
+  'borrow',
+  'close',
+  'create',
+  'swap-deposit-fees'
+)
 
 const asBroadcastTxActionOp = asObject<BroadcastTxActionOp>({
   type: asValue('broadcast-tx'),
@@ -145,7 +162,10 @@ const asSwapActionOp = asObject<SwapActionOp>({
 })
 const asSwapActionOpDisplayKey = asValue('swap-deposit')
 
-export const asNodeActionOp: Cleaner<NodeActionOp> = asEither(asSeqActionOp, asParActionOp)
+export const asNodeActionOp: Cleaner<NodeActionOp> = asEither(
+  asSeqActionOp,
+  asParActionOp
+)
 export const asLeafActionOp: Cleaner<LeafActionOp> = asEither(
   asBroadcastTxActionOp,
   asWyreBuyActionOp,
@@ -156,7 +176,10 @@ export const asLeafActionOp: Cleaner<LeafActionOp> = asEither(
   asLoanWithdrawActionOp,
   asSwapActionOp
 )
-export const asActionOp: Cleaner<ActionOp> = asEither(asNodeActionOp, asLeafActionOp)
+export const asActionOp: Cleaner<ActionOp> = asEither(
+  asNodeActionOp,
+  asLeafActionOp
+)
 
 //
 // Action Effects
@@ -215,7 +238,8 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 // Action Program
 //
 
-export const asActionProgramCompleteMessage = asObject<ActionProgramCompleteMessage>({ title: asString, message: asString })
+export const asActionProgramCompleteMessage =
+  asObject<ActionProgramCompleteMessage>({ title: asString, message: asString })
 export const asActionProgram = asObject<ActionProgram>({
   programId: asString,
   actionOp: asActionOp,

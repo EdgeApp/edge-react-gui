@@ -3,7 +3,12 @@ import { Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -34,8 +39,20 @@ const NotificationCardComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { title, type, message, persistent = false, testID, onClose, onPress } = props
-  const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
+  const {
+    title,
+    type,
+    message,
+    persistent = false,
+    testID,
+    onClose,
+    onPress
+  } = props
+  const {
+    iconUri = type === 'warning'
+      ? getThemedIconUri(theme, 'notifications/icon-warning')
+      : getThemedIconUri(theme, 'notifications/icon-info')
+  } = props
 
   const opacity = useSharedValue(1)
   const [visible, setVisible] = React.useState(true)
@@ -76,7 +93,11 @@ const NotificationCardComponent = (props: Props) => {
   }, [handleNullComponent, opacity, visible])
 
   return nullComponent ? null : (
-    <ShadowedView style={Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos}>
+    <ShadowedView
+      style={
+        Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos
+      }
+    >
       <BlurBackground />
       <Animated.View style={[styles.cardContainer, animatedStyle]}>
         <TouchableContents onPress={handlePress} testID={testID}>
@@ -87,17 +108,32 @@ const NotificationCardComponent = (props: Props) => {
               newlines, while iOS prioritizes newlines before shrinking text.
               We already use smaller text here so we shouldn't shrink it
               more */}
-            <TitleText type={type} numberOfLines={2} disableFontScaling={Platform.OS === 'android'}>
+            <TitleText
+              type={type}
+              numberOfLines={2}
+              disableFontScaling={Platform.OS === 'android'}
+            >
               {title}
             </TitleText>
-            <MessageText type={type} numberOfLines={3} disableFontScaling={Platform.OS === 'android'}>
+            <MessageText
+              type={type}
+              numberOfLines={3}
+              disableFontScaling={Platform.OS === 'android'}
+            >
               {message}
             </MessageText>
           </TextView>
         </TouchableContents>
         {onClose != null ? (
-          <TouchableCloseButton onPress={handleClose} testID={`${testID}.close`}>
-            <AntDesignIcon color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
+          <TouchableCloseButton
+            onPress={handleClose}
+            testID={`${testID}.close`}
+          >
+            <AntDesignIcon
+              color={theme.iconTappable}
+              name="close"
+              size={theme.rem(1.25)}
+            />
           </TouchableCloseButton>
         ) : null}
       </Animated.View>
@@ -140,19 +176,23 @@ const Icon = styled(FastImage)(theme => ({
   marginRight: theme.rem(0.25)
 }))
 
-const TitleText = styled(EdgeText)<{ type: 'warning' | 'info' }>(theme => props => ({
-  color: props.type === 'warning' ? theme.warningIcon : theme.primaryText,
-  marginHorizontal: theme.rem(0.25),
-  marginBottom: theme.rem(0.25),
-  fontSize: theme.rem(0.75),
-  fontFamily: theme.fontFaceBold
-}))
+const TitleText = styled(EdgeText)<{ type: 'warning' | 'info' }>(
+  theme => props => ({
+    color: props.type === 'warning' ? theme.warningIcon : theme.primaryText,
+    marginHorizontal: theme.rem(0.25),
+    marginBottom: theme.rem(0.25),
+    fontSize: theme.rem(0.75),
+    fontFamily: theme.fontFaceBold
+  })
+)
 
-const MessageText = styled(EdgeText)<{ type: 'warning' | 'info' }>(theme => props => ({
-  color: props.type === 'warning' ? theme.warningIcon : theme.secondaryText,
-  marginHorizontal: theme.rem(0.25),
-  fontSize: theme.rem(0.75)
-}))
+const MessageText = styled(EdgeText)<{ type: 'warning' | 'info' }>(
+  theme => props => ({
+    color: props.type === 'warning' ? theme.warningIcon : theme.secondaryText,
+    marginHorizontal: theme.rem(0.25),
+    fontSize: theme.rem(0.75)
+  })
+)
 
 const TextView = styled(View)(theme => ({
   flexShrink: 1,

@@ -3,7 +3,16 @@ import { asMaybe, asObject, asString } from 'cleaners'
 import { FilledTextInputBaseProps } from '../components/themed/FilledTextInput'
 
 // Define all form field types here.
-export type FormFieldType = 'address' | 'address2' | 'text' | 'postalcode' | 'state' | 'city' | 'name' | 'iban' | 'swift'
+export type FormFieldType =
+  | 'address'
+  | 'address2'
+  | 'text'
+  | 'postalcode'
+  | 'state'
+  | 'city'
+  | 'name'
+  | 'iban'
+  | 'swift'
 
 // For each form field type, define the relevant display properties that will be
 // used to pass along to the FilledTextInput.

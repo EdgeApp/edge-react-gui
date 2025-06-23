@@ -33,13 +33,23 @@ export function RadioListModal(props: Props) {
     const { name, icon, text } = item
 
     const isSelected = selected === name
-    const radio = isSelected ? { icon: 'radio-button-on', color: theme.iconTappable } : { icon: 'radio-button-off', color: theme.iconTappable }
-    const accessibilityState = isSelected ? { checked: true } : { checked: false }
-    const accessibilityHint = `${isSelected ? lstrings.on_hint : lstrings.off_hint} ${name}`
+    const radio = isSelected
+      ? { icon: 'radio-button-on', color: theme.iconTappable }
+      : { icon: 'radio-button-off', color: theme.iconTappable }
+    const accessibilityState = isSelected
+      ? { checked: true }
+      : { checked: false }
+    const accessibilityHint = `${
+      isSelected ? lstrings.on_hint : lstrings.off_hint
+    } ${name}`
 
     const iconElement =
       typeof icon === 'string' ? (
-        <Image resizeMode="contain" source={{ uri: icon }} style={styles.icon} />
+        <Image
+          resizeMode="contain"
+          source={{ uri: icon }}
+          style={styles.icon}
+        />
       ) : typeof icon === 'number' ? (
         <Image resizeMode="contain" source={icon} style={styles.icon} />
       ) : (
@@ -66,7 +76,16 @@ export function RadioListModal(props: Props) {
     )
   })
 
-  return <ListModal bridge={bridge} title={title} textInput={false} rowsData={items} rowComponent={renderRow} fullScreen={false} />
+  return (
+    <ListModal
+      bridge={bridge}
+      title={title}
+      textInput={false}
+      rowsData={items}
+      rowComponent={renderRow}
+      fullScreen={false}
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

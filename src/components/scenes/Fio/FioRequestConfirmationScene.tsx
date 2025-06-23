@@ -1,12 +1,21 @@
 import { div, mul } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
-import { getExchangeDenom, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../../selectors/WalletSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
@@ -27,8 +36,18 @@ import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showDevError, showError, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
+import {
+  Airship,
+  showDevError,
+  showError,
+  showToast
+} from '../../services/AirshipInstance'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  useTheme
+} from '../../services/ThemeContext'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
@@ -72,7 +91,10 @@ interface State {
   showSlider: boolean
 }
 
-export class FioRequestConfirmationConnected extends React.Component<Props, State> {
+export class FioRequestConfirmationConnected extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -92,16 +114,23 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   setAddressesState = async () => {
     if (this.props.fioWallets) {
-      const { chainCode, currencyCode, connectedWalletsByFioAddress } = this.props
+      const { chainCode, currencyCode, connectedWalletsByFioAddress } =
+        this.props
       const walletAddresses = []
       let defaultFioAddressFrom = null
       for (const fioWallet of this.props.fioWallets) {
         try {
-          const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
+          const fioAddresses: string[] =
+            await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
-              if (defaultFioAddressFrom == null && connectedWalletsByFioAddress[fioAddress]?.[`${chainCode}:${currencyCode}`] === this.props.wallet.id) {
+              if (
+                defaultFioAddressFrom == null &&
+                connectedWalletsByFioAddress[fioAddress]?.[
+                  `${chainCode}:${currencyCode}`
+                ] === this.props.wallet.id
+              ) {
                 defaultFioAddressFrom = fioAddress
               }
             }
@@ -113,25 +142,45 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
       this.setState({
         walletAddresses,
-        fioAddressFrom: defaultFioAddressFrom != null ? defaultFioAddressFrom : walletAddresses[0].fioAddress
+        fioAddressFrom:
+          defaultFioAddressFrom != null
+            ? defaultFioAddressFrom
+            : walletAddresses[0].fioAddress
       })
     }
   }
 
   resetSlider = (): void => {
-    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
+    this.setState({ showSlider: false }, () =>
+      this.setState({ showSlider: true })
+    )
   }
 
   onConfirm = async () => {
-    const { account, chainCode, exchangeDenomination, fioPlugin, isConnected, navigation, route, wallet } = this.props
+    const {
+      account,
+      chainCode,
+      exchangeDenomination,
+      fioPlugin,
+      isConnected,
+      navigation,
+      route,
+      wallet
+    } = this.props
     const { amounts, tokenId } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
-    const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
+    const walletAddress = walletAddresses.find(
+      ({ fioAddress }) => fioAddress === fioAddressFrom
+    )
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = div(amounts.nativeAmount, exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const val = div(
+        amounts.nativeAmount,
+        exchangeDenomination.multiplier,
+        DECIMAL_PRECISION
+      )
       try {
         if (!isConnected) {
           showError(lstrings.fio_network_alert_text)
@@ -150,7 +199,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             tokenCode: '',
             memo: ''
           })
-          const bundledTxs = await getRemainingBundles(fioWallet, this.state.fioAddressFrom)
+          const bundledTxs = await getRemainingBundles(
+            fioWallet,
+            this.state.fioAddressFrom
+          )
           // The API only returns a fee if there are 0 bundled transactions remaining. New requests can cost up to two transactions
           // so we need to check the corner case where a user might have one remaining transaction.
           if (edgeTx.networkFee !== '0' || bundledTxs < 2) {
@@ -184,12 +236,21 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         let payerPublicKey
         try {
           const fioCurrencyCode = fioPlugin.currencyInfo.currencyCode
-          payerPublicKey = await checkPubAddress(fioPlugin, this.state.fioAddressTo, fioCurrencyCode, fioCurrencyCode)
+          payerPublicKey = await checkPubAddress(
+            fioPlugin,
+            this.state.fioAddressTo,
+            fioCurrencyCode,
+            fioCurrencyCode
+          )
         } catch (e: any) {
           console.log(e)
         }
 
-        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(wallet.currencyInfo.pluginId, chainCode, exchangeDenomination.name)
+        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(
+          wallet.currencyInfo.pluginId,
+          chainCode,
+          exchangeDenomination.name
+        )
 
         // send fio request
         const edgeTx = await fioMakeSpend(fioWallet, 'requestFunds', {
@@ -210,7 +271,11 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
-        showError(`${lstrings.fio_request_error_header}: "${error.json?.fields?.[0]?.error ?? ''}"`)
+        showError(
+          `${lstrings.fio_request_error_header}: "${
+            error.json?.fields?.[0]?.error ?? ''
+          }"`
+        )
       }
     } else {
       showError(lstrings.fio_wallet_missing_for_fio_address)
@@ -233,13 +298,30 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { currencyCode, fioPlugin, wallet } = this.props
     const { walletAddresses } = this.state
     const fioAddressFrom = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
+      <AddressModal
+        bridge={bridge}
+        walletId={wallet.id}
+        currencyCode={currencyCode}
+        title={lstrings.fio_confirm_request_fio_title}
+        useUserFioAddressesOnly
+      />
     ))
     if (fioAddressFrom == null) return
-    if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
-      return showError(`${lstrings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
-    if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(lstrings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
-    if (fioAddressFrom === this.state.fioAddressTo) return showError(lstrings.fio_confirm_request_error_from_same)
+    if (
+      fioPlugin &&
+      !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom))
+    )
+      return showError(
+        `${lstrings.send_fio_request_error_addr_not_exist}${
+          fioAddressFrom ? '\n' + fioAddressFrom : ''
+        }`
+      )
+    if (
+      !walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
+    )
+      return showError(lstrings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
+    if (fioAddressFrom === this.state.fioAddressTo)
+      return showError(lstrings.fio_confirm_request_error_from_same)
     this.setState({ fioAddressFrom })
   }
 
@@ -255,12 +337,25 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} isFioOnly />
+      <AddressModal
+        bridge={bridge}
+        walletId={wallet.id}
+        currencyCode={currencyCode}
+        title={lstrings.fio_confirm_request_fio_title}
+        isFioOnly
+      />
     ))
     if (fioAddressTo == null) {
       this.showError()
-    } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
-      this.showError(`${lstrings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+    } else if (
+      fioPlugin &&
+      !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))
+    ) {
+      this.showError(
+        `${lstrings.send_fio_request_error_addr_not_exist}${
+          fioAddressTo ? '\n' + fioAddressTo : ''
+        }`
+      )
     } else if (this.state.fioAddressFrom === fioAddressTo) {
       this.showError(lstrings.fio_confirm_request_error_to_same)
     } else {
@@ -282,21 +377,45 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       />
     ))
     if (memo == null) return
-    if (memo.length > 64) return showError(lstrings.send_fio_request_error_memo_inline)
-    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) return showError(lstrings.send_fio_request_error_memo_invalid_character)
+    if (memo.length > 64)
+      return showError(lstrings.send_fio_request_error_memo_inline)
+    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo))
+      return showError(lstrings.send_fio_request_error_memo_invalid_character)
     this.setState({ memo })
   }
 
   render() {
-    const { defaultIsoFiat, displayDenomination, exchangeDenomination, exchangeSecondaryToPrimaryRatio, route, theme } = this.props
+    const {
+      defaultIsoFiat,
+      displayDenomination,
+      exchangeDenomination,
+      exchangeSecondaryToPrimaryRatio,
+      route,
+      theme
+    } = this.props
     const { amounts } = route.params
 
-    const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
+    const {
+      fioAddressFrom,
+      fioAddressTo,
+      loading,
+      memo,
+      settingFioAddressTo,
+      showSlider
+    } = this.state
 
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = div(amounts.nativeAmount, displayDenomination.multiplier, DECIMAL_PRECISION)
-      exchangeAmount = div(amounts.nativeAmount, exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      cryptoAmount = div(
+        amounts.nativeAmount,
+        displayDenomination.multiplier,
+        DECIMAL_PRECISION
+      )
+      exchangeAmount = div(
+        amounts.nativeAmount,
+        exchangeDenomination.multiplier,
+        DECIMAL_PRECISION
+      )
     } catch (e: any) {
       return null
     }
@@ -312,22 +431,47 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader title={lstrings.fio_confirm_request_header} underline withTopMargin />
+        <SceneHeader
+          title={lstrings.fio_confirm_request_header}
+          underline
+          withTopMargin
+        />
         <View style={styles.container}>
           <EdgeCard sections>
-            <EdgeRow rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.fio_confirm_request_from}
+              body={fioAddressFrom}
+              onPress={this.onAddressFromPressed}
+            />
             <EdgeRow
               rightButtonType="editable"
               title={lstrings.fio_confirm_request_to}
               body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
               onPress={this.onAddressToPressed}
             />
-            <EdgeRow title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-            <EdgeRow maximumHeight="large" rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+            <EdgeRow
+              title={lstrings.fio_confirm_request_amount}
+              body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`}
+            />
+            <EdgeRow
+              maximumHeight="large"
+              rightButtonType="editable"
+              title={lstrings.fio_confirm_request_memo}
+              body={memo}
+              onPress={this.onMemoPressed}
+            />
           </EdgeCard>
           <View style={styles.sliderContainer}>
-            {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
-              <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />
+            {fioAddressFrom.length > 0 &&
+            fioAddressTo.length > 0 &&
+            showSlider ? (
+              <Slider
+                onSlidingComplete={this.onConfirm}
+                disabled={loading}
+                showSpinner={loading}
+                disabledText={lstrings.loading}
+              />
             ) : null}
           </View>
         </View>
@@ -352,10 +496,16 @@ export const FioRequestConfirmationScene = withWallet((ownProps: OwnProps) => {
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
-  const connectedWalletsByFioAddress = useSelector(state => state.ui.fio.connectedWalletsByFioAddress)
+  const connectedWalletsByFioAddress = useSelector(
+    state => state.ui.fio.connectedWalletsByFioAddress
+  )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const displayDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
-  const exchangeSecondaryToPrimaryRatio = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const displayDenomination = useSelector(state =>
+    selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+  )
+  const exchangeSecondaryToPrimaryRatio = useSelector(state =>
+    getExchangeRate(state, currencyCode, defaultIsoFiat)
+  )
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
   const isConnected = useSelector(state => state.network.isConnected)
 

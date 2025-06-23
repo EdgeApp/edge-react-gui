@@ -8,9 +8,14 @@ export interface StateManager<State extends object> {
   update: (state: Partial<State>) => void
 }
 
-export const useStateManager = <T extends object>(defaultState: T): StateManager<T> => {
+export const useStateManager = <T extends object>(
+  defaultState: T
+): StateManager<T> => {
   const [state, setState] = useState<T>(defaultState)
-  const handleUpdate: StateManager<T>['update'] = useHandler((state: Partial<T>) => setState({ ...stateManagerRef.current.state, ...state }))
+  const handleUpdate: StateManager<T>['update'] = useHandler(
+    (state: Partial<T>) =>
+      setState({ ...stateManagerRef.current.state, ...state })
+  )
   const stateManagerRef = useRef<StateManager<T>>({
     state,
     update: handleUpdate

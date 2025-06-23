@@ -5,7 +5,9 @@ type Watchable<T extends object> = {
   watch: Subscriber<T>
 } & T
 
-export function withWatchableProps<T extends Watchable<any>>(original: Omit<T, 'watch'>): T {
+export function withWatchableProps<T extends Watchable<any>>(
+  original: Omit<T, 'watch'>
+): T {
   const [watch, emit]: Events<T> = makeEvents<T>()
   const out: T = { ...original, watch } as any
 

@@ -13,7 +13,11 @@ describe('WalletListModal', () => {
   it('should render with loading props', () => {
     const rendered = render(
       <FakeProviders>
-        <WalletListModal bridge={fakeAirshipBridge} navigation={fakeNavigation} headerTitle="Wallet List" />
+        <WalletListModal
+          bridge={fakeAirshipBridge}
+          navigation={fakeNavigation}
+          headerTitle="Wallet List"
+        />
       </FakeProviders>
     )
 
@@ -47,6 +51,8 @@ describe('WalletListModal', () => {
     ])
 
     // Check missing currency codes:
-    expect(upgradeCurrencyCodes(lookup, ['ETH', 'LOL'])).toEqual([{ pluginId: 'ethereum', tokenId: null }])
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'LOL'])).toEqual([
+      { pluginId: 'ethereum', tokenId: null }
+    ])
   })
 })

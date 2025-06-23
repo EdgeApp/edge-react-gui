@@ -59,7 +59,8 @@ export class WalletLifecycleComponent extends React.Component<Props> {
    * Figures out what has changed and adapts.
    */
   handleChange = () => {
-    const { account, context, sortedWalletList, userPausedWalletsSet } = this.props
+    const { account, context, sortedWalletList, userPausedWalletsSet } =
+      this.props
 
     // Check for login / logout:
     if (account !== this.edgeAccount || context !== this.edgeContext) {
@@ -67,7 +68,10 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       this.unsubscribe()
 
       // Only subscribe if we are logged in:
-      if (typeof account.watch === 'function' && typeof context.watch === 'function') {
+      if (
+        typeof account.watch === 'function' &&
+        typeof context.watch === 'function'
+      ) {
         this.cleanups = [
           account.watch('activeWalletIds', this.handleChange),
           account.watch('currencyWallets', this.handleChange),
@@ -84,7 +88,11 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // If we have become paused (app into background), shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
-      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(error => showError(error))
+      Promise.all(
+        Object.keys(currencyWallets).map(
+          async walletId => await currencyWallets[walletId].changePaused(true)
+        )
+      ).catch(error => showError(error))
     }
     this.paused = paused
 
@@ -116,7 +124,8 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       if (token != null || tokenId != null) continue
       if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) continue
       if (!wallet.paused) continue
-      if (this.booting.find(boot => boot.walletId === wallet.id) != null) continue
+      if (this.booting.find(boot => boot.walletId === wallet.id) != null)
+        continue
       if (userPausedWalletsSet.has(wallet.id)) continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
@@ -146,7 +155,10 @@ export class WalletLifecycleComponent extends React.Component<Props> {
  * Returns an object that can be used to monitor the status
  * or cancel the callback.
  */
-function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot {
+function bootWallet(
+  wallet: EdgeCurrencyWallet,
+  onBoot: () => void
+): WalletBoot {
   let cleanup: (() => void) | undefined
   let timeoutId: ReturnType<typeof setTimeout> | undefined
 

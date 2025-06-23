@@ -10,8 +10,16 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { removeIsoPrefix, runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
-import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
-import { FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import {
+  FiatPlugin,
+  FiatPluginFactory,
+  FiatPluginStartParams,
+  FiatPluginWalletPickerResult
+} from './fiatPluginTypes'
+import {
+  FiatProviderGetQuoteParams,
+  FiatProviderQuote
+} from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardsCard } from './scenes/RewardsCardDashboardScene'
@@ -41,8 +49,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const { showUi, account, guiPlugin, pluginUtils } = params
   const { pluginId } = guiPlugin
 
-  const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
-  if (providers.length === 0) throw new Error('No enabled providers for RewardsCardPlugin')
+  const providers = await initializeProviders<IoniaMethods>(
+    PROVIDER_FACTORIES,
+    params
+  )
+  if (providers.length === 0)
+    throw new Error('No enabled providers for RewardsCardPlugin')
   const provider = providers[0]
 
   // Get supported crypto assets:
@@ -53,7 +65,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   })
 
   // Only supporting mainnet currencies for now
-  const allowedAssets: EdgeAsset[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId, tokenId: null }))
+  const allowedAssets: EdgeAsset[] = Object.keys(supportedAssetMap.crypto).map(
+    pluginId => ({ pluginId, tokenId: null })
+  )
 
   //
   // Helpers:
@@ -82,7 +96,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // Shared State:
   //
 
-  let redundantQuoteParams: Pick<FiatPluginStartParams, 'direction' | 'paymentTypes' | 'regionCode'>
+  let redundantQuoteParams: Pick<
+    FiatPluginStartParams,
+    'direction' | 'paymentTypes' | 'regionCode'
+  >
   let userRewardsCards: UserRewardsCards = {
     activeCards: [],
     archivedCards: []
@@ -137,18 +154,25 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Hide the card
       await provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
-      userRewardsCards.activeCards = userRewardsCards.activeCards.filter(c => c.id !== card.id)
+      userRewardsCards.activeCards = userRewardsCards.activeCards.filter(
+        c => c.id !== card.id
+      )
 
       // Reset state for dashboard
       await showDashboard({ showLoading: false })
     }
   }
 
-  const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
+  const showNewCardEnterAmount = async (
+    walletListResult: FiatPluginWalletPickerResult
+  ) => {
     const { walletId, tokenId } = walletListResult
 
     const wallet = account.currencyWallets[walletId]
-    if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+    if (wallet == null)
+      return await showUi.showError(
+        new Error(`Missing wallet with ID ${walletId}`)
+      )
     const currencyCode = getCurrencyCode(wallet, tokenId)
 
     let providerQuote: FiatProviderQuote | undefined
@@ -157,7 +181,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
     showUi.enterAmount({
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
-      label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
+      label1: sprintf(
+        lstrings.fiat_plugin_amount_currencycode,
+        displayFiatCurrencyCode
+      ),
       label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
       initState: {
         value1: '500'
@@ -214,12 +241,17 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         // Abort to avoid race conditions
         if (myCounter !== counter) return
 
-        const exchangeRateText = getRateFromQuote(providerQuote, displayFiatCurrencyCode)
+        const exchangeRateText = getRateFromQuote(
+          providerQuote,
+          displayFiatCurrencyCode
+        )
         stateManager.update({
           statusText: { content: exchangeRateText }
         })
 
-        return sourceFieldNum === 1 ? toFixed(providerQuote.cryptoAmount, 6) : toFixed(providerQuote.fiatAmount, 2)
+        return sourceFieldNum === 1
+          ? toFixed(providerQuote.cryptoAmount, 6)
+          : toFixed(providerQuote.fiatAmount, 2)
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
@@ -295,10 +327,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const isAuthenticated = await provider.otherMethods.authenticate().catch(error => {
-        console.error(error)
-        throw new Error(lstrings.rewards_card_error_authenticate)
-      })
+      const isAuthenticated = await provider.otherMethods
+        .authenticate()
+        .catch(error => {
+          console.error(error)
+          throw new Error(lstrings.rewards_card_error_authenticate)
+        })
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
@@ -315,7 +349,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         )
       }
 
-      const hasCards = userRewardsCards.activeCards.length + userRewardsCards.activeCards.length > 0
+      const hasCards =
+        userRewardsCards.activeCards.length +
+          userRewardsCards.activeCards.length >
+        0
 
       redundantQuoteParams = {
         direction: startParams.direction,

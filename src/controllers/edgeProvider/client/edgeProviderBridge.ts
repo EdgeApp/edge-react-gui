@@ -58,7 +58,9 @@ function makeEdgeProvider(): EdgeProvider {
 
   // Build method wrappers:
   const out: EdgeProvider = {} as any
-  for (const key of Object.keys(methodCleaners) as Array<keyof typeof methodCleaners>) {
+  for (const key of Object.keys(methodCleaners) as Array<
+    keyof typeof methodCleaners
+  >) {
     const cleaners = methodCleaners[key]
     if (cleaners == null) continue
 

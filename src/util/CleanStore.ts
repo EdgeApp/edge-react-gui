@@ -10,19 +10,32 @@ interface CleanStoreRecord<T> {
 }
 
 interface CleanStore {
-  initRecord: <T>(key: string, cleaner: Cleaner<T>) => Promise<CleanStoreRecord<T>>
-  getRecord: <T>(key: string, cleaner: Cleaner<T>) => Promise<CleanStoreRecord<T> | undefined>
+  initRecord: <T>(
+    key: string,
+    cleaner: Cleaner<T>
+  ) => Promise<CleanStoreRecord<T>>
+  getRecord: <T>(
+    key: string,
+    cleaner: Cleaner<T>
+  ) => Promise<CleanStoreRecord<T> | undefined>
   setRecord: <T>(key: string, data: T, cleaner: Cleaner<T>) => Promise<void>
 }
 
 const { debugStore } = ENV.ACTION_QUEUE
 
-export const makeCleanStore = (account: EdgeAccount, storeId: string): CleanStore => {
+export const makeCleanStore = (
+  account: EdgeAccount,
+  storeId: string
+): CleanStore => {
   //
   // Private
   //
 
-  function makeCleanStoreRecord<T>(key: string, data: T, cleaner: Cleaner<T>): CleanStoreRecord<T> {
+  function makeCleanStoreRecord<T>(
+    key: string,
+    data: T,
+    cleaner: Cleaner<T>
+  ): CleanStoreRecord<T> {
     return {
       async update(data) {
         await instance.setRecord(key, data, cleaner)
@@ -54,7 +67,10 @@ export const makeCleanStore = (account: EdgeAccount, storeId: string): CleanStor
   //
 
   const instance: CleanStore = {
-    async initRecord<T>(key: string, cleaner: Cleaner<T>): Promise<CleanStoreRecord<T>> {
+    async initRecord<T>(
+      key: string,
+      cleaner: Cleaner<T>
+    ): Promise<CleanStoreRecord<T>> {
       const record = await instance.getRecord(key, cleaner)
       if (record == null) {
         const data: T = cleaner(undefined)
@@ -63,21 +79,28 @@ export const makeCleanStore = (account: EdgeAccount, storeId: string): CleanStor
       }
       return record
     },
-    async getRecord<T>(key: string, cleaner: Cleaner<T>): Promise<CleanStoreRecord<T> | undefined> {
+    async getRecord<T>(
+      key: string,
+      cleaner: Cleaner<T>
+    ): Promise<CleanStoreRecord<T> | undefined> {
       const serializedData = await readData(key)
       if (serializedData == null) return
       try {
         const data = cleaner(serializedData)
         return makeCleanStoreRecord(key, data, cleaner)
       } catch (err: any) {
-        throw new Error(`Failed to read '${key}' from CleanStore: ${String(err)}`)
+        throw new Error(
+          `Failed to read '${key}' from CleanStore: ${String(err)}`
+        )
       }
     },
     async setRecord<T>(key: string, data: T, cleaner: Cleaner<T>) {
       try {
         const serializedData = uncleaner(cleaner)(data)
         if (typeof serializedData !== 'string') {
-          throw new Error(`Record ${key} in store ${storeId} must serialize to a string`)
+          throw new Error(
+            `Record ${key} in store ${storeId} must serialize to a string`
+          )
         }
         await writeData(key, serializedData)
       } catch (error: any) {

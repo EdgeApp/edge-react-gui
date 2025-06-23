@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions'
+import {
+  activatePromotion,
+  removePromotion
+} from '../../actions/AccountReferralActions'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
@@ -32,22 +35,35 @@ export class PromotionSettingsComponent extends React.Component<Props> {
 
     return (
       <SceneWrapper>
-        <SettingsHeaderRow label={lstrings.settings_promotion_affiliation_header} />
+        <SettingsHeaderRow
+          label={lstrings.settings_promotion_affiliation_header}
+        />
         <SettingsSubHeader
           label={
             deviceReferral.installerId == null
               ? lstrings.settings_promotion_device_normal
-              : sprintf(lstrings.settings_promotion_device_installer, deviceReferral.installerId)
+              : sprintf(
+                  lstrings.settings_promotion_device_installer,
+                  deviceReferral.installerId
+                )
           }
         />
         {deviceReferral.currencyCodes == null ? null : (
-          <SettingsSubHeader label={sprintf(lstrings.settings_promotion_device_currencies, deviceReferral.currencyCodes.join(', '))} />
+          <SettingsSubHeader
+            label={sprintf(
+              lstrings.settings_promotion_device_currencies,
+              deviceReferral.currencyCodes.join(', ')
+            )}
+          />
         )}
         <SettingsSubHeader
           label={
             accountReferral.installerId == null
               ? lstrings.settings_promotion_account_normal
-              : sprintf(lstrings.settings_promotion_account_installer, accountReferral.installerId)
+              : sprintf(
+                  lstrings.settings_promotion_account_installer,
+                  accountReferral.installerId
+                )
           }
         />
         <SettingsHeaderRow label={lstrings.settings_promotion_header} />
@@ -60,9 +76,18 @@ export class PromotionSettingsComponent extends React.Component<Props> {
           />
         ))}
         {accountReferral.activePromotions.map(activePromotion => (
-          <SettingsTappableRow action="delete" key={activePromotion} label={activePromotion} onPress={async () => await removePromotion(activePromotion)} />
+          <SettingsTappableRow
+            action="delete"
+            key={activePromotion}
+            label={activePromotion}
+            onPress={async () => await removePromotion(activePromotion)}
+          />
         ))}
-        <SettingsTappableRow action="add" label={lstrings.settings_promotion_add} onPress={this.handleAdd} />
+        <SettingsTappableRow
+          action="add"
+          label={lstrings.settings_promotion_add}
+          onPress={this.handleAdd}
+        />
       </SceneWrapper>
     )
   }
@@ -84,7 +109,11 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   }
 }
 
-export const PromotionSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const PromotionSettingsScene = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   state => ({
     accountReferral: state.account.accountReferral,
     deviceReferral: state.deviceReferral

@@ -4,13 +4,21 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
-import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  useTheme
+} from '../../../components/services/ThemeContext'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { asSepaInfo, SEPA_FORM_DISKLET_NAME, SepaInfo } from '../../../types/FormTypes'
+import {
+  asSepaInfo,
+  SEPA_FORM_DISKLET_NAME,
+  SepaInfo
+} from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
@@ -59,7 +67,12 @@ export const SepaFormScene = React.memo((props: Props) => {
   // Initialize scene with any saved forms from disklet
   useAsyncEffect(
     async () => {
-      const diskletFormData: SepaInfo | undefined = await getDiskletFormData<SepaInfo>(disklet, SEPA_FORM_DISKLET_NAME, asSepaInfo)
+      const diskletFormData: SepaInfo | undefined =
+        await getDiskletFormData<SepaInfo>(
+          disklet,
+          SEPA_FORM_DISKLET_NAME,
+          asSepaInfo
+        )
       if (diskletFormData != null) {
         setName(diskletFormData.name)
         setIban(diskletFormData.iban)
@@ -79,9 +92,26 @@ export const SepaFormScene = React.memo((props: Props) => {
 
   const scrollContent = (
     <>
-      <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
-      <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
-      <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
+      <GuiFormField
+        fieldType="name"
+        value={name}
+        label={lstrings.form_field_title_account_owner}
+        onChangeText={handleNameInput}
+        autofocus
+      />
+      <GuiFormField
+        fieldType="iban"
+        value={iban}
+        label={lstrings.form_field_title_iban}
+        onChangeText={handleIbanInput}
+      />
+      <GuiFormField
+        fieldType="swift"
+        value={swift}
+        returnKeyType="done"
+        label={lstrings.form_field_title_swift_bic}
+        onChangeText={handleSwiftInput}
+      />
       <SceneButtons
         primary={{
           label: doneLabel,
@@ -98,7 +128,10 @@ export const SepaFormScene = React.memo((props: Props) => {
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={headerTitle} underline withTopMargin />
           {Platform.OS === 'ios' ? (
-            <ScrollView contentContainerStyle={{ ...insetStyle, ...styles.container }} keyboardShouldPersistTaps="handled">
+            <ScrollView
+              contentContainerStyle={{ ...insetStyle, ...styles.container }}
+              keyboardShouldPersistTaps="handled"
+            >
               {scrollContent}
             </ScrollView>
           ) : (

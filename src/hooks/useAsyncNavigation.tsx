@@ -6,7 +6,9 @@ import * as React from 'react'
  * multiple navigations from rapid tapping. Navigation calls are only executed
  * if there isn't already another one in flight
  */
-export const useAsyncNavigation = <Nav extends NavigationProp<any>>(navigation: Nav): Nav => {
+export const useAsyncNavigation = <Nav extends NavigationProp<any>>(
+  navigation: Nav
+): Nav => {
   const [isNavigating, setIsNavigating] = React.useState(false)
 
   React.useEffect(() => {
@@ -23,7 +25,9 @@ export const useAsyncNavigation = <Nav extends NavigationProp<any>>(navigation: 
     }
   }, [navigation])
 
-  const createDebouncedMethod = <Method extends (...args: any[]) => any>(method: Method): Method => {
+  const createDebouncedMethod = <Method extends (...args: any[]) => any>(
+    method: Method
+  ): Method => {
     return ((...args: Parameters<Method>) => {
       if (isNavigating) return
 

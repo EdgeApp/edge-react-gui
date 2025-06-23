@@ -2,8 +2,15 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { useTheme } from '../../../components/services/ThemeContext'
-import { FilledTextInput, FilledTextInputRef, FilledTextInputReturnKeyType } from '../../../components/themed/FilledTextInput'
-import { FORM_FIELD_DISPLAY_PROPS, FormFieldType } from '../../../types/FormTypes'
+import {
+  FilledTextInput,
+  FilledTextInputRef,
+  FilledTextInputReturnKeyType
+} from '../../../components/themed/FilledTextInput'
+import {
+  FORM_FIELD_DISPLAY_PROPS,
+  FormFieldType
+} from '../../../types/FormTypes'
 
 // TODO: Consolidate with FormField
 

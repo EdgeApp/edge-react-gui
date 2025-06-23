@@ -6,14 +6,22 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
+import {
+  BUNDLED_TXS_AMOUNT_ALERT,
+  findWalletByFioAddress
+} from '../../../util/FioAddressUtils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConnectWallets } from '../../FioAddress/ConnectWallets'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
@@ -94,14 +102,29 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     } = this.props
 
     if (bundledTxs < BUNDLED_TXS_AMOUNT_ALERT) {
-      const title = !bundledTxs ? lstrings.title_no_bundled_txs : lstrings.title_low_on_bundled_txs
-      const msg = !bundledTxs ? lstrings.fio_address_details_no_bundled_txs : lstrings.fio_address_details_bundled_txs_out_soon
-      return <AlertCardUi4 title={title} body={msg} type="warning" onPress={this._onPressAccountSettings} />
+      const title = !bundledTxs
+        ? lstrings.title_no_bundled_txs
+        : lstrings.title_low_on_bundled_txs
+      const msg = !bundledTxs
+        ? lstrings.fio_address_details_no_bundled_txs
+        : lstrings.fio_address_details_bundled_txs_out_soon
+      return (
+        <AlertCardUi4
+          title={title}
+          body={msg}
+          type="warning"
+          onPress={this._onPressAccountSettings}
+        />
+      )
     }
 
     return (
       <EdgeCard paddingRem={0.25}>
-        <SettingsTappableRow action="setting" label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings} />
+        <SettingsTappableRow
+          action="setting"
+          label={lstrings.fio_address_details_screen_manage_account_settings}
+          onPress={this._onPressAccountSettings}
+        />
       </EdgeCard>
     )
   }
@@ -119,7 +142,13 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
           <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
           {this.renderAccountSettings()}
           <SettingsHeaderRow
-            icon={<IonIcon name="link" color={theme.primaryText} size={theme.rem(1.5)} />}
+            icon={
+              <IonIcon
+                name="link"
+                color={theme.primaryText}
+                size={theme.rem(1.5)}
+              />
+            }
             label={lstrings.fio_address_details_connect_to_wallets}
           />
           <ConnectWallets

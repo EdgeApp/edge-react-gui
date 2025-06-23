@@ -10,8 +10,14 @@ import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
-import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
-import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
+import {
+  checkAndSetRegion,
+  showCountrySelectionModal
+} from '../../actions/CountryListActions'
+import {
+  getDeviceSettings,
+  writeDeveloperPluginUri
+} from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -26,12 +32,24 @@ import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
-import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
-import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
+import {
+  SceneScrollHandler,
+  useSceneScrollHandler
+} from '../../state/SceneScrollState'
+import {
+  asBuySellPlugins,
+  asGuiPluginJson,
+  BuySellPlugins,
+  GuiPluginRow
+} from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
+import {
+  BuyTabSceneProps,
+  NavigationBase,
+  SellTabSceneProps
+} from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
@@ -42,7 +60,13 @@ import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
-import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import {
+  EdgeAnim,
+  fadeInUp20,
+  fadeInUp30,
+  fadeInUp60,
+  fadeInUp90
+} from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -50,7 +74,12 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  useTheme
+} from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -61,8 +90,14 @@ export interface GuiPluginListParams {
   forcedWalletResult?: WalletListResult
 }
 
-const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
-const sellRaw = sellPluginJsonOverrideRaw.length > 0 ? sellPluginJsonOverrideRaw : sellPluginJsonRaw
+const buyRaw =
+  buyPluginJsonOverrideRaw.length > 0
+    ? buyPluginJsonOverrideRaw
+    : buyPluginJsonRaw
+const sellRaw =
+  sellPluginJsonOverrideRaw.length > 0
+    ? sellPluginJsonOverrideRaw
+    : sellPluginJsonRaw
 
 const buySellPlugins: BuySellPlugins = {
   buy: asGuiPluginJson(buyRaw),
@@ -180,7 +215,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     // Grab plugin settings that patch the json
     try {
-      const networkPluginsPatch = asBuySellPlugins(infoServerData.rollup?.buySellPluginsPatch ?? {})
+      const networkPluginsPatch = asBuySellPlugins(
+        infoServerData.rollup?.buySellPluginsPatch ?? {}
+      )
       const directions: Array<'buy' | 'sell'> = ['buy', 'sell']
       for (const direction of directions) {
         const patches = networkPluginsPatch[direction]
@@ -196,7 +233,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           if (typeof patch === 'string') continue
 
           const { id } = patch
-          const matchingIndex = currentDirection.findIndex(plugin => typeof plugin !== 'string' && plugin.id === id)
+          const matchingIndex = currentDirection.findIndex(
+            plugin => typeof plugin !== 'string' && plugin.id === id
+          )
           if (matchingIndex > -1) {
             currentDirection[matchingIndex] = patch
           } else {
@@ -213,7 +252,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (currentPluginsJson !== buySellPluginsJson) {
       this.setPluginState(currentPlugins)
     }
-    this.timeoutId = setTimeout(() => this.updatePlugins(), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
+    this.timeoutId = setTimeout(
+      () => this.updatePlugins(),
+      BUY_SELL_PLUGIN_REFRESH_INTERVAL
+    )
   }
 
   /**
@@ -248,7 +290,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     // Don't allow light accounts to enter buy webview plugins
     const direction = this.getSceneDirection()
-    if (direction === 'buy' && plugin.nativePlugin == null && checkAndShowLightBackupModal(account, navigation as NavigationBase)) return
+    if (
+      direction === 'buy' &&
+      plugin.nativePlugin == null &&
+      checkAndShowLightBackupModal(account, navigation as NavigationBase)
+    )
+      return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow
@@ -288,9 +335,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         osVersion: getOsVersion(),
         currentDate: new Date()
       })
-      const allPluginPromotions = promoCards.map(card => card.pluginPromotions ?? []).flat()
+      const allPluginPromotions = promoCards
+        .map(card => card.pluginPromotions ?? [])
+        .flat()
       const pluginPromotions = allPluginPromotions.filter(promo => {
-        const pluginIdMatch = (promo.pluginIds ?? []).some(pid => pid === pluginId)
+        const pluginIdMatch = (promo.pluginIds ?? []).some(
+          pid => pid === pluginId
+        )
         return pluginIdMatch && promo.pluginType === direction
       })
 
@@ -347,7 +398,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             <EdgeText style={styles.titleText} numberOfLines={1}>
               {'Pay with '}
             </EdgeText>
-            <Image style={styles.titleAppleLogo} source={paymentTypeLogoApplePay} />
+            <Image
+              style={styles.titleAppleLogo}
+              source={paymentTypeLogoApplePay}
+            />
           </View>
         )
       default:
@@ -376,13 +430,23 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       // Attempt to find the stateProvince name if stateProvinceCode is provided
       let stateProvinceName = stateProvinceCode
       if (country && country.stateProvinces && stateProvinceCode) {
-        const stateProvince = country.stateProvinces.find(sp => sp['alpha-2'] === stateProvinceCode)
-        stateProvinceName = stateProvince ? stateProvince.name : stateProvinceCode // Fallback to stateProvinceCode if not found
+        const stateProvince = country.stateProvinces.find(
+          sp => sp['alpha-2'] === stateProvinceCode
+        )
+        stateProvinceName = stateProvince
+          ? stateProvince.name
+          : stateProvinceCode // Fallback to stateProvinceCode if not found
       }
 
-      const text = stateProvinceName ? `${stateProvinceName}, ${countryName}` : countryName
+      const text = stateProvinceName
+        ? `${stateProvinceName}, ${countryName}`
+        : countryName
       Airship.show<'ok' | undefined>(bridge => (
-        <ButtonsModal bridge={bridge} message={sprintf(lstrings.fiat_plugin_no_provider_1s, text)} buttons={{ ok: { label: lstrings.string_ok_cap } }} />
+        <ButtonsModal
+          bridge={bridge}
+          message={sprintf(lstrings.fiat_plugin_no_provider_1s, text)}
+          buttons={{ ok: { label: lstrings.string_ok_cap } }}
+        />
       )).catch(() => {})
     } else {
       showError(error)
@@ -399,10 +463,15 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const styles = getStyles(this.props.theme)
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
-    const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
+    const pluginPartnerLogo = partnerLogoThemeKey
+      ? theme[partnerLogoThemeKey]
+      : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
     return (
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
+      <EdgeAnim
+        enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
+        style={styles.hackContainer}
+      >
         <EdgeCard
           icon={
             <Image
@@ -411,20 +480,37 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () => await this.openPlugin(item).catch(error => this.handleError(error))}
-          onLongPress={async () => await this.openPlugin(item, true).catch(error => this.handleError(error))}
+          onPress={async () =>
+            await this.openPlugin(item).catch(error => this.handleError(error))
+          }
+          onLongPress={async () =>
+            await this.openPlugin(item, true).catch(error =>
+              this.handleError(error)
+            )
+          }
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>
             {this.renderTitle(item)}
-            {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
+            {item.description === '' ? null : (
+              <EdgeText style={styles.subtitleText}>
+                {item.description}
+              </EdgeText>
+            )}
             {poweredBy != null && item.partnerIconPath != null ? (
               <>
                 <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
                 <View style={styles.pluginRowPoweredByRow}>
-                  <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
-                  <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-                  <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+                  <EdgeText style={styles.footerText}>
+                    {lstrings.plugin_powered_by_space}
+                  </EdgeText>
+                  <Image
+                    style={styles.partnerIconImage}
+                    source={pluginPartnerLogo}
+                  />
+                  <EdgeText style={styles.footerText}>
+                    {' ' + poweredBy}
+                  </EdgeText>
                 </View>
               </>
             ) : null}
@@ -435,38 +521,85 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { account, countryCode, stateProvinceCode, onCountryPress, theme, forcedWalletResult } = this.props
+    const {
+      account,
+      countryCode,
+      stateProvinceCode,
+      onCountryPress,
+      theme,
+      forcedWalletResult
+    } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
-    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
-    const stateProvinceData = countryData?.stateProvinces?.find(sp => sp['alpha-2'] === stateProvinceCode)
-    const uri = `${FLAG_LOGO_URL}/${countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')}.png`
+    const countryData = COUNTRY_CODES.find(
+      country => country['alpha-2'] === countryCode
+    )
+    const stateProvinceData = countryData?.stateProvinces?.find(
+      sp => sp['alpha-2'] === stateProvinceCode
+    )
+    const uri = `${FLAG_LOGO_URL}/${
+      countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')
+    }.png`
     const imageSrc = React.useMemo(() => ({ uri }), [uri])
     const hasCountryData = countryData != null
 
-    const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
-    const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
-    const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
-    const forcedWallet = forcedWalletResult?.type === 'wallet' ? account.currencyWallets[forcedWalletResult.walletId] : undefined
+    const countryName = hasCountryData
+      ? countryData.name
+      : lstrings.buy_sell_crypto_select_country_button
+    const iconStyle =
+      stateProvinceData == null
+        ? styles.selectedCountryFlag
+        : styles.selectedCountryFlagSelectableRow
+    const icon = !hasCountryData ? undefined : (
+      <FastImage source={imageSrc} style={iconStyle} />
+    )
+    const forcedWallet =
+      forcedWalletResult?.type === 'wallet'
+        ? account.currencyWallets[forcedWalletResult.walletId]
+        : undefined
 
     const titleAsset =
-      forcedWalletResult == null || forcedWalletResult.type !== 'wallet' || forcedWallet == null
+      forcedWalletResult == null ||
+      forcedWalletResult.type !== 'wallet' ||
+      forcedWallet == null
         ? lstrings.cryptocurrency
-        : getCurrencyCodeWithAccount(account, forcedWallet.currencyInfo.pluginId, forcedWalletResult.tokenId) ?? ''
+        : getCurrencyCodeWithAccount(
+            account,
+            forcedWallet.currencyInfo.pluginId,
+            forcedWalletResult.tokenId
+          ) ?? ''
 
     const countryCard =
       stateProvinceData == null ? (
         <EdgeCard>
-          <EdgeRow onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
+          <EdgeRow
+            onPress={onCountryPress}
+            rightButtonType="none"
+            icon={icon}
+            body={countryName}
+          />
         </EdgeCard>
       ) : (
-        <SelectableRow onPress={onCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
+        <SelectableRow
+          onPress={onCountryPress}
+          subTitle={stateProvinceData.name}
+          title={countryData?.name}
+          icon={icon}
+        />
       )
 
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={direction === 'buy' ? sprintf(lstrings.buy_1s, titleAsset) : sprintf(lstrings.sell_1s, titleAsset)} underline withTopMargin />
+          <SceneHeader
+            title={
+              direction === 'buy'
+                ? sprintf(lstrings.buy_1s, titleAsset)
+                : sprintf(lstrings.sell_1s, titleAsset)
+            }
+            underline
+            withTopMargin
+          />
         </EdgeAnim>
 
         {hasCountryData ? (
@@ -501,15 +634,33 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, insetStyle } = this.props
+    const {
+      accountPlugins,
+      accountReferral,
+      countryCode,
+      stateProvinceCode,
+      developerModeOn,
+      disablePlugins,
+      insetStyle
+    } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
 
     // Pick a filter based on our direction:
-    let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins, stateProvinceCode)
+    let plugins = filterGuiPluginJson(
+      direction === 'buy' ? buy : sell,
+      Platform.OS,
+      countryCode,
+      disablePlugins,
+      stateProvinceCode
+    )
 
     // Filter disabled plugins:
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      undefined
+    )
     plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
     if (!ENV.ENABLE_VISA_PROGRAM) {
@@ -632,18 +783,27 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
 
   const handleScroll = useSceneScrollHandler()
   const account = useSelector(state => state.core.account)
-  const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
+  const accountPlugins = useSelector(
+    state => state.account.referralCache.accountPlugins
+  )
   const accountReferral = useSelector(state => state.account.accountReferral)
-  const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
+  const deviceId = useSelector(state =>
+    base58ToUuid(state.core.context.clientId)
+  )
   const coreDisklet = useSelector(state => state.core.disklet)
-  const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
+  const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } =
+    useSelector(state => state.ui.settings)
   const direction = isBuyProps(props) ? 'buy' : 'sell'
-  const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+  const disablePlugins = useSelector(
+    state => state.ui.exchangeInfo[direction].disablePlugins
+  )
   const isFocused = useIsFocused()
 
   const debouncedNavigation = useAsyncNavigation(navigation)
 
-  const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
+  const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<
+    WalletListResult | undefined
+  >(params.forcedWalletResult)
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
@@ -719,5 +879,9 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
 })
 
 // Export separate components for buy and sell routes
-export const BuyScene = (props: BuyProps) => <GuiPluginListSceneComponent {...props} />
-export const SellScene = (props: SellProps) => <GuiPluginListSceneComponent {...props} />
+export const BuyScene = (props: BuyProps) => (
+  <GuiPluginListSceneComponent {...props} />
+)
+export const SellScene = (props: SellProps) => (
+  <GuiPluginListSceneComponent {...props} />
+)

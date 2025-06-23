@@ -1,20 +1,42 @@
 import { div, log10, lt, round } from 'biggystring'
-import { asArray, asBoolean, asMaybe, asObject, asString, asUnknown } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asMaybe,
+  asObject,
+  asString,
+  asUnknown
+} from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { readSyncedSettings, writeMostRecentWalletsSelected, writeSyncedSettings } from '../actions/SettingsActions'
+import {
+  readSyncedSettings,
+  writeMostRecentWalletsSelected,
+  writeSyncedSettings
+} from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { Airship, showError, showToast } from '../components/services/AirshipInstance'
-import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import {
+  Airship,
+  showError,
+  showToast
+} from '../components/services/AirshipInstance'
+import {
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, getCurrencyCodeMultiplier, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  getCurrencyCodeMultiplier,
+  isKeysOnlyPlugin
+} from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -34,14 +56,20 @@ const activateWalletName: MapObject<{ name: string; notes: string }> = {
 }
 const ACTIVATION_TOAST_AUTO_HIDE_MS = 5000
 
-export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivate }: SelectWalletTokenParams): ThunkAction<Promise<boolean>> {
+export function selectWalletToken({
+  navigation,
+  walletId,
+  tokenId,
+  alwaysActivate
+}: SelectWalletTokenParams): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(error => showError(error))
+    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId))
+      wallet.changePaused(false).catch(error => showError(error))
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -52,11 +80,18 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
-      if (unactivatedTokenIds.find(unactivatedTokenId => unactivatedTokenId === tokenId) != null) {
+      if (
+        unactivatedTokenIds.find(
+          unactivatedTokenId => unactivatedTokenId === tokenId
+        ) != null
+      ) {
         await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
         return false
       }
-      if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+      if (
+        walletId !== currentWalletId ||
+        currencyCode !== currentWalletCurrencyCode
+      ) {
         dispatch({
           type: 'UI/WALLETS/SELECT_WALLET',
           data: { walletId, currencyCode }
@@ -65,16 +100,27 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
       return true
     }
 
-    const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+    const { isAccountActivationRequired } = getSpecialCurrencyInfo(
+      wallet.currencyInfo.pluginId
+    )
     if (isAccountActivationRequired) {
       // activation-required wallets need different path in case not activated yet
-      if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-        return await dispatch(selectActivationRequiredWallet(navigation, walletId, currencyCode))
+      if (
+        alwaysActivate ||
+        walletId !== currentWalletId ||
+        currencyCode !== currentWalletCurrencyCode
+      ) {
+        return await dispatch(
+          selectActivationRequiredWallet(navigation, walletId, currencyCode)
+        )
       }
       return true
     }
 
-    if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+    if (
+      walletId !== currentWalletId ||
+      currencyCode !== currentWalletCurrencyCode
+    ) {
       dispatch({
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { walletId, currencyCode }
@@ -85,7 +131,11 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 }
 
 // check if the wallet is activated (via public address blank string check) and route to activation scene(s)
-function selectActivationRequiredWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<boolean>> {
+function selectActivationRequiredWallet(
+  navigation: NavigationBase,
+  walletId: string,
+  currencyCode: string
+): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
@@ -112,7 +162,10 @@ function selectActivationRequiredWallet(navigation: NavigationBase, walletId: st
         <ButtonsModal
           bridge={bridge}
           title={lstrings.create_wallet_account_unfinished_activation_title}
-          message={sprintf(lstrings.create_wallet_account_unfinished_activation_message, currencyCode)}
+          message={sprintf(
+            lstrings.create_wallet_account_unfinished_activation_message,
+            currencyCode
+          )}
           buttons={{ ok: { label: lstrings.string_ok } }}
         />
       )).catch(err => showError(err))
@@ -121,7 +174,10 @@ function selectActivationRequiredWallet(navigation: NavigationBase, walletId: st
   }
 }
 
-export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeTokenId): ThunkAction<void> {
+export function updateMostRecentWalletsSelected(
+  walletId: string,
+  tokenId: EdgeTokenId
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -147,7 +203,11 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
   }
 }
 
-export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenIds: EdgeTokenId[]): ThunkAction<Promise<void>> {
+export function activateWalletTokens(
+  navigation: NavigationBase,
+  wallet: EdgeCurrencyWallet,
+  tokenIds: EdgeTokenId[]
+): ThunkAction<Promise<void>> {
   return async (_dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -170,29 +230,57 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
         }
       })
       const tokensText = tokenIds.map(tokenId => {
-        const { currencyCode, displayName } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
+        const { currencyCode, displayName } =
+          tokenId != null
+            ? wallet.currencyConfig.allTokens[tokenId]
+            : wallet.currencyInfo
         return `${displayName} (${currencyCode})`
       })
-      const tileTitle = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_scene_tile_title : lstrings.activate_wallet_token_scene_tile_title
+      const tileTitle =
+        tokenIds.length > 1
+          ? lstrings.activate_wallet_tokens_scene_tile_title
+          : lstrings.activate_wallet_token_scene_tile_title
       const tileBody = tokensText.join(', ')
 
       const { networkFee } = activationQuote
-      const { nativeAmount: nativeFee, currencyPluginId, tokenId: feeTokenId } = networkFee
-      if (currencyPluginId !== pluginId) throw new Error('Internal Error: Fee asset mismatch.')
+      const {
+        nativeAmount: nativeFee,
+        currencyPluginId,
+        tokenId: feeTokenId
+      } = networkFee
+      if (currencyPluginId !== pluginId)
+        throw new Error('Internal Error: Fee asset mismatch.')
 
       const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
 
-      const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, paymentCurrencyCode)
+      const multiplier = getCurrencyCodeMultiplier(
+        wallet.currencyConfig,
+        paymentCurrencyCode
+      )
       const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
-      const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
-      const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
-      let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
+      const feeDenom = selectDisplayDenomByCurrencyCode(
+        state,
+        wallet.currencyConfig,
+        paymentCurrencyCode
+      )
+      const displayFee = div(
+        nativeFee,
+        feeDenom.multiplier,
+        log10(feeDenom.multiplier)
+      )
+      let fiatFee = convertCurrencyFromExchangeRates(
+        state.exchangeRates,
+        paymentCurrencyCode,
+        defaultIsoFiat,
+        exchangeNetworkFee
+      )
       if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
       else fiatFee = round(fiatFee, -3)
       const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${defaultFiat})`
       let bodyText = lstrings.activate_wallet_token_scene_body
 
-      const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+      const { tokenActivationAdditionalReserveText } =
+        SPECIAL_CURRENCY_INFO[pluginId] ?? {}
       if (tokenActivationAdditionalReserveText != null) {
         bodyText += '\n\n' + tokenActivationAdditionalReserveText
       }
@@ -206,11 +294,16 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
         ],
         onConfirm: (resetSlider: () => void) => {
           if (lt(wallet.balanceMap.get(feeTokenId) ?? '0', nativeFee)) {
-            const msg = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_insufficient_funds_s : lstrings.activate_wallet_token_insufficient_funds_s
+            const msg =
+              tokenIds.length > 1
+                ? lstrings.activate_wallet_tokens_insufficient_funds_s
+                : lstrings.activate_wallet_token_insufficient_funds_s
             Airship.show<'ok' | undefined>(bridge => (
               <ButtonsModal
                 bridge={bridge}
-                title={lstrings.create_wallet_account_unfinished_activation_title}
+                title={
+                  lstrings.create_wallet_account_unfinished_activation_title
+                }
                 message={sprintf(msg, feeString)}
                 buttons={{ ok: { label: lstrings.string_ok } }}
               />
@@ -219,8 +312,12 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
             return
           }
 
-          const name = activateWalletName[pluginId]?.name ?? lstrings.activate_wallet_token_transaction_name_category_generic
-          const notes = activateWalletName[pluginId]?.notes ?? lstrings.activate_wallet_token_transaction_notes_generic
+          const name =
+            activateWalletName[pluginId]?.name ??
+            lstrings.activate_wallet_token_transaction_name_category_generic
+          const notes =
+            activateWalletName[pluginId]?.notes ??
+            lstrings.activate_wallet_token_transaction_notes_generic
           activationQuote
             .approve({
               metadata: {
@@ -230,7 +327,10 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
               }
             })
             .then(result => {
-              showToast(lstrings.activate_wallet_token_success, ACTIVATION_TOAST_AUTO_HIDE_MS)
+              showToast(
+                lstrings.activate_wallet_token_success,
+                ACTIVATION_TOAST_AUTO_HIDE_MS
+              )
               navigation.pop()
             })
             .catch(e => {
@@ -240,7 +340,9 @@ export function activateWalletTokens(navigation: NavigationBase, wallet: EdgeCur
         }
       })
     } else {
-      throw new Error('Activation with multiple wallet options not supported yet')
+      throw new Error(
+        'Activation with multiple wallet options not supported yet'
+      )
     }
   }
 }
@@ -256,7 +358,9 @@ const asKeyInfo = asObject({
 
 type KeyInfo = ReturnType<typeof asKeyInfo>
 
-export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Promise<void>> {
+export function checkCompromisedKeys(
+  navigation: NavigationBase
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
@@ -323,7 +427,10 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       try {
         await queryInfoServer(docIds)
       } catch (e: any) {
-        console.log('checkCompromisedKeys invalid info server response', e.message)
+        console.log(
+          'checkCompromisedKeys invalid info server response',
+          e.message
+        )
         break
       }
     }
@@ -332,7 +439,9 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
     for (const entry of hashedPubKeys.entries()) {
       const [walletId, pubkeyHash] = entry
 
-      const keyInfo = exposedKeyInfos.find(info => info.pubKeyHash === pubkeyHash)
+      const keyInfo = exposedKeyInfos.find(
+        info => info.pubKeyHash === pubkeyHash
+      )
       if (keyInfo?.exposed) {
         exposedWalletIds.push(walletId)
       } else {
@@ -347,8 +456,13 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       data: securityCheckedWallets
     })
 
-    const MigrateWalletsModal = async (walletNames: string[]): Promise<'yes' | 'no' | undefined> => {
-      const message = sprintf(lstrings.migrate_wallets_modal_message, walletNames.join('\n'))
+    const MigrateWalletsModal = async (
+      walletNames: string[]
+    ): Promise<'yes' | 'no' | undefined> => {
+      const message = sprintf(
+        lstrings.migrate_wallets_modal_message,
+        walletNames.join('\n')
+      )
 
       return await Airship.show<'yes' | 'no' | undefined>(bridge => (
         <ButtonsModal
@@ -367,7 +481,9 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
 
     // If any walletId come back true show modal to go to migration scene with affected wallets preselected
     if (exposedWalletIds.length > 0) {
-      const walletNames = exposedWalletIds.map(walletId => getWalletName(currencyWallets[walletId]))
+      const walletNames = exposedWalletIds.map(walletId =>
+        getWalletName(currencyWallets[walletId])
+      )
       const response = await MigrateWalletsModal(walletNames)
       exposedWalletIds.forEach(walletId => {
         const { checked, modalShown } = securityCheckedWallets[walletId]

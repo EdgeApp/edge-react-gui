@@ -14,7 +14,10 @@ import {
 import process from 'process'
 import * as React from 'react'
 
-import { pickBestQuote, SwapConfirmationScene } from '../../components/scenes/SwapConfirmationScene'
+import {
+  pickBestQuote,
+  SwapConfirmationScene
+} from '../../components/scenes/SwapConfirmationScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'

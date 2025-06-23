@@ -50,7 +50,9 @@ export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
   return await writeDeviceSettings(updatedSettings)
 }
 
-export const writeForceLightAccountCreate = async (forceLightAccountCreate: boolean) => {
+export const writeForceLightAccountCreate = async (
+  forceLightAccountCreate: boolean
+) => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -68,7 +70,9 @@ export const writeForceLightAccountCreate = async (forceLightAccountCreate: bool
 /**
  * Track the state of whether the "How did you Discover Edge" modal was shown.
  **/
-export const writeIsSurveyDiscoverShown = async (isSurveyDiscoverShown: boolean) => {
+export const writeIsSurveyDiscoverShown = async (
+  isSurveyDiscoverShown: boolean
+) => {
   return await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
 }
 

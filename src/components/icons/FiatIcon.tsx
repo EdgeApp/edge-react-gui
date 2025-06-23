@@ -29,9 +29,15 @@ export const FiatIconComponent = (props: Props) => {
   const fiatBackgroundIcon = getCurrencyIconUris('fiat', null)
   const source = React.useMemo(
     () => ({
-      uri: mono ? fiatBackgroundIcon.symbolImageDarkMono : fiatBackgroundIcon.symbolImage
+      uri: mono
+        ? fiatBackgroundIcon.symbolImageDarkMono
+        : fiatBackgroundIcon.symbolImage
     }),
-    [fiatBackgroundIcon.symbolImage, fiatBackgroundIcon.symbolImageDarkMono, mono]
+    [
+      fiatBackgroundIcon.symbolImage,
+      fiatBackgroundIcon.symbolImageDarkMono,
+      mono
+    ]
   )
   const fiatSymbol = getFiatSymbol(fixFiatCurrencyCode(fiatCurrencyCode))
 

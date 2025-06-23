@@ -35,9 +35,12 @@ const PaymentMethodRowComponent = (props: Props) => {
   const guiPlugin = guiPlugins[pluginId]
 
   const [isFirstRun, setIsFirstRun] = React.useState(true)
-  const [partnerIconPath, setPartnerIconPath] = React.useState<string | undefined>(undefined)
+  const [partnerIconPath, setPartnerIconPath] = React.useState<
+    string | undefined
+  >(undefined)
 
-  if (guiPlugin == null) throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
+  if (guiPlugin == null)
+    throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
 
   if (isFirstRun) {
     for (const row of pluginJson) {
@@ -49,7 +52,10 @@ const PaymentMethodRowComponent = (props: Props) => {
     }
   }
 
-  if (!isFirstRun && partnerIconPath == null) throw new Error(`PaymentMethodRow could not find icon for ${pluginId} plugin`)
+  if (!isFirstRun && partnerIconPath == null)
+    throw new Error(
+      `PaymentMethodRow could not find icon for ${pluginId} plugin`
+    )
 
   // #endregion Initialization
 
@@ -60,7 +66,8 @@ const PaymentMethodRowComponent = (props: Props) => {
   const fiatCurrencyCode = paymentMethod.defaultCurrency
   const mainIcon = <FiatIcon fiatCurrencyCode={fiatCurrencyCode} />
   const name = paymentMethod.name
-  const partnerIconUri = partnerIconPath != null ? getPartnerIconUri(partnerIconPath) : undefined
+  const partnerIconUri =
+    partnerIconPath != null ? getPartnerIconUri(partnerIconPath) : undefined
 
   // #endregion Constants
 
@@ -68,7 +75,10 @@ const PaymentMethodRowComponent = (props: Props) => {
 
   const renderPluginDisplay = () => (
     <>
-      <FastImage source={{ uri: partnerIconUri }} style={styles.partnerIconImage} />
+      <FastImage
+        source={{ uri: partnerIconUri }}
+        style={styles.partnerIconImage}
+      />
       <EdgeText style={styles.pluginText}>{guiPlugin.displayName}</EdgeText>
     </>
   )

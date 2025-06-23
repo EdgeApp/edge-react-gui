@@ -24,7 +24,13 @@ interface Props<T> {
   autoCorrect?: boolean // Defaults to 'false'
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'words'
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'search'
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
+  keyboardType?:
+    | 'default'
+    | 'number-pad'
+    | 'decimal-pad'
+    | 'numeric'
+    | 'email-address'
+    | 'phone-pad' // Defaults to 'default'
   blurOnSubmit?: boolean // Defaults to 'true'
   inputAccessoryViewID?: string
   maxLength?: number
@@ -37,7 +43,10 @@ interface Props<T> {
   fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
-  onViewableItemsChanged?: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
+  onViewableItemsChanged?: (info: {
+    viewableItems: ViewToken[]
+    changed: ViewToken[]
+  }) => void
 }
 
 export function ListModal<T>({
@@ -59,14 +68,16 @@ export function ListModal<T>({
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
-  const renderItem: ListRenderItem<T> = ({ item }) => (rowComponent ? rowComponent(item) : null)
+  const renderItem: ListRenderItem<T> = ({ item }) =>
+    rowComponent ? rowComponent(item) : null
   const handleCancel = () => bridge.resolve(undefined)
   const handleChangeText = (text: string) => {
     setText(text)
     setFilteredRows(text)
   }
 
-  const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
+  const handleSubmitEditing = () =>
+    onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text)
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return {

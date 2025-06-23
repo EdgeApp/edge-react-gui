@@ -13,7 +13,13 @@ import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
-import { getPluginFromPolicyId, getPoliciesFromPlugins, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
+import {
+  getPluginFromPolicyId,
+  getPoliciesFromPlugins,
+  getPolicyAssetName,
+  getPolicyIconUris,
+  getPolicyTitleName
+} from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { AccentColors } from '../../common/DotsBackground'
@@ -38,18 +44,32 @@ export interface StakeOptionsParams {
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { currencyCode } = route.params
-  const [stakePlugins = []] = useAsyncValue(async () => await getStakePlugins(wallet.currencyInfo.pluginId))
-  const stakePositionMap = useSelector(state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {})
-  const stakePolicies = getPoliciesFromPlugins(stakePlugins, stakePositionMap, wallet, currencyCode)
+  const [stakePlugins = []] = useAsyncValue(
+    async () => await getStakePlugins(wallet.currencyInfo.pluginId)
+  )
+  const stakePositionMap = useSelector(
+    state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
+  )
+  const stakePolicies = getPoliciesFromPlugins(
+    stakePlugins,
+    stakePositionMap,
+    wallet,
+    currencyCode
+  )
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
   const pluginId = wallet?.currencyInfo.pluginId
-  const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
+  const tokenId = pluginId
+    ? getTokenIdForced(account, pluginId, currencyCode)
+    : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
-  const stakePolicyArray = React.useMemo(() => Object.values(stakePolicies), [stakePolicies])
+  const stakePolicyArray = React.useMemo(
+    () => Object.values(stakePolicies),
+    [stakePolicies]
+  )
 
   //
   // Handlers
@@ -78,9 +98,16 @@ const StakeOptionsSceneComponent = (props: Props) => {
     const key = [primaryText, secondaryText].join()
     const policyIcons = getPolicyIconUris(account.currencyConfig, stakePolicy)
     const stakePosition = stakePositionMap[stakePolicy.stakePolicyId]
-    const isStaked = stakePosition?.allocations.some(allocation => allocation.allocationType === 'staked' && gt(allocation.nativeAmount, '0'))
+    const isStaked = stakePosition?.allocations.some(
+      allocation =>
+        allocation.allocationType === 'staked' &&
+        gt(allocation.nativeAmount, '0')
+    )
     return (
-      <EdgeTouchableOpacity key={key} onPress={() => handleStakeOptionPress(stakePolicy)}>
+      <EdgeTouchableOpacity
+        key={key}
+        onPress={() => handleStakeOptionPress(stakePolicy)}
+      >
         <StakingOptionCard
           apy={stakePolicy.apy}
           currencyLogos={policyIcons.stakeAssetUris}
@@ -100,7 +127,10 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
   if (iconColor != null) {
-    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
     backgroundColors[0] = scaledColor
   }
 
@@ -124,13 +154,20 @@ const StakeOptionsSceneComponent = (props: Props) => {
                 the scroll area of a scene. If so, we must make the SceneContainer
                 component implement FlatList components. This is a one-off 
                 until then. */}
-                <SceneHeaderUi4 title={sprintf(lstrings.staking_change_add_header, currencyCode)} />
+                <SceneHeaderUi4
+                  title={sprintf(
+                    lstrings.staking_change_add_header,
+                    currencyCode
+                  )}
+                />
                 <Space horizontalRem={0.5} bottomRem={0.5}>
                   <EdgeText>{lstrings.stake_select_options}</EdgeText>
                 </Space>
               </>
             }
-            keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
+            keyExtractor={(stakePolicy: StakePolicy) =>
+              stakePolicy.stakePolicyId
+            }
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         </SceneContainer>

@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Animated,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz'
@@ -10,8 +16,17 @@ import { Airship } from '../services/AirshipInstance'
  * Shows a message & activity spinner on a fullscreen backdrop, tied to the lifetime of a promise.
  * No touches will be registed at it's lifetime.
  */
-export async function showFullScreenSpinner<T>(message: string, promise: Promise<T>): Promise<T> {
-  return await Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
+export async function showFullScreenSpinner<T>(
+  message: string,
+  promise: Promise<T>
+): Promise<T> {
+  return await Airship.show(bridge => (
+    <AirshipFullScreenSpinner
+      bridge={bridge}
+      message={message}
+      activity={promise}
+    />
+  ))
 }
 
 const fadeInTime = 300

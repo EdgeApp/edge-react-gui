@@ -1,10 +1,17 @@
 import { abs, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
 import { EdgeRow } from './EdgeRow'
@@ -21,17 +28,21 @@ interface Props {
 export function TxCryptoAmountRow(props: Props) {
   const { transaction, wallet } = props
   const { currencyInfo } = wallet
-  const { currencyCode, nativeAmount, networkFee, swapData, tokenId } = transaction
+  const { currencyCode, nativeAmount, networkFee, swapData, tokenId } =
+    transaction
 
   // Find the currency display name:
   const { allTokens } = wallet.currencyConfig
   let currencyName = currencyCode
-  if (currencyCode === currencyInfo.currencyCode) currencyName = currencyInfo.displayName
+  if (currencyCode === currencyInfo.currencyCode)
+    currencyName = currencyInfo.displayName
   if (tokenId != null) currencyName = allTokens[tokenId].displayName
 
   // Find the denomination to use:
   const walletDefaultDenom: EdgeDenomination = useSelector(state =>
-    currencyInfo.currencyCode === currencyCode ? getExchangeDenom(wallet.currencyConfig, tokenId) : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+    currencyInfo.currencyCode === currencyCode
+      ? getExchangeDenom(wallet.currencyConfig, tokenId)
+      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
   // Crypto Amount Logic
@@ -40,24 +51,44 @@ export function TxCryptoAmountRow(props: Props) {
     const direction = parseInt(nativeAmount) >= 0 ? 'receive' : 'send'
 
     if (direction === 'receive') {
-      const convertedAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(absoluteAmount)
+      const convertedAmount = convertNativeToDisplay(
+        walletDefaultDenom.multiplier
+      )(absoluteAmount)
       const symbolString =
-        currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol ? walletDefaultDenom.symbol : swapData?.payoutCurrencyCode ?? ''
+        currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+          ? walletDefaultDenom.symbol
+          : swapData?.payoutCurrencyCode ?? ''
 
       return `${symbolString} ${convertedAmount}`
     }
 
     // It's a send, so the symbol is weirdly different for some reason:
-    const symbolString = currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol ? walletDefaultDenom.symbol : currencyCode
+    const symbolString =
+      currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+        ? walletDefaultDenom.symbol
+        : currencyCode
 
     if (networkFee !== '') {
       const amountMinusFee = sub(absoluteAmount, networkFee)
-      const convertedAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(amountMinusFee)
+      const convertedAmount = convertNativeToDisplay(
+        walletDefaultDenom.multiplier
+      )(amountMinusFee)
 
-      const convertedFee = abs(truncateDecimals(convertNativeToDisplay(walletDefaultDenom.multiplier)(networkFee)))
+      const convertedFee = abs(
+        truncateDecimals(
+          convertNativeToDisplay(walletDefaultDenom.multiplier)(networkFee)
+        )
+      )
       const feeString = symbolString
-        ? sprintf(lstrings.fragment_tx_detail_mining_fee_with_symbol, convertedFee)
-        : sprintf(lstrings.fragment_tx_detail_mining_fee_with_denom, convertedFee, walletDefaultDenom.name)
+        ? sprintf(
+            lstrings.fragment_tx_detail_mining_fee_with_symbol,
+            convertedFee
+          )
+        : sprintf(
+            lstrings.fragment_tx_detail_mining_fee_with_denom,
+            convertedFee,
+            walletDefaultDenom.name
+          )
 
       return `${symbolString} ${convertedAmount} (${feeString})`
     }
@@ -65,7 +96,20 @@ export function TxCryptoAmountRow(props: Props) {
     // If the fee is missing, why not use the "receive" logic above?
     // I have no idea:
     return `${symbolString} ${absoluteAmount}`
-  }, [currencyCode, currencyInfo, nativeAmount, networkFee, swapData, walletDefaultDenom])
+  }, [
+    currencyCode,
+    currencyInfo,
+    nativeAmount,
+    networkFee,
+    swapData,
+    walletDefaultDenom
+  ])
 
-  return <EdgeRow rightButtonType="none" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
+  return (
+    <EdgeRow
+      rightButtonType="none"
+      title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)}
+      body={text}
+    />
+  )
 }

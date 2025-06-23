@@ -10,7 +10,10 @@ describe('AutoLogoutModal', () => {
   it('should render with loading props', () => {
     const rendered = render(
       <FakeProviders>
-        <AutoLogoutModal bridge={fakeAirshipBridge} autoLogoutTimeInSeconds={11} />
+        <AutoLogoutModal
+          bridge={fakeAirshipBridge}
+          autoLogoutTimeInSeconds={11}
+        />
       </FakeProviders>
     )
 

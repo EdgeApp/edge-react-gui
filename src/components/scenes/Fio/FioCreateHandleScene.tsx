@@ -7,7 +7,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { createFioWallet, refreshAllFioAddresses } from '../../../actions/FioAddressActions'
+import {
+  createFioWallet,
+  refreshAllFioAddresses
+} from '../../../actions/FioAddressActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -101,27 +104,34 @@ export const FioCreateHandleScene = (props: Props) => {
     const fioAccountName = `${fioHandle}${domainStr}`
     if (!(await fioPlugin.otherMethods.validateAccount(fioAccountName))) {
       if (!mounted.current) return
-      setErrorText(sprintf(lstrings.fio_register_handle_taken_error_s, fioAccountName))
+      setErrorText(
+        sprintf(lstrings.fio_register_handle_taken_error_s, fioAccountName)
+      )
     }
 
     // Register handle
     try {
       // TODO: Refactor fioPlugin.otherMethods.buyAddressRequest to support
       // handling custom referralCode and apiToken
-      const regAddressRes = await fetch('https://reg.fioprotocol.io/public-api/buy-address', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          address: fioAccountName,
-          referralCode: freeRegRefCode,
-          publicKey: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress,
-          redirectUrl: '',
-          apiToken: freeRegApiToken
-        })
-      }).then(async res => await res.json())
+      const regAddressRes = await fetch(
+        'https://reg.fioprotocol.io/public-api/buy-address',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            address: fioAccountName,
+            referralCode: freeRegRefCode,
+            publicKey: (
+              await wallet.getReceiveAddress({ tokenId: null })
+            ).publicAddress,
+            redirectUrl: '',
+            apiToken: freeRegApiToken
+          })
+        }
+      ).then(async res => await res.json())
 
       // Check registration status
       try {
@@ -164,7 +174,9 @@ export const FioCreateHandleScene = (props: Props) => {
       try {
         const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
         if (domains.length !== 1 || !mounted.current) return
-        setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
+        setDomainStr(
+          `${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`
+        )
       } catch (e) {
         setErrorText(lstrings.fio_register_handle_error)
         return
@@ -195,9 +207,18 @@ export const FioCreateHandleScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
-        <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
+        <FastImage
+          source={{ uri: getFioCustomizeHandleImage(theme) }}
+          style={styles.icon}
+        />
+        <EdgeText style={styles.title}>
+          {lstrings.personalize_wallet_title}
+        </EdgeText>
         <View style={styles.inputContainer}>
           <FilledTextInput
             ref={inputRef}
@@ -219,9 +240,16 @@ export const FioCreateHandleScene = (props: Props) => {
             label={lstrings.fio_register_handle_button}
             onPress={handleRegisterPress}
             marginRem={0.5}
-            disabled={fioHandle.length < 3 || errorText != null || wallet == null}
+            disabled={
+              fioHandle.length < 3 || errorText != null || wallet == null
+            }
           />
-          <MainButton type="escape" label={lstrings.string_cancel_cap} onPress={handleCancelPress} marginRem={0.5} />
+          <MainButton
+            type="escape"
+            label={lstrings.string_cancel_cap}
+            onPress={handleCancelPress}
+            marginRem={0.5}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

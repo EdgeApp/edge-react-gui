@@ -15,14 +15,21 @@ export type FetchInput<RequestPayload> = RequestInit & {
   payload?: RequestPayload
 }
 
-export type Fetcher<RequestPayload, ResponsePayload> = (input?: FetchInput<RequestPayload>) => Promise<ResponsePayload>
+export type Fetcher<RequestPayload, ResponsePayload> = (
+  input?: FetchInput<RequestPayload>
+) => Promise<ResponsePayload>
 
-export function cleanFetch<RequestPayload, ResponsePayload>(schema: FetchSchema<RequestPayload, ResponsePayload>): Fetcher<RequestPayload, ResponsePayload> {
+export function cleanFetch<RequestPayload, ResponsePayload>(
+  schema: FetchSchema<RequestPayload, ResponsePayload>
+): Fetcher<RequestPayload, ResponsePayload> {
   const { asRequest, asResponse, resource } = schema
   const wasRequest = asRequest ? uncleaner(asRequest) : (r: unknown) => r
 
-  const fetcher = async (input?: FetchInput<RequestPayload>): Promise<ResponsePayload> => {
-    const uri = typeof resource === 'function' ? resource(input ?? {}) : resource
+  const fetcher = async (
+    input?: FetchInput<RequestPayload>
+  ): Promise<ResponsePayload> => {
+    const uri =
+      typeof resource === 'function' ? resource(input ?? {}) : resource
     if (uri == null) throw new Error(`Missing resource identifier (URI)`)
     const request = wasRequest(input?.payload)
 
@@ -34,7 +41,9 @@ export function cleanFetch<RequestPayload, ResponsePayload>(schema: FetchSchema<
 
     if (!fetchResponse.ok) {
       const message = await fetchResponse.text()
-      throw new Error(`${String(uri)} ${fetchResponse.status}${message ? `: ${message}` : ''}`)
+      throw new Error(
+        `${String(uri)} ${fetchResponse.status}${message ? `: ${message}` : ''}`
+      )
     }
 
     const responseText = await fetchResponse.text()
@@ -62,6 +71,8 @@ export function fetcherWithOptions<RequestPayload, ResponsePayload>(
   input: FetchInput<RequestPayload>
 ): Fetcher<RequestPayload, ResponsePayload> {
   return async (finalInput?: FetchInput<RequestPayload>) => {
-    return await fetcher(finalInput == null ? input : deepmerge(input, finalInput))
+    return await fetcher(
+      finalInput == null ? input : deepmerge(input, finalInput)
+    )
   }
 }

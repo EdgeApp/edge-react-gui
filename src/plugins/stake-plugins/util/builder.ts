@@ -20,7 +20,9 @@ export function makeBuilder(executor: Executor): Builder {
   async function run() {
     let local = {}
     for (const imperative of imperatives) {
-      const definitions = await executor(global => imperative({ ...global, ...local }))
+      const definitions = await executor(global =>
+        imperative({ ...global, ...local })
+      )
       if (typeof definitions === 'object') local = { ...local, ...definitions }
     }
   }

@@ -37,7 +37,8 @@ const pluginData: { [pluginId: string]: TermsUri } = {
   },
   sideshift: {
     termsUri: 'https://sideshift.ai/legal',
-    kycUri: 'https://help.sideshift.ai/en/articles/6230858-sideshift-ai-s-risk-management-policy'
+    kycUri:
+      'https://help.sideshift.ai/en/articles/6230858-sideshift-ai-s-risk-management-policy'
   },
   swapuz: {
     termsUri: 'https://swapuz.com/terms-of-use',
@@ -46,7 +47,9 @@ const pluginData: { [pluginId: string]: TermsUri } = {
   }
 }
 
-export async function swapVerifyTerms(swapConfig: EdgeSwapConfig): Promise<boolean> {
+export async function swapVerifyTerms(
+  swapConfig: EdgeSwapConfig
+): Promise<boolean> {
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
@@ -54,7 +57,13 @@ export async function swapVerifyTerms(swapConfig: EdgeSwapConfig): Promise<boole
     return true
   }
 
-  const result = await Airship.show<boolean>(bridge => <SwapVerifyTermsModal bridge={bridge} swapInfo={swapConfig.swapInfo} uris={uris} />)
+  const result = await Airship.show<boolean>(bridge => (
+    <SwapVerifyTermsModal
+      bridge={bridge}
+      swapInfo={swapConfig.swapInfo}
+      uris={uris}
+    />
+  ))
 
   if (result) {
     await swapConfig.changeUserSettings({ agreedToTerms: true })
@@ -83,28 +92,50 @@ function SwapVerifyTermsModal(props: Props) {
       bridge={bridge}
       title={
         <View style={styles.titleContainer}>
-          <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
+          <FastImage
+            style={styles.titleImage}
+            source={{ uri: getSwapPluginIconUri(pluginId, theme) }}
+            resizeMode="contain"
+          />
           <ModalTitle>{displayName}</ModalTitle>
         </View>
       }
       onCancel={() => bridge.resolve(false)}
     >
       <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
-      <MainButton label={lstrings.swap_terms_accept_button} marginRem={1} onPress={() => bridge.resolve(true)} />
-      <MainButton label={lstrings.swap_terms_reject_button} marginRem={1} type="secondary" onPress={() => bridge.resolve(false)} />
+      <MainButton
+        label={lstrings.swap_terms_accept_button}
+        marginRem={1}
+        onPress={() => bridge.resolve(true)}
+      />
+      <MainButton
+        label={lstrings.swap_terms_reject_button}
+        marginRem={1}
+        type="secondary"
+        onPress={() => bridge.resolve(false)}
+      />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
-          <Text style={styles.linkText} onPress={async () => await Linking.openURL(termsUri)}>
+          <Text
+            style={styles.linkText}
+            onPress={async () => await Linking.openURL(termsUri)}
+          >
             {lstrings.swap_terms_terms_link}
           </Text>
         )}
         {privacyUri == null ? null : (
-          <Text style={styles.linkText} onPress={async () => await Linking.openURL(privacyUri)}>
+          <Text
+            style={styles.linkText}
+            onPress={async () => await Linking.openURL(privacyUri)}
+          >
             {lstrings.swap_terms_privacy_link}
           </Text>
         )}
         {kycUri == null ? null : (
-          <Text style={styles.linkText} onPress={async () => await Linking.openURL(kycUri)}>
+          <Text
+            style={styles.linkText}
+            onPress={async () => await Linking.openURL(kycUri)}
+          >
             {lstrings.swap_terms_kyc_link}
           </Text>
         )}

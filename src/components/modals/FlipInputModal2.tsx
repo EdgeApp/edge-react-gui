@@ -20,7 +20,12 @@ import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
+import {
+  ExchangedFlipInput2,
+  ExchangedFlipInputAmounts,
+  ExchangedFlipInputRef,
+  ExchangeFlipInputFields
+} from '../themed/ExchangedFlipInput2'
 import { EdgeModal } from './EdgeModal'
 
 export interface FlipInputModalResult {
@@ -58,172 +63,221 @@ interface Props {
   hideMaxButton?: boolean
 }
 
-const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((props: Props, ref) => {
-  const {
-    bridge,
-    wallet,
-    tokenId,
-    startNativeAmount,
-    forceField,
-    onAmountsChanged,
-    feeTokenId: startingFeeTokenId,
-    feeNativeAmount: startingFeeNativeAmount = '',
-    feeStyle,
-    onFeesChange,
-    onMaxSet,
-    headerText,
-    hideMaxButton
-  } = props
+const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
+  (props: Props, ref) => {
+    const {
+      bridge,
+      wallet,
+      tokenId,
+      startNativeAmount,
+      forceField,
+      onAmountsChanged,
+      feeTokenId: startingFeeTokenId,
+      feeNativeAmount: startingFeeNativeAmount = '',
+      feeStyle,
+      onFeesChange,
+      onMaxSet,
+      headerText,
+      hideMaxButton
+    } = props
 
-  const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
+    const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
-  const balanceMap = useWatch(wallet, 'balanceMap')
-  const [feeTokenId, setFeeTokenId] = useState<EdgeTokenId>(startingFeeTokenId)
-  const [feeNativeAmount, setFeeNativeAmount] = useState<string>(startingFeeNativeAmount)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [amounts, setAmounts] = useState<ExchangedFlipInputAmounts>({
-    nativeAmount: '',
-    exchangeAmount: '',
-    fiatAmount: '',
-    fieldChanged: forceField ?? 'fiat'
-  })
-
-  const displayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
-  const feeDisplayDenom = useDisplayDenom(wallet.currencyConfig, feeTokenId)
-  const walletName = useWalletName(wallet)
-
-  const flipInputHeaderText = headerText ?? sprintf(lstrings.send_from_wallet, walletName)
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const handleAmountsChanged = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    setAmounts(amounts)
-
-    if (onAmountsChanged != null) onAmountsChanged(amounts)
-  })
-
-  const handleFeesChange = useHandler(() => {
-    if (onFeesChange != null) {
-      handleCloseModal()
-      onFeesChange()
-    }
-  })
-
-  const handleCloseModal = useHandler(() => {
-    let { nativeAmount, exchangeAmount, fiatAmount } = amounts
-    nativeAmount = nativeAmount === '' ? '0' : nativeAmount
-    exchangeAmount = exchangeAmount === '' ? '0' : exchangeAmount
-    fiatAmount = fiatAmount === '' ? '0' : fiatAmount
-    bridge.resolve({ nativeAmount, exchangeAmount, fiatAmount })
-  })
-
-  const handleSendMaxAmount = useHandler(() => {
-    if (onMaxSet != null) {
-      onMaxSet()
-      handleCloseModal()
-    }
-  })
-
-  const renderErrorMessage = () => {
-    const opacity = errorMessage == null ? 0 : 1
-    return (
-      <EdgeText numberOfLines={1} style={[styles.exchangeRateErrorText, { opacity }]}>
-        {errorMessage == null ? ' ' : errorMessage.split('\n')[0]}
-      </EdgeText>
+    const balanceMap = useWatch(wallet, 'balanceMap')
+    const [feeTokenId, setFeeTokenId] =
+      useState<EdgeTokenId>(startingFeeTokenId)
+    const [feeNativeAmount, setFeeNativeAmount] = useState<string>(
+      startingFeeNativeAmount
     )
-  }
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [amounts, setAmounts] = useState<ExchangedFlipInputAmounts>({
+      nativeAmount: '',
+      exchangeAmount: '',
+      fiatAmount: '',
+      fieldChanged: forceField ?? 'fiat'
+    })
 
-  const renderExchangeRates = () => {
-    return (
-      <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{lstrings.string_rate}</EdgeText>
-        <ExchangeRate2 wallet={wallet} tokenId={tokenId} />
-      </View>
+    const displayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
+    const feeDisplayDenom = useDisplayDenom(wallet.currencyConfig, feeTokenId)
+    const walletName = useWalletName(wallet)
+
+    const flipInputHeaderText =
+      headerText ?? sprintf(lstrings.send_from_wallet, walletName)
+    const theme = useTheme()
+    const styles = getStyles(theme)
+
+    const handleAmountsChanged = useHandler(
+      (amounts: ExchangedFlipInputAmounts) => {
+        setAmounts(amounts)
+
+        if (onAmountsChanged != null) onAmountsChanged(amounts)
+      }
     )
-  }
 
-  const renderBalance = () => {
-    const { multiplier, name } = displayDenom
-    const balanceCrypto = balanceMap.get(tokenId) ?? '0'
-    const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} (`
-    const parenString = ')'
-    return (
-      <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{lstrings.send_confirmation_balance}</EdgeText>
-        <EdgeText style={styles.rateBalanceText}>
-          {balance}
-          <FiatText currencyConfig={wallet.currencyConfig} tokenId={tokenId} nativeCryptoAmount={balanceCrypto} />
-          {parenString}
+    const handleFeesChange = useHandler(() => {
+      if (onFeesChange != null) {
+        handleCloseModal()
+        onFeesChange()
+      }
+    })
+
+    const handleCloseModal = useHandler(() => {
+      let { nativeAmount, exchangeAmount, fiatAmount } = amounts
+      nativeAmount = nativeAmount === '' ? '0' : nativeAmount
+      exchangeAmount = exchangeAmount === '' ? '0' : exchangeAmount
+      fiatAmount = fiatAmount === '' ? '0' : fiatAmount
+      bridge.resolve({ nativeAmount, exchangeAmount, fiatAmount })
+    })
+
+    const handleSendMaxAmount = useHandler(() => {
+      if (onMaxSet != null) {
+        onMaxSet()
+        handleCloseModal()
+      }
+    })
+
+    const renderErrorMessage = () => {
+      const opacity = errorMessage == null ? 0 : 1
+      return (
+        <EdgeText
+          numberOfLines={1}
+          style={[styles.exchangeRateErrorText, { opacity }]}
+        >
+          {errorMessage == null ? ' ' : errorMessage.split('\n')[0]}
         </EdgeText>
-      </View>
-    )
-  }
+      )
+    }
 
-  const renderFees = () => {
-    const feeDisplayAmountTemp = div(feeNativeAmount, feeDisplayDenom.multiplier, DECIMAL_PRECISION)
-    const feeDisplayAmount = toFixed(feeDisplayAmountTemp, 0, log10(feeDisplayDenom.multiplier))
-
-    const feeCryptoText = `${feeDisplayAmount} ${feeDisplayDenom.name} (`
-    const feeTextStyle = feeStyle === 'dangerText' ? styles.feeTextDanger : feeStyle === 'warningText' ? styles.feeTextWarning : styles.feeTextDefault
-    const parenString = ')'
-    return (
-      <View style={styles.feeContainer}>
-        <View style={styles.feeTitleContainer}>
-          <EdgeText style={styles.primaryTitle}>{lstrings.string_fee}</EdgeText>
-          {onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
+    const renderExchangeRates = () => {
+      return (
+        <View style={styles.rateBalanceContainer}>
+          <EdgeText style={styles.secondaryTitle}>
+            {lstrings.string_rate}
+          </EdgeText>
+          <ExchangeRate2 wallet={wallet} tokenId={tokenId} />
         </View>
-        <EdgeText style={feeTextStyle}>
-          {feeCryptoText}
-          <FiatText nativeCryptoAmount={feeNativeAmount} currencyConfig={wallet.currencyConfig} maxPrecision={2} subCentTruncation tokenId={feeTokenId} />
-          {parenString}
-        </EdgeText>
-      </View>
-    )
-  }
+      )
+    }
 
-  const renderFlipInput = () => {
-    return (
-      <EdgeCard marginRem={[0, 0.5, 0.5]}>
-        <ExchangedFlipInput2
-          ref={exchangedFlipInputRef}
-          wallet={wallet}
-          tokenId={tokenId}
-          startNativeAmount={startNativeAmount}
-          forceField={amounts.fieldChanged}
-          headerText={flipInputHeaderText}
-          onAmountChanged={handleAmountsChanged}
-          keyboardVisible
-          onNext={handleCloseModal}
-          hideMaxButton={hideMaxButton}
-          onMaxPress={handleSendMaxAmount}
-        />
-      </EdgeCard>
-    )
-  }
-
-  React.useImperativeHandle(ref, () => ({
-    setFees: (params: SetFeesParams) => {
-      setFeeTokenId(params.feeTokenId)
-      setFeeNativeAmount(params.feeNativeAmount)
-    },
-    setAmount: (field: ExchangeFlipInputFields, value: string) => exchangedFlipInputRef.current?.setAmount(field, value),
-    setError: (errorMessage: string | null) => setErrorMessage(errorMessage)
-  }))
-
-  return (
-    <EdgeModal bridge={bridge} onCancel={handleCloseModal}>
-      <View style={styles.flipInput}>{renderFlipInput()}</View>
-      <EdgeTouchableWithoutFeedback onPress={handleFeesChange}>
-        <View style={styles.fees}>
-          {renderFees()}
-          {renderExchangeRates()}
-          {renderBalance()}
-          {renderErrorMessage()}
+    const renderBalance = () => {
+      const { multiplier, name } = displayDenom
+      const balanceCrypto = balanceMap.get(tokenId) ?? '0'
+      const balance = `${formatNumber(
+        div(balanceCrypto, multiplier, DECIMAL_PRECISION)
+      )} ${name} (`
+      const parenString = ')'
+      return (
+        <View style={styles.rateBalanceContainer}>
+          <EdgeText style={styles.secondaryTitle}>
+            {lstrings.send_confirmation_balance}
+          </EdgeText>
+          <EdgeText style={styles.rateBalanceText}>
+            {balance}
+            <FiatText
+              currencyConfig={wallet.currencyConfig}
+              tokenId={tokenId}
+              nativeCryptoAmount={balanceCrypto}
+            />
+            {parenString}
+          </EdgeText>
         </View>
-      </EdgeTouchableWithoutFeedback>
-    </EdgeModal>
-  )
-})
+      )
+    }
+
+    const renderFees = () => {
+      const feeDisplayAmountTemp = div(
+        feeNativeAmount,
+        feeDisplayDenom.multiplier,
+        DECIMAL_PRECISION
+      )
+      const feeDisplayAmount = toFixed(
+        feeDisplayAmountTemp,
+        0,
+        log10(feeDisplayDenom.multiplier)
+      )
+
+      const feeCryptoText = `${feeDisplayAmount} ${feeDisplayDenom.name} (`
+      const feeTextStyle =
+        feeStyle === 'dangerText'
+          ? styles.feeTextDanger
+          : feeStyle === 'warningText'
+          ? styles.feeTextWarning
+          : styles.feeTextDefault
+      const parenString = ')'
+      return (
+        <View style={styles.feeContainer}>
+          <View style={styles.feeTitleContainer}>
+            <EdgeText style={styles.primaryTitle}>
+              {lstrings.string_fee}
+            </EdgeText>
+            {onFeesChange ? (
+              <FontAwesomeIcon
+                name="edit"
+                style={styles.feeIcon}
+                size={theme.rem(0.75)}
+              />
+            ) : null}
+          </View>
+          <EdgeText style={feeTextStyle}>
+            {feeCryptoText}
+            <FiatText
+              nativeCryptoAmount={feeNativeAmount}
+              currencyConfig={wallet.currencyConfig}
+              maxPrecision={2}
+              subCentTruncation
+              tokenId={feeTokenId}
+            />
+            {parenString}
+          </EdgeText>
+        </View>
+      )
+    }
+
+    const renderFlipInput = () => {
+      return (
+        <EdgeCard marginRem={[0, 0.5, 0.5]}>
+          <ExchangedFlipInput2
+            ref={exchangedFlipInputRef}
+            wallet={wallet}
+            tokenId={tokenId}
+            startNativeAmount={startNativeAmount}
+            forceField={amounts.fieldChanged}
+            headerText={flipInputHeaderText}
+            onAmountChanged={handleAmountsChanged}
+            keyboardVisible
+            onNext={handleCloseModal}
+            hideMaxButton={hideMaxButton}
+            onMaxPress={handleSendMaxAmount}
+          />
+        </EdgeCard>
+      )
+    }
+
+    React.useImperativeHandle(ref, () => ({
+      setFees: (params: SetFeesParams) => {
+        setFeeTokenId(params.feeTokenId)
+        setFeeNativeAmount(params.feeNativeAmount)
+      },
+      setAmount: (field: ExchangeFlipInputFields, value: string) =>
+        exchangedFlipInputRef.current?.setAmount(field, value),
+      setError: (errorMessage: string | null) => setErrorMessage(errorMessage)
+    }))
+
+    return (
+      <EdgeModal bridge={bridge} onCancel={handleCloseModal}>
+        <View style={styles.flipInput}>{renderFlipInput()}</View>
+        <EdgeTouchableWithoutFeedback onPress={handleFeesChange}>
+          <View style={styles.fees}>
+            {renderFees()}
+            {renderExchangeRates()}
+            {renderBalance()}
+            {renderErrorMessage()}
+          </View>
+        </EdgeTouchableWithoutFeedback>
+      </EdgeModal>
+    )
+  }
+)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   flipInput: {

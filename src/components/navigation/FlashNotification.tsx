@@ -20,9 +20,19 @@ export function FlashNotification(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <AirshipDropdown bridge={bridge} backgroundColor={theme.modal} onPress={onPress}>
+    <AirshipDropdown
+      bridge={bridge}
+      backgroundColor={theme.modal}
+      onPress={onPress}
+    >
       <View style={styles.container}>
-        {icon ?? <AntDesignIcon name="checkcircle" size={theme.rem(2)} style={styles.icon} />}
+        {icon ?? (
+          <AntDesignIcon
+            name="checkcircle"
+            size={theme.rem(2)}
+            style={styles.icon}
+          />
+        )}
         <Paragraph center>{message}</Paragraph>
       </View>
     </AirshipDropdown>

@@ -18,7 +18,10 @@ export const getFioCustomizeHandleImage = (theme: Theme) => {
  * Borrow Plugin Icons
  */
 export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
-  return getCurrencyIconUris(borrowPluginInfo.currencyPluginId, borrowPluginInfo.displayTokenId).symbolImage
+  return getCurrencyIconUris(
+    borrowPluginInfo.currencyPluginId,
+    borrowPluginInfo.displayTokenId
+  ).symbolImage
 }
 
 /**
@@ -32,7 +35,11 @@ export function getSwapPluginIconUri(pluginId: string, theme: Theme) {
  * Stake Provider Icons
  * Icons to differentiate multiple staking options that share the same assets.
  */
-export function getStakeProviderIcon(pluginId: string, providerId: string, theme: Theme) {
+export function getStakeProviderIcon(
+  pluginId: string,
+  providerId: string,
+  theme: Theme
+) {
   return `${theme.iconServerBaseUri}/stakeProviderIcons/${pluginId}/${providerId}/icon.png`
 }
 
@@ -44,8 +51,13 @@ export interface CurrencyIcons {
   symbolImageDarkMono: string
 }
 
-export function getCurrencyIconUris(pluginId: string, tokenId: EdgeTokenId, useChainIcon: boolean = false): CurrencyIcons {
-  const iconFile = useChainIcon && tokenId === null ? `chain_${pluginId}` : tokenId ?? pluginId
+export function getCurrencyIconUris(
+  pluginId: string,
+  tokenId: EdgeTokenId,
+  useChainIcon: boolean = false
+): CurrencyIcons {
+  const iconFile =
+    useChainIcon && tokenId === null ? `chain_${pluginId}` : tokenId ?? pluginId
   const currencyPath = `${pluginId}/${removeHexPrefix(iconFile)}`.toLowerCase()
   return {
     symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,

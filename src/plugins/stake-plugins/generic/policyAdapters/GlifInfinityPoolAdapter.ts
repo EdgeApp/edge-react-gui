@@ -5,8 +5,17 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
-import { GlifInfinityPool__factory, GlifPoolToken__factory, GlifSimpleRamp__factory } from '../../../contracts'
-import { ChangeQuote, PositionAllocation, QuoteAllocation, StakePosition } from '../../types'
+import {
+  GlifInfinityPool__factory,
+  GlifPoolToken__factory,
+  GlifSimpleRamp__factory
+} from '../../../contracts'
+import {
+  ChangeQuote,
+  PositionAllocation,
+  QuoteAllocation,
+  StakePosition
+} from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
 import { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
@@ -19,12 +28,25 @@ export interface GlifInfinityPoolAdapterConfig {
   simpleRampContractAddress: string
 }
 
-export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<GlifInfinityPoolAdapterConfig>): StakePolicyAdapter => {
-  if (policyConfig.stakeAssets.length > 1) throw new Error(`Staking more than one assets is not supported for GlifInfinityPoolAdapter`)
-  if (policyConfig.rewardAssets.length > 1) throw new Error(`Claim of more than one assets is not supported for GlifInfinityPoolAdapter`)
+export const makeGlifInfinityPoolAdapter = (
+  policyConfig: StakePolicyConfig<GlifInfinityPoolAdapterConfig>
+): StakePolicyAdapter => {
+  if (policyConfig.stakeAssets.length > 1)
+    throw new Error(
+      `Staking more than one assets is not supported for GlifInfinityPoolAdapter`
+    )
+  if (policyConfig.rewardAssets.length > 1)
+    throw new Error(
+      `Claim of more than one assets is not supported for GlifInfinityPoolAdapter`
+    )
 
-  if (policyConfig.stakeAssets[0].currencyCode !== policyConfig.rewardAssets[0].currencyCode)
-    throw new Error(`Stake and claim of different assets is not supported for GlifInfinityPoolAdapter`)
+  if (
+    policyConfig.stakeAssets[0].currencyCode !==
+    policyConfig.rewardAssets[0].currencyCode
+  )
+    throw new Error(
+      `Stake and claim of different assets is not supported for GlifInfinityPoolAdapter`
+    )
 
   // Metadata constants:
   const metadataName = 'GLIF Infinity Pool'
@@ -33,14 +55,26 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
 
   const { adapterConfig, stakePolicyId } = policyConfig
   const { rpcProviderUrls } = adapterConfig
-  const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
+  const provider = new ethers.providers.FallbackProvider(
+    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
+  )
 
   // Declare contracts:
   const { poolContractAddress, simpleRampContractAddress } = adapterConfig
-  const poolContract = GlifInfinityPool__factory.connect(poolContractAddress, provider)
-  const simpleRampContract = GlifSimpleRamp__factory.connect(simpleRampContractAddress, provider)
+  const poolContract = GlifInfinityPool__factory.connect(
+    poolContractAddress,
+    provider
+  )
+  const simpleRampContract = GlifSimpleRamp__factory.connect(
+    simpleRampContractAddress,
+    provider
+  )
 
-  async function prepareChangeQuote(walletSigner: EdgeWalletSigner, txs: ethers.PopulatedTransaction[], allocations: QuoteAllocation[]): Promise<ChangeQuote> {
+  async function prepareChangeQuote(
+    walletSigner: EdgeWalletSigner,
+    txs: ethers.PopulatedTransaction[],
+    allocations: QuoteAllocation[]
+  ): Promise<ChangeQuote> {
     let networkFee = BigNumber.from(0)
 
     for (const tx of txs) {
@@ -87,8 +121,12 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
     }
 
     const feeData = await provider.getFeeData()
-    const maxFeePerGas = feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
-    const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas !== null ? feeData.maxPriorityFeePerGas : undefined
+    const maxFeePerGas =
+      feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
+    const maxPriorityFeePerGas =
+      feeData.maxPriorityFeePerGas !== null
+        ? feeData.maxPriorityFeePerGas
+        : undefined
 
     return {
       maxFeePerGas,
@@ -104,32 +142,48 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
     stakePolicyId,
 
     async fetchClaimQuote(): Promise<ChangeQuote> {
-      throw new Error('fetchClaimQuote not implemented for GlifInfinityPoolAdapter')
+      throw new Error(
+        'fetchClaimQuote not implemented for GlifInfinityPoolAdapter'
+      )
     },
 
-    async fetchStakeQuote(wallet, requestAssetId, requestNativeAmount): Promise<ChangeQuote> {
+    async fetchStakeQuote(
+      wallet,
+      requestAssetId,
+      requestNativeAmount
+    ): Promise<ChangeQuote> {
       const requestAssetCurrencyCode = requestAssetId.currencyCode
-      const isRequestAssetNative = requestAssetCurrencyCode === policyConfig.parentCurrencyCode
+      const isRequestAssetNative =
+        requestAssetCurrencyCode === policyConfig.parentCurrencyCode
 
       if (!isRequestAssetNative) throw new Error('Token staking not supported')
 
-      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
+      const {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nextNonce,
+        txs,
+        walletAddress,
+        walletSigner
+      } = await workflowUtils(wallet)
 
       // Deposit into pool contract:
       txs.push(
-        await poolContract.connect(walletSigner).populateTransaction['deposit(address)'](walletAddress, {
-          value: requestNativeAmount,
-          maxFeePerGas,
-          maxPriorityFeePerGas,
-          nonce: await nextNonce(),
-          customData: {
-            metadata: {
-              name: metadataName,
-              category: 'Expense:Fee',
-              notes: `Stake into ${metadataPoolAssetName} pool contract`
+        await poolContract
+          .connect(walletSigner)
+          .populateTransaction['deposit(address)'](walletAddress, {
+            value: requestNativeAmount,
+            maxFeePerGas,
+            maxPriorityFeePerGas,
+            nonce: await nextNonce(),
+            customData: {
+              metadata: {
+                name: metadataName,
+                category: 'Expense:Fee',
+                notes: `Stake into ${metadataPoolAssetName} pool contract`
+              }
             }
-          }
-        })
+          })
       )
 
       // Calculate the stake asset native amounts:
@@ -145,52 +199,86 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
 
-    async fetchUnstakeQuote(wallet, requestAssetId, requestNativeAmount): Promise<ChangeQuote> {
+    async fetchUnstakeQuote(
+      wallet,
+      requestAssetId,
+      requestNativeAmount
+    ): Promise<ChangeQuote> {
       const requestAssetCurrencyCode = requestAssetId.currencyCode
-      const isRequestAssetNative = requestAssetCurrencyCode === policyConfig.parentCurrencyCode
+      const isRequestAssetNative =
+        requestAssetCurrencyCode === policyConfig.parentCurrencyCode
 
       if (!isRequestAssetNative) throw new Error('Token staking not supported')
 
       const poolTokenAddress = await poolContract.liquidStakingToken()
-      const poolTokenContract = GlifPoolToken__factory.connect(poolTokenAddress, provider)
+      const poolTokenContract = GlifPoolToken__factory.connect(
+        poolTokenAddress,
+        provider
+      )
 
-      const { maxFeePerGas, maxPriorityFeePerGas, nextNonce, txs, walletAddress, walletSigner } = await workflowUtils(wallet)
+      const {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nextNonce,
+        txs,
+        walletAddress,
+        walletSigner
+      } = await workflowUtils(wallet)
 
       // Approve token transfer
-      const expectedLiquidityAmount = await simpleRampContract.previewWithdraw(requestNativeAmount)
-      const allowanceResult = await poolTokenContract.allowance(walletAddress, simpleRampContract.address)
+      const expectedLiquidityAmount = await simpleRampContract.previewWithdraw(
+        requestNativeAmount
+      )
+      const allowanceResult = await poolTokenContract.allowance(
+        walletAddress,
+        simpleRampContract.address
+      )
       if (allowanceResult.lt(expectedLiquidityAmount)) {
         txs.push(
-          await poolTokenContract.connect(walletSigner).populateTransaction.approve(simpleRampContract.address, expectedLiquidityAmount, {
-            maxFeePerGas,
-            maxPriorityFeePerGas,
-            nonce: await nextNonce(),
-            customData: {
-              metadata: {
-                name: metadataName,
-                category: 'Expense:Fees',
-                notes: `Approve ${metadataPoolAssetName} liquidity pool contract`
+          await poolTokenContract
+            .connect(walletSigner)
+            .populateTransaction.approve(
+              simpleRampContract.address,
+              expectedLiquidityAmount,
+              {
+                maxFeePerGas,
+                maxPriorityFeePerGas,
+                nonce: await nextNonce(),
+                customData: {
+                  metadata: {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${metadataPoolAssetName} liquidity pool contract`
+                  }
+                }
               }
-            }
-          })
+            )
         )
       }
 
       // Withdraw liquidity
       txs.push(
-        await simpleRampContract.connect(walletSigner).populateTransaction.withdrawF(requestNativeAmount, walletAddress, walletAddress, BigNumber.from(0), {
-          gasLimit: 250000000,
-          maxFeePerGas,
-          maxPriorityFeePerGas,
-          nonce: await nextNonce(),
-          customData: {
-            metadata: {
-              name: metadataName,
-              category: 'Transfer:Staking',
-              notes: `Remove liquidity from ${metadataPoolAssetName} pool contract`
+        await simpleRampContract
+          .connect(walletSigner)
+          .populateTransaction.withdrawF(
+            requestNativeAmount,
+            walletAddress,
+            walletAddress,
+            BigNumber.from(0),
+            {
+              gasLimit: 250000000,
+              maxFeePerGas,
+              maxPriorityFeePerGas,
+              nonce: await nextNonce(),
+              customData: {
+                metadata: {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: `Remove liquidity from ${metadataPoolAssetName} pool contract`
+                }
+              }
             }
-          }
-        })
+          )
       )
 
       // Calculate the stake asset native amounts:
@@ -206,19 +294,29 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
       return await prepareChangeQuote(walletSigner, txs, allocations)
     },
 
-    async fetchUnstakeExactQuote(wallet, requestAssetId, nativeAmount): Promise<ChangeQuote> {
-      throw new Error('fetchUnstakeExactQuote not implemented for GlifInfinityPoolAdapter')
+    async fetchUnstakeExactQuote(
+      wallet,
+      requestAssetId,
+      nativeAmount
+    ): Promise<ChangeQuote> {
+      throw new Error(
+        'fetchUnstakeExactQuote not implemented for GlifInfinityPoolAdapter'
+      )
     },
 
     async fetchStakePosition(wallet): Promise<StakePosition> {
       const stakeAssetId = policyConfig.stakeAssets[0]
       const stakeAssetCurrencyCode = stakeAssetId.currencyCode
-      const isStakeAssetNative = stakeAssetCurrencyCode === policyConfig.parentCurrencyCode
+      const isStakeAssetNative =
+        stakeAssetCurrencyCode === policyConfig.parentCurrencyCode
 
       if (!isStakeAssetNative) throw new Error('Token staking not supported')
 
       const poolTokenAddress = await poolContract.liquidStakingToken()
-      const poolTokenContract = GlifPoolToken__factory.connect(poolTokenAddress, provider)
+      const poolTokenContract = GlifPoolToken__factory.connect(
+        poolTokenAddress,
+        provider
+      )
 
       const { walletAddress, walletSigner } = await workflowUtils(wallet)
 
@@ -230,7 +328,9 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
         .connect(walletSigner)
         .balanceOf(walletAddress)
         .catch(err => {
-          if (String(err).includes('Transaction reverted without a reason string')) {
+          if (
+            String(err).includes('Transaction reverted without a reason string')
+          ) {
             return BigNumber.from(0)
           }
           throw err
@@ -241,7 +341,9 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
         .connect(walletSigner)
         .previewRedeem(poolTokenBalance)
         .catch(err => {
-          if (String(err).includes('Transaction reverted without a reason string')) {
+          if (
+            String(err).includes('Transaction reverted without a reason string')
+          ) {
             return BigNumber.from(0)
           }
           throw err
@@ -277,7 +379,9 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
       }
     },
     async fetchYieldInfo() {
-      const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
+      const infoServerResponse = asInfoServerResponse(
+        infoServerData.rollup?.apyValues ?? { policies: {} }
+      )
       const apy = infoServerResponse.policies[stakePolicyId] ?? 0
 
       return {

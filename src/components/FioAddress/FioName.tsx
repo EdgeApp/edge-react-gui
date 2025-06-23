@@ -23,7 +23,9 @@ export const FioNameRow = (props: FioNameProps) => {
 
   const renderSubTitle = () => {
     if (expiration != null) {
-      const subTitle = `${lstrings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+      const subTitle = `${
+        lstrings.fio_address_details_screen_expires
+      } ${formatDate(new Date(expiration))}`
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 

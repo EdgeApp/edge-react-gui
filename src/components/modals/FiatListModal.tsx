@@ -29,13 +29,21 @@ export const FiatListModal = (props: Props) => {
   const styles = getStyles(theme)
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const supportedFiats = React.useMemo(() => getSupportedFiats(defaultFiat).filter(item => FIAT_COUNTRY[item.value] != null), [defaultFiat])
+  const supportedFiats = React.useMemo(
+    () =>
+      getSupportedFiats(defaultFiat).filter(
+        item => FIAT_COUNTRY[item.value] != null
+      ),
+    [defaultFiat]
+  )
   const [visibleRows, setVisibleRows] = React.useState<FiatListViewToken[]>([])
 
   const fiatModalRowFilter = (searchText: string, item: GuiFiatType) => {
     const lowerCaseText = searchText.toLowerCase()
     return (
-      FIAT_COUNTRY[item.value]?.countryName.toLowerCase().includes(lowerCaseText) ||
+      FIAT_COUNTRY[item.value]?.countryName
+        .toLowerCase()
+        .includes(lowerCaseText) ||
       item.label.toLowerCase().includes(lowerCaseText) ||
       item.value.toLowerCase().includes(lowerCaseText)
     )
@@ -45,13 +53,18 @@ export const FiatListModal = (props: Props) => {
     const fiatCountry = FIAT_COUNTRY[item.value]
 
     const key = `currency_label_${item.value}`
-    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
+    const subTitle =
+      lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
 
     return (
       <SelectableRow
         icon={
           fiatCountry?.logoUrl != null ? (
-            <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.image} accessibilityHint={item.value} />
+            <FastImage
+              source={{ uri: fiatCountry.logoUrl }}
+              style={styles.image}
+              accessibilityHint={item.value}
+            />
           ) : (
             <View style={styles.image} />
           )
@@ -63,9 +76,11 @@ export const FiatListModal = (props: Props) => {
     )
   }
 
-  const onViewableItemsChanged = useHandler((info: { viewableItems: ViewToken[] }) => {
-    setVisibleRows(info.viewableItems)
-  })
+  const onViewableItemsChanged = useHandler(
+    (info: { viewableItems: ViewToken[] }) => {
+      setVisibleRows(info.viewableItems)
+    }
+  )
 
   const onSubmitEditing = useHandler(() => {
     if (visibleRows.length === 1) {

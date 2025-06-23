@@ -6,7 +6,9 @@ import { DeepLink } from '../types/DeepLinkTypes'
 /**
  * Extracts a deep link from a push message, if present.
  */
-export function parsePushMessage(message: FirebaseMessagingTypes.RemoteMessage): DeepLink | undefined {
+export function parsePushMessage(
+  message: FirebaseMessagingTypes.RemoteMessage
+): DeepLink | undefined {
   const priceChange = asMaybe(asPriceChangePayloadData)(message.data)
   if (priceChange != null) {
     return {

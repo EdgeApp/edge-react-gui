@@ -5,7 +5,8 @@ let sendSoundPromise: Promise<Sound> | undefined
 Sound.setCategory('Ambient', true)
 
 export async function playReceiveSound(): Promise<void> {
-  if (!receiveSoundPromise) receiveSoundPromise = loadSound('audio_received.mp3')
+  if (!receiveSoundPromise)
+    receiveSoundPromise = loadSound('audio_received.mp3')
   return await receiveSoundPromise.then(playSound)
 }
 
@@ -19,7 +20,9 @@ export async function playSendSound(): Promise<void> {
  */
 async function loadSound(name: string): Promise<Sound> {
   return await new Promise((resolve, reject) => {
-    const sound: Sound = new Sound(name, Sound.MAIN_BUNDLE, error => (error ? reject(error) : resolve(sound)))
+    const sound: Sound = new Sound(name, Sound.MAIN_BUNDLE, error =>
+      error ? reject(error) : resolve(sound)
+    )
   })
 }
 
@@ -28,6 +31,8 @@ async function loadSound(name: string): Promise<Sound> {
  */
 async function playSound(sound: Sound): Promise<void> {
   return await new Promise((resolve, reject) => {
-    sound.play(success => (success ? resolve() : new Error('Could not play sound')))
+    sound.play(success =>
+      success ? resolve() : new Error('Could not play sound')
+    )
   })
 }

@@ -61,7 +61,12 @@ export const IconBadge = (props: Props) => {
           {number === 0 ? (
             <View style={styles.priorityCircle} />
           ) : (
-            <EdgeText style={Platform.OS === 'android' ? styles.textAndroid : styles.textIos} disableFontScaling>
+            <EdgeText
+              style={
+                Platform.OS === 'android' ? styles.textAndroid : styles.textIos
+              }
+              disableFontScaling
+            >
               {number}
             </EdgeText>
           )}

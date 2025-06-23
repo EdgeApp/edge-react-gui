@@ -5,7 +5,11 @@ import { NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 
-export function executePluginAction(navigation: NavigationBase, pluginId: string, direction: 'buy' | 'sell'): ThunkAction<Promise<void>> {
+export function executePluginAction(
+  navigation: NavigationBase,
+  pluginId: string,
+  direction: 'buy' | 'sell'
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings

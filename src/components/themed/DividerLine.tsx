@@ -35,7 +35,14 @@ export const DividerLine = (props: Props) => {
 
   const colors = props.colors ?? theme.dividerLineColors
 
-  return <LinearGradient colors={colors} start={start} end={end} style={[styles.underline, margin]} />
+  return (
+    <LinearGradient
+      colors={colors}
+      start={start}
+      end={end}
+      style={[styles.underline, margin]}
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

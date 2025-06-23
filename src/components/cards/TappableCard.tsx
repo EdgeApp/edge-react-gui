@@ -19,7 +19,12 @@ interface Props {
  * An (optionally) tappable card that displays its children in up to two left/right
  * sections.
  */
-const TappableCardComponent = ({ children, disabled = false, onPress, ...cardProps }: Props) => {
+const TappableCardComponent = ({
+  children,
+  disabled = false,
+  onPress,
+  ...cardProps
+}: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -27,14 +32,25 @@ const TappableCardComponent = ({ children, disabled = false, onPress, ...cardPro
     <View style={styles.container}>
       <View style={styles.childrenContainer}>{children}</View>
       {onPress == null ? null : (
-        <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={disabled ? theme.deactivatedText : theme.iconTappable} style={styles.chevron} />
+        <FontAwesome5
+          name="chevron-right"
+          size={theme.rem(1.25)}
+          color={disabled ? theme.deactivatedText : theme.iconTappable}
+          style={styles.chevron}
+        />
       )}
     </View>
   )
 
   return (
     <EdgeCard {...cardProps}>
-      {disabled ? renderTouchableChildren() : <EdgeTouchableOpacity onPress={onPress}>{renderTouchableChildren()}</EdgeTouchableOpacity>}
+      {disabled ? (
+        renderTouchableChildren()
+      ) : (
+        <EdgeTouchableOpacity onPress={onPress}>
+          {renderTouchableChildren()}
+        </EdgeTouchableOpacity>
+      )}
     </EdgeCard>
   )
 }

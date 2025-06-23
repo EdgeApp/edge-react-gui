@@ -1,6 +1,8 @@
 import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
-import ReorderableList, { ReorderableListItem } from 'react-native-reorderable-list'
+import ReorderableList, {
+  ReorderableListItem
+} from 'react-native-reorderable-list'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
@@ -27,20 +29,22 @@ export function WalletListSortable(props: Props) {
 
   const [walletOrder, setWalletOrder] = React.useState(account.activeWalletIds)
 
-  const handleReorder = useHandler(({ from, to }: { from: number; to: number }) => {
-    // Reorder the walletOrder array
-    const newOrder = [...walletOrder]
-    newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
-    setWalletOrder(newOrder)
+  const handleReorder = useHandler(
+    ({ from, to }: { from: number; to: number }) => {
+      // Reorder the walletOrder array
+      const newOrder = [...walletOrder]
+      newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
+      setWalletOrder(newOrder)
 
-    // Update the wallet sort order in the account
-    const keyStates: EdgeWalletStates = {}
-    for (let i = 0; i < newOrder.length; ++i) {
-      const walletId = newOrder[i]
-      keyStates[walletId] = { sortIndex: i }
+      // Update the wallet sort order in the account
+      const keyStates: EdgeWalletStates = {}
+      for (let i = 0; i < newOrder.length; ++i) {
+        const walletId = newOrder[i]
+        keyStates[walletId] = { sortIndex: i }
+      }
+      account.changeWalletStates(keyStates).catch(error => showError(error))
     }
-    account.changeWalletStates(keyStates).catch(error => showError(error))
-  })
+  )
 
   const keyExtractor = React.useCallback(
     (item: string) => item,

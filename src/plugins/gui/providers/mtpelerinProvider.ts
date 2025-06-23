@@ -1,5 +1,12 @@
 import { div } from 'biggystring'
-import { asNumber, asObject, asOptional, asString, asUnknown, asValue } from 'cleaners'
+import {
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asUnknown,
+  asValue
+} from 'cleaners'
 import { EdgeAssetAction, EdgeSpendInfo, EdgeTxActionFiat } from 'edge-core-js'
 import { toUtf8Bytes } from 'ethers/lib/utils'
 
@@ -10,7 +17,11 @@ import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
+import {
+  FiatDirection,
+  FiatPaymentType,
+  SaveTxActionParams
+} from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -79,15 +90,17 @@ if (MODE === 'test') {
   PLUGIN_EVM_MAP.goerli = true
 }
 
-const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLUGIN_TO_CHAIN_ID_MAP).reduce(
-  (out: { [chainId: string]: string }, [pluginId, chainId]) => {
-    out[chainId] = pluginId
-    return out
-  },
-  {}
-)
+const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(
+  PLUGIN_TO_CHAIN_ID_MAP
+).reduce((out: { [chainId: string]: string }, [pluginId, chainId]) => {
+  out[chainId] = pluginId
+  return out
+}, {})
 
-type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
+type AllowedPaymentTypes = Record<
+  FiatDirection,
+  { [Payment in FiatPaymentType]?: boolean }
+>
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
@@ -310,15 +323,25 @@ type WidgetSellParams = (WidgetSellSourceParams | WidgetSellDestParams) & {
 export const mtpelerinProvider: FiatProviderFactory = {
   providerId,
   storeId,
-  makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+  makeProvider: async (
+    params: FiatProviderFactoryParams
+  ): Promise<FiatProvider> => {
     const { apiKey, referralCode } = asApiKeys(params.apiKeys)
     const out: FiatProvider = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({
+        direction,
+        paymentTypes,
+        regionCode
+      }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
+        if (
+          !paymentTypes.some(
+            paymentType => allowedPaymentTypes[direction][paymentType] === true
+          )
+        )
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
@@ -378,8 +401,20 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
         return allowedCurrencyCodes
       },
-      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { amountType, direction, regionCode, exchangeAmount, fiatCurrencyCode, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
+      getQuote: async (
+        params: FiatProviderGetQuoteParams
+      ): Promise<FiatProviderQuote> => {
+        const {
+          amountType,
+          direction,
+          regionCode,
+          exchangeAmount,
+          fiatCurrencyCode,
+          paymentTypes,
+          pluginId,
+          displayCurrencyCode,
+          tokenId
+        } = params
         if (BUY_ONLY_PLUGIN_IDS[pluginId] && direction === 'sell')
           throw new FiatProviderError({
             providerId,
@@ -394,7 +429,11 @@ export const mtpelerinProvider: FiatProviderFactory = {
             errorType: 'regionRestricted',
             displayCurrencyCode
           })
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
+        if (
+          !paymentTypes.some(
+            paymentType => allowedPaymentTypes[direction][paymentType] === true
+          )
+        )
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
@@ -456,13 +495,16 @@ export const mtpelerinProvider: FiatProviderFactory = {
           }
         }
 
-        const response = await fetch(`${urls.api[MODE]}/currency_rates/convert`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(getQuoteParams)
-        })
+        const response = await fetch(
+          `${urls.api[MODE]}/currency_rates/convert`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(getQuoteParams)
+          }
+        )
         if (!response.ok) {
           const text = await response.text()
           throw new Error(`Error fetching Mt Pelerin quote: ${text}`)
@@ -495,7 +537,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
           cryptoAmount,
           direction: params.direction,
           expirationDate: new Date(Date.now() + 60000),
-          approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+          approveQuote: async (
+            approveParams: FiatProviderApproveQuoteParams
+          ): Promise<void> => {
             const { coreWallet, showUi } = approveParams
             const { publicAddress } = await coreWallet.getReceiveAddress({
               tokenId
@@ -505,18 +549,30 @@ export const mtpelerinProvider: FiatProviderFactory = {
               return publicAddress
             }
 
-            const sendResponse = (eventName: string, response: unknown, injecteJs: (js: string) => void): void => {
+            const sendResponse = (
+              eventName: string,
+              response: unknown,
+              injecteJs: (js: string) => void
+            ): void => {
               const run = `
-                          window.wallet._response('${eventName}', ${JSON.stringify(response)});
+                          window.wallet._response('${eventName}', ${JSON.stringify(
+                response
+              )});
                           true;
                           `
               injecteJs(run)
             }
 
             // This is the state of the user-journey through the quoting process
-            let userFlowStatus: 'preparing-quote' | 'submitted-quote' | 'navigating-back' = 'preparing-quote'
+            let userFlowStatus:
+              | 'preparing-quote'
+              | 'submitted-quote'
+              | 'navigating-back' = 'preparing-quote'
 
-            const onMessage: FiatPluginOpenWebViewParams['onMessage'] = (eventMessage: string, injectJs) => {
+            const onMessage: FiatPluginOpenWebViewParams['onMessage'] = (
+              eventMessage: string,
+              injectJs
+            ) => {
               const message = asMessage(JSON.parse(eventMessage))
               try {
                 switch (message.request) {
@@ -547,7 +603,13 @@ export const mtpelerinProvider: FiatProviderFactory = {
                   }
                   case 'sendTransaction': {
                     const send = async (): Promise<void> => {
-                      const { gasLimit: hexGasLimit, gasPrice: hexGasPrice, to, amount, value: valueHex } = asSendTransactionParams(message.params)
+                      const {
+                        gasLimit: hexGasLimit,
+                        gasPrice: hexGasPrice,
+                        to,
+                        amount,
+                        value: valueHex
+                      } = asSendTransactionParams(message.params)
 
                       let nativeAmount: string
                       if (amount != null) {
@@ -562,8 +624,15 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       const orderId = 'mtpelerin_no_orderid'
                       const orderUri = 'https://mtpelerin.com'
 
-                      const multiplier = getCurrencyCodeMultiplier(coreWallet.currencyConfig, params.displayCurrencyCode)
-                      const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
+                      const multiplier = getCurrencyCodeMultiplier(
+                        coreWallet.currencyConfig,
+                        params.displayCurrencyCode
+                      )
+                      const exchangeAmount = div(
+                        nativeAmount,
+                        multiplier,
+                        multiplier.length
+                      )
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
@@ -669,7 +738,12 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       userFlowStatus = 'submitted-quote'
                     }
                     send().catch((e: unknown) => {
-                      if (!(e instanceof Error && e.message.includes(SendErrorBackPressed))) {
+                      if (
+                        !(
+                          e instanceof Error &&
+                          e.message.includes(SendErrorBackPressed)
+                        )
+                      ) {
                         showError(e)
                       }
                     })
@@ -691,7 +765,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
               const utf8Message = toUtf8Bytes(message)
               const hexMessage = Buffer.from(utf8Message).toString('hex')
               const signature = await coreWallet.signMessage(hexMessage)
-              hash = Buffer.from(signature.replace('0x', ''), 'hex').toString('base64')
+              hash = Buffer.from(signature.replace('0x', ''), 'hex').toString(
+                'base64'
+              )
             } else {
               hash = await coreWallet.signMessage(message, {
                 otherParams: { publicAddress }
@@ -699,7 +775,10 @@ export const mtpelerinProvider: FiatProviderFactory = {
             }
 
             let widgetParams: WidgetParams
-            const commonParams: Pick<WidgetParams, '_ctkn' | 'addr' | 'code' | 'hash' | 'net' | 'type' | 'rfr'> = {
+            const commonParams: Pick<
+              WidgetParams,
+              '_ctkn' | 'addr' | 'code' | 'hash' | 'net' | 'type' | 'rfr'
+            > = {
               _ctkn: apiKey,
               addr: publicAddress,
               code,
@@ -746,7 +825,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
                 }
               }
             }
-            const url = `${urls.widget[MODE]}/?${encodeQuery(widgetParams)}` + (MODE === 'test' ? '&env=development' : '')
+            const url =
+              `${urls.widget[MODE]}/?${encodeQuery(widgetParams)}` +
+              (MODE === 'test' ? '&env=development' : '')
 
             await showUi.openWebView({
               url,

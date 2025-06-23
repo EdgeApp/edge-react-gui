@@ -88,14 +88,20 @@ export const SwapSuccessScene = (props: Props) => {
   return (
     <SceneWrapper hasNotifications>
       <View style={styles.container}>
-        <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
+        <EdgeText style={styles.title}>
+          {lstrings.exchange_congratulations}
+        </EdgeText>
         <EdgeText style={styles.text} numberOfLines={2}>
           {lstrings.exchange_congratulations_success}
         </EdgeText>
         <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
           {lstrings.exchange_congratulations_note}
         </EdgeText>
-        <EdgeAnim style={styles.animOverlay} visible={showButton} enter={fadeIn}>
+        <EdgeAnim
+          style={styles.animOverlay}
+          visible={showButton}
+          enter={fadeIn}
+        >
           <SceneButtons
             primary={{ label: lstrings.string_done_cap, onPress: handleDone }}
             secondary={{

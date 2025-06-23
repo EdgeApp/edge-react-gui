@@ -3,7 +3,12 @@ import { Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -32,7 +37,13 @@ type Timeout = ReturnType<typeof setTimeout>
  * A notification that slides down from the top of the screen.
  */
 export function AirshipDropdown(props: Props): React.ReactElement {
-  const { autoHideMs = 5000, backgroundColor, bridge, children, onPress } = props
+  const {
+    autoHideMs = 5000,
+    backgroundColor,
+    bridge,
+    children,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 

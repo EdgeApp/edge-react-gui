@@ -17,7 +17,14 @@ const options = [
   ['lowest', lstrings.wallet_list_sort_lowest]
 ]
 
-export const asSortOption = asValue('manual', 'name', 'currencyCode', 'currencyName', 'highest', 'lowest')
+export const asSortOption = asValue(
+  'manual',
+  'name',
+  'currencyCode',
+  'currencyName',
+  'highest',
+  'lowest'
+)
 export type SortOption = ReturnType<typeof asSortOption>
 
 interface Props {
@@ -28,11 +35,29 @@ interface Props {
 export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
   const renderRow = useHandler(([key, title]) => {
     return key === 'manual' ? (
-      <SettingsTappableRow key={key} label={title} onPress={() => bridge.resolve(key)} />
+      <SettingsTappableRow
+        key={key}
+        label={title}
+        onPress={() => bridge.resolve(key)}
+      />
     ) : (
-      <SettingsRadioRow key={key} label={title} value={sortOption === key} onPress={() => bridge.resolve(key)} />
+      <SettingsRadioRow
+        key={key}
+        label={title}
+        value={sortOption === key}
+        onPress={() => bridge.resolve(key)}
+      />
     )
   })
 
-  return <ListModal bridge={bridge} title={lstrings.wallet_list_sort_title} textInput={false} rowsData={options} rowComponent={renderRow} fullScreen={false} />
+  return (
+    <ListModal
+      bridge={bridge}
+      title={lstrings.wallet_list_sort_title}
+      textInput={false}
+      rowsData={options}
+      rowComponent={renderRow}
+      fullScreen={false}
+    />
+  )
 }

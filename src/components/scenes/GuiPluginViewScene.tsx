@@ -3,7 +3,12 @@ import * as React from 'react'
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useSelector } from '../../types/reactRedux'
-import { BuyTabSceneProps, EdgeAppSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
+import {
+  BuyTabSceneProps,
+  EdgeAppSceneProps,
+  NavigationBase,
+  SellTabSceneProps
+} from '../../types/routerTypes'
 import { UriQueryMap } from '../../types/WebTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
@@ -36,11 +41,17 @@ export function GuiPluginViewScene(props: Props): React.ReactElement {
   const { deepPath, deepQuery, plugin } = route.params
   const account = useSelector(state => state.core.account)
 
-  if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) navigation.pop()
+  if (checkAndShowLightBackupModal(account, navigation as NavigationBase))
+    navigation.pop()
 
   return (
     <SceneWrapper hasTabs={route.name !== 'pluginView'} avoidKeyboard>
-      <EdgeProviderComponent plugin={plugin} deepPath={deepPath} deepQuery={deepQuery} navigation={navigation as NavigationBase} />
+      <EdgeProviderComponent
+        plugin={plugin}
+        deepPath={deepPath}
+        deepQuery={deepQuery}
+        navigation={navigation as NavigationBase}
+      />
     </SceneWrapper>
   )
 }

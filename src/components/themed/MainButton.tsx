@@ -38,7 +38,16 @@ interface Props {
  * special margins in MainButton use cases from a UI4 design perspective.
  */
 export function MainButton(props: Props) {
-  const { children, disabled = false, label, marginRem, onPress, type = 'primary', layout, spinner = false } = props
+  const {
+    children,
+    disabled = false,
+    label,
+    marginRem,
+    onPress,
+    type = 'primary',
+    layout,
+    spinner = false
+  } = props
 
   return (
     <EdgeButton

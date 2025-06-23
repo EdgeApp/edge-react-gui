@@ -2,7 +2,11 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-import { EdgeAccount, EdgeCorePluginOptions, EdgeCurrencyWallet } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCorePluginOptions,
+  EdgeCurrencyWallet
+} from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -18,7 +22,11 @@ export class StakeBelowLimitError extends Error {
   currencyCode: string
   nativeMin?: string
 
-  constructor(request: ChangeQuoteRequest, currencyCode: string, nativeMin?: string) {
+  constructor(
+    request: ChangeQuoteRequest,
+    currencyCode: string,
+    nativeMin?: string
+  ) {
     super('Amount is too low')
     this.currencyCode = currencyCode
     this.name = 'StakeBelowLimitError'
@@ -122,7 +130,13 @@ export interface ChangeQuoteRequest {
 }
 
 export interface QuoteAllocation {
-  allocationType: 'stake' | 'unstake' | 'claim' | 'networkFee' | 'deductedFee' | 'futureUnstakeFee'
+  allocationType:
+    | 'stake'
+    | 'unstake'
+    | 'claim'
+    | 'networkFee'
+    | 'deductedFee'
+    | 'futureUnstakeFee'
   pluginId: string
   currencyCode: string
   nativeAmount: string
@@ -185,20 +199,35 @@ export interface StakePolicyFilter {
   currencyCode?: string
 }
 
-export const filterStakePolicies = (policies: StakePolicy[], filter?: StakePolicyFilter): StakePolicy[] => {
+export const filterStakePolicies = (
+  policies: StakePolicy[],
+  filter?: StakePolicyFilter
+): StakePolicy[] => {
   if (filter == null) return policies
 
   let out: StakePolicy[] = [...policies]
   const { currencyCode, pluginId, wallet } = filter
 
   if (wallet != null) {
-    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId))
+    out = out.filter(policy =>
+      [...policy.rewardAssets, ...policy.stakeAssets].some(
+        asset => asset.pluginId === wallet.currencyInfo.pluginId
+      )
+    )
   }
   if (currencyCode != null) {
-    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode))
+    out = out.filter(policy =>
+      [...policy.rewardAssets, ...policy.stakeAssets].some(
+        asset => asset.currencyCode === currencyCode
+      )
+    )
   }
   if (pluginId != null) {
-    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === pluginId))
+    out = out.filter(policy =>
+      [...policy.rewardAssets, ...policy.stakeAssets].some(
+        asset => asset.pluginId === pluginId
+      )
+    )
   }
   return out
 }
@@ -209,4 +238,6 @@ export interface StakePlugin {
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }
 
-export type StakePluginFactory = (opts?: EdgeCorePluginOptions) => Promise<StakePlugin>
+export type StakePluginFactory = (
+  opts?: EdgeCorePluginOptions
+) => Promise<StakePlugin>

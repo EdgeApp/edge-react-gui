@@ -1,11 +1,27 @@
-import { asArray, asBoolean, asDate, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asDate,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 import { EdgeDataStore } from 'edge-core-js'
 import { EdgeAccount } from 'edge-core-js/types'
 
 import { ENV } from '../env'
 import { RootState, ThunkAction } from '../types/reduxTypes'
-import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
-import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
+import {
+  AccountReferral,
+  Promotion,
+  ReferralCache
+} from '../types/ReferralTypes'
+import {
+  asCurrencyCode,
+  asIpApi,
+  asMessageTweak,
+  asPluginTweak
+} from '../types/TweakTypes'
 import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
@@ -17,7 +33,9 @@ const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
 /**
  * Call this at login time to load the account referral information.
  */
-export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<void>> {
+export function loadAccountReferral(
+  account: EdgeAccount
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // First try the disk:
     try {
@@ -79,7 +97,8 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Copy the app install reason into the account:
     const state = getState()
-    const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
+    const { installerId, currencyCodes, messages, plugins } =
+      state.deviceReferral
     const creationDate = new Date()
     const referral: AccountReferral = {
       activePromotions: [],
@@ -96,13 +115,18 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
     }
 
     dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
-    await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
+    await Promise.all([
+      saveAccountReferral(getState()),
+      saveReferralCache(getState())
+    ])
 
     dispatch(logEvent('Load_Install_Reason_Match'))
 
     // Also try activating the same link as a promotion (with silent errors):
     if (installerId != null) {
-      await activatePromotion(installerId)(dispatch, getState).catch(() => undefined)
+      await activatePromotion(installerId)(dispatch, getState).catch(
+        () => undefined
+      )
     }
   }
 }
@@ -118,11 +142,16 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
  * in data meant this type of promo, because account balances are not ready at
  * boot.
  */
-export function activatePromotion(installerId: string): ThunkAction<Promise<void>> {
+export function activatePromotion(
+  installerId: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Add the promotion to `accountReferral.activePromotions` immediately, if
     // it passes the filters:
-    const filteredPromoData = await getActivePromoIds({ installerId, countryCode: getState().ui.countryCode })
+    const filteredPromoData = await getActivePromoIds({
+      installerId,
+      countryCode: getState().ui.countryCode
+    })
 
     if (filteredPromoData.length > 0) {
       dispatch({ type: 'ACTIVE_PROMOTION_ADDED', data: installerId })
@@ -167,7 +196,9 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
 /**
  * Cancels a promotion that a user may have installed from a link.
  */
-export function removePromotion(installerId: string): ThunkAction<Promise<void>> {
+export function removePromotion(
+  installerId: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'PROMOTION_REMOVED', data: installerId })
     await saveAccountReferral(getState())
@@ -177,7 +208,10 @@ export function removePromotion(installerId: string): ThunkAction<Promise<void>>
 /**
  * Hides the provided message from the user.
  */
-export function hideMessageTweak(messageId: string, source: TweakSource): ThunkAction<Promise<void>> {
+export function hideMessageTweak(
+  messageId: string,
+  source: TweakSource
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId, source } })
     await saveAccountReferral(getState())
@@ -187,7 +221,9 @@ export function hideMessageTweak(messageId: string, source: TweakSource): ThunkA
 /**
  * Deactivates any swap plugin preferences from the account affiliation.
  */
-export function ignoreAccountSwap(ignore: boolean = true): ThunkAction<Promise<void>> {
+export function ignoreAccountSwap(
+  ignore: boolean = true
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
     await saveAccountReferral(getState())
@@ -197,7 +233,10 @@ export function ignoreAccountSwap(ignore: boolean = true): ThunkAction<Promise<v
 export function refreshAccountReferral(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
+    const {
+      installerId = 'no-installer-id',
+      creationDate = new Date('2018-01-01')
+    } = state.account.accountReferral
     const cache: ReferralCache = {
       accountMessages: [],
       accountPlugins: []
@@ -211,14 +250,17 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
         throw new Error(`Returned status code ${reply.status}`)
       }
       const clean = asServerTweaks(await reply.json())
-      cache.accountMessages.push(...lockStartDates(clean.messages, creationDate))
+      cache.accountMessages.push(
+        ...lockStartDates(clean.messages, creationDate)
+      )
       cache.accountPlugins.push(...lockStartDates(clean.plugins, creationDate))
     } catch (e: any) {
       console.warn(`Failed to contact referral server: ${e.message}`)
     }
 
     // Get promo cards from info server
-    if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
+    if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0)
+      return
     dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
     await saveReferralCache(getState())
   }
@@ -228,7 +270,9 @@ export interface ValidateFuncs {
   getCountryCodeByIp: () => Promise<string>
 
   // Placeholder dummy routine we can fill in with real plugin when we have one
-  checkDummyPluginHasBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
+  checkDummyPluginHasBank: (
+    dataStore: EdgeDataStore
+  ) => Promise<boolean | undefined>
   getBuildNumber: () => string
   getLanguageTag: () => string
   getOs: () => string
@@ -254,7 +298,10 @@ export const getCountryCodeByIp = async (): Promise<string | undefined> => {
 async function saveAccountReferral(state: RootState): Promise<void> {
   const { account } = state.core
   const { accountReferral } = state.account
-  await account?.disklet?.setText(ACCOUNT_REFERRAL_FILE, JSON.stringify(accountReferral))
+  await account?.disklet?.setText(
+    ACCOUNT_REFERRAL_FILE,
+    JSON.stringify(accountReferral)
+  )
 }
 
 /**
@@ -263,7 +310,10 @@ async function saveAccountReferral(state: RootState): Promise<void> {
 async function saveReferralCache(state: RootState): Promise<void> {
   const { account } = state.core
   const { referralCache } = state.account
-  await account?.localDisklet?.setText(REFERRAL_CACHE_FILE, JSON.stringify(referralCache))
+  await account?.localDisklet?.setText(
+    REFERRAL_CACHE_FILE,
+    JSON.stringify(referralCache)
+  )
 }
 
 /**

@@ -19,7 +19,12 @@ interface StakingReturnsCardParams {
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, stakeProviderInfo }: StakingReturnsCardParams) {
+export function StakingReturnsCard({
+  fromCurrencyLogos,
+  toCurrencyLogos,
+  apy,
+  stakeProviderInfo
+}: StakingReturnsCardParams) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -36,16 +41,30 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, st
   const renderEstimatedReturn = () => {
     if (apy == null || apy <= 0) return null
     const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
-    return <EdgeText>{sprintf(lstrings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
+    return (
+      <EdgeText>
+        {sprintf(lstrings.stake_estimated_return, estimatedReturnMsg)}
+      </EdgeText>
+    )
   }
 
   const renderStakeProvider = () => {
     if (stakeProviderInfo == null) return null
     const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
-    const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
+    const swapProviderIcon = getStakeProviderIcon(
+      pluginId,
+      stakeProviderId,
+      theme
+    )
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        {swapProviderIcon ? (
+          <FastImage
+            style={styles.swapProviderIcon}
+            resizeMode={FastImage.resizeMode.contain}
+            source={{ uri: swapProviderIcon }}
+          />
+        ) : null}
         <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )

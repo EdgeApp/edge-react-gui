@@ -2,15 +2,30 @@ import { uncleaner } from 'cleaners'
 import { EdgeDataDump, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
+import {
+  getBrand,
+  getBuildNumber,
+  getDeviceId,
+  getVersion
+} from 'react-native-device-info'
 import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { LogsModal } from '../components/modals/LogsModal'
-import { Airship, showError, showToast } from '../components/services/AirshipInstance'
-import { asActionProgram, asActionProgramState } from '../controllers/action-queue/cleaners'
-import { ActionProgram, ActionProgramState } from '../controllers/action-queue/types'
+import {
+  Airship,
+  showError,
+  showToast
+} from '../components/services/AirshipInstance'
+import {
+  asActionProgram,
+  asActionProgramState
+} from '../controllers/action-queue/cleaners'
+import {
+  ActionProgram,
+  ActionProgramState
+} from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
@@ -173,7 +188,9 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
             const currencyCode = getCurrencyCode(wallet, tokenId)
             logOutput.data += `${currencyCode}: ${txs} txs\n`
           } catch (e) {
-            logOutput.data += `Error checking tokenId ${tokenId} in wallet ${wallet.id}: ${String(e)}`
+            logOutput.data += `Error checking tokenId ${tokenId} in wallet ${
+              wallet.id
+            }: ${String(e)}`
           }
         }
         const { imported, syncKey } = await account.getRawPrivateKey(wallet.id)

@@ -15,7 +15,11 @@ function WalletListLoadingRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <EdgeTouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
+    <EdgeTouchableOpacity
+      style={styles.container}
+      onLongPress={onLongPress}
+      onPress={onPress}
+    >
       <ActivityIndicator color={theme.primaryText} size="large" />
     </EdgeTouchableOpacity>
   )

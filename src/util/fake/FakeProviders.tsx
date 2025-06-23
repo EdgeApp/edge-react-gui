@@ -25,7 +25,10 @@ interface Props {
 export function FakeProviders(props: Props) {
   const { children, initialState = {} } = props
 
-  const store = React.useMemo(() => createStore(rootReducer, initialState as any, applyMiddleware(thunk)), [initialState])
+  const store = React.useMemo(
+    () => createStore(rootReducer, initialState as any, applyMiddleware(thunk)),
+    [initialState]
+  )
   return (
     <SafeAreaProvider initialMetrics={initialMetrics}>
       {renderStateProviders(

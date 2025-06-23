@@ -21,12 +21,18 @@ export const showSendScamWarningModal = async (disklet: Disklet) => {
   try {
     await disklet.getText(SCAM_WARNING)
   } catch (error: any) {
-    const scamMessage = sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName)
+    const scamMessage = sprintf(
+      lstrings.warning_scam_message_financial_advice_s,
+      config.appName
+    )
     await Airship.show<boolean>(bridge => {
       const warningMessage = `\u2022 ${scamMessage}\n\n\u2022 ${lstrings.warning_scam_message_irreversibility}\n\n\u2022 ${lstrings.warning_scam_message_unknown_recipients}`
 
       return (
-        <ConfirmContinueModal bridge={bridge} title={lstrings.warning_scam_title}>
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={lstrings.warning_scam_title}
+        >
           <Paragraph>
             <WarningText>{warningMessage}</WarningText>
           </Paragraph>
@@ -81,7 +87,9 @@ type ScamWarningInfo = ReturnType<typeof asScamWarningInfo>
  *
  * Returns true if a modal was shown
  **/
-export const showScamWarningModal = async (scamWarningInfoKey: keyof ScamWarningInfo): Promise<boolean> => {
+export const showScamWarningModal = async (
+  scamWarningInfoKey: keyof ScamWarningInfo
+): Promise<boolean> => {
   // const scamWarningInfo = await getScamWarningInfo()
   // // Ignore if we've already triggered a particular warning
   // if (scamWarningInfo[scamWarningInfoKey]) {

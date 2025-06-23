@@ -38,9 +38,12 @@ const adaptors: TarotPoolAdapterConfig[] = [
       symbol: 'vAMMV2-TAROT/OP'
     },
     collateralContractAddress: '0xAC181c3c33220f12F619dC4F5FA82937C8183d53',
-    token0BorrowableContractAddress: '0x3bF5E17A8242D5f96e8CB3136750f135F8e889Dd',
-    token1BorrowableContractAddress: '0xfAcDD4a72b110Be8F193Ebdb0ba66196955D919E',
-    velodromeFactoryContractAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
+    token0BorrowableContractAddress:
+      '0x3bF5E17A8242D5f96e8CB3136750f135F8e889Dd',
+    token1BorrowableContractAddress:
+      '0xfAcDD4a72b110Be8F193Ebdb0ba66196955D919E',
+    velodromeFactoryContractAddress:
+      '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
     isStable: false,
     isTarotVault: true
   },
@@ -64,9 +67,12 @@ const adaptors: TarotPoolAdapterConfig[] = [
       symbol: 'vAMMV2-USDC/TAROT'
     },
     collateralContractAddress: '0xcCb52c8c9eFB06b9D5534127Ba5362F4d8E9c0Fe',
-    token0BorrowableContractAddress: '0x388a16D05b5eB4BB4c6D6f841544c6138219dF53',
-    token1BorrowableContractAddress: '0x319193ff130285329Cc5fD4a46694f969d23A275',
-    velodromeFactoryContractAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
+    token0BorrowableContractAddress:
+      '0x388a16D05b5eB4BB4c6D6f841544c6138219dF53',
+    token1BorrowableContractAddress:
+      '0x319193ff130285329Cc5fD4a46694f969d23A275',
+    velodromeFactoryContractAddress:
+      '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
     isStable: false,
     isTarotVault: true
   },
@@ -90,9 +96,12 @@ const adaptors: TarotPoolAdapterConfig[] = [
       symbol: 'vAMMV2-TAROT/USDC'
     },
     collateralContractAddress: '0x8900CB225992E99749AF222095A75C22343bede1',
-    token0BorrowableContractAddress: '0xA76ab78453164dA65923FFcbe6Fa3C171C219459',
-    token1BorrowableContractAddress: '0xB6e8C7d12DF9e2d6784f661B63466C4d77f57A2E',
-    velodromeFactoryContractAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
+    token0BorrowableContractAddress:
+      '0xA76ab78453164dA65923FFcbe6Fa3C171C219459',
+    token1BorrowableContractAddress:
+      '0xB6e8C7d12DF9e2d6784f661B63466C4d77f57A2E',
+    velodromeFactoryContractAddress:
+      '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
     isStable: false,
     isTarotVault: true
   },
@@ -116,9 +125,12 @@ const adaptors: TarotPoolAdapterConfig[] = [
       symbol: 'vAMMV2-USDC/VELO'
     },
     collateralContractAddress: '0x554197E3593C2262A8AD0BfB22835f28f4BC384D',
-    token0BorrowableContractAddress: '0xb842242c26747F46EBA2528De19Ff12FAf576191',
-    token1BorrowableContractAddress: '0x68Ef7f9b5dEBce90F654DC988E17c504782EC76D',
-    velodromeFactoryContractAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
+    token0BorrowableContractAddress:
+      '0xb842242c26747F46EBA2528De19Ff12FAf576191',
+    token1BorrowableContractAddress:
+      '0x68Ef7f9b5dEBce90F654DC988E17c504782EC76D',
+    velodromeFactoryContractAddress:
+      '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
     isStable: false,
     isTarotVault: true
   },
@@ -142,9 +154,12 @@ const adaptors: TarotPoolAdapterConfig[] = [
       symbol: 'vAMMV2-OP/VELO'
     },
     collateralContractAddress: '0xEC21A442E1458137D6d3f9aE94F8BD82137b69c5',
-    token0BorrowableContractAddress: '0x85861B726006ec8e2a276781741F25FB813BEea4',
-    token1BorrowableContractAddress: '0xB9D9dE899425555355Fdb0d3c70901E74b090115',
-    velodromeFactoryContractAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
+    token0BorrowableContractAddress:
+      '0x85861B726006ec8e2a276781741F25FB813BEea4',
+    token1BorrowableContractAddress:
+      '0xB9D9dE899425555355Fdb0d3c70901E74b090115',
+    velodromeFactoryContractAddress:
+      '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
     isStable: false,
     isTarotVault: true
   }
@@ -175,7 +190,8 @@ const makePolicyConfig = (adapterConfig: TarotPoolAdapterConfig) => {
   }
 }
 
-const optimismPolicyConfig: Array<StakePolicyConfig<TarotPoolAdapterConfig>> = adaptors.map(adaptor => makePolicyConfig(adaptor))
+const optimismPolicyConfig: Array<StakePolicyConfig<TarotPoolAdapterConfig>> =
+  adaptors.map(adaptor => makePolicyConfig(adaptor))
 
 export const tarotpool: StakePluginInfo = {
   pluginId: 'stake:optimism:tarot',

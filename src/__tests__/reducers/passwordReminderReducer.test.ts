@@ -210,7 +210,11 @@ describe('PasswordReminder', () => {
           ...initialState,
           lastLoginDate: 0
         }
-        const expected = daysBetween(previousState.lastPasswordUseDate, previousState.lastLoginDate) + 2
+        const expected =
+          daysBetween(
+            previousState.lastPasswordUseDate,
+            previousState.lastLoginDate
+          ) + 2
         const actual = uut(previousState, action).nonPasswordDaysLimit
 
         expect(actual).toEqual(expected)

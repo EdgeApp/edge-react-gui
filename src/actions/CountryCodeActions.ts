@@ -23,7 +23,10 @@ export const fetchCountryCode =
       // successful
       if (countryCode !== firstOpenInfo.countryCode && countryCode != null) {
         firstOpenInfo.countryCode = countryCode
-        await firstOpenDisklet.setText(FIRST_OPEN, JSON.stringify(firstOpenInfo))
+        await firstOpenDisklet.setText(
+          FIRST_OPEN,
+          JSON.stringify(firstOpenInfo)
+        )
       }
 
       // Update Redux with the fresh country code

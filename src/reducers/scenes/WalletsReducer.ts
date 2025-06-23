@@ -43,7 +43,10 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
   }
 }
 
-const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (state = [], action) => {
+const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (
+  state = [],
+  action
+) => {
   switch (action.type) {
     case 'UPDATE_FIO_WALLETS': {
       const { fioWallets } = action.data

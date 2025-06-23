@@ -11,7 +11,8 @@ const argv = process.argv
 const mylog = console.log
 
 const _rootProjectDir = join(__dirname, '../')
-const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
+const githubSshKey =
+  process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
 
 let _currentPath = __dirname
 const baseDir = join(_currentPath, '..')
@@ -94,7 +95,9 @@ main()
 
 function main() {
   if (argv.length < 4) {
-    mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch] [test build]')
+    mylog(
+      'Usage: node -r sucrase/register deploy.ts [project] [platform] [branch] [test build]'
+    )
     mylog('  project options: edge')
     mylog('  platform options: ios, android')
     mylog('  branch options: master, develop')
@@ -132,11 +135,16 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
 
 function makeProject(buildObj: BuildObj) {
   const project = buildObj.projectName
-  const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
+  const config = JSON.parse(
+    fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8')
+  )
 
   Object.assign(buildObj, config[project])
   Object.assign(buildObj, config[project][buildObj.platformType])
-  Object.assign(buildObj, config[project][buildObj.platformType][buildObj.repoBranch])
+  Object.assign(
+    buildObj,
+    config[project][buildObj.platformType][buildObj.repoBranch]
+  )
 
   console.log(buildObj)
 }
@@ -187,15 +195,28 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
     process.env.MATCH_PASSWORD != null
   ) {
-    call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`)
-    call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
+    call(
+      `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${
+        process.env.HOME ?? ''
+      }/Library/Keychains/login.keychain"`
+    )
+    call(
+      `security set-keychain-settings -l ${
+        process.env.HOME ?? ''
+      }/Library/Keychains/login.keychain`
+    )
 
     mylog('Using Fastlane for provisioning profiles')
     const matchFileLoc = join(buildObj.guiDir, '.fastlane', 'Matchfile')
     let matchFile = fs.readFileSync(matchFileLoc, { encoding: 'utf8' })
     matchFile = matchFile.replace('BUILD_REPO_URL', process.env.BUILD_REPO_URL)
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
-    const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
+    const profileDir = join(
+      process.env.HOME,
+      'Library',
+      'MobileDevice',
+      'Provisioning Profiles'
+    )
     call(`rm -rf ${escapePath(profileDir)}`)
     call(
       `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
@@ -214,14 +235,20 @@ function buildIos(buildObj: BuildObj) {
   if (fs.existsSync(join(patchDir, 'GoogleService-Info.plist'))) {
     call(`cp -a ${join(patchDir, 'GoogleService-Info.plist')} ios/edge/`)
   } else if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
-    call(`cp -a ${buildObj.guiDir}/GoogleService-Info.plist ${buildObj.guiPlatformDir}/edge/`)
+    call(
+      `cp -a ${buildObj.guiDir}/GoogleService-Info.plist ${buildObj.guiPlatformDir}/edge/`
+    )
   }
 
   // Bug fixes for React Native 0.46
   call('mkdir -p node_modules/react-native/scripts/')
   call('mkdir -p node_modules/react-native/packager/')
-  call('cp -a node_modules/react-native/scripts/* node_modules/react-native/packager/')
-  call('cp -a node_modules/react-native/packager/* node_modules/react-native/scripts/')
+  call(
+    'cp -a node_modules/react-native/scripts/* node_modules/react-native/packager/'
+  )
+  call(
+    'cp -a node_modules/react-native/packager/* node_modules/react-native/scripts/'
+  )
   // call('cp -a ../third-party node_modules/react-native/')
   // chdir(buildObj.guiDir + '/node_modules/react-native/third-party/glog-0.3.4')
   // call('../../scripts/ios-configure-glog.sh')
@@ -229,7 +256,9 @@ function buildIos(buildObj: BuildObj) {
   // chdir(buildObj.guiDir)
   // call('react-native bundle --dev false --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios')
 
-  const xcodeArchiveDir = `${process.env.HOME || ''}/Library/Developer/Xcode/Archives/`
+  const xcodeArchiveDir = `${
+    process.env.HOME || ''
+  }/Library/Developer/Xcode/Archives/`
   // Delete old archive directories
   deleteOldDirsSync(xcodeArchiveDir, cutoffDate)
 
@@ -237,10 +266,16 @@ function buildIos(buildObj: BuildObj) {
 
   let cmdStr
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${
+    process.env.KEYCHAIN_PASSWORD ?? ''
+  }' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
+  call(
+    `security set-keychain-settings -l ${
+      process.env.HOME ?? ''
+    }/Library/Keychains/login.keychain`
+  )
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
@@ -255,13 +290,19 @@ function buildIos(buildObj: BuildObj) {
   const archiveDirArray = archiveDir.split('\n')
   archiveDir = archiveDirArray[0]
 
-  buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
+  buildObj.dSymFile = escapePath(
+    `${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`
+  )
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
   buildObj.dSymZip = escapePath(
-    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.dSYM.zip`
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${
+      buildObj.buildNum
+    }-${buildObj.guiHash.slice(0, 8)}.dSYM.zip`
   )
   buildObj.ipaFile = escapePath(
-    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.ipa`
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${
+      buildObj.buildNum
+    }-${buildObj.guiHash.slice(0, 8)}.ipa`
   )
 
   if (fs.existsSync(buildObj.ipaFile)) {
@@ -276,14 +317,23 @@ function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiPlatformDir)
 
   // Replace TeamID in exportOptions.plist
-  let plist = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', { encoding: 'utf8' })
+  let plist = fs.readFileSync(
+    buildObj.guiPlatformDir + '/exportOptions.plist',
+    { encoding: 'utf8' }
+  )
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}'  "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${
+    process.env.KEYCHAIN_PASSWORD ?? ''
+  }'  "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
+  call(
+    `security set-keychain-settings -l ${
+      process.env.HOME ?? ''
+    }/Library/Keychains/login.keychain`
+  )
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
@@ -304,7 +354,18 @@ function buildIos(buildObj: BuildObj) {
 }
 
 function buildIosMaestro(buildObj: BuildObj) {
-  const { buildNum, guiDir, guiHash, guiPlatformDir, productName, productNameClean, repoBranch, tmpDir, xcodeScheme, xcodeWorkspace } = buildObj
+  const {
+    buildNum,
+    guiDir,
+    guiHash,
+    guiPlatformDir,
+    productName,
+    productNameClean,
+    repoBranch,
+    tmpDir,
+    xcodeScheme,
+    xcodeWorkspace
+  } = buildObj
 
   chdir(guiDir)
 
@@ -325,9 +386,16 @@ function buildIosMaestro(buildObj: BuildObj) {
   call(cmdStr)
 
   const appFile = escapePath(`${productName}.app`)
-  const appFileDir = escapePath(`${buildDir}/Build/Products/Release-iphonesimulator/`)
+  const appFileDir = escapePath(
+    `${buildDir}/Build/Products/Release-iphonesimulator/`
+  )
 
-  buildObj.ipaFile = escapePath(`${tmpDir}/${productNameClean}-${repoBranch}-${buildNum}-${guiHash.slice(0, 8)}.zip`)
+  buildObj.ipaFile = escapePath(
+    `${tmpDir}/${productNameClean}-${repoBranch}-${buildNum}-${guiHash.slice(
+      0,
+      8
+    )}.zip`
+  )
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
   }
@@ -358,13 +426,16 @@ function buildAndroid(buildObj: BuildObj) {
   if (fs.existsSync(join(patchDir, 'google-services.json'))) {
     call(`cp -a ${join(patchDir, 'google-services.json')} android/app/`)
   } else if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
-    call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
+    call(
+      `cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`
+    )
   }
 
   chdir(buildObj.guiDir)
 
   process.env.ORG_GRADLE_PROJECT_storeFile = keyStoreFile
-  process.env.ORG_GRADLE_PROJECT_storePassword = buildObj.androidKeyStorePassword
+  process.env.ORG_GRADLE_PROJECT_storePassword =
+    buildObj.androidKeyStorePassword
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
   process.env.ORG_GRADLE_PROJECT_keyPassword = buildObj.androidKeyStorePassword
 
@@ -388,7 +459,10 @@ function buildAndroid(buildObj: BuildObj) {
   const aabPath = join(archiveDir, `${outfile}.aab`)
   const apksPath = join(archiveDir, `${outfile}.apks`)
   const apkPathDir = join(archiveDir, `${outfile}_apk_container`)
-  fs.copyFileSync(join(guiPlatformDir, '/app/build/outputs/bundle/release/app-release.aab'), aabPath)
+  fs.copyFileSync(
+    join(guiPlatformDir, '/app/build/outputs/bundle/release/app-release.aab'),
+    aabPath
+  )
 
   call(
     `java -jar ${bundleToolPath} build-apks --overwrite --mode=universal --bundle=${aabPath} --output=${apksPath} --ks=${keyStoreFile} --ks-key-alias=${androidKeyStoreAlias} --ks-pass=pass:${androidKeyStorePassword}`
@@ -408,7 +482,10 @@ function buildCommonPost(buildObj: BuildObj) {
   if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !maestroBuild) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
-    const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
+    const url = sprintf(
+      'https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload',
+      buildObj.hockeyAppId
+    )
 
     curl = sprintf(
       '/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
@@ -428,14 +505,23 @@ function buildCommonPost(buildObj: BuildObj) {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (zealotApiToken != null && zealotUrl != null && zealotChannelKey != null && !maestroBuild) {
+  if (
+    zealotApiToken != null &&
+    zealotUrl != null &&
+    zealotChannelKey != null &&
+    !maestroBuild
+  ) {
     const branch = encodeURIComponent(buildObj.repoBranch)
     const gitCommit = encodeURIComponent(buildObj.guiHash)
     chdir(buildObj.guiDir)
-    const changes = cmd(`git diff HEAD^ HEAD CHANGELOG.md | { grep '^+[^+]' || true; }`)
+    const changes = cmd(
+      `git diff HEAD^ HEAD CHANGELOG.md | { grep '^+[^+]' || true; }`
+    )
     const changelog = encodeURIComponent(changes)
     mylog(`\n\nUploading to Zealot: ${zealotUrl}`)
-    mylog('***********************************************************************\n')
+    mylog(
+      '***********************************************************************\n'
+    )
 
     call(
       `curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${zealotChannelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`
@@ -444,20 +530,39 @@ function buildCommonPost(buildObj: BuildObj) {
   }
 
   if (buildObj.rsyncLocation != null) {
-    const { buildNum, guiHash, platformType, productNameClean, repoBranch, testRepoUrl, version } = buildObj
+    const {
+      buildNum,
+      guiHash,
+      platformType,
+      productNameClean,
+      repoBranch,
+      testRepoUrl,
+      version
+    } = buildObj
 
     mylog(`\n\nUploading to rsyncLocation ${buildObj.rsyncLocation}`)
-    mylog('***********************************************************************\n')
+    mylog(
+      '***********************************************************************\n'
+    )
 
-    const datePrefix = new Date().toISOString().slice(2, 19).replace(/:/gi, '').replace(/-/gi, '')
+    const datePrefix = new Date()
+      .toISOString()
+      .slice(2, 19)
+      .replace(/:/gi, '')
+      .replace(/-/gi, '')
     const [fileExtension] = buildObj.ipaFile.split('.').reverse()
     const testBuild = maestroBuild ? '--maestro' : ''
     const rsyncFile = escapePath(
-      `${datePrefix}--${productNameClean}--${platformType}--${repoBranch}--${buildNum}--${guiHash.slice(0, 8)}${testBuild}.${fileExtension}`
+      `${datePrefix}--${productNameClean}--${platformType}--${repoBranch}--${buildNum}--${guiHash.slice(
+        0,
+        8
+      )}${testBuild}.${fileExtension}`
     )
 
     const rsyncFilePath = join(buildObj.rsyncLocation, rsyncFile)
-    call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncFilePath}`)
+    call(
+      `rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncFilePath}`
+    )
     mylog('\n*** Upload to rsyncLocation Complete ***')
 
     if (testRepoUrl != null) {
@@ -477,7 +582,9 @@ function buildCommonPost(buildObj: BuildObj) {
         }
 
         chdir(baseDir)
-        call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone ${testRepoUrl}`)
+        call(
+          `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone ${testRepoUrl}`
+        )
 
         const latestTestFileObj: LatestTestFile = {
           platformType,
@@ -502,9 +609,13 @@ function buildCommonPost(buildObj: BuildObj) {
         })
 
         call(`git add ${LATEST_TEST_FILE}`)
-        call(`git commit -m "latestTestFile. ${buildNum} ${version} ${guiHash} ${platformBranch}"`)
+        call(
+          `git commit -m "latestTestFile. ${buildNum} ${version} ${guiHash} ${platformBranch}"`
+        )
         try {
-          call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push -u origin ${platformBranch}`)
+          call(
+            `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push -u origin ${platformBranch}`
+          )
           success = true
           break
         } catch (e: any) {
@@ -524,7 +635,12 @@ function buildCommonPost(buildObj: BuildObj) {
 function builddate() {
   const date = new Date()
 
-  const dateStr = sprintf('%d-%02d-%02d', date.getFullYear(), date.getMonth() + 1, date.getDate())
+  const dateStr = sprintf(
+    '%d-%02d-%02d',
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate()
+  )
   return dateStr
 }
 

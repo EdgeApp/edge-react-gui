@@ -10,7 +10,8 @@ import { EdgeButton } from '../../components/buttons/EdgeButton'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
-const testIconUri = 'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
+const testIconUri =
+  'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
 
 describe('Buttons', () => {
   it('should render simple loose buttons', () => {
@@ -110,7 +111,10 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a column layout with 1 buttons', () => {
     const rendered = render(
       <FakeProviders>
-        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
+        <ButtonsView
+          primary={{ label: 'Primary', onPress: () => {} }}
+          secondary={{ label: 'Secondary', onPress: () => {} }}
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -119,7 +123,10 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a column layout with 2 buttons', () => {
     const rendered = render(
       <FakeProviders>
-        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
+        <ButtonsView
+          primary={{ label: 'Primary', onPress: () => {} }}
+          secondary={{ label: 'Secondary', onPress: () => {} }}
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -141,7 +148,11 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a row layout with 1 buttons', () => {
     const rendered = render(
       <FakeProviders>
-        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+        <ButtonsView
+          primary={{ label: 'Primary', onPress: () => {} }}
+          secondary={{ label: 'Secondary', onPress: () => {} }}
+          layout="row"
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -150,7 +161,11 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a row layout with 2 buttons', () => {
     const rendered = render(
       <FakeProviders>
-        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+        <ButtonsView
+          primary={{ label: 'Primary', onPress: () => {} }}
+          secondary={{ label: 'Secondary', onPress: () => {} }}
+          layout="row"
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -180,7 +195,10 @@ describe('Buttons', () => {
             tertiary={{ label: 'Tertiary', onPress: () => {} }}
             layout="column"
           />
-          <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} layout="column" />
+          <ButtonsView
+            primary={{ label: 'Primary', onPress: () => {} }}
+            layout="column"
+          />
         </View>
       </FakeProviders>
     )
@@ -197,7 +215,10 @@ describe('Buttons', () => {
             tertiary={{ label: 'Tertiary', onPress: () => {} }}
             layout="row"
           />
-          <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} layout="row" />
+          <ButtonsView
+            primary={{ label: 'Primary', onPress: () => {} }}
+            layout="row"
+          />
         </View>
       </FakeProviders>
     )

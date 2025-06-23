@@ -1,12 +1,20 @@
 /* eslint-disable react-native/no-raw-text */
-import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
+import {
+  DrawerContentComponentProps,
+  useDrawerStatus
+} from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeUserInfo } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
@@ -74,9 +82,15 @@ export function SideMenuComponent(props: Props) {
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
   const watchedUsername = useWatch(account, 'username')
-  const displayUsername = getDisplayUsername(account.rootLoginId, watchedUsername)
+  const displayUsername = getDisplayUsername(
+    account.rootLoginId,
+    watchedUsername
+  )
 
-  const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
+  const sortedUsers = React.useMemo(
+    () => arrangeUsers(localUsers, account),
+    [account, localUsers]
+  )
 
   const footerContainerStyle = React.useMemo(() => {
     return [styles.footerContainer, { paddingBottom: insets.bottom }]
@@ -168,7 +182,12 @@ export function SideMenuComponent(props: Props) {
   const handleShareApp = async () => {
     // Generate anonymized referral ID
     const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
-    const refId = hashjs.sha256().update(data).digest('hex').replace('0x', '').substring(0, 10)
+    const refId = hashjs
+      .sha256()
+      .update(data)
+      .digest('hex')
+      .replace('0x', '')
+      .substring(0, 10)
 
     const url = `${config.website}?af=appreferred_${refId}`
     const subject = sprintf(lstrings.share_subject, config.appName)
@@ -189,7 +208,8 @@ export function SideMenuComponent(props: Props) {
   /// ---- Animation ----
 
   // Track the destination height of the dropdown
-  const userListDesiredHeight = styles.rowContainer.height * sortedUsers.length + theme.rem(1)
+  const userListDesiredHeight =
+    styles.rowContainer.height * sortedUsers.length + theme.rem(1)
   const userListHeight = Math.min(userListDesiredHeight, bottomPanelHeight)
 
   // Height value above can change if users are added/removed
@@ -217,7 +237,9 @@ export function SideMenuComponent(props: Props) {
     opacity: 0.8 * sAnimationMult.value
   }))
   const aRotate = useAnimatedStyle(() => ({
-    transform: [{ rotateZ: `${(isDropped ? -180 : 180) * sAnimationMult.value}deg` }]
+    transform: [
+      { rotateZ: `${(isDropped ? -180 : 180) * sAnimationMult.value}deg` }
+    ]
   }))
 
   /// ---- Row Data ----
@@ -309,16 +331,22 @@ export function SideMenuComponent(props: Props) {
 
   if (ENV.FIO_INIT == null || ENV.FIO_INIT === false) {
     // Remove FIO rows
-    let index = rowDatas.findIndex(row => row.title === lstrings.drawer_fio_names)
+    let index = rowDatas.findIndex(
+      row => row.title === lstrings.drawer_fio_names
+    )
     if (index >= 0) rowDatas.splice(index, 1)
-    index = rowDatas.findIndex(row => row.title === lstrings.drawer_fio_requests)
+    index = rowDatas.findIndex(
+      row => row.title === lstrings.drawer_fio_requests
+    )
     if (index >= 0) rowDatas.splice(index, 1)
   }
 
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        dispatch(executePluginAction(navigationBase, 'rewardscard', 'sell')).catch(err => showError(err))
+        dispatch(
+          executePluginAction(navigationBase, 'rewardscard', 'sell')
+        ).catch(err => showError(err))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'credit-card',
@@ -334,22 +362,44 @@ export function SideMenuComponent(props: Props) {
 
   const topPanel = (
     <View style={styles.topPanel}>
-      <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
+      <Image
+        style={styles.logoImage}
+        source={theme.primaryLogo}
+        resizeMode="contain"
+      />
       {isAccountRowShown ? (
         <>
-          <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
+          <Pressable
+            accessible={false}
+            onPress={handleToggleDropdown}
+            style={styles.rowContainer}
+          >
             <View style={styles.leftIconContainer}>
-              <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Fontello
+                name="control-panel-account"
+                style={styles.icon}
+                size={theme.rem(1.5)}
+                color={theme.iconTappable}
+              />
             </View>
             <View style={styles.rowBodyContainer}>
-              <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
+              <EdgeText
+                style={styles.text}
+                disableFontScaling={Platform.OS === 'android'}
+                ellipsizeMode="tail"
+              >
                 {displayUsername}
               </EdgeText>
             </View>
             {isMultiUsers ? (
               <View style={styles.rightIconContainer}>
                 <Animated.View style={aRotate}>
-                  <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
+                  <Feather
+                    testID="downArrow"
+                    name="chevron-down"
+                    color={theme.iconTappable}
+                    size={theme.rem(1.5)}
+                  />
                 </Animated.View>
               </View>
             ) : null}
@@ -368,39 +418,88 @@ export function SideMenuComponent(props: Props) {
             <View key={userInfo.loginId} style={styles.rowContainer}>
               {/* This empty container is required to align the row contents properly */}
               <View style={styles.leftIconContainer} />
-              <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
-                <EdgeText style={styles.text} disableFontScaling={Platform.OS === 'android'} ellipsizeMode="tail">
+              <EdgeTouchableOpacity
+                style={styles.rowBodyContainer}
+                onPress={handleSwitchAccount(userInfo)}
+              >
+                <EdgeText
+                  style={styles.text}
+                  disableFontScaling={Platform.OS === 'android'}
+                  ellipsizeMode="tail"
+                >
                   {getUserInfoUsername(userInfo)}
                 </EdgeText>
               </EdgeTouchableOpacity>
-              <EdgeTouchableOpacity style={styles.rightIconContainer} onPress={handleDeleteAccount(userInfo)}>
-                <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
+              <EdgeTouchableOpacity
+                style={styles.rightIconContainer}
+                onPress={handleDeleteAccount(userInfo)}
+              >
+                <MaterialIcon
+                  accessibilityHint={lstrings.close_control_panel_hint}
+                  color={theme.iconTappable}
+                  name="close"
+                  size={theme.rem(1.5)}
+                />
               </EdgeTouchableOpacity>
             </View>
           ))}
         </ScrollView>
       </Animated.View>
-      <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-      <Pressable style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]} onPress={handleToggleDropdown} />
+      <Animated.View
+        style={[styles.disable, styles.invisibleTapper, aFade]}
+        pointerEvents="none"
+      />
+      <Pressable
+        style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]}
+        onPress={handleToggleDropdown}
+      />
     </>
   )
 
   const navigationRows = (
     <>
       <View style={styles.rowsContainer}>
-        <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        <ScrollView
+          overScrollMode="always"
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        >
           {rowDatas.map(rowData => (
-            <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+            <EdgeTouchableOpacity
+              accessible={false}
+              onPress={rowData.pressHandler}
+              key={rowData.title}
+              style={styles.rowContainer}
+            >
               <View style={styles.leftIconContainer}>
                 {rowData.iconName === 'notifications' ? (
-                  <IconBadge number={number} offsetX={theme.rem(0.25)} offsetY={theme.rem(0.25)} sizeRem={1.5}>
-                    <Ionicons name="notifications-outline" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <IconBadge
+                    number={number}
+                    offsetX={theme.rem(0.25)}
+                    offsetY={theme.rem(0.25)}
+                    sizeRem={1.5}
+                  >
+                    <Ionicons
+                      name="notifications-outline"
+                      style={styles.icon}
+                      size={theme.rem(1.5)}
+                      color={theme.iconTappable}
+                    />
                   </IconBadge>
                 ) : rowData.iconName != null ? (
-                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <Fontello
+                    name={rowData.iconName}
+                    style={styles.icon}
+                    size={theme.rem(1.5)}
+                    color={theme.iconTappable}
+                  />
                 ) : null}
                 {rowData.iconNameFontAwesome != null ? (
-                  <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
+                  <FontAwesome5Icon
+                    name={rowData.iconNameFontAwesome}
+                    style={styles.icon}
+                    size={theme.rem(1.25)}
+                    color={theme.iconTappable}
+                  />
                 ) : null}
               </View>
               <View style={styles.rowBodyContainer}>
@@ -410,7 +509,12 @@ export function SideMenuComponent(props: Props) {
           ))}
         </ScrollView>
       </View>
-      <LinearGradient colors={[footerTopColor, footerBottomColor]} style={footerContainerStyle} start={footerGradientStart} end={footerGradientEnd} />
+      <LinearGradient
+        colors={[footerTopColor, footerBottomColor]}
+        style={footerContainerStyle}
+        start={footerGradientStart}
+        end={footerGradientEnd}
+      />
     </>
   )
 
@@ -524,8 +628,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // TODO: Refactor more of SideMenu into styled components
-const OuterView = styled(View)<{ insets: { top: number; bottom: number } }>(() => props => ({
-  flexGrow: 1,
-  paddingTop: props.insets.top,
-  paddingBottom: props.insets.bottom
-}))
+const OuterView = styled(View)<{ insets: { top: number; bottom: number } }>(
+  () => props => ({
+    flexGrow: 1,
+    paddingTop: props.insets.top,
+    paddingBottom: props.insets.bottom
+  })
+)

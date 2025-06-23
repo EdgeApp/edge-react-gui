@@ -4,7 +4,12 @@ import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
@@ -44,7 +49,11 @@ export function ButtonBox(props: Props) {
   })
 
   return (
-    <EdgeTouchableOpacity accessible={false} onPress={handlePress} style={[margin, padding]}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      onPress={handlePress}
+      style={[margin, padding]}
+    >
       {children}
     </EdgeTouchableOpacity>
   )
@@ -79,15 +88,27 @@ export function RadioIcon(props: { value: boolean }) {
   const theme = useTheme()
 
   const icon = value ? (
-    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="radio-button-on" />
+    <IonIcon
+      size={theme.rem(1.25)}
+      color={theme.iconTappable}
+      name="radio-button-on"
+    />
   ) : (
-    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="radio-button-off" />
+    <IonIcon
+      size={theme.rem(1.25)}
+      color={theme.icon}
+      name="radio-button-off"
+    />
   )
 
   return icon
 }
 
-export function RightChevronButton(props: { text: string; onPress: () => void; paddingRem?: number[] | number }) {
+export function RightChevronButton(props: {
+  text: string
+  onPress: () => void
+  paddingRem?: number[] | number
+}) {
   const { text, onPress, paddingRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -97,7 +118,11 @@ export function RightChevronButton(props: { text: string; onPress: () => void; p
     <EdgeTouchableOpacity accessible={false} onPress={onPress}>
       <View style={[padding, styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
-        <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+        <IonIcon
+          name="chevron-forward"
+          size={theme.rem(1.5)}
+          color={theme.iconTappable}
+        />
       </View>
     </EdgeTouchableOpacity>
   )

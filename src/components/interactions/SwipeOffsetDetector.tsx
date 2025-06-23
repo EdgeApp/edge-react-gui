@@ -1,6 +1,12 @@
 import * as React from 'react'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { SharedValue, useSharedValue, withDecay, WithDecayConfig, withSpring } from 'react-native-reanimated'
+import {
+  SharedValue,
+  useSharedValue,
+  withDecay,
+  WithDecayConfig,
+  withSpring
+} from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useTheme } from '../services/ThemeContext'
@@ -33,7 +39,12 @@ const VELOCITY_INCREASE_FACTOR = 3 / 2
  */
 
 export const SwipeOffsetDetector = (props: Props) => {
-  const { children, maxOffset = Infinity, minOffset = -Infinity, swipeOffset } = props
+  const {
+    children,
+    maxOffset = Infinity,
+    minOffset = -Infinity,
+    swipeOffset
+  } = props
   const theme = useTheme()
   const { width: screenWidth } = useSafeAreaFrame()
   const offsetStart = useSharedValue(0)
@@ -48,7 +59,8 @@ export const SwipeOffsetDetector = (props: Props) => {
     })
     .onEnd(e => {
       // Convert the velocity to a ratio of the screen width.
-      const screenVelocity = (e.velocityX / screenWidth) * VELOCITY_INCREASE_FACTOR
+      const screenVelocity =
+        (e.velocityX / screenWidth) * VELOCITY_INCREASE_FACTOR
       const inertiaConfig: WithDecayConfig = {
         // Negate velocity because swipe direction is an inverse to gesture direction
         velocity: -screenVelocity,

@@ -21,7 +21,8 @@ interface Props {
   logs: MultiLogOutput
 }
 
-const SENSITIVE_KEY_REGEX = /"(?:allKeys|displayPrivateSeed|displayPublicSeed|otpKey|loginKey|recoveryKey|dataKey|syncKey)\\*"/
+const SENSITIVE_KEY_REGEX =
+  /"(?:allKeys|displayPrivateSeed|displayPublicSeed|otpKey|loginKey|recoveryKey|dataKey|syncKey)\\*"/
 
 export const LogsModal = (props: Props) => {
   const { bridge, logs } = props
@@ -30,12 +31,18 @@ export const LogsModal = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   React.useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true)
-    })
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false)
-    })
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true)
+      }
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false)
+      }
+    )
 
     return () => {
       keyboardDidShowListener.remove()
@@ -44,7 +51,10 @@ export const LogsModal = (props: Props) => {
   }, [])
 
   const isDangerous = React.useMemo(() => {
-    return SENSITIVE_KEY_REGEX.test(logs.activity.data) || SENSITIVE_KEY_REGEX.test(logs.info.data)
+    return (
+      SENSITIVE_KEY_REGEX.test(logs.activity.data) ||
+      SENSITIVE_KEY_REGEX.test(logs.info.data)
+    )
   }, [logs])
 
   const handleSave = async () => {
@@ -53,7 +63,10 @@ export const LogsModal = (props: Props) => {
 
     const payload = JSON.stringify(logs, null, 2)
     const username = logs.info.loggedInUser?.userName ?? ''
-    const dir = Platform.OS === 'android' ? RNFS.ExternalCachesDirectoryPath : RNFS.DocumentDirectoryPath
+    const dir =
+      Platform.OS === 'android'
+        ? RNFS.ExternalCachesDirectoryPath
+        : RNFS.DocumentDirectoryPath
     const path = `${dir}/edge-log-${username}.json`.replace('-.json', '.json')
 
     const shareOptions: ShareOptions = {
@@ -78,10 +91,14 @@ export const LogsModal = (props: Props) => {
 
     await Promise.all([
       sendLogs(logs.activity, underDuress).catch((e: any) => {
-        throw new Error(`${lstrings.settings_modal_send_logs_failure} activity logs code ${e?.message}`)
+        throw new Error(
+          `${lstrings.settings_modal_send_logs_failure} activity logs code ${e?.message}`
+        )
       }),
       sendLogs(logs.info, underDuress).catch((e: any) => {
-        throw new Error(`${lstrings.settings_modal_send_logs_failure} info logs code ${e?.message}`)
+        throw new Error(
+          `${lstrings.settings_modal_send_logs_failure} info logs code ${e?.message}`
+        )
       })
     ])
     showToast(lstrings.settings_modal_send_logs_success)
@@ -93,13 +110,26 @@ export const LogsModal = (props: Props) => {
   }
 
   return (
-    <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
+    <EdgeModal
+      bridge={bridge}
+      onCancel={handleCancel}
+      title={lstrings.settings_button_export_logs}
+      scroll
+    >
       {isDangerous ? (
-        <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />
+        <WarningCard
+          key="warning"
+          title={lstrings.string_warning}
+          footer={lstrings.settings_modal_send_unsafe}
+          marginRem={0.5}
+        />
       ) : isKeyboardVisible ? null : (
         <Paragraph>{lstrings.settings_modal_export_logs_directions}</Paragraph>
       )}
-      <AlertCardUi4 title={lstrings.settings_modal_export_logs_warning} type="warning" />
+      <AlertCardUi4
+        title={lstrings.settings_modal_export_logs_warning}
+        type="warning"
+      />
       <ModalFilledTextInput
         autoCorrect
         autoFocus={false}
@@ -110,7 +140,11 @@ export const LogsModal = (props: Props) => {
         value={userMessage}
       />
       <ModalButtons
-        primary={{ label: sprintf(lstrings.send_to_1s, config.appName), onPress: handleSend, disabled: isDangerous }}
+        primary={{
+          label: sprintf(lstrings.send_to_1s, config.appName),
+          onPress: handleSend,
+          disabled: isDangerous
+        }}
         secondary={{ label: lstrings.save, onPress: handleSave }}
       />
     </EdgeModal>

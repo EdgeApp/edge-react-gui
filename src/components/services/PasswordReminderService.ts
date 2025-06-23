@@ -16,7 +16,10 @@ type Props = StateProps & DispatchProps
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.settingsLoaded && !matchJson(prevProps.passwordReminder, this.props.passwordReminder)) {
+    if (
+      this.props.settingsLoaded &&
+      !matchJson(prevProps.passwordReminder, this.props.passwordReminder)
+    ) {
       this.props.setPasswordReminder(this.props.passwordReminder)
     }
   }

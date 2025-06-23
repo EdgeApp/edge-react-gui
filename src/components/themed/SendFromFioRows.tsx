@@ -7,7 +7,11 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../types/types'
-import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../util/FioAddressUtils'
+import {
+  checkRecordSendFee,
+  findWalletByFioAddress,
+  FIO_NO_BUNDLED_ERR_CODE
+} from '../../util/FioAddressUtils'
 import { SectionView } from '../layout/SectionView'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -22,7 +26,11 @@ interface OwnProps {
   selected: string
   memo: string
   memoError: string
-  onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void
+  onSelect: (
+    fioAddress: string,
+    fioWallet: EdgeCurrencyWallet,
+    error: string
+  ) => void
   onMemoChange: (memo: string, memoError: string) => void
   fioRequest?: FioRequest
   isSendUsingFioAddress?: boolean
@@ -47,7 +55,10 @@ interface LocalState {
   prevFioAddresses: FioAddress[]
 }
 
-export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalState> {
+export class SendFromFioRowsComponent extends React.PureComponent<
+  Props,
+  LocalState
+> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -66,8 +77,14 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
       }
     }
     const fioAddress = fioAddresses.find(({ name }) => name === selected)
-    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.bundledTxs !== prevFioAddress.bundledTxs) {
+    const prevFioAddress = prevFioAddresses.find(
+      ({ name }) => name === selected
+    )
+    if (
+      fioAddress &&
+      prevFioAddress &&
+      fioAddress.bundledTxs !== prevFioAddress.bundledTxs
+    ) {
       return {
         bundledTxsUpdated: true,
         prevFioAddresses: fioAddresses
@@ -77,10 +94,13 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
   }
 
   componentDidMount() {
-    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
+    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } =
+      this.props
     if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
-      this.setFioAddress(fioRequest.payer_fio_address).catch(err => showError(err))
+      this.setFioAddress(fioRequest.payer_fio_address).catch(err =>
+        showError(err)
+      )
     } else if (isSendUsingFioAddress) {
       this.setDefaultFioAddress().catch(err => showError(err))
     }
@@ -94,7 +114,11 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
       this.setState({ bundledTxsUpdated: false })
       this.setFioAddress(this.props.selected).catch(err => showError(err))
     }
-    if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
+    if (
+      isSendUsingFioAddress !== prevProps.isSendUsingFioAddress &&
+      !fioRequest &&
+      isSendUsingFioAddress
+    ) {
       this.setDefaultFioAddress().catch(err => showError(err))
     }
   }
@@ -106,7 +130,9 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
       const fioNames = await fioWallet.otherMethods.getFioAddressNames()
       if (fioNames.length) {
         this.setState({ loading: false }, () => {
-          this.setFioAddress(fioNames[0], fioWallet).catch(err => showError(err))
+          this.setFioAddress(fioNames[0], fioWallet).catch(err =>
+            showError(err)
+          )
         })
         break
       }
@@ -116,7 +142,13 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
   selectAddress = async () => {
     const { currencyCode, coreWallet } = this.props
     const response = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} title={lstrings.fio_select_address} currencyCode={currencyCode} walletId={coreWallet.id} useUserFioAddressesOnly />
+      <AddressModal
+        bridge={bridge}
+        title={lstrings.fio_select_address}
+        currencyCode={currencyCode}
+        walletId={coreWallet.id}
+        useUserFioAddressesOnly
+      />
     ))
     if (response) {
       await this.setFioAddress(response)
@@ -139,13 +171,21 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
     if (memo != null) this.handleMemoChange(memo)
   }
 
-  setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
-    const { navigation, fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
+  setFioAddress = async (
+    fioAddress: string,
+    fioWallet?: EdgeCurrencyWallet | null
+  ) => {
+    const { navigation, fioWallets, fioAddresses, fioRequest, currencyCode } =
+      this.props
     if (!fioWallet) {
       if (fioAddresses && fioAddress.length) {
-        const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
+        const selectedFioAddress = fioAddresses.find(
+          ({ name }) => name === fioAddress
+        )
         if (selectedFioAddress) {
-          fioWallet = fioWallets.find(({ id }) => id === selectedFioAddress.walletId)
+          fioWallet = fioWallets.find(
+            ({ id }) => id === selectedFioAddress.walletId
+          )
         }
       }
       if (!fioWallet) {
@@ -167,17 +207,19 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
     } catch (e: any) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
         this.props.onSelect(fioAddress, fioWallet, e.message)
-        const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.fio_no_bundled_err_msg}
-            message={lstrings.fio_no_bundled_add_err_msg}
-            buttons={{
-              ok: { label: lstrings.title_fio_add_bundled_txs },
-              cancel: { label: lstrings.string_cancel_cap }
-            }}
-          />
-        ))
+        const answer = await Airship.show<'ok' | 'cancel' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.fio_no_bundled_err_msg}
+              message={lstrings.fio_no_bundled_add_err_msg}
+              buttons={{
+                ok: { label: lstrings.title_fio_add_bundled_txs },
+                cancel: { label: lstrings.string_cancel_cap }
+              }}
+            />
+          )
+        )
         if (answer === 'ok') {
           return navigation.push('fioAddressSettings', {
             showAddBundledTxs: true,
@@ -230,7 +272,11 @@ export class SendFromFioRowsComponent extends React.PureComponent<Props, LocalSt
 
     if (memoError) {
       return (
-        <EdgeRow rightButtonType="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
+        <EdgeRow
+          rightButtonType="touchable"
+          title={lstrings.select_fio_address_address_memo_error}
+          onPress={this.openMessageInput}
+        >
           <EdgeText style={{ color: theme.dangerText }}>{memoError}</EdgeText>
         </EdgeRow>
       )

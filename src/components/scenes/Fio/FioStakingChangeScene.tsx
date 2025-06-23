@@ -1,5 +1,10 @@
 import { add, div, eq, gt } from 'biggystring'
-import { EdgeAssetActionType, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeAssetActionType,
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -10,20 +15,36 @@ import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
-import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
+import {
+  formatNumber,
+  formatTimeDate,
+  SHORT_DATE_FMT
+} from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
-import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
-import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
+import {
+  getCurrencyCode,
+  getCurrencyCodeMultiplier
+} from '../../../util/CurrencyInfoHelpers'
+import {
+  FioStakingBalanceType,
+  getFioStakingBalances
+} from '../../../util/stakeUtils'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToDenomination
+} from '../../../util/utils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { EdgeModal } from '../../modals/EdgeModal'
-import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
+import {
+  FlipInputModal2,
+  FlipInputModalResult
+} from '../../modals/FlipInputModal2'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -43,7 +64,10 @@ export interface FioStakingChangeParams {
   walletId: string
 }
 
-type PartialAmounts = Pick<ExchangedFlipInputAmounts, 'nativeAmount' | 'exchangeAmount'>
+type PartialAmounts = Pick<
+  ExchangedFlipInputAmounts,
+  'nativeAmount' | 'exchangeAmount'
+>
 
 export const FioStakingChangeScene = withWallet((props: Props) => {
   const theme = useTheme()
@@ -63,10 +87,14 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const [nativeAmount, setNativeAmount] = React.useState('0')
   const [exchangeAmount, setExchangeAmount] = React.useState('0')
   const [apy, setApy] = React.useState(0)
-  const [error, setError] = React.useState<Error | string | undefined>(undefined)
+  const [error, setError] = React.useState<Error | string | undefined>(
+    undefined
+  )
   const [loading, setLoading] = React.useState(false)
   const [tx, setTx] = React.useState<EdgeTransaction | undefined>(undefined)
-  const [selectedFioAddress, setSelectedFioAddress] = React.useState<string | undefined>(undefined)
+  const [selectedFioAddress, setSelectedFioAddress] = React.useState<
+    string | undefined
+  >(undefined)
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
   const dispatch = useDispatch()
@@ -101,12 +129,28 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     const stakeTypes = Object.keys(balances) as FioStakingBalanceType[]
     for (const stakedType of stakeTypes) {
       const stakingNativeAmount = balances[stakedType]
-      const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-      const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
+      const stakingCryptoAmount: string = convertNativeToDenomination(
+        currencyDenomination.multiplier
+      )(stakingNativeAmount)
+      const stakingCryptoAmountFormat = formatNumber(
+        add(stakingCryptoAmount, '0')
+      )
 
-      const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
-      const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+      const stakingDefaultCryptoAmount = convertNativeToDenomination(
+        defaultDenomination.multiplier
+      )(stakingNativeAmount)
+      const stakingFiatBalance = convertCurrencyFromExchangeRates(
+        exchangeRates,
+        currencyCode,
+        defaultIsoFiat,
+        stakingDefaultCryptoAmount
+      )
+      const stakingFiatBalanceFormat = formatNumber(
+        stakingFiatBalance && gt(stakingFiatBalance, '0.000001')
+          ? stakingFiatBalance
+          : 0,
+        { toFixed: 2 }
+      )
 
       stakingBalances[stakedType] = {
         native: stakingNativeAmount,
@@ -116,7 +160,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     }
   }
 
-  const onAmountsChanged = ({ exchangeAmount, nativeAmount }: PartialAmounts) => {
+  const onAmountsChanged = ({
+    exchangeAmount,
+    nativeAmount
+  }: PartialAmounts) => {
     setExchangeAmount(exchangeAmount)
     setNativeAmount(nativeAmount)
   }
@@ -140,14 +187,22 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           .then(nativeAmount => {
             onAmountsChanged({
               nativeAmount,
-              exchangeAmount: add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0')
+              exchangeAmount: add(
+                convertNativeToDenomination(currencyDenomination.multiplier)(
+                  nativeAmount
+                ),
+                '0'
+              )
             })
           })
         break
       }
       case 'unstake': {
         const nativeAmount = stakingBalances.staked.native
-        const multiplier = getCurrencyCodeMultiplier(currencyWallet.currencyConfig, 'FIO')
+        const multiplier = getCurrencyCodeMultiplier(
+          currencyWallet.currencyConfig,
+          'FIO'
+        )
         const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
         onAmountsChanged({
           nativeAmount,
@@ -164,14 +219,19 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }
 
   const handleSubmit = async () => {
-    if (tx == null) return setError(lstrings.create_wallet_account_error_sending_transaction)
+    if (tx == null)
+      return setError(lstrings.create_wallet_account_error_sending_transaction)
     setLoading(true)
     try {
       const signedTx = await currencyWallet.signTx(tx)
       const broadcastedTx = await currencyWallet.broadcastTx(signedTx)
       await currencyWallet.saveTx(broadcastedTx)
 
-      showToast(assetActionType === 'stake' ? lstrings.staking_success : lstrings.staking_unstake_success)
+      showToast(
+        assetActionType === 'stake'
+          ? lstrings.staking_success
+          : lstrings.staking_unstake_success
+      )
       navigation.goBack()
     } catch (e: any) {
       setError(e.message)
@@ -201,7 +261,15 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           bridge={bridge}
           onCancel={bridge.resolve}
           title={
-            <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
+            <ModalTitle
+              icon={
+                <MaterialCommunityIcons
+                  name="chart-line"
+                  size={theme.rem(2)}
+                  color={theme.iconTappable}
+                />
+              }
+            >
               {lstrings.staking_change_unlock_explainer_title}
             </ModalTitle>
           }
@@ -236,13 +304,22 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   React.useEffect(() => {
     if (!selectedFioAddress && fioAddresses?.length > 0) {
       const fioAddress = fioAddresses
-        .filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
-        .sort(({ bundledTxs }, { bundledTxs: bundledTxs2 }) => (bundledTxs <= bundledTxs2 ? 1 : -1))[0]
+        .filter(
+          ({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId
+        )
+        .sort(({ bundledTxs }, { bundledTxs: bundledTxs2 }) =>
+          bundledTxs <= bundledTxs2 ? 1 : -1
+        )[0]
 
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
       // Addresses must have at least 1 bundled transaction; we rely on bundle txs and don't yet support fee-based tx for staking
-      if (fioAddress.bundledTxs < 1) return setError(new Error(sprintf(lstrings.staking_no_bundled_txs_error, fioAddress.name)))
+      if (fioAddress.bundledTxs < 1)
+        return setError(
+          new Error(
+            sprintf(lstrings.staking_no_bundled_txs_error, fioAddress.name)
+          )
+        )
 
       setSelectedFioAddress(fioAddress.name)
     }
@@ -272,7 +349,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         ],
         otherParams: {
           action: {
-            name: assetActionType === 'stake' ? 'stakeFioTokens' : 'unStakeFioTokens',
+            name:
+              assetActionType === 'stake'
+                ? 'stakeFioTokens'
+                : 'unStakeFioTokens',
             params: {
               fioAddress: selectedFioAddress
             }
@@ -307,10 +387,20 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }, [nativeAmount])
 
   const renderAdd = () => {
-    const apyValue = sprintf(apy === maxApy ? lstrings.staking_estimated_return_up_to : lstrings.staking_estimated_return, `${apy}%`)
+    const apyValue = sprintf(
+      apy === maxApy
+        ? lstrings.staking_estimated_return_up_to
+        : lstrings.staking_estimated_return,
+      `${apy}%`
+    )
     return (
       <>
-        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
+        <SceneHeader
+          style={styles.sceneHeader}
+          title={sprintf(lstrings.staking_change_add_header, currencyCode)}
+          underline
+          withTopMargin
+        >
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <View style={styles.explainer}>
@@ -318,7 +408,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Paragraph>{lstrings.staking_change_explaner2}</Paragraph>
         </View>
         <EdgeCard marginRem={1}>
-          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
+          <EdgeRow
+            rightButtonType="editable"
+            title={lstrings.staking_change_add_amount_title}
+            onPress={handleAmount}
+          >
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
           </EdgeRow>
         </EdgeCard>
@@ -333,18 +427,39 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
 
   const renderRemove = () => {
     const unlockDate = tx?.otherParams?.ui.unlockDate
-    const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, SHORT_DATE_FMT) : ''
+    const unlockDateFormat = unlockDate
+      ? formatTimeDate(unlockDate, SHORT_DATE_FMT)
+      : ''
     let estReward = '0'
-    if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
-      estReward = add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
+    if (
+      tx != null &&
+      tx.otherParams != null &&
+      tx.otherParams.ui != null &&
+      tx.otherParams.ui.estReward != null
+    ) {
+      estReward = add(
+        convertNativeToDenomination(currencyDenomination.multiplier)(
+          tx.otherParams.ui.estReward
+        ),
+        '0'
+      )
     }
     return (
       <>
-        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_remove_header, currencyCode)} underline withTopMargin>
+        <SceneHeader
+          style={styles.sceneHeader}
+          title={sprintf(lstrings.staking_change_remove_header, currencyCode)}
+          underline
+          withTopMargin
+        >
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <EdgeCard sections>
-          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
+          <EdgeRow
+            rightButtonType="editable"
+            title={lstrings.staking_change_remove_amount_title}
+            onPress={handleAmount}
+          >
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
           </EdgeRow>
           {estReward !== '0' && (
@@ -352,7 +467,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
               <EdgeText style={styles.amountText}>{estReward}</EdgeText>
             </EdgeRow>
           )}
-          <EdgeRow rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
+          <EdgeRow
+            rightButtonType="questionable"
+            title={lstrings.staking_change_remove_unlock_date}
+            onPress={handleUnlockDate}
+          >
             <EdgeText>{unlockDateFormat}</EdgeText>
           </EdgeRow>
         </EdgeCard>
@@ -363,7 +482,14 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const renderError = () => {
     if (error == null) return null
 
-    return <AlertCardUi4 marginRem={1} type="error" title={lstrings.fragment_error} body={String(error)} />
+    return (
+      <AlertCardUi4
+        marginRem={1}
+        type="error"
+        title={lstrings.fragment_error}
+        body={String(error)}
+      />
+    )
   }
 
   return (
@@ -380,7 +506,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       })()}
       {renderError()}
       <View style={styles.sliderContainer}>
-        <Slider onSlidingComplete={handleSubmit} disabled={sliderDisabled} showSpinner={loading} />
+        <Slider
+          onSlidingComplete={handleSubmit}
+          disabled={sliderDisabled}
+          showSpinner={loading}
+        />
       </View>
     </SceneWrapper>
   )

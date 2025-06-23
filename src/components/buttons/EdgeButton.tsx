@@ -54,7 +54,18 @@ interface Props {
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
 export function EdgeButton(props: Props) {
-  const { layout = 'solo', children, disabled = false, label, onPress, type = 'primary', spinner = false, mini = false, marginRem, testID } = props
+  const {
+    layout = 'solo',
+    children,
+    disabled = false,
+    label,
+    onPress,
+    type = 'primary',
+    spinner = false,
+    mini = false,
+    marginRem,
+    testID
+  } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -101,7 +112,10 @@ export function EdgeButton(props: Props) {
 
   const maybeText =
     label == null ? null : (
-      <EdgeText numberOfLines={1} style={[textStyle, children == null ? null : styles.leftMarginedText]}>
+      <EdgeText
+        numberOfLines={1}
+        style={[textStyle, children == null ? null : styles.leftMarginedText]}
+      >
         {label}
       </EdgeText>
     )
@@ -123,7 +137,11 @@ export function EdgeButton(props: Props) {
     if (layout === 'row') retStyle.push(styles.touchContainerRow)
     if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
 
-    retStyle.push(customMarginPadding != null ? customMarginPadding : styles.touchContainerSpacing)
+    retStyle.push(
+      customMarginPadding != null
+        ? customMarginPadding
+        : styles.touchContainerSpacing
+    )
 
     return retStyle
   }, [layout, customMarginPadding, styles])
@@ -137,7 +155,13 @@ export function EdgeButton(props: Props) {
     if (layout === 'solo') retStyle.push(styles.visibleContainerSolo)
     if (type === 'tertiary') retStyle.push(styles.visibleContainerTertiary)
 
-    retStyle.push(mini ? styles.visibleSizeMini : type === 'tertiary' ? styles.visibleSizeTertiary : styles.visibleSizeDefault)
+    retStyle.push(
+      mini
+        ? styles.visibleSizeMini
+        : type === 'tertiary'
+        ? styles.visibleSizeTertiary
+        : styles.visibleSizeDefault
+    )
     retStyle.push({
       opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
     })
@@ -146,7 +170,12 @@ export function EdgeButton(props: Props) {
   }, [disabled, hideContent, layout, mini, styles, type])
 
   return (
-    <EdgeTouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
+    <EdgeTouchableOpacity
+      disabled={disabled || pending || spinner}
+      style={touchContainerStyle}
+      onPress={handlePress}
+      testID={testID}
+    >
       <LinearGradient {...gradientProps} style={visibleContainerStyle}>
         {hideContent ? (
           <View style={styles.invisibleContent}>
@@ -160,7 +189,12 @@ export function EdgeButton(props: Props) {
           </>
         )}
       </LinearGradient>
-      {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={[customMarginPadding, styles.spinner]} />}
+      {!hideContent ? null : (
+        <ActivityIndicator
+          color={spinnerColor}
+          style={[customMarginPadding, styles.spinner]}
+        />
+      )}
     </EdgeTouchableOpacity>
   )
 }

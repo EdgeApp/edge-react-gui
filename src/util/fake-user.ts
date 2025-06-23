@@ -23,7 +23,8 @@ const fakeUserDump: EdgeFakeUser = {
     loginAuthBox: {
       encryptionType: 0,
       iv_hex: '785bcaf5ccfffef9e063f2bdb487a641',
-      data_base64: '0raA/GQpdS0zecC6fL/i3/9wOHj59ldwGfiVQG5L+E/JfZIBk+g9YDlOWYPVjKQYJkgQRT+/0HK7nisuwCDCzE9iQtxseGlsBNp/wRhQWo3K9YmFXT7rXi8zNJZ44+ky'
+      data_base64:
+        '0raA/GQpdS0zecC6fL/i3/9wOHj59ldwGfiVQG5L+E/JfZIBk+g9YDlOWYPVjKQYJkgQRT+/0HK7nisuwCDCzE9iQtxseGlsBNp/wRhQWo3K9YmFXT7rXi8zNJZ44+ky'
     },
     loginId: 'Tg+IxuNwr4YMAZalWcfq5EjlFTs5ZehzdfvkaG9VX6k=',
     passwordAuthBox: {
@@ -33,7 +34,8 @@ const fakeUserDump: EdgeFakeUser = {
         'F1JDsfFE8foL6K5Rf/UYeUOLxfs0P3sZtgx9EuxD8TB/itDS4B4x3wN6K7RDm+gOhcnTBr7k1VgP7YvMYKlI4niyVKPbilCSgvOqTjQA6aFS6wZuLHFMbXKQL3bCHpOxTEMCc3hqmvchWHGMIAC49w=='
     },
     passwordAuthSnrp: {
-      salt_hex: 'b5865ffb9fa7b3bfe4b2384d47ce831ee22a4a9d5c34c7ef7d21467cc758f81b',
+      salt_hex:
+        'b5865ffb9fa7b3bfe4b2384d47ce831ee22a4a9d5c34c7ef7d21467cc758f81b',
       n: 16384,
       r: 1,
       p: 1
@@ -45,7 +47,8 @@ const fakeUserDump: EdgeFakeUser = {
         'jePZF2d2A/vJdJH8dM5JbhdW0PK+RZCKC4lgMzygrTxkVa9Om8wH5144K8m8qUgnME28rNo/gtHlJBIajyrOdsNi14oQ9UVnMLpRQoR2bZ/97a7oSAaog2L5I0hznQOkNsvb8hGF+Aq2HNah8ui+7w=='
     },
     passwordKeySnrp: {
-      salt_hex: '1b8ab58cbfbeb9a023b27d74476601082bda455ccf0e497033020d4457b691d8',
+      salt_hex:
+        '1b8ab58cbfbeb9a023b27d74476601082bda455ccf0e497033020d4457b691d8',
       n: 131072,
       r: 8,
       p: 1
@@ -65,7 +68,8 @@ const fakeUserDump: EdgeFakeUser = {
     pin2TextBox: {
       encryptionType: 0,
       iv_hex: 'A5D640EE754A2EB4C9757EAF3AEE3EF5',
-      data_base64: 'DG0PZIeTueE9fE/JNKMYufF5to3dCyFh2Ce+nMYwbcRewJsXwmtKE0BXd4bbVmzQITE5RhAnTbSOSQUDmbQ6C6n+oI3fkFUif0fB39ukeEbePZU368zt+Db3vY1x8lRD'
+      data_base64:
+        'DG0PZIeTueE9fE/JNKMYufF5to3dCyFh2Ce+nMYwbcRewJsXwmtKE0BXd4bbVmzQITE5RhAnTbSOSQUDmbQ6C6n+oI3fkFUif0fB39ukeEbePZU368zt+Db3vY1x8lRD'
     },
     loginAuth: 'I7J9dEdmAQgr2kVczw5JcDMCDURXtpHYOyrVLN9e2UA=',
     passwordAuth: 'wwlWGZ9GiRqktzxUCMPe5yeXS8AJTJX3A3EWaVdUB1Q=',

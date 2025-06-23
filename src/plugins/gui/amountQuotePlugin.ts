@@ -7,12 +7,24 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  getCurrencyCodeMultiplier
+} from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
-import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
+import {
+  DECIMAL_PRECISION,
+  fuzzyTimeout,
+  removeIsoPrefix
+} from '../../util/utils'
+import {
+  FiatPlugin,
+  FiatPluginFactory,
+  FiatPluginFactoryArgs,
+  FiatPluginStartParams
+} from './fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderAssetMap,
@@ -31,7 +43,10 @@ import { moonpayProvider } from './providers/moonpayProvider'
 import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { simplexProvider } from './providers/simplexProvider'
-import { EnterAmountState, FiatPluginEnterAmountParams } from './scenes/FiatPluginEnterAmountScene'
+import {
+  EnterAmountState,
+  FiatPluginEnterAmountParams
+} from './scenes/FiatPluginEnterAmountScene'
 import { initializeProviders } from './util/initializeProviders'
 
 // A map keyed by provider pluginIds, and values representing preferred priority
@@ -43,7 +58,9 @@ type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
 // A map keyed by supported payment types and values of ProviderPriorityMap
 const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
-type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPriorityMap>
+type PaymentTypeProviderPriorityMap = ReturnType<
+  typeof asPaymentTypeProviderPriorityMap
+>
 
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
@@ -53,10 +70,23 @@ interface ConvertValueInternalResult {
   value?: string
 }
 type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
-  convertValueInternal: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<ConvertValueInternalResult>
+  convertValueInternal: (
+    sourceFieldNum: number,
+    value: string,
+    stateManager: StateManager<EnterAmountState>
+  ) => Promise<ConvertValueInternalResult>
 }
 
-const providerFactories = [banxaProvider, bityProvider, kadoProvider, kadoOtcProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
+const providerFactories = [
+  banxaProvider,
+  bityProvider,
+  kadoProvider,
+  kadoOtcProvider,
+  moonpayProvider,
+  mtpelerinProvider,
+  paybisProvider,
+  simplexProvider
+]
 
 const DEFAULT_FIAT_AMOUNT = '500'
 const DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT = '50'
@@ -73,7 +103,11 @@ const NO_PROVIDER_TOAST_DURATION_MS = 10000
 /** Pick a default fiat amount in the foreign fiat amount that is roughly equal
  to the default USD fiat amount. Prioritizes rounding up/down to a nice looking
  whole number. */
-async function getInitialFiatValue(date: string, startingFiatAmount: string, isoFiatCurrencyCode: string) {
+async function getInitialFiatValue(
+  date: string,
+  startingFiatAmount: string,
+  isoFiatCurrencyCode: string
+) {
   let initialValue1: string | undefined
   if (isoFiatCurrencyCode !== 'iso:USD') {
     const ratePair = `${isoFiatCurrencyCode}_iso:USD`
@@ -91,7 +125,9 @@ async function getInitialFiatValue(date: string, startingFiatAmount: string, iso
   return initialValue1
 }
 
-export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
+export const amountQuoteFiatPlugin: FiatPluginFactory = async (
+  params: FiatPluginFactoryArgs
+) => {
   const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
   const { pluginId } = guiPlugin
   const isLightAccount = account.username == null
@@ -130,16 +166,27 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   }
 
   const providers = await initializeProviders(providerFactories, params)
-  if (providers.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
+  if (providers.length === 0)
+    throw new Error('No enabled amountQuoteFiatPlugin providers')
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotions, providerId } = params
+      const {
+        defaultIsoFiat,
+        direction,
+        defaultFiatAmount,
+        forceFiatCurrencyCode,
+        regionCode,
+        paymentTypes,
+        pluginPromotions,
+        providerId
+      } = params
 
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
-      if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
+      if (paymentTypes.length === 0)
+        console.warn('No payment types given to FiatPlugin: ' + pluginId)
 
       let providerPriority: PaymentTypeProviderPriorityMap = {}
       let priorityArray: PriorityArray = [{}]
@@ -149,7 +196,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         try {
           if (infoServerData.rollup?.fiatPluginPriority != null) {
             providerPriority = infoServerData.rollup.fiatPluginPriority
-            priorityArray = createPriorityArray(providerPriority[paymentTypes[0]], pluginPromotions)
+            priorityArray = createPriorityArray(
+              providerPriority[paymentTypes[0]],
+              pluginPromotions
+            )
           }
         } catch (e: any) {
           console.warn('Failed to fetch provider priorities:', e)
@@ -160,10 +210,17 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       }
 
       const paymentProviderPriority = providerPriority[paymentTypes[0]] ?? {}
-      const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
+      const priorityProviders = providers.filter(
+        p =>
+          paymentProviderPriority[p.providerId] != null &&
+          paymentProviderPriority[p.providerId] > 0
+      )
 
       if (priorityProviders.length === 0) {
-        const msg = direction === 'buy' ? lstrings.fiat_plugin_no_buy_providers : lstrings.fiat_plugin_no_sell_providers
+        const msg =
+          direction === 'buy'
+            ? lstrings.fiat_plugin_no_buy_providers
+            : lstrings.fiat_plugin_no_sell_providers
         await showUi.showToast(msg, NO_PROVIDER_TOAST_DURATION_MS)
         return
       }
@@ -171,12 +228,17 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
       for (const provider of priorityProviders) {
-        assetPromises.push(provider.getSupportedAssets({ direction, regionCode, paymentTypes }))
+        assetPromises.push(
+          provider.getSupportedAssets({ direction, regionCode, paymentTypes })
+        )
       }
 
       const ps = fuzzyTimeout(assetPromises, 5000)
 
-      const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
+      const assetArray = await showUi.showToastSpinner(
+        lstrings.fiat_plugin_fetching_assets,
+        ps
+      )
 
       const requireAmountFiat: { [providerId: string]: boolean } = {}
       const requireAmountCrypto: { [providerId: string]: boolean } = {}
@@ -198,7 +260,12 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         for (const currencyPluginId in assetMap.crypto) {
           const providerTokens = assetMap.crypto[currencyPluginId]
           for (const { tokenId } of providerTokens) {
-            console.log('Adding asset:', assetMap.providerId, currencyPluginId, tokenId)
+            console.log(
+              'Adding asset:',
+              assetMap.providerId,
+              currencyPluginId,
+              tokenId
+            )
             allowedAssets.push({ pluginId: currencyPluginId, tokenId })
           }
           for (const fiatCode in assetMap.fiat) {
@@ -207,10 +274,19 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         }
       }
 
-      const allowedProvidersArray = priorityProviders.filter(p => allowedProviders[p.providerId])
-      const fiatAmountProviders = allowedProvidersArray.filter(p => !requireAmountCrypto[p.providerId])
-      const cryptoAmountProviders = allowedProvidersArray.filter(p => !requireAmountFiat[p.providerId])
-      const hasProviderWithoutRequire = allowedProvidersArray.some(p => !requireAmountFiat[p.providerId] && !requireAmountCrypto[p.providerId])
+      const allowedProvidersArray = priorityProviders.filter(
+        p => allowedProviders[p.providerId]
+      )
+      const fiatAmountProviders = allowedProvidersArray.filter(
+        p => !requireAmountCrypto[p.providerId]
+      )
+      const cryptoAmountProviders = allowedProvidersArray.filter(
+        p => !requireAmountFiat[p.providerId]
+      )
+      const hasProviderWithoutRequire = allowedProvidersArray.some(
+        p =>
+          !requireAmountFiat[p.providerId] && !requireAmountCrypto[p.providerId]
+      )
 
       // Filter out providers that have a required amount type if there are ANY providers
       // that do not have a required amount type.
@@ -220,8 +296,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         // We don't have a fully flexible provider that can take fiat or crypto inputs
         // Validate if we need to force a specific input type
         for (const p of allowedProvidersArray) {
-          if (requireAmountFiat[p.providerId] && requireAmountCrypto[p.providerId]) {
-            throw new Error('Provider must not require both fiat and crypto amounts')
+          if (
+            requireAmountFiat[p.providerId] &&
+            requireAmountCrypto[p.providerId]
+          ) {
+            throw new Error(
+              'Provider must not require both fiat and crypto amounts'
+            )
           }
           if (requireAmountFiat[p.providerId]) {
             requireFiat = true
@@ -237,7 +318,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Pop up modal to pick wallet/asset
       // TODO: Filter wallets according to fiats supported by allowed providers
       const walletListResult = await showUi.walletPicker({
-        headerTitle: direction === 'buy' ? lstrings.fiat_plugin_select_asset_to_purchase : lstrings.fiat_plugin_select_asset_to_sell,
+        headerTitle:
+          direction === 'buy'
+            ? lstrings.fiat_plugin_select_asset_to_purchase
+            : lstrings.fiat_plugin_select_asset_to_sell,
         allowedAssets,
         showCreateWallet: direction === 'buy'
       })
@@ -247,7 +331,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const coreWallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+      if (!coreWallet)
+        return await showUi.showError(
+          new Error(`Missing wallet with ID ${walletId}`)
+        )
 
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
@@ -261,19 +348,35 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
-      const startingFiatAmount = isLightAccount ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+      const startingFiatAmount = isLightAccount
+        ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT
+        : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
       const isoNow = new Date().toISOString()
-      const initialValue1 = requireCrypto ? undefined : await getInitialFiatValue(isoNow, startingFiatAmount, isoFiatCurrencyCode)
+      const initialValue1 = requireCrypto
+        ? undefined
+        : await getInitialFiatValue(
+            isoNow,
+            startingFiatAmount,
+            isoFiatCurrencyCode
+          )
 
       // Navigate to scene to have user enter amount
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
-        headerTitle: isBuy ? sprintf(lstrings.buy_1s, currencyCode) : sprintf(lstrings.sell_1s, currencyCode),
+        headerTitle: isBuy
+          ? sprintf(lstrings.buy_1s, currencyCode)
+          : sprintf(lstrings.sell_1s, currencyCode),
         initState: {
           value1: initialValue1,
-          statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }
+          statusText:
+            initialValue1 == null
+              ? { content: lstrings.enter_amount_label }
+              : { content: '' }
         },
-        label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
+        label1: sprintf(
+          lstrings.fiat_plugin_amount_currencycode,
+          displayFiatCurrencyCode
+        ),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         swapInputLocations: requireCrypto,
         async onChangeText() {},
@@ -282,13 +385,24 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const getMaxQuoteOrError = async (
             fieldNum: number,
             quoteValue: string
-          ): Promise<{ value1: string; value2: string } | ConvertValueInternalResult | undefined> => {
+          ): Promise<
+            | { value1: string; value2: string }
+            | ConvertValueInternalResult
+            | undefined
+          > => {
             // First try getting a quote using the requested value
-            const result = await enterAmount.convertValueInternal(fieldNum, quoteValue, stateManager)
+            const result = await enterAmount.convertValueInternal(
+              fieldNum,
+              quoteValue,
+              stateManager
+            )
             if (result.bestError?.quoteError != null) {
               const { quoteError } = result.bestError
               // We're only interested in overLimit errors to help find the max value
-              if (quoteError.errorType === 'overLimit' && quoteError.errorAmount != null) {
+              if (
+                quoteError.errorType === 'overLimit' &&
+                quoteError.errorAmount != null
+              ) {
                 const { errorAmount, displayCurrencyCode } = quoteError
 
                 // We can only get a new quote if the displayCurrencyCode is specified since
@@ -298,14 +412,22 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
                     // Re-query for a quote using the error amount as a fiat value which is fieldNum=1.
                     // This 'should' succeed since the API told us this is the max value.
                     const value1 = String(errorAmount)
-                    const value2 = await enterAmount.convertValue(1, value1, stateManager)
+                    const value2 = await enterAmount.convertValue(
+                      1,
+                      value1,
+                      stateManager
+                    )
                     if (value2 == null) return
                     return { value1, value2 }
                   } else if (displayCurrencyCode === currencyCode) {
                     // Re-query for a quote using the error amount as a crypto value which is fieldNum=2.
                     // This 'should' succeed since the API told us this is the max value.
                     const value2 = String(errorAmount)
-                    const value1 = await enterAmount.convertValue(2, value2, stateManager)
+                    const value1 = await enterAmount.convertValue(
+                      2,
+                      value2,
+                      stateManager
+                    )
                     if (value1 == null) return
                     return { value1, value2 }
                   }
@@ -346,7 +468,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             if (publicAddress == null) {
               stateManager.update({
                 statusText: {
-                  content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode),
+                  content: sprintf(
+                    lstrings.fiat_plugin_max_sell_quote_error_1s,
+                    currencyCode
+                  ),
                   textType: 'error'
                 }
               })
@@ -355,7 +480,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               tokenId,
               spendTargets: [{ publicAddress }]
             })
-            const multiplier = getCurrencyCodeMultiplier(coreWallet.currencyConfig, currencyCode)
+            const multiplier = getCurrencyCodeMultiplier(
+              coreWallet.currencyConfig,
+              currencyCode
+            )
             const exchangeAmount = div(maxAmount, multiplier, multiplier.length)
 
             const result = await getMaxQuoteOrError(2, exchangeAmount)
@@ -381,8 +509,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         },
 
         async convertValue(sourceFieldNum, value, stateManager) {
-          const out = await enterAmount.convertValueInternal(sourceFieldNum, value, stateManager)
-          if (out.stateManagerUpdate != null) stateManager.update(out.stateManagerUpdate)
+          const out = await enterAmount.convertValueInternal(
+            sourceFieldNum,
+            value,
+            stateManager
+          )
+          if (out.stateManagerUpdate != null)
+            stateManager.update(out.stateManagerUpdate)
           return out.value
         },
 
@@ -460,7 +593,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
                 // For lack of a better algo, choose the first pluginPromotion
                 const pluginPromotion = pluginPromotions[0] // providerIds is actually "promoProviderIds" and are linked
                 const providerIds = pluginPromotion?.providerIds ?? []
-                promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+                promoCode = providerIds.some(pid => pid === p.providerId)
+                  ? pluginPromotion?.promoCode
+                  : undefined
               }
               return await p.getQuote({ ...quoteParams, promoCode })
             })
@@ -476,11 +611,18 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
-            if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.providerId] <= 0) continue
+            if (
+              providerPriority[pluginId] != null &&
+              providerPriority[pluginId][quote.providerId] <= 0
+            )
+              continue
             goodQuotes.push(quote)
           }
 
-          const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
+          const noQuoteText =
+            direction === 'buy'
+              ? lstrings.fiat_plugin_buy_no_quote
+              : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
             const fpQuoteErrors = errors.map(error => {
@@ -490,7 +632,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               return error as FiatProviderQuoteError
             })
 
-            const bestError = getBestError(fpQuoteErrors, sourceFieldCurrencyCode, direction)
+            const bestError = getBestError(
+              fpQuoteErrors,
+              sourceFieldCurrencyCode,
+              direction
+            )
             return {
               bestError,
               stateManagerUpdate: {
@@ -512,7 +658,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
 
-          const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+          const exchangeRateText = getRateFromQuote(
+            bestQuote,
+            displayFiatCurrencyCode
+          )
 
           const out: ConvertValueInternalResult = {
             stateManagerUpdate: {
@@ -539,12 +688,16 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             let text
             if (lastSourceFieldNum === 1) {
               // User entered a fiat value. Show the crypto value per partner
-              const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
+              const localeAmount = formatNumber(
+                toFixed(quote.cryptoAmount, 0, 6)
+              )
               text = `(${localeAmount} ${quote.displayCurrencyCode})`
             } else {
               // User entered a crypto value. Show the fiat value per partner
               const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
-              text = `(${localeAmount} ${removeIsoPrefix(quote.fiatCurrencyCode)})`
+              text = `(${localeAmount} ${removeIsoPrefix(
+                quote.fiatCurrencyCode
+              )})`
             }
             const out = {
               text,
@@ -562,11 +715,16 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           // 2. Set the best quote to the one chosen by user (if any is chosen)
           if (rowName != null && rowName !== bestQuote.pluginDisplayName) {
-            bestQuote = goodQuotes.find(quote => quote.pluginDisplayName === rowName)
+            bestQuote = goodQuotes.find(
+              quote => quote.pluginDisplayName === rowName
+            )
             if (bestQuote == null) return
 
             // 3. Set the status text and powered by
-            const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+            const statusText = getRateFromQuote(
+              bestQuote,
+              displayFiatCurrencyCode
+            )
             stateManager.update({
               statusText: { content: statusText },
               poweredBy: {
@@ -575,7 +733,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               }
             })
 
-            logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
+            logEvent(
+              isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider'
+            )
 
             if (lastSourceFieldNum === 1) {
               stateManager.update({ value2: bestQuote.cryptoAmount })
@@ -593,10 +753,17 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           if (isLightAccount && isBuy) {
             const quoteFiatCurrencyCode = bestQuote.fiatCurrencyCode
 
-            if (initialValue1 != null && gt(bestQuote.fiatAmount, initialValue1)) {
+            if (
+              initialValue1 != null &&
+              gt(bestQuote.fiatAmount, initialValue1)
+            ) {
               stateManager.update({
                 statusText: {
-                  content: sprintf(lstrings.fiat_plugin_purchase_limit_error_2s, initialValue1, removeIsoPrefix(quoteFiatCurrencyCode)),
+                  content: sprintf(
+                    lstrings.fiat_plugin_purchase_limit_error_2s,
+                    initialValue1,
+                    removeIsoPrefix(quoteFiatCurrencyCode)
+                  ),
                   textType: 'error'
                 }
               })
@@ -618,7 +785,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 // showing the quotes.
 // TODO: conflict: also defines whether or not to accept a quote from the
 // provider
-export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap, pluginPromotions: PluginPromotion[] = []): PriorityArray => {
+export const createPriorityArray = (
+  providerPriorityMap?: ProviderPriorityMap,
+  pluginPromotions: PluginPromotion[] = []
+): PriorityArray => {
   const priorityArray: PriorityArray = []
   if (providerPriorityMap != null) {
     // Create a copy of the providerPriorityMap to avoid modifying the original
@@ -666,7 +836,11 @@ export const createPriorityArray = (providerPriorityMap?: ProviderPriorityMap, p
   return priorityArray
 }
 
-export const getBestQuote = (direction: 'buy' | 'sell', quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | undefined => {
+export const getBestQuote = (
+  direction: 'buy' | 'sell',
+  quotes: FiatProviderQuote[],
+  priorityArray: PriorityArray
+): FiatProviderQuote | undefined => {
   let bestQuote
   let bestQuoteRatio = '0'
   for (const p of priorityArray) {

@@ -1,7 +1,10 @@
 import jsrsasign, { hextob64 } from 'jsrsasign'
 
 //
-export const sha512HashAndSign = (verifiableData: string, privateKey: string) => {
+export const sha512HashAndSign = (
+  verifiableData: string,
+  privateKey: string
+) => {
   // Create a SHA-512 hash of the data
   const hashedData = jsrsasign.KJUR.crypto.Util.sha512(verifiableData)
 

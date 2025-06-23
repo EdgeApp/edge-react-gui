@@ -17,7 +17,9 @@ function makeLinkTests(tests: { [uri: string]: DeepLink }): void {
 
 describe('parseDeepLink', function () {
   describe('azteco', () => {
-    expect(parseDeepLink('https://azte.co?c1=a&c2=b', { aztecoApiKey: 'someKey' })).toEqual({
+    expect(
+      parseDeepLink('https://azte.co?c1=a&c2=b', { aztecoApiKey: 'someKey' })
+    ).toEqual({
       type: 'azteco',
       uri: 'https://azte.co/partners/someKey?CODE_1=a&CODE_2=b&ADDRESS='
     })
@@ -25,46 +27,50 @@ describe('parseDeepLink', function () {
 
   describe('requestAddress', () => {
     makeLinkTests({
-      'edge://reqaddr?codes=eth-btc&post=https%3A%2F%2Fbitwage.com&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&payer=bitwage': {
-        type: 'requestAddress',
-        assets: [
-          { nativeCode: 'ETH', tokenCode: 'ETH' },
-          { nativeCode: 'BTC', tokenCode: 'BTC' }
-        ],
-        post: 'https://bitwage.com',
-        redir: 'https://bitwage.com/getaddr',
-        payer: 'bitwage'
-      },
-      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr': {
-        type: 'requestAddress',
-        assets: [
-          { nativeCode: 'ETH', tokenCode: 'ETH' },
-          { nativeCode: 'BTC', tokenCode: 'BTC' }
-        ],
-        post: undefined,
-        redir: 'https://bitwage.com/getaddr',
-        payer: undefined
-      },
-      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%2F': {
-        type: 'requestAddress',
-        assets: [
-          { nativeCode: 'ETH', tokenCode: 'ETH' },
-          { nativeCode: 'BTC', tokenCode: 'BTC' }
-        ],
-        post: undefined,
-        redir: 'https://bitwage.com/getaddr/',
-        payer: undefined
-      },
-      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%3F': {
-        type: 'requestAddress',
-        assets: [
-          { nativeCode: 'ETH', tokenCode: 'ETH' },
-          { nativeCode: 'BTC', tokenCode: 'BTC' }
-        ],
-        post: undefined,
-        redir: 'https://bitwage.com/getaddr?',
-        payer: undefined
-      },
+      'edge://reqaddr?codes=eth-btc&post=https%3A%2F%2Fbitwage.com&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&payer=bitwage':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'ETH' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' }
+          ],
+          post: 'https://bitwage.com',
+          redir: 'https://bitwage.com/getaddr',
+          payer: 'bitwage'
+        },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'ETH' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' }
+          ],
+          post: undefined,
+          redir: 'https://bitwage.com/getaddr',
+          payer: undefined
+        },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%2F':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'ETH' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' }
+          ],
+          post: undefined,
+          redir: 'https://bitwage.com/getaddr/',
+          payer: undefined
+        },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%3F':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'ETH' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' }
+          ],
+          post: undefined,
+          redir: 'https://bitwage.com/getaddr?',
+          payer: undefined
+        },
       'edge://reqaddr?codes=eth&post=https%3A%2F%2Fbitwage.com': {
         type: 'requestAddress',
         assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
@@ -79,31 +85,34 @@ describe('parseDeepLink', function () {
         redir: 'https://bitwage.com/getaddr',
         payer: undefined
       },
-      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%3FnoValueQuery': {
-        type: 'requestAddress',
-        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
-        post: undefined,
-        redir: 'https://bitwage.com?noValueQuery',
-        payer: undefined
-      },
-      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&post=https%3A%2F%2Fbitwage.com': {
-        type: 'requestAddress',
-        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
-        post: 'https://bitwage.com',
-        redir: 'https://bitwage.com/getaddr',
-        payer: undefined
-      },
-      'edge://reqaddr?codes=ETH_usdc-BTC-DOGE_DOGE&redir=https://bitwage.com/getaddr%3Frequestid%3D123&payer=bitwage&post=https%3A%2F%2Fbitwage.com': {
-        type: 'requestAddress',
-        assets: [
-          { nativeCode: 'ETH', tokenCode: 'USDC' },
-          { nativeCode: 'BTC', tokenCode: 'BTC' },
-          { nativeCode: 'DOGE', tokenCode: 'DOGE' }
-        ],
-        post: 'https://bitwage.com',
-        redir: 'https://bitwage.com/getaddr?requestid=123',
-        payer: 'bitwage'
-      },
+      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%3FnoValueQuery':
+        {
+          type: 'requestAddress',
+          assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+          post: undefined,
+          redir: 'https://bitwage.com?noValueQuery',
+          payer: undefined
+        },
+      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&post=https%3A%2F%2Fbitwage.com':
+        {
+          type: 'requestAddress',
+          assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+          post: 'https://bitwage.com',
+          redir: 'https://bitwage.com/getaddr',
+          payer: undefined
+        },
+      'edge://reqaddr?codes=ETH_usdc-BTC-DOGE_DOGE&redir=https://bitwage.com/getaddr%3Frequestid%3D123&payer=bitwage&post=https%3A%2F%2Fbitwage.com':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'USDC' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' },
+            { nativeCode: 'DOGE', tokenCode: 'DOGE' }
+          ],
+          post: 'https://bitwage.com',
+          redir: 'https://bitwage.com/getaddr?requestid=123',
+          payer: 'bitwage'
+        },
       'reqaddr://?codes=ETH_usdc-BTC-DOGE_DOGE-LTC-ETH_UNI&post=https%3A%2F%2Fbitwage.com&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%3Frequestid%3D123%26otherquery':
         {
           type: 'requestAddress',
@@ -142,7 +151,9 @@ describe('parseDeepLink', function () {
     })
 
     it('Wrong host', () => {
-      const result = parseDeepLink('reqaddr://?codes=eth&post=https%3A%2F%2Fjgiugdfigfdiudhfd.com')
+      const result = parseDeepLink(
+        'reqaddr://?codes=eth&post=https%3A%2F%2Fjgiugdfigfdiudhfd.com'
+      )
       expect(result.type).toBe('requestAddress')
     })
   })
@@ -221,13 +232,14 @@ describe('parseDeepLink', function () {
 
   describe('fiatPlugin', function () {
     makeLinkTests({
-      'https://deep.edge.app/plugin/creditcard/buy/moonpay/applepay/rabbit/hole?param=alice': {
-        type: 'fiatPlugin',
-        pluginId: 'creditcard',
-        providerId: 'moonpay',
-        direction: 'buy',
-        paymentType: 'applepay'
-      }
+      'https://deep.edge.app/plugin/creditcard/buy/moonpay/applepay/rabbit/hole?param=alice':
+        {
+          type: 'fiatPlugin',
+          pluginId: 'creditcard',
+          providerId: 'moonpay',
+          direction: 'buy',
+          paymentType: 'applepay'
+        }
     })
   })
   describe('fiatProvider', function () {

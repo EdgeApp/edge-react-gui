@@ -1,5 +1,10 @@
 import { asBoolean, asObject, asString } from 'cleaners'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -7,10 +12,19 @@ import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
-import { exportTransactionsToBitwave, exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
+import {
+  exportTransactionsToBitwave,
+  exportTransactionsToCSV,
+  exportTransactionsToQBO,
+  updateTxsFiat
+} from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  getExchangeDenomByCurrencyCode,
+  selectDisplayDenomByCurrencyCode
+} from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
@@ -49,7 +63,11 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateTxsFiatDispatch: (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) => void
+  updateTxsFiatDispatch: (
+    wallet: EdgeCurrencyWallet,
+    currencyCode: string,
+    txs: EdgeTransaction[]
+  ) => void
 }
 
 type Props = StateProps & OwnProps & ThemeProps & DispatchProps
@@ -76,15 +94,32 @@ const asExportTxInfoMap = asObject(asExportTxInfo)
 type ExportTxInfoMap = ReturnType<typeof asExportTxInfoMap>
 type ExportTxInfo = ReturnType<typeof asExportTxInfo>
 
-class TransactionsExportSceneComponent extends React.PureComponent<Props, State> {
+class TransactionsExportSceneComponent extends React.PureComponent<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
     let lastYear = 0
     if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.state = {
-      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
-      endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
+      startDate: new Date(
+        new Date().getFullYear() - lastYear,
+        lastMonth.getMonth(),
+        1,
+        0,
+        0,
+        0
+      ),
+      endDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1,
+        0,
+        0,
+        0
+      ),
       isExportQbo: false,
       isExportCsv: true,
       isExportBitwave: false
@@ -93,7 +128,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   setThisMonth = () => {
     this.setState({
-      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
+      startDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1,
+        0,
+        0,
+        0
+      ),
       endDate: new Date()
     })
   }
@@ -103,8 +145,22 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     let lastYear = 0
     if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.setState({
-      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
-      endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
+      startDate: new Date(
+        new Date().getFullYear() - lastYear,
+        lastMonth.getMonth(),
+        1,
+        0,
+        0,
+        0
+      ),
+      endDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1,
+        0,
+        0,
+        0
+      )
     })
   }
 
@@ -115,9 +171,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       const { disklet } = sourceWallet
       const result = await disklet.getText(EXPORT_TX_INFO_FILE)
       const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-      const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+      const tokenCurrencyCode =
+        tokenId ?? sourceWallet.currencyInfo.currencyCode
 
-      const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenCurrencyCode]
+      const { isExportBitwave, isExportCsv, isExportQbo } =
+        exportTxInfoMap[tokenCurrencyCode]
 
       this.setState({
         isExportBitwave,
@@ -125,12 +183,15 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         isExportQbo
       })
     } catch (e) {
-      console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
+      console.log(
+        `Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`
+      )
     }
   }
 
   render() {
-    const { startDate, endDate, isExportBitwave, isExportCsv, isExportQbo } = this.state
+    const { startDate, endDate, isExportBitwave, isExportCsv, isExportQbo } =
+      this.state
     const { theme, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const iconSize = theme.rem(1.25)
@@ -143,14 +204,43 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     return (
       <SceneWrapper scroll>
         <SettingsRow label={walletName} onPress={() => undefined} />
-        <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_date_range} />
-        <SettingsRow label={lstrings.export_transaction_this_month} onPress={this.setThisMonth} />
-        <SettingsRow label={lstrings.export_transaction_last_month} onPress={this.setLastMonth} />
-        <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
-        <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
-        <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
+        <SettingsHeaderRow
+          icon={
+            <EntypoIcon name="calendar" color={theme.icon} size={iconSize} />
+          }
+          label={lstrings.export_transaction_date_range}
+        />
+        <SettingsRow
+          label={lstrings.export_transaction_this_month}
+          onPress={this.setThisMonth}
+        />
+        <SettingsRow
+          label={lstrings.export_transaction_last_month}
+          onPress={this.setLastMonth}
+        />
+        <SettingsLabelRow
+          label={lstrings.string_start}
+          right={startDateString}
+          onPress={this.handleStartDate}
+        />
+        <SettingsLabelRow
+          label={lstrings.string_end}
+          right={endDateString}
+          onPress={this.handleEndDate}
+        />
+        <SettingsHeaderRow
+          icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />}
+          label={lstrings.export_transaction_export_type}
+        />
         {this.renderSwitches()}
-        {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={[3, 0, 1]} onPress={this.handleSubmit} type="secondary" />}
+        {disabledExport ? null : (
+          <MainButton
+            label={lstrings.string_export}
+            marginRem={[3, 0, 1]}
+            onPress={this.handleSubmit}
+            type="secondary"
+          />
+        )}
       </SceneWrapper>
     )
   }
@@ -159,22 +249,38 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsSwitchRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
-        <SettingsSwitchRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
-        <SettingsSwitchRow label={lstrings.export_transaction_bitwave_csv} value={isExportBitwave} onPress={this.handleBitwaveToggle} />
+        <SettingsSwitchRow
+          label={lstrings.export_transaction_quickbooks_qbo}
+          value={isExportQbo}
+          onPress={this.handleQboToggle}
+        />
+        <SettingsSwitchRow
+          label={lstrings.export_transaction_csv}
+          value={isExportCsv}
+          onPress={this.handleCsvToggle}
+        />
+        <SettingsSwitchRow
+          label={lstrings.export_transaction_bitwave_csv}
+          value={isExportBitwave}
+          onPress={this.handleBitwaveToggle}
+        />
       </>
     )
   }
 
   handleStartDate = async () => {
     const { startDate } = this.state
-    const date = await Airship.show<Date>(bridge => <DateModal bridge={bridge} initialValue={startDate} />)
+    const date = await Airship.show<Date>(bridge => (
+      <DateModal bridge={bridge} initialValue={startDate} />
+    ))
     this.setState({ startDate: date })
   }
 
   handleEndDate = async () => {
     const { endDate } = this.state
-    const date = await Airship.show<Date>(bridge => <DateModal bridge={bridge} initialValue={endDate} />)
+    const date = await Airship.show<Date>(bridge => (
+      <DateModal bridge={bridge} initialValue={endDate} />
+    ))
     this.setState({ endDate: date })
   }
 
@@ -191,9 +297,17 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   handleSubmit = async (): Promise<void> => {
-    const { account, defaultIsoFiat, exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
+    const {
+      account,
+      defaultIsoFiat,
+      exchangeMultiplier,
+      multiplier,
+      parentMultiplier,
+      route
+    } = this.props
     const { sourceWallet, currencyCode } = route.params
-    const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
+    const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } =
+      this.state
     const { tokenId } = this.props
     const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
@@ -204,7 +318,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
       exportTxInfo = exportTxInfoMap[tokenCurrencyCode]
     } catch (e) {
-      console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
+      console.log(
+        `Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`
+      )
     }
 
     let accountId = ''
@@ -218,8 +334,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
             autoCorrect={false}
             bridge={bridge}
             initialValue={fileAccountId}
-            inputLabel={lstrings.export_transaction_bitwave_accountid_modal_input_label}
-            message={lstrings.export_transaction_bitwave_accountid_modal_message}
+            inputLabel={
+              lstrings.export_transaction_bitwave_accountid_modal_input_label
+            }
+            message={
+              lstrings.export_transaction_bitwave_accountid_modal_message
+            }
             returnKeyType="next"
             submitLabel={lstrings.string_next_capitalized}
             title={lstrings.export_transaction_bitwave_accountid_modal_title}
@@ -242,7 +362,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         isExportQbo,
         isExportCsv
       }
-      await sourceWallet.disklet.setText(EXPORT_TX_INFO_FILE, JSON.stringify(exportTxInfoMap))
+      await sourceWallet.disklet.setText(
+        EXPORT_TX_INFO_FILE,
+        JSON.stringify(exportTxInfoMap)
+      )
     }
 
     if (startDate.getTime() > endDate.getTime()) {
@@ -255,7 +378,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const walletName = getWalletName(sourceWallet)
 
     const fullCurrencyCode =
-      sourceWallet.currencyInfo.currencyCode === currencyCode ? currencyCode : `${sourceWallet.currencyInfo.currencyCode}-${currencyCode}`
+      sourceWallet.currencyInfo.currencyCode === currencyCode
+        ? currencyCode
+        : `${sourceWallet.currencyInfo.currencyCode}-${currencyCode}`
 
     const dateString =
       now.getFullYear().toString() +
@@ -290,7 +415,13 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await exportTransactionsToCSV(sourceWallet, defaultIsoFiat, txs, currencyCode, multiplier)
+    const csvFile = await exportTransactionsToCSV(
+      sourceWallet,
+      defaultIsoFiat,
+      txs,
+      currencyCode,
+      multiplier
+    )
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showToast(lstrings.export_transaction_export_error)
       return
@@ -306,7 +437,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await exportTransactionsToQBO(txs, defaultIsoFiat, multiplier)
+      const qboFile = await exportTransactionsToQBO(
+        txs,
+        defaultIsoFiat,
+        multiplier
+      )
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',
@@ -316,7 +451,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportBitwave) {
-      const bitwaveFile = await exportTransactionsToBitwave(sourceWallet, accountId, txs, currencyCode, exchangeMultiplier, parentMultiplier)
+      const bitwaveFile = await exportTransactionsToBitwave(
+        sourceWallet,
+        accountId,
+        txs,
+        currencyCode,
+        exchangeMultiplier,
+        parentMultiplier
+      )
       files.push({
         contents: bitwaveFile,
         mimeType: 'text/comma-separated-values',
@@ -340,7 +482,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       for (const file of files) {
         const url = `file://${directory}/${file.fileName}`
         urls.push(url)
-        await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+        await RNFS.writeFile(
+          `${directory}/${file.fileName}`,
+          file.contents,
+          'utf8'
+        )
       }
 
       await Share.open({
@@ -362,7 +508,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     for (const file of files) {
       const url = `file://${directory}/${file.fileName}`
       urls.push(url)
-      await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+      await RNFS.writeFile(
+        `${directory}/${file.fileName}`,
+        file.contents,
+        'utf8'
+      )
     }
 
     await Share.open({
@@ -374,17 +524,36 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 }
 
-export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnProps>(
+export const TransactionsExportScene = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   (state, { route: { params } }) => ({
     account: state.core.account,
     defaultIsoFiat: state.ui.settings.defaultIsoFiat,
-    exchangeMultiplier: getExchangeDenomByCurrencyCode(params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
-    multiplier: selectDisplayDenomByCurrencyCode(state, params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
-    parentMultiplier: getExchangeDenom(params.sourceWallet.currencyConfig, null).multiplier,
-    tokenId: getTokenIdForced(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
+    exchangeMultiplier: getExchangeDenomByCurrencyCode(
+      params.sourceWallet.currencyConfig,
+      params.currencyCode
+    ).multiplier,
+    multiplier: selectDisplayDenomByCurrencyCode(
+      state,
+      params.sourceWallet.currencyConfig,
+      params.currencyCode
+    ).multiplier,
+    parentMultiplier: getExchangeDenom(params.sourceWallet.currencyConfig, null)
+      .multiplier,
+    tokenId: getTokenIdForced(
+      state.core.account,
+      params.sourceWallet.currencyInfo.pluginId,
+      params.currencyCode
+    )
   }),
   dispatch => ({
-    updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>
-      await dispatch(updateTxsFiat(wallet, currencyCode, txs))
+    updateTxsFiatDispatch: async (
+      wallet: EdgeCurrencyWallet,
+      currencyCode: string,
+      txs: EdgeTransaction[]
+    ) => await dispatch(updateTxsFiat(wallet, currencyCode, txs))
   })
 )(withTheme(TransactionsExportSceneComponent))

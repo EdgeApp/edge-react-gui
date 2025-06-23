@@ -33,7 +33,12 @@ export const SectionView = (props: Props): React.ReactElement | null => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const margin = marginRem != null ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)) : extendRight ? styles.marginScene : styles.marginCard
+  const margin =
+    marginRem != null
+      ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+      : extendRight
+      ? styles.marginScene
+      : styles.marginCard
 
   const nonNullChildren = React.Children.map(children, child => {
     if (child != null) {
@@ -54,7 +59,10 @@ export const SectionView = (props: Props): React.ReactElement | null => {
               return (
                 <>
                   {child}
-                  <DividerLineUi4 marginRem={dividerMarginRem} extendRight={extendRight} />
+                  <DividerLineUi4
+                    marginRem={dividerMarginRem}
+                    extendRight={extendRight}
+                  />
                 </>
               )
             }

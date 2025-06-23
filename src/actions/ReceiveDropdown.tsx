@@ -6,7 +6,10 @@ import { sprintf } from 'sprintf-js'
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../selectors/DenominationSelectors'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -19,7 +22,10 @@ let receiveDropdownShowing = false
 /**
  * Shows a drop-down alert for an incoming transaction.
  */
-export function showReceiveDropdown(navigation: NavigationBase, transaction: EdgeTransaction): ThunkAction<void> {
+export function showReceiveDropdown(
+  navigation: NavigationBase,
+  transaction: EdgeTransaction
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const { currencyCode, nativeAmount, tokenId, walletId } = transaction
 
@@ -36,18 +42,32 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
 
     // Check the spam limits:
     const { spamFilterOn } = state.ui.settings
-    const exchangeRate = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const exchangeRate = getExchangeRate(
+      state,
+      currencyCode,
+      isoFiatCurrencyCode
+    )
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
     const spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
-    if (spamFilterOn && (exchangeRate === 0 || lt(nativeAmount, spamThreshold))) {
+    if (
+      spamFilterOn &&
+      (exchangeRate === 0 || lt(nativeAmount, spamThreshold))
+    ) {
       return
     }
 
     // Format the message:
-    const displayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+    const displayDenomination = selectDisplayDenom(
+      state,
+      wallet.currencyConfig,
+      tokenId
+    )
     const { symbol, name, multiplier } = displayDenomination
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
-    const message = sprintf(lstrings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+    const message = sprintf(
+      lstrings.bitcoin_received,
+      `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`
+    )
 
     // Display the dropdown:
     receiveDropdownShowing = true

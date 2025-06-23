@@ -1,12 +1,19 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
+import LinearGradient, {
+  LinearGradientProps
+} from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionView } from '../layout/SectionView'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -97,34 +104,63 @@ export const EdgeCard = (props: Props) => {
       await onClose()
     }
   })
-  const imageSrc = React.useMemo(() => (typeof icon === 'string' ? { uri: icon } : { uri: '' }), [icon])
-  const viewStyle = React.useMemo(() => [styles.cardContainer, margin, padding, fillStyle], [styles.cardContainer, margin, padding, fillStyle])
+  const imageSrc = React.useMemo(
+    () => (typeof icon === 'string' ? { uri: icon } : { uri: '' }),
+    [icon]
+  )
+  const viewStyle = React.useMemo(
+    () => [styles.cardContainer, margin, padding, fillStyle],
+    [styles.cardContainer, margin, padding, fillStyle]
+  )
 
-  const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
+  const nonNullChildren = React.Children.toArray(children).filter(
+    child => child != null && React.isValidElement(child)
+  )
   if (nonNullChildren.length === 0) return null
 
   const background = (
     <View style={styles.backgroundFill}>
       {nodeBackground}
-      {gradientBackground == null ? null : <LinearGradient {...gradientBackground} style={StyleSheet.absoluteFill} />}
+      {gradientBackground == null ? null : (
+        <LinearGradient
+          {...gradientBackground}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
     </View>
   )
 
   const maybeIcon =
     icon == null ? null : (
-      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={imageSrc} style={styles.iconBuiltin} /> : icon}</View>
+      <View style={styles.iconContainer}>
+        {typeof icon === 'string' ? (
+          <FastImage source={imageSrc} style={styles.iconBuiltin} />
+        ) : (
+          icon
+        )}
+      </View>
     )
 
   const content = sections ? <SectionView>{children}</SectionView> : children
 
   const maybeCloseButton =
     onClose == null ? null : (
-      <EdgeTouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
-        <AntDesignIcon color={theme.primaryText} name="close" size={theme.rem(1.25)} />
+      <EdgeTouchableOpacity
+        style={styles.cornerContainer}
+        onPress={handleClose}
+      >
+        <AntDesignIcon
+          color={theme.primaryText}
+          name="close"
+          size={theme.rem(1.25)}
+        />
       </EdgeTouchableOpacity>
     )
 
-  const maybeOverlay = overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>
+  const maybeOverlay =
+    overlay == null ? null : (
+      <View style={styles.overlayContainer}>{overlay}</View>
+    )
 
   const allContent =
     icon == null ? (
@@ -147,7 +183,13 @@ export const EdgeCard = (props: Props) => {
     )
 
   return isPressable ? (
-    <EdgeTouchableOpacity accessible={false} testID={testID} style={viewStyle} onPress={handlePress} onLongPress={handleLongPress}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      testID={testID}
+      style={viewStyle}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+    >
       {allContent}
     </EdgeTouchableOpacity>
   ) : (

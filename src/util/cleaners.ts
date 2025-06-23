@@ -1,4 +1,11 @@
-import { asEither, asMaybe, asObject, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asEither,
+  asMaybe,
+  asObject,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 /**
  * Accepts strings that are valid numbers according to biggystring.
@@ -27,7 +34,10 @@ export const asMaybeContractLocation = asMaybe(
   })
 )
 
-export const asObjectIn = <K extends string | number | symbol, T>(asKey: Cleaner<K>, asT: Cleaner<T>): Cleaner<{ [k in K]: T }> => {
+export const asObjectIn = <K extends string | number | symbol, T>(
+  asKey: Cleaner<K>,
+  asT: Cleaner<T>
+): Cleaner<{ [k in K]: T }> => {
   return function asObject(raw) {
     if (typeof raw !== 'object' || raw == null) {
       throw new TypeError('Expected an object, got ' + showValue(raw))
@@ -48,8 +58,10 @@ export const asObjectIn = <K extends string | number | symbol, T>(asKey: Cleaner
   }
 }
 
-export const asObjectInOrTrue = <K extends string | number | symbol, T>(asKey: Cleaner<K>, asT: Cleaner<T>) =>
-  asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
+export const asObjectInOrTrue = <K extends string | number | symbol, T>(
+  asKey: Cleaner<K>,
+  asT: Cleaner<T>
+) => asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
 
 // -----------------------------------------------------------------------------
 // Internal functions taken from `cleaners` package
@@ -95,7 +107,10 @@ function locateError(error: unknown, step: string, offset: number): unknown {
       error.insertStepAt = error.message.length
     }
     // @ts-expect-error
-    error.message = error.message.slice(0, error.insertStepAt) + step + error.message.slice(error.insertStepAt)
+    error.message =
+      error.message.slice(0, error.insertStepAt) +
+      step +
+      error.message.slice(error.insertStepAt)
     // @ts-expect-error
     error.insertStepAt += offset
   }

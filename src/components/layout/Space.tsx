@@ -2,7 +2,11 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
+import {
+  MarginRemProps,
+  MarginRemStyle,
+  useMarginRemStyle
+} from '../../hooks/useMarginRemStyle'
 
 export interface SpaceProps extends MarginRemProps {
   // Single-sided:
@@ -50,12 +54,34 @@ export interface SpaceProps extends MarginRemProps {
   row?: boolean
 }
 
-type SpaceStyle = Pick<ViewStyle, 'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'> & MarginRemStyle
+type SpaceStyle = Pick<
+  ViewStyle,
+  'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'
+> &
+  MarginRemStyle
 
 export const Space = React.memo((props: SpaceProps) => {
   const { children } = props
-  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, row = false } = props
-  const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
+  const {
+    aroundRem,
+    horizontalRem,
+    verticalRem,
+    topRem,
+    bottomRem,
+    leftRem,
+    rightRem,
+    expand = false,
+    row = false
+  } = props
+  const {
+    alignBottom,
+    alignLeft,
+    alignRight,
+    alignTop,
+    alignCenter,
+    alignHorizontal,
+    alignVertical
+  } = props
 
   const topFill = boolify(alignBottom, alignVertical, alignCenter)
   const bottomFill = boolify(alignTop, alignVertical, alignCenter)
@@ -77,10 +103,26 @@ export const Space = React.memo((props: SpaceProps) => {
   const flexDirection = row ? 'row' : 'column'
 
   // Alignment:
-  const horizontalAlignment = leftFill && rightFill ? 'center' : rightFill ? 'flex-start' : leftFill ? 'flex-end' : undefined
-  const verticalAlignment = topFill && bottomFill ? 'center' : bottomFill ? 'flex-start' : topFill ? 'flex-end' : undefined
+  const horizontalAlignment =
+    leftFill && rightFill
+      ? 'center'
+      : rightFill
+      ? 'flex-start'
+      : leftFill
+      ? 'flex-end'
+      : undefined
+  const verticalAlignment =
+    topFill && bottomFill
+      ? 'center'
+      : bottomFill
+      ? 'flex-start'
+      : topFill
+      ? 'flex-end'
+      : undefined
   const alignItems = row ? verticalAlignment : horizontalAlignment
-  const justifyContent = row ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
+  const justifyContent = row
+    ? horizontalAlignment ?? (expand ? 'space-between' : undefined)
+    : verticalAlignment
 
   // Flex:
   const alignSelf = expand ? 'stretch' : undefined
@@ -95,7 +137,14 @@ export const Space = React.memo((props: SpaceProps) => {
       justifyContent,
       ...marginRemStyle
     }),
-    [alignItems, alignSelf, flexDirection, flexGrow, justifyContent, marginRemStyle]
+    [
+      alignItems,
+      alignSelf,
+      flexDirection,
+      flexGrow,
+      justifyContent,
+      marginRemStyle
+    ]
   )
 
   return <View style={spaceStyle}>{children}</View>

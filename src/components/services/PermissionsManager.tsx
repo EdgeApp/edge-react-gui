@@ -1,13 +1,26 @@
 import { Disklet } from 'disklet'
 import * as React from 'react'
-import { check, checkMultiple, openSettings, PermissionStatus, request } from 'react-native-permissions'
+import {
+  check,
+  checkMultiple,
+  openSettings,
+  PermissionStatus,
+  request
+} from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
-import { SETTINGS_PERMISSION_LIMITS, SETTINGS_PERMISSION_QUANTITY } from '../../constants/constantSettings'
+import {
+  SETTINGS_PERMISSION_LIMITS,
+  SETTINGS_PERMISSION_QUANTITY
+} from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
-import { Permission, permissionNames, PermissionsState } from '../../reducers/PermissionsReducer'
+import {
+  Permission,
+  permissionNames,
+  PermissionsState
+} from '../../reducers/PermissionsReducer'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
@@ -35,8 +48,11 @@ export const PermissionsManager = () => {
  * If toggled on, will request permissions if system-level contacts permissions
  * are not granted. If toggled off, will open system settings.
  */
-export async function requestContactsPermission(contactsPermissionOn: boolean): Promise<boolean> {
-  const currentContactsPermissionOn = (await check(permissionNames.contacts)) === 'granted'
+export async function requestContactsPermission(
+  contactsPermissionOn: boolean
+): Promise<boolean> {
+  const currentContactsPermissionOn =
+    (await check(permissionNames.contacts)) === 'granted'
 
   if (contactsPermissionOn && !currentContactsPermissionOn) {
     // Initial prompt to inform the reason of the permissions request.
@@ -44,7 +60,10 @@ export async function requestContactsPermission(contactsPermissionOn: boolean): 
     // regardless of the prior permissions state.
     await request(permissionNames.contacts, {
       title: lstrings.contacts_permission_modal_title,
-      message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
+      message: sprintf(
+        lstrings.contacts_permission_modal_body_1,
+        config.appName
+      ),
       buttonPositive: lstrings.string_allow,
       buttonNegative: lstrings.string_deny
     })
@@ -69,17 +88,25 @@ export async function requestContactsPermission(contactsPermissionOn: boolean): 
  * Checks permission and attempts to request permissions (only if checked
  * permission was 'denied')
  */
-export async function checkAndRequestPermission(data: Permission): Promise<PermissionStatus> {
+export async function checkAndRequestPermission(
+  data: Permission
+): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(permissionNames[data])
 
   if (status === 'denied') return await request(permissionNames[data])
   else return status
 }
 
-export const checkIfDenied = (status: PermissionStatus) => status === 'blocked' || status === 'denied' || status === 'unavailable'
+export const checkIfDenied = (status: PermissionStatus) =>
+  status === 'blocked' || status === 'denied' || status === 'unavailable'
 
 // Returns true if denied, false if accepted
-export async function requestPermissionOnSettings(disklet: Disklet, data: Permission, name: string, mandatory: boolean): Promise<boolean> {
+export async function requestPermissionOnSettings(
+  disklet: Disklet,
+  data: Permission,
+  name: string,
+  mandatory: boolean
+): Promise<boolean> {
   const permissionLimits = await disklet
     .getText(SETTINGS_PERMISSION_LIMITS)
     .then(text => JSON.parse(text))
@@ -87,7 +114,8 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
   const permissionLimit = permissionLimits[data] ?? 0
 
   // Check to ignore the permission checks if not mandatory and already past the limit
-  if (!mandatory && permissionLimit >= SETTINGS_PERMISSION_QUANTITY) return false
+  if (!mandatory && permissionLimit >= SETTINGS_PERMISSION_QUANTITY)
+    return false
 
   const status: PermissionStatus = await check(permissionNames[data])
 
@@ -102,7 +130,14 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
   // User not accepting the permission prior
   if (status === 'blocked') {
-    const isDenied = await Airship.show<boolean>(bridge => <PermissionsSettingModal bridge={bridge} mandatory={mandatory} permission={data} name={name} />)
+    const isDenied = await Airship.show<boolean>(bridge => (
+      <PermissionsSettingModal
+        bridge={bridge}
+        mandatory={mandatory}
+        permission={data}
+        name={name}
+      />
+    ))
 
     if (isDenied) return true
 
@@ -122,10 +157,14 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
   return false
 }
 
-export function setNewPermissions(currentPermissions: PermissionsState): ThunkAction<Promise<void>> {
+export function setNewPermissions(
+  currentPermissions: PermissionsState
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const names: Permission[] = Object.keys(permissionNames) as any[]
-    const devicePermissions = await checkMultiple(names.map(name => permissionNames[name]))
+    const devicePermissions = await checkMultiple(
+      names.map(name => permissionNames[name])
+    )
 
     // Figure out which ones have changed to avoid a pointless dispatch:
     const newPermissions: Partial<PermissionsState> = {}

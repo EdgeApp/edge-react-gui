@@ -7,11 +7,19 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FundAccountModal } from '../components/modals/FundAccountModal'
 import { pickWallet } from '../components/modals/WalletListModal'
-import { Airship, showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
+import {
+  Airship,
+  showError,
+  showToast,
+  showToastSpinner
+} from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { executePlugin, fiatProviderDeeplinkHandler } from '../plugins/gui/fiatPlugin'
+import {
+  executePlugin,
+  fiatProviderDeeplinkHandler
+} from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -40,7 +48,10 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
+export function launchDeepLink(
+  navigation: NavigationBase,
+  link: DeepLink
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     await handleLink(navigation, dispatch, state, link)
@@ -52,7 +63,12 @@ export function launchDeepLink(navigation: NavigationBase, link: DeepLink): Thun
  * @returns true if the link is handled,
  * or false if the app is in the wrong state to handle this link.
  */
-async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<void> {
+async function handleLink(
+  navigation: NavigationBase,
+  dispatch: Dispatch,
+  state: RootState,
+  link: DeepLink
+): Promise<void> {
   const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
   const { currencyWallets } = account
@@ -82,7 +98,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       }
 
       // Check the disabled status:
-      if (state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true || state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true) {
+      if (
+        state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true ||
+        state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true
+      ) {
         showError(`Plugin "${pluginId}" is disabled`)
         break
       }
@@ -96,7 +115,12 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     }
 
     case 'fiatPlugin': {
-      const { direction = 'buy', paymentType = 'credit', pluginId, providerId } = link
+      const {
+        direction = 'buy',
+        paymentType = 'credit',
+        pluginId,
+        providerId
+      } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.nativePlugin == null) {
         showError(new Error(`No fiat plugin named "${pluginId}" exists`))
@@ -104,7 +128,8 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       }
 
       // Check the disabled status:
-      const disableProviders = state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
+      const disableProviders =
+        state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
       if (disableProviders === true) {
         showError(`Plugin "${pluginId}" is disabled`)
         break
@@ -185,14 +210,18 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
 
     case 'price-change': {
       const { pluginId, body } = link
-      const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+      const currencyCode =
+        account.currencyConfig[pluginId].currencyInfo.currencyCode
       let result
       if (config.disableSwaps === true) {
         result = await Airship.show<'buy' | 'sell' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
             title={lstrings.price_change_notification}
-            message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
+            message={`${body} ${sprintf(
+              lstrings.price_change_buy_sell_trade,
+              currencyCode
+            )}`}
             buttons={{
               buy: { label: lstrings.title_buy, type: 'secondary' },
               sell: { label: lstrings.title_sell }
@@ -200,18 +229,23 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
           />
         ))
       } else {
-        result = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.price_change_notification}
-            message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
-            buttons={{
-              buy: { label: lstrings.title_buy, type: 'secondary' },
-              sell: { label: lstrings.title_sell },
-              exchange: { label: lstrings.buy_crypto_modal_exchange }
-            }}
-          />
-        ))
+        result = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.price_change_notification}
+              message={`${body} ${sprintf(
+                lstrings.price_change_buy_sell_trade,
+                currencyCode
+              )}`}
+              buttons={{
+                buy: { label: lstrings.title_buy, type: 'secondary' },
+                sell: { label: lstrings.title_sell },
+                exchange: { label: lstrings.buy_crypto_modal_exchange }
+              }}
+            />
+          )
+        )
       }
 
       if (result === 'buy') {
@@ -241,7 +275,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
           if (keysOnlyMode) return
 
           const { pluginId } = wallet.currencyInfo
-          const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
+          const parsedUri = await wallet
+            .parseUri(link.uri)
+            .catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
             matchingWalletIdsAndUris.push({
@@ -259,7 +295,14 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
 
       // Check if this is an email for Tron USDT and show warning for potential
       // PIX send
-      if (isEmail(link.uri) && assets.find(asset => asset.pluginId === 'tron' && asset.tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t') != null) {
+      if (
+        isEmail(link.uri) &&
+        assets.find(
+          asset =>
+            asset.pluginId === 'tron' &&
+            asset.tokenId === 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+        ) != null
+      ) {
         const approved = await Airship.show<boolean>(bridge => (
           <ConfirmContinueModal
             bridge={bridge}
@@ -286,7 +329,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
 
       if (matchingWalletIdsAndUris.length === 1) {
         const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
-        await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
+        await dispatch(
+          handleWalletUris(navigation, currencyWallets[walletId], parsedUri)
+        )
         break
       }
 
@@ -315,7 +360,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       try {
         navigation.navigate(link.sceneName as any, link.query as any)
       } catch (e) {
-        showError(`Deep link failed. Unable to navigate to: '${link.sceneName}'`)
+        showError(
+          `Deep link failed. Unable to navigate to: '${link.sceneName}'`
+        )
       }
       break
     }
@@ -323,7 +370,9 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     case 'modal': {
       switch (link.modalName) {
         case 'fundAccount':
-          await Airship.show(bridge => <FundAccountModal bridge={bridge} navigation={navigation} />)
+          await Airship.show(bridge => (
+            <FundAccountModal bridge={bridge} navigation={navigation} />
+          ))
           break
         default:
           showError(`Unknown modal: '${link.modalName}'`)
@@ -345,7 +394,10 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
       const { walletId } = walletListResult
       const wallet = account.currencyWallets[walletId]
       const { publicAddress } = (await wallet.getAddresses({ tokenId }))[0]
-      const { currencyCode } = tokenId == null ? account.currencyConfig[pluginId].currencyInfo : account.currencyConfig[pluginId].allTokens[tokenId]
+      const { currencyCode } =
+        tokenId == null
+          ? account.currencyConfig[pluginId].currencyInfo
+          : account.currencyConfig[pluginId].allTokens[tokenId]
 
       // Encode data:
       const data = btoa(`edgerewards|${publicAddress}|${currencyCode}`)

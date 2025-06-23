@@ -19,7 +19,10 @@ export const SectionHeader = (props: { title?: string }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  if (theme.listSectionHeaderBackgroundGradientStart != null && theme.listSectionHeaderBackgroundGradientEnd != null) {
+  if (
+    theme.listSectionHeaderBackgroundGradientStart != null &&
+    theme.listSectionHeaderBackgroundGradientEnd != null
+  ) {
     return (
       <LinearGradient
         style={styles.headerContainer}

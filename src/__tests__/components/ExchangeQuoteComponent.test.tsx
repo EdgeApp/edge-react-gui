@@ -1,7 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
-import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeSwapInfo, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
+import {
+  addEdgeCorePlugins,
+  EdgeAccount,
+  EdgeContext,
+  EdgeCurrencyWallet,
+  EdgeSwapInfo,
+  lockEdgeCorePlugins,
+  makeFakeEdgeWorld
+} from 'edge-core-js'
 import process from 'process'
 import * as React from 'react'
 

@@ -24,7 +24,11 @@ interface TransactionListOptions {
  * so call the `requestMore` method to request more transactions,
  * until `atEnd` becomes true.
  */
-export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, opts: TransactionListOptions = {}): Output {
+export function useTransactionList(
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId,
+  opts: TransactionListOptions = {}
+): Output {
   const { searchString = '', spamThreshold = '0' } = opts
 
   const requestMore = React.useRef(() => {})
@@ -32,7 +36,10 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeToke
   // Ignore changes to the spamThreshold unless it's changing to or from 0
   // This prevents starting the stream over when the exchange rate changes
   const spamThresholdRef = React.useRef(spamThreshold)
-  if (spamThreshold !== spamThresholdRef.current && (spamThreshold === '0' || spamThresholdRef.current === '0')) {
+  if (
+    spamThreshold !== spamThresholdRef.current &&
+    (spamThreshold === '0' || spamThresholdRef.current === '0')
+  ) {
     spamThresholdRef.current = spamThreshold
   }
 

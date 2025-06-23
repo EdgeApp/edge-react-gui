@@ -27,7 +27,11 @@ describe('BuyCrypto', () => {
 
     const rendered = render(
       <FakeProviders initialState={mockState}>
-        <BuyCrypto wallet={fakeWallet} tokenId={null} navigation={fakeNavigation} />
+        <BuyCrypto
+          wallet={fakeWallet}
+          tokenId={null}
+          navigation={fakeNavigation}
+        />
       </FakeProviders>
     )
 

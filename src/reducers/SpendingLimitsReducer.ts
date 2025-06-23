@@ -10,7 +10,10 @@ export const initialState: SpendingLimits = {
   }
 }
 
-export const isEnabled = (state: boolean = initialState.transaction.isEnabled, action: Action) => {
+export const isEnabled = (
+  state: boolean = initialState.transaction.isEnabled,
+  action: Action
+) => {
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
@@ -21,7 +24,10 @@ export const isEnabled = (state: boolean = initialState.transaction.isEnabled, a
   }
 }
 
-export const amount = (state: number = initialState.transaction.amount, action: Action) => {
+export const amount = (
+  state: number = initialState.transaction.amount,
+  action: Action
+) => {
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {

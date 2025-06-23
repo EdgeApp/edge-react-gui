@@ -33,13 +33,30 @@ const StepProgressRowComponent = ({
     if (isNodeActive) {
       // 'start' and 'end' LinearGradient coordinates close to each other give
       // the illusion of a partial solid fill.
-      return <LinearGradient style={styles.circleCommon} start={{ x: 0, y: 0.49 }} end={{ x: 0, y: 0.51 }} colors={[theme.iconTappable, theme.fadeDisable]} />
+      return (
+        <LinearGradient
+          style={styles.circleCommon}
+          start={{ x: 0, y: 0.49 }}
+          end={{ x: 0, y: 0.51 }}
+          colors={[theme.iconTappable, theme.fadeDisable]}
+        />
+      )
     } else
       return (
         // Queued/completed
-        <View style={isNodeCompleted ? styles.circleCompleted : styles.circleQueued} />
+        <View
+          style={isNodeCompleted ? styles.circleCompleted : styles.circleQueued}
+        />
       )
-  }, [isNodeActive, isNodeCompleted, styles.circleCommon, styles.circleCompleted, styles.circleQueued, theme.fadeDisable, theme.iconTappable])
+  }, [
+    isNodeActive,
+    isNodeCompleted,
+    styles.circleCommon,
+    styles.circleCompleted,
+    styles.circleQueued,
+    theme.fadeDisable,
+    theme.iconTappable
+  ])
 
   // Render connecting segment lines between the bottom of this node and the
   // top of the next node (omitting if this is the last node).
@@ -48,8 +65,14 @@ const StepProgressRowComponent = ({
 
   // Combine the node+segment on the left with the text elements on the right
   // into a completed StepProgressRow
-  const titleStyle = isNodeCompleted || isNodeActive ? styles.textTitleActive : styles.textTitleDisabled
-  const bodyStyle = isNodeCompleted || isNodeActive ? styles.textBodyActive : styles.textBodyDisabled
+  const titleStyle =
+    isNodeCompleted || isNodeActive
+      ? styles.textTitleActive
+      : styles.textTitleDisabled
+  const bodyStyle =
+    isNodeCompleted || isNodeActive
+      ? styles.textBodyActive
+      : styles.textBodyDisabled
 
   return (
     <View style={styles.actionRow}>
@@ -91,7 +114,9 @@ const StepProgressRow = React.memo(StepProgressRowComponent)
 //
 // StepProgressBar is a collection of StepProgressRows.
 // -----------------------------------------------------------------------------
-const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo[] }) => {
+const StepProgressBarComponent = (props: {
+  actionDisplayInfos: ActionDisplayInfo[]
+}) => {
   // completedSteps of -1 will gray out all steps, while 0 will highlight the
   // first step
   const { actionDisplayInfos, ...containerProps } = props
@@ -108,10 +133,16 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo
       // Active/in-progress nodes are partially filled while queued or completed
       // nodes are solid filled.
       const isLast = totalSteps <= 1 || i >= totalSteps - 1
-      const nodeError = currentInfo.status instanceof Error ? currentInfo.status : undefined
-      const isNodeCompleted = currentInfo.status === 'done' || currentInfo.status instanceof Error
+      const nodeError =
+        currentInfo.status instanceof Error ? currentInfo.status : undefined
+      const isNodeCompleted =
+        currentInfo.status === 'done' || currentInfo.status instanceof Error
       // HACK: Set active status of this node based on the status of the previous node. Check to be removed when ActionQueue properly handles updating the execution state of an 'active' step.
-      const isNodeActive = !isNodeCompleted && (currentInfo.status === 'active' || (i > 0 && (prevInfo.status === 'done' || prevInfo.status instanceof Error)))
+      const isNodeActive =
+        !isNodeCompleted &&
+        (currentInfo.status === 'active' ||
+          (i > 0 &&
+            (prevInfo.status === 'done' || prevInfo.status instanceof Error)))
 
       actionRows.push(
         <StepProgressRow

@@ -18,7 +18,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
+import {
+  convertTransactionFeeToDisplayFee,
+  truncateDecimals
+} from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -62,52 +65,95 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
 
   const mounted = React.useRef<boolean>(true)
 
-  const [transactionState, setTransactionState] = React.useState<Map<string, EdgeTransaction | Error>>(new Map())
+  const [transactionState, setTransactionState] = React.useState<
+    Map<string, EdgeTransaction | Error>
+  >(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
 
-  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<SweepPrivateKeyItem>) => {
-    const { key, pluginId, tokenId } = data.item
+  const renderCurrencyRow = useHandler(
+    (data: ListRenderItemInfo<SweepPrivateKeyItem>) => {
+      const { key, pluginId, tokenId } = data.item
 
-    if (receivingWallet == null) return null
-    const {
-      currencyInfo: { currencyCode, denominations }
-    } = receivingWallet
-    const walletName = ''
-    const tx = transactionState.get(key)
+      if (receivingWallet == null) return null
+      const {
+        currencyInfo: { currencyCode, denominations }
+      } = receivingWallet
+      const walletName = ''
+      const tx = transactionState.get(key)
 
-    let rightSide: React.ReactElement
-    if (tx == null) {
-      rightSide = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
-    } else if (tx instanceof Error) {
-      rightSide = <EdgeText style={{ color: theme.negativeText, fontSize: theme.rem(0.75) }}>{tx.message}</EdgeText>
-
-      if (tx instanceof InsufficientFundsError) {
-        return (
-          <CreateWalletSelectCryptoRow
-            pluginId={pluginId}
-            tokenId={tokenId}
-            walletName=""
-            rightSide={rightSide}
-            onPress={async () => {
-              await handleInsufficientFunds(receivingWallet, tx)
-            }}
+      let rightSide: React.ReactElement
+      if (tx == null) {
+        rightSide = (
+          <ActivityIndicator
+            style={{ paddingRight: theme.rem(0.3125) }}
+            color={theme.iconTappable}
           />
         )
+      } else if (tx instanceof Error) {
+        rightSide = (
+          <EdgeText
+            style={{ color: theme.negativeText, fontSize: theme.rem(0.75) }}
+          >
+            {tx.message}
+          </EdgeText>
+        )
+
+        if (tx instanceof InsufficientFundsError) {
+          return (
+            <CreateWalletSelectCryptoRow
+              pluginId={pluginId}
+              tokenId={tokenId}
+              walletName=""
+              rightSide={rightSide}
+              onPress={async () => {
+                await handleInsufficientFunds(receivingWallet, tx)
+              }}
+            />
+          )
+        }
+      } else {
+        const exchangeDenom = denominations.find(
+          denom => denom.name === currencyCode
+        ) as EdgeDenomination
+        const displayDenom =
+          displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
+
+        const transactionFee = convertTransactionFeeToDisplayFee(
+          currencyCode,
+          defaultFiat,
+          exchangeRates,
+          tx,
+          displayDenom,
+          exchangeDenom
+        )
+        const fiatAmount =
+          transactionFee.fiatAmount === '0'
+            ? '0'
+            : ` ${transactionFee.fiatAmount}`
+        const feeSyntax = `${
+          transactionFee.cryptoSymbol ?? ''
+        } ${truncateDecimals(transactionFee.cryptoAmount)} (${
+          transactionFee.fiatSymbol ?? ''
+        }${fiatAmount})`
+        rightSide = (
+          <EdgeText
+            style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }}
+          >
+            {feeSyntax}
+          </EdgeText>
+        )
       }
-    } else {
-      const exchangeDenom = denominations.find(denom => denom.name === currencyCode) as EdgeDenomination
-      const displayDenom = displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
-      const transactionFee = convertTransactionFeeToDisplayFee(currencyCode, defaultFiat, exchangeRates, tx, displayDenom, exchangeDenom)
-      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${truncateDecimals(transactionFee.cryptoAmount)} (${
-        transactionFee.fiatSymbol ?? ''
-      }${fiatAmount})`
-      rightSide = <EdgeText style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }}>{feeSyntax}</EdgeText>
+      return (
+        <CreateWalletSelectCryptoRow
+          pluginId={pluginId}
+          tokenId={tokenId}
+          walletName={walletName}
+          rightSide={rightSide}
+        />
+      )
     }
-
-    return <CreateWalletSelectCryptoRow pluginId={pluginId} tokenId={tokenId} walletName={walletName} rightSide={rightSide} />
-  })
+  )
 
   const handleInsufficientFunds = useHandler(async (wallet, error) => {
     await showInsufficientFeesModal({
@@ -139,11 +185,19 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       let feeTotal = '0'
 
       const tokenItems = [...sweepPrivateKeyList]
-      const mainnetItem = tokenItems.splice(sweepPrivateKeyList.length - 1, 1)[0]
-      const publicAddress = (await receivingWallet.getReceiveAddress({ tokenId: null })).publicAddress
+      const mainnetItem = tokenItems.splice(
+        sweepPrivateKeyList.length - 1,
+        1
+      )[0]
+      const publicAddress = (
+        await receivingWallet.getReceiveAddress({ tokenId: null })
+      ).publicAddress
       let enableSlider = false
 
-      const getMax = async (asset: SweepPrivateKeyItem, numPendingTxs: number) => {
+      const getMax = async (
+        asset: SweepPrivateKeyItem,
+        numPendingTxs: number
+      ) => {
         const fakeEdgeTransaction: EdgeTransaction = {
           blockHeight: 0,
           currencyCode: '',
@@ -164,7 +218,10 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           tokenId: asset.tokenId,
           spendTargets: [{ publicAddress }],
           networkFeeOption: 'standard',
-          pendingTxs: Array.from({ length: numPendingTxs }, () => fakeEdgeTransaction)
+          pendingTxs: Array.from(
+            { length: numPendingTxs },
+            () => fakeEdgeTransaction
+          )
         }
 
         try {
@@ -181,8 +238,11 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
             spendTargets: [{ publicAddress, nativeAmount }]
           }
           const edgeTransaction = await memoryWallet.makeSpend(maxSpendInfo)
-          const txFee = edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
-          setTransactionState(prevState => new Map([...prevState, [asset.key, edgeTransaction]]))
+          const txFee =
+            edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+          setTransactionState(
+            prevState => new Map([...prevState, [asset.key, edgeTransaction]])
+          )
           feeTotal = add(feeTotal, txFee)
           // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
           if (lt(memoryWallet.balanceMap.get(null) ?? '0', feeTotal)) {
@@ -195,14 +255,25 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
         } catch (e) {
           const insufficientFundsError = asMaybeInsufficientFundsError(e)
           if (insufficientFundsError != null) {
-            setTransactionState(prevState => new Map([...prevState, [asset.key, insufficientFundsError]]))
+            setTransactionState(
+              prevState =>
+                new Map([...prevState, [asset.key, insufficientFundsError]])
+            )
           } else {
-            setTransactionState(prevState => new Map([...prevState, [asset.key, Error(lstrings.migrate_unknown_error_fragment)]]))
+            setTransactionState(
+              prevState =>
+                new Map([
+                  ...prevState,
+                  [asset.key, Error(lstrings.migrate_unknown_error_fragment)]
+                ])
+            )
           }
         }
       }
 
-      await Promise.all(tokenItems.map(async (item, index) => await getMax(item, index)))
+      await Promise.all(
+        tokenItems.map(async (item, index) => await getMax(item, index))
+      )
       await getMax(mainnetItem, tokenItems.length)
 
       if (enableSlider && mounted.current) {
@@ -224,7 +295,10 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   return (
     <SceneWrapper>
       <View style={styles.content}>
-        <SceneHeader title={lstrings.sweep_private_key_calculate_fee_title} withTopMargin />
+        <SceneHeader
+          title={lstrings.sweep_private_key_calculate_fee_title}
+          withTopMargin
+        />
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
           {lstrings.sweep_private_key_instructions_fragment}
         </EdgeText>
@@ -265,4 +339,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SweepPrivateKeyCalculateFeeScene = React.memo(SweepPrivateKeyCalculateFeeComponent)
+export const SweepPrivateKeyCalculateFeeScene = React.memo(
+  SweepPrivateKeyCalculateFeeComponent
+)
