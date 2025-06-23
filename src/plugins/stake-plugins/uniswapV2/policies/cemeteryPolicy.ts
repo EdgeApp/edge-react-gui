@@ -482,8 +482,8 @@ export const makeCemeteryPolicy = (
               const transferTopicHash = ethers.utils.id(
                 'Transfer(address,address,uint256)'
               )
-              // @ts-expect-error
               const transferTopics = receipt.logs.filter(
+                // @ts-expect-error
                 log => log.topics[0] === transferTopicHash
               )
               // The last token transfer log is the LP-token transfer

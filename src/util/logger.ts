@@ -188,8 +188,8 @@ export function logActivity(...info: Array<number | string | null | {}>): void {
 }
 
 async function request(data: string) {
-  // @ts-expect-error
   return await global.fetch(
+    // @ts-expect-error
     `${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`,
     {
       method: 'POST',

@@ -103,9 +103,9 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
           return {
             // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
             id: new Date(unlockDate).toDateString(),
-            // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
             title: sprintf(
               lstrings.staking_locked_title,
+              // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
               formatTimeDate(new Date(unlockDate), true)
             ),
             amount: formattedAmount

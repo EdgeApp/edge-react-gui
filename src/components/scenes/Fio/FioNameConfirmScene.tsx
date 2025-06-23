@@ -98,8 +98,8 @@ class FioNameConfirm extends React.PureComponent<Props> {
             const publicDomains = await fioPlugin.otherMethods.getDomains(
               fioPlugin.currencyInfo.defaultSettings?.fallbackRef
             )
-            // @ts-expect-error
             const domainExists = publicDomains.find(
+              // @ts-expect-error
               domain =>
                 domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1]
             )

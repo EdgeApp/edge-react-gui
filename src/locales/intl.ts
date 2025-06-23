@@ -235,9 +235,10 @@ export function formatDate(
 
   try {
     // TODO: Determine the purpose of this replace() and mapping...
-    // @ts-expect-error
     const dateFormattingLocale =
+      // @ts-expect-error
       locales[localeIdentifier.replace('_', '-')] ??
+      // @ts-expect-error
       locales[localeIdentifier.split('-')?.[0]]
     return format(date, dateFormat, { locale: dateFormattingLocale })
   } catch (e: any) {

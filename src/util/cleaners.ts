@@ -106,10 +106,11 @@ function locateError(error: unknown, step: string, offset: number): unknown {
       // @ts-expect-error
       error.insertStepAt = error.message.length
     }
-    // @ts-expect-error
     error.message =
+      // @ts-expect-error
       error.message.slice(0, error.insertStepAt) +
       step +
+      // @ts-expect-error
       error.message.slice(error.insertStepAt)
     // @ts-expect-error
     error.insertStepAt += offset

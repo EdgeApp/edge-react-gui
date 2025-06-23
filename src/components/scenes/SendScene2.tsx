@@ -677,9 +677,9 @@ const SendComponent = (props: Props) => {
             <View style={styles.calcFeeView}>
               <EdgeText
                 style={{
-                  // @ts-expect-error
                   color: feeSyntaxStyle
-                    ? theme[feeSyntaxStyle]
+                    ? // @ts-expect-error
+                      theme[feeSyntaxStyle]
                     : theme.primaryText
                 }}
               >
@@ -691,9 +691,9 @@ const SendComponent = (props: Props) => {
           ) : (
             <EdgeText
               style={{
-                // @ts-expect-error
                 color: feeSyntaxStyle
-                  ? theme[feeSyntaxStyle]
+                  ? // @ts-expect-error
+                    theme[feeSyntaxStyle]
                   : theme.primaryText
               }}
             >
