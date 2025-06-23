@@ -262,7 +262,7 @@ export function walletListMenuAction(
         const wallet = currencyWallets[walletId]
         navigation.navigate('transactionsExport', {
           sourceWallet: wallet,
-          currencyCode: getCurrencyCode(wallet, tokenId)
+          tokenId
         })
       }
     }

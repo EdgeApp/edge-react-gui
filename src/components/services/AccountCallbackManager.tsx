@@ -18,7 +18,7 @@ import {
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
-import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -136,9 +136,9 @@ export function AccountCallbackManager(props: Props) {
 
           if (!tx.isSend) {
             dispatch(updateTransactionCount()).catch(err => console.warn(err))
-            const exchangeDenom = getExchangeDenomByCurrencyCode(
+            const exchangeDenom = getExchangeDenom(
               wallet.currencyConfig,
-              tx.currencyCode
+              tx.tokenId
             )
             const cryptoAmount = Math.abs(
               parseFloat(

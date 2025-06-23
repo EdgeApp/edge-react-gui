@@ -22,12 +22,11 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import {
   getExchangeDenom,
-  getExchangeDenomByCurrencyCode,
-  selectDisplayDenomByCurrencyCode
+  selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
@@ -42,7 +41,7 @@ import { MainButton } from '../themed/MainButton'
 
 export interface TransactionsExportParams {
   sourceWallet: EdgeCurrencyWallet
-  currencyCode: string
+  tokenId: EdgeTokenId
 }
 
 interface File {
@@ -55,19 +54,20 @@ interface OwnProps extends EdgeAppSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   account: EdgeAccount
+  currencyCode: string
   defaultIsoFiat: string
   exchangeMultiplier: string
   multiplier: string
   parentMultiplier: string
-  tokenId: EdgeTokenId
 }
 
 interface DispatchProps {
   updateTxsFiatDispatch: (
     wallet: EdgeCurrencyWallet,
+    tokenId: EdgeTokenId,
     currencyCode: string,
     txs: EdgeTransaction[]
-  ) => void
+  ) => Promise<void>
 }
 
 type Props = StateProps & OwnProps & ThemeProps & DispatchProps
@@ -166,8 +166,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
   async componentDidMount(): Promise<void> {
     try {
-      const { sourceWallet } = this.props.route.params
-      const { tokenId } = this.props
+      const { sourceWallet, tokenId } = this.props.route.params
       const { disklet } = sourceWallet
       const result = await disklet.getText(EXPORT_TX_INFO_FILE)
       const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
@@ -192,8 +191,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<
   render() {
     const { startDate, endDate, isExportBitwave, isExportCsv, isExportQbo } =
       this.state
-    const { theme, route } = this.props
-    const { sourceWallet, currencyCode } = route.params
+    const { currencyCode, theme, route } = this.props
+    const { sourceWallet } = route.params
     const iconSize = theme.rem(1.25)
 
     const walletName = `${getWalletName(sourceWallet)} (${currencyCode})`
@@ -299,16 +298,16 @@ class TransactionsExportSceneComponent extends React.PureComponent<
   handleSubmit = async (): Promise<void> => {
     const {
       account,
+      currencyCode,
       defaultIsoFiat,
       exchangeMultiplier,
       multiplier,
       parentMultiplier,
       route
     } = this.props
-    const { sourceWallet, currencyCode } = route.params
+    const { sourceWallet, tokenId } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } =
       this.state
-    const { tokenId } = this.props
     const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
     let exportTxInfo: ExportTxInfo | undefined
@@ -411,7 +410,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const formats: string[] = []
 
     // Update the transactions that are missing fiat amounts
-    await this.props.updateTxsFiatDispatch(sourceWallet, currencyCode, txs)
+    await this.props.updateTxsFiatDispatch(
+      sourceWallet,
+      tokenId,
+      currencyCode,
+      txs
+    )
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
@@ -531,29 +535,22 @@ export const TransactionsExportScene = connect<
 >(
   (state, { route: { params } }) => ({
     account: state.core.account,
+    currencyCode: getCurrencyCode(params.sourceWallet, params.tokenId),
     defaultIsoFiat: state.ui.settings.defaultIsoFiat,
-    exchangeMultiplier: getExchangeDenomByCurrencyCode(
+    exchangeMultiplier: getExchangeDenom(
       params.sourceWallet.currencyConfig,
-      params.currencyCode
+      params.tokenId
     ).multiplier,
-    multiplier: selectDisplayDenomByCurrencyCode(
+    multiplier: selectDisplayDenom(
       state,
       params.sourceWallet.currencyConfig,
-      params.currencyCode
+      params.tokenId
     ).multiplier,
     parentMultiplier: getExchangeDenom(params.sourceWallet.currencyConfig, null)
-      .multiplier,
-    tokenId: getTokenIdForced(
-      state.core.account,
-      params.sourceWallet.currencyInfo.pluginId,
-      params.currencyCode
-    )
+      .multiplier
   }),
   dispatch => ({
-    updateTxsFiatDispatch: async (
-      wallet: EdgeCurrencyWallet,
-      currencyCode: string,
-      txs: EdgeTransaction[]
-    ) => await dispatch(updateTxsFiat(wallet, currencyCode, txs))
+    updateTxsFiatDispatch: async (wallet, tokenId, currencyCode, txs) =>
+      await dispatch(updateTxsFiat(wallet, tokenId, currencyCode, txs))
   })
 )(withTheme(TransactionsExportSceneComponent))
