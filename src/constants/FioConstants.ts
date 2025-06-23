@@ -4,47 +4,39 @@ import { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 
-export interface FioAsset {
+interface FioAsset {
   chainCode: string
-  tokenCodes: { [tokenId: string]: string }
+  tokenCodes?: { [tokenId: string]: string }
 }
 
 /**
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
-export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
+const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
   abstract: {
-    chainCode: 'ABSTRACT',
-    tokenCodes: {}
+    chainCode: 'ABSTRACT'
   },
   ethereum: {
-    chainCode: 'ETH', // Make this explicit so L2's don't take it
-    tokenCodes: {}
+    chainCode: 'ETH' // Make this explicit so L2's don't take it
   },
   ethereumpo: {
-    chainCode: 'ETHEREUMPO',
-    tokenCodes: {}
+    chainCode: 'ETHEREUMPO'
   },
   optimism: {
-    chainCode: 'OPT',
-    tokenCodes: {}
+    chainCode: 'OPT'
   },
   bobevm: {
-    chainCode: 'BOBNETWORK',
-    tokenCodes: {}
+    chainCode: 'BOBNETWORK'
   },
   zksync: {
-    chainCode: 'ZKSYNC',
-    tokenCodes: {}
+    chainCode: 'ZKSYNC'
   },
   binancesmartchain: {
-    chainCode: 'BSC',
-    tokenCodes: {}
+    chainCode: 'BSC'
   },
   sonic: {
-    chainCode: 'SONIC',
-    tokenCodes: {}
+    chainCode: 'SONIC'
   },
   ripple: {
     chainCode: 'XRP',

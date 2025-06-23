@@ -1,6 +1,6 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { ListRenderItem, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
@@ -13,19 +13,33 @@ import {
 import { EdgeText } from '../../components/themed/EdgeText'
 import { MainButton } from '../../components/themed/MainButton'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { tokenIdToFioCode } from '../../constants/FioConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { CcWalletMap } from '../../reducers/FioReducer'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { FioConnectionWalletItem } from '../../types/types'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
-import {
-  convertFIOToEdgeCodes,
-  makeConnectWallets
-} from '../../util/FioAddressUtils'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
+
+export interface FioConnectionWalletItem {
+  key: string
+  wallet: EdgeCurrencyWallet
+  tokenId: EdgeTokenId
+
+  // FIO stuff:
+  fioChainCode: string
+  fioTokenCode: string
+  fullFioCode: string
+  isConnected: boolean
+}
+
+interface WalletItemMap {
+  [key: string]: FioConnectionWalletItem
+}
 
 interface FioConnectWalletsProps {
   disabled: boolean
@@ -47,16 +61,14 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
     state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {}
   )
   const walletItems = React.useMemo(
-    () => makeConnectWallets(edgeWallets, ccWalletMap),
-    [edgeWallets, ccWalletMap]
+    () => makeConnectWallets(account, edgeWallets, ccWalletMap),
+    [account, edgeWallets, ccWalletMap]
   )
 
-  const [connectWalletsMap, setConnectWalletsMap] = React.useState<{
-    [walletId: string]: FioConnectionWalletItem
-  }>({})
-  const [disconnectWalletsMap, setDisconnectWalletsMap] = React.useState<{
-    [walletId: string]: FioConnectionWalletItem
-  }>({})
+  const [connectWalletsMap, setConnectWalletsMap] =
+    React.useState<WalletItemMap>({})
+  const [disconnectWalletsMap, setDisconnectWalletsMap] =
+    React.useState<WalletItemMap>({})
   const [prevItemsConnected, setPrevItemsConnected] = React.useState<{
     [key: string]: boolean
   }>({})
@@ -85,8 +97,8 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
       if (
         Object.keys(connectWalletsMap).find(
           (cWalletKey: string) =>
-            connectWalletsMap[cWalletKey].fullCurrencyCode ===
-            disconnectWalletsMap[walletKey].fullCurrencyCode
+            connectWalletsMap[cWalletKey].fullFioCode ===
+            disconnectWalletsMap[walletKey].fullFioCode
         ) == null
       ) {
         walletsToDisconnect.push(disconnectWalletsMap[walletKey])
@@ -117,19 +129,19 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
 
   const handleSelectWallet = (
     value: boolean,
-    wallet: FioConnectionWalletItem
+    item: FioConnectionWalletItem
   ): void => {
     if (value) {
-      if (disconnectWalletsMap[wallet.key] != null) {
-        delete disconnectWalletsMap[wallet.key]
+      if (disconnectWalletsMap[item.key] != null) {
+        delete disconnectWalletsMap[item.key]
       } else {
-        connectWalletsMap[wallet.key] = wallet
+        connectWalletsMap[item.key] = item
       }
     } else {
-      if (connectWalletsMap[wallet.key] != null) {
-        delete connectWalletsMap[wallet.key]
+      if (connectWalletsMap[item.key] != null) {
+        delete connectWalletsMap[item.key]
       } else {
-        disconnectWalletsMap[wallet.key] = wallet
+        disconnectWalletsMap[item.key] = item
       }
     }
 
@@ -139,81 +151,66 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   }
 
   const keyExtractor = useHandler(
-    (item: FioConnectionWalletItem): string =>
-      `${item.fullCurrencyCode}${item.edgeWallet.id}`
+    (item: FioConnectionWalletItem): string => item.key
   )
 
-  const renderFioConnectionWalletItem = ({
-    item: wallet
-  }: {
-    item: FioConnectionWalletItem
-  }) => {
-    if (wallet != null) {
-      const value = wallet.isConnected
-        ? !disconnectWalletsMap[wallet.key]
-        : !!connectWalletsMap[wallet.key]
-      const disabled =
-        !value &&
-        (!!Object.keys(connectWalletsMap).find(
-          (walletItemKey: string) =>
-            connectWalletsMap[walletItemKey].fullCurrencyCode ===
-            wallet.fullCurrencyCode
-        ) ||
-          !!Object.keys(walletItems).find(
-            (walletKey: string) =>
-              walletItems[walletKey].fullCurrencyCode ===
-                wallet.fullCurrencyCode &&
-              walletItems[walletKey].isConnected &&
-              walletItems[walletKey].id !== wallet.id &&
-              !disconnectWalletsMap[walletKey]
-          ))
-      const noWalletSymbol = '-'
+  const renderFioConnectionWalletItem: ListRenderItem<
+    FioConnectionWalletItem
+  > = ({ item }) => {
+    const value = item.isConnected
+      ? disconnectWalletsMap[item.key] == null
+      : connectWalletsMap[item.key] != null
+    const disabled =
+      !value &&
+      (Object.keys(connectWalletsMap).find(
+        (walletItemKey: string) =>
+          connectWalletsMap[walletItemKey].fullFioCode === item.fullFioCode
+      ) != null ||
+        Object.keys(walletItems).find(
+          (key: string) =>
+            walletItems[key].fullFioCode === item.fullFioCode &&
+            walletItems[key].isConnected &&
+            walletItems[key].wallet.id !== item.wallet.id &&
+            disconnectWalletsMap[key] == null
+        ) != null)
+    const noWalletSymbol = '-'
 
-      // Convert back to Edge currency code to display the icon
-      const pluginId = wallet.edgeWallet.currencyInfo.pluginId
-      const { tokenCode: currencyCode } = convertFIOToEdgeCodes(
-        account,
-        pluginId,
-        wallet.chainCode,
-        wallet.currencyCode
-      )
+    // Convert back to Edge currency code to display the icon
+    const { pluginId } = item.wallet.currencyInfo
+    const currencyCode = getCurrencyCode(item.wallet, item.tokenId)
 
-      const tokenId = getTokenIdForced(account, pluginId, currencyCode)
-
-      return (
-        <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
-          <View style={styles.rowContainerTop}>
-            <View style={styles.containerLeft}>
-              {wallet != null ? (
-                <CryptoIcon pluginId={pluginId} tokenId={tokenId} />
-              ) : (
-                <EdgeText>{noWalletSymbol}</EdgeText>
-              )}
+    return (
+      <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
+        <View style={styles.rowContainerTop}>
+          <View style={styles.containerLeft}>
+            {item != null ? (
+              <CryptoIcon pluginId={pluginId} tokenId={item.tokenId} />
+            ) : (
+              <EdgeText>{noWalletSymbol}</EdgeText>
+            )}
+          </View>
+          <View style={styles.walletDetailsContainer}>
+            <View style={styles.walletDetailsCol}>
+              <EdgeText style={styles.walletDetailsRowCurrency}>
+                {currencyCode}
+              </EdgeText>
+              <EdgeText style={styles.walletDetailsRowName}>
+                {getWalletName(item.wallet)}
+              </EdgeText>
             </View>
-            <View style={styles.walletDetailsContainer}>
-              <View style={styles.walletDetailsCol}>
-                <EdgeText style={styles.walletDetailsRowCurrency}>
-                  {currencyCode}
-                </EdgeText>
-                <EdgeText style={styles.walletDetailsRowName}>
-                  {wallet.name}
-                </EdgeText>
-              </View>
-              <View style={styles.walletDetailsCol}>
-                <View style={styles.switchContainer}>
-                  <Switch
-                    disabled={disabled}
-                    onChange={() => handleSelectWallet(!value, wallet)}
-                    value={value}
-                  />
-                </View>
+            <View style={styles.walletDetailsCol}>
+              <View style={styles.switchContainer}>
+                <Switch
+                  disabled={disabled}
+                  onChange={() => handleSelectWallet(!value, item)}
+                  value={value}
+                />
               </View>
             </View>
           </View>
         </View>
-      )
-    }
-    return null
+      </View>
+    )
   }
 
   return (
@@ -245,6 +242,47 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
       </View>
     </View>
   )
+}
+
+const makeConnectWallets = (
+  account: EdgeAccount,
+  wallets: EdgeAccount['currencyWallets'],
+  ccWalletMap: CcWalletMap
+): WalletItemMap => {
+  const walletItems: WalletItemMap = {}
+
+  function addItem(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): void {
+    const { fioChainCode, fioTokenCode } = tokenIdToFioCode(
+      wallet.currencyConfig,
+      tokenId
+    )
+    const fullFioCode = `${fioChainCode}:${fioTokenCode}`
+    const key = `${wallet.id}-${fioTokenCode}`
+
+    walletItems[key] = {
+      key,
+      wallet,
+      tokenId,
+      fioTokenCode,
+      fioChainCode,
+      fullFioCode,
+      isConnected: ccWalletMap[fullFioCode] === wallet.id
+    }
+  }
+
+  for (const walletId of Object.keys(wallets)) {
+    const wallet = wallets[walletId]
+    if (wallet.currencyInfo.pluginId === 'fio') continue
+    addItem(wallet, null)
+
+    for (const tokenId of wallet.enabledTokenIds) {
+      const token = wallet.currencyConfig.allTokens[tokenId]
+      if (token == null) continue
+      addItem(wallet, tokenId)
+    }
+  }
+
+  return walletItems
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
