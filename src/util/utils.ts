@@ -633,20 +633,6 @@ export const getPluginIdFromChainCode = (
   return pluginId
 }
 
-export function tokenIdsToCurrencyCodes(
-  currencyConfig: EdgeCurrencyConfig,
-  tokenIds: string[]
-): string[] {
-  const { builtinTokens = {}, customTokens = {} } = currencyConfig
-
-  const out: string[] = []
-  for (const tokenId of tokenIds) {
-    const token = customTokens[tokenId] ?? builtinTokens[tokenId]
-    if (token != null) out.push(token.currencyCode)
-  }
-  return out
-}
-
 export interface MiniCurrencyConfig {
   allTokens: EdgeTokenMap
   currencyInfo: EdgeCurrencyInfo
