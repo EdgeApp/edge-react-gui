@@ -1333,7 +1333,7 @@ export const convertEdgeToFIOCodes = (
   edgeTokenCode: string
 ) => {
   const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
-  const fioChainCode = fioAssets[pluginId].chainCode ?? edgeChainCode
+  const fioChainCode = fioAssets[pluginId]?.chainCode ?? edgeChainCode
   const fioTokenCode =
     edgeTokenCode === edgeChainCode ? fioChainCode : edgeTokenCode
 
