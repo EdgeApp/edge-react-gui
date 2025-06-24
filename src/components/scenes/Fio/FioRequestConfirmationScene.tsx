@@ -210,7 +210,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
-        showError(`${lstrings.fio_request_error_header}: "${error.json?.fields?.[0]?.error ?? ''}"`)
+        showError(`${lstrings.fio_request_error_header}: "${error.json?.fields?.[0]?.error ?? String(error)}"`)
       }
     } else {
       showError(lstrings.fio_wallet_missing_for_fio_address)
