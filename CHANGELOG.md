@@ -17,6 +17,7 @@
 - changed: Fees are no longer estimated before amounts are entered in `SendScene2`
 - changed: Remove boot logo animation on Android.
 - changed: Recent wallets added to the top of the Wallet List when searching
+- changed: `OSMOSIS_INIT` type updated to accept api keys
 - fixed: Connecting tokens to FIO addresses failing if there was a "." in the currency code
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
