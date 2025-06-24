@@ -273,7 +273,7 @@ export class FioRequestConfirmationConnected extends React.Component<
         this.resetSlider()
         showError(
           `${lstrings.fio_request_error_header}: "${
-            error.json?.fields?.[0]?.error ?? ''
+            error.json?.fields?.[0]?.error ?? String(error)
           }"`
         )
       }
