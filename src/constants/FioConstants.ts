@@ -1,15 +1,25 @@
+import { EdgeAccount } from 'edge-core-js'
+
+import { EdgeAsset } from '../types/types'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { infoServerData } from '../util/network'
+
+export interface FioAsset {
+  chainCode: string
+  tokenCodes: { [tokenId: string]: string }
+}
+
 /**
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
-
-export interface FioAsset {
-  chainCode: string
-  tokenCodes: { [address: string]: string }
-}
 export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
   abstract: {
     chainCode: 'ABSTRACT',
+    tokenCodes: {}
+  },
+  ethereum: {
+    chainCode: 'ETH', // Make this explicit so L2's don't take it
     tokenCodes: {}
   },
   ethereumpo: {
@@ -46,4 +56,33 @@ export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
       'USD-rEn9eRkX25wfGPLysUMAvZ84jAzFNpT5fL': 'USDST'
     }
   }
+}
+
+export const fioCodeToEdgeAsset = (account: EdgeAccount, fioChainCode: string, fioTokenCode: string): EdgeAsset | undefined => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+
+  const pluginId =
+    // Check the table first:
+    Object.keys(fioAssets).find(pluginId => fioAssets[pluginId].chainCode === fioChainCode) ??
+    // Otherwise, just match the main currency code:
+    Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === fioChainCode)
+
+  // Bail out if we don't know about this chain:
+  if (pluginId == null) return
+
+  // Find the token being asked for:
+  const fioTokens = fioAssets[pluginId]?.tokenCodes ?? {}
+  const tokenId =
+    // If the token code matches the chain code, we want the main asset:
+    fioTokenCode === fioAssets[pluginId]?.chainCode
+      ? null
+      : // Otherwise, check the special token mappings for this chain:
+        Object.keys(fioTokens).find(tokenId => fioTokens[tokenId] === fioTokenCode) ??
+        // Otherwise, do a normal token lookup:
+        getTokenId(account.currencyConfig[pluginId], fioTokenCode)
+
+  // Bail out if we couldn't find a matching token or main asset (null):
+  if (tokenId === undefined) return
+
+  return { pluginId, tokenId }
 }

@@ -5,8 +5,7 @@ import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
-import { FIO_ASSET_MAP } from '../../../constants/FioConstants'
-import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
+import { fioCodeToEdgeAsset } from '../../../constants/FioConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
@@ -17,13 +16,11 @@ import { getCurrencyCode, getTokenIdForced } from '../../../util/CurrencyInfoHel
 import {
   addToFioAddressCache,
   cancelFioRequest,
-  convertFIOToEdgeCodes,
   FIO_FAKE_RECORD_OBT_DATA_REQUEST,
   FIO_NO_BUNDLED_ERR_CODE,
   fioMakeSpend,
   fioSignAndBroadcast
 } from '../../../util/FioAddressUtils'
-import { tokenIdsToCurrencyCodes } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
@@ -335,37 +332,49 @@ class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     const { account, onSelectWallet } = this.props
-    const availableWallets: Array<{ id: string; currencyCode: string }> = []
-    for (const walletId of Object.keys(account.currencyWallets)) {
-      const wallet = account.currencyWallets[walletId]
-      const { chainCode, tokenCode } = convertFIOToEdgeCodes(
-        account,
-        wallet.currencyInfo.pluginId,
-        fioRequest.content.chain_code.toUpperCase(),
-        fioRequest.content.token_code.toUpperCase()
-      )
-      const walletCurrencyCode = wallet.currencyInfo.currencyCode.toUpperCase()
-      if (walletCurrencyCode === tokenCode) {
-        availableWallets.push({ id: walletId, currencyCode: tokenCode })
-        if (availableWallets.length > 1) {
-          await this.renderDropUp(fioRequest)
-          return
-        }
+    const edgeAsset = fioCodeToEdgeAsset(account, fioRequest.content.chain_code.toUpperCase(), fioRequest.content.token_code.toUpperCase())
+
+    // Find matching wallets:
+    if (edgeAsset != null) {
+      const { pluginId, tokenId } = edgeAsset
+      const walletIds = Object.keys(account.currencyWallets).filter(walletId => {
+        const wallet = account.currencyWallets[walletId]
+        return wallet.currencyInfo.pluginId === pluginId && (tokenId == null || wallet.enabledTokenIds.includes(tokenId))
+      })
+
+      // Just do the send if we have one choice:
+      if (walletIds.length === 1) {
+        const [walletId] = walletIds
+        const wallet = account.currencyWallets[walletId]
+
+        const currencyCode = getCurrencyCode(wallet, tokenId)
+        onSelectWallet(walletId, currencyCode)
+        await this.sendCrypto(fioRequest, walletId, currencyCode)
+        return
       }
-      const enabledTokens = tokenIdsToCurrencyCodes(wallet.currencyConfig, wallet.enabledTokenIds)
-      if (walletCurrencyCode === chainCode && enabledTokens.includes(tokenCode)) {
-        availableWallets.push({ id: walletId, currencyCode: tokenCode })
-        if (availableWallets.length > 1) {
-          await this.renderDropUp(fioRequest)
-          return
+
+      // Show a modal if we have multiple choices:
+      if (walletIds.length > 1) {
+        const result = await Airship.show<WalletListResult>(bridge => (
+          <WalletListModal
+            bridge={bridge}
+            navigation={this.props.navigation as NavigationBase}
+            headerTitle={lstrings.fio_src_wallet}
+            allowedAssets={[edgeAsset]}
+          />
+        ))
+        if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
+          const wallet = account.currencyWallets[walletId]
+          const currencyCode = getCurrencyCode(wallet, tokenId)
+          onSelectWallet(walletId, currencyCode)
+          await this.sendCrypto(fioRequest, walletId, currencyCode)
         }
+        return
       }
     }
-    if (availableWallets.length) {
-      onSelectWallet(availableWallets[0].id, availableWallets[0].currencyCode)
-      await this.sendCrypto(fioRequest, availableWallets[0].id, availableWallets[0].currencyCode)
-      return
-    }
+
+    // Nothing matched, so show an error:
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -374,38 +383,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
     ))
-  }
-
-  renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
-    const { account, onSelectWallet } = this.props
-    const { content } = selectedFioPendingRequest
-    const pluginId =
-      Object.keys(FIO_ASSET_MAP).find(pluginId => FIO_ASSET_MAP[pluginId].chainCode === content.chain_code.toUpperCase()) ??
-      Object.keys(SPECIAL_CURRENCY_INFO).find(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode === content.chain_code.toUpperCase())
-    if (pluginId == null) {
-      showError(sprintf(lstrings.fio_request_unknown_chain_code, content.chain_code.toUpperCase()))
-      return
-    }
-
-    const { tokenCode } = convertFIOToEdgeCodes(account, pluginId, content.chain_code.toUpperCase(), content.token_code.toUpperCase())
-    const tokenId = getTokenIdForced(account, pluginId, tokenCode)
-    const allowedAssets = [{ pluginId, tokenId }]
-
-    const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={this.props.navigation as NavigationBase}
-        headerTitle={lstrings.fio_src_wallet}
-        allowedAssets={allowedAssets}
-      />
-    ))
-    if (result?.type === 'wallet') {
-      const { walletId, tokenId } = result
-      const wallet = account.currencyWallets[walletId]
-      const currencyCode = getCurrencyCode(wallet, tokenId)
-      onSelectWallet(walletId, currencyCode)
-      await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
-    }
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
