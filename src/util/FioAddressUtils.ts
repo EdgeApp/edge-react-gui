@@ -1311,6 +1311,7 @@ export const refreshFioNames = async (
 }
 
 export const convertFIOToEdgeCodes = (
+  account: EdgeAccount,
   pluginId: string,
   fioChainCode: string,
   fioTokenCode: string
@@ -1319,7 +1320,7 @@ export const convertFIOToEdgeCodes = (
   const fioAsset = fioAssets[pluginId]
   const chainCode =
     fioAsset != null && fioChainCode === fioAsset.chainCode
-      ? fioAsset.chainCode
+      ? account.currencyConfig[pluginId].currencyInfo.currencyCode
       : fioChainCode
   const tokenCode = fioTokenCode === fioChainCode ? chainCode : fioTokenCode
 

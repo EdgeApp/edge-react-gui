@@ -387,6 +387,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     for (const walletId of Object.keys(account.currencyWallets)) {
       const wallet = account.currencyWallets[walletId]
       const { chainCode, tokenCode } = convertFIOToEdgeCodes(
+        account,
         wallet.currencyInfo.pluginId,
         fioRequest.content.chain_code.toUpperCase(),
         fioRequest.content.token_code.toUpperCase()
@@ -463,6 +464,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     const { tokenCode } = convertFIOToEdgeCodes(
+      account,
       pluginId,
       content.chain_code.toUpperCase(),
       content.token_code.toUpperCase()

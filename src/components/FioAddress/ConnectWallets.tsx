@@ -172,6 +172,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
       // Convert back to Edge currency code to display the icon
       const pluginId = wallet.edgeWallet.currencyInfo.pluginId
       const { tokenCode: currencyCode } = convertFIOToEdgeCodes(
+        account,
         pluginId,
         wallet.chainCode,
         wallet.currencyCode

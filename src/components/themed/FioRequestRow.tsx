@@ -284,6 +284,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
           `No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`
         )
       const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(
+        account,
         pluginId,
         fioRequest.content.chain_code.toUpperCase(),
         tokenCode
