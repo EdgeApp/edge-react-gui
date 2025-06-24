@@ -216,7 +216,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
       })
 
       if (pluginId == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
-      const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(pluginId, fioRequest.content.chain_code.toUpperCase(), tokenCode)
+      const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(account, pluginId, fioRequest.content.chain_code.toUpperCase(), tokenCode)
       tokenCode = edgeTokenCode
       displayDenomination = selectDisplayDenomByCurrencyCode(state, currencyConfig[pluginId], tokenCode)
       exchangeDenomination = getExchangeDenomByCurrencyCode(currencyConfig[pluginId], tokenCode)

@@ -1057,10 +1057,10 @@ export const refreshFioNames = async (
   return { fioAddresses, fioDomains, fioWalletsById }
 }
 
-export const convertFIOToEdgeCodes = (pluginId: string, fioChainCode: string, fioTokenCode: string) => {
+export const convertFIOToEdgeCodes = (account: EdgeAccount, pluginId: string, fioChainCode: string, fioTokenCode: string) => {
   const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
   const fioAsset = fioAssets[pluginId]
-  const chainCode = fioAsset != null && fioChainCode === fioAsset.chainCode ? fioAsset.chainCode : fioChainCode
+  const chainCode = fioAsset != null && fioChainCode === fioAsset.chainCode ? account.currencyConfig[pluginId].currencyInfo.currencyCode : fioChainCode
   const tokenCode = fioTokenCode === fioChainCode ? chainCode : fioTokenCode
 
   return { chainCode, tokenCode }
