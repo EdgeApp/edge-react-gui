@@ -28,30 +28,51 @@ export function parseMarkdown(str: string): React.ReactNode {
 }
 
 function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
-  const subTokens = 'tokens' in token ? token.tokens?.map((token, index) => tokenToReactNode(token as MarkedToken, `${key}-${index}`)) : undefined
+  const subTokens =
+    'tokens' in token
+      ? token.tokens?.map((token, index) =>
+          tokenToReactNode(token as MarkedToken, `${key}-${index}`)
+        )
+      : undefined
   switch (token.type) {
     case 'text': {
       return <EdgeText numberOfLines={1000}>{token.text}</EdgeText>
     }
     case 'paragraph': {
       console.log('P')
-      return <Paragraph>{subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}</Paragraph>
+      return (
+        <Paragraph>
+          {subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}
+        </Paragraph>
+      )
     }
     case 'em': {
       return <Em>{subTokens ?? token.text}</Em>
     }
     case 'list': {
       console.log('OL')
-      return <Ol>{token.items.map((item, index) => tokenToReactNode(item, `${key}-${index}`))}</Ol>
+      return (
+        <Ol>
+          {token.items.map((item, index) =>
+            tokenToReactNode(item, `${key}-${index}`)
+          )}
+        </Ol>
+      )
     }
     case 'list_item': {
       console.log('LI')
       return (
         <Li key={key}>
           <LiBullet>
-            <EdgeText>{token.raw.match(/^[\s]*([*\-\d.]+)/)?.[1] ?? '*'}</EdgeText>
+            <EdgeText>
+              {token.raw.match(/^[\s]*([*\-\d.]+)/)?.[1] ?? '*'}
+            </EdgeText>
           </LiBullet>
-          <LiContent>{subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}</LiContent>
+          <LiContent>
+            {subTokens ?? (
+              <EdgeText numberOfLines={1000}>{token.text}</EdgeText>
+            )}
+          </LiContent>
         </Li>
       )
     }

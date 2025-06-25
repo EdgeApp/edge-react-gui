@@ -42,7 +42,12 @@ export const FundAccountModal = (props: Props) => {
     Airship.clear()
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={lstrings.select_receive_asset}
+        navigation={navigation}
+        showCreateWallet
+      />
     ))
 
     if (result?.type === 'wallet') {
@@ -65,10 +70,17 @@ export const FundAccountModal = (props: Props) => {
     bridge.resolve()
   })
 
-  const iconProps = React.useMemo(() => ({ size: theme.rem(1.25), color: theme.iconTappable }), [theme])
+  const iconProps = React.useMemo(
+    () => ({ size: theme.rem(1.25), color: theme.iconTappable }),
+    [theme]
+  )
 
   return (
-    <EdgeModal bridge={bridge} title={lstrings.fund_account_modal_title} onCancel={handleCancel}>
+    <EdgeModal
+      bridge={bridge}
+      title={lstrings.fund_account_modal_title}
+      onCancel={handleCancel}
+    >
       <SelectableRow
         marginRem={0.5}
         minimumFontScale={0.5}
@@ -86,7 +98,10 @@ export const FundAccountModal = (props: Props) => {
         marginRem={0.5}
         minimumFontScale={0.5}
         title={lstrings.fund_account_modal_receive_title}
-        subTitle={sprintf(lstrings.fund_account_modal_receive_body_1s, config.appName)}
+        subTitle={sprintf(
+          lstrings.fund_account_modal_receive_body_1s,
+          config.appName
+        )}
         onPress={handleReceive}
         icon={
           <View style={style.iconContainer}>

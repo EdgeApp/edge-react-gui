@@ -8,7 +8,11 @@ export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   symbol: ''
 })
 
-export const selectDisplayDenomByCurrencyCode = (state: RootState, currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeDenomination => {
+export const selectDisplayDenomByCurrencyCode = (
+  state: RootState,
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string
+): EdgeDenomination => {
   const { pluginId } = currencyConfig.currencyInfo
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
   if (pluginSettings != null && pluginSettings[currencyCode] != null) {
@@ -17,7 +21,11 @@ export const selectDisplayDenomByCurrencyCode = (state: RootState, currencyConfi
   return getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
 }
 
-export const selectDisplayDenom = (state: RootState, currencyConfig: EdgeCurrencyConfig, tokenId: EdgeTokenId): EdgeDenomination => {
+export const selectDisplayDenom = (
+  state: RootState,
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): EdgeDenomination => {
   const exchangeDenomination = getExchangeDenom(currencyConfig, tokenId)
 
   let { currencyCode } = currencyConfig.currencyInfo
@@ -41,10 +49,14 @@ export const selectDisplayDenom = (state: RootState, currencyConfig: EdgeCurrenc
  * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
  * whichever you have.
  */
-export const getExchangeDenomByCurrencyCode = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeDenomination => {
+export const getExchangeDenomByCurrencyCode = (
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string
+): EdgeDenomination => {
   const { allTokens, currencyInfo } = currencyConfig
 
-  if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
+  if (currencyInfo.currencyCode === currencyCode)
+    return currencyInfo.denominations[0]
   for (const tokenId of Object.keys(allTokens)) {
     const token = allTokens[tokenId]
     if (token.currencyCode === currencyCode) return token.denominations[0]
@@ -58,7 +70,10 @@ export const getExchangeDenomByCurrencyCode = (currencyConfig: EdgeCurrencyConfi
  * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
  * whichever you have.
  */
-export function getExchangeDenom(currencyConfig: EdgeCurrencyConfig, tokenId: EdgeTokenId): EdgeDenomination {
+export function getExchangeDenom(
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): EdgeDenomination {
   if (tokenId == null) return currencyConfig.currencyInfo.denominations[0]
 
   const token = currencyConfig.allTokens[tokenId]

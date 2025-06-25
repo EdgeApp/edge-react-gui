@@ -6,6 +6,11 @@ import { useSelector } from '../types/reactRedux'
 /**
  * Subscribes to a wallet's display denomination.
  */
-export function useDisplayDenom(currencyConfig: EdgeCurrencyConfig, tokenId: EdgeTokenId): EdgeDenomination {
-  return useSelector(state => selectDisplayDenom(state, currencyConfig, tokenId))
+export function useDisplayDenom(
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): EdgeDenomination {
+  return useSelector(state =>
+    selectDisplayDenom(state, currencyConfig, tokenId)
+  )
 }

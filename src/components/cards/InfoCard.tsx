@@ -29,11 +29,19 @@ export function InfoCarouselCard(props: Props) {
   const { navigation, promoInfo, onClose } = props
   const { localeMessages, ctaButton, background, dismissable } = promoInfo
 
-  const backgroundInfo = theme.isDark ? background.darkMode : background.lightMode
-  const { backgroundGradientColors, backgroundGradientEnd, backgroundGradientStart, imageUri } = backgroundInfo
+  const backgroundInfo = theme.isDark
+    ? background.darkMode
+    : background.lightMode
+  const {
+    backgroundGradientColors,
+    backgroundGradientEnd,
+    backgroundGradientStart,
+    imageUri
+  } = backgroundInfo
 
   const message = getLocaleOrDefaultString(localeMessages)
-  const ctaLabel = ctaButton == null ? null : getLocaleOrDefaultString(ctaButton.localeLabels)
+  const ctaLabel =
+    ctaButton == null ? null : getLocaleOrDefaultString(ctaButton.localeLabels)
 
   const handlePress = useHandler(async () => {
     if (ctaButton == null) return
@@ -53,8 +61,17 @@ export function InfoCarouselCard(props: Props) {
     <EdgeCard
       onClose={dismissable ? onClose : undefined}
       nodeBackground={
-        <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
-          <FastImage source={imageSrc} style={styles.backgroundImage} resizeMode="stretch" />
+        <LinearGradient
+          colors={backgroundGradientColors}
+          start={backgroundGradientStart}
+          end={backgroundGradientEnd}
+          style={styles.backgroundContainer}
+        >
+          <FastImage
+            source={imageSrc}
+            style={styles.backgroundImage}
+            resizeMode="stretch"
+          />
         </LinearGradient>
       }
     >
@@ -64,7 +81,13 @@ export function InfoCarouselCard(props: Props) {
         </EdgeText>
         {ctaLabel == null ? null : (
           <View style={styles.cornerButtonContainer}>
-            <EdgeButton layout="solo" type="secondary" label={ctaLabel} mini onPress={handlePress} />
+            <EdgeButton
+              layout="solo"
+              type="secondary"
+              label={ctaLabel}
+              mini
+              onPress={handlePress}
+            />
           </View>
         )}
       </View>

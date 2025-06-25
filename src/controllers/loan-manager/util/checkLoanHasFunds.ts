@@ -9,7 +9,10 @@ export const checkLoanHasFunds = (loanAccount: LoanAccount): boolean => {
     '0'
   )
   const hasCollateral = gt(
-    borrowEngine.collaterals.reduce((sum, collateral) => add(sum, collateral.nativeAmount), '0'),
+    borrowEngine.collaterals.reduce(
+      (sum, collateral) => add(sum, collateral.nativeAmount),
+      '0'
+    ),
     '0'
   )
   return hasDebt || hasCollateral

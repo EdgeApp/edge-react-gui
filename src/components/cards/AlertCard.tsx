@@ -53,19 +53,34 @@ export function AlertCardUi4(props: Props) {
   }
 
   return (
-    <EdgeCard gradientBackground={type === 'error' ? theme.cardGradientError : theme.cardGradientWarning} marginRem={marginRem} onPress={onPress}>
+    <EdgeCard
+      gradientBackground={
+        type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
+      }
+      marginRem={marginRem}
+      onPress={onPress}
+    >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <IonIcon name="warning-outline" style={styles.icon} color={theme.primaryText} size={theme.rem(1.25)} />
+          <IonIcon
+            name="warning-outline"
+            style={styles.icon}
+            color={theme.primaryText}
+            size={theme.rem(1.25)}
+          />
           <EdgeText numberOfLines={0} style={styles.titleText}>
             {title}
           </EdgeText>
         </View>
 
-        {header == null ? null : <EdgeText style={styles.text}>{header}</EdgeText>}
+        {header == null ? null : (
+          <EdgeText style={styles.text}>{header}</EdgeText>
+        )}
 
         {body == null ? null : typeof body === 'object' && body.length > 0 ? (
-          <View style={styles.bulletPointContainer}>{body.map(point => bulletPoint(point))}</View>
+          <View style={styles.bulletPointContainer}>
+            {body.map(point => bulletPoint(point))}
+          </View>
         ) : (
           <EdgeText style={styles.text} numberOfLines={10}>
             {body}

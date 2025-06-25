@@ -2,7 +2,10 @@ import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { newPriceChangeEvent, updateNotificationSettings } from '../../actions/NotificationActions'
+import {
+  newPriceChangeEvent,
+  updateNotificationSettings
+} from '../../actions/NotificationActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
@@ -24,13 +27,26 @@ export const CurrencyNotificationScene = (props: Props) => {
   const { pluginId } = currencyInfo
   const dispatch = useDispatch()
 
-  const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
+  const defaultIsoFiat = useSelector(
+    (state: RootState) => state.ui.settings.defaultIsoFiat
+  )
   const settings = useSelector((state: RootState) => state.notificationSettings)
 
   const updateSettings = (settingChange: 'hourly' | 'daily') => async () => {
-    const hourly = settingChange === 'hourly' ? !settings.plugins[pluginId].hourlyChange : !!settings.plugins[pluginId].hourlyChange
-    const daily = settingChange === 'daily' ? !settings.plugins[pluginId].dailyChange : !!settings.plugins[pluginId].dailyChange
-    const event = newPriceChangeEvent(currencyInfo, defaultIsoFiat, hourly, daily)
+    const hourly =
+      settingChange === 'hourly'
+        ? !settings.plugins[pluginId].hourlyChange
+        : !!settings.plugins[pluginId].hourlyChange
+    const daily =
+      settingChange === 'daily'
+        ? !settings.plugins[pluginId].dailyChange
+        : !!settings.plugins[pluginId].dailyChange
+    const event = newPriceChangeEvent(
+      currencyInfo,
+      defaultIsoFiat,
+      hourly,
+      daily
+    )
     try {
       await dispatch(updateNotificationSettings({ createEvents: [event] }))
     } catch (e: any) {
@@ -45,13 +61,20 @@ export const CurrencyNotificationScene = (props: Props) => {
     <SceneWrapper scroll>
       <SettingsSwitchRow
         key="hourly"
-        label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
+        label={sprintf(
+          lstrings.settings_currency_notifications_percent_change_hour,
+          3
+        )}
         value={settings.plugins[pluginId].hourlyChange != null}
         onPress={handleHourlyPress}
       />
       <SettingsSwitchRow
         key="daily"
-        label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
+        label={sprintf(
+          lstrings.settings_currency_notifications_percent_change_hours,
+          10,
+          24
+        )}
         value={settings.plugins[pluginId].dailyChange != null}
         onPress={handleDailyPress}
       />

@@ -19,18 +19,33 @@ export async function exportTransactionsToCSV(
 ): Promise<string> {
   let denomName = ''
   if (denomination != null) {
-    const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
+    const denomObj = wallet.currencyInfo.denominations.find(
+      edgeDenom => edgeDenom.multiplier === denomination
+    )
     if (denomObj != null) denomName = denomObj.name
   }
-  return exportTransactionsToCSVInner(txs, currencyCode, defaultIsoFiat, denomination, denomName)
+  return exportTransactionsToCSVInner(
+    txs,
+    currencyCode,
+    defaultIsoFiat,
+    denomination,
+    denomName
+  )
 }
 
-export function updateTxsFiat(wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]): ThunkAction<Promise<void>> {
+export function updateTxsFiat(
+  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  txs: EdgeTransaction[]
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const defaultIsoFiat = state.ui.settings.defaultIsoFiat
 
-    const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+    const exchangeDenom = getExchangeDenomByCurrencyCode(
+      wallet.currencyConfig,
+      currencyCode
+    )
 
     let promises: Array<Promise<void>> = []
     for (const tx of txs) {
@@ -45,7 +60,15 @@ export function updateTxsFiat(wallet: EdgeCurrencyWallet, currencyCode: string, 
                 ...tx.metadata,
                 exchangeAmount: {
                   ...tx.metadata?.exchangeAmount,
-                  [defaultIsoFiat]: rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
+                  [defaultIsoFiat]:
+                    rate *
+                    Number(
+                      div(
+                        tx.nativeAmount,
+                        exchangeDenom.multiplier,
+                        DECIMAL_PRECISION
+                      )
+                    )
                 }
               }
             })
@@ -171,7 +194,10 @@ function makeBitwaveDateTime(date: number): string {
 //      2. category set to 'Expense:Network Fee'
 //      3. txid set to old txid + '-TRANSFER_TX'
 
-export function getTransferTx(oldEdgeTransaction: EdgeTransaction, fiatCurrencyCode: string): EdgeTransaction[] | null {
+export function getTransferTx(
+  oldEdgeTransaction: EdgeTransaction,
+  fiatCurrencyCode: string
+): EdgeTransaction[] | null {
   const edgeTransaction = { ...oldEdgeTransaction }
   edgeTransaction.metadata = { ...oldEdgeTransaction.metadata }
 
@@ -180,13 +206,24 @@ export function getTransferTx(oldEdgeTransaction: EdgeTransaction, fiatCurrencyC
   if (!lt(edgeTransaction.nativeAmount, '0')) return null
   if (!gt(edgeTransaction.networkFee, '0')) return null
 
-  const nativeAmountNoFee = add(edgeTransaction.nativeAmount, edgeTransaction.networkFee)
+  const nativeAmountNoFee = add(
+    edgeTransaction.nativeAmount,
+    edgeTransaction.networkFee
+  )
   let newTxFiatFee = 0
-  let amountFiat = edgeTransaction.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+  let amountFiat =
+    edgeTransaction.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
 
   if (amountFiat > 0) {
-    const exchangeRate: string = div(amountFiat.toString(), edgeTransaction.nativeAmount, 16)
-    const newTxFiatFeeString: string = mul(exchangeRate, edgeTransaction.networkFee)
+    const exchangeRate: string = div(
+      amountFiat.toString(),
+      edgeTransaction.nativeAmount,
+      16
+    )
+    const newTxFiatFeeString: string = mul(
+      exchangeRate,
+      edgeTransaction.networkFee
+    )
     newTxFiatFee = Math.abs(Number(newTxFiatFeeString))
     amountFiat = Number(mul(exchangeRate, nativeAmountNoFee))
   }
@@ -235,11 +272,14 @@ export function exportTransactionsToQBO(
   }
 
   function edgeTxToQbo(edgeTx: EdgeTransaction) {
-    const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
+    const TRNAMT: string = denom
+      ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
+      : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
     const DTPOSTED = makeOfxDate(edgeTx.date)
     const NAME: string = edgeTx.metadata?.name ?? ''
-    const amountFiat: number = edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+    const amountFiat: number =
+      edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
     const category: string = edgeTx.metadata?.category ?? ''
     const notes: string = edgeTx.metadata?.notes ?? ''
 
@@ -357,11 +397,16 @@ export function exportTransactionsToCSVInner(
   }
 
   function edgeTxToCsv(edgeTx: EdgeTransaction) {
-    const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
-    const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
+    const amount: string = denom
+      ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
+      : edgeTx.nativeAmount
+    const networkFeeField: string = denom
+      ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION)
+      : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
     const name: string = edgeTx.metadata?.name ?? ''
-    const amountFiat: number = edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+    const amountFiat: number =
+      edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
     const category: string = edgeTx.metadata?.category ?? ''
     const notes: string = edgeTx.metadata?.notes ?? ''
 
@@ -406,7 +451,17 @@ export async function exportTransactionsToBitwave(
   }
 
   function edgeTxToCsv(edgeTx: EdgeTransaction) {
-    const { date, isSend, metadata, nativeAmount, networkFee, ourReceiveAddresses, parentNetworkFee, spendTargets, txid } = edgeTx
+    const {
+      date,
+      isSend,
+      metadata,
+      nativeAmount,
+      networkFee,
+      ourReceiveAddresses,
+      parentNetworkFee,
+      spendTargets,
+      txid
+    } = edgeTx
     const amount: string = abs(div(nativeAmount, multiplier, DECIMAL_PRECISION))
     const time = makeBitwaveDateTime(date)
     let fee: string = ''
@@ -431,7 +486,10 @@ export async function exportTransactionsToBitwave(
       toAddress = ourReceiveAddresses != null ? ourReceiveAddresses[0] : ''
     }
 
-    const id = shajs('sha256').update(`${txid}_${nativeAmount}_${networkFee}_${toAddress}`).digest('hex').slice(0, 16)
+    const id = shajs('sha256')
+      .update(`${txid}_${nativeAmount}_${networkFee}_${toAddress}`)
+      .digest('hex')
+      .slice(0, 16)
 
     items.push({
       id,

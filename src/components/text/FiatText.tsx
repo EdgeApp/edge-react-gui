@@ -39,10 +39,11 @@ export const FiatText = ({
   tokenId,
   currencyConfig
 }: Props) => {
-  const { currencyCode, denomination, isoFiatCurrencyCode } = useTokenDisplayData({
-    tokenId,
-    currencyConfig
-  })
+  const { currencyCode, denomination, isoFiatCurrencyCode } =
+    useTokenDisplayData({
+      tokenId,
+      currencyConfig
+    })
 
   const text = useFiatText({
     appendFiatCurrencyCode,
@@ -54,7 +55,9 @@ export const FiatText = ({
     isoFiatCurrencyCode,
     maxPrecision,
     minPrecision,
-    nativeCryptoAmount: isKeysOnlyPlugin(currencyConfig.currencyInfo.pluginId) ? '0' : nativeCryptoAmount,
+    nativeCryptoAmount: isKeysOnlyPlugin(currencyConfig.currencyInfo.pluginId)
+      ? '0'
+      : nativeCryptoAmount,
     subCentTruncation,
     hideBalance
   })

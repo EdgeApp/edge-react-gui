@@ -8,7 +8,9 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'glif_infinity_pool'
 }
 
-const filecoinCalibrationPolicyConfig: Array<StakePolicyConfig<GlifInfinityPoolAdapterConfig>> = [
+const filecoinCalibrationPolicyConfig: Array<
+  StakePolicyConfig<GlifInfinityPoolAdapterConfig>
+> = [
   {
     stakePolicyId: 'tfil_glif_infinity_pool_0',
     stakeProviderInfo: stakeProviderInfo,
@@ -23,8 +25,12 @@ const filecoinCalibrationPolicyConfig: Array<StakePolicyConfig<GlifInfinityPoolA
     disableMaxStake: true,
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
-    stakeAssets: [{ pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }],
-    rewardAssets: [{ pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }]
+    stakeAssets: [
+      { pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }
+    ],
+    rewardAssets: [
+      { pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }
+    ]
   }
 ]
 

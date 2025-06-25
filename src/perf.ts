@@ -1,5 +1,8 @@
 import { PerfEvent } from 'edge-login-ui-rn'
-import performance, { PerformanceEntry, PerformanceObserver } from 'react-native-performance'
+import performance, {
+  PerformanceEntry,
+  PerformanceObserver
+} from 'react-native-performance'
 
 //
 // Logging
@@ -35,8 +38,12 @@ new PerformanceObserver(list => {
 // Launch:
 new PerformanceObserver(list => {
   const entries = list.getEntries()
-  const hasLaunchFinished = entries.some(entry => entry.name === 'nativeLaunchEnd')
-  const hasBundleFinished = entries.some(entry => entry.name === 'runJsBundleEnd')
+  const hasLaunchFinished = entries.some(
+    entry => entry.name === 'nativeLaunchEnd'
+  )
+  const hasBundleFinished = entries.some(
+    entry => entry.name === 'runJsBundleEnd'
+  )
 
   if (hasLaunchFinished && hasBundleFinished) {
     performance.measure('nativeLaunch', 'nativeLaunchStart', 'nativeLaunchEnd')
@@ -74,7 +81,9 @@ new PerformanceObserver(list => {
 // Login UI Performance Markers
 //
 
-export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void {
+export function performanceMarkersFromLoginUiPerfEvents(
+  event: PerfEvent
+): void {
   switch (event.name) {
     case 'passwordLoginBegin':
       performance.mark('loginBegin')
@@ -105,7 +114,11 @@ export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void 
 // Utilities
 //
 
-function markerMeasurement(measureName: string, startName: string, endName: string) {
+function markerMeasurement(
+  measureName: string,
+  startName: string,
+  endName: string
+) {
   return (entries: PerformanceEntry[]) => {
     const endMark = entries.find(entry => entry.name === endName)
 

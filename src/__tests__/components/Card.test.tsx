@@ -9,7 +9,8 @@ import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 const testColors = ['#4c669f', '#3b5998', '#192f6a']
-const testIconUri = 'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
+const testIconUri =
+  'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
 
 describe('Card', () => {
   it('should render with gradient background', () => {
@@ -29,7 +30,11 @@ describe('Card', () => {
   })
 
   it('should render with node background', () => {
-    const nodeBackground = <View style={{ height: 100, width: 100, backgroundColor: testColors[0] }} />
+    const nodeBackground = (
+      <View
+        style={{ height: 100, width: 100, backgroundColor: testColors[0] }}
+      />
+    )
     const rendered = render(
       <FakeProviders>
         <EdgeCard nodeBackground={nodeBackground}>
@@ -69,7 +74,11 @@ describe('Card', () => {
 
     const rendered = render(
       <FakeProviders>
-        <EdgeCard onPress={mockOnPress} onLongPress={mockOnLongPress} testID="card">
+        <EdgeCard
+          onPress={mockOnPress}
+          onLongPress={mockOnLongPress}
+          testID="card"
+        >
           <EdgeText>Press Me</EdgeText>
         </EdgeCard>
       </FakeProviders>

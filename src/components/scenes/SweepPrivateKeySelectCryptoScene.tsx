@@ -66,7 +66,9 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
       return
     }
 
-    const filteredSweepPrivateKeyList = sweepPrivateKeyList.filter(item => selectedItems.has(item.key))
+    const filteredSweepPrivateKeyList = sweepPrivateKeyList.filter(item =>
+      selectedItems.has(item.key)
+    )
     navigation.push('sweepPrivateKeyCalculateFee', {
       memoryWallet,
       receivingWallet,
@@ -74,32 +76,35 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
     })
   })
 
-  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<SweepPrivateKeyItem>) => {
-    const { key, tokenId } = item.item
-    const displayName = tokenId == null ? mainnetDisplayName : allTokens[tokenId].displayName
+  const renderCreateWalletRow = useHandler(
+    (item: ListRenderItemInfo<SweepPrivateKeyItem>) => {
+      const { key, tokenId } = item.item
+      const displayName =
+        tokenId == null ? mainnetDisplayName : allTokens[tokenId].displayName
 
-    const toggle = (
-      <Switch
-        ios_backgroundColor={theme.toggleButtonOff}
-        trackColor={{
-          false: theme.toggleButtonOff,
-          true: theme.toggleButton
-        }}
-        value={selectedItems.has(key)}
-        onValueChange={() => handleCreateWalletToggle(key)}
-      />
-    )
+      const toggle = (
+        <Switch
+          ios_backgroundColor={theme.toggleButtonOff}
+          trackColor={{
+            false: theme.toggleButtonOff,
+            true: theme.toggleButton
+          }}
+          value={selectedItems.has(key)}
+          onValueChange={() => handleCreateWalletToggle(key)}
+        />
+      )
 
-    return (
-      <CreateWalletSelectCryptoRow
-        pluginId={pluginId}
-        tokenId={tokenId}
-        walletName={displayName}
-        onPress={() => handleCreateWalletToggle(key)}
-        rightSide={toggle}
-      />
-    )
-  })
+      return (
+        <CreateWalletSelectCryptoRow
+          pluginId={pluginId}
+          tokenId={tokenId}
+          walletName={displayName}
+          onPress={() => handleCreateWalletToggle(key)}
+          rightSide={toggle}
+        />
+      )
+    }
+  )
 
   const keyExtractor = useHandler((item: SweepPrivateKeyItem) => item.key)
 
@@ -107,7 +112,10 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
     <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <SceneHeader title={lstrings.sweep_private_key_select_crypto_title} withTopMargin />
+          <SceneHeader
+            title={lstrings.sweep_private_key_select_crypto_title}
+            withTopMargin
+          />
           <FlatList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{
@@ -123,9 +131,18 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
             renderItem={renderCreateWalletRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
+          <Fade
+            noFadeIn={numSelected > 0}
+            visible={numSelected > 0}
+            duration={300}
+          >
             <View style={styles.bottomButton}>
-              <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 0.75]} onPress={handleNext} />
+              <MainButton
+                label={lstrings.string_next_capitalized}
+                type="primary"
+                marginRem={[0, 0, 0.75]}
+                onPress={handleNext}
+              />
             </View>
           </Fade>
         </View>
@@ -142,4 +159,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SweepPrivateKeySelectCryptoScene = React.memo(SweepPrivateKeySelectCryptoComponent)
+export const SweepPrivateKeySelectCryptoScene = React.memo(
+  SweepPrivateKeySelectCryptoComponent
+)

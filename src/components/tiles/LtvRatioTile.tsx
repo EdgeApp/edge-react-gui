@@ -5,7 +5,10 @@ import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
-export const LtvRatioTile = (props: { borrowEngine: BorrowEngine; futureValue: string }) => {
+export const LtvRatioTile = (props: {
+  borrowEngine: BorrowEngine
+  futureValue: string
+}) => {
   const theme = useTheme()
   const { borrowEngine, futureValue } = props
   const currentValue = borrowEngine.loanToValue
@@ -26,5 +29,11 @@ export const LtvRatioTile = (props: { borrowEngine: BorrowEngine; futureValue: s
 }
 
 export const getLtvColorValue = (ltvValue: number, theme: Theme): string => {
-  return ltvValue > 0.7 ? theme.dangerText : ltvValue > 0.6 ? theme.warningText : ltvValue > 0 ? theme.positiveText : theme.deactivatedText
+  return ltvValue > 0.7
+    ? theme.dangerText
+    : ltvValue > 0.6
+    ? theme.warningText
+    : ltvValue > 0
+    ? theme.positiveText
+    : theme.deactivatedText
 }

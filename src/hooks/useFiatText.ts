@@ -1,6 +1,9 @@
 import { abs, add, div, lt, toFixed } from 'biggystring'
 
-import { getFiatSymbol, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
+import {
+  getFiatSymbol,
+  USD_FIAT
+} from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
@@ -45,11 +48,21 @@ export const useFiatText = (props: Props): string => {
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
-    const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const cryptoAmount = div(
+      nativeCryptoAmount,
+      cryptoExchangeMultiplier,
+      DECIMAL_PRECISION
+    )
+    return convertCurrency(
+      state,
+      cryptoCurrencyCode,
+      isoFiatCurrencyCode,
+      cryptoAmount
+    )
   })
 
-  const isSubCentTruncationActive = subCentTruncation && lt(abs(fiatAmount), '0.01')
+  const isSubCentTruncationActive =
+    subCentTruncation && lt(abs(fiatAmount), '0.01')
 
   // Convert the amount to an internationalized string or '0'
   const fiatString = hideBalance
@@ -65,8 +78,14 @@ export const useFiatText = (props: Props): string => {
     : '0'
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
-  const fiatSymbol = hideFiatSymbol ? '' : `${getFiatSymbol(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
-  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${removeIsoPrefix(isoFiatCurrencyCode)}` : ''
+  const fiatSymbol = hideFiatSymbol
+    ? ''
+    : `${getFiatSymbol(isoFiatCurrencyCode)}${
+        fiatSymbolSpace || hideBalance ? ' ' : ''
+      }`
+  const fiatCurrencyCode = appendFiatCurrencyCode
+    ? ` ${removeIsoPrefix(isoFiatCurrencyCode)}`
+    : ''
   return `${lessThanSymbol}${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
@@ -77,7 +96,13 @@ export const formatFiatString = (props: {
   minPrecision?: number
   maxPrecision?: number
 }): string => {
-  const { fiatAmount, minPrecision = 2, maxPrecision = 6, autoPrecision = true, noGrouping = false } = props
+  const {
+    fiatAmount,
+    minPrecision = 2,
+    maxPrecision = 6,
+    autoPrecision = true,
+    noGrouping = false
+  } = props
 
   // Assume any spaces means this is some truncated '1.23 Bn' or '3.45 M' string
   const [fiatAmountCleanedMag, magnitudeCode] = fiatAmount.split(' ')
@@ -99,15 +124,24 @@ export const formatFiatString = (props: {
   }
 
   // Convert back to a localized fiat amount string with specified precision and grouping
-  return `${displayFiatAmount(fiatAmtCleanedDelim, precision, noGrouping)}${magnitudeCodeStr}`
+  return `${displayFiatAmount(
+    fiatAmtCleanedDelim,
+    precision,
+    noGrouping
+  )}${magnitudeCodeStr}`
 }
 
 /**
  * Returns a localized fiat amount string
  * */
-export const displayFiatAmount = (fiatAmount?: number | string, precision: number = 2, noGrouping: boolean = true) => {
+export const displayFiatAmount = (
+  fiatAmount?: number | string,
+  precision: number = 2,
+  noGrouping: boolean = true
+) => {
   const fiatAmountBns = fiatAmount != null ? add(fiatAmount, '0') : undefined
-  if (fiatAmountBns == null || fiatAmountBns === '0') return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  if (fiatAmountBns == null || fiatAmountBns === '0')
+    return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const absoluteAmount = abs(fiatAmountBns)
   return formatNumber(toFixed(absoluteAmount, precision, precision), {
     noGrouping

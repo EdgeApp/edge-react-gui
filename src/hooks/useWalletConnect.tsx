@@ -1,7 +1,11 @@
 import '@walletconnect/react-native-compat'
 
 import { SessionTypes } from '@walletconnect/types'
-import { buildApprovedNamespaces, getSdkError, parseUri } from '@walletconnect/utils'
+import {
+  buildApprovedNamespaces,
+  getSdkError,
+  parseUri
+} from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
 import { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
@@ -24,10 +28,17 @@ export const UNSUPPORTED_WC_VERSION = 'UNSUPPORTED_WC_VERSION'
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
-  approveSession: (proposal: Web3WalletTypes.SessionProposal, walletId: string) => Promise<void>
+  approveSession: (
+    proposal: Web3WalletTypes.SessionProposal,
+    walletId: string
+  ) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
   disconnectSession: (topic: string) => Promise<void>
-  approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
+  approveRequest: (
+    topic: string,
+    requestId: number,
+    result: JsonObject | string
+  ) => Promise<void>
   rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
 
@@ -50,9 +61,14 @@ export function useWalletConnect(): WalletConnect {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   // Utils
-  const parseConnection = (session: SessionTypes.Struct, walletId: string): WcConnectionInfo => {
+  const parseConnection = (
+    session: SessionTypes.Struct,
+    walletId: string
+  ): WcConnectionInfo => {
     const icon = session.peer.metadata.icons[0] ?? '.svg'
-    const iconUri = icon.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : icon
+    const iconUri = icon.endsWith('.svg')
+      ? 'https://content.edge.app/walletConnectLogo.png'
+      : icon
     const { date, time } = unixToLocaleDateTime(session.expiry)
     const expiration = `${date} at ${time}`
     const connection = {
@@ -75,7 +91,10 @@ export function useWalletConnect(): WalletConnect {
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
+      const walletId = getWalletIdFromSessionNamespace(
+        session.namespaces,
+        accounts
+      )
       if (walletId == null) continue
 
       const connection = parseConnection(session, walletId)
@@ -112,57 +131,73 @@ export function useWalletConnect(): WalletConnect {
     )
   })
 
-  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, walletId: string) => {
-    const client = await getClient()
+  const approveSession = useHandler(
+    async (proposal: Web3WalletTypes.SessionProposal, walletId: string) => {
+      const client = await getClient()
 
-    const wallet = currencyWallets[walletId]
-    if (wallet == null) return
+      const wallet = currencyWallets[walletId]
+      if (wallet == null) return
 
-    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
-    if (chainId == null) return
+      const chainId =
+        SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]
+          .walletConnectV2ChainId
+      if (chainId == null) return
 
-    const address = await wallet.getReceiveAddress({ tokenId: null })
-    const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
+      const address = await wallet.getReceiveAddress({ tokenId: null })
+      const supportedNamespaces = getSupportedNamespaces(
+        chainId,
+        address.publicAddress
+      )
 
-    // Check that we support all required methods
-    if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
-      const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
-        return !supportedNamespaces[chainId.namespace].methods.includes(method)
-      })
-      if (unsupportedMethods.length > 0) {
-        throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
-      }
-    }
-
-    await runWithTimeout(
-      client.approveSession({
-        id: proposal.id,
-        namespaces: buildApprovedNamespaces({
-          proposal: proposal.params,
-          supportedNamespaces
+      // Check that we support all required methods
+      if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
+        const unsupportedMethods = proposal.params.requiredNamespaces[
+          chainId.namespace
+        ].methods.filter(method => {
+          return !supportedNamespaces[chainId.namespace].methods.includes(
+            method
+          )
         })
-      }),
-      20000
-    )
-  })
+        if (unsupportedMethods.length > 0) {
+          throw new Error(
+            `Required methods unimplemented: ${unsupportedMethods.join(',')}`
+          )
+        }
+      }
 
-  const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
-    const client = await getClient()
-    await client
-      .rejectSession({
-        id: proposal.id,
-        reason: getSdkError('USER_REJECTED')
-      })
-      .catch(e => {
-        console.log('walletConnect rejectSession error', String(e))
-      })
-  })
+      await runWithTimeout(
+        client.approveSession({
+          id: proposal.id,
+          namespaces: buildApprovedNamespaces({
+            proposal: proposal.params,
+            supportedNamespaces
+          })
+        }),
+        20000
+      )
+    }
+  )
+
+  const rejectSession = useHandler(
+    async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
+      const client = await getClient()
+      await client
+        .rejectSession({
+          id: proposal.id,
+          reason: getSdkError('USER_REJECTED')
+        })
+        .catch(e => {
+          console.log('walletConnect rejectSession error', String(e))
+        })
+    }
+  )
 
   const disconnectSession = useHandler(async (topic: string): Promise<void> => {
     const client = await getClient()
     const sessions = client.getActiveSessions()
     const session = sessions[topic]
-    const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
+    const dAppName =
+      session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
 
     // In testing, this method is pretty unreliable. May be worth replacing with something more manual.
     await runWithTimeout(
@@ -172,22 +207,28 @@ export function useWalletConnect(): WalletConnect {
       }),
       10000
     )
-    Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
-      console.log(e)
-    )
+    Airship.show(bridge => (
+      <FlashNotification
+        bridge={bridge}
+        message={sprintf(lstrings.wc_dapp_disconnected, dAppName)}
+        onPress={() => {}}
+      />
+    )).catch(e => console.log(e))
   })
 
-  const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
-    const client = await getClient()
-    await client
-      .respondSessionRequest({
-        topic,
-        response: { id, jsonrpc: '2.0', result }
-      })
-      .catch(e => {
-        console.log('walletConnect approveRequest error', String(e))
-      })
-  })
+  const approveRequest = useHandler(
+    async (topic: string, id: number, result: JsonObject | string) => {
+      const client = await getClient()
+      await client
+        .respondSessionRequest({
+          topic,
+          response: { id, jsonrpc: '2.0', result }
+        })
+        .catch(e => {
+          console.log('walletConnect approveRequest error', String(e))
+        })
+    }
+  )
 
   const rejectRequest = useHandler(async (topic: string, id: number) => {
     const client = await getClient()
@@ -215,12 +256,23 @@ export function useWalletConnect(): WalletConnect {
       approveRequest,
       rejectRequest
     }),
-    [getActiveSessions, initSession, approveSession, rejectSession, disconnectSession, approveRequest, rejectRequest]
+    [
+      getActiveSessions,
+      initSession,
+      approveSession,
+      rejectSession,
+      disconnectSession,
+      approveRequest,
+      rejectRequest
+    ]
   )
 }
 
 // Utilities
-const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
+const getSupportedNamespaces = (
+  chainId: WalletConnectChainId,
+  addr: string
+) => {
   const { namespace, reference } = chainId
 
   let methods: string[]
@@ -254,11 +306,14 @@ const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => 
   }
 }
 
-export const getAccounts = async (currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+export const getAccounts = async (currencyWallets: {
+  [walletId: string]: EdgeCurrencyWallet
+}) => {
   const map = new Map<string, string>()
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
-    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+    const chainId =
+      SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
     const address = await currencyWallets[walletId].getReceiveAddress({
@@ -270,9 +325,13 @@ export const getAccounts = async (currencyWallets: { [walletId: string]: EdgeCur
   return map
 }
 
-export const getWalletIdFromSessionNamespace = (namespaces: SessionTypes.Namespaces, accounts: Map<string, string>): string | undefined => {
+export const getWalletIdFromSessionNamespace = (
+  namespaces: SessionTypes.Namespaces,
+  accounts: Map<string, string>
+): string | undefined => {
   for (const networkName of Object.keys(namespaces)) {
-    const [namespace, reference, address] = namespaces[networkName].accounts[0].split(':')
+    const [namespace, reference, address] =
+      namespaces[networkName].accounts[0].split(':')
     const account = `${namespace}:${reference}:${address}`
 
     const walletId = accounts.get(account)

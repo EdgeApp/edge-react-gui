@@ -13,7 +13,11 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
-import { UNSUPPORTED_WC_VERSION, useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
+import {
+  UNSUPPORTED_WC_VERSION,
+  useWalletConnect,
+  walletConnectClient
+} from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
@@ -42,7 +46,9 @@ export const WcConnectionsScene = (props: Props) => {
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
   const [connecting, setConnecting] = React.useState(false)
-  const [sessionProposal, setSessionProposal] = React.useState<Map<string, Web3WalletTypes.SessionProposal>>(new Map())
+  const [sessionProposal, setSessionProposal] = React.useState<
+    Map<string, Web3WalletTypes.SessionProposal>
+  >(new Map())
 
   const account = useSelector(state => state.core.account)
   const walletConnect = useWalletConnect()
@@ -75,7 +81,10 @@ export const WcConnectionsScene = (props: Props) => {
         })
         proposal = newProposal
       }
-      const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, account.currencyConfig)
+      const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(
+        proposal,
+        account.currencyConfig
+      )
       const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
@@ -133,32 +142,64 @@ export const WcConnectionsScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
-      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
+        <EdgeText style={styles.subTitle}>
+          {lstrings.wc_walletconnect_subtitle}
+        </EdgeText>
         <MainButton
-          label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
+          label={
+            connecting
+              ? undefined
+              : lstrings.wc_walletconnect_new_connection_button
+          }
           type="primary"
           marginRem={[2, 0]}
           onPress={async () => await handleNewConnectionPress()}
           spinner={connecting}
         />
-        <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>
+        <EdgeText style={styles.listTitle}>
+          {lstrings.wc_walletconnect_active_connections}
+        </EdgeText>
         {walletConnectClient.client != null ? null : (
           <EdgeText style={{ ...styles.listTitle, color: theme.dangerText }}>
-            {sprintf(lstrings.wc_dapp_disconnected, lstrings.wc_walletconnect_title)}
+            {sprintf(
+              lstrings.wc_dapp_disconnected,
+              lstrings.wc_walletconnect_title
+            )}
           </EdgeText>
         )}
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
-            <EdgeTouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
-              <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
+            <EdgeTouchableOpacity
+              key={index}
+              style={styles.listRow}
+              onPress={() => handleActiveConnectionPress(dAppConnection)}
+            >
+              <FastImage
+                resizeMode="contain"
+                style={styles.currencyLogo}
+                source={{ uri: dAppConnection.icon }}
+              />
               <View style={styles.info}>
-                <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
-                <EdgeText style={styles.infoMidTitle}>{dAppConnection.dAppUrl}</EdgeText>
-                <EdgeText style={styles.infoSubTitle}>{dAppConnection.walletName}</EdgeText>
+                <EdgeText style={styles.infoTitle}>
+                  {dAppConnection.dAppName}
+                </EdgeText>
+                <EdgeText style={styles.infoMidTitle}>
+                  {dAppConnection.dAppUrl}
+                </EdgeText>
+                <EdgeText style={styles.infoSubTitle}>
+                  {dAppConnection.walletName}
+                </EdgeText>
               </View>
               <View style={styles.arrow}>
-                <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
+                <AntDesignIcon
+                  name="right"
+                  size={theme.rem(1)}
+                  color={theme.icon}
+                />
               </View>
             </EdgeTouchableOpacity>
           ))}
@@ -222,11 +263,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.SessionProposal, currencyConfig: EdgeAccount['currencyConfig']): EdgeAsset[] => {
+const getProposalNamespaceCompatibleEdgeTokenIds = (
+  proposal: Web3WalletTypes.SessionProposal,
+  currencyConfig: EdgeAccount['currencyConfig']
+): EdgeAsset[] => {
   // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
   const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
 
-  const getChainIdsFromNamespaces = (namespaces: { [key: string]: ProposalTypes.BaseRequiredNamespace }): Set<string> => {
+  const getChainIdsFromNamespaces = (namespaces: {
+    [key: string]: ProposalTypes.BaseRequiredNamespace
+  }): Set<string> => {
     const chainIds = new Set<string>()
     for (const key of Object.keys(namespaces)) {
       if (key.split(':').length === 2) {
@@ -240,8 +286,12 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.Se
     return chainIds
   }
 
-  const requiredChainIds: Set<string> = getChainIdsFromNamespaces(requiredNamespaces)
-  const optionalChainIds: Set<string> = requiredChainIds.size === 0 ? getChainIdsFromNamespaces(optionalNamespaces) : new Set()
+  const requiredChainIds: Set<string> =
+    getChainIdsFromNamespaces(requiredNamespaces)
+  const optionalChainIds: Set<string> =
+    requiredChainIds.size === 0
+      ? getChainIdsFromNamespaces(optionalNamespaces)
+      : new Set()
 
   let hasWalletForRequiredNamespace = false
   const edgeTokenIdMap = new Map<string, EdgeAsset>()

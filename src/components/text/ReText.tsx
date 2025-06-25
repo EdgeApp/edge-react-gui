@@ -26,9 +26,23 @@ const ReTextComponent = (props: TextProps & ThemeProps) => {
     } as any
   })
 
-  const memoizedStyle = React.useMemo(() => [[baseStyle, Platform.OS === 'android' ? androidAdjust : null], style], [androidAdjust, baseStyle, style])
+  const memoizedStyle = React.useMemo(
+    () => [
+      [baseStyle, Platform.OS === 'android' ? androidAdjust : null],
+      style
+    ],
+    [androidAdjust, baseStyle, style]
+  )
 
-  return <AnimatedTextInput underlineColorAndroid="transparent" editable={false} value={text.value} style={memoizedStyle} {...{ animatedProps }} />
+  return (
+    <AnimatedTextInput
+      underlineColorAndroid="transparent"
+      editable={false}
+      value={text.value}
+      style={memoizedStyle}
+      {...{ animatedProps }}
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

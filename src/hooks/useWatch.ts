@@ -5,7 +5,10 @@ import * as React from 'react'
  */
 export function useWatch<
   T extends {
-    readonly watch: <Name extends keyof T>(name: Name, callback: (value: T[Name]) => void) => () => void
+    readonly watch: <Name extends keyof T>(
+      name: Name,
+      callback: (value: T[Name]) => void
+    ) => () => void
   },
   Name extends keyof T
 >(object: T, name: Name): T[Name] {

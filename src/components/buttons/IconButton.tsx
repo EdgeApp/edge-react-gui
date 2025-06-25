@@ -32,7 +32,15 @@ export interface Props {
  * container, if given.
  */
 export const IconButton = (props: Props) => {
-  const { children, disabled, superscriptLabel, label, sizeRem = 3, testID, onPress } = props
+  const {
+    children,
+    disabled,
+    superscriptLabel,
+    label,
+    sizeRem = 3,
+    testID,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -49,7 +57,13 @@ export const IconButton = (props: Props) => {
   )
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID} disabled={disabled}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      style={styles.tappableArea}
+      onPress={onPress}
+      testID={testID}
+      disabled={disabled}
+    >
       <View style={styles.topContainer}>
         <View style={iconContainerStyle}>{children}</View>
         {superscriptLabel == null ? null : (
@@ -59,7 +73,13 @@ export const IconButton = (props: Props) => {
             end={theme.primaryButtonColorEnd}
             style={styles.superScriptContainer}
           >
-            <EdgeText style={[styles.superscriptLabel, Platform.OS === 'android' ? styles.androidAdjust : null]} disableFontScaling>
+            <EdgeText
+              style={[
+                styles.superscriptLabel,
+                Platform.OS === 'android' ? styles.androidAdjust : null
+              ]}
+              disableFontScaling
+            >
               {superscriptLabel}
             </EdgeText>
           </LinearGradient>

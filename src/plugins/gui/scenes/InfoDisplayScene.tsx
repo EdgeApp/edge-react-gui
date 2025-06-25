@@ -6,7 +6,11 @@ import { Fontello } from '../../../assets/vector/index'
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
-import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  useTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
@@ -108,7 +112,11 @@ export const InfoDisplayScene = React.memo((props: Props) => {
   const renderCopyButton = (value: string) => {
     return (
       <EdgeTouchableOpacity onPress={() => handleCopyPress(value)}>
-        <Fontello name="Copy-icon" size={theme.rem(1)} color={theme.iconTappable} />
+        <Fontello
+          name="Copy-icon"
+          size={theme.rem(1)}
+          color={theme.iconTappable}
+        />
       </EdgeTouchableOpacity>
     )
   }
@@ -119,7 +127,10 @@ export const InfoDisplayScene = React.memo((props: Props) => {
         <EdgeText style={styles.groupTitle}>{group.groupTitle}</EdgeText>
         {group.items.map(item => (
           <View style={styles.textRow} key={item.label}>
-            <EdgeText style={styles.itemLabel} numberOfLines={2}>{`${item.label}:`}</EdgeText>
+            <EdgeText
+              style={styles.itemLabel}
+              numberOfLines={2}
+            >{`${item.label}:`}</EdgeText>
             <View style={styles.itemValueRow}>
               <EdgeText style={styles.itemValue} numberOfLines={3}>
                 {item.value ?? lstrings.n_a}
@@ -139,7 +150,9 @@ export const InfoDisplayScene = React.memo((props: Props) => {
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>
       </View>
       {renderGroups()}
-      <SceneButtons primary={{ label: lstrings.string_done_cap, onPress: handleDone }} />
+      <SceneButtons
+        primary={{ label: lstrings.string_done_cap, onPress: handleDone }}
+      />
     </SceneWrapper>
   )
 })

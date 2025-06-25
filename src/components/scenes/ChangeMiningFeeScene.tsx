@@ -1,4 +1,9 @@
-import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId, JsonObject } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeSpendInfo,
+  EdgeTokenId,
+  JsonObject
+} from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import Evilicons from 'react-native-vector-icons/EvilIcons'
@@ -14,7 +19,12 @@ import { darkenHexColor } from '../../util/utils'
 import { AccentColors } from '../common/DotsBackground'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -59,13 +69,20 @@ const feeOptions = {
   }
 }
 
-export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookProps, State> {
+export class ChangeMiningFeeComponent extends React.PureComponent<
+  Props & HookProps,
+  State
+> {
   constructor(props: Props) {
     super(props)
-    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.spendInfo
+    const { networkFeeOption = 'standard', customNetworkFee = {} } =
+      this.props.route.params.spendInfo
     const customFormat = this.getCustomFormat()
 
-    if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
+    if (
+      customFormat != null &&
+      Object.keys(customNetworkFee).length !== customFormat.length
+    ) {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
       // @ts-expect-error
@@ -106,7 +123,10 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
 
     const backgroundColors = [...theme.assetBackgroundGradientColors]
     if (iconColor != null) {
-      const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      const scaledColor = darkenHexColor(
+        iconColor,
+        theme.assetBackgroundColorScale
+      )
       backgroundColors[0] = scaledColor
     }
 
@@ -119,8 +139,15 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
         backgroundGradientStart={theme.assetBackgroundGradientStart}
         overrideDots={theme.backgroundDots.assetOverrideDots}
       >
-        <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
-        <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        <SceneHeader
+          title={lstrings.title_change_mining_fee}
+          underline
+          withTopMargin
+        />
+        <ScrollView
+          contentContainerStyle={styles.container}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        >
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
@@ -150,9 +177,16 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
               <Evilicons name="gear" style={styles.settingsIcon} />
             </SettingsRadioRow>
           ) : null}
-          {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
+          {customFormat != null
+            ? this.renderCustomFeeTextInput(customFormat)
+            : null}
           {this.renderFeeWarning()}
-          <MainButton label={lstrings.string_done_cap} marginRem={[4, 0, 2]} type="secondary" onPress={this.onSubmit} />
+          <MainButton
+            label={lstrings.string_done_cap}
+            marginRem={[4, 0, 2]}
+            type="secondary"
+            onPress={this.onSubmit}
+          />
         </ScrollView>
       </SceneWrapper>
     )
@@ -190,11 +224,19 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
     const { theme } = this.props
     const styles = getStyles(theme)
     if (networkFeeOption !== 'custom' && networkFeeOption !== 'low') return null
-    const title = networkFeeOption === 'custom' ? lstrings.warning_custom_fee_selected : lstrings.warning_low_fee_selected
+    const title =
+      networkFeeOption === 'custom'
+        ? lstrings.warning_custom_fee_selected
+        : lstrings.warning_low_fee_selected
 
     return (
       <View style={styles.view}>
-        <Alert title={title} message={lstrings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
+        <Alert
+          title={title}
+          message={lstrings.warning_low_or_custom_fee}
+          type="warning"
+          marginRem={[1.5, 1]}
+        />
       </View>
     )
   }

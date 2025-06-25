@@ -21,7 +21,14 @@ import { HomeTileCard } from '../cards/HomeTileCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { MarketsCard } from '../cards/MarketsCard'
 import { SupportCard } from '../cards/SupportCard'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp110, fadeInUp140 } from '../common/EdgeAnim'
+import {
+  EdgeAnim,
+  fadeInUp30,
+  fadeInUp60,
+  fadeInUp80,
+  fadeInUp110,
+  fadeInUp140
+} from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SectionView } from '../layout/SectionView'
@@ -40,17 +47,29 @@ const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
  * @param countryCode - An optional string representing the country code to filter by. If `null`, an empty array is returned.
  * @returns An array of `ContentPost` objects that match the provided country code.
  */
-export const filterContentPosts = (contentPosts?: ContentPost[], countryCode?: string): ContentPost[] => {
+export const filterContentPosts = (
+  contentPosts?: ContentPost[],
+  countryCode?: string
+): ContentPost[] => {
   if (contentPosts == null) return []
   return contentPosts.filter((contentPost: ContentPost) => {
-    const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } = contentPost
+    const { countryCodes: includeCountryCodes = [], excludeCountryCodes = [] } =
+      contentPost
 
     const isCountryInclude =
       includeCountryCodes.length === 0 ||
-      (countryCode != null && includeCountryCodes.some(includeCountryCode => includeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+      (countryCode != null &&
+        includeCountryCodes.some(
+          includeCountryCode =>
+            includeCountryCode.toUpperCase() === countryCode.toUpperCase()
+        ))
     const isCountryExclude =
       excludeCountryCodes.length > 0 &&
-      (countryCode == null || excludeCountryCodes.some(excludeCountryCode => excludeCountryCode.toUpperCase() === countryCode.toUpperCase()))
+      (countryCode == null ||
+        excludeCountryCodes.some(
+          excludeCountryCode =>
+            excludeCountryCode.toUpperCase() === countryCode.toUpperCase()
+        ))
 
     return isCountryInclude && !isCountryExclude
   })
@@ -100,22 +119,44 @@ export const HomeScene = (props: Props) => {
   // Check for content posts from info server:
   React.useEffect(() => {
     // Merge legacy non-geographic-specific blog posts with geo-specific ones:
-    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(legacyBlogPost => ({
-      countryCodes: [],
-      excludeCountryCodes: [],
-      ...legacyBlogPost
-    }))
-    setBlogPosts([...nonGeoPosts, ...filterContentPosts(infoServerData.rollup?.blogPostsGeo, countryCode)])
+    const nonGeoPosts = (infoServerData.rollup?.blogPosts ?? []).map(
+      legacyBlogPost => ({
+        countryCodes: [],
+        excludeCountryCodes: [],
+        ...legacyBlogPost
+      })
+    )
+    setBlogPosts([
+      ...nonGeoPosts,
+      ...filterContentPosts(infoServerData.rollup?.blogPostsGeo, countryCode)
+    ])
 
     // Get video posts
-    setVideoPosts(filterContentPosts(infoServerData.rollup?.videoPosts, countryCode))
+    setVideoPosts(
+      filterContentPosts(infoServerData.rollup?.videoPosts, countryCode)
+    )
   }, [countryCode])
 
-  const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto1') }), [theme])
-  const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto1') }), [theme])
-  const earnIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-earn1') }), [theme])
-  const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade1') }), [theme])
-  const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
+  const buyCryptoIcon = React.useMemo(
+    () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto1') }),
+    [theme]
+  )
+  const sellCryptoIcon = React.useMemo(
+    () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto1') }),
+    [theme]
+  )
+  const earnIcon = React.useMemo(
+    () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-earn1') }),
+    [theme]
+  )
+  const tradeCryptoIcon = React.useMemo(
+    () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade1') }),
+    [theme]
+  )
+  const homeRowStyle = React.useMemo(
+    () => [styles.homeRowContainer, { height: cardSize }],
+    [styles, cardSize]
+  )
   const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
   const hideSwap = config.disableSwaps === true
 
@@ -127,13 +168,18 @@ export const HomeScene = (props: Props) => {
           <Animated.ScrollView
             onScroll={handleScroll}
             style={undoInsetStyle}
-            contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom }]}
+            contentContainerStyle={[
+              { ...insetStyle, paddingBottom: insetStyle.paddingBottom }
+            ]}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={fadeInUp140}>
-                  <BalanceCard onViewAssetsPress={handleViewAssetsPress} navigation={navigation as NavigationBase} />
+                  <BalanceCard
+                    onViewAssetsPress={handleViewAssetsPress}
+                    navigation={navigation as NavigationBase}
+                  />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
                 <InfoCardCarousel
@@ -150,7 +196,11 @@ export const HomeScene = (props: Props) => {
                       gradientBackground={theme.buyCardGradient}
                       nodeBackground={
                         <View style={styles.backroundImageContainer}>
-                          <FastImage source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                          <FastImage
+                            source={buyCryptoIcon}
+                            style={styles.backgroundImage}
+                            resizeMode="stretch"
+                          />
                         </View>
                       }
                       onPress={handleBuyPress}
@@ -161,7 +211,11 @@ export const HomeScene = (props: Props) => {
                       gradientBackground={theme.sellCardGradient}
                       nodeBackground={
                         <View style={styles.backroundImageContainer}>
-                          <FastImage source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                          <FastImage
+                            source={sellCryptoIcon}
+                            style={styles.backgroundImage}
+                            resizeMode="stretch"
+                          />
                         </View>
                       }
                       onPress={handleSellPress}
@@ -177,7 +231,11 @@ export const HomeScene = (props: Props) => {
                         gradientBackground={theme.earnCardGradient}
                         nodeBackground={
                           <View style={styles.backroundImageContainer}>
-                            <FastImage source={earnIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                            <FastImage
+                              source={earnIcon}
+                              style={styles.backgroundImage}
+                              resizeMode="stretch"
+                            />
                           </View>
                         }
                         onPress={handleFioPress}
@@ -190,7 +248,11 @@ export const HomeScene = (props: Props) => {
                         gradientBackground={theme.swapCardGradient}
                         nodeBackground={
                           <View style={styles.backroundImageContainer}>
-                            <FastImage source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
+                            <FastImage
+                              source={tradeCryptoIcon}
+                              style={styles.backgroundImage}
+                              resizeMode="stretch"
+                            />
                           </View>
                         }
                         onPress={handleSwapPress}
@@ -216,7 +278,10 @@ export const HomeScene = (props: Props) => {
                   }
                 />
                 <EdgeAnim enter={fadeInUp30}>
-                  <MarketsCard navigation={navigation as NavigationBase} numRows={5} />
+                  <MarketsCard
+                    navigation={navigation as NavigationBase}
+                    numRows={5}
+                  />
                 </EdgeAnim>
               </>
               {videoPosts == null || videoPosts.length === 0 ? null : (
@@ -225,7 +290,12 @@ export const HomeScene = (props: Props) => {
                   <ContentPostCarousel contentPosts={videoPosts} />
                 </>
               )}
-              <SupportCard title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
+              <SupportCard
+                title={lstrings.title_support}
+                body={lstrings.body_support}
+                buttonText={lstrings.button_support}
+                url={config.supportContactSite}
+              />
             </SectionView>
           </Animated.ScrollView>
         </>

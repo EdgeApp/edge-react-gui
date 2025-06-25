@@ -33,7 +33,9 @@ const ConfirmSceneComponent = (props: Props) => {
 
   const renderInfoTiles = () => {
     if (infoTiles == null) return null
-    return infoTiles.map(({ label, value }) => <EdgeRow key={label} title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => (
+      <EdgeRow key={label} title={label} body={value} />
+    ))
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
@@ -53,7 +55,11 @@ const ConfirmSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper scroll padding={theme.rem(0.5)}>
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <KeyboardAwareScrollView
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         {/* We have to use the SceneHeaderUi4 component here because 
         the SceneContainer component does not implement KeyboardAwareScrollView
         and we require the KeyboardAwareScrollView component for this one-off
@@ -66,8 +72,16 @@ const ConfirmSceneComponent = (props: Props) => {
         </View>
         {renderInfoTiles()}
         <View style={styles.footer}>
-          <SafeSlider disabled={false} onSlidingComplete={handleSliderComplete} />
-          <EdgeButton label={lstrings.string_cancel_cap} type="tertiary" marginRem={1} onPress={handleBackButton} />
+          <SafeSlider
+            disabled={false}
+            onSlidingComplete={handleSliderComplete}
+          />
+          <EdgeButton
+            label={lstrings.string_cancel_cap}
+            type="tertiary"
+            marginRem={1}
+            onPress={handleBackButton}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

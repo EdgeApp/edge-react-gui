@@ -58,14 +58,24 @@ export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
   }
 }
 
-export const fioCodeToEdgeAsset = (account: EdgeAccount, fioChainCode: string, fioTokenCode: string): EdgeAsset | undefined => {
+export const fioCodeToEdgeAsset = (
+  account: EdgeAccount,
+  fioChainCode: string,
+  fioTokenCode: string
+): EdgeAsset | undefined => {
   const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
 
   const pluginId =
     // Check the table first:
-    Object.keys(fioAssets).find(pluginId => fioAssets[pluginId].chainCode === fioChainCode) ??
+    Object.keys(fioAssets).find(
+      pluginId => fioAssets[pluginId].chainCode === fioChainCode
+    ) ??
     // Otherwise, just match the main currency code:
-    Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === fioChainCode)
+    Object.keys(account.currencyConfig).find(
+      pluginId =>
+        account.currencyConfig[pluginId].currencyInfo.currencyCode ===
+        fioChainCode
+    )
 
   // Bail out if we don't know about this chain:
   if (pluginId == null) return
@@ -77,7 +87,9 @@ export const fioCodeToEdgeAsset = (account: EdgeAccount, fioChainCode: string, f
     fioTokenCode === fioAssets[pluginId]?.chainCode
       ? null
       : // Otherwise, check the special token mappings for this chain:
-        Object.keys(fioTokens).find(tokenId => fioTokens[tokenId] === fioTokenCode) ??
+        Object.keys(fioTokens).find(
+          tokenId => fioTokens[tokenId] === fioTokenCode
+        ) ??
         // Otherwise, do a normal token lookup:
         getTokenId(account.currencyConfig[pluginId], fioTokenCode)
 

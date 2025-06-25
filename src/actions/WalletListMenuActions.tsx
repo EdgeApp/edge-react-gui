@@ -7,7 +7,11 @@ import { sprintf } from 'sprintf-js'
 import { ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
-import { Airship, showError, showToast } from '../components/services/AirshipInstance'
+import {
+  Airship,
+  showError,
+  showToast
+} from '../components/services/AirshipInstance'
 import { Alert } from '../components/themed/Alert'
 import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
@@ -39,7 +43,9 @@ export type WalletListMenuKey =
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
-  navigation: WalletsTabSceneProps<'walletList' | 'walletDetails'>['navigation'],
+  navigation: WalletsTabSceneProps<
+    'walletList' | 'walletDetails'
+  >['navigation'],
   walletId: string,
   option: WalletListMenuKey,
   tokenId: EdgeTokenId,
@@ -69,7 +75,9 @@ export function walletListMenuAction(
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
-        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(error => showError(error))
+        account
+          .changeWalletStates({ [walletId]: { deleted: true } })
+          .catch(error => showError(error))
       }
     }
     case 'delete': {
@@ -81,9 +89,17 @@ export function walletListMenuAction(
 
         if (Object.values(currencyWallets).length === 1) {
           await Airship.show<'ok' | undefined>(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} title={lstrings.cannot_delete_last_wallet_modal_title}>
-              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</Paragraph>
-              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</Paragraph>
+            <ButtonsModal
+              bridge={bridge}
+              buttons={{ ok: { label: lstrings.string_ok_cap } }}
+              title={lstrings.cannot_delete_last_wallet_modal_title}
+            >
+              <Paragraph>
+                {lstrings.cannot_delete_last_wallet_modal_message_part_1}
+              </Paragraph>
+              <Paragraph>
+                {lstrings.cannot_delete_last_wallet_modal_message_part_2}
+              </Paragraph>
             </ButtonsModal>
           ))
           return
@@ -96,7 +112,8 @@ export function walletListMenuAction(
           const engine = state.core.account.currencyWallets[walletId]
           if (engine != null) {
             try {
-              const fioAddresses = await engine.otherMethods.getFioAddressNames()
+              const fioAddresses =
+                await engine.otherMethods.getFioAddressNames()
               fioAddress = fioAddresses.length ? fioAddresses[0] : ''
             } catch (e: any) {
               fioAddress = ''
@@ -109,7 +126,8 @@ export function walletListMenuAction(
         let tokenCurrencyCode: string | undefined
         if (tokenId == null) {
           if (fioAddress) {
-            additionalMsg = lstrings.fragmet_wallets_delete_fio_extra_message_mobile
+            additionalMsg =
+              lstrings.fragmet_wallets_delete_fio_extra_message_mobile
           } else if (Object.keys(wallet.currencyConfig.allTokens).length > 0) {
             additionalMsg = lstrings.fragmet_wallets_delete_eth_extra_message
           }
@@ -117,7 +135,9 @@ export function walletListMenuAction(
           tokenCurrencyCode = getCurrencyCode(wallet, tokenId)
         }
         // Prompt user for action from modal
-        const resolveValue = await dispatch(showDeleteWalletModal(walletId, tokenCurrencyCode, additionalMsg))
+        const resolveValue = await dispatch(
+          showDeleteWalletModal(walletId, tokenCurrencyCode, additionalMsg)
+        )
 
         // Archive wallet or token if user confirmed action
         if (resolveValue === 'confirm') {
@@ -125,7 +145,11 @@ export function walletListMenuAction(
             account
               .changeWalletStates({ [walletId]: { deleted: true } })
               .then(r => {
-                logActivity(`Archived Wallet ${account.username} -- ${getWalletName(wallet)} ${wallet.type} ${wallet.id}`)
+                logActivity(
+                  `Archived Wallet ${account.username} -- ${getWalletName(
+                    wallet
+                  )} ${wallet.type} ${wallet.id}`
+                )
               })
               .catch(error => showError(error))
 
@@ -134,11 +158,17 @@ export function walletListMenuAction(
               await dispatch(deleteLoanAccount(walletId))
             }
           } else {
-            const newlyEnabledTokenIds = wallet.enabledTokenIds.filter(id => id !== tokenId)
+            const newlyEnabledTokenIds = wallet.enabledTokenIds.filter(
+              id => id !== tokenId
+            )
             wallet
               .changeEnabledTokenIds(newlyEnabledTokenIds)
               .then(() => {
-                logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
+                logActivity(
+                  `Disable Token: ${getWalletName(wallet)} ${wallet.type} ${
+                    wallet.id
+                  } ${tokenId}`
+                )
               })
               .catch(error => showError(error))
           }
@@ -182,16 +212,27 @@ export function walletListMenuAction(
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 
-        const title = switchString === 'viewPrivateViewKey' ? lstrings.fragment_wallets_view_private_view_key : lstrings.fragment_wallets_view_xpub
+        const title =
+          switchString === 'viewPrivateViewKey'
+            ? lstrings.fragment_wallets_view_private_view_key
+            : lstrings.fragment_wallets_view_xpub
 
         await Airship.show<'copy' | 'link' | undefined>(bridge => (
-          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} message={displayPublicSeed} title={title}>
+          <ButtonsModal
+            bridge={bridge}
+            buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
+            message={displayPublicSeed}
+            title={title}
+          >
             {switchString === 'viewXPub' ? null : (
               <Alert
                 type="warning"
                 title={lstrings.string_warning}
                 marginRem={0.5}
-                message={sprintf(lstrings.fragment_wallets_view_private_view_key_warning_s, getWalletName(wallet))}
+                message={sprintf(
+                  lstrings.fragment_wallets_view_private_view_key_warning_s,
+                  getWalletName(wallet)
+                )}
                 numberOfLines={0}
               />
             )}
@@ -246,7 +287,11 @@ export function walletListMenuAction(
 
         if (passwordValid) {
           const { name, id, type } = wallet
-          logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
+          logActivity(
+            `Show Master Private Key: ${account.username} -- ${
+              name ?? ''
+            } -- ${type} -- ${id}`
+          )
           // Add a copy button only for development
           let devButtons = {}
           // @ts-expect-error
@@ -280,7 +325,8 @@ export function walletListMenuAction(
         const passwordValid = await dispatch(
           validatePassword({
             title: lstrings.fragment_wallets_get_raw_keys_title,
-            warningMessage: lstrings.fragment_wallets_get_raw_keys_warning_message,
+            warningMessage:
+              lstrings.fragment_wallets_get_raw_keys_warning_message,
             submitLabel: lstrings.string_get_raw_keys
           })
         )
@@ -290,7 +336,14 @@ export function walletListMenuAction(
 
           const rawKeys = await account.getRawPrivateKey(walletId)
           const keys = JSON.stringify(rawKeys, null, 2)
-          await Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
+          await Airship.show(bridge => (
+            <RawTextModal
+              bridge={bridge}
+              body={keys}
+              title={lstrings.string_raw_keys}
+              disableCopy
+            />
+          ))
         }
       }
     }

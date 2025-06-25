@@ -1,7 +1,14 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useMemo } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue, useWorkletCallback, withTiming } from 'react-native-reanimated'
+import {
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedScrollHandler,
+  useSharedValue,
+  useWorkletCallback,
+  withTiming
+} from 'react-native-reanimated'
 
 import { createStateProvider } from './createStateProvider'
 
@@ -13,26 +20,40 @@ export interface ScrollState {
   scrollMomentumEndEvent: SharedValue<NativeScrollEvent | null>
 }
 
-export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider((): ScrollState => {
-  const scrollY = useSharedValue(0)
-  const scrollBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollEndEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollMomentumBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollMomentumEndEvent = useSharedValue<NativeScrollEvent | null>(null)
+export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider(
+  (): ScrollState => {
+    const scrollY = useSharedValue(0)
+    const scrollBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
+    const scrollEndEvent = useSharedValue<NativeScrollEvent | null>(null)
+    const scrollMomentumBeginEvent = useSharedValue<NativeScrollEvent | null>(
+      null
+    )
+    const scrollMomentumEndEvent = useSharedValue<NativeScrollEvent | null>(
+      null
+    )
 
-  return useMemo(
-    () => ({
-      scrollY,
-      scrollBeginEvent,
-      scrollEndEvent,
-      scrollMomentumBeginEvent,
-      scrollMomentumEndEvent
-    }),
-    [scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY]
-  )
-})
+    return useMemo(
+      () => ({
+        scrollY,
+        scrollBeginEvent,
+        scrollEndEvent,
+        scrollMomentumBeginEvent,
+        scrollMomentumEndEvent
+      }),
+      [
+        scrollBeginEvent,
+        scrollEndEvent,
+        scrollMomentumBeginEvent,
+        scrollMomentumEndEvent,
+        scrollY
+      ]
+    )
+  }
+)
 
-export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+export type SceneScrollHandler = (
+  event: NativeSyntheticEvent<NativeScrollEvent>
+) => void
 
 /**
  * Return a Reanimated scroll handler (special worklet handler ref) to be attached
@@ -45,10 +66,16 @@ export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>
  * if the scene is focused (react-navigation's useIsFocused).
  */
 export const useSceneScrollHandler = (): SceneScrollHandler => {
-  const scrollBeginEvent = useSceneScrollContext(state => state.scrollBeginEvent)
+  const scrollBeginEvent = useSceneScrollContext(
+    state => state.scrollBeginEvent
+  )
   const scrollEndEvent = useSceneScrollContext(state => state.scrollEndEvent)
-  const scrollMomentumBeginEvent = useSceneScrollContext(state => state.scrollMomentumBeginEvent)
-  const scrollMomentumEndEvent = useSceneScrollContext(state => state.scrollMomentumEndEvent)
+  const scrollMomentumBeginEvent = useSceneScrollContext(
+    state => state.scrollMomentumBeginEvent
+  )
+  const scrollMomentumEndEvent = useSceneScrollContext(
+    state => state.scrollMomentumEndEvent
+  )
   const scrollY = useSceneScrollContext(state => state.scrollY)
 
   const isFocused = useSharedValue(false)

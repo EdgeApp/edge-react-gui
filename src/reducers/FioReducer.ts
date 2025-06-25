@@ -19,7 +19,10 @@ const initialState: FioState = {
   connectedWalletsByFioAddress: {}
 }
 
-export const fio: Reducer<FioState, Action> = (state = initialState, action: Action) => {
+export const fio: Reducer<FioState, Action> = (
+  state = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS': {
       const { connectedWalletsByFioAddress } = state

@@ -1,5 +1,8 @@
 import { captureException, withScope } from '@sentry/react-native'
-import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
+import {
+  TrackingEventName as LoginTrackingEventName,
+  TrackingValues as LoginTrackingValues
+} from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { checkNotifications } from 'react-native-permissions'
@@ -59,7 +62,10 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch' // No longer used
   | LoginTrackingEventName
 
-export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => void
+export type OnLogEvent = (
+  event: TrackingEventName,
+  values?: TrackingValues
+) => void
 
 /**
  * Analytics: Known dollar amount revenue
@@ -142,7 +148,12 @@ export interface TrackingValues extends LoginTrackingValues {
   appleAdsKeywordId?: string // Apple Search Ads attribution keyword ID
 
   // Conversion values
-  conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues | BuyConversionValues | SwapConversionValues
+  conversionValues?:
+    | DollarConversionValues
+    | CryptoConversionValues
+    | SellConversionValues
+    | BuyConversionValues
+    | SwapConversionValues
 }
 
 // Set up the global Posthog analytics instance at boot
@@ -202,14 +213,23 @@ export function trackError(
 /**
  * Send a raw event to all backends.
  */
-export function logEvent(event: TrackingEventName, values: TrackingValues = {}): ThunkAction<void> {
+export function logEvent(
+  event: TrackingEventName,
+  values: TrackingValues = {}
+): ThunkAction<void> {
   return async (dispatch, getState) => {
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
-        const { isFirstOpen, deviceId, firstOpenEpoch, appleAdsAttribution } = await getFirstOpenInfo()
+        const { isFirstOpen, deviceId, firstOpenEpoch, appleAdsAttribution } =
+          await getFirstOpenInfo()
 
-        const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
+        const {
+          error,
+          createdWalletCurrencyCode,
+          conversionValues,
+          ...restValue
+        } = values
         const params: any = {
           edgeVersion: getVersion(),
           buildNumber: getBuildNumber(),
@@ -229,16 +249,23 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         params.promoIds = accountReferral.activePromotions
 
         const { creationDate, installerId } = accountReferral
-        params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
+        params.refAccountDate =
+          installerId == null || creationDate == null
+            ? undefined
+            : creationDate.toISOString().replace(/-\d\dT.*/, '')
         params.refAccountInstallerId = accountReferral.installerId
         params.refAccountCurrencyCodes = accountReferral.currencyCodes
 
         // Get the account age in months:
         const { created: accountCreatedDate } = core.account
-        params.accountAgeMonths = accountCreatedDate == null ? undefined : monthsBetween(accountCreatedDate, new Date())
+        params.accountAgeMonths =
+          accountCreatedDate == null
+            ? undefined
+            : monthsBetween(accountCreatedDate, new Date())
 
         // Adjust params:
-        if (createdWalletCurrencyCode != null) params.currency = createdWalletCurrencyCode
+        if (createdWalletCurrencyCode != null)
+          params.currency = createdWalletCurrencyCode
         if (error != null) params.error = makeErrorLog(error)
 
         // Conversion values:
@@ -246,25 +273,49 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           const { conversionType } = conversionValues
           if (conversionType === 'dollar') {
             params.currency = 'USD'
-            params.dollarRevenue = Math.abs(Number(conversionValues.dollarRevenue.toFixed(2)))
+            params.dollarRevenue = Math.abs(
+              Number(conversionValues.dollarRevenue.toFixed(2))
+            )
           } else if (conversionType === 'buy') {
-            const { destAmount, sourceFiatAmount, sourceFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
+            const {
+              destAmount,
+              sourceFiatAmount,
+              sourceFiatCurrencyCode,
+              orderId,
+              fiatProviderId
+            } = conversionValues
 
-            params.destDollarValue = Math.abs(Number(destAmount.displayDollarValue(exchangeRates)))
-            params.destCryptoAmount = Math.abs(Number(destAmount.exchangeAmount))
+            params.destDollarValue = Math.abs(
+              Number(destAmount.displayDollarValue(exchangeRates))
+            )
+            params.destCryptoAmount = Math.abs(
+              Number(destAmount.exchangeAmount)
+            )
             params.destCurrencyCode = destAmount.currencyCode
             params.dollarValue = params.destDollarValue
 
-            params.sourceFiatValue = Math.abs(Number(sourceFiatAmount)).toFixed(2)
+            params.sourceFiatValue = Math.abs(Number(sourceFiatAmount)).toFixed(
+              2
+            )
             params.sourceFiatCurrencyCode = sourceFiatCurrencyCode
 
             if (orderId != null) params.orderId = orderId
             if (fiatProviderId != null) params.fiatProviderId = fiatProviderId
           } else if (conversionType === 'sell') {
-            const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
+            const {
+              sourceAmount,
+              destFiatAmount,
+              destFiatCurrencyCode,
+              orderId,
+              fiatProviderId
+            } = conversionValues
 
-            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
-            params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
+            params.sourceDollarValue = Math.abs(
+              Number(sourceAmount.displayDollarValue(exchangeRates))
+            )
+            params.sourceCryptoAmount = Math.abs(
+              Number(sourceAmount.exchangeAmount)
+            )
             params.sourceCurrencyCode = sourceAmount.currencyCode
             params.dollarValue = params.sourceDollarValue
 
@@ -279,22 +330,38 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
             params.cryptoAmount = Math.abs(Number(cryptoAmount.exchangeAmount))
             params.currency = cryptoAmount.currencyCode
 
-            params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(exchangeRates)))
+            params.dollarValue = Math.abs(
+              Number(cryptoAmount.displayDollarValue(exchangeRates))
+            )
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
           } else if (conversionType === 'swap') {
-            const { destAmount, sourceAmount, swapProviderId, orderId, isBuiltInAsset } = conversionValues
+            const {
+              destAmount,
+              sourceAmount,
+              swapProviderId,
+              orderId,
+              isBuiltInAsset
+            } = conversionValues
 
             params.isBuiltInAsset = isBuiltInAsset
 
-            params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
+            params.sourceCryptoAmount = Math.abs(
+              Number(sourceAmount.exchangeAmount)
+            )
             params.sourceCurrencyCode = sourceAmount.currencyCode
-            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
+            params.sourceDollarValue = Math.abs(
+              Number(sourceAmount.displayDollarValue(exchangeRates))
+            )
 
-            params.destCryptoAmount = Math.abs(Number(destAmount.exchangeAmount))
+            params.destCryptoAmount = Math.abs(
+              Number(destAmount.exchangeAmount)
+            )
             params.destCurrencyCode = destAmount.currencyCode
-            params.destDollarValue = Math.abs(Number(destAmount.displayDollarValue(exchangeRates)))
+            params.destDollarValue = Math.abs(
+              Number(destAmount.displayDollarValue(exchangeRates))
+            )
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
@@ -302,14 +369,19 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
         }
 
         // Add all 'sticky' remote config variant values:
-        for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+        for (const key of Object.keys(experimentConfig))
+          params[`svar_${key}`] =
+            experimentConfig[key as keyof ExperimentConfig]
 
         // Notifications
         const notificationPermission = await checkNotifications()
         params.notificationStatus = notificationPermission.status
         consify({ logEvent: { event, params } })
 
-        Promise.all([logToPosthog(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+        Promise.all([
+          logToPosthog(event, params),
+          logToUtilServer(event, params)
+        ]).catch(error => console.warn(error))
       })
       .catch(console.error)
   }
@@ -329,7 +401,10 @@ async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
 /**
  * Send a tracking event to the util server.
  */
-async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
+async function logToUtilServer(
+  event: TrackingEventName,
+  values: TrackingValues
+) {
   const body = JSON.stringify({ ...values, event })
 
   try {
@@ -343,8 +418,13 @@ async function logToUtilServer(event: TrackingEventName, values: TrackingValues)
     })
     if (!response.ok) {
       const text = await response.text()
-      console.warn(`logToUtilServer:fetch ${event} ${text} body length: ${body.length}`)
-      captureException(new Error(`logToUtilServer:fetch !ok ${event} ${text}`), { event_id: 'logToUtilServer', data: body })
+      console.warn(
+        `logToUtilServer:fetch ${event} ${text} body length: ${body.length}`
+      )
+      captureException(
+        new Error(`logToUtilServer:fetch !ok ${event} ${text}`),
+        { event_id: 'logToUtilServer', data: body }
+      )
     }
   } catch (e) {
     console.warn(`logToUtilServer:fetch ${event}`)

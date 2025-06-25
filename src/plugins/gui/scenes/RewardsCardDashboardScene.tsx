@@ -9,7 +9,10 @@ import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Shimmer } from '../../../components/progress-indicators/Shimmer'
-import { Airship, showError } from '../../../components/services/AirshipInstance'
+import {
+  Airship,
+  showError
+} from '../../../components/services/AirshipInstance'
 import { useTheme } from '../../../components/services/ThemeContext'
 import { DividerLine } from '../../../components/themed/DividerLine'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -36,7 +39,15 @@ interface Props extends BuyTabSceneProps<'rewardsCardDashboard'> {}
 
 export const RewardsCardDashboardScene = (props: Props) => {
   const { route } = props
-  const { items, onCardLongPress, onCardPress, onHelpPress, onNewPress, onRemovePress, showLoading = false } = route.params
+  const {
+    items,
+    onCardLongPress,
+    onCardPress,
+    onHelpPress,
+    onNewPress,
+    onRemovePress,
+    showLoading = false
+  } = route.params
   const theme = useTheme()
   const [bottomFloatHeight, setBottomFloatHeight] = useState(0)
 
@@ -64,7 +75,11 @@ export const RewardsCardDashboardScene = (props: Props) => {
           title={lstrings.rewards_card_dashboard_title}
           tertiary={
             <EdgeTouchableOpacity onPress={handleHelpPress}>
-              <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Ionicon
+                name="help-circle-outline"
+                size={theme.rem(1.5)}
+                color={theme.iconTappable}
+              />
             </EdgeTouchableOpacity>
           }
           underline
@@ -84,13 +99,24 @@ export const RewardsCardDashboardScene = (props: Props) => {
               />
             )
           })}
-          {items.length === 0 && !showLoading ? <MessageText>{lstrings.no_active_cards_message}</MessageText> : null}
-          {showLoading ? <RewardsCard onQuestionPress={handleQuestionPress} /> : null}
+          {items.length === 0 && !showLoading ? (
+            <MessageText>{lstrings.no_active_cards_message}</MessageText>
+          ) : null}
+          {showLoading ? (
+            <RewardsCard onQuestionPress={handleQuestionPress} />
+          ) : null}
         </CardList>
       </SceneWrapper>
-      <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
+      <BottomFloat
+        onLayout={event =>
+          setBottomFloatHeight(event.nativeEvent.layout.height)
+        }
+      >
         <Space aroundRem={1}>
-          <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
+          <MainButton
+            onPress={onNewPress}
+            label={lstrings.buy_new_card_button}
+          />
         </Space>
       </BottomFloat>
     </>
@@ -107,9 +133,17 @@ export interface RewardsCardProps {
 }
 
 export const RewardsCard = (props: RewardsCardProps) => {
-  const { item, onLongPress, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
+  const {
+    item,
+    onLongPress,
+    onPress,
+    onQuestionPress,
+    onRemovePress,
+    shouldStack = false
+  } = props
   const theme = useTheme()
-  const purchaseAmount = item?.amount == null ? 'Unknown' : `$${item.amount.toString()}`
+  const purchaseAmount =
+    item?.amount == null ? 'Unknown' : `$${item.amount.toString()}`
   const purchaseAsset = item?.purchaseAsset ?? 'Unknown'
 
   return (
@@ -125,16 +159,30 @@ export const RewardsCard = (props: RewardsCardProps) => {
           <CardHeader>
             <Space row>
               <VisaBrandImage source={visaBrandImage} />
-              {onPress == null ? null : <Ionicon name="chevron-forward-outline" size={theme.rem(1.5)} color={theme.iconTappable} />}
+              {onPress == null ? null : (
+                <Ionicon
+                  name="chevron-forward-outline"
+                  size={theme.rem(1.5)}
+                  color={theme.iconTappable}
+                />
+              )}
             </Space>
             {onRemovePress == null ? null : (
               <EdgeTouchableOpacity onPress={onRemovePress}>
-                <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
+                <Ionicon
+                  name="remove-circle-outline"
+                  size={theme.rem(1.5)}
+                  color={theme.dangerIcon}
+                />
               </EdgeTouchableOpacity>
             )}
             {onQuestionPress == null ? null : (
               <EdgeTouchableOpacity onPress={onQuestionPress}>
-                <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Ionicon
+                  name="help-circle-outline"
+                  size={theme.rem(1.5)}
+                  color={theme.iconTappable}
+                />
               </EdgeTouchableOpacity>
             )}
           </CardHeader>
@@ -144,14 +192,20 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
-                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.creationDate)}</CardFieldValue>
+                  <CardFieldValue>
+                    {item == null ? ' ' : toLocaleDate(item.creationDate)}
+                  </CardFieldValue>
                 </Space>
               </Space>
               <Space>
-                <CardFieldLabel textAlign="right">{lstrings.purchase_price_label}</CardFieldLabel>
+                <CardFieldLabel textAlign="right">
+                  {lstrings.purchase_price_label}
+                </CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
-                  <CardFieldValue textAlign="right">{item == null ? ' ' : purchaseAmount}</CardFieldValue>
+                  <CardFieldValue textAlign="right">
+                    {item == null ? ' ' : purchaseAmount}
+                  </CardFieldValue>
                 </Space>
               </Space>
             </Space>
@@ -160,14 +214,20 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 <CardFieldLabel>{lstrings.string_expires}</CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
-                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.expirationDate)}</CardFieldValue>
+                  <CardFieldValue>
+                    {item == null ? ' ' : toLocaleDate(item.expirationDate)}
+                  </CardFieldValue>
                 </Space>
               </Space>
               <Space>
-                <CardFieldLabel textAlign="right">{lstrings.purchase_asset_label}</CardFieldLabel>
+                <CardFieldLabel textAlign="right">
+                  {lstrings.purchase_asset_label}
+                </CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
-                  <CardFieldValue textAlign="right">{item == null ? ' ' : purchaseAsset}</CardFieldValue>
+                  <CardFieldValue textAlign="right">
+                    {item == null ? ' ' : purchaseAsset}
+                  </CardFieldValue>
                 </Space>
               </Space>
             </Space>
@@ -234,18 +294,22 @@ const VisaBrandImage = styled(Image)(theme => ({
   marginRight: theme.rem(0.5)
 }))
 
-const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(theme => props => ({
-  color: theme.secondaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.7),
-  includeFontPadding: false,
-  textAlign: props.textAlign ?? 'left'
-}))
+const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+  theme => props => ({
+    color: theme.secondaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.7),
+    includeFontPadding: false,
+    textAlign: props.textAlign ?? 'left'
+  })
+)
 
-const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(theme => props => ({
-  color: theme.primaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.8),
-  includeFontPadding: false,
-  textAlign: props.textAlign ?? 'left'
-}))
+const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+  theme => props => ({
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.8),
+    includeFontPadding: false,
+    textAlign: props.textAlign ?? 'left'
+  })
+)

@@ -5,7 +5,10 @@ import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
  * remove the given user, then organize the 3 most recent users,
  * followed by the rest in alphabetical order.
  */
-export function arrangeUsers(localUsers: EdgeUserInfo[], activeAccount: EdgeAccount): EdgeUserInfo[] {
+export function arrangeUsers(
+  localUsers: EdgeUserInfo[],
+  activeAccount: EdgeAccount
+): EdgeUserInfo[] {
   // Sort the users according to their last login date (excluding active logged in user):
   const inactiveUsers = localUsers
     .filter(info => info.loginId !== activeAccount.rootLoginId)

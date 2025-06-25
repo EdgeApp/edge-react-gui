@@ -42,7 +42,8 @@ export function WalletListScene(props: Props) {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const allKeys = useWatch(account, 'allKeys')
-  const hasRestoreWallets = allKeys.filter(key => key.archived || key.deleted).length > 0
+  const hasRestoreWallets =
+    allKeys.filter(key => key.archived || key.deleted).length > 0
 
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
 
@@ -53,7 +54,9 @@ export function WalletListScene(props: Props) {
   //
 
   const handleSort = useHandler(() => {
-    Airship.show<SortOption>(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
+    Airship.show<SortOption>(bridge => (
+      <WalletListSortModal sortOption={sortOption} bridge={bridge} />
+    ))
       .then(sort => {
         if (sort == null) return
         if (sort !== sortOption) dispatch(updateWalletsSort(sort))
@@ -126,7 +129,14 @@ export function WalletListScene(props: Props) {
   //
 
   const renderHeader = React.useMemo(() => {
-    return <WalletListHeader navigation={navigation as NavigationBase} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
+    return (
+      <WalletListHeader
+        navigation={navigation as NavigationBase}
+        sorting={sorting}
+        searching={isSearching}
+        openSortModal={handleSort}
+      />
+    )
   }, [handleSort, navigation, isSearching, sorting])
 
   const renderListFooter = React.useMemo(() => {
@@ -166,15 +176,33 @@ export function WalletListScene(props: Props) {
         }}
       />
     )
-  }, [isSearching, tokenSupportingWalletIds.length, hasRestoreWallets, handlePressAddWallets, handlePressAddEditToken, handlePressRestoreWallets])
+  }, [
+    isSearching,
+    tokenSupportingWalletIds.length,
+    hasRestoreWallets,
+    handlePressAddWallets,
+    handlePressAddEditToken,
+    handlePressRestoreWallets
+  ])
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
       const key = 'WalletListScene-SearchFooter'
       return sorting ? (
-        <SceneFooterWrapper key={key} noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
+        <SceneFooterWrapper
+          key={key}
+          noBackgroundBlur
+          sceneWrapperInfo={sceneWrapperInfo}
+          onLayoutHeight={handleFooterLayoutHeight}
+        >
           <View style={styles.sortFooterContainer}>
-            <EdgeButton key="doneButton" mini type="primary" label={lstrings.string_done_cap} onPress={handlePressDone} />
+            <EdgeButton
+              key="doneButton"
+              mini
+              type="primary"
+              label={lstrings.string_done_cap}
+              onPress={handlePressDone}
+            />
           </View>
         </SceneFooterWrapper>
       ) : (
@@ -206,7 +234,13 @@ export function WalletListScene(props: Props) {
   )
 
   return (
-    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasTabs hasNotifications renderFooter={renderFooter}>
+    <SceneWrapper
+      avoidKeyboard
+      footerHeight={footerHeight}
+      hasTabs
+      hasNotifications
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <AccountSyncBar />

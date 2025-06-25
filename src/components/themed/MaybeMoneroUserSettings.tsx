@@ -4,7 +4,10 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
-import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
+import {
+  CurrencySettingProps,
+  maybeCurrencySetting
+} from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
@@ -22,7 +25,9 @@ type Props = CurrencySettingProps<MoneroUserSettings, undefined>
 function MoneroUserSettingsComponent(props: Props) {
   const { defaultSetting, onUpdate, setting } = props
   const { enableCustomServers, moneroLightwalletServer } = setting
-  const isEmpty = moneroLightwalletServer === '' || moneroLightwalletServer === defaultSetting.moneroLightwalletServer
+  const isEmpty =
+    moneroLightwalletServer === '' ||
+    moneroLightwalletServer === defaultSetting.moneroLightwalletServer
 
   const handleMyMonero = useHandler(async (): Promise<void> => {
     await onUpdate({
@@ -52,16 +57,30 @@ function MoneroUserSettingsComponent(props: Props) {
     logActivity(`Enable Monero Node: "${server ?? moneroLightwalletServer}"`)
   })
 
-  const customLabel = lstrings.settings_monero_custom + (isEmpty ? '' : `:\n${moneroLightwalletServer}`)
+  const customLabel =
+    lstrings.settings_monero_custom +
+    (isEmpty ? '' : `:\n${moneroLightwalletServer}`)
 
   return (
     <>
       <SettingsHeaderRow label={lstrings.settings_monero} />
       <SettingsSubHeader label={lstrings.settings_monero_info} />
-      <SettingsRadioRow label={lstrings.settings_monero_default} value={!enableCustomServers} onPress={handleMyMonero} />
-      <SettingsRadioRow label={customLabel} value={enableCustomServers} onPress={handleCustomServer} />
+      <SettingsRadioRow
+        label={lstrings.settings_monero_default}
+        value={!enableCustomServers}
+        onPress={handleMyMonero}
+      />
+      <SettingsRadioRow
+        label={customLabel}
+        value={enableCustomServers}
+        onPress={handleCustomServer}
+      />
     </>
   )
 }
 
-export const MaybeMoneroUserSettings = maybeCurrencySetting(MoneroUserSettingsComponent, asMoneroUserSettings, undefined)
+export const MaybeMoneroUserSettings = maybeCurrencySetting(
+  MoneroUserSettingsComponent,
+  asMoneroUserSettings,
+  undefined
+)

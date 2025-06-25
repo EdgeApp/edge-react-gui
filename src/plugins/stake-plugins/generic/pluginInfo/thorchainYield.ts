@@ -2,7 +2,9 @@ import { ENV } from '../../../../env'
 import { ThorchainYieldAdapterConfig } from '../policyAdapters/ThorchainYieldAdaptor'
 import { StakePluginInfo, StakePolicyConfig } from '../types'
 
-const thorchainYieldPolicyConfig: Array<StakePolicyConfig<ThorchainYieldAdapterConfig>> = [
+const thorchainYieldPolicyConfig: Array<
+  StakePolicyConfig<ThorchainYieldAdapterConfig>
+> = [
   {
     stakePolicyId: 'thorchain_yield',
     stakeProviderInfo: {
@@ -15,7 +17,10 @@ const thorchainYieldPolicyConfig: Array<StakePolicyConfig<ThorchainYieldAdapterC
     adapterConfig: {
       type: 'thorchain-yield',
       pluginId: 'thorchainrune',
-      ninerealmsClientId: ENV.THORCHAIN_INIT !== false ? ENV.THORCHAIN_INIT.ninerealmsClientId : undefined,
+      ninerealmsClientId:
+        ENV.THORCHAIN_INIT !== false
+          ? ENV.THORCHAIN_INIT.ninerealmsClientId
+          : undefined,
       thornodeServers: ['https://thornode.ninerealms.com']
     },
 

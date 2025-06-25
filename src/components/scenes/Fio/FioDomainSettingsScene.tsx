@@ -9,8 +9,18 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
-import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import {
+  getDomainSetVisibilityFee,
+  getRenewalFee,
+  getTransferFee,
+  renewFioDomain,
+  setDomainVisibility
+} from '../../../util/FioAddressUtils'
+import {
+  logEvent,
+  TrackingEventName,
+  TrackingValues
+} from '../../../util/tracking'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
@@ -18,7 +28,12 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -79,7 +94,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const domainName = `@${fioDomainName || ''}`
     const transferredMessage = ` ${lstrings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={lstrings.fio_domain_label} buttons={{ ok: { label: lstrings.string_ok_cap } }}>
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.fio_domain_label}
+        buttons={{ ok: { label: lstrings.string_ok_cap } }}
+      >
         <EdgeText style={styles.tileTextBottom}>
           <EdgeText style={styles.cursive}>{domainName}</EdgeText>
           {transferredMessage}
@@ -109,9 +128,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => await getRenewalFee(fioWallet)
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) =>
+    await getRenewalFee(fioWallet)
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet, true)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+    await getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
     const { isConnected, route } = this.props
@@ -179,7 +200,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: lstrings.fio_domain_to_transfer, value: `@${fioDomainName}` }]
+      infoTiles: [
+        { label: lstrings.fio_domain_to_transfer, value: `@${fioDomainName}` }
+      ]
     }
 
     navigation.navigate('send2', sendParams)
@@ -194,22 +217,40 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader title={lstrings.title_fio_domain_settings} underline withTopMargin />
+        <SceneHeader
+          title={lstrings.title_fio_domain_settings}
+          underline
+          withTopMargin
+        />
         <View style={styles.container}>
           <EdgeCard>
-            <EdgeRow title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+            <EdgeRow
+              title={lstrings.fio_domain_label}
+              body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`}
+            />
           </EdgeCard>
           <EdgeCard>
-            <EdgeRow title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+            <EdgeRow
+              title={lstrings.fio_address_details_screen_expires}
+              body={formatDate(new Date(expiration))}
+            />
           </EdgeCard>
           {showVisibility && (
             <FioActionSubmit
-              title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
+              title={
+                isPublic
+                  ? lstrings.title_fio_make_private_domain
+                  : lstrings.title_fio_make_public_domain
+              }
               onSubmit={this.setDomainVisibility}
               onSuccess={this.afterSuccess}
               onCancel={this.cancelOperation}
               getOperationFee={getDomainSetVisibilityFee}
-              successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
+              successMessage={
+                isPublic
+                  ? lstrings.fio_domain_is_private_label
+                  : lstrings.fio_domain_is_public_label
+              }
               fioWallet={fioWallet}
               showPaymentWalletPicker
               navigation={this.props.navigation as NavigationBase}
@@ -237,10 +278,20 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
           )}
           {!showRenew && !showVisibility && !showTransfer && (
             <EdgeCard sections>
-              <SettingsTappableRow label={lstrings.title_fio_renew_domain} onPress={this.onRenewPress} />
-              <SettingsTappableRow label={lstrings.title_fio_transfer_domain} onPress={this.onTransferPress} />
               <SettingsTappableRow
-                label={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
+                label={lstrings.title_fio_renew_domain}
+                onPress={this.onRenewPress}
+              />
+              <SettingsTappableRow
+                label={lstrings.title_fio_transfer_domain}
+                onPress={this.onTransferPress}
+              />
+              <SettingsTappableRow
+                label={
+                  isPublic
+                    ? lstrings.title_fio_make_private_domain
+                    : lstrings.title_fio_make_public_domain
+                }
                 onPress={this.onVisibilityPress}
               />
             </EdgeCard>

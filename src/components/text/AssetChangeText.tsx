@@ -19,33 +19,49 @@ interface Props {
  * Returns a styled text node that displays the daily % change from a wallet
  * asset
  **/
-export const AssetChangeTextUi4 = React.memo(({ wallet, tokenId, style }: Props) => {
-  const { assetToFiatRate, usdToWalletFiatRate, assetToYestUsdRate } = useTokenDisplayData({
-    tokenId,
-    currencyConfig: wallet.currencyConfig
-  })
+export const AssetChangeTextUi4 = React.memo(
+  ({ wallet, tokenId, style }: Props) => {
+    const { assetToFiatRate, usdToWalletFiatRate, assetToYestUsdRate } =
+      useTokenDisplayData({
+        tokenId,
+        currencyConfig: wallet.currencyConfig
+      })
 
-  const theme = useTheme()
-  const { percentString, deltaColorStyle } = getPercentDeltaString(assetToFiatRate, assetToYestUsdRate, usdToWalletFiatRate, theme)
-  const textStyle = React.useMemo<TextStyle>(
-    () => ({
-      color: deltaColorStyle,
-      textAlign: 'left',
-      flexShrink: 1,
-      ...style
-    }),
-    [deltaColorStyle, style]
-  )
+    const theme = useTheme()
+    const { percentString, deltaColorStyle } = getPercentDeltaString(
+      assetToFiatRate,
+      assetToYestUsdRate,
+      usdToWalletFiatRate,
+      theme
+    )
+    const textStyle = React.useMemo<TextStyle>(
+      () => ({
+        color: deltaColorStyle,
+        textAlign: 'left',
+        flexShrink: 1,
+        ...style
+      }),
+      [deltaColorStyle, style]
+    )
 
-  return <EdgeText style={textStyle}>{percentString}</EdgeText>
-})
+    return <EdgeText style={textStyle}>{percentString}</EdgeText>
+  }
+)
 
-const getPercentDeltaString = (assetToFiatRate: number, assetToYestFiatRate: number, usdToWalletFiatRate: number, theme: Theme) => {
+const getPercentDeltaString = (
+  assetToFiatRate: number,
+  assetToYestFiatRate: number,
+  usdToWalletFiatRate: number,
+  theme: Theme
+) => {
   const yesterdayExchangeRate = assetToYestFiatRate * usdToWalletFiatRate
   const yesterdayDelta = assetToFiatRate - yesterdayExchangeRate
 
   // Use 0 as delta if either exchange rate is missing or 0
-  const yesterdayDeltaPct = yesterdayExchangeRate === 0 || assetToFiatRate === 0 ? 0 : yesterdayDelta / yesterdayExchangeRate
+  const yesterdayDeltaPct =
+    yesterdayExchangeRate === 0 || assetToFiatRate === 0
+      ? 0
+      : yesterdayDelta / yesterdayExchangeRate
 
   let percentString
   // Prepend a < sign if a nonzero delta rounds to zero

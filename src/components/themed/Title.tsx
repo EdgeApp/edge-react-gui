@@ -20,7 +20,9 @@ export function Title(props: Props) {
 
   return (
     <View style={styles.row}>
-      {leftIcon ? <View style={[styles.leftIcon, styleLeftIcon]}>{leftIcon}</View> : null}
+      {leftIcon ? (
+        <View style={[styles.leftIcon, styleLeftIcon]}>{leftIcon}</View>
+      ) : null}
       <EdgeText style={styles.text}>{text}</EdgeText>
       {rightIcon ? <View style={styleRightIcon}>{rightIcon}</View> : null}
     </View>

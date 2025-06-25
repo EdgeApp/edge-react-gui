@@ -30,10 +30,15 @@ export function AssetSettingsScene(props: Props) {
   const handleRescanTokens = useHandler(async () => {
     let isTokensDetected = false
     for (const wallet of Object.values(currencyWallets)) {
-      const detectedDisabledTokens = wallet.detectedTokenIds.filter(dt => !wallet.enabledTokenIds.includes(dt))
+      const detectedDisabledTokens = wallet.detectedTokenIds.filter(
+        dt => !wallet.enabledTokenIds.includes(dt)
+      )
 
       if (detectedDisabledTokens.length > 0) {
-        await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...detectedDisabledTokens])
+        await wallet.changeEnabledTokenIds([
+          ...wallet.enabledTokenIds,
+          ...detectedDisabledTokens
+        ])
         isTokensDetected = true
       }
     }
@@ -47,8 +52,17 @@ export function AssetSettingsScene(props: Props) {
 
   return (
     <SceneWrapper scroll>
-      <SettingsTappableRow key="detectTokens" label={lstrings.settings_detect_tokens} onPress={handleRescanTokens}>
-        <FontAwesomeIcon style={styles.icon} name="refresh" size={theme.rem(1.25)} color={theme.iconTappable} />
+      <SettingsTappableRow
+        key="detectTokens"
+        label={lstrings.settings_detect_tokens}
+        onPress={handleRescanTokens}
+      >
+        <FontAwesomeIcon
+          style={styles.icon}
+          name="refresh"
+          size={theme.rem(1.25)}
+          color={theme.iconTappable}
+        />
       </SettingsTappableRow>
       {CURRENCY_SETTINGS_KEYS.map(pluginId => {
         if (account.currencyConfig[pluginId] == null) return null
@@ -60,8 +74,17 @@ export function AssetSettingsScene(props: Props) {
           })
 
         return (
-          <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-            <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
+          <SettingsTappableRow
+            key={pluginId}
+            label={displayName}
+            onPress={onPress}
+          >
+            <CryptoIcon
+              marginRem={[0.5, 0, 0.5, 0.5]}
+              pluginId={pluginId}
+              tokenId={null}
+              sizeRem={1.25}
+            />
           </SettingsTappableRow>
         )
       })}

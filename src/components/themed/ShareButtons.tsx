@@ -20,21 +20,46 @@ export function ShareButtons(props: Props) {
 
   return (
     <View style={styles.container}>
-      <ShareButton icon="FIO-geometric" text={lstrings.fio_reject_request_title} onPress={openFioAddressModal} />
-      <ShareButton icon="Copy-icon" text={lstrings.fragment_request_copy_title} onPress={copyToClipboard} />
-      <ShareButton icon="FIO-share" text={lstrings.string_share} onPress={openShareModal} />
+      <ShareButton
+        icon="FIO-geometric"
+        text={lstrings.fio_reject_request_title}
+        onPress={openFioAddressModal}
+      />
+      <ShareButton
+        icon="Copy-icon"
+        text={lstrings.fragment_request_copy_title}
+        onPress={copyToClipboard}
+      />
+      <ShareButton
+        icon="FIO-share"
+        text={lstrings.string_share}
+        onPress={openShareModal}
+      />
     </View>
   )
 }
 
-function ShareButton(props: { text: string; onPress: () => Promise<void>; icon: string }) {
+function ShareButton(props: {
+  text: string
+  onPress: () => Promise<void>
+  icon: string
+}) {
   const { icon, text, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={styles.button} onPress={onPress}>
-      <Fontello name={icon} size={theme.rem(1.5)} style={styles.image} color={theme.iconTappable} />
+    <EdgeTouchableOpacity
+      accessible={false}
+      style={styles.button}
+      onPress={onPress}
+    >
+      <Fontello
+        name={icon}
+        size={theme.rem(1.5)}
+        style={styles.image}
+        color={theme.iconTappable}
+      />
       <EdgeText style={styles.text}>{text}</EdgeText>
     </EdgeTouchableOpacity>
   )

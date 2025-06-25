@@ -1,7 +1,13 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming
+} from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
@@ -27,7 +33,14 @@ export const Shimmer = (props: Props) => {
     const startPosition = -shimmerWidth
     const endPosition = containerWidth
     offset.value = startPosition
-    offset.value = withRepeat(withSequence(withTiming(startPosition, { duration: duration / 2 }), withTiming(endPosition, { duration })), -1, false)
+    offset.value = withRepeat(
+      withSequence(
+        withTiming(startPosition, { duration: duration / 2 }),
+        withTiming(endPosition, { duration })
+      ),
+      -1,
+      false
+    )
   })
 
   React.useEffect(() => {
@@ -42,9 +55,21 @@ export const Shimmer = (props: Props) => {
 
   return isShown ? (
     <View style={styles.container} onLayout={handleContainerLayout}>
-      <Animated.View style={[styles.gradientContainer, { width: shimmerWidth }, animStyle]}>
-        <LinearGradient style={styles.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]} />
-        <LinearGradient style={styles.gradient} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]} />
+      <Animated.View
+        style={[styles.gradientContainer, { width: shimmerWidth }, animStyle]}
+      >
+        <LinearGradient
+          style={styles.gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+        />
+        <LinearGradient
+          style={styles.gradient}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+        />
       </Animated.View>
     </View>
   ) : null

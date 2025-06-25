@@ -1,7 +1,12 @@
 import { useIsFocused } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Platform } from 'react-native'
-import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
+import {
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { SceneWrapperInfo } from '../components/common/SceneWrapper'
 import { useSharedEvent } from '../hooks/useSharedEvent'
@@ -19,53 +24,67 @@ import { useSceneScrollContext } from './SceneScrollState'
  * footer in place. This should be used by scenes or components which should
  * respond to these values.
  */
-export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
-  const [keepOpen, setKeepOpen] = useState(false)
-  const footerHeight = useSharedValue(0)
-  const footerOpenRatio = useSharedValue(1)
-  const footerOpenRatioStart = useSharedValue(1)
-  const snapTo = useSharedValue<number | undefined>(undefined)
+export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(
+  () => {
+    const [keepOpen, setKeepOpen] = useState(false)
+    const footerHeight = useSharedValue(0)
+    const footerOpenRatio = useSharedValue(1)
+    const footerOpenRatioStart = useSharedValue(1)
+    const snapTo = useSharedValue<number | undefined>(undefined)
 
-  const resetFooterRatio = useCallback(() => {
-    snapTo.value = 1
-  }, [snapTo])
+    const resetFooterRatio = useCallback(() => {
+      snapTo.value = 1
+    }, [snapTo])
 
-  return useMemo(
-    () => ({
-      footerHeight,
-      // The scene can animate components using this shared value to
-      // collapse/expand its components. A value of 1 means opened, and 0 means
-      // closed.
-      footerOpenRatio,
-      footerOpenRatioStart,
-      keepOpen,
-      // The scene can use these to lock the footer into an open state.
-      setKeepOpen,
-      // The scene can call this to reset the footer state to an open state.
-      resetFooterRatio,
-      snapTo
-    }),
-    [footerHeight, footerOpenRatio, footerOpenRatioStart, keepOpen, resetFooterRatio, snapTo]
-  )
-})
+    return useMemo(
+      () => ({
+        footerHeight,
+        // The scene can animate components using this shared value to
+        // collapse/expand its components. A value of 1 means opened, and 0 means
+        // closed.
+        footerOpenRatio,
+        footerOpenRatioStart,
+        keepOpen,
+        // The scene can use these to lock the footer into an open state.
+        setKeepOpen,
+        // The scene can call this to reset the footer state to an open state.
+        resetFooterRatio,
+        snapTo
+      }),
+      [
+        footerHeight,
+        footerOpenRatio,
+        footerOpenRatioStart,
+        keepOpen,
+        resetFooterRatio,
+        snapTo
+      ]
+    )
+  }
+)
 
-export type FooterRender = (sceneWrapperInfo?: SceneWrapperInfo) => React.ReactNode
+export type FooterRender = (
+  sceneWrapperInfo?: SceneWrapperInfo
+) => React.ReactNode
 const defaultFooterRender: FooterRender = () => null
 
 /**
  * This is the global provider for the footer render function.
  */
-export const [SceneFooterRenderProvider, useSceneFooterRenderState] = createStateProvider(() => {
-  const [renderFooter, setRenderFooter] = useState<FooterRender>(() => defaultFooterRender)
+export const [SceneFooterRenderProvider, useSceneFooterRenderState] =
+  createStateProvider(() => {
+    const [renderFooter, setRenderFooter] = useState<FooterRender>(
+      () => defaultFooterRender
+    )
 
-  return useMemo(
-    () => ({
-      renderFooter,
-      setRenderFooter
-    }),
-    [renderFooter, setRenderFooter]
-  )
-})
+    return useMemo(
+      () => ({
+        renderFooter,
+        setRenderFooter
+      }),
+      [renderFooter, setRenderFooter]
+    )
+  })
 
 //
 // Derived Hooks
@@ -81,7 +100,9 @@ interface PortalSceneFooterProps {
 }
 export const PortalSceneFooter = (props: PortalSceneFooterProps) => {
   const { children: render = defaultFooterRender } = props
-  const setRenderFooter = useSceneFooterRenderState(state => state.setRenderFooter)
+  const setRenderFooter = useSceneFooterRenderState(
+    state => state.setRenderFooter
+  )
 
   // This will be used to determine if our render function should be cast
   // to the global state.
@@ -126,15 +147,23 @@ export const PortalSceneFooter = (props: PortalSceneFooterProps) => {
  * thrashing for the footer state shared values.
  */
 export const FooterAccordionEventService = () => {
-  const scrollBeginEvent = useSceneScrollContext(state => state.scrollBeginEvent)
+  const scrollBeginEvent = useSceneScrollContext(
+    state => state.scrollBeginEvent
+  )
   const scrollEndEvent = useSceneScrollContext(state => state.scrollEndEvent)
-  const scrollMomentumBeginEvent = useSceneScrollContext(state => state.scrollMomentumBeginEvent)
-  const scrollMomentumEndEvent = useSceneScrollContext(state => state.scrollMomentumEndEvent)
+  const scrollMomentumBeginEvent = useSceneScrollContext(
+    state => state.scrollMomentumBeginEvent
+  )
+  const scrollMomentumEndEvent = useSceneScrollContext(
+    state => state.scrollMomentumEndEvent
+  )
   const scrollY = useSceneScrollContext(state => state.scrollY)
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
-  const footerOpenRatioStart = useSceneFooterState(state => state.footerOpenRatioStart)
+  const footerOpenRatioStart = useSceneFooterState(
+    state => state.footerOpenRatioStart
+  )
   const keepOpen = useSceneFooterState(state => state.keepOpen)
   const snapTo = useSceneFooterState(state => state.snapTo)
 
@@ -203,7 +232,10 @@ export const FooterAccordionEventService = () => {
       if (scrollYDelta === previousScrollYDelta) return
 
       const ratioDelta = scrollYDelta * scrollDeltaToRatioDeltaFactor
-      const currentValue = Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
+      const currentValue = Math.min(
+        1,
+        Math.max(0, footerOpenRatioStart.value - ratioDelta)
+      )
 
       if (snapTo.value !== undefined) {
         snapTo.value = undefined

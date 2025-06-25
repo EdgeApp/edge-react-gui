@@ -55,10 +55,23 @@ export const showInsufficientFeesModal = async (props: ShowModalProps) => {
   const { countryCode, coreError, navigation, wallet, onSwap } = props
 
   if (config.disableSwaps === true && countryCode === 'GB') {
-    await Airship.show<'ok' | undefined>(bridge => <InsufficientFeesModalNoSwapBuy bridge={bridge} coreError={coreError} wallet={wallet} />)
+    await Airship.show<'ok' | undefined>(bridge => (
+      <InsufficientFeesModalNoSwapBuy
+        bridge={bridge}
+        coreError={coreError}
+        wallet={wallet}
+      />
+    ))
   } else {
     await Airship.show(bridge => (
-      <InsufficientFeesModal bridge={bridge} coreError={coreError} countryCode={countryCode} navigation={navigation} wallet={wallet} onSwap={onSwap} />
+      <InsufficientFeesModal
+        bridge={bridge}
+        coreError={coreError}
+        countryCode={countryCode}
+        navigation={navigation}
+        wallet={wallet}
+        onSwap={onSwap}
+      />
     ))
   }
 }
@@ -67,19 +80,33 @@ export const showInsufficientFeesModal = async (props: ShowModalProps) => {
  * Shows a simple modal notifying the user that they don't have enough funds to
  * cover fees, without any CTA to buy or swap.
  */
-function InsufficientFeesModalNoSwapBuy(props: InsufficientFeesModalNoSwapBuyProps) {
+function InsufficientFeesModalNoSwapBuy(
+  props: InsufficientFeesModalNoSwapBuyProps
+) {
   const { bridge, wallet, coreError } = props
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const { multiplier, name: denomName } = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const { multiplier, name: denomName } = useDisplayDenom(
+    wallet.currencyConfig,
+    tokenId
+  )
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   return (
     <ButtonsModal
       message={
         currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
-          ? sprintf(lstrings.uk_deposit_parent_crypto_modal_message_no_exchange_3s, amountString, denomName, wallet.currencyInfo.displayName)
-          : sprintf(lstrings.uk_deposit_parent_crypto_modal_message_no_exchange_2s, amountString, denomName)
+          ? sprintf(
+              lstrings.uk_deposit_parent_crypto_modal_message_no_exchange_3s,
+              amountString,
+              denomName,
+              wallet.currencyInfo.displayName
+            )
+          : sprintf(
+              lstrings.uk_deposit_parent_crypto_modal_message_no_exchange_2s,
+              amountString,
+              denomName
+            )
       }
       bridge={bridge}
       buttons={{ ok: { label: lstrings.string_ok } }}
@@ -97,7 +124,10 @@ function InsufficientFeesModal(props: InsufficientFeesModalProps) {
   // Get the display amount:
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const { multiplier, name: denomName } = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const { multiplier, name: denomName } = useDisplayDenom(
+    wallet.currencyConfig,
+    tokenId
+  )
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   const handleCancel = useHandler(() => bridge.resolve())
@@ -135,26 +165,58 @@ function InsufficientFeesModal(props: InsufficientFeesModalProps) {
     secondary = undefined
     message =
       currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
-        ? sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_3s, amountString, denomName, wallet.currencyInfo.displayName)
-        : sprintf(lstrings.buy_parent_crypto_modal_message_no_exchange_2s, amountString, denomName)
+        ? sprintf(
+            lstrings.buy_parent_crypto_modal_message_no_exchange_3s,
+            amountString,
+            denomName,
+            wallet.currencyInfo.displayName
+          )
+        : sprintf(
+            lstrings.buy_parent_crypto_modal_message_no_exchange_2s,
+            amountString,
+            denomName
+          )
   } else {
     primary = countryCode === 'GB' ? swapButton : buyButton
     secondary = countryCode === 'GB' ? undefined : swapButton
     message =
       currencyCode === 'ETH' && wallet.currencyInfo.pluginId !== 'ethereum'
         ? sprintf(
-            getUkCompliantString(countryCode, 'insufficient_fees_3s', amountString, denomName, wallet.currencyInfo.displayName),
+            getUkCompliantString(
+              countryCode,
+              'insufficient_fees_3s',
+              amountString,
+              denomName,
+              wallet.currencyInfo.displayName
+            ),
             amountString,
             denomName,
             wallet.currencyInfo.displayName
           )
-        : sprintf(getUkCompliantString(countryCode, 'insufficient_fees_2s', amountString, denomName), amountString, denomName)
+        : sprintf(
+            getUkCompliantString(
+              countryCode,
+              'insufficient_fees_2s',
+              amountString,
+              denomName
+            ),
+            amountString,
+            denomName
+          )
   }
 
   return (
-    <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
+    <EdgeModal
+      bridge={bridge}
+      title={lstrings.buy_crypto_modal_title}
+      onCancel={handleCancel}
+    >
       <Paragraph>{message}</Paragraph>
-      <ButtonsView primary={primary} secondary={secondary} tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }} />
+      <ButtonsView
+        primary={primary}
+        secondary={secondary}
+        tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
+      />
     </EdgeModal>
   )
 }

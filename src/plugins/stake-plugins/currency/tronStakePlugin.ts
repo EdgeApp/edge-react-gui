@@ -136,7 +136,9 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
   return policy
 }
 
-export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin | undefined> => {
+export const makeTronStakePlugin = async (
+  pluginId: string
+): Promise<StakePlugin | undefined> => {
   if (pluginId !== 'tron') return
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
@@ -144,9 +146,13 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
 
       for (const policy of policies) {
         if (policy.deprecated && filter?.wallet != null) {
-          const deprecatedPolicyBalance = filter.wallet.stakingStatus.stakedAmounts.find(
-            stakedAmount => policy.rewardAssets[0].currencyCode === stakedAmount.otherParams?.type && gt(stakedAmount.nativeAmount, '0')
-          )
+          const deprecatedPolicyBalance =
+            filter.wallet.stakingStatus.stakedAmounts.find(
+              stakedAmount =>
+                policy.rewardAssets[0].currencyCode ===
+                  stakedAmount.otherParams?.type &&
+                gt(stakedAmount.nativeAmount, '0')
+            )
           if (deprecatedPolicyBalance == null) continue
         }
         out.push(policy)
@@ -155,7 +161,8 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
       return filterStakePolicies(out, filter)
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      if (isDeprecated(request.stakePolicyId)) return await fetchChangeQuoteV1(request)
+      if (isDeprecated(request.stakePolicyId))
+        return await fetchChangeQuoteV1(request)
 
       const { action, stakePolicyId, nativeAmount, wallet } = request
       const { pluginId, currencyCode } = wallet.currencyInfo
@@ -165,10 +172,13 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
       }
 
       const policy = getPolicyFromId(stakePolicyId)
-      const resource = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
+      const resource =
+        policy.rewardAssets[0].internalCurrencyCode ??
+        policy.rewardAssets[0].currencyCode
       const spendTargets = [
         {
-          publicAddress: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
+          publicAddress: (await wallet.getReceiveAddress({ tokenId: null }))
+            .publicAddress
         }
       ]
 
@@ -178,7 +188,11 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
         case 'stake': {
           if (lt(nativeAmount, MIN_TRX_STAKE)) {
             // Only new stakes in v2 need to meet this min amount
-            throw new StakeBelowLimitError(request, request.currencyCode, MIN_TRX_STAKE)
+            throw new StakeBelowLimitError(
+              request,
+              request.currencyCode,
+              MIN_TRX_STAKE
+            )
           }
 
           const spendInfo: EdgeSpendInfo = {
@@ -210,7 +224,12 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
             const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
             if (stakedAmount == null) continue
 
-            if (stakedAmount.otherParams.type === `${WITHDRAW_PREFIX}${resource}` && stakedAmount.unlockDate != null && stakedAmount.unlockDate < new Date()) {
+            if (
+              stakedAmount.otherParams.type ===
+                `${WITHDRAW_PREFIX}${resource}` &&
+              stakedAmount.unlockDate != null &&
+              stakedAmount.unlockDate < new Date()
+            ) {
               claimableAmount = add(claimableAmount, stakedAmount.nativeAmount)
             }
           }
@@ -301,14 +320,19 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
         approve
       }
     },
-    async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      if (isDeprecated(request.stakePolicyId)) return await fetchStakePositionV1(request)
+    async fetchStakePosition(
+      request: StakePositionRequest
+    ): Promise<StakePosition> {
+      if (isDeprecated(request.stakePolicyId))
+        return await fetchStakePositionV1(request)
 
       const { stakePolicyId, wallet } = request
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const policy = getPolicyFromId(stakePolicyId)
-      const rewardAsset = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
+      const rewardAsset =
+        policy.rewardAssets[0].internalCurrencyCode ??
+        policy.rewardAssets[0].currencyCode
       const tokenId = getWalletTokenId(wallet, currencyCode)
       const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
       const canStake = gt(balanceTrx, '0')
@@ -324,7 +348,8 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
           otherParams: { type },
           unlockDate
         } = stakedAmount
-        if (type !== rewardAsset && type !== `${WITHDRAW_PREFIX}${rewardAsset}`) continue
+        if (type !== rewardAsset && type !== `${WITHDRAW_PREFIX}${rewardAsset}`)
+          continue
 
         const locktime = unlockDate != null ? new Date(unlockDate) : undefined
         let allocationType: PositionAllocation['allocationType'] = 'staked'
@@ -355,7 +380,10 @@ export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin
       return {
         allocations,
         canStake,
-        canUnstake: allocations.some(alloc => alloc.allocationType === 'staked' && gt(alloc.nativeAmount, '0')),
+        canUnstake: allocations.some(
+          alloc =>
+            alloc.allocationType === 'staked' && gt(alloc.nativeAmount, '0')
+        ),
         canUnstakeAndClaim: false,
         canClaim
       }
@@ -369,7 +397,9 @@ const isDeprecated = (policyId: string): boolean => {
   const policy = policies.find(policy => policy.stakePolicyId === policyId)
   return policy?.deprecated === true
 }
-const fetchChangeQuoteV1 = async (request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+const fetchChangeQuoteV1 = async (
+  request: ChangeQuoteRequest
+): Promise<ChangeQuote> => {
   const { action, stakePolicyId, nativeAmount, wallet } = request
   const { pluginId, currencyCode } = wallet.currencyInfo
 
@@ -389,7 +419,8 @@ const fetchChangeQuoteV1 = async (request: ChangeQuoteRequest): Promise<ChangeQu
     tokenId: null,
     spendTargets: [
       {
-        publicAddress: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
+        publicAddress: (await wallet.getReceiveAddress({ tokenId: null }))
+          .publicAddress
       }
     ],
     otherParams: {
@@ -425,17 +456,24 @@ const fetchChangeQuoteV1 = async (request: ChangeQuoteRequest): Promise<ChangeQu
     approve
   }
 }
-const fetchStakePositionV1 = async (request: StakePositionRequest): Promise<StakePosition> => {
+const fetchStakePositionV1 = async (
+  request: StakePositionRequest
+): Promise<StakePosition> => {
   const { stakePolicyId, wallet } = request
   const { currencyCode, pluginId } = wallet.currencyInfo
 
   const policy = getPolicyFromId(stakePolicyId)
   const rewardAsset = policy.rewardAssets[0].currencyCode
-  const stakedAmount = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
+  const stakedAmount = wallet.stakingStatus.stakedAmounts.find(
+    amount => amount.otherParams?.type === rewardAsset
+  )
   const nativeAmount = stakedAmount?.nativeAmount ?? '0'
   const tokenId = getWalletTokenId(wallet, currencyCode)
   const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
-  const locktime = stakedAmount?.unlockDate != null ? new Date(stakedAmount.unlockDate) : undefined
+  const locktime =
+    stakedAmount?.unlockDate != null
+      ? new Date(stakedAmount.unlockDate)
+      : undefined
 
   return {
     allocations: [

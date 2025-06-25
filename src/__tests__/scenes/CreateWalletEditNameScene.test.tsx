@@ -81,7 +81,9 @@ describe('CreateWalletEditNameComponent', () => {
                 displayName: 'Polymath Network',
                 pluginId: 'ethereum',
                 tokenId: '9992ec3cf6a55b00978cddf2b27bc6882d88d1ec',
-                createWalletIds: ['bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=']
+                createWalletIds: [
+                  'bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA='
+                ]
               }
             ]
           })}

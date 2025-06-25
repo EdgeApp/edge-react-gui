@@ -31,7 +31,11 @@ export interface BigAmount {
 }
 
 export type TarotBorrowableContracts = [TarotBorrowable, Erc20, VelodromePoolV2]
-type TarotCollateralContracts = [TarotCollateral, VelodromeLPToken, VelodromePoolV2]
+type TarotCollateralContracts = [
+  TarotCollateral,
+  VelodromeLPToken,
+  VelodromePoolV2
+]
 export interface TarotContractGroups {
   [TarotPoolTokenType.BorrowableA]: TarotBorrowableContracts
   [TarotPoolTokenType.BorrowableB]: TarotBorrowableContracts
@@ -43,17 +47,45 @@ export interface TarotContractGroups {
  * To avoid math errors and interoperability between utils, no code cleanups were attempted.
  */
 
-export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.providers.FallbackProvider, walletAddress: string) => {
-  const poolContract = VelodromePoolV2__factory.connect(config.poolContractAddress, provider)
-  const lpTokenContract = VelodromeLPToken__factory.connect(config.lpToken.contractAddress, provider)
-  const token0Contract = Erc20__factory.connect(config.token0.contractAddress, provider)
-  const token1Contract = Erc20__factory.connect(config.token1.contractAddress, provider)
-  const token0BorrowableContract = TarotBorrowable__factory.connect(config.token0BorrowableContractAddress, provider)
-  const token1BorrowableContract = TarotBorrowable__factory.connect(config.token1BorrowableContractAddress, provider)
-  const collateralContract = TarotCollateral__factory.connect(config.collateralContractAddress, provider)
+export const tarotUtils = (
+  config: TarotPoolAdapterConfig,
+  provider: ethers.providers.FallbackProvider,
+  walletAddress: string
+) => {
+  const poolContract = VelodromePoolV2__factory.connect(
+    config.poolContractAddress,
+    provider
+  )
+  const lpTokenContract = VelodromeLPToken__factory.connect(
+    config.lpToken.contractAddress,
+    provider
+  )
+  const token0Contract = Erc20__factory.connect(
+    config.token0.contractAddress,
+    provider
+  )
+  const token1Contract = Erc20__factory.connect(
+    config.token1.contractAddress,
+    provider
+  )
+  const token0BorrowableContract = TarotBorrowable__factory.connect(
+    config.token0BorrowableContractAddress,
+    provider
+  )
+  const token1BorrowableContract = TarotBorrowable__factory.connect(
+    config.token1BorrowableContractAddress,
+    provider
+  )
+  const collateralContract = TarotCollateral__factory.connect(
+    config.collateralContractAddress,
+    provider
+  )
 
   return {
-    async getAccruedBalance(contract: TarotBorrowable, walletAddress: string): Promise<BigNumber> {
+    async getAccruedBalance(
+      contract: TarotBorrowable,
+      walletAddress: string
+    ): Promise<BigNumber> {
       const [borrowBalance, accrualTimestamp, borrowRate] = await Promise.all([
         contract.borrowBalance(walletAddress),
         contract.accrualTimestamp(),
@@ -72,7 +104,10 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
 
     async getReserves(): Promise<[number, number]> {
       const [reserve0, reserve1] = await lpTokenContract.getReserves()
-      return [parseFloat(formatUnits(reserve0, config.token0.decimals)), parseFloat(formatUnits(reserve1, config.token1.decimals))]
+      return [
+        parseFloat(formatUnits(reserve0, config.token0.decimals)),
+        parseFloat(formatUnits(reserve1, config.token1.decimals))
+      ]
     },
 
     // Used for calculating max deleverage. Future variable deleverage will use nativeAmount to determine these values
@@ -88,20 +123,28 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
     },
 
     async getMarketPriceDenomLP(): Promise<[number, number]> {
-      const [[reserve0, reserve1], totalSupply] = await Promise.all([this.getReserves(), this.getLPTotalSupply()])
+      const [[reserve0, reserve1], totalSupply] = await Promise.all([
+        this.getReserves(),
+        this.getLPTotalSupply()
+      ])
       let ret: [number, number]
       if (config.isStable) {
         const x2 = reserve0 * reserve0
         const y2 = reserve1 * reserve1
         const f = (3 * x2 + y2) / (x2 + 3 * y2)
-        ret = [((totalSupply / reserve0) * f) / (1 + f), totalSupply / reserve1 / (1 + f)]
+        ret = [
+          ((totalSupply / reserve0) * f) / (1 + f),
+          totalSupply / reserve1 / (1 + f)
+        ]
       } else {
         ret = [totalSupply / reserve0 / 2, totalSupply / reserve1 / 2]
       }
       return ret
     },
 
-    async getContracts(poolTokenType: TarotPoolTokenType): Promise<TarotContractGroups[typeof poolTokenType]> {
+    async getContracts(
+      poolTokenType: TarotPoolTokenType
+    ): Promise<TarotContractGroups[typeof poolTokenType]> {
       if (poolTokenType === TarotPoolTokenType.BorrowableA) {
         return [token0BorrowableContract, token0Contract, poolContract]
       }
@@ -113,7 +156,9 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       return [collateralContract, lpTokenContract, poolContract]
     },
 
-    async getExchangeRate(poolTokenType: TarotPoolTokenType): Promise<BigNumber> {
+    async getExchangeRate(
+      poolTokenType: TarotPoolTokenType
+    ): Promise<BigNumber> {
       let ret = BigNumber.from(0)
       if (poolTokenType === TarotPoolTokenType.BorrowableA) {
         ret = await token0BorrowableContract.exchangeRateLast()
@@ -131,7 +176,10 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
     },
 
     async getDeposited(poolTokenType: TarotPoolTokenType): Promise<BigAmount> {
-      const [[poolToken], exchangeRate] = await Promise.all([this.getContracts(poolTokenType), this.getExchangeRate(poolTokenType)])
+      const [[poolToken], exchangeRate] = await Promise.all([
+        this.getContracts(poolTokenType),
+        this.getExchangeRate(poolTokenType)
+      ])
       const balance = await poolToken.balanceOf(walletAddress)
       let decimals = 18
       if (poolTokenType === TarotPoolTokenType.BorrowableA) {
@@ -184,12 +232,15 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       priceA: number,
       priceB: number
     ): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
-      const [valueCollateralPart, amountAPart, amountBPart] = await Promise.all([
-        this.getDeposited(TarotPoolTokenType.Collateral),
-        this.getBorrowed(TarotPoolTokenType.BorrowableA),
-        this.getBorrowed(TarotPoolTokenType.BorrowableB)
-      ])
-      const valueCollateral = this.parseNumber(valueCollateralPart) + changes.changeCollateral
+      const [valueCollateralPart, amountAPart, amountBPart] = await Promise.all(
+        [
+          this.getDeposited(TarotPoolTokenType.Collateral),
+          this.getBorrowed(TarotPoolTokenType.BorrowableA),
+          this.getBorrowed(TarotPoolTokenType.BorrowableB)
+        ]
+      )
+      const valueCollateral =
+        this.parseNumber(valueCollateralPart) + changes.changeCollateral
       const amountA = this.parseNumber(amountAPart) + changes.changeBorrowedA
       const amountB = this.parseNumber(amountBPart) + changes.changeBorrowedB
       const valueA = amountA * priceA
@@ -201,21 +252,30 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       }
     },
 
-    async getMarketValues(changes: typeof this.NO_CHANGES): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
+    async getMarketValues(
+      changes: typeof this.NO_CHANGES
+    ): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
       const [priceA, priceB] = await this.getMarketPriceDenomLP()
       return await this.getValuesFromPrice(this.NO_CHANGES, priceA, priceB)
     },
 
     async getMaxDeleverage(): Promise<number> {
       if (config.isStable) {
-        const [[reserve0, reserve1], { valueCollateral, valueA, valueB }] = await Promise.all([this.getReserves(), this.getMarketValues(this.NO_CHANGES)])
+        const [[reserve0, reserve1], { valueCollateral, valueA, valueB }] =
+          await Promise.all([
+            this.getReserves(),
+            this.getMarketValues(this.NO_CHANGES)
+          ])
         const x2 = reserve0 * reserve0
         const y2 = reserve1 * reserve1
         const f = (3 * x2 + y2) / (x2 + 3 * y2)
-        const minRepayA = (valueCollateral * f) / (1 + f) / Math.sqrt(SLIPPAGE_FACTOR)
+        const minRepayA =
+          (valueCollateral * f) / (1 + f) / Math.sqrt(SLIPPAGE_FACTOR)
         const minRepayB = valueCollateral / (1 + f) / Math.sqrt(SLIPPAGE_FACTOR)
         if (minRepayA >= valueA && minRepayB >= valueB) {
-          const deposited = await this.getDeposited(TarotPoolTokenType.Collateral)
+          const deposited = await this.getDeposited(
+            TarotPoolTokenType.Collateral
+          )
           return this.parseNumber(deposited)
         }
         if (valueCollateral / Math.sqrt(SLIPPAGE_FACTOR) < valueA + valueB) {
@@ -227,7 +287,9 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
           return valueB * (1 + f) * Math.sqrt(SLIPPAGE_FACTOR)
         }
       }
-      const { valueCollateral, valueA, valueB } = await this.getMarketValues(this.NO_CHANGES)
+      const { valueCollateral, valueA, valueB } = await this.getMarketValues(
+        this.NO_CHANGES
+      )
       const minRepayPerSide = valueCollateral / 2 / Math.sqrt(SLIPPAGE_FACTOR)
       if (minRepayPerSide >= valueA && minRepayPerSide >= valueB) {
         const deposited = await this.getDeposited(TarotPoolTokenType.Collateral)
@@ -246,7 +308,10 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       bAmountAMin: number
       bAmountBMin: number
     }> {
-      const [[x, y], [priceA, priceB]] = await Promise.all([this.getReserves(), this.getMarketPriceDenomLP()])
+      const [[x, y], [priceA, priceB]] = await Promise.all([
+        this.getReserves(),
+        this.getMarketPriceDenomLP()
+      ])
       const lpStable = await lpTokenContract.stable()
       const x2 = x * x
       const y2 = y * y
@@ -275,7 +340,9 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       return await this.getNewLeverage(this.NO_CHANGES)
     },
 
-    async getValues(changes: typeof this.NO_CHANGES): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
+    async getValues(
+      changes: typeof this.NO_CHANGES
+    ): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
       const [priceA, priceB] = await this.getPriceDenomLP()
       return await this.getValuesFromPrice(changes, priceA, priceB)
     },
@@ -293,8 +360,12 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
         price1 = price1.mul(vaultTokenExchangeRate).div(TEN_18)
       }
       return [
-        this.parse18(price0.mul(BigNumber.from(10).pow(config.token0.decimals)).div(TEN_18)),
-        this.parse18(price1.mul(BigNumber.from(10).pow(config.token1.decimals)).div(TEN_18))
+        this.parse18(
+          price0.mul(BigNumber.from(10).pow(config.token0.decimals)).div(TEN_18)
+        ),
+        this.parse18(
+          price1.mul(BigNumber.from(10).pow(config.token1.decimals)).div(TEN_18)
+        )
       ]
     },
 

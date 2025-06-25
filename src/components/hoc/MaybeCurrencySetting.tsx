@@ -41,10 +41,16 @@ export function maybeCurrencySetting<T, X>(
   return function CurrencySettingsSection(props: Props) {
     const { currencyConfig } = props
 
-    const defaultSetting = React.useMemo(() => asMaybeSetting(currencyConfig.currencyInfo.defaultSettings), [currencyConfig])
+    const defaultSetting = React.useMemo(
+      () => asMaybeSetting(currencyConfig.currencyInfo.defaultSettings),
+      [currencyConfig]
+    )
 
     const userSettings = useWatch(currencyConfig, 'userSettings')
-    const setting = React.useMemo(() => asMaybeSetting(userSettings), [userSettings])
+    const setting = React.useMemo(
+      () => asMaybeSetting(userSettings),
+      [userSettings]
+    )
 
     const handleUpdate = useHandler(
       async settings =>
@@ -55,7 +61,12 @@ export function maybeCurrencySetting<T, X>(
     )
 
     return defaultSetting == null ? null : (
-      <Component defaultSetting={defaultSetting} extraInfo={extraInfo} setting={setting ?? defaultSetting} onUpdate={handleUpdate} />
+      <Component
+        defaultSetting={defaultSetting}
+        extraInfo={extraInfo}
+        setting={setting ?? defaultSetting}
+        onUpdate={handleUpdate}
+      />
     )
   }
 }

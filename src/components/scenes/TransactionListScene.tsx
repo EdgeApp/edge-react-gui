@@ -1,7 +1,17 @@
 import { useRoute } from '@react-navigation/native'
-import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTokenMap,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native'
+import {
+  ListRenderItemInfo,
+  Platform,
+  RefreshControl,
+  View
+} from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { activateWalletTokens } from '../../actions/WalletActions'
@@ -17,7 +27,11 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
+import {
+  NavigationBase,
+  RouteProp,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { calculateSpamThreshold, unixToLocaleDateTime } from '../../util/utils'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
@@ -27,7 +41,11 @@ import { HeaderTitle } from '../navigation/HeaderTitle'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
-import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
+import {
+  EmptyLoader,
+  SectionHeader,
+  SectionHeaderCentered
+} from '../themed/TransactionListComponents'
 import { TransactionCard } from '../themed/TransactionListRow'
 
 export interface TransactionListParams {
@@ -48,7 +66,10 @@ function TransactionListComponent(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
+  const tokenId = checkToken(
+    route.params.tokenId,
+    wallet.currencyConfig.allTokens
+  )
   const { pluginId } = wallet.currencyInfo
 
   // State:
@@ -64,8 +85,13 @@ function TransactionListComponent(props: Props) {
   // Spam filter
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const currencyCode = tokenId == null ? wallet.currencyInfo.currencyCode : wallet.currencyConfig.allTokens[tokenId].currencyCode
-  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const currencyCode =
+    tokenId == null
+      ? wallet.currencyInfo.currencyCode
+      : wallet.currencyConfig.allTokens[tokenId].currencyCode
+  const exchangeRate = useSelector(state =>
+    getExchangeRate(state, currencyCode, defaultIsoFiat)
+  )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const spamThreshold = React.useMemo<string | undefined>(() => {
     if (spamFilterOn) {
@@ -83,7 +109,8 @@ function TransactionListComponent(props: Props) {
     spamThreshold
   })
 
-  const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  const { isTransactionListUnsupported = false } =
+    SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Assemble the data for the section list:
   const listItems = React.useMemo(() => {
@@ -126,8 +153,16 @@ function TransactionListComponent(props: Props) {
   useAsyncEffect(
     async () => {
       if (unactivatedTokenIds.length > 0) {
-        if (unactivatedTokenIds.some(unactivatedTokenId => unactivatedTokenId === tokenId)) {
-          await dispatch(activateWalletTokens(navigation as NavigationBase, wallet, [tokenId]))
+        if (
+          unactivatedTokenIds.some(
+            unactivatedTokenId => unactivatedTokenId === tokenId
+          )
+        ) {
+          await dispatch(
+            activateWalletTokens(navigation as NavigationBase, wallet, [
+              tokenId
+            ])
+          )
         }
       }
     },
@@ -183,30 +218,46 @@ function TransactionListComponent(props: Props) {
     if (isTransactionListUnsupported) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
     } else if (isSearching) {
-      return <SectionHeaderCentered title={lstrings.transaction_list_search_no_result} />
+      return (
+        <SectionHeaderCentered
+          title={lstrings.transaction_list_search_no_result}
+        />
+      )
     }
     return null
   }, [isTransactionListUnsupported, isSearching, wallet, tokenId])
 
-  const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
-    if (item == null) {
-      return <EmptyLoader />
-    }
+  const renderItem = useHandler(
+    ({ index, item }: ListRenderItemInfo<ListItem>) => {
+      if (item == null) {
+        return <EmptyLoader />
+      }
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
-    if (typeof item === 'string') {
+      const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
+      if (typeof item === 'string') {
+        return (
+          <EdgeAnim
+            disableAnimation={disableAnimation}
+            enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
+          >
+            <SectionHeader title={item} />
+          </EdgeAnim>
+        )
+      }
       return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-          <SectionHeader title={item} />
+        <EdgeAnim
+          disableAnimation={disableAnimation}
+          enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
+        >
+          <TransactionCard
+            navigation={navigation as NavigationBase}
+            transaction={item}
+            wallet={wallet}
+          />
         </EdgeAnim>
       )
     }
-    return (
-      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
-        <TransactionCard navigation={navigation as NavigationBase} transaction={item} wallet={wallet} />
-      </EdgeAnim>
-    )
-  })
+  )
 
   const keyExtractor = useHandler((item: ListItem) => {
     if (item == null) return 'spinner'
@@ -231,11 +282,24 @@ function TransactionListComponent(props: Props) {
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+    [
+      handleChangeText,
+      handleDoneSearching,
+      handleFooterLayoutHeight,
+      handleStartSearching,
+      isSearching,
+      searchText
+    ]
   )
 
   return (
-    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasTabs hasNotifications renderFooter={renderFooter}>
+    <SceneWrapper
+      avoidKeyboard
+      footerHeight={footerHeight}
+      hasTabs
+      hasNotifications
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <View style={undoInsetStyle}>
           <Animated.FlatList
@@ -277,7 +341,10 @@ export const TransactionListTitle = () => {
  * If the token gets deleted, the scene will crash.
  * Fall back to the main currency code if this happens.
  */
-function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId {
+function checkToken(
+  tokenId: EdgeTokenId,
+  allTokens: EdgeTokenMap
+): EdgeTokenId {
   if (tokenId == null) return null
   if (allTokens[tokenId] == null) return null
   return tokenId

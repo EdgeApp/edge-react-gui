@@ -19,7 +19,8 @@ export const WalletIcon = (props: WalletIconProps) => {
   const size = theme.rem(sizeRem)
 
   const compromised = useSelector(state => {
-    const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
+    const { modalShown = 0 } =
+      state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
     return modalShown > 0
   })
 
@@ -31,7 +32,11 @@ export const WalletIcon = (props: WalletIconProps) => {
         size={size}
         wallet={wallet}
       />
-      <CryptoIcon {...props} pluginId={pluginId} secondaryIconOverride={compromised ? compromisedIcon : undefined} />
+      <CryptoIcon
+        {...props}
+        pluginId={pluginId}
+        secondaryIconOverride={compromised ? compromisedIcon : undefined}
+      />
     </View>
   )
 }

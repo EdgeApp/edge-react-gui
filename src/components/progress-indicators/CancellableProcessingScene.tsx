@@ -101,11 +101,18 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
               duration: animationDuration
             }}
           >
-            <ActivityIndicator size="large" style={styles.spinner} color={theme.iconTappable} />
+            <ActivityIndicator
+              size="large"
+              style={styles.spinner}
+              color={theme.iconTappable}
+            />
           </EdgeAnim>
         </View>
         {!isLongWait ? null : (
-          <EdgeAnim style={styles.button} enter={{ type: 'fadeInDown', distance: 90 }}>
+          <EdgeAnim
+            style={styles.button}
+            enter={{ type: 'fadeInDown', distance: 90 }}
+          >
             <ButtonsView
               absolute
               primary={{

@@ -2,7 +2,10 @@ import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import { BatteryOptEnabled, RequestDisableOptimization } from 'react-native-battery-optimization-check'
+import {
+  BatteryOptEnabled,
+  RequestDisableOptimization
+} from 'react-native-battery-optimization-check'
 import { usePowerState } from 'react-native-device-info'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
@@ -20,7 +23,12 @@ import { defaultAccount } from '../../reducers/CoreReducer'
 import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
+import {
+  height,
+  ratioHorizontal,
+  ratioVertical,
+  width
+} from '../../util/scaling'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AlertDropdown } from '../navigation/AlertDropdown'
@@ -62,7 +70,9 @@ let isFioModalShown = false
  */
 export function Services(props: Props) {
   const dispatch = useDispatch()
-  const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
+  const account = useSelector(state =>
+    state.core.account !== defaultAccount ? state.core.account : undefined
+  )
   const powerState = usePowerState()
   const { navigation } = props
 
@@ -77,24 +87,39 @@ export function Services(props: Props) {
       return
     }
 
-    const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-    const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
+    const { freeRegApiToken = undefined, freeRegRefCode = undefined } =
+      typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+    const hasFioWallets = account.allKeys.some(
+      keyInfo => keyInfo.type === 'wallet:fio'
+    )
 
-    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && account.username != null && !hasFioWallets) {
+    if (
+      freeRegApiToken != null &&
+      freeRegRefCode != null &&
+      !account.newAccount &&
+      account.username != null &&
+      !hasFioWallets
+    ) {
       const fioCreateHandleRecord = await account.dataStore
         .getItem('', FIO_CREATE_HANDLE_ITEM_ID)
         .then(asFioCreateHandleRecord)
         .catch(() => undefined)
 
       if (fioCreateHandleRecord == null) {
-        const shouldCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
+        const shouldCreateHandle = await Airship.show<boolean>(bridge => (
+          <FioCreateHandleModal bridge={bridge} />
+        ))
         if (shouldCreateHandle) {
           navigation.navigate('fioCreateHandle', {
             freeRegApiToken,
             freeRegRefCode
           })
         } else {
-          await account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
+          await account.dataStore.setItem(
+            '',
+            FIO_CREATE_HANDLE_ITEM_ID,
+            uncleaner(asFioCreateHandleRecord)({ ignored: new Date() })
+          )
         }
       }
     }
@@ -102,7 +127,9 @@ export function Services(props: Props) {
 
   React.useEffect(() => {
     console.log(`Dimensions: get(window) width=${width} height=${height}`)
-    console.log(`Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`)
+    console.log(
+      `Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`
+    )
   }, [])
 
   // Methods to call immediately after login:
@@ -155,13 +182,23 @@ export function Services(props: Props) {
       if (!batteryOptEnabled) {
         return
       }
-      console.warn('Battery saver mode enabled and battery optimization is disabled')
+      console.warn(
+        'Battery saver mode enabled and battery optimization is disabled'
+      )
       await Airship.show(bridge => {
         const onPress = async () => {
           await RequestDisableOptimization()
           bridge.resolve()
         }
-        return <AlertDropdown bridge={bridge} onPress={onPress} message={lstrings.warning_battery_saver} warning persistent />
+        return (
+          <AlertDropdown
+            bridge={bridge}
+            onPress={onPress}
+            message={lstrings.warning_battery_saver}
+            warning
+            persistent
+          />
+        )
       }).catch(e => showDevError(e))
     },
     [powerState],
@@ -185,10 +222,14 @@ export function Services(props: Props) {
       {account == null ? null : <NotificationService account={account} />}
       <AutoLogout />
       <ContactsLoader />
-      {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
+      {account == null ? null : (
+        <AccountCallbackManager account={account} navigation={navigation} />
+      )}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
-      {account == null ? null : <FioService account={account} navigation={navigation} />}
+      {account == null ? null : (
+        <FioService account={account} navigation={navigation} />
+      )}
       <PermissionsManager />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />

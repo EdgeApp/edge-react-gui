@@ -1,21 +1,34 @@
 import { filterNull } from '../../../../util/safeFilters'
-import { ActionEffect, EffectCheckResult, ExecutionContext, SeqEffect } from '../../types'
+import {
+  ActionEffect,
+  EffectCheckResult,
+  ExecutionContext,
+  SeqEffect
+} from '../../types'
 
-export async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
+export async function checkActionEffect(
+  context: ExecutionContext,
+  effect: ActionEffect
+): Promise<EffectCheckResult> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
-    `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
+    `Unexpected null effect while running check. ` +
+    `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
   switch (effect.type) {
     case 'seq': {
       const checkedEffects = filterNull(effect.childEffects)
-      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+      if (checkedEffects.length !== effect.childEffects.length)
+        throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
       const childEffectCheck = await context.checkActionEffect(childEffect)
 
       // Completely effective
-      if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
+      if (
+        childEffectCheck.isEffective &&
+        effect.opIndex >= effect.childEffects.length - 1
+      ) {
         return {
           delay: 0,
           isEffective: true
@@ -44,7 +57,8 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
-      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+      if (checkedEffects.length !== effect.childEffects.length)
+        throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Check all child effects concurrently
       const childEffectPromises = checkedEffects.map(async childEffect => {
@@ -58,13 +72,19 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
         ? {
             type: 'par',
             childEffects: checkedEffects.map((effect, index) => {
-              return childEffectChecks[index].isEffective ? { type: 'done' } : effect
+              return childEffectChecks[index].isEffective
+                ? { type: 'done' }
+                : effect
             })
           }
         : undefined
 
       // Let delay be the maximum delay of the remaining ineffective effects or zero
-      const delay = childEffectChecks.reduce((max, result) => (result.isEffective ? max : Math.max(result.delay, max)), 0)
+      const delay = childEffectChecks.reduce(
+        (max, result) =>
+          result.isEffective ? max : Math.max(result.delay, max),
+        0
+      )
 
       return {
         delay,

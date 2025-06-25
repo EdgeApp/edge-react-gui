@@ -1,4 +1,15 @@
-import { asArray, asDate, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asDate,
+  asEither,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asTuple,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 import { asLegacyTokenId } from '../../../types/types'
 import { asBase64 } from '../../../util/cleaners/asBase64'
@@ -17,14 +28,16 @@ import {
   TxConfirmTrigger
 } from './pushTypes'
 
-export const asAddressBalanceTrigger: Cleaner<AddressBalanceTrigger> = asObject({
-  type: asValue('address-balance'),
-  pluginId: asString,
-  tokenId: asLegacyTokenId,
-  address: asString,
-  aboveAmount: asOptional(asString), // Satoshis or Wei or such
-  belowAmount: asOptional(asString) // Satoshis or Wei or such
-})
+export const asAddressBalanceTrigger: Cleaner<AddressBalanceTrigger> = asObject(
+  {
+    type: asValue('address-balance'),
+    pluginId: asString,
+    tokenId: asLegacyTokenId,
+    address: asString,
+    aboveAmount: asOptional(asString), // Satoshis or Wei or such
+    belowAmount: asOptional(asString) // Satoshis or Wei or such
+  }
+)
 
 export const asAllTrigger = asObject<AllTrigger>({
   type: asValue('all'),
@@ -86,7 +99,12 @@ export const asPushMessage: Cleaner<PushMessage> = asObject({
   data: asOptional(asObject(asString))
 })
 
-export const asPushEventState: Cleaner<PushEventState> = asValue('waiting', 'cancelled', 'triggered', 'hidden')
+export const asPushEventState: Cleaner<PushEventState> = asValue(
+  'waiting',
+  'cancelled',
+  'triggered',
+  'hidden'
+)
 
 export const asNewPushEvent: Cleaner<NewPushEvent> = asObject({
   eventId: asString,

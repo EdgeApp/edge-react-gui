@@ -17,6 +17,9 @@
 #   git log --all -i --grep='yarn\sfix' --pretty=%H
 ##
 
+# 2025-06-23 (80 columns)
+e7cf3888a260fd19acb615796d8212da13bd3fd7
+
 # 2022-10-26 (Enabling consistent-type-definitions rule)
 d3232bfa37fb2c30931614c48217a9b200da263d
 

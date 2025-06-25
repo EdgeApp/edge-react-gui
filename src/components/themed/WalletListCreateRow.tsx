@@ -2,7 +2,10 @@ import { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
+import {
+  createWallet,
+  getUniqueWalletName
+} from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
 import { Airship, showError } from '../../components/services/AirshipInstance'
@@ -30,7 +33,9 @@ export interface WalletListCreateRowProps {
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
-export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
+export const WalletListCreateRowComponent = (
+  props: WalletListCreateRowProps
+) => {
   const {
     createItem,
     createWalletId,
@@ -40,8 +45,15 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     // Callbacks:
     onPress
   } = props
-  const { currencyCode, displayName: currencyName = '', keyOptions = {}, pluginId, walletType } = createItem
-  const createWalletIds = createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
+  const {
+    currencyCode,
+    displayName: currencyName = '',
+    keyOptions = {},
+    pluginId,
+    walletType
+  } = createItem
+  const createWalletIds =
+    createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -52,7 +64,10 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
   const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
-  const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
+  const networkName =
+    pluginId != null && tokenId != null
+      ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})`
+      : ''
 
   const pressMutexRef = React.useRef<boolean>(false)
 
@@ -62,7 +77,8 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
     pressMutexRef.current = true
 
-    const handleRes = (wallet?: EdgeCurrencyWallet) => (onPress != null && wallet != null ? onPress(wallet.id, tokenId) : null)
+    const handleRes = (wallet?: EdgeCurrencyWallet) =>
+      onPress != null && wallet != null ? onPress(wallet.id, tokenId) : null
     if (walletType != null) {
       await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
@@ -114,7 +130,9 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
               textInput={false}
               fullScreen={false}
               rowComponent={renderRow}
-              rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
+              rowsData={createWalletIds.map(
+                walletId => currencyWallets[walletId]
+              )}
             />
           )
         })
@@ -128,13 +146,24 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
   return (
     <EdgeTouchableOpacity style={styles.row} onPress={handlePress}>
-      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIcon
+        marginRem={1}
+        pluginId={pluginId}
+        sizeRem={2}
+        tokenId={tokenId}
+      />
       <View style={styles.nameColumn}>
-        <EdgeText style={styles.currencyText}>{`${currencyCode}${networkName}`}</EdgeText>
+        <EdgeText
+          style={styles.currencyText}
+        >{`${currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>
       </View>
       <View style={styles.labelColumn}>
-        <EdgeText style={styles.labelText}>{walletType != null ? lstrings.fragment_create_wallet_create_wallet : lstrings.wallet_list_add_token}</EdgeText>
+        <EdgeText style={styles.labelText}>
+          {walletType != null
+            ? lstrings.fragment_create_wallet_create_wallet
+            : lstrings.wallet_list_add_token}
+        </EdgeText>
       </View>
     </EdgeTouchableOpacity>
   )
@@ -163,7 +192,12 @@ function createAndSelectToken({
     try {
       // Try to find existing Parent Edge Wallet, if no specific wallet was given
       const { currencyWallets } = account
-      const parentWalletId = createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+      const parentWalletId =
+        createWalletId ??
+        Object.keys(currencyWallets).find(
+          walletId =>
+            currencyWallets[walletId].currencyInfo.pluginId === pluginId
+        )
       const wallet: EdgeCurrencyWallet =
         parentWalletId != null
           ? currencyWallets[parentWalletId]
@@ -182,19 +216,27 @@ function createAndSelectToken({
             )
 
       // Show the user the token terms modal only once
-      await approveTokenTerms(account, wallet.currencyInfo.pluginId, countryCode)
+      await approveTokenTerms(
+        account,
+        wallet.currencyInfo.pluginId,
+        countryCode
+      )
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
       return wallet
     } catch (error: any) {
       showError(error)
-      if (trackingEventFailed != null) logEvent(trackingEventFailed, { error: String(error) })
+      if (trackingEventFailed != null)
+        logEvent(trackingEventFailed, { error: String(error) })
     }
   }
 }
 
-function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
+function createAndSelectWallet(
+  pluginId: string,
+  keyOptions: JsonObject
+): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core

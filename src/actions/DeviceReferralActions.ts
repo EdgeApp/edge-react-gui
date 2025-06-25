@@ -2,7 +2,11 @@ import { asArray, asObject, asOptional, asString } from 'cleaners'
 
 import { ThunkAction } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
-import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
+import {
+  asCurrencyCode,
+  asMessageTweak,
+  asPluginTweak
+} from '../types/TweakTypes'
 import { fetchReferral } from '../util/network'
 import { logEvent } from '../util/tracking'
 
@@ -37,7 +41,10 @@ export function loadDeviceReferral(): ThunkAction<Promise<void>> {
       }
       const deviceReferral = unpackDeviceReferral(await reply.json())
       dispatch({ type: 'DEVICE_REFERRAL_LOADED', data: deviceReferral })
-      await disklet.setText(DEVICE_REFERRAL_FILE, JSON.stringify(deviceReferral))
+      await disklet.setText(
+        DEVICE_REFERRAL_FILE,
+        JSON.stringify(deviceReferral)
+      )
     } catch (error: any) {
       // If all else fails, we just don't have a reason:
       console.log('Failed to load install reason', error)

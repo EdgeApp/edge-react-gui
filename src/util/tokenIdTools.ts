@@ -9,7 +9,10 @@ import { CurrencyConfigMap } from './utils'
  * The goal is to delete this once the wallet stops using this legacy format
  * internally.
  */
-export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeAsset[], currencyCodes?: string[]): EdgeAsset[] | undefined {
+export function upgradeCurrencyCodes(
+  lookup: (currencyCode: string) => EdgeAsset[],
+  currencyCodes?: string[]
+): EdgeAsset[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   const out: EdgeAsset[] = []
@@ -23,7 +26,9 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeAsset
       // It's a scoped code, like "ETH-REP", so filter using the parent:
       const parent = lookup(parentCode).find(match => match.tokenId == null)
       if (parent == null) continue
-      out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+      out.push(
+        ...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId)
+      )
     }
   }
   return out
@@ -32,7 +37,9 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeAsset
 /**
  * Creates a function that returns all matching tokenId's for a currency code.
  */
-export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeAsset[] {
+export function makeCurrencyCodeTable(
+  currencyConfigMap: CurrencyConfigMap
+): (currencyCode: string) => EdgeAsset[] {
   const map = new Map<string, EdgeAsset[]>()
 
   function addMatch(currencyCode: string, location: EdgeAsset): void {

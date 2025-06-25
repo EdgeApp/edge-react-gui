@@ -7,7 +7,11 @@ import { BlurView } from 'rn-id-blurview'
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount } from '../../actions/LoginActions'
-import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  useTheme
+} from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
@@ -40,7 +44,12 @@ let firstRun = true
 
 export function LoginScene(props: Props) {
   const { navigation, route } = props
-  const { experimentConfig, loginUiInitialRoute = 'login', nextLoginId, passwordRecoveryKey } = route.params
+  const {
+    experimentConfig,
+    loginUiInitialRoute = 'login',
+    nextLoginId,
+    passwordRecoveryKey
+  } = route.params
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -60,13 +69,18 @@ export function LoginScene(props: Props) {
   React.useEffect(() => {
     if (!firstRun) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))) {
+    if (
+      YOLO_USERNAME != null &&
+      (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))
+    ) {
       firstRun = false
       if (YOLO_PIN != null) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
           .then(async account => {
-            await dispatch(initializeAccount(navigation as NavigationBase, account))
+            await dispatch(
+              initializeAccount(navigation as NavigationBase, account)
+            )
           })
           .catch(error => showError(error))
       }
@@ -74,11 +88,18 @@ export function LoginScene(props: Props) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(async account => {
-            await dispatch(initializeAccount(navigation as NavigationBase, account))
+            await dispatch(
+              initializeAccount(navigation as NavigationBase, account)
+            )
           })
           .catch(error => showError(error))
       }
-    } else if (YOLO_USERNAME == null && account.username == null && context.localUsers[0]?.loginId != null && typeof YOLO_PIN === 'string') {
+    } else if (
+      YOLO_USERNAME == null &&
+      account.username == null &&
+      context.localUsers[0]?.loginId != null &&
+      typeof YOLO_PIN === 'string'
+    ) {
       // Allow YOLO_PIN with light accounts
       firstRun = false
       context
@@ -86,7 +107,9 @@ export function LoginScene(props: Props) {
           useLoginId: true
         })
         .then(async account => {
-          await dispatch(initializeAccount(navigation as NavigationBase, account))
+          await dispatch(
+            initializeAccount(navigation as NavigationBase, account)
+          )
         })
         .catch(error => showError(error))
     }
@@ -100,7 +123,9 @@ export function LoginScene(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation as NavigationBase).catch(err => showDevError(err))
+        showHelpModal(navigation as NavigationBase).catch(err =>
+          showDevError(err)
+        )
       },
       text: lstrings.string_help
     }),

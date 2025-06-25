@@ -22,7 +22,10 @@ interface State {
  * This means you can update `useState` values,
  * but they will always be stale if you try to read them in here.
  */
-export function useWalletsSubscriber(account: EdgeAccount, subscribe: (wallet: EdgeCurrencyWallet) => Cleanup): void {
+export function useWalletsSubscriber(
+  account: EdgeAccount,
+  subscribe: (wallet: EdgeCurrencyWallet) => Cleanup
+): void {
   const state = React.useRef<State>({
     cleanups: new Map(),
     lastWallets: {},

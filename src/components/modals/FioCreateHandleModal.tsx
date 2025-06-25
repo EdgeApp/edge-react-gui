@@ -40,7 +40,11 @@ export const FioCreateHandleModal = (props: Props) => {
   return (
     <EdgeModal bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
-        <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} resizeMode={FastImage.resizeMode.contain} />
+        <FastImage
+          source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }}
+          style={styles.icon}
+          resizeMode={FastImage.resizeMode.contain}
+        />
         <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
           {parseMarkedText(lstrings.fio_free_web3_handle_title_m)}
         </GetFioHandleTitle>

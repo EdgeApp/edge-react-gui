@@ -51,7 +51,13 @@ export interface TxConfirmTrigger {
   readonly txid: string
 }
 
-export type PushTrigger = AddressBalanceTrigger | AllTrigger | AnyTrigger | PriceChangeTrigger | PriceLevelTrigger | TxConfirmTrigger
+export type PushTrigger =
+  | AddressBalanceTrigger
+  | AllTrigger
+  | AnyTrigger
+  | PriceChangeTrigger
+  | PriceLevelTrigger
+  | TxConfirmTrigger
 
 /**
  * Records when a trigger took place.

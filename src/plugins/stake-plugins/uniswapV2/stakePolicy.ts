@@ -17,10 +17,12 @@ export interface StakePolicyInfo {
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { isStablePool, stakeProviderInfo, stakeAssets, rewardAssets } = policyInfo
+    const { isStablePool, stakeProviderInfo, stakeAssets, rewardAssets } =
+      policyInfo
     const stakePolicyId = policyInfo.stakePolicyId
     const apy = infoResponse.policies[stakePolicyId]
-    const yieldType = isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
+    const yieldType =
+      isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
 
     return {
       stakePolicyId,

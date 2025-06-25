@@ -11,7 +11,10 @@ import { ThunkAction } from '../../types/reduxTypes'
 import { getPositionAllocations } from '../../util/stakeUtils'
 import { datelog } from '../../util/utils'
 
-export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWallet): ThunkAction<Promise<void>> => {
+export const updateStakingState = (
+  currencyCode: string,
+  wallet: EdgeCurrencyWallet
+): ThunkAction<Promise<void>> => {
   return async (dispatch, getState) => {
     const walletId = wallet.id
 
@@ -20,7 +23,10 @@ export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWal
     const { pluginId } = wallet.currencyInfo
 
     // Exit with empty state if staking is not supported
-    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported !== true || !ENV.ENABLE_STAKING) {
+    if (
+      SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported !== true ||
+      !ENV.ENABLE_STAKING
+    ) {
       dispatch({ type: 'STAKING/FINISH_LOADING', walletId })
       return
     }
@@ -49,7 +55,9 @@ export const updateStakingState = (currencyCode: string, wallet: EdgeCurrencyWal
           stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
           const { staked, earned } = getPositionAllocations(stakePosition)
           total = [...staked, ...earned]
-            .filter(p => p.currencyCode === currencyCode && p.pluginId === pluginId)
+            .filter(
+              p => p.currencyCode === currencyCode && p.pluginId === pluginId
+            )
             .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
         } catch (err) {
           console.error(err)

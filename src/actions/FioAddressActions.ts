@@ -3,7 +3,10 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../util/FioAddressUtils'
+import {
+  refreshConnectedWalletsForFioAddress,
+  refreshFioNames
+} from '../util/FioAddressUtils'
 import { createWallet } from './CreateWalletActions'
 
 export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {
@@ -30,7 +33,9 @@ export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
     const { currencyWallets } = state.core.account
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
 
-    const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(fioWallets)
+    const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(
+      fioWallets
+    )
 
     global.requestAnimationFrame(() => {
       dispatch({
@@ -44,12 +49,18 @@ export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
     })
 
     const { connectedWalletsByFioAddress } = state.ui.fio
-    const wallets = Object.keys(currencyWallets).map(walletKey => currencyWallets[walletKey])
+    const wallets = Object.keys(currencyWallets).map(
+      walletKey => currencyWallets[walletKey]
+    )
     for (const { name, walletId } of fioAddresses) {
       if (!connectedWalletsByFioAddress[name]) {
         const fioWallet = fioWalletsById[walletId]
         if (!fioWallet) continue
-        const ccWalletMap = await refreshConnectedWalletsForFioAddress(name, fioWallet, wallets)
+        const ccWalletMap = await refreshConnectedWalletsForFioAddress(
+          name,
+          fioWallet,
+          wallets
+        )
         dispatch({
           type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
           data: {

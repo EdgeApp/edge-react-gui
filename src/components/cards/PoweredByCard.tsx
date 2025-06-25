@@ -24,17 +24,29 @@ export const PoweredByCard = (props: Props) => {
     <View style={styles.cardContainer}>
       <EdgeCard onPress={onPress} paddingRem={0.5}>
         <View style={styles.poweredByContainer}>
-          <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
+          <FastImage
+            style={styles.poweredByIcon}
+            source={iconSrc}
+            resizeMode="contain"
+          />
           <View style={styles.poweredByContainerColumn}>
             <View style={styles.poweredByContainerRow}>
-              <EdgeText style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</EdgeText>
+              <EdgeText style={styles.poweredByText}>
+                {lstrings.plugin_powered_by_space}
+              </EdgeText>
               <EdgeText style={styles.poweredByText}>{poweredByText}</EdgeText>
             </View>
             <View style={styles.poweredByContainerRow}>
-              <EdgeText style={styles.tapToChangeText}>{lstrings.tap_to_change_provider}</EdgeText>
+              <EdgeText style={styles.tapToChangeText}>
+                {lstrings.tap_to_change_provider}
+              </EdgeText>
             </View>
           </View>
-          <FontAwesome5 name="chevron-right" color={theme.iconTappable} size={theme.rem(1)} />
+          <FontAwesome5
+            name="chevron-right"
+            color={theme.iconTappable}
+            size={theme.rem(1)}
+          />
         </View>
       </EdgeCard>
     </View>

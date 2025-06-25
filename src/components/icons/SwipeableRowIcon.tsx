@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import Animated, { SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  withTiming
+} from 'react-native-reanimated'
 
 interface Props {
   children?: React.ReactNode
@@ -25,7 +29,9 @@ export function SwipeableRowIcon(props: Props) {
     minWidth,
     transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
   }))
-  return <Animated.View style={[styles.center, style]}>{children}</Animated.View>
+  return (
+    <Animated.View style={[styles.center, style]}>{children}</Animated.View>
+  )
 }
 
 const styles = StyleSheet.create({

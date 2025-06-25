@@ -62,11 +62,21 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     }
 
     const key = `currency_label_${data.item.value}`
-    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
+    const subTitle =
+      lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
 
     return (
       <SelectableRow
-        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={
+          fiatCountry.logoUrl ? (
+            <FastImage
+              source={{ uri: fiatCountry.logoUrl }}
+              style={styles.cryptoTypeLogo}
+            />
+          ) : (
+            <View style={styles.cryptoTypeLogo} />
+          )
+        }
         subTitle={subTitle}
         title={data.item.value}
         onPress={() => this.onSelectFiat(data.item)}
@@ -82,7 +92,9 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       const lowerCaseText = this.state.searchTerm.toLowerCase()
       return (
         subTitle.toLowerCase().includes(lowerCaseText) ||
-        FIAT_COUNTRY[entry.value]?.countryName.toLowerCase().includes(lowerCaseText) ||
+        FIAT_COUNTRY[entry.value]?.countryName
+          .toLowerCase()
+          .includes(lowerCaseText) ||
         entry.label.toLowerCase().includes(lowerCaseText) ||
         entry.value.toLowerCase().includes(lowerCaseText)
       )
@@ -92,7 +104,11 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard>
         {({ insetStyle, undoInsetStyle }) => (
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-            <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
+            <SceneHeader
+              title={lstrings.title_create_wallet_select_fiat}
+              underline
+              withTopMargin
+            >
               <SimpleTextInput
                 topRem={1}
                 horizontalRem={0.5}
@@ -153,7 +169,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, OwnProps>(
+export const DefaultFiatSettingScene = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   state => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),

@@ -33,7 +33,9 @@ export const InfoCardCarousel = (props: Props) => {
 
   const countryCode = useSelector(state => state.ui.countryCode)
 
-  const [filteredCards, setFilteredCards] = React.useState<DisplayInfoCard[]>([])
+  const [filteredCards, setFilteredCards] = React.useState<DisplayInfoCard[]>(
+    []
+  )
 
   // Set account funded status
   const accountFunded = useIsAccountFunded()
@@ -52,13 +54,33 @@ export const InfoCardCarousel = (props: Props) => {
     const osVersion = getOsVersion()
 
     const referralPromotions = accountReferral.promotions ?? []
-    const promoIds = [...referralPromotions.map(promotion => promotion.installerId), ...(accountReferral.activePromotions ?? [])]
-    setFilteredCards(getDisplayInfoCards({ cards, countryCode, accountFunded, promoIds, buildNumber, osType, osVersion, version, currentDate }))
+    const promoIds = [
+      ...referralPromotions.map(promotion => promotion.installerId),
+      ...(accountReferral.activePromotions ?? [])
+    ]
+    setFilteredCards(
+      getDisplayInfoCards({
+        cards,
+        countryCode,
+        accountFunded,
+        promoIds,
+        buildNumber,
+        osType,
+        osVersion,
+        version,
+        currentDate
+      })
+    )
   }, [accountFunded, accountReferral, cards, countryCode])
 
   const account = useSelector(state => state.core.account)
-  const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
-  const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
+  const hiddenAccountMessages = useSelector(
+    state => state.account.accountReferral.hiddenAccountMessages
+  )
+  const activeCards = React.useMemo(
+    () => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]),
+    [filteredCards, hiddenAccountMessages]
+  )
 
   // List rendering methods:
   const keyExtractor = useHandler((item: DisplayInfoCard) => item.messageId)
@@ -74,17 +96,32 @@ export const InfoCardCarousel = (props: Props) => {
           // addPromoCardToNotifications has its own validation checks
           await addPromoCardToNotifications(account, item)
         } catch (error) {
-          console.error('Failed to add promo card to notification center:', error)
+          console.error(
+            'Failed to add promo card to notification center:',
+            error
+          )
         }
       }
     }
-    return <InfoCarouselCard navigation={navigation} promoInfo={item} onClose={handleClose} />
+    return (
+      <InfoCarouselCard
+        navigation={navigation}
+        promoInfo={item}
+        onClose={handleClose}
+      />
+    )
   })
 
   if (activeCards == null || activeCards.length === 0) return null
   return (
     <EdgeAnim enter={enterAnim}>
-      <EdgeCarousel data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
+      <EdgeCarousel
+        data={activeCards}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        height={theme.rem(10)}
+        width={screenWidth}
+      />
     </EdgeAnim>
   )
 }

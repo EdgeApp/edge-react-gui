@@ -54,8 +54,19 @@ export interface ButtonModalProps<Buttons> {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
-  const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
+export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
+  props: ButtonModalProps<Buttons>
+) {
+  const {
+    bridge,
+    title,
+    message,
+    children,
+    buttons,
+    disableCancel = false,
+    fullScreen = false,
+    warning
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -86,7 +97,12 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   })
 
   return (
-    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
+    <EdgeModal
+      warning={warning}
+      bridge={bridge}
+      title={title}
+      onCancel={disableCancel ? undefined : handleCancel}
+    >
       <View style={[styles.textStyle, containerStyle]}>
         {message != null ? <Paragraph>{message}</Paragraph> : null}
         {children}

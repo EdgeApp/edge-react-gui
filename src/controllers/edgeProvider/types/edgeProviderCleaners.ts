@@ -1,7 +1,30 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
-import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction, EdgeTxAmount } from 'edge-core-js'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asTuple,
+  asUnknown,
+  asValue,
+  Cleaner
+} from 'cleaners'
+import {
+  EdgeMemo,
+  EdgeMetadata,
+  EdgeNetworkFee,
+  EdgeReceiveAddress,
+  EdgeTransaction,
+  EdgeTxAmount
+} from 'edge-core-js'
 
-import { asEdgeAsset, asEdgeCurrencyCode, asEdgeTokenId } from '../../../types/types'
+import {
+  asEdgeAsset,
+  asEdgeCurrencyCode,
+  asEdgeTokenId
+} from '../../../types/types'
 import {
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
@@ -41,7 +64,9 @@ const asEdgeReceiveAddress = asObject<EdgeReceiveAddress>({
   nativeAmount: asString
 })
 
-const asConfirmation = asValue<['confirmed', 'unconfirmed', 'syncing', 'dropped']>('confirmed', 'unconfirmed', 'syncing', 'dropped')
+const asConfirmation = asValue<
+  ['confirmed', 'unconfirmed', 'syncing', 'dropped']
+>('confirmed', 'unconfirmed', 'syncing', 'dropped')
 
 const asEdgeMemo = asObject<EdgeMemo>({
   memoName: asString,
@@ -73,7 +98,11 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
   txid: asString
 })
 
-export const asExtendedCurrencyCode = asEither(asString, asEdgeAsset, asEdgeCurrencyCode)
+export const asExtendedCurrencyCode = asEither(
+  asString,
+  asEdgeAsset,
+  asEdgeCurrencyCode
+)
 
 const asWalletDetails = asObject<WalletDetails>({
   name: asString,
@@ -98,7 +127,11 @@ const asEdgeGetWalletHistoryResult = asObject<EdgeGetWalletHistoryResult>({
   transactions: asArray(asEdgeTransaction)
 })
 
-const asFeeOption = asValue<['low', 'standard', 'high']>('low', 'standard', 'high')
+const asFeeOption = asValue<['low', 'standard', 'high']>(
+  'low',
+  'standard',
+  'high'
+)
 
 const asEdgeRequestSpendOptions = asObject<EdgeRequestSpendOptions>({
   currencyCode: asOptional(asString),
@@ -156,7 +189,10 @@ export const methodCleaners: MethodTable<EdgeProviderMethods> = {
     asReturn: asEdgeGetWalletHistoryResult
   },
   requestSpend: {
-    asParams: asTuple(asArray(asEdgeProviderSpendTarget), asOptional(asEdgeRequestSpendOptions)),
+    asParams: asTuple(
+      asArray(asEdgeProviderSpendTarget),
+      asOptional(asEdgeRequestSpendOptions)
+    ),
     asReturn: asVoid
   },
   requestSpendUri: {

@@ -16,7 +16,10 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
   const { name } = wallet
   if (name != null) return name
 
-  return sprintf(lstrings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
+  return sprintf(
+    lstrings.my_crypto_wallet_name,
+    wallet.currencyInfo.displayName
+  )
 }
 
 /**
@@ -37,7 +40,10 @@ export function cleanFiatCurrencyCode(fiatCurrencyCode: string): {
   }
 }
 
-export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
+export const getAvailableBalance = (
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId
+): string => {
   const { pluginId } = wallet.currencyInfo
 
   let balance = wallet.balanceMap.get(tokenId) ?? '0'
@@ -50,10 +56,20 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenId: EdgeTok
 }
 
 /** @deprecated - Use `enableTokens()` instead */
-export const enableTokenCurrencyCode = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
+export const enableTokenCurrencyCode = async (
+  currencyCode: string,
+  wallet: EdgeCurrencyWallet
+) => {
   const allTokens = wallet.currencyConfig.allTokens
-  const newTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode.toUpperCase() === currencyCode.toUpperCase())
-  if (newTokenId == null) throw Error(`Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`)
+  const newTokenId = Object.keys(allTokens).find(
+    tokenId =>
+      allTokens[tokenId].currencyCode.toUpperCase() ===
+      currencyCode.toUpperCase()
+  )
+  if (newTokenId == null)
+    throw Error(
+      `Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`
+    )
 
   await enableTokens([newTokenId], wallet)
 }
@@ -64,14 +80,22 @@ export const enableTokenCurrencyCode = async (currencyCode: string, wallet: Edge
  * get enabled.
  * - If the tokens are all already enabled, this function call is a noop.
  */
-export const enableTokens = async (newTokenIds: EdgeTokenId[], wallet: EdgeCurrencyWallet) => {
+export const enableTokens = async (
+  newTokenIds: EdgeTokenId[],
+  wallet: EdgeCurrencyWallet
+) => {
   const { enabledTokenIds, currencyConfig } = wallet
   const { allTokens } = currencyConfig
 
   const tokensToEnable = Object.keys(allTokens).filter(
-    tokenId => newTokenIds.filter(newTokenId => newTokenId != null).includes(tokenId) && !enabledTokenIds.includes(tokenId)
+    tokenId =>
+      newTokenIds.filter(newTokenId => newTokenId != null).includes(tokenId) &&
+      !enabledTokenIds.includes(tokenId)
   )
 
   if (tokensToEnable.length > 0)
-    await showFullScreenSpinner(lstrings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable]))
+    await showFullScreenSpinner(
+      lstrings.wallet_list_modal_enabling_token,
+      wallet.changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable])
+    )
 }

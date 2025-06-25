@@ -48,7 +48,14 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleMenu = useHandler(() => {
     closeRow()
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />).catch(err => showError(err))
+    Airship.show(bridge => (
+      <WalletListMenuModal
+        bridge={bridge}
+        tokenId={tokenId}
+        navigation={navigation}
+        walletId={wallet.id}
+      />
+    )).catch(err => showError(err))
   })
 
   const handleRequest = useHandler(() => {
@@ -126,7 +133,10 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
       </EdgeTouchableOpacity>
-      <EdgeTouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
+      <EdgeTouchableOpacity
+        style={styles.requestUnderlay}
+        onPress={handleRequest}
+      >
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
         </SwipeableRowIcon>
@@ -167,7 +177,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       onRightSwipe={handleSend}
       slopOpts={slopOpts}
     >
-      <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
+      <WalletListCurrencyRow
+        token={token}
+        tokenId={tokenId}
+        wallet={wallet}
+        onLongPress={handleMenu}
+        onPress={handleSelect}
+      />
     </SwipeableRow>
   )
 }
@@ -197,4 +213,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableCurrencyRow = React.memo(WalletListSwipeableCurrencyRowComponent)
+export const WalletListSwipeableCurrencyRow = React.memo(
+  WalletListSwipeableCurrencyRowComponent
+)

@@ -11,7 +11,11 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
-import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting } from '../themed/MaybeCustomServersSetting'
+import {
+  MaybeBlockbookSetting,
+  MaybeCustomServersSetting,
+  MaybeElectrumSetting
+} from '../themed/MaybeCustomServersSetting'
 import { MaybeMoneroUserSettings } from '../themed/MaybeMoneroUserSettings'
 
 export interface CurrencySettingsParams {
@@ -29,7 +33,10 @@ export function CurrencySettingsScene(props: Props) {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const selectedDenominationMultiplier = useDisplayDenom(account.currencyConfig[pluginId], null).multiplier
+  const selectedDenominationMultiplier = useDisplayDenom(
+    account.currencyConfig[pluginId],
+    null
+  ).multiplier
   const currencyConfig = account.currencyConfig[pluginId]
 
   function renderDenominations() {
@@ -40,11 +47,17 @@ export function CurrencySettingsScene(props: Props) {
           const key = denomination.multiplier
           const isSelected = key === selectedDenominationMultiplier
           const handlePress = async () => {
-            await dispatch(setDenominationKeyRequest(pluginId, currencyCode, denomination))
+            await dispatch(
+              setDenominationKeyRequest(pluginId, currencyCode, denomination)
+            )
           }
 
           return (
-            <SettingsRadioRow key={key} value={isSelected} onPress={handlePress}>
+            <SettingsRadioRow
+              key={key}
+              value={isSelected}
+              onPress={handlePress}
+            >
               <Text style={styles.labelText}>
                 <Text style={styles.symbolText}>{denomination.symbol}</Text>
                 {' - ' + denomination.name}

@@ -21,7 +21,13 @@ interface Props {
  * 3. Localization: commas, decimals, spaces
  **/
 export const CryptoText = React.memo((props: Props) => {
-  const { wallet, tokenId, nativeAmount, withSymbol, hideBalance = false } = props
+  const {
+    wallet,
+    tokenId,
+    nativeAmount,
+    withSymbol,
+    hideBalance = false
+  } = props
   const cryptoText = useCryptoText({
     wallet,
     tokenId,

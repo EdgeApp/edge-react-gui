@@ -23,8 +23,16 @@ export function PermissionsSettingModal(props: {
   const isAppForeground = useIsAppForeground()
 
   const message = mandatory
-    ? sprintf(lstrings.contacts_permission_modal_enable_settings_mandatory, name, permission)
-    : sprintf(lstrings.contacts_permission_modal_enable_settings, name, permission)
+    ? sprintf(
+        lstrings.contacts_permission_modal_enable_settings_mandatory,
+        name,
+        permission
+      )
+    : sprintf(
+        lstrings.contacts_permission_modal_enable_settings,
+        name,
+        permission
+      )
 
   useAsyncEffect(
     async () => {
@@ -47,7 +55,12 @@ export function PermissionsSettingModal(props: {
   return (
     <EdgeModal bridge={bridge} onCancel={handleClose}>
       <Paragraph>{message}</Paragraph>
-      <MainButton label={lstrings.string_ok_cap} marginRem={1} type="primary" onPress={handlePress} />
+      <MainButton
+        label={lstrings.string_ok_cap}
+        marginRem={1}
+        type="primary"
+        onPress={handlePress}
+      />
     </EdgeModal>
   )
 }

@@ -16,15 +16,30 @@ interface Props {
 }
 
 const SceneHeaderComponent = (props: Props) => {
-  const { children, style, tertiary = null, title, underline = false, withTopMargin = false } = props
+  const {
+    children,
+    style,
+    tertiary = null,
+    title,
+    underline = false,
+    withTopMargin = false
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <>
-      <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
+      <View
+        style={[
+          styles.container,
+          withTopMargin ? styles.topMargin : null,
+          style
+        ]}
+      >
         <View style={styles.titleContainer}>
-          {title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}
+          {title == null ? null : (
+            <EdgeText style={styles.title}>{title}</EdgeText>
+          )}
           {tertiary}
         </View>
         {children}

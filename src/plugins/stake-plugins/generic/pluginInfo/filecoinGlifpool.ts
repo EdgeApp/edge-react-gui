@@ -8,7 +8,9 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'glif_infinity_pool'
 }
 
-const filecoinPolicyConfig: Array<StakePolicyConfig<GlifInfinityPoolAdapterConfig>> = [
+const filecoinPolicyConfig: Array<
+  StakePolicyConfig<GlifInfinityPoolAdapterConfig>
+> = [
   {
     stakePolicyId: 'fil_glif_infinity_pool_0',
     stakeProviderInfo: stakeProviderInfo,

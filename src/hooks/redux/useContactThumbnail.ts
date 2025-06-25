@@ -16,11 +16,14 @@ import { useAsyncEffect } from '../useAsyncEffect'
 export const useContactThumbnail = (name?: string): string | undefined => {
   const contacts = useSelector(state => state.contacts)
   const dispatch = useDispatch()
-  const [currentContactsPermissionOn, setCurrentContactsPermissionOn] = React.useState(false)
+  const [currentContactsPermissionOn, setCurrentContactsPermissionOn] =
+    React.useState(false)
 
   useAsyncEffect(
     async () => {
-      const currentContactsPermissionOn = (await check(permissionNames.contacts).catch(_error => 'denied')) === 'granted'
+      const currentContactsPermissionOn =
+        (await check(permissionNames.contacts).catch(_error => 'denied')) ===
+        'granted'
       setCurrentContactsPermissionOn(currentContactsPermissionOn)
 
       if (!currentContactsPermissionOn) {
@@ -42,7 +45,11 @@ export const useContactThumbnail = (name?: string): string | undefined => {
     for (const contact of contacts) {
       const { givenName, familyName } = contact
       const contactName = normalizeForSearch(`${givenName}${familyName ?? ''}`)
-      if (contactName === searchName && contact.thumbnailPath != null && contact.thumbnailPath !== '') {
+      if (
+        contactName === searchName &&
+        contact.thumbnailPath != null &&
+        contact.thumbnailPath !== ''
+      ) {
         return contact.thumbnailPath
       }
     }

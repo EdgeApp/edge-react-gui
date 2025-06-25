@@ -5,26 +5,38 @@ import { makeEvent } from 'yavent'
 import { showError } from '../components/services/AirshipInstance'
 import { useSelector } from '../types/reactRedux'
 import { ThunkAction } from '../types/reduxTypes'
-import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, NotifState, PasswordReminder, SpendingLimits } from '../types/types'
+import {
+  asLocalAccountSettings,
+  asNotifInfo,
+  LocalAccountSettings,
+  NotifInfo,
+  NotifState,
+  PasswordReminder,
+  SpendingLimits
+} from '../types/types'
 import { logActivity } from '../util/logger'
 
 export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
-const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()
+const [watchAccountSettings, emitAccountSettings] =
+  makeEvent<LocalAccountSettings>()
 watchAccountSettings(s => {
   localAccountSettings = s
 })
 
 let readSettingsFromDisk = false
-export const getLocalAccountSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {
+export const getLocalAccountSettings = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
   if (readSettingsFromDisk) return localAccountSettings
   const settings = await readLocalAccountSettings(account)
   return settings
 }
 
 export function useAccountSettings() {
-  const [accountSettings, setAccountSettings] = React.useState(localAccountSettings)
+  const [accountSettings, setAccountSettings] =
+    React.useState(localAccountSettings)
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
   return accountSettings
 }
@@ -37,16 +49,36 @@ export function useAccountSettings() {
  */
 export function useNotifCount(): number | undefined {
   const { notifState } = useAccountSettings()
-  const isDuressAccount = useSelector(state => state.core.account.isDuressAccount)
+  const isDuressAccount = useSelector(
+    state => state.core.account.isDuressAccount
+  )
   return React.useMemo(() => {
     const priorityCount = Object.entries(notifState)
-      .filter(([type]) => !(isDuressAccount && ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)))
-      .filter(([, notifInfo]) => notifInfo.isPriority && !notifInfo.isCompleted).length
+      .filter(
+        ([type]) =>
+          !(
+            isDuressAccount &&
+            ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)
+          )
+      )
+      .filter(
+        ([, notifInfo]) => notifInfo.isPriority && !notifInfo.isCompleted
+      ).length
     const incompleteCount = Object.entries(notifState)
-      .filter(([type]) => !(isDuressAccount && ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)))
+      .filter(
+        ([type]) =>
+          !(
+            isDuressAccount &&
+            ['pwReminder', 'otpReminder', 'ip2FaReminder'].includes(type)
+          )
+      )
       .filter(([, notifInfo]) => !notifInfo.isCompleted).length
 
-    return priorityCount === 0 && incompleteCount === 0 ? undefined : priorityCount > 0 ? 0 : incompleteCount
+    return priorityCount === 0 && incompleteCount === 0
+      ? undefined
+      : priorityCount > 0
+      ? 0
+      : incompleteCount
   }, [notifState, isDuressAccount])
 }
 
@@ -54,7 +86,8 @@ export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
+    const currentAccountBalanceVisibility =
+      state.ui.settings.isAccountBalanceVisible
     writeAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
       .then(() => {
         dispatch({
@@ -66,15 +99,21 @@ export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   }
 }
 
-export function setPasswordReminder(passwordReminder: PasswordReminder): ThunkAction<void> {
+export function setPasswordReminder(
+  passwordReminder: PasswordReminder
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
-    writePasswordReminderSetting(account, passwordReminder).catch(error => showError(error))
+    writePasswordReminderSetting(account, passwordReminder).catch(error =>
+      showError(error)
+    )
   }
 }
 
-export function setDeveloperModeOn(developerModeOn: boolean): ThunkAction<void> {
+export function setDeveloperModeOn(
+  developerModeOn: boolean
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -106,45 +145,67 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
   }
 }
 
-const writePasswordReminderSetting = async (account: EdgeAccount, passwordReminder: PasswordReminder): Promise<LocalAccountSettings> =>
+const writePasswordReminderSetting = async (
+  account: EdgeAccount,
+  passwordReminder: PasswordReminder
+): Promise<LocalAccountSettings> =>
   await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, passwordReminder }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 
-const writeAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean): Promise<LocalAccountSettings> => {
+const writeAccountBalanceVisibility = async (
+  account: EdgeAccount,
+  isAccountBalanceVisible: boolean
+): Promise<LocalAccountSettings> => {
   return await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, isAccountBalanceVisible }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeDeveloperModeSetting = async (account: EdgeAccount, developerModeOn: boolean): Promise<LocalAccountSettings> => {
+const writeDeveloperModeSetting = async (
+  account: EdgeAccount,
+  developerModeOn: boolean
+): Promise<LocalAccountSettings> => {
   return await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, developerModeOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-const writeSpamFilterSetting = async (account: EdgeAccount, spamFilterOn: boolean): Promise<LocalAccountSettings> => {
+const writeSpamFilterSetting = async (
+  account: EdgeAccount,
+  spamFilterOn: boolean
+): Promise<LocalAccountSettings> => {
   return await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spamFilterOn }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeContactsPermissionShown = async (account: EdgeAccount, contactsPermissionShown: boolean): Promise<LocalAccountSettings> => {
+export const writeContactsPermissionShown = async (
+  account: EdgeAccount,
+  contactsPermissionShown: boolean
+): Promise<LocalAccountSettings> => {
   return await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, contactsPermissionShown }
     return await writeLocalAccountSettings(account, updatedSettings)
   })
 }
 
-export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits): Promise<LocalAccountSettings> => {
+export const writeSpendingLimits = async (
+  account: EdgeAccount,
+  spendingLimits: SpendingLimits
+): Promise<LocalAccountSettings> => {
   return await getLocalAccountSettings(account).then(async settings => {
     const updatedSettings = { ...settings, spendingLimits }
     const out = writeLocalAccountSettings(account, updatedSettings)
-    logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
+    logActivity(
+      `Set Spending Limits: ${account.username} -- ${JSON.stringify(
+        spendingLimits.transaction
+      )}`
+    )
     return await out
   })
 }
@@ -153,9 +214,15 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
  * Manage the state of account notifications, used by both `NotificationView` and
  * `NotificationCenterScene`
  **/
-const writeAccountNotifState = async (account: EdgeAccount, notifState: NotifState): Promise<LocalAccountSettings> => {
+const writeAccountNotifState = async (
+  account: EdgeAccount,
+  notifState: NotifState
+): Promise<LocalAccountSettings> => {
   const localSettings = await getLocalAccountSettings(account)
-  return await writeLocalAccountSettings(account, { ...localSettings, notifState })
+  return await writeLocalAccountSettings(account, {
+    ...localSettings,
+    notifState
+  })
 }
 
 /**
@@ -170,7 +237,10 @@ export const writeAccountNotifInfo = async (
   const settings = await getLocalAccountSettings(account)
   return await writeAccountNotifState(account, {
     ...settings.notifState,
-    [accountNotifStateKey]: { ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})), ...notifInfo }
+    [accountNotifStateKey]: {
+      ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})),
+      ...notifInfo
+    }
   })
 }
 
@@ -179,18 +249,25 @@ export const writeAccountNotifInfo = async (
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.
  */
-export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string): Promise<LocalAccountSettings> => {
+export const writeTokenWarningsShown = async (
+  account: EdgeAccount,
+  pluginId: string
+): Promise<LocalAccountSettings> => {
   const settings = await getLocalAccountSettings(account)
   // Use a Set to ensure there's no duplicates when adding to this info
   const updatedSettings = {
     ...settings,
-    tokenWarningsShown: Array.from(new Set([...settings.tokenWarningsShown, pluginId]))
+    tokenWarningsShown: Array.from(
+      new Set([...settings.tokenWarningsShown, pluginId])
+    )
   }
 
   return await writeLocalAccountSettings(account, updatedSettings)
 }
 
-export const readLocalAccountSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {
+export const readLocalAccountSettings = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
   try {
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
@@ -204,7 +281,10 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
   }
 }
 
-export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings): Promise<LocalAccountSettings> => {
+export const writeLocalAccountSettings = async (
+  account: EdgeAccount,
+  settings: LocalAccountSettings
+): Promise<LocalAccountSettings> => {
   // Refresh cache, notify callers
   emitAccountSettings(settings)
 

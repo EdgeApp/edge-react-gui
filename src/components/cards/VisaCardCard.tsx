@@ -20,7 +20,9 @@ import { EdgeCard } from './EdgeCard'
 
 export const IONIA_SUPPORTED_FIATS = ['USD']
 
-export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards)
+export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
+  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards
+)
 
 interface Props {
   wallet: EdgeCurrencyWallet
@@ -36,7 +38,9 @@ export const VisaCardCard = (props: Props) => {
 
   const handlePress = useHandler(() => {
     dispatch(logEvent('Visa_Card_Launch'))
-    dispatch(executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')).catch(err => showError(err))
+    dispatch(
+      executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')
+    ).catch(err => showError(err))
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
@@ -54,7 +58,11 @@ export const VisaCardCard = (props: Props) => {
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
         <EdgeCard paddingRem={0}>
           <EdgeTouchableOpacity onPress={handlePress} style={styles.container}>
-            <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
+            <FastImage
+              resizeMode="contain"
+              source={{ uri: icon.symbolImage }}
+              style={styles.icon}
+            />
             <EdgeText numberOfLines={0} style={styles.text}>
               {lstrings.rewards_card_call_to_action}
             </EdgeText>

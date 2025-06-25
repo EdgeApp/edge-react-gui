@@ -16,7 +16,9 @@ export const AccountSyncBar = () => {
   const progress = useAccountSyncRatio()
 
   // Animation state:
-  const [isProgressVisible, setIsProgressVisible] = React.useState(progress !== 100)
+  const [isProgressVisible, setIsProgressVisible] = React.useState(
+    progress !== 100
+  )
   const animation = React.useRef(new Animated.Value(progress)).current
 
   const widthInterpolated = animation.interpolate({

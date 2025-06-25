@@ -1,12 +1,25 @@
 import { abs } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeMetadataChange,
+  EdgeSaveTxMetadataOptions,
+  EdgeTransaction,
+  EdgeTxSwap
+} from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
+import {
+  formatCategory,
+  getTxActionDisplayInfo,
+  pluginIdIcons,
+  splitCategory
+} from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
@@ -23,7 +36,12 @@ import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
-import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor, removeIsoPrefix } from '../../util/utils'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchange,
+  darkenHexColor,
+  removeIsoPrefix
+} from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -35,7 +53,10 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
-import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
+import {
+  ContactListModal,
+  ContactModalResult
+} from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
@@ -56,7 +77,8 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId, onDone } = route.params
-  const { currencyCode, metadata, nativeAmount, date, txid, tokenId } = transaction
+  const { currencyCode, metadata, nativeAmount, date, txid, tokenId } =
+    transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
@@ -65,12 +87,24 @@ const TransactionDetailsComponent = (props: Props) => {
   const iconColor = useIconColor({ pluginId: currencyInfo.pluginId, tokenId })
 
   // Choose a default category based on metadata or the txAction
-  const { action, assetAction, direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const {
+    action,
+    assetAction,
+    direction,
+    iconPluginId,
+    mergedData,
+    savedData
+  } = getTxActionDisplayInfo(transaction, account, wallet)
 
-  const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
+  const swapData =
+    convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const thumbnailPath = useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
-  const iconSource = React.useMemo(() => ({ uri: thumbnailPath }), [thumbnailPath])
+  const thumbnailPath =
+    useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+  const iconSource = React.useMemo(
+    () => ({ uri: thumbnailPath }),
+    [thumbnailPath]
+  )
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
     exchangeAmount: metadata?.exchangeAmount,
@@ -79,7 +113,8 @@ const TransactionDetailsComponent = (props: Props) => {
     name: mergedData.name ?? '',
     notes: mergedData.notes ?? ''
   })
-  const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
+  const [acceleratedTx, setAcceleratedTx] =
+    React.useState<null | EdgeTransaction>(null)
 
   // #region Crypto Fiat Rows
 
@@ -94,22 +129,40 @@ const TransactionDetailsComponent = (props: Props) => {
 
   // Look up the current price:
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
-  const absExchangeAmount = convertNativeToExchange(exchangeDenom.multiplier)(absoluteAmount)
-  const currentFiat = useSelector(state => parseFloat(convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, defaultIsoFiat, absExchangeAmount)))
+  const absExchangeAmount = convertNativeToExchange(exchangeDenom.multiplier)(
+    absoluteAmount
+  )
+  const currentFiat = useSelector(state =>
+    parseFloat(
+      convertCurrencyFromExchangeRates(
+        state.exchangeRates,
+        currencyCode,
+        defaultIsoFiat,
+        absExchangeAmount
+      )
+    )
+  )
 
   // Look up the historical price:
   const dateObj = new Date(date * 1000)
   const dateString = dateObj.toLocaleString()
   const isoDate = dateObj.toISOString()
-  const historicRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
+  const historicRate = useHistoricalRate(
+    `${currencyCode}_${defaultIsoFiat}`,
+    isoDate
+  )
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
   const metadataFiat = localMetadata.exchangeAmount?.[defaultIsoFiat]
-  const originalFiat = metadataFiat == null || metadataFiat === 0 ? historicFiat : Math.abs(metadataFiat)
+  const originalFiat =
+    metadataFiat == null || metadataFiat === 0
+      ? historicFiat
+      : Math.abs(metadataFiat)
 
   // Percent difference:
-  const percentChange = originalFiat === 0 ? 0 : (currentFiat - originalFiat) / originalFiat
+  const percentChange =
+    originalFiat === 0 ? 0 : (currentFiat - originalFiat) / originalFiat
 
   // Convert to text:
   const originalFiatText = displayFiatAmount(originalFiat)
@@ -129,7 +182,10 @@ const TransactionDetailsComponent = (props: Props) => {
         keyboardType="numeric"
         submitLabel={lstrings.string_save}
         textSizeRem={1.5}
-        title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)}
+        title={sprintf(
+          lstrings.transaction_details_amount_in_fiat,
+          defaultFiat
+        )}
       />
     ))
       .then(async inputText => {
@@ -150,7 +206,9 @@ const TransactionDetailsComponent = (props: Props) => {
       .catch(error => showError(error))
   })
 
-  const handleDone = useHandler(() => (onDone == null ? navigation.pop() : onDone()))
+  const handleDone = useHandler(() =>
+    onDone == null ? navigation.pop() : onDone()
+  )
 
   // #endregion Crypto Fiat Rows
 
@@ -171,14 +229,25 @@ const TransactionDetailsComponent = (props: Props) => {
   }, [])
 
   const openPersonInput = async () => {
-    const person = await Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={localMetadata.name ?? ''} />
-    ))
+    const person = await Airship.show<ContactModalResult | undefined>(
+      bridge => (
+        <ContactListModal
+          bridge={bridge}
+          contactType={personLabel}
+          contactName={localMetadata.name ?? ''}
+        />
+      )
+    )
     if (person != null) onSaveTxDetails({ name: person.contactName })
   }
 
   const openCategoryInput = async () => {
-    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={localMetadata.category ?? ''} />)
+    const newCategory = await Airship.show<string | undefined>(bridge => (
+      <CategoryModal
+        bridge={bridge}
+        initialCategory={localMetadata.category ?? ''}
+      />
+    ))
     if (newCategory == null) return
     onSaveTxDetails({ category: newCategory })
   }
@@ -204,7 +273,12 @@ const TransactionDetailsComponent = (props: Props) => {
 
     try {
       const signedTx = await Airship.show<EdgeTransaction | null>(bridge => (
-        <AccelerateTxModal bridge={bridge} acceleratedTx={acceleratedTx} replacedTx={transaction} wallet={wallet} />
+        <AccelerateTxModal
+          bridge={bridge}
+          acceleratedTx={acceleratedTx}
+          replacedTx={transaction}
+          wallet={wallet}
+        />
       ))
 
       if (signedTx != null) {
@@ -221,7 +295,9 @@ const TransactionDetailsComponent = (props: Props) => {
       if (err?.message === 'transaction underpriced') {
         const newAcceleratedTx = await wallet.accelerate(acceleratedTx)
         setAcceleratedTx(newAcceleratedTx)
-        showError(lstrings.transaction_details_accelerate_transaction_fee_too_low)
+        showError(
+          lstrings.transaction_details_accelerate_transaction_fee_too_low
+        )
         return
       }
       showError(err)
@@ -258,7 +334,11 @@ const TransactionDetailsComponent = (props: Props) => {
     if (category !== localMetadata.category) {
       changed = true
       const lowerCat = category?.toLowerCase()
-      if (category === savedData.category || (lowerCat === 'income:' && direction === 'receive') || (lowerCat === 'expense:' && direction === 'send')) {
+      if (
+        category === savedData.category ||
+        (lowerCat === 'income:' && direction === 'receive') ||
+        (lowerCat === 'expense:' && direction === 'send')
+      ) {
         newCategory = null
         newDetails.category = savedData.category
       } else {
@@ -303,9 +383,15 @@ const TransactionDetailsComponent = (props: Props) => {
     setLocalMetadata(newValues)
   }
 
-  const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
+  const personLabel =
+    direction === 'receive'
+      ? lstrings.transaction_details_sender
+      : lstrings.transaction_details_recipient
   const personName = localMetadata.name ?? personLabel
-  const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
+  const personHeader = sprintf(
+    lstrings.transaction_details_person_name,
+    personLabel
+  )
 
   // spendTargets recipient addresses format
   let recipientsAddresses = ''
@@ -317,7 +403,9 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const categoriesText = formatCategory(splitCategory(localMetadata.category ?? undefined))
+  const categoriesText = formatCategory(
+    splitCategory(localMetadata.category ?? undefined)
+  )
 
   const accentColors: AccentColors = {
     // Transparent fallback for while iconColor is loading
@@ -326,7 +414,10 @@ const TransactionDetailsComponent = (props: Props) => {
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
   if (iconColor != null) {
-    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
     backgroundColors[0] = scaledColor
   }
 
@@ -352,7 +443,11 @@ const TransactionDetailsComponent = (props: Props) => {
               thumbnailPath ? (
                 <FastImage style={styles.tileThumbnail} source={iconSource} />
               ) : (
-                <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
+                <IonIcon
+                  style={styles.tileAvatarIcon}
+                  name="person"
+                  size={theme.rem(2)}
+                />
               )
             }
             title={personHeader}
@@ -366,60 +461,121 @@ const TransactionDetailsComponent = (props: Props) => {
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
         <EdgeCard sections>
           <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-          <EdgeRow rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, defaultFiat)} onPress={handleEdit}>
+          <EdgeRow
+            rightButtonType="editable"
+            title={sprintf(
+              lstrings.transaction_details_amount_in_fiat,
+              defaultFiat
+            )}
+            onPress={handleEdit}
+          >
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{originalFiatText}</EdgeText>
             </View>
           </EdgeRow>
-          <EdgeRow rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
+          <EdgeRow
+            rightButtonType="none"
+            title={lstrings.transaction_details_amount_current_price}
+          >
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
               <EdgeText>{currentFiatText}</EdgeText>
               {originalFiatText === currentFiatText ? null : (
-                <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
+                <EdgeText
+                  style={
+                    percentChange >= 0
+                      ? styles.tileTextPriceChangeUp
+                      : styles.tileTextPriceChangeDown
+                  }
+                >{` (${percentText})`}</EdgeText>
               )}
             </View>
           </EdgeRow>
           <EdgeRow title={lstrings.fio_date_label} body={dateString} />
-          {walletName != null ? <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} /> : null}
+          {walletName != null ? (
+            <EdgeRow
+              title={lstrings.wc_smartcontract_wallet}
+              body={walletName}
+            />
+          ) : null}
 
           {acceleratedTx == null ? null : (
-            <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
+            <EdgeRow
+              rightButtonType="touchable"
+              title={lstrings.transaction_details_advance_details_accelerate}
+              onPress={openAccelerateModel}
+            />
           )}
         </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
         <EdgeCard sections>
-          <EdgeRow rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
+          <EdgeRow
+            rightButtonType="editable"
+            title={lstrings.transaction_details_category_title}
+            onPress={openCategoryInput}
+            body={categoriesText}
+          />
           <EdgeRow
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
-            body={localMetadata.notes == null || localMetadata.notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : localMetadata.notes}
+            body={
+              localMetadata.notes == null || localMetadata.notes.trim() === ''
+                ? lstrings.transaction_details_empty_note_placeholder
+                : localMetadata.notes
+            }
             onPress={openNotesInput}
           />
           {transaction.memos?.map((memo, i) =>
-            memo.hidden === true ? null : <EdgeRow body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
+            memo.hidden === true ? null : (
+              <EdgeRow
+                body={memo.value}
+                key={`memo${i}`}
+                title={getMemoTitle(memo.memoName)}
+                rightButtonType="copy"
+              />
+            )
           )}
         </EdgeCard>
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
+        {swapData == null ? null : (
+          <SwapDetailsCard
+            swapData={swapData}
+            transaction={transaction}
+            wallet={wallet}
+          />
+        )}
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {fiatAction == null || assetAction == null ? null : (
-          <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
+          <FiatExchangeDetailsCard
+            action={fiatAction}
+            assetAction={assetAction}
+            transaction={transaction}
+            wallet={wallet}
+          />
         )}
       </EdgeAnim>
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
         <EdgeCard sections>
-          <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          <EdgeRow
+            rightButtonType="copy"
+            title={lstrings.transaction_details_tx_id_modal_title}
+            body={txid}
+          />
           {recipientsAddresses === '' ? null : (
-            <EdgeRow maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+            <EdgeRow
+              maximumHeight="large"
+              rightButtonType="copy"
+              title={lstrings.transaction_details_recipient_addresses}
+              body={recipientsAddresses}
+            />
           )}
         </EdgeCard>
       </EdgeAnim>
@@ -481,7 +637,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const TransactionDetailsScene = withWallet(TransactionDetailsComponent)
 
-const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransaction): EdgeTxSwap | undefined => {
+const convertActionToSwapData = (
+  account: EdgeAccount,
+  transaction: EdgeTransaction
+): EdgeTxSwap | undefined => {
   const action = transaction.savedAction ?? transaction.chainAction
   const assetAction = transaction.assetAction ?? transaction.chainAssetAction
 
@@ -493,9 +652,22 @@ const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransact
     return
   }
 
-  const { swapInfo, orderId, orderUri, isEstimate, toAsset, payoutAddress, payoutWalletId, refundAddress } = action
+  const {
+    swapInfo,
+    orderId,
+    orderUri,
+    isEstimate,
+    toAsset,
+    payoutAddress,
+    payoutWalletId,
+    refundAddress
+  } = action
 
-  const payoutCurrencyCode = getCurrencyCodeWithAccount(account, toAsset.pluginId, toAsset.tokenId)
+  const payoutCurrencyCode = getCurrencyCodeWithAccount(
+    account,
+    toAsset.pluginId,
+    toAsset.tokenId
+  )
   if (payoutCurrencyCode == null) return
 
   const out: EdgeTxSwap = {

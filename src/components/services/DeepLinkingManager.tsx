@@ -1,4 +1,6 @@
-import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import messaging, {
+  FirebaseMessagingTypes
+} from '@react-native-firebase/messaging'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -30,18 +32,27 @@ export function DeepLinkingManager(props: Props) {
   const [pendingLink, setPendingLink] = React.useState<DeepLink | null>()
 
   const account = useSelector(state => state.core.account)
-  const accountReferralLoaded = useSelector(state => state.account.accountReferralLoaded)
+  const accountReferralLoaded = useSelector(
+    state => state.account.accountReferralLoaded
+  )
   const settingsLoaded = useSelector(state => state.ui.settings.settingsLoaded)
 
   // Wait for wallets to load:
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
   const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
-  const allWalletsLoaded = activeWalletIds.every(walletId => currencyWallets[walletId] != null || currencyWalletErrors[walletId] != null)
+  const allWalletsLoaded = activeWalletIds.every(
+    walletId =>
+      currencyWallets[walletId] != null ||
+      currencyWalletErrors[walletId] != null
+  )
 
   // We need to be fully logged in to handle most link types:
   const canHandleLink: boolean =
-    (account !== defaultAccount && accountReferralLoaded && allWalletsLoaded && settingsLoaded) ||
+    (account !== defaultAccount &&
+      accountReferralLoaded &&
+      allWalletsLoaded &&
+      settingsLoaded) ||
     // We can always handle recovery links:
     pendingLink?.type === 'passwordRecovery'
 
@@ -70,7 +81,9 @@ export function DeepLinkingManager(props: Props) {
       }
 
       /** Handler for push messages received while app is in the background. */
-      function handleBackgroundPushMessage(message: FirebaseMessagingTypes.RemoteMessage): void {
+      function handleBackgroundPushMessage(
+        message: FirebaseMessagingTypes.RemoteMessage
+      ): void {
         try {
           const link = parsePushMessage(message)
           if (link != null) setPendingLink(link)
@@ -81,21 +94,29 @@ export function DeepLinkingManager(props: Props) {
       }
 
       /** Handler for push messages received while app is in the foreground. */
-      const handleForegroundPushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
+      const handleForegroundPushMessage = (
+        message: FirebaseMessagingTypes.RemoteMessage
+      ) => {
         const title = message.notification?.title ?? ''
         const body = message.notification?.body ?? ''
 
         if (title === '' && body === '') {
-          console.error('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title and no body')
+          console.error(
+            'FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title and no body'
+          )
           return
         }
 
         let notifMessage: string
         if (title === '') {
-          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title')
+          console.warn(
+            'FirebaseMessagingTypes.RemoteMessage (foreground push message) has no title'
+          )
           notifMessage = body
         } else if (body === '') {
-          console.warn('FirebaseMessagingTypes.RemoteMessage (foreground push message) has no body')
+          console.warn(
+            'FirebaseMessagingTypes.RemoteMessage (foreground push message) has no body'
+          )
           notifMessage = title
         } else {
           notifMessage = `${title}\n\n${body}`
@@ -109,7 +130,13 @@ export function DeepLinkingManager(props: Props) {
             onPress={() => {
               bridge.resolve()
             }}
-            icon={<FontAwesomeIcon name="bell-o" size={theme.rem(2)} style={styles.icon} />}
+            icon={
+              <FontAwesomeIcon
+                name="bell-o"
+                size={theme.rem(2)}
+                style={styles.icon}
+              />
+            }
           />
         )).catch(error => showDevError(String(error)))
       }

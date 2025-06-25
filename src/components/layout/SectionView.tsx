@@ -28,12 +28,17 @@ const DEFAULT_MARGIN_REM = 0.5
  * wideSpacing is meant for sectioning out a scene where more spacing is needed
  * between sections.
  */
-export const SectionView = (props: Props): JSX.Element | null => {
+export const SectionView = (props: Props): React.ReactElement | null => {
   const { children, extendRight = false, marginRem, dividerMarginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const margin = marginRem != null ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)) : extendRight ? styles.marginScene : styles.marginCard
+  const margin =
+    marginRem != null
+      ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+      : extendRight
+      ? styles.marginScene
+      : styles.marginCard
 
   const nonNullChildren = React.Children.map(children, child => {
     if (child != null) {
@@ -54,7 +59,10 @@ export const SectionView = (props: Props): JSX.Element | null => {
               return (
                 <>
                   {child}
-                  <DividerLineUi4 marginRem={dividerMarginRem} extendRight={extendRight} />
+                  <DividerLineUi4
+                    marginRem={dividerMarginRem}
+                    extendRight={extendRight}
+                  />
                 </>
               )
             }

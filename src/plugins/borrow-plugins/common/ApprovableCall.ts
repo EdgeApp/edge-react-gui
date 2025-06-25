@@ -1,5 +1,11 @@
 import { asObject, asOptional, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeToken, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeSpendInfo,
+  EdgeToken,
+  EdgeTransaction
+} from 'edge-core-js'
 import { ethers } from 'ethers'
 
 import { PendingTxMap } from '../../../controllers/action-queue/types'
@@ -25,23 +31,34 @@ export interface CallInfo {
   metadata?: EdgeMetadata
 }
 
-export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
+export const makeApprovableCall = async (
+  params: CallInfo
+): Promise<ApprovableAction> => {
   const { tx: txInfo, wallet, spendToken, nativeAmount, metadata } = params
   const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
-  if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
+  if (gasPrice == null || gasLimit == null)
+    throw new Error(
+      'Explicit gas price and limit required for ApprovableAction.'
+    )
 
-  const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<EdgeTransaction> => {
+  const makeApprovableCallSpend = async (
+    dryrun: boolean,
+    pendingTxMap: Readonly<PendingTxMap>
+  ): Promise<EdgeTransaction> => {
     const pendingTxs = pendingTxMap[walletId]
-    const currencyCode = spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode
+    const currencyCode =
+      spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode
     const tokenId = getWalletTokenId(wallet, currencyCode)
     const edgeSpendInfo: EdgeSpendInfo = {
       tokenId,
       skipChecks: dryrun,
       spendTargets: [
         {
-          nativeAmount: txInfo.value ? txInfo.value.toString() : nativeAmount ?? '0',
+          nativeAmount: txInfo.value
+            ? txInfo.value.toString()
+            : nativeAmount ?? '0',
           publicAddress: txInfo.to,
           otherParams: { data: txInfo.data }
         }
@@ -55,14 +72,17 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
       pendingTxs
     }
 
-    const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(edgeSpendInfo)
+    const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(
+      edgeSpendInfo
+    )
     return edgeUnsignedTx
   }
 
   const placeholderTx = await makeApprovableCallSpend(true, {})
   const networkFee = {
     currencyCode: wallet.currencyInfo.currencyCode,
-    nativeAmount: placeholderTx.parentNetworkFee ?? placeholderTx.networkFee ?? '0'
+    nativeAmount:
+      placeholderTx.parentNetworkFee ?? placeholderTx.networkFee ?? '0'
   }
 
   return {
@@ -87,11 +107,15 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
   }
 }
 
-export const makeTxCalls = async (actionInfos: CallInfo[]): Promise<ApprovableAction[]> => {
+export const makeTxCalls = async (
+  actionInfos: CallInfo[]
+): Promise<ApprovableAction[]> => {
   return await Promise.all(actionInfos.map(makeApprovableCall))
 }
 
-export const makeSideEffectApprovableAction = (approve: () => Promise<void>): ApprovableAction => {
+export const makeSideEffectApprovableAction = (
+  approve: () => Promise<void>
+): ApprovableAction => {
   return {
     unsignedTxs: [],
     networkFee: {

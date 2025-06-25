@@ -25,7 +25,10 @@ export function ExtraTabScene(props: Props) {
 
     return (
       <SceneWrapper hasTabs>
-        <EdgeProviderComponent plugin={plugin} navigation={navigation as NavigationBase} />
+        <EdgeProviderComponent
+          plugin={plugin}
+          navigation={navigation as NavigationBase}
+        />
       </SceneWrapper>
     )
   }

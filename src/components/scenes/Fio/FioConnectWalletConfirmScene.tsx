@@ -8,7 +8,10 @@ import { CcWalletMap } from '../../../reducers/FioReducer'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
-import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../util/FioAddressUtils'
+import {
+  FIO_NO_BUNDLED_ERR_CODE,
+  updatePubAddressesForFioAddress
+} from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -28,11 +31,14 @@ export interface FioConnectWalletConfirmParams {
   walletsToDisconnect: FioConnectionWalletItem[]
 }
 
-interface FioConnectWalletConfirmProps extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
+interface FioConnectWalletConfirmProps
+  extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 
-export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmProps) => {
+export const FioConnectWalletConfirmComponent = (
+  props: FioConnectWalletConfirmProps
+) => {
   const { wallet: fioWallet, navigation, route } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -41,14 +47,20 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
   const { fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
 
   const account = useSelector(state => state.core.account)
-  const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
+  const ccWalletMap = useSelector(
+    state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {}
+  )
   const isConnected = useSelector(state => state.network.isConnected)
 
   const [acknowledge, setAcknowledge] = React.useState(false)
-  const [connectWalletsLoading, setConnectWalletsLoading] = React.useState(false)
+  const [connectWalletsLoading, setConnectWalletsLoading] =
+    React.useState(false)
   const [showSlider, setShowSlider] = React.useState(true)
 
-  const updateConnectedWallets = (currentFioAddress: string, currentCcWalletMap: CcWalletMap) => {
+  const updateConnectedWallets = (
+    currentFioAddress: string,
+    currentCcWalletMap: CcWalletMap
+  ) => {
     dispatch({
       type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
       data: { fioAddress: currentFioAddress, ccWalletMap: currentCcWalletMap }
@@ -69,7 +81,10 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
   const renderWalletLine = (wallet: FioConnectionWalletItem) => {
     const label = `${wallet.name} (${wallet.currencyCode})`
     return (
-      <EdgeText key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
+      <EdgeText
+        key={`${wallet.id}-${wallet.currencyCode}`}
+        style={styles.content}
+      >
         {label}
       </EdgeText>
     )
@@ -86,9 +101,13 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
 
     try {
       // Get a compatible address (less than 128 characters)
-      const getCompatibleAddress = async (wallet: EdgeCurrencyWallet): Promise<string> => {
+      const getCompatibleAddress = async (
+        wallet: EdgeCurrencyWallet
+      ): Promise<string> => {
         const edgeAddresses = await wallet.getAddresses({ tokenId: null })
-        const edgeAddress = edgeAddresses.find(edgeAddress => edgeAddress.publicAddress.length <= 128)
+        const edgeAddress = edgeAddresses.find(
+          edgeAddress => edgeAddress.publicAddress.length <= 128
+        )
         if (edgeAddress == null) {
           throw new Error('Address exceeds 128 characters')
         }
@@ -96,16 +115,23 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
       }
 
       // Connect wallets
-      let promiseArray = walletsToConnect.map(async (wallet: FioConnectionWalletItem) => ({
-        walletId: wallet.id,
-        tokenCode: wallet.currencyCode,
-        chainCode: wallet.chainCode,
-        publicAddress: await getCompatibleAddress(wallet.edgeWallet)
-      }))
+      let promiseArray = walletsToConnect.map(
+        async (wallet: FioConnectionWalletItem) => ({
+          walletId: wallet.id,
+          tokenCode: wallet.currencyCode,
+          chainCode: wallet.chainCode,
+          publicAddress: await getCompatibleAddress(wallet.edgeWallet)
+        })
+      )
 
       let publicAddresses = await Promise.all(promiseArray)
 
-      const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(account, fioWallet, fioAddressName, publicAddresses)
+      const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(
+        account,
+        fioWallet,
+        fioAddressName,
+        publicAddresses
+      )
 
       if (updatedCcWallets.length) {
         for (const { fullCurrencyCode, walletId } of updatedCcWallets) {
@@ -115,22 +141,25 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
       }
 
       // Disconnect wallets
-      promiseArray = walletsToDisconnect.map(async (wallet: FioConnectionWalletItem) => ({
-        walletId: wallet.id,
-        tokenCode: wallet.currencyCode,
-        chainCode: wallet.chainCode,
-        publicAddress: await getCompatibleAddress(wallet.edgeWallet)
-      }))
+      promiseArray = walletsToDisconnect.map(
+        async (wallet: FioConnectionWalletItem) => ({
+          walletId: wallet.id,
+          tokenCode: wallet.currencyCode,
+          chainCode: wallet.chainCode,
+          publicAddress: await getCompatibleAddress(wallet.edgeWallet)
+        })
+      )
 
       publicAddresses = await Promise.all(promiseArray)
 
-      const { updatedCcWallets: removedCcWallets, error: removedError } = await updatePubAddressesForFioAddress(
-        account,
-        fioWallet,
-        fioAddressName,
-        publicAddresses,
-        false
-      )
+      const { updatedCcWallets: removedCcWallets, error: removedError } =
+        await updatePubAddressesForFioAddress(
+          account,
+          fioWallet,
+          fioAddressName,
+          publicAddresses,
+          false
+        )
 
       if (removedCcWallets.length) {
         for (const { fullCurrencyCode } of removedCcWallets) {
@@ -149,7 +178,9 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
           for (const walletToConnect of walletsToConnect) {
             if (
               updatedCcWallets.findIndex(
-                ({ walletId, fullCurrencyCode }) => walletId === walletToConnect.id && fullCurrencyCode === walletToConnect.fullCurrencyCode
+                ({ walletId, fullCurrencyCode }) =>
+                  walletId === walletToConnect.id &&
+                  fullCurrencyCode === walletToConnect.fullCurrencyCode
               ) < 0
             ) {
               walletsToConnectLeft.push(walletToConnect)
@@ -162,7 +193,9 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
           for (const walletToDisconnect of walletsToDisconnect) {
             if (
               removedCcWallets.findIndex(
-                ({ walletId, fullCurrencyCode }) => walletId === walletToDisconnect.id && fullCurrencyCode === walletToDisconnect.fullCurrencyCode
+                ({ walletId, fullCurrencyCode }) =>
+                  walletId === walletToDisconnect.id &&
+                  fullCurrencyCode === walletToDisconnect.fullCurrencyCode
               ) < 0
             ) {
               walletsToDisconnectLeft.push(walletToDisconnect)
@@ -220,15 +253,34 @@ export const FioConnectWalletConfirmComponent = (props: FioConnectWalletConfirmP
 
   return (
     <SceneWrapper scroll>
-      <SceneHeader title={lstrings.title_fio_connect_to_wallet} underline withTopMargin />
+      <SceneHeader
+        title={lstrings.title_fio_connect_to_wallet}
+        underline
+        withTopMargin
+      />
       <View style={styles.container}>
         <EdgeCard sections>
-          <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-          {walletsToConnect.length > 0 ? <EdgeRow title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(renderWalletLine)}</EdgeRow> : null}
-          {walletsToDisconnect.length > 0 ? <EdgeRow title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(renderWalletLine)}</EdgeRow> : null}
+          <EdgeRow
+            title={lstrings.fio_address_register_form_field_label}
+            body={fioAddressName}
+          />
+          {walletsToConnect.length > 0 ? (
+            <EdgeRow title={lstrings.title_fio_connect_to_wallet}>
+              {walletsToConnect.map(renderWalletLine)}
+            </EdgeRow>
+          ) : null}
+          {walletsToDisconnect.length > 0 ? (
+            <EdgeRow title={lstrings.title_fio_disconnect_wallets}>
+              {walletsToDisconnect.map(renderWalletLine)}
+            </EdgeRow>
+          ) : null}
         </EdgeCard>
 
-        <Radio value={acknowledge} onPress={handleCheckPress} marginRem={[2, 2, 0]}>
+        <Radio
+          value={acknowledge}
+          onPress={handleCheckPress}
+          marginRem={[2, 2, 0]}
+        >
           <EdgeText style={styles.checkTitle} numberOfLines={4}>
             {lstrings.fio_connect_checkbox_text}
           </EdgeText>
@@ -268,4 +320,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioConnectWalletConfirmScene = withWallet(FioConnectWalletConfirmComponent)
+export const FioConnectWalletConfirmScene = withWallet(
+  FioConnectWalletConfirmComponent
+)

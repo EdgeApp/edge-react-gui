@@ -11,7 +11,9 @@ interface EdgeSwitchProps {
   onSelectB: () => void
 }
 
-export const EdgeSwitch: React.FC<EdgeSwitchProps> = (props: EdgeSwitchProps) => {
+export const EdgeSwitch: React.FC<EdgeSwitchProps> = (
+  props: EdgeSwitchProps
+) => {
   const { labelA, labelB, onSelectA, onSelectB } = props
   const theme = useTheme()
   const styles = getStyles(theme)

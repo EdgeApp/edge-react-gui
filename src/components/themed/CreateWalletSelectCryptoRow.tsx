@@ -41,18 +41,33 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const currencyConfigs = useWatch(account, 'currencyConfig')
   const isToken = tokenId != null
-  const tokenOrCurrencyInfo = isToken ? currencyConfigs[pluginId].allTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
-  const networkName = isToken ? ` (${currencyConfigs[pluginId].currencyInfo.displayName})` : ''
+  const tokenOrCurrencyInfo = isToken
+    ? currencyConfigs[pluginId].allTokens[tokenId]
+    : currencyConfigs[pluginId].currencyInfo
+  const networkName = isToken
+    ? ` (${currencyConfigs[pluginId].currencyInfo.displayName})`
+    : ''
 
   const handlePress = useHandler(() => {
     if (onPress != null) onPress()?.catch(err => showError(err))
   })
 
   return (
-    <EdgeTouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
-      <CryptoIcon marginRem={0.5} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+    <EdgeTouchableOpacity
+      style={styles.container}
+      disabled={onPress == null}
+      onPress={handlePress}
+    >
+      <CryptoIcon
+        marginRem={0.5}
+        pluginId={pluginId}
+        sizeRem={2}
+        tokenId={tokenId}
+      />
       <View style={styles.detailsContainer}>
-        <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
+        <EdgeText style={styles.detailsCurrency}>{`${
+          tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode
+        }${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
       <View style={styles.childrenContainer}>{rightSide}</View>
@@ -94,4 +109,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoRow = React.memo(CreateWalletSelectCryptoRowComponent)
+export const CreateWalletSelectCryptoRow = React.memo(
+  CreateWalletSelectCryptoRowComponent
+)

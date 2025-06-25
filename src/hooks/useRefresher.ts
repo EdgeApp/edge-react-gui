@@ -2,7 +2,11 @@ import * as React from 'react'
 
 import { showError } from '../components/services/AirshipInstance'
 
-export function useRefresher<T>(cb: () => Promise<T>, defaultValue: T, delay: number): T {
+export function useRefresher<T>(
+  cb: () => Promise<T>,
+  defaultValue: T,
+  delay: number
+): T {
   const [value, setValue] = React.useState<T>(defaultValue)
 
   React.useEffect(() => {

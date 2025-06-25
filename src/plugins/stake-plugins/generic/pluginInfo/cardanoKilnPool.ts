@@ -2,7 +2,9 @@ import { ENV } from '../../../../env'
 import { CardanoPooledKilnAdapterConfig } from '../policyAdapters/CardanoKilnAdaptor'
 import { StakePluginInfo, StakePolicyConfig } from '../types'
 
-const kilnPolicyConfig: Array<StakePolicyConfig<CardanoPooledKilnAdapterConfig>> = [
+const kilnPolicyConfig: Array<
+  StakePolicyConfig<CardanoPooledKilnAdapterConfig>
+> = [
   {
     stakePolicyId: 'cardano_kiln_pool0',
     stakeProviderInfo: {

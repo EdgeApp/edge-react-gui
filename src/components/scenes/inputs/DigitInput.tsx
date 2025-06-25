@@ -22,7 +22,13 @@ interface Props {
 }
 
 export const DigitInput = (props: Props) => {
-  const { testID, pin, maxPinLength = MAX_PIN_LENGTH, marginRem, onChangePin } = props
+  const {
+    testID,
+    pin,
+    maxPinLength = MAX_PIN_LENGTH,
+    marginRem,
+    onChangePin
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -12,7 +12,9 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsModal } from './ButtonsModal'
 
-export const LoanWelcomeModal = (props: { bridge: AirshipBridge<'ok' | undefined> }) => {
+export const LoanWelcomeModal = (props: {
+  bridge: AirshipBridge<'ok' | undefined>
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { bridge } = props
@@ -22,10 +24,23 @@ export const LoanWelcomeModal = (props: { bridge: AirshipBridge<'ok' | undefined
   const iconUri = getBorrowPluginIconUri(defaultBorrowPlugin.borrowInfo)
 
   return (
-    <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.legacy_address_modal_continue } }}>
+    <ButtonsModal
+      bridge={bridge}
+      buttons={{ ok: { label: lstrings.legacy_address_modal_continue } }}
+    >
       <Space aroundRem={1}>
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
-        <EdgeText numberOfLines={20}>{sprintf(lstrings.loan_welcome_6s, config.appName, lstrings.loan_aave_fragment, 'BTC', 'USDC', '10', '120')}</EdgeText>
+        <EdgeText numberOfLines={20}>
+          {sprintf(
+            lstrings.loan_welcome_6s,
+            config.appName,
+            lstrings.loan_aave_fragment,
+            'BTC',
+            'USDC',
+            '10',
+            '120'
+          )}
+        </EdgeText>
       </Space>
     </ButtonsModal>
   )

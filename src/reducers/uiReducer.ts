@@ -4,8 +4,14 @@ import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { Action } from '../types/reduxTypes'
 import { exchangeInfo } from './ExchangeInfoReducer'
 import { fio, FioState } from './FioReducer'
-import { passwordReminder, PasswordReminderState } from './PasswordReminderReducer'
-import { fioAddress, FioAddressSceneState } from './scenes/FioAddressSceneReducer'
+import {
+  passwordReminder,
+  PasswordReminderState
+} from './PasswordReminderReducer'
+import {
+  fioAddress,
+  FioAddressSceneState
+} from './scenes/FioAddressSceneReducer'
 import { settings, SettingsState } from './scenes/SettingsReducer'
 import { wallets, WalletsState } from './scenes/WalletsReducer'
 
@@ -28,7 +34,8 @@ const uiInner = combineReducers<UiState, Action>({
   passwordReminder,
   settings,
   countryCode(state: string = 'US', action) {
-    if (action.type === 'UI/SET_COUNTRY_CODE') return action.data.countryCode ?? state
+    if (action.type === 'UI/SET_COUNTRY_CODE')
+      return action.data.countryCode ?? state
     return state
   },
   notificationHeight(state = 0, action) {

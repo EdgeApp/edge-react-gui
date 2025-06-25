@@ -10,7 +10,9 @@ import { Dispatch, RootState, Store } from '../types/reduxTypes'
 export function connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps: (state: RootState, ownProps: OwnProps) => StateProps,
   mapDispatchToProps: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
-): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React.FunctionComponent<OwnProps> {
+): (
+  component: React.ComponentType<StateProps & DispatchProps & OwnProps>
+) => React.FunctionComponent<OwnProps> {
   // @ts-expect-error
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
 }

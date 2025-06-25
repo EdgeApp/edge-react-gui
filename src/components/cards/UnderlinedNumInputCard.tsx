@@ -20,7 +20,14 @@ const UnderlinedNumInputCardComponent = (props: {
   onPress?: () => void | Promise<void>
   title: string
 }) => {
-  const { currencyCode, emptyPlaceholder = lstrings.string_amount, formattedAmount, iconUri, onPress, title } = props
+  const {
+    currencyCode,
+    emptyPlaceholder = lstrings.string_amount,
+    formattedAmount,
+    iconUri,
+    onPress,
+    title
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -49,24 +56,42 @@ const UnderlinedNumInputCardComponent = (props: {
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
               <EdgeText style={styles.textTitle}>{title}</EdgeText>
-              <View style={styles.valueContainer} onLayout={handleBaseTextLayout}>
+              <View
+                style={styles.valueContainer}
+                onLayout={handleBaseTextLayout}
+              >
                 {zeroString(formattedAmount) ? (
                   <>
-                    <EdgeText style={styles.textBaseSecondary}>{emptyPlaceholder}</EdgeText>
-                    <EdgeText style={styles.textExponentSecondary} onLayout={handleExponentLayout}>
+                    <EdgeText style={styles.textBaseSecondary}>
+                      {emptyPlaceholder}
+                    </EdgeText>
+                    <EdgeText
+                      style={styles.textExponentSecondary}
+                      onLayout={handleExponentLayout}
+                    >
                       {currencyCode}
                     </EdgeText>
                   </>
                 ) : (
                   <>
-                    <EdgeText style={styles.textBasePrimary}>{formattedAmount}</EdgeText>
-                    <EdgeText style={styles.textExponentPrimary} onLayout={handleExponentLayout}>
+                    <EdgeText style={styles.textBasePrimary}>
+                      {formattedAmount}
+                    </EdgeText>
+                    <EdgeText
+                      style={styles.textExponentPrimary}
+                      onLayout={handleExponentLayout}
+                    >
                       {currencyCode}
                     </EdgeText>
                   </>
                 )}
               </View>
-              <View style={[styles.bar, { width: baseTextLayout.width - exponentTextWidth }]} />
+              <View
+                style={[
+                  styles.bar,
+                  { width: baseTextLayout.width - exponentTextWidth }
+                ]}
+              />
             </View>
             <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
@@ -127,4 +152,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const UnderlinedNumInputCard = React.memo(UnderlinedNumInputCardComponent)
+export const UnderlinedNumInputCard = React.memo(
+  UnderlinedNumInputCardComponent
+)

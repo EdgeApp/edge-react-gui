@@ -10,13 +10,24 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, removeIsoPrefix } from '../../util/utils'
+import {
+  DECIMAL_PRECISION,
+  getDenomFromIsoCode,
+  maxPrimaryCurrencyConversionDecimals,
+  precisionAdjust,
+  removeIsoPrefix
+} from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
+import {
+  FieldNum,
+  FlipInput2,
+  FlipInputFieldInfos,
+  FlipInputRef
+} from './FlipInput2'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
@@ -60,7 +71,10 @@ const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
 // 2. Has FlipInput2 only show "display" amounts (ie. sats, bits, mETH)
 // 3. Returns values to parent in fiat exchange amt, crypto exchange amt, and crypto native amt
 
-const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Props>((props: Props, ref) => {
+const ExchangedFlipInput2Component = React.forwardRef<
+  ExchangedFlipInputRef,
+  Props
+>((props: Props, ref) => {
   const {
     wallet,
     tokenId,
@@ -96,9 +110,13 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const precisionAdjustVal = precisionAdjust({
     primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
     secondaryExchangeMultiplier: fiatDenom.multiplier,
-    exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
+    exchangeSecondaryToPrimaryRatio:
+      exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
   })
-  const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
+  const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(
+    log10(cryptoDisplayDenom.multiplier),
+    precisionAdjustVal
+  )
   const fieldInfos: FlipInputFieldInfos = [
     {
       currencyName: cryptoDisplayDenom.name,
@@ -110,33 +128,68 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     }
   ]
 
-  const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {
-    const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-    const rate = exchangeRates[rateKey] ?? '0'
-    return mul(amount, rate)
-  })
+  const convertCurrency = useHandler(
+    (
+      amount: string,
+      fromCurrencyCode: string,
+      toCurrencyCode: string
+    ): string => {
+      const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+      const rate = exchangeRates[rateKey] ?? '0'
+      return mul(amount, rate)
+    }
+  )
 
   const convertFromCryptoNative = useHandler((nativeAmount: string) => {
-    if (nativeAmount === '') return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
-    const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
-    const displayAmount = div(nativeAmount, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
-    const fiatAmountLong = convertCurrency(exchangeAmount, cryptoCurrencyCode, defaultIsoFiat)
+    if (nativeAmount === '')
+      return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
+    const exchangeAmount = div(
+      nativeAmount,
+      cryptoExchangeDenom.multiplier,
+      DECIMAL_PRECISION
+    )
+    const displayAmount = div(
+      nativeAmount,
+      cryptoDisplayDenom.multiplier,
+      DECIMAL_PRECISION
+    )
+    const fiatAmountLong = convertCurrency(
+      exchangeAmount,
+      cryptoCurrencyCode,
+      defaultIsoFiat
+    )
     const fiatAmount = round(fiatAmountLong, -2)
     return { fiatAmount, exchangeAmount, displayAmount }
   })
 
   const convertFromFiat = useHandler((fiatAmount: string) => {
-    if (fiatAmount === '') return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
-    const exchangeAmountLong = convertCurrency(fiatAmount, defaultIsoFiat, cryptoCurrencyCode)
-    const nativeAmountLong = mul(exchangeAmountLong, cryptoExchangeDenom.multiplier)
-    const displayAmountLong = div(nativeAmountLong, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
+    if (fiatAmount === '')
+      return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
+    const exchangeAmountLong = convertCurrency(
+      fiatAmount,
+      defaultIsoFiat,
+      cryptoCurrencyCode
+    )
+    const nativeAmountLong = mul(
+      exchangeAmountLong,
+      cryptoExchangeDenom.multiplier
+    )
+    const displayAmountLong = div(
+      nativeAmountLong,
+      cryptoDisplayDenom.multiplier,
+      DECIMAL_PRECISION
+    )
 
     // Apply cryptoMaxPrecision to remove extraneous sub-penny precision
     const displayAmount = round(displayAmountLong, -cryptoMaxPrecision)
 
     // Convert back to native and exchange amounts after cryptoMaxPrecision has been applied
     const nativeAmount = mul(displayAmount, cryptoDisplayDenom.multiplier)
-    const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
+    const exchangeAmount = div(
+      nativeAmount,
+      cryptoExchangeDenom.multiplier,
+      DECIMAL_PRECISION
+    )
     return { displayAmount, nativeAmount, exchangeAmount }
   })
 
@@ -149,45 +202,61 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     return fiatAmount
   })
 
-  const convertValue = useHandler(async (fieldNum: number, amount: string): Promise<string | undefined> => {
-    if (amount === '') {
-      onAmountChanged({
-        exchangeAmount: '',
-        nativeAmount: '',
-        fiatAmount: '',
-        fieldChanged: fieldNum ? 'fiat' : 'crypto'
-      })
-      return ''
-    }
-    if (fieldNum === 0) {
-      const nativeAmount = mul(amount, cryptoDisplayDenom.multiplier)
-      const { fiatAmount, exchangeAmount } = convertFromCryptoNative(nativeAmount)
-      onAmountChanged({
-        exchangeAmount,
-        nativeAmount,
-        fiatAmount,
-        fieldChanged: 'crypto'
-      })
+  const convertValue = useHandler(
+    async (fieldNum: number, amount: string): Promise<string | undefined> => {
+      if (amount === '') {
+        onAmountChanged({
+          exchangeAmount: '',
+          nativeAmount: '',
+          fiatAmount: '',
+          fieldChanged: fieldNum ? 'fiat' : 'crypto'
+        })
+        return ''
+      }
+      if (fieldNum === 0) {
+        const nativeAmount = mul(amount, cryptoDisplayDenom.multiplier)
+        const { fiatAmount, exchangeAmount } =
+          convertFromCryptoNative(nativeAmount)
+        onAmountChanged({
+          exchangeAmount,
+          nativeAmount,
+          fiatAmount,
+          fieldChanged: 'crypto'
+        })
 
-      return fiatAmount
-    } else {
-      const { nativeAmount, exchangeAmount, displayAmount } = convertFromFiat(amount)
-      onAmountChanged({
-        exchangeAmount,
-        nativeAmount,
-        fiatAmount: amount,
-        fieldChanged: 'fiat'
-      })
-      return displayAmount
+        return fiatAmount
+      } else {
+        const { nativeAmount, exchangeAmount, displayAmount } =
+          convertFromFiat(amount)
+        onAmountChanged({
+          exchangeAmount,
+          nativeAmount,
+          fiatAmount: amount,
+          fieldChanged: 'fiat'
+        })
+        return displayAmount
+      }
     }
-  })
+  )
 
   React.useEffect(() => {
-    const { exchangeAmount, displayAmount } = convertFromCryptoNative(startNativeAmount ?? '')
-    const initFiat = convertCurrency(exchangeAmount, cryptoCurrencyCode, defaultIsoFiat)
+    const { exchangeAmount, displayAmount } = convertFromCryptoNative(
+      startNativeAmount ?? ''
+    )
+    const initFiat = convertCurrency(
+      exchangeAmount,
+      cryptoCurrencyCode,
+      defaultIsoFiat
+    )
     setRenderDisplayAmount(displayAmount)
     setRenderFiatAmount(initFiat)
-  }, [convertCurrency, convertFromCryptoNative, cryptoCurrencyCode, defaultIsoFiat, startNativeAmount])
+  }, [
+    convertCurrency,
+    convertFromCryptoNative,
+    cryptoCurrencyCode,
+    defaultIsoFiat,
+    startNativeAmount
+  ])
 
   React.useImperativeHandle(ref, () => ({
     setAmount: (field, value) => {
@@ -208,16 +277,30 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
    * to initialize the focused flip input field with fiat.
    */
   const overrideForceField = useMemo(
-    () => (convertCurrency('100', cryptoCurrencyCode, defaultIsoFiat) === '0' ? 'crypto' : forceField),
+    () =>
+      convertCurrency('100', cryptoCurrencyCode, defaultIsoFiat) === '0'
+        ? 'crypto'
+        : forceField,
     [convertCurrency, cryptoCurrencyCode, defaultIsoFiat, forceField]
   )
 
   const pluginInfo = getSpecialCurrencyInfo(pluginId)
-  const showMaxButton = pluginInfo.noMaxSpend !== true && !hideMaxButton && onMaxPress != null
+  const showMaxButton =
+    pluginInfo.noMaxSpend !== true && !hideMaxButton && onMaxPress != null
 
   return (
     <>
-      <EdgeRow onPress={headerCallback} icon={<CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
+      <EdgeRow
+        onPress={headerCallback}
+        icon={
+          <CryptoIcon
+            marginRem={[0, 0.5, 0, 0]}
+            pluginId={pluginId}
+            sizeRem={1.5}
+            tokenId={tokenId}
+          />
+        }
+      >
         <EdgeText style={styles.headerText}>{headerText}</EdgeText>
       </EdgeRow>
 
@@ -240,7 +323,9 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
         </View>
         {showMaxButton ? (
           <EdgeTouchableOpacity style={styles.maxButton} onPress={onMaxPress}>
-            <EdgeText style={styles.maxButtonText}>{lstrings.string_max_cap}</EdgeText>
+            <EdgeText style={styles.maxButtonText}>
+              {lstrings.string_max_cap}
+            </EdgeText>
           </EdgeTouchableOpacity>
         ) : null}
       </View>

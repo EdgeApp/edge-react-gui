@@ -1,6 +1,9 @@
 import { EdgeAccount } from 'edge-core-js'
 
-import { asSyncedAccountSettings, SyncedAccountSettings } from '../../actions/SettingsActions'
+import {
+  asSyncedAccountSettings,
+  SyncedAccountSettings
+} from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
 import { asLocalAccountSettings, LocalAccountSettings } from '../../types/types'
@@ -17,7 +20,9 @@ export const initialState: SettingsState = {
   userPausedWalletsSet: null
 }
 
-export interface SettingsState extends LocalAccountSettings, SyncedAccountSettings {
+export interface SettingsState
+  extends LocalAccountSettings,
+    SyncedAccountSettings {
   changesLocked: boolean
   isTouchEnabled: boolean
   isTouchSupported: boolean
@@ -39,7 +44,10 @@ export interface AccountInitPayload extends SettingsState {
   walletsSort: SortOption
 }
 
-export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {
+export const settingsLegacy = (
+  state: SettingsState = initialState,
+  action: Action
+): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
       const { account, walletSort } = action.data
@@ -49,16 +57,19 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       for (const pluginId of Object.keys(account.currencyConfig)) {
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { currencyCode } = currencyInfo
-        if (newState.denominationSettings[pluginId] == null) state.denominationSettings[pluginId] = {}
+        if (newState.denominationSettings[pluginId] == null)
+          state.denominationSettings[pluginId] = {}
         // @ts-expect-error
         if (newState.denominationSettings[pluginId][currencyCode] == null) {
           // @ts-expect-error
-          newState.denominationSettings[pluginId][currencyCode] = currencyInfo.denominations[0]
+          newState.denominationSettings[pluginId][currencyCode] =
+            currencyInfo.denominations[0]
         }
         for (const token of currencyInfo.metaTokens ?? []) {
           const tokenCode = token.currencyCode
           // @ts-expect-error
-          newState.denominationSettings[pluginId][tokenCode] = token.denominations[0]
+          newState.denominationSettings[pluginId][tokenCode] =
+            token.denominations[0]
         }
       }
       return newState
@@ -104,7 +115,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         userPausedWallets,
         userPausedWalletsSet: new Set(userPausedWallets),
         pinLoginEnabled,
-        preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
+        preferredSwapPluginId:
+          preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
         securityCheckedWallets,
         settingsLoaded: true,
@@ -244,7 +256,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   }
 }
 
-export const settings = (state: SettingsState = initialState, action: Action): SettingsState => {
+export const settings = (
+  state: SettingsState = initialState,
+  action: Action
+): SettingsState => {
   let result = state
   const legacy = settingsLegacy(state, action)
 

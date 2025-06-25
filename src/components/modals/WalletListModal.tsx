@@ -7,7 +7,10 @@ import { sprintf } from 'sprintf-js'
 
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/PaymentMethod'
+import {
+  PaymentMethod,
+  PaymentMethodsMap
+} from '../../controllers/action-queue/PaymentMethod'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -110,10 +113,11 @@ export function WalletListModal(props: Props) {
 
   const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
-    // TODO: Re-enable once new fiat ramp partner is re-integrated
-    return null
-  }, [account])
+  const [bankAccountsMap] =
+    useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
+      // TODO: Re-enable once new fiat ramp partner is re-integrated
+      return null
+    }, [account])
 
   // #endregion State
 
@@ -135,17 +139,23 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
-  const handleWalletListPress = useHandler(async (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
-    if (walletId === '') {
-      handleCancel()
-      showError(lstrings.network_alert_title)
-    } else if (customAsset != null) {
-      bridge.resolve({ type: 'custom', customAsset })
-    } else {
-      dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
-      bridge.resolve({ type: 'wallet', walletId, tokenId })
+  const handleWalletListPress = useHandler(
+    async (
+      walletId: string,
+      tokenId: EdgeTokenId,
+      customAsset?: CustomAsset
+    ) => {
+      if (walletId === '') {
+        handleCancel()
+        showError(lstrings.network_alert_title)
+      } else if (customAsset != null) {
+        bridge.resolve({ type: 'custom', customAsset })
+      } else {
+        dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
+        bridge.resolve({ type: 'wallet', walletId, tokenId })
+      }
     }
-  })
+  )
   const handleSearchClear = useHandler(() => {
     setSearchText('')
   })
@@ -156,52 +166,97 @@ export function WalletListModal(props: Props) {
       <ButtonsModal
         bridge={bridge}
         title={lstrings.deposit_to_bank}
-        message={sprintf(lstrings.wallet_list_modal_confirm_s_bank_withdrawal, config.appName)}
+        message={sprintf(
+          lstrings.wallet_list_modal_confirm_s_bank_withdrawal,
+          config.appName
+        )}
         buttons={{
           continue: { label: lstrings.legacy_address_modal_continue }
         }}
       />
     ))
-    if (result === 'continue') await bridge.resolve({ type: 'bankSignupRequest' })
+    if (result === 'continue')
+      await bridge.resolve({ type: 'bankSignupRequest' })
   })
 
   // #endregion Handlers
 
   // #region Renderers
 
-  const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
-    return (
-      <EdgeTouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
-        <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
-      </EdgeTouchableOpacity>
-    )
-  })
+  const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(
+    item => {
+      return (
+        <EdgeTouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
+          <PaymentMethodRow
+            paymentMethod={item.item}
+            pluginId="wyre"
+            key={item.item.id}
+          />
+        </EdgeTouchableOpacity>
+      )
+    }
+  )
 
   const renderCustomAsset: ListRenderItem<CustomAsset> = useHandler(item => {
-    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.item.referenceTokenId} customAsset={item.item} onPress={handleWalletListPress} />
+    return (
+      <WalletListCurrencyRow
+        wallet={item.item.wallet}
+        tokenId={item.item.referenceTokenId}
+        customAsset={item.item}
+        onPress={handleWalletListPress}
+      />
+    )
   })
 
   const bankSection = React.useMemo<React.ReactNode>(() => {
     if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
     if (Object.keys(bankAccountsMap).length === 0) {
-      return <MainButton label={lstrings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
+      return (
+        <MainButton
+          label={lstrings.deposit_to_bank}
+          marginRem={[0, 0.75, 1.5, 0.75]}
+          type="secondary"
+          onPress={handleShowBankPlugin}
+        />
+      )
     }
     return (
       <View style={styles.bankMargin}>
-        <FlatList data={Object.values(bankAccountsMap)} keyboardShouldPersistTaps="handled" renderItem={renderPaymentMethod} keyExtractor={item => item.id} />
+        <FlatList
+          data={Object.values(bankAccountsMap)}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderPaymentMethod}
+          keyExtractor={item => item.id}
+        />
       </View>
     )
-  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin])
+  }, [
+    bankAccountsMap,
+    handleShowBankPlugin,
+    renderPaymentMethod,
+    showBankOptions,
+    styles.bankMargin
+  ])
 
   const customAssetSection = React.useMemo<React.ReactNode>(() => {
     if (!showCustomAssets) return null
     return (
       <View style={styles.customAssetMargin}>
-        <FlatList data={customAssets} keyboardShouldPersistTaps="handled" renderItem={renderCustomAsset} keyExtractor={item => item.referenceTokenId} />
+        <FlatList
+          data={customAssets}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderCustomAsset}
+          keyExtractor={item => item.referenceTokenId}
+        />
       </View>
     )
-  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin])
+  }, [
+    customAssets,
+    renderCustomAsset,
+    showCustomAssets,
+    styles.customAssetMargin
+  ])
 
   // #endregion Renderers
 
@@ -226,7 +281,9 @@ export function WalletListModal(props: Props) {
     >
       {bankSection}
       {customAssetSection}
-      {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
+      {showBankOptions || showCustomAssets ? (
+        <EdgeText>{lstrings.your_wallets}</EdgeText>
+      ) : null}
       <WalletList
         allowedAssets={allowedAssets}
         allowedWalletIds={allowedWalletIds}
@@ -270,7 +327,13 @@ export const pickWallet = async (args: {
   navigation: NavigationBase
   showCreateWallet?: boolean
 }): Promise<WalletListResult> => {
-  const { account, assets = [], headerTitle = lstrings.select_wallet, navigation, showCreateWallet } = args
+  const {
+    account,
+    assets = [],
+    headerTitle = lstrings.select_wallet,
+    navigation,
+    showCreateWallet
+  } = args
   const { currencyWallets } = account
 
   const matchingWallets: Array<{ walletId: string; tokenId: EdgeTokenId }> = []
@@ -290,7 +353,9 @@ export const pickWallet = async (args: {
         continue
       }
       // See if this wallet has a matching token enabled
-      const tokenIdMatch = wallet.enabledTokenIds.find(enabledTokenId => tokenId === enabledTokenId)
+      const tokenIdMatch = wallet.enabledTokenIds.find(
+        enabledTokenId => tokenId === enabledTokenId
+      )
 
       if (tokenIdMatch != null) {
         matchingWallets.push({ walletId, tokenId })
@@ -312,7 +377,13 @@ export const pickWallet = async (args: {
   } else {
     // There is more than one match or we don't have a wallet for this asset. Launch the picker
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={navigation}
+        headerTitle={headerTitle}
+        allowedAssets={assets}
+        showCreateWallet={showCreateWallet}
+      />
     ))
     return walletListResult
   }

@@ -43,8 +43,10 @@ export const getCryptoText = ({
   const { multiplier: displayMultiplier, symbol } = displayDenomination
   const finalSymbol = symbol ? symbol + ' ' : ''
   const finalCurrencyCode = currencyCode ? ' ' + currencyCode : ''
-  if (hideBalance) return `${finalSymbol}${lstrings.redacted_placeholder}${finalCurrencyCode}`
-  if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0${finalCurrencyCode}`
+  if (hideBalance)
+    return `${finalSymbol}${lstrings.redacted_placeholder}${finalCurrencyCode}`
+  if (zeroString(nativeAmount))
+    return `${symbol ? symbol + ' ' : ''}0${finalCurrencyCode}`
 
   const { multiplier: exchangeMultiplier } = exchangeDenomination
 
@@ -55,12 +57,20 @@ export const getCryptoText = ({
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
       exchangeSecondaryToPrimaryRatio: exchangeRate
     })
-    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayMultiplier), precisionAdjustValue)
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(
+      log10(displayMultiplier),
+      precisionAdjustValue
+    )
   }
 
   try {
-    const truncatedCryptoAmount = nonLocalTruncateDecimals(div(nativeAmount, displayMultiplier, DECIMAL_PRECISION), maxConversionDecimals)
-    const finalCryptoAmount = formatNumber(decimalOrZero(truncatedCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const truncatedCryptoAmount = nonLocalTruncateDecimals(
+      div(nativeAmount, displayMultiplier, DECIMAL_PRECISION),
+      maxConversionDecimals
+    )
+    const finalCryptoAmount = formatNumber(
+      decimalOrZero(truncatedCryptoAmount, maxConversionDecimals)
+    ) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     if (currencyCode != null) {
       // Display with currency code if provided

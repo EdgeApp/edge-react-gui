@@ -20,7 +20,13 @@ const IMAGE_HEIGHT_RATIO = '65%'
  * Blog post card with a top image and text below.
  */
 export const ContentPostCard = (props: Props) => {
-  const { localeTitle, localeBody, localeBlogUrl, lightImageUrl, darkImageUrl } = props.contentPost
+  const {
+    localeTitle,
+    localeBody,
+    localeBlogUrl,
+    lightImageUrl,
+    darkImageUrl
+  } = props.contentPost
 
   const theme = useTheme()
   const styles = getStyles(theme)

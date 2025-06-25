@@ -27,15 +27,25 @@ export const NetworkFeeTile = (props: Props) => {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
-  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const exchangeRate = useSelector(state =>
+    getExchangeRate(state, currencyCode, defaultIsoFiat)
+  )
 
-  const exchangeDenominationMultiplier = getExchangeDenom(currencyConfig, null).multiplier
+  const exchangeDenominationMultiplier = getExchangeDenom(
+    currencyConfig,
+    null
+  ).multiplier
   const exchangeDenominationName = getExchangeDenom(currencyConfig, null).name
-  const exchangeDenominationSymbol = getExchangeDenom(currencyConfig, null).symbol ?? ''
+  const exchangeDenominationSymbol =
+    getExchangeDenom(currencyConfig, null).symbol ?? ''
 
-  const displayDenominationMultiplier = useDisplayDenom(currencyConfig, null).multiplier
+  const displayDenominationMultiplier = useDisplayDenom(
+    currencyConfig,
+    null
+  ).multiplier
   const displayDenominationName = useDisplayDenom(currencyConfig, null).name
-  const displayDenominationSymbol = useDisplayDenom(currencyConfig, null).symbol ?? ''
+  const displayDenominationSymbol =
+    useDisplayDenom(currencyConfig, null).symbol ?? ''
 
   const feeCryptoAmount = getCryptoText({
     displayDenomination: {

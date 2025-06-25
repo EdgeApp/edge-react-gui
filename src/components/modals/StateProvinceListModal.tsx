@@ -23,11 +23,18 @@ interface StateCountryListViewToken extends ViewToken {
   item: StateProvinceData
 }
 
-export const StateProvinceListModal = ({ countryCode, stateProvinces: rawStateProvinces, stateProvince, bridge }: Props) => {
+export const StateProvinceListModal = ({
+  countryCode,
+  stateProvinces: rawStateProvinces,
+  stateProvince,
+  bridge
+}: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const [visibleRows, setVisibleRows] = React.useState<StateCountryListViewToken[]>([])
+  const [visibleRows, setVisibleRows] = React.useState<
+    StateCountryListViewToken[]
+  >([])
 
   const stateProvinces: StateProvinceData[] = []
   for (const sp of rawStateProvinces) {
@@ -40,16 +47,29 @@ export const StateProvinceListModal = ({ countryCode, stateProvinces: rawStatePr
       const source = {
         uri: `${FLAG_LOGO_URL}/stateprovinces/${countryCode.toLowerCase()}/${alpha.toLowerCase()}.png`
       }
-      return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
+      return (
+        <SelectableRow
+          icon={<FastImage source={source} style={styles.image} />}
+          subTitle={alpha}
+          title={name}
+          onPress={() => bridge.resolve(alpha)}
+        />
+      )
     },
     [bridge, countryCode, styles.image]
   )
 
-  const rowDataFilter = React.useCallback((searchText: string, stateProvince: StateProvinceData) => {
-    const lowerCaseText = searchText.toLowerCase()
-    const upperCaseText = searchText.toUpperCase()
-    return stateProvince.name.toLowerCase().includes(lowerCaseText) || stateProvince['alpha-2'].includes(upperCaseText)
-  }, [])
+  const rowDataFilter = React.useCallback(
+    (searchText: string, stateProvince: StateProvinceData) => {
+      const lowerCaseText = searchText.toLowerCase()
+      const upperCaseText = searchText.toUpperCase()
+      return (
+        stateProvince.name.toLowerCase().includes(lowerCaseText) ||
+        stateProvince['alpha-2'].includes(upperCaseText)
+      )
+    },
+    []
+  )
 
   const handleSubmitEditing = useHandler(() => {
     if (visibleRows.length > 0) {
@@ -57,9 +77,11 @@ export const StateProvinceListModal = ({ countryCode, stateProvinces: rawStatePr
     }
   })
 
-  const onViewableItemsChanged = useHandler((info: { viewableItems: ViewToken[] }) => {
-    setVisibleRows(info.viewableItems)
-  })
+  const onViewableItemsChanged = useHandler(
+    (info: { viewableItems: ViewToken[] }) => {
+      setVisibleRows(info.viewableItems)
+    }
+  )
 
   return (
     <ListModal

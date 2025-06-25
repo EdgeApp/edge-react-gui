@@ -26,7 +26,10 @@ module.exports = {
                   const arrowFunctionText = sourceCode.getText(arrowFunction)
 
                   // Replace the empty params () with (maybeAbort)
-                  const newText = arrowFunctionText.replace(/^\(\s*\)/, '(maybeAbort)')
+                  const newText = arrowFunctionText.replace(
+                    /^\(\s*\)/,
+                    '(maybeAbort)'
+                  )
 
                   return fixer.replaceText(arrowFunction, newText)
                 }

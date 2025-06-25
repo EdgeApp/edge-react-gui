@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
-import { InteractionManager, ListRenderItem, Platform, View } from 'react-native'
+import {
+  InteractionManager,
+  ListRenderItem,
+  Platform,
+  View
+} from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -19,7 +24,7 @@ const DOT_SIZE_REM = 0.5
 /**
  * A horizontal carousel with pagination dots
  */
-export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
+export function EdgeCarousel<T>(props: Props<T>): React.ReactElement {
   const { data, keyExtractor, height, width } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -34,7 +39,9 @@ export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   }, [data])
 
   const renderItem = useHandler<ListRenderItem<T>>(info => (
-    <View style={[styles.childContainer, { width: width * 0.9, height }]}>{props.renderItem(info)}</View>
+    <View style={[styles.childContainer, { width: width * 0.9, height }]}>
+      {props.renderItem(info)}
+    </View>
   ))
 
   /**

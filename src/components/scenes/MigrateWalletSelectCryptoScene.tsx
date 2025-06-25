@@ -10,7 +10,10 @@ import { lstrings } from '../../locales/strings'
 import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  isKeysOnlyPlugin
+} from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -79,7 +82,8 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
     const out: Set<string> = new Set()
     for (const migrateWalletItem of migrateWalletList) {
-      if (preSelectedWalletIds.includes(migrateWalletItem.createWalletIds[0])) out.add(migrateWalletItem.key)
+      if (preSelectedWalletIds.includes(migrateWalletItem.createWalletIds[0]))
+        out.add(migrateWalletItem.key)
     }
     return out
   })
@@ -99,43 +103,52 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       return
     }
 
-    const filteredMigrateWalletList = migrateWalletList.filter(item => selectedItems.has(item.key))
+    const filteredMigrateWalletList = migrateWalletList.filter(item =>
+      selectedItems.has(item.key)
+    )
     navigation.push('migrateWalletCalculateFee', {
       migrateWalletList: filteredMigrateWalletList
     })
   })
 
-  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<MigrateWalletItem>) => {
-    const { key, displayName, pluginId, tokenId } = item.item
+  const renderCreateWalletRow = useHandler(
+    (item: ListRenderItemInfo<MigrateWalletItem>) => {
+      const { key, displayName, pluginId, tokenId } = item.item
 
-    const toggle = (
-      <Switch
-        ios_backgroundColor={theme.toggleButtonOff}
-        trackColor={{
-          false: theme.toggleButtonOff,
-          true: theme.toggleButton
-        }}
-        value={selectedItems.has(key)}
-        onValueChange={() => handleCreateWalletToggle(key)}
-      />
-    )
+      const toggle = (
+        <Switch
+          ios_backgroundColor={theme.toggleButtonOff}
+          trackColor={{
+            false: theme.toggleButtonOff,
+            true: theme.toggleButton
+          }}
+          value={selectedItems.has(key)}
+          onValueChange={() => handleCreateWalletToggle(key)}
+        />
+      )
 
-    return (
-      <CreateWalletSelectCryptoRow
-        pluginId={pluginId}
-        tokenId={tokenId}
-        walletName={displayName}
-        onPress={() => handleCreateWalletToggle(key)}
-        rightSide={toggle}
-      />
-    )
-  })
+      return (
+        <CreateWalletSelectCryptoRow
+          pluginId={pluginId}
+          tokenId={tokenId}
+          walletName={displayName}
+          onPress={() => handleCreateWalletToggle(key)}
+          rightSide={toggle}
+        />
+      )
+    }
+  )
 
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 0.75]} onPress={handleNext} />
+          <MainButton
+            label={lstrings.string_next_capitalized}
+            type="primary"
+            marginRem={[0, 0, 0.75]}
+            onPress={handleNext}
+          />
         </View>
       </Fade>
     ),
@@ -148,7 +161,10 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
+          <SceneHeader
+            title={lstrings.migrate_wallets_select_crypto_title}
+            withTopMargin
+          />
           <FlatList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{
@@ -179,4 +195,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const MigrateWalletSelectCryptoScene = React.memo(MigrateWalletSelectCryptoComponent)
+export const MigrateWalletSelectCryptoScene = React.memo(
+  MigrateWalletSelectCryptoComponent
+)

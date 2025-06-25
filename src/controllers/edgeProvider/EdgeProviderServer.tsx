@@ -20,8 +20,15 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
-import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import {
+  WalletListModal,
+  WalletListResult
+} from '../../components/modals/WalletListModal'
+import {
+  Airship,
+  showError,
+  showToast
+} from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
@@ -29,7 +36,10 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  getCurrencyCodeMultiplier
+} from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
@@ -73,7 +83,17 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     selectedTokenId: string | null
     selectedWallet?: EdgeCurrencyWallet
   }) {
-    const { account, deepLink, defaultIsoFiat, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
+    const {
+      account,
+      deepLink,
+      defaultIsoFiat,
+      dispatch,
+      navigation,
+      plugin,
+      reloadWebView,
+      selectedTokenId,
+      selectedWallet
+    } = opts
 
     this._account = account
     this._defaultIsoFiat = defaultIsoFiat
@@ -93,39 +113,60 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes?: ExtendedCurrencyCode[]): Promise<ExtendedCurrencyCode> {
+  async chooseCurrencyWallet(
+    allowedCurrencyCodes?: ExtendedCurrencyCode[]
+  ): Promise<ExtendedCurrencyCode> {
     const account = this._account
 
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
-    const allObjects = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'object')
-    const allStrings = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'string')
+    const allObjects = (allowedCurrencyCodes ?? ['']).every(
+      code => typeof code === 'object'
+    )
+    const allStrings = (allowedCurrencyCodes ?? ['']).every(
+      code => typeof code === 'string'
+    )
 
     if (!allObjects && !allStrings) {
       throw new Error('Cannot mix string and object currency specifiers')
     }
 
-    const allowedAssets = upgradeExtendedCurrencyCodes(account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
+    const allowedAssets = upgradeExtendedCurrencyCodes(
+      account.currencyConfig,
+      this._plugin.fixCurrencyCodes,
+      allowedCurrencyCodes
+    )
     if (allowedAssets == null) {
       throw new Error('No allowed assets specified')
     }
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this._navigation} showCreateWallet allowedAssets={allowedAssets} headerTitle={lstrings.choose_your_wallet} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this._navigation}
+        showCreateWallet
+        allowedAssets={allowedAssets}
+        headerTitle={lstrings.choose_your_wallet}
+      />
     ))
     if (result?.type === 'wallet') {
       const { walletId, tokenId } = result
 
       this._selectedWallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(this._selectedWallet, tokenId)
-      if (this._selectedWallet == null) throw new Error(`Missing wallet for walletId`)
+      if (this._selectedWallet == null)
+        throw new Error(`Missing wallet for walletId`)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
       this._selectedTokenId = tokenId
 
-      const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
+      const unfixCode = unfixCurrencyCode(
+        this._plugin.fixCurrencyCodes,
+        pluginId,
+        tokenId
+      )
       if (unfixCode != null) {
         return unfixCode
       }
@@ -141,10 +182,16 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
       const flowHack: any = allowedCurrencyCodes
       const stringCodes: string[] = flowHack
-      const returnCurrencyCode = getReturnCurrencyCode(stringCodes, chainCode, tokenCode)
+      const returnCurrencyCode = getReturnCurrencyCode(
+        stringCodes,
+        chainCode,
+        tokenCode
+      )
 
       if (returnCurrencyCode == null) {
-        throw new Error(`Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`)
+        throw new Error(
+          `Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`
+        )
       }
       return returnCurrencyCode
     }
@@ -152,7 +199,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   // Get an address from the user's wallet
-  async getReceiveAddress(options: EdgeGetReceiveAddressOptions = {}): Promise<EdgeReceiveAddress> {
+  async getReceiveAddress(
+    options: EdgeGetReceiveAddressOptions = {}
+  ): Promise<EdgeReceiveAddress> {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
@@ -169,7 +218,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     if (wallet == null) throw new Error('No selected wallet')
 
     const { currencyConfig, currencyInfo } = wallet
-    const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
+    const { currencyCode } =
+      tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
     const walletName = getWalletName(wallet)
     const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     const icons = getCurrencyIconUris(wallet.currencyInfo.pluginId, tokenId)
@@ -241,7 +291,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const store = account.dataStore
     const returnObj: MapObject<string | undefined> = {}
     for (const key of keys) {
-      returnObj[key] = await store.getItem(this._plugin.storeId, key).catch(e => undefined)
+      returnObj[key] = await store
+        .getItem(this._plugin.storeId, key)
+        .catch(e => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
@@ -257,17 +309,22 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     if (wallet == null) throw new Error('No selected wallet')
 
     // Prompt user with yes/no modal for permission
-    const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.fragment_wallets_export_transactions}
-        message={sprintf(lstrings.transaction_history_permission, getWalletName(wallet))}
-        buttons={{
-          ok: { label: lstrings.yes },
-          cancel: { label: lstrings.no }
-        }}
-      />
-    ))
+    const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(
+      bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.fragment_wallets_export_transactions}
+          message={sprintf(
+            lstrings.transaction_history_permission,
+            getWalletName(wallet)
+          )}
+          buttons={{
+            ok: { label: lstrings.yes },
+            cancel: { label: lstrings.no }
+          }}
+        />
+      )
+    )
     if (confirmTxShare !== 'ok') {
       throw new Error('User denied permission')
     }
@@ -286,15 +343,25 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend(providerSpendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
-    const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+  async requestSpend(
+    providerSpendTargets: EdgeProviderSpendTarget[],
+    options: EdgeRequestSpendOptions = {}
+  ): Promise<EdgeTransaction | undefined> {
+    const {
+      customNetworkFee,
+      metadata,
+      lockInputs = true,
+      uniqueIdentifier,
+      orderId
+    } = options
 
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
     const { currencyConfig, currencyInfo } = wallet
-    const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
+    const { currencyCode } =
+      tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
 
     // PUBLIC ADDRESS URI
     const spendTargets: EdgeSpendTarget[] = []
@@ -302,7 +369,10 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       let { exchangeAmount, nativeAmount, publicAddress, otherParams } = target
 
       if (exchangeAmount != null) {
-        const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, currencyCode)
+        const multiplier = getCurrencyCodeMultiplier(
+          wallet.currencyConfig,
+          currencyCode
+        )
         nativeAmount = mul(exchangeAmount, multiplier)
       }
       spendTargets.push({
@@ -324,34 +394,52 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   // Request that the user spend to a URI
-  async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
+  async requestSpendUri(
+    uri: string,
+    options: EdgeRequestSpendOptions = {}
+  ): Promise<EdgeTransaction | undefined> {
     console.log(`requestSpendUri ${uri}`)
     const account = this._account
-    const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+    const {
+      customNetworkFee,
+      metadata,
+      lockInputs = true,
+      uniqueIdentifier,
+      orderId
+    } = options
 
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
     const { currencyConfig, currencyInfo } = wallet
-    const { currencyCode: selectedCurrencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
+    const { currencyCode: selectedCurrencyCode } =
+      tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
 
-    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await wallet.parseUri(uri)
+    const result: EdgeParsedUri & { paymentProtocolURL?: string } =
+      await wallet.parseUri(uri)
     const { legacyAddress, publicAddress, nativeAmount } = result
     const { currencyCode = result.currencyCode } = options
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchPaymentProto(this._navigation, account, result.paymentProtocolURL, {
-        tokenId,
-        wallet: this._selectedWallet,
-        metadata
-      }).catch(error => showError(error))
+      await launchPaymentProto(
+        this._navigation,
+        account,
+        result.paymentProtocolURL,
+        {
+          tokenId,
+          wallet: this._selectedWallet,
+          metadata
+        }
+      ).catch(error => showError(error))
       return
     }
 
     if (currencyCode !== selectedCurrencyCode) {
-      throw new Error('URI currency code mismatch from chooseCurrencyWallet selected code')
+      throw new Error(
+        'URI currency code mismatch from chooseCurrencyWallet selected code'
+      )
     }
 
     // PUBLIC ADDRESS URI
@@ -389,7 +477,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const { tokenId } = spendInfo
 
     return await new Promise((resolve, reject) => {
-      const lockTilesMap = lockInputs ? { address: true, amount: true, wallet: true } : undefined
+      const lockTilesMap = lockInputs
+        ? { address: true, amount: true, wallet: true }
+        : undefined
 
       this._navigation.navigate('send2', {
         walletId: wallet.id,
@@ -408,8 +498,15 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
-          const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, transaction.currencyCode)
-          const exchangeAmount = div(transaction.nativeAmount, multiplier, multiplier.length)
+          const multiplier = getCurrencyCodeMultiplier(
+            wallet.currencyConfig,
+            transaction.currencyCode
+          )
+          const exchangeAmount = div(
+            transaction.nativeAmount,
+            multiplier,
+            multiplier.length
+          )
           this._dispatch(
             logEvent('EdgeProvider_Conversion_Success', {
               conversionValues: {
@@ -510,10 +607,14 @@ export function upgradeExtendedCurrencyCodes(
         // For all other chains, tokenCodes need to be specified with their parent chain. ie "MATIC-USDC"
 
         // Find all the matching coins that are parent chains
-        const mainnets = codeLookup(parentCode).filter(match => match.tokenId == null)
+        const mainnets = codeLookup(parentCode).filter(
+          match => match.tokenId == null
+        )
 
         // Find all the matching coins that are tokens of ETH
-        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum' && match.tokenId != null)
+        const ethParent = codeLookup(parentCode).filter(
+          match => match.pluginId === 'ethereum' && match.tokenId != null
+        )
 
         // If there is a match for both mainnet coins and ETH tokens, then don't add this currencyCode
         if (mainnets.length > 0 && ethParent.length > 0) continue
@@ -521,9 +622,15 @@ export function upgradeExtendedCurrencyCodes(
         out.push(...mainnets, ...ethParent)
       } else {
         // It's a scoped code, like "ETH-REP", so filter using the parent:
-        const parent = codeLookup(parentCode).find(match => match.tokenId == null)
+        const parent = codeLookup(parentCode).find(
+          match => match.tokenId == null
+        )
         if (parent == null) continue
-        out.push(...codeLookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+        out.push(
+          ...codeLookup(tokenCode).filter(
+            match => match.pluginId === parent.pluginId
+          )
+        )
       }
     } else {
       const { pluginId } = code
@@ -535,7 +642,11 @@ export function upgradeExtendedCurrencyCodes(
       } else {
         const { currencyCode } = code
         // The object contains a scoped currency code:
-        out.push(...codeLookup(currencyCode).filter(match => match.pluginId === pluginId))
+        out.push(
+          ...codeLookup(currencyCode).filter(
+            match => match.pluginId === pluginId
+          )
+        )
       }
     }
   }
@@ -543,23 +654,41 @@ export function upgradeExtendedCurrencyCodes(
   return out
 }
 
-function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeAsset } = {}, pluginId: string, tokenId: EdgeTokenId): string | undefined {
-  return Object.keys(fixCurrencyCodes).find(uid => fixCurrencyCodes[uid].pluginId === pluginId && fixCurrencyCodes[uid].tokenId === tokenId)
+function unfixCurrencyCode(
+  fixCurrencyCodes: { [badString: string]: EdgeAsset } = {},
+  pluginId: string,
+  tokenId: EdgeTokenId
+): string | undefined {
+  return Object.keys(fixCurrencyCodes).find(
+    uid =>
+      fixCurrencyCodes[uid].pluginId === pluginId &&
+      fixCurrencyCodes[uid].tokenId === tokenId
+  )
 }
 
-export function getReturnCurrencyCode(allowedCurrencyCodes: string[] | undefined, chainCode: string, tokenCode: string): string | undefined {
+export function getReturnCurrencyCode(
+  allowedCurrencyCodes: string[] | undefined,
+  chainCode: string,
+  tokenCode: string
+): string | undefined {
   let returnCurrencyCode
 
   // See if there's a match with a double code
-  returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === `${chainCode}-${tokenCode}`)
+  returnCurrencyCode = (allowedCurrencyCodes ?? []).find(
+    m => m === `${chainCode}-${tokenCode}`
+  )
 
   if (returnCurrencyCode == null) {
     if (chainCode === tokenCode) {
       // Try to match mainnet single codes if a mainnet coin was chosen
-      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === chainCode)
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(
+        m => m === chainCode
+      )
     } else if (chainCode === 'ETH') {
       // Special case for ETH. Users can specify a single code token
-      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === tokenCode)
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(
+        m => m === tokenCode
+      )
     }
   }
 

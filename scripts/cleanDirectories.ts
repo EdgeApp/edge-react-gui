@@ -2,7 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 // Validate directory names (YYMMDDxx or YYYY-MM-DD)
-const isValidDirName = (dirName: string): boolean => /^[0-9]{8}$/.test(dirName) || /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(dirName)
+const isValidDirName = (dirName: string): boolean =>
+  /^[0-9]{8}$/.test(dirName) || /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(dirName)
 
 // Parse date from directory name
 const parseDateFromDirName = (dirName: string): Date | null => {

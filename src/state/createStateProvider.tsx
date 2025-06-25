@@ -10,7 +10,9 @@ type Selector<State> = <T>(selector: (state: State) => T) => T
  * @param getState the function to return the context value (state)
  * @returns The context provider component and a useStateSelector hook to select context state
  */
-export function createStateProvider<State>(getState: () => State): [React.FunctionComponent<{ children: React.ReactNode }>, Selector<State>] {
+export function createStateProvider<State>(
+  getState: () => State
+): [React.FunctionComponent<{ children: React.ReactNode }>, Selector<State>] {
   const Context = createContext<State | undefined>(undefined)
   function WithContext({ children }: { children: React.ReactNode }) {
     const value = getState()
@@ -19,7 +21,10 @@ export function createStateProvider<State>(getState: () => State): [React.Functi
 
   function useStateSelector<T>(selector: (state: State) => T): T {
     const state = useContextSelector(Context, state => {
-      if (state == null) throw new Error(`Cannot call useStateSelector outside of ${Context.displayName}`)
+      if (state == null)
+        throw new Error(
+          `Cannot call useStateSelector outside of ${Context.displayName}`
+        )
       return selector(state)
     })
     return state

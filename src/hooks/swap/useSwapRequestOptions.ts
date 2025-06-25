@@ -11,17 +11,30 @@ import { bestOfPlugins } from '../../util/ReferralHelpers'
 export const useSwapRequestOptions = (): EdgeSwapRequestOptions => {
   const referralCache = useSelector(state => state.account.referralCache)
   const accountReferral = useSelector(state => state.account.accountReferral)
-  const preferredSwapPluginId = useSelector(state => state.ui.settings.preferredSwapPluginId)
-  const preferredSwapPluginType = useSelector(state => state.ui.settings.preferredSwapPluginType)
-  const disablePlugins = useSelector(state => state.ui.exchangeInfo.swap.disablePlugins)
+  const preferredSwapPluginId = useSelector(
+    state => state.ui.settings.preferredSwapPluginId
+  )
+  const preferredSwapPluginType = useSelector(
+    state => state.ui.settings.preferredSwapPluginType
+  )
+  const disablePlugins = useSelector(
+    state => state.ui.exchangeInfo.swap.disablePlugins
+  )
 
   return useMemo((): EdgeSwapRequestOptions => {
     // Find preferred swap provider:
-    const activePlugins = bestOfPlugins(referralCache.accountPlugins, accountReferral, preferredSwapPluginId)
+    const activePlugins = bestOfPlugins(
+      referralCache.accountPlugins,
+      accountReferral,
+      preferredSwapPluginId
+    )
     const preferPluginId = activePlugins.preferredSwapPluginId
     if (preferPluginId != null) {
       const { swapSource } = activePlugins
-      const reason = swapSource.type === 'promotion' ? 'promo ' + swapSource.installerId : swapSource.type
+      const reason =
+        swapSource.type === 'promotion'
+          ? 'promo ' + swapSource.installerId
+          : swapSource.type
       console.log(`Preferring ${preferPluginId} from ${reason}`)
     }
     return {
@@ -32,5 +45,11 @@ export const useSwapRequestOptions = (): EdgeSwapRequestOptions => {
       promoCodes: activePlugins.promoCodes,
       slowResponseMs: 10 * 1000
     }
-  }, [accountReferral, disablePlugins, preferredSwapPluginId, preferredSwapPluginType, referralCache.accountPlugins])
+  }, [
+    accountReferral,
+    disablePlugins,
+    preferredSwapPluginId,
+    preferredSwapPluginType,
+    referralCache.accountPlugins
+  ])
 }

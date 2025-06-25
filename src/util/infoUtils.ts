@@ -39,7 +39,18 @@ interface InfoFilterProps {
  * the info server data.
  */
 export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
-  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, promoIds, installerId } = props
+  const {
+    cards,
+    countryCode,
+    accountFunded,
+    buildNumber,
+    osType,
+    version,
+    osVersion,
+    currentDate,
+    promoIds,
+    installerId
+  } = props
 
   if (cards == null) return []
 
@@ -86,26 +97,39 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
     // Validate country
     if (excludeCountryCodes.length > 0 || countryCodes.length > 0) {
       if (ccLowerCase == null) continue
-      const isCountryInclude = countryCodes.length === 0 || countryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
-      const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      const isCountryInclude =
+        countryCodes.length === 0 ||
+        countryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      const isCountryExclude =
+        excludeCountryCodes.length > 0 &&
+        excludeCountryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
       if (!isCountryInclude || isCountryExclude) continue
     }
 
     // Validate OS type
-    if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) continue
+    if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType))
+      continue
 
     // Validate OS version
     if (osVersions.length > 0 && !osVersions.includes(osVersion)) continue
 
     // Validate date range
-    if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
+    if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf())
+      continue
     // Only check end date if we're not ignoring expiration
-    if (!props.ignoreExpiration && endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
+    if (
+      !props.ignoreExpiration &&
+      endIsoDate != null &&
+      currentDate.valueOf() > endDate.valueOf()
+    )
+      continue
 
     // Validate promoId
     if (
       promoId != null &&
-      ((promoIds != null && !promoIds.some(accountPromoId => accountPromoId === promoId)) || (installerId != null && installerId !== promoId))
+      ((promoIds != null &&
+        !promoIds.some(accountPromoId => accountPromoId === promoId)) ||
+        (installerId != null && installerId !== promoId))
     )
       continue
 
@@ -121,12 +145,20 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
  *
  * Ignores any info that doesn't contain display messages.
  */
-export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] => {
+export const getDisplayInfoCards = (
+  props: InfoFilterProps
+): DisplayInfoCard[] => {
   const filteredInfoData = filterInfoCards(props)
 
   const filteredInfoCards: DisplayInfoCard[] = []
   for (const card of filteredInfoData) {
-    const { background, ctaButton, dismissable, localeMessages, pluginPromotions } = card
+    const {
+      background,
+      ctaButton,
+      dismissable,
+      localeMessages,
+      pluginPromotions
+    } = card
 
     // Ignore any cards with no display data
     if (Object.keys(localeMessages).length === 0) continue
@@ -149,7 +181,11 @@ export const getDisplayInfoCards = (props: InfoFilterProps): DisplayInfoCard[] =
  * Returns a list of promo IDs that are currently valid ("active") for the
  * environment and time according to info server `promoCards2` data.
  */
-export const getActivePromoIds = async (props: { countryCode?: string; promoIds?: string[]; installerId?: string }): Promise<string[]> => {
+export const getActivePromoIds = async (props: {
+  countryCode?: string
+  promoIds?: string[]
+  installerId?: string
+}): Promise<string[]> => {
   const { installerId, promoIds, countryCode } = props
 
   const currentDate = new Date()
@@ -170,5 +206,7 @@ export const getActivePromoIds = async (props: { countryCode?: string; promoIds?
     version
   })
 
-  return filteredPromoData.map(promo => promo.promoId).filter((id): id is string => id != null)
+  return filteredPromoData
+    .map(promo => promo.promoId)
+    .filter((id): id is string => id != null)
 }

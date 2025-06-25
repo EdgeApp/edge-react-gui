@@ -1,5 +1,9 @@
 import { abs, div, eq, gt, log10 } from 'biggystring'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -8,7 +12,12 @@ import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
+import {
+  formatCategory,
+  getTxActionDisplayInfo,
+  pluginIdIcons,
+  splitCategory
+} from '../../actions/CategoriesActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -74,7 +83,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
 
   // CryptoAmount
-  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const exchangeRate = useSelector(state =>
+    getExchangeRate(state, currencyCode, defaultIsoFiat)
+  )
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({
@@ -82,23 +93,51 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
       exchangeSecondaryToPrimaryRatio: exchangeRate
     })
-    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(
+      log10(displayDenomination.multiplier),
+      precisionAdjustValue
+    )
   }
 
-  const { direction, iconPluginId, mergedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const { direction, iconPluginId, mergedData } = getTxActionDisplayInfo(
+    transaction,
+    account,
+    wallet
+  )
   const { category, name } = mergedData
   const isSentTransaction = direction === 'send'
 
-  const cryptoAmount = div(abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
-  const cryptoExchangeAmount = div(abs(transaction.nativeAmount ?? '0'), exchangeDenomination.multiplier, DECIMAL_PRECISION)
-  const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
+  const cryptoAmount = div(
+    abs(transaction.nativeAmount ?? '0'),
+    displayDenomination.multiplier,
+    DECIMAL_PRECISION
+  )
+  const cryptoExchangeAmount = div(
+    abs(transaction.nativeAmount ?? '0'),
+    exchangeDenomination.multiplier,
+    DECIMAL_PRECISION
+  )
+  const cryptoAmountFormat = formatNumber(
+    decimalOrZero(
+      truncateDecimals(cryptoAmount, maxConversionDecimals),
+      maxConversionDecimals
+    )
+  )
 
-  const cryptoAmountString = `${isSentTransaction ? '-' : '+'}${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmountFormat}`
+  const cryptoAmountString = `${isSentTransaction ? '-' : '+'}${
+    denominationSymbol ? denominationSymbol + ' ' : ''
+  }${cryptoAmountFormat}`
 
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
-  const historicalRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
-  const amountFiat = (defaultAmountFiat ?? 0) > 0 ? defaultAmountFiat ?? 0 : historicalRate * Number(cryptoExchangeAmount)
+  const historicalRate = useHistoricalRate(
+    `${currencyCode}_${defaultIsoFiat}`,
+    isoDate
+  )
+  const amountFiat =
+    (defaultAmountFiat ?? 0) > 0
+      ? defaultAmountFiat ?? 0
+      : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
   const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
@@ -128,7 +167,8 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   }
 
   // Icon & Thumbnail
-  const thumbnailPath = useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
+  const thumbnailPath =
+    useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)
@@ -139,11 +179,19 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
 
   const arrowIcon = (
     <ShadowedView style={arrowContainerStyle}>
-      <Ionicons name={arrowIconName} size={arrowIconSize} color={arrowIconColor} style={styles.icon} />
+      <Ionicons
+        name={arrowIconName}
+        size={arrowIconSize}
+        color={arrowIconColor}
+        style={styles.icon}
+      />
     </ShadowedView>
   )
 
-  const iconSource = React.useMemo(() => ({ uri: thumbnailPath }), [thumbnailPath])
+  const iconSource = React.useMemo(
+    () => ({ uri: thumbnailPath }),
+    [thumbnailPath]
+  )
 
   const icon =
     thumbnailPath != null ? (
@@ -160,12 +208,20 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   const confirmationText = getConfirmationText(currencyInfo, transaction)
 
   const confirmationStyle =
-    transaction.confirmations === 'confirmed' ? null : transaction.confirmations === 'failed' ? styles.failedText : styles.unconfirmedText
+    transaction.confirmations === 'confirmed'
+      ? null
+      : transaction.confirmations === 'failed'
+      ? styles.failedText
+      : styles.unconfirmedText
 
   // Transaction Category
   let categoryText
   // Only show a category text if the category is not a standard 'income:' or 'expense:'
-  if (edgeCategory.subcategory !== '' || (edgeCategory.category.toLowerCase() !== 'income' && edgeCategory.category.toLowerCase() !== 'expense')) {
+  if (
+    edgeCategory.subcategory !== '' ||
+    (edgeCategory.category.toLowerCase() !== 'income' &&
+      edgeCategory.category.toLowerCase() !== 'expense')
+  ) {
     categoryText = formatCategory(edgeCategory)
   }
 
@@ -212,7 +268,10 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
           )}
           {confirmationText == null ? null : (
             <View style={styles.row}>
-              <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+              <EdgeText
+                ellipsizeMode="tail"
+                style={[styles.secondaryText, confirmationStyle]}
+              >
                 {confirmationText}
               </EdgeText>
             </View>
@@ -221,7 +280,11 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       </SectionView>
     </EdgeCard>
   ) : (
-    <EdgeTouchableOpacity onPress={handlePress} onLongPress={handleLongPress} style={styles.cardlessRow}>
+    <EdgeTouchableOpacity
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+      style={styles.cardlessRow}
+    >
       {icon}
       <View style={styles.cardlessView}>
         <View style={styles.row}>
@@ -232,7 +295,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
         </View>
         <View style={styles.row}>
           <View style={styles.dateRow}>
-            <EdgeText style={styles.cardlessDateText}>{unixToLocaleDateTime(transaction.date).date}</EdgeText>
+            <EdgeText style={styles.cardlessDateText}>
+              {unixToLocaleDateTime(transaction.date).date}
+            </EdgeText>
             <EdgeText ellipsizeMode="tail" style={styles.secondaryText}>
               {timeText}
             </EdgeText>
@@ -246,7 +311,10 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
         )}
         {confirmationText == null ? null : (
           <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
+            <EdgeText
+              ellipsizeMode="tail"
+              style={[styles.secondaryText, confirmationStyle]}
+            >
               {confirmationText}
             </EdgeText>
           </View>
@@ -374,17 +442,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTransaction): string | undefined {
+function getConfirmationText(
+  currencyInfo: EdgeCurrencyInfo,
+  transaction: EdgeTransaction
+): string | undefined {
   // Default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
   // Default canReplaceByFee to false, so we don't show the RBF message unless the currencyInfo has it set.
   const { canReplaceByFee = false, requiredConfirmations = 1 } = currencyInfo
 
-  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+  const isSentTransaction =
+    transaction.nativeAmount.startsWith('-') ||
+    (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
   if (transaction.confirmations === 'confirmed') {
     return
   }
-  if (!isSentTransaction && canReplaceByFee && transaction.confirmations === 'unconfirmed') {
+  if (
+    !isSentTransaction &&
+    canReplaceByFee &&
+    transaction.confirmations === 'unconfirmed'
+  ) {
     return lstrings.fragment_transaction_list_unconfirmed_rbf2
   }
   if (transaction.confirmations === 'unconfirmed') {
@@ -397,7 +474,11 @@ function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTr
     return lstrings.fragment_transaction_list_tx_failed
   }
   if (typeof transaction.confirmations === 'number') {
-    return sprintf(lstrings.fragment_transaction_list_confirmation_progress, transaction.confirmations, requiredConfirmations)
+    return sprintf(
+      lstrings.fragment_transaction_list_confirmation_progress,
+      transaction.confirmations,
+      requiredConfirmations
+    )
   }
 
   return lstrings.fragment_transaction_list_tx_synchronizing

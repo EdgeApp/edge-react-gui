@@ -1,8 +1,28 @@
-import { asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  asArray,
+  asBoolean,
+  asDate,
+  asMaybe,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  Cleaner
+} from 'cleaners'
+import {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeSpendInfo,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { ErrorNoMatchingWallets, pickWallet } from '../components/modals/WalletListModal'
+import {
+  ErrorNoMatchingWallets,
+  pickWallet
+} from '../components/modals/WalletListModal'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -173,7 +193,10 @@ export const PAYMENT_PROTOCOL_MAP: MapObject<EdgeAsset> = {
  * Performs the fetch commands to the Payment Protocol.
  * Throws errors when response is not OK.
  */
-async function fetchPaymentProtoJsonResponse(uri: string, init: object): Promise<Response> {
+async function fetchPaymentProtoJsonResponse(
+  uri: string,
+  init: object
+): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
@@ -216,9 +239,22 @@ async function fetchPaymentProtoJsonResponse(uri: string, init: object): Promise
  * 3. Make preliminary transaction hexes to pass onto the Payment Protocol for verification
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
-export async function launchPaymentProto(navigation: NavigationBase, account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
+export async function launchPaymentProto(
+  navigation: NavigationBase,
+  account: EdgeAccount,
+  uri: string,
+  params: LaunchPaymentProtoParams
+): Promise<void> {
   const { currencyWallets } = account
-  const { hideScamWarning, metadata = {}, navigateReplace, tokenId: tokenIdParam = null, wallet, onBack, onDone } = params
+  const {
+    hideScamWarning,
+    metadata = {},
+    navigateReplace,
+    tokenId: tokenIdParam = null,
+    wallet,
+    onBack,
+    onDone
+  } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -227,7 +263,9 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   const optionsResponse = asPaymentProtoOptionsResponse(responseJson)
   const paymentId = optionsResponse.paymentId
   const paymentAssets: EdgeAsset[] = []
-  const paymentCurrencies: string[] = optionsResponse.paymentOptions.map(option => option.currency)
+  const paymentCurrencies: string[] = optionsResponse.paymentOptions.map(
+    option => option.currency
+  )
 
   for (const currency of paymentCurrencies) {
     if (PAYMENT_PROTOCOL_MAP[currency] == null) continue
@@ -275,9 +313,13 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     selectedAsset = { pluginId: selectedWallet.currencyInfo.pluginId, tokenId }
   }
 
-  const chain = Object.keys(CHAIN_MAP).find(chainCode => CHAIN_MAP[chainCode] === selectedWallet.currencyInfo.pluginId)
+  const chain = Object.keys(CHAIN_MAP).find(
+    chainCode => CHAIN_MAP[chainCode] === selectedWallet.currencyInfo.pluginId
+  )
   const currency = Object.keys(PAYMENT_PROTOCOL_MAP).find(
-    bitpayCode => PAYMENT_PROTOCOL_MAP[bitpayCode].pluginId === selectedAsset.pluginId && PAYMENT_PROTOCOL_MAP[bitpayCode].tokenId === selectedAsset.tokenId
+    bitpayCode =>
+      PAYMENT_PROTOCOL_MAP[bitpayCode].pluginId === selectedAsset.pluginId &&
+      PAYMENT_PROTOCOL_MAP[bitpayCode].tokenId === selectedAsset.tokenId
   )
   if (chain == null || currency == null)
     throw new PaymentProtoError('InvalidPaymentOption', {
@@ -311,7 +353,9 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   }
 
   const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
-  metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
+  metadata.notes = metadata.notes
+    ? metadata.notes + '\n\n' + paymentIdString
+    : paymentIdString
 
   // Make the spend to generate the tx hexes
   let requiredFeeRate = invoiceInstruction.requiredFeeRate
@@ -319,7 +363,11 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   // transactions and we want to make sure the transaction succeeds.
   const { pluginId, tokenId } = selectedAsset
 
-  if (typeof requiredFeeRate === 'number' && SPECIAL_CURRENCY_INFO[pluginId].hasSegwit) requiredFeeRate *= 1.8
+  if (
+    typeof requiredFeeRate === 'number' &&
+    SPECIAL_CURRENCY_INFO[pluginId].hasSegwit
+  )
+    requiredFeeRate *= 1.8
   const spendInfo: EdgeSpendInfo = {
     tokenId,
     // Reverse the outputs since Anypay puts the merchant amount first. Making it last will have
@@ -358,7 +406,10 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onBack,
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-      if (error) showError(`${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`)
+      if (error)
+        showError(
+          `${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`
+        )
       if (onDone != null) onDone(edgeTransaction)
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
@@ -372,7 +423,8 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
       }
 
       if (selectedWallet == null) throw new Error('Missing selectedWallet')
-      if (unsignedHex === '' || signedHex === '') throw new PaymentProtoError('EmptyVerificationHexReq', { errorData })
+      if (unsignedHex === '' || signedHex === '')
+        throw new PaymentProtoError('EmptyVerificationHexReq', { errorData })
 
       const verificationPaymentRequest = {
         chain,
@@ -389,8 +441,12 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
       })
 
       // Verify that the transaction data reply matches
-      const verificationPaymentResponse = asPaymentProtoVerificationResponse(responseJson).payment
-      if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
+      const verificationPaymentResponse =
+        asPaymentProtoVerificationResponse(responseJson).payment
+      if (
+        verificationPaymentResponse.transactions.length !== 1 ||
+        unsignedHex !== verificationPaymentResponse.transactions[0].tx
+      ) {
         errorData = {
           ...errorData,
           verificationPaymentRequest,
@@ -409,7 +465,9 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
         body: JSON.stringify({
           chain,
           currency,
-          transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
+          transactions: [
+            { tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }
+          ]
         })
       })
       return await selectedWallet.broadcastTx(edgeTransaction)
@@ -437,52 +495,58 @@ const asPaymentProtoOption: Cleaner<PaymentProtoOption> = asObject({
   selected: asBoolean
 })
 
-const asPaymentProtoOptionsResponse: Cleaner<PaymentProtoOptionsResponse> = asObject({
-  time: asDate,
-  expires: asDate,
-  memo: asString,
-  paymentUrl: asString,
-  paymentId: asString,
-  paymentOptions: asArray(asPaymentProtoOption)
-})
+const asPaymentProtoOptionsResponse: Cleaner<PaymentProtoOptionsResponse> =
+  asObject({
+    time: asDate,
+    expires: asDate,
+    memo: asString,
+    paymentUrl: asString,
+    paymentId: asString,
+    paymentOptions: asArray(asPaymentProtoOption)
+  })
 
-const asPaymentProtoInstructionOutput: Cleaner<PaymentProtoInstructionOutput> = asObject({
-  amount: asNumber,
-  address: asString,
-  invoiceID: asOptional(asString)
-})
+const asPaymentProtoInstructionOutput: Cleaner<PaymentProtoInstructionOutput> =
+  asObject({
+    amount: asNumber,
+    address: asString,
+    invoiceID: asOptional(asString)
+  })
 
-const asPaymentProtoInvoiceInstruction: Cleaner<PaymentProtoInvoiceInstruction> = asObject({
-  type: asString,
-  requiredFeeRate: asMaybe(asNumber),
-  outputs: asOptional(asArray(asPaymentProtoInstructionOutput)),
-  value: asMaybe(asNumber),
-  to: asOptional(asString),
-  data: asOptional(asString),
-  gasPrice: asMaybe(asNumber)
-})
+const asPaymentProtoInvoiceInstruction: Cleaner<PaymentProtoInvoiceInstruction> =
+  asObject({
+    type: asString,
+    requiredFeeRate: asMaybe(asNumber),
+    outputs: asOptional(asArray(asPaymentProtoInstructionOutput)),
+    value: asMaybe(asNumber),
+    to: asOptional(asString),
+    data: asOptional(asString),
+    gasPrice: asMaybe(asNumber)
+  })
 
-const asPaymentProtoInvoiceResponse: Cleaner<PaymentProtoInvoiceResponse> = asObject({
-  time: asDate,
-  expires: asDate,
-  memo: asString,
-  paymentUrl: asString,
-  paymentId: asString,
-  chain: asString,
-  network: asString,
-  instructions: asArray(asPaymentProtoInvoiceInstruction),
-  currency: asOptional(asString)
-})
+const asPaymentProtoInvoiceResponse: Cleaner<PaymentProtoInvoiceResponse> =
+  asObject({
+    time: asDate,
+    expires: asDate,
+    memo: asString,
+    paymentUrl: asString,
+    paymentId: asString,
+    chain: asString,
+    network: asString,
+    instructions: asArray(asPaymentProtoInvoiceInstruction),
+    currency: asOptional(asString)
+  })
 
 const asPaymentProtoTransaction: Cleaner<PaymentProtoTransaction> = asObject({
   tx: asString
 })
 
-const asPaymentProtoVerificationPayment: Cleaner<PaymentProtoVerificationPayment> = asObject({
-  transactions: asArray(asPaymentProtoTransaction)
-})
+const asPaymentProtoVerificationPayment: Cleaner<PaymentProtoVerificationPayment> =
+  asObject({
+    transactions: asArray(asPaymentProtoTransaction)
+  })
 
-const asPaymentProtoVerificationResponse: Cleaner<PaymentProtoVerificationResponse> = asObject({
-  payment: asPaymentProtoVerificationPayment,
-  memo: asString
-})
+const asPaymentProtoVerificationResponse: Cleaner<PaymentProtoVerificationResponse> =
+  asObject({
+    payment: asPaymentProtoVerificationPayment,
+    memo: asString
+  })

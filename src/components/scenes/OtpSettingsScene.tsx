@@ -45,7 +45,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
   componentDidMount() {
     const { account } = this.props
-    this.cleanups = [account.watch('otpKey', otpKey => this.setState({ otpKey }))]
+    this.cleanups = [
+      account.watch('otpKey', otpKey => this.setState({ otpKey }))
+    ]
   }
 
   componentWillUnmount() {
@@ -96,12 +98,19 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const { otpKey } = this.state
     const styles = getStyles(theme)
-    const otpDescriptionTwo = sprintf(lstrings.otp_description_two, config.appName)
+    const otpDescriptionTwo = sprintf(
+      lstrings.otp_description_two,
+      config.appName
+    )
 
     return (
       <SceneWrapper padding={theme.rem(0.5)} scroll>
         <AntDesignIcon name="lock" style={styles.icon} />
-        <Text style={styles.titleText}>{otpKey != null ? lstrings.title_otp_enabled : lstrings.title_otp_disabled}</Text>
+        <Text style={styles.titleText}>
+          {otpKey != null
+            ? lstrings.title_otp_enabled
+            : lstrings.title_otp_disabled}
+        </Text>
 
         <Text style={styles.messageText}>{lstrings.otp_description}</Text>
         <Text style={styles.messageText}>{otpDescriptionTwo}</Text>
@@ -113,9 +122,19 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
         {otpKey != null ? this.renderKey(otpKey) : null}
         {otpKey != null ? (
-          <MainButton label={lstrings.otp_disable} marginRem={[1, 0, 0.5]} type="secondary" onPress={this.handleDisable} />
+          <MainButton
+            label={lstrings.otp_disable}
+            marginRem={[1, 0, 0.5]}
+            type="secondary"
+            onPress={this.handleDisable}
+          />
         ) : (
-          <MainButton label={lstrings.otp_enable} marginRem={[0.5, 0, 1]} type="secondary" onPress={this.handleEnable} />
+          <MainButton
+            label={lstrings.otp_enable}
+            marginRem={[0.5, 0, 1]}
+            type="secondary"
+            onPress={this.handleEnable}
+          />
         )}
       </SceneWrapper>
     )
@@ -128,9 +147,17 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.keyArea}>
-        <EdgeTouchableOpacity style={styles.keyToggle} onPress={this.handleToggleKey}>
-          <Text style={styles.keyToggleText}>{showKey ? lstrings.otp_hide_code : lstrings.otp_show_code}</Text>
-          <AntDesignIcon name={showKey ? 'up' : 'down'} style={styles.keyToggleIcon} />
+        <EdgeTouchableOpacity
+          style={styles.keyToggle}
+          onPress={this.handleToggleKey}
+        >
+          <Text style={styles.keyToggleText}>
+            {showKey ? lstrings.otp_hide_code : lstrings.otp_show_code}
+          </Text>
+          <AntDesignIcon
+            name={showKey ? 'up' : 'down'}
+            style={styles.keyToggleIcon}
+          />
         </EdgeTouchableOpacity>
         {showKey ? (
           <EdgeTouchableOpacity onPress={this.handleCopyKey}>

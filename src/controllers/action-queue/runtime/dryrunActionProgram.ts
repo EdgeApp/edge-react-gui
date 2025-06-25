@@ -1,4 +1,11 @@
-import { ActionEffect, ActionProgram, ActionProgramState, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
+import {
+  ActionEffect,
+  ActionProgram,
+  ActionProgramState,
+  ExecutionContext,
+  ExecutionOutput,
+  PendingTxMap
+} from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
 
 export async function dryrunActionProgram(
@@ -11,7 +18,10 @@ export async function dryrunActionProgram(
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const executableAction = await context.evaluateAction(program, simulatedState)
+    const executableAction = await context.evaluateAction(
+      program,
+      simulatedState
+    )
     const dryrunOutput = await executableAction.dryrun(pendingTxMap)
 
     // In order to avoid infinite loops, we must break when we reach the end
@@ -34,7 +44,10 @@ export async function dryrunActionProgram(
     // Add all txs to pendingTxMap
     dryrunOutput.broadcastTxs.forEach(broadcastTx => {
       const walletId = broadcastTx.walletId
-      pendingTxMap[walletId] = [...(pendingTxMap[walletId] ?? []), broadcastTx.tx]
+      pendingTxMap[walletId] = [
+        ...(pendingTxMap[walletId] ?? []),
+        broadcastTx.tx
+      ]
     })
 
     // End of the program
@@ -44,6 +57,9 @@ export async function dryrunActionProgram(
 }
 
 function checkEffectForNull(effect: ActionEffect): boolean {
-  if (effect.type === 'seq' || effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
+  if (effect.type === 'seq' || effect.type === 'par')
+    return effect.childEffects.some(
+      effect => effect === null || checkEffectForNull(effect)
+    )
   return false
 }

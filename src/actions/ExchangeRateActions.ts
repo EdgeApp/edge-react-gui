@@ -1,4 +1,12 @@
-import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asEither,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
@@ -63,7 +71,10 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
         datelog('Error loading exchange rate cache:', String(error))
         return { assetPairs: [], rates: {} }
       })
-      const { exchangeRates, exchangeRatesMap } = buildGuiRates(exchangeRateCache.rates, yesterday)
+      const { exchangeRates, exchangeRatesMap } = buildGuiRates(
+        exchangeRateCache.rates,
+        yesterday
+      )
       dispatch({
         type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
         data: {
@@ -74,8 +85,17 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
     }
 
     // Refresh from the network:
-    await fetchExchangeRates(account, defaultIsoFiat, exchangeRateCache, now, yesterday)
-    const { exchangeRates, exchangeRatesMap } = buildGuiRates(exchangeRateCache.rates, yesterday)
+    await fetchExchangeRates(
+      account,
+      defaultIsoFiat,
+      exchangeRateCache,
+      now,
+      yesterday
+    )
+    const { exchangeRates, exchangeRatesMap } = buildGuiRates(
+      exchangeRateCache.rates,
+      yesterday
+    )
     dispatch({
       type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
       data: {
@@ -118,7 +138,13 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
 /**
  * Fetches exchange rates from the server, and writes them out to disk.
  */
-async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, cache: ExchangeRateCacheFile, now: number, yesterday: string): Promise<void> {
+async function fetchExchangeRates(
+  account: EdgeAccount,
+  accountIsoFiat: string,
+  cache: ExchangeRateCacheFile,
+  now: number,
+  yesterday: string
+): Promise<void> {
   const { currencyWallets } = account
 
   // Look up various dates:
@@ -226,7 +252,9 @@ async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, 
           break
         }
       } catch (error: unknown) {
-        console.log(`buildExchangeRates error querying rates server ${String(error)}`)
+        console.log(
+          `buildExchangeRates error querying rates server ${String(error)}`
+        )
       }
     }
   }
@@ -235,15 +263,20 @@ async function fetchExchangeRates(account: EdgeAccount, accountIsoFiat: string, 
   exchangeRateCache = { rates, assetPairs }
 
   // Write the cache to disk:
-  await disklet.setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache)).catch(error => {
-    datelog('Error saving exchange rate cache:', String(error))
-  })
+  await disklet
+    .setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache))
+    .catch(error => {
+      datelog('Error saving exchange rate cache:', String(error))
+    })
 }
 
 /**
  * Converts rates from the cache format to the GUI's in-memory format.
  */
-function buildGuiRates(rateCache: ExchangeRateCache, yesterday: string): { exchangeRates: GuiExchangeRates; exchangeRatesMap: GuiExchangeRatesMap } {
+function buildGuiRates(
+  rateCache: ExchangeRateCache,
+  yesterday: string
+): { exchangeRates: GuiExchangeRates; exchangeRatesMap: GuiExchangeRatesMap } {
   const out: GuiExchangeRates = { 'iso:USD_iso:USD': 1 }
   const outMap: GuiExchangeRatesMap = new Map()
   const yesterdayTimestamp = Date.parse(yesterday)
@@ -253,7 +286,11 @@ function buildGuiRates(rateCache: ExchangeRateCache, yesterday: string): { excha
     out[key] = rate
 
     // Include reverse rates:
-    const [codeA, codeB, date] = key.split('_') as [string, string, string | undefined]
+    const [codeA, codeB, date] = key.split('_') as [
+      string,
+      string,
+      string | undefined
+    ]
     const reverseKey = `${codeB}_${codeA}${date ? '_' + date : ''}`
     out[reverseKey] = rate === 0 ? 0 : 1 / rate
 
@@ -265,7 +302,9 @@ function buildGuiRates(rateCache: ExchangeRateCache, yesterday: string): { excha
     let yesterdayRate: number | undefined
     // We only look up yesterday's rate for USD pairs
     if (codeB === 'iso:USD') {
-      yesterdayRate = rateCache[`${codeA}_${codeB}_${yesterday}`]?.rate ?? closestRateForTimestamp(rateCache, codeA, yesterdayTimestamp)
+      yesterdayRate =
+        rateCache[`${codeA}_${codeB}_${yesterday}`]?.rate ??
+        closestRateForTimestamp(rateCache, codeA, yesterdayTimestamp)
     }
 
     const codeAMap = outMap.get(codeA) ?? new Map()
@@ -274,7 +313,11 @@ function buildGuiRates(rateCache: ExchangeRateCache, yesterday: string): { excha
     const codeBMap = outMap.get(codeB) ?? new Map()
     outMap.set(
       codeB,
-      codeBMap.set(codeA, { currentRate: out[reverseKey], yesterdayRate: yesterdayRate === 0 || yesterdayRate == null ? 0 : 1 / yesterdayRate })
+      codeBMap.set(codeA, {
+        currentRate: out[reverseKey],
+        yesterdayRate:
+          yesterdayRate === 0 || yesterdayRate == null ? 0 : 1 / yesterdayRate
+      })
     )
   }
 
@@ -293,9 +336,15 @@ const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
   return yesterday
 }
 
-export const closestRateForTimestamp = (exchangeRates: ExchangeRateCache, currencyCode: string, timestamp: number): number | undefined => {
+export const closestRateForTimestamp = (
+  exchangeRates: ExchangeRateCache,
+  currencyCode: string,
+  timestamp: number
+): number | undefined => {
   // The extra _ at the end means there is a date string at the end of the key
-  const filteredPairs = Object.keys(exchangeRates).filter(pair => pair.startsWith(`${currencyCode}_iso:USD_`))
+  const filteredPairs = Object.keys(exchangeRates).filter(pair =>
+    pair.startsWith(`${currencyCode}_iso:USD_`)
+  )
 
   let bestRate: number | undefined
   let bestDistance = Infinity

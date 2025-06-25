@@ -1,5 +1,13 @@
 import { div, gt, lt, mul } from 'biggystring'
-import { asArray, asBoolean, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue
+} from 'cleaners'
 import URL from 'url-parse'
 
 import { ENV } from '../../../env'
@@ -71,7 +79,10 @@ const SUPPORTED_REGIONS: FiatProviderExactRegions = {
   }
 }
 
-type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
+type AllowedPaymentTypes = Record<
+  FiatDirection,
+  { [Payment in FiatPaymentType]?: boolean }
+>
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
@@ -221,7 +232,9 @@ interface GetQuoteParams {
 export const kadoOtcProvider: FiatProviderFactory = {
   providerId,
   storeId,
-  makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+  makeProvider: async (
+    params: FiatProviderFactoryParams
+  ): Promise<FiatProvider> => {
     const { apiKeys } = params
     const { apiKey, apiUserEmail } = asApiKeys(apiKeys)
 
@@ -231,15 +244,26 @@ export const kadoOtcProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({
+        direction,
+        paymentTypes,
+        regionCode
+      }): Promise<FiatProviderAssetMap> => {
         validateExactRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
+        if (
+          !paymentTypes.some(
+            paymentType => allowedPaymentTypes[direction][paymentType] === true
+          )
+        )
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
           })
-        const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
+        const allowedCurrencyCodes =
+          direction === 'buy'
+            ? allowedBuyCurrencyCodes
+            : allowedSellCurrencyCodes
 
         if (Object.keys(allowedCurrencyCodes.crypto).length > 0) {
           return allowedCurrencyCodes
@@ -276,7 +300,11 @@ export const kadoOtcProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (asset.rampProducts == null || !asset.rampProducts.includes(direction)) continue
+            if (
+              asset.rampProducts == null ||
+              !asset.rampProducts.includes(direction)
+            )
+              continue
             if (isNative) {
               allowedCurrencyCodes.crypto[pluginId].push({
                 tokenId: null,
@@ -285,7 +313,10 @@ export const kadoOtcProvider: FiatProviderFactory = {
               continue
             }
 
-            if (address != null && address !== '0x0000000000000000000000000000000000000000') {
+            if (
+              address != null &&
+              address !== '0x0000000000000000000000000000000000000000'
+            ) {
               const tokenId = await params.getTokenIdFromContract({
                 pluginId,
                 contractAddress: address
@@ -302,10 +333,15 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
         return allowedCurrencyCodes
       },
-      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
+      getQuote: async (
+        params: FiatProviderGetQuoteParams
+      ): Promise<FiatProviderQuote> => {
         validateExactRegion(providerId, params.regionCode, SUPPORTED_REGIONS)
 
-        const allowedCurrencyCodes = params.direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
+        const allowedCurrencyCodes =
+          params.direction === 'buy'
+            ? allowedBuyCurrencyCodes
+            : allowedSellCurrencyCodes
 
         if (!allowedCountryCodes[params.regionCode.countryCode])
           throw new FiatProviderError({
@@ -314,7 +350,12 @@ export const kadoOtcProvider: FiatProviderFactory = {
             displayCurrencyCode: params.displayCurrencyCode
           })
 
-        if (!params.paymentTypes.some(paymentType => allowedPaymentTypes[params.direction][paymentType] === true))
+        if (
+          !params.paymentTypes.some(
+            paymentType =>
+              allowedPaymentTypes[params.direction][paymentType] === true
+          )
+        )
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
@@ -323,7 +364,9 @@ export const kadoOtcProvider: FiatProviderFactory = {
         const paymentType = params.paymentTypes[0]
 
         const allowedTokens = allowedCurrencyCodes.crypto[params.pluginId]
-        const allowedToken = allowedTokens.find(t => t.tokenId === params.tokenId)
+        const allowedToken = allowedTokens.find(
+          t => t.tokenId === params.tokenId
+        )
         if (allowedToken == null)
           throw new FiatProviderError({
             providerId,
@@ -368,21 +411,37 @@ export const kadoOtcProvider: FiatProviderFactory = {
         if (params.direction === 'buy') {
           if (params.amountType === 'fiat') {
             fiatAmount = params.exchangeAmount
-            const scaleRatio = div(params.exchangeAmount, queryParams.amount, 18)
+            const scaleRatio = div(
+              params.exchangeAmount,
+              queryParams.amount,
+              18
+            )
             cryptoAmount = mul(quote.receive.unitCount, scaleRatio)
           } else {
             cryptoAmount = params.exchangeAmount
-            const exchangeRate = div(quote.receive.amount, quote.receive.unitCount, 18)
+            const exchangeRate = div(
+              quote.receive.amount,
+              quote.receive.unitCount,
+              18
+            )
             fiatAmount = div(mul(params.exchangeAmount, exchangeRate), 1, 2)
           }
         } else {
           if (params.amountType === 'crypto') {
             cryptoAmount = params.exchangeAmount
-            const scaleRatio = div(params.exchangeAmount, queryParams.amount, 18)
+            const scaleRatio = div(
+              params.exchangeAmount,
+              queryParams.amount,
+              18
+            )
             fiatAmount = div(mul(quote.receive.amount, scaleRatio), 1, 2)
           } else {
             fiatAmount = params.exchangeAmount
-            const exchangeRate = div(queryParams.amount, quote.receive.amount, 18)
+            const exchangeRate = div(
+              queryParams.amount,
+              quote.receive.amount,
+              18
+            )
             cryptoAmount = mul(params.exchangeAmount, exchangeRate)
           }
         }
@@ -396,7 +455,11 @@ export const kadoOtcProvider: FiatProviderFactory = {
             displayCurrencyCode: 'USD'
           })
 
-        if (params.direction === 'buy' && paymentType === 'wire' && gt(fiatAmount, MAX_QUOTE_AMOUNT)) {
+        if (
+          params.direction === 'buy' &&
+          paymentType === 'wire' &&
+          gt(fiatAmount, MAX_QUOTE_AMOUNT)
+        ) {
           throw new FiatProviderError({
             providerId,
             errorType: 'overLimit',
@@ -418,7 +481,9 @@ export const kadoOtcProvider: FiatProviderFactory = {
           cryptoAmount,
           direction: params.direction,
           expirationDate: new Date(Date.now() + 60000),
-          approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+          approveQuote: async (
+            approveParams: FiatProviderApproveQuoteParams
+          ): Promise<void> => {
             const { showUi } = approveParams
 
             // First, show a confirmation modal asking the user if they want to proceed
@@ -436,7 +501,10 @@ export const kadoOtcProvider: FiatProviderFactory = {
 
             // If confirmed, proceed to get user contact information
             const userInfo = await showUi.emailForm({
-              message: params.direction === 'buy' ? lstrings.otc_enter_contact_to_buy : lstrings.otc_enter_contact_to_sell
+              message:
+                params.direction === 'buy'
+                  ? lstrings.otc_enter_contact_to_buy
+                  : lstrings.otc_enter_contact_to_sell
             })
 
             if (userInfo == null) {
@@ -452,10 +520,16 @@ export const kadoOtcProvider: FiatProviderFactory = {
                   body: `------ CUSTOMER INFO ------
 Name: ${userInfo.firstName} ${userInfo.lastName}
 Email: ${userInfo.email}
-Location: ${params.regionCode.countryCode}${params.regionCode.stateProvinceCode ? ', ' + params.regionCode.stateProvinceCode : ''}
+Location: ${params.regionCode.countryCode}${
+                    params.regionCode.stateProvinceCode
+                      ? ', ' + params.regionCode.stateProvinceCode
+                      : ''
+                  }
 
 ------ TRANSACTION DETAILS ------
-Request: ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${tokenOtherInfo.symbol}
+Request: ${params.direction === 'buy' ? 'Buy' : 'Sell'} ${cryptoAmount} ${
+                    tokenOtherInfo.symbol
+                  }
 For: ${fiatAmount} USD
 Payment Method: ${paymentType}
 `
@@ -469,14 +543,17 @@ Payment Method: ${paymentType}
               }
             }
 
-            const response = await fetch('https://edgeapp.zendesk.com/api/v2/tickets.json', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Basic ${authToken}`
-              },
-              body: JSON.stringify(requestBody)
-            })
+            const response = await fetch(
+              'https://edgeapp.zendesk.com/api/v2/tickets.json',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Basic ${authToken}`
+                },
+                body: JSON.stringify(requestBody)
+              }
+            )
 
             if (!response.ok) {
               const text = await response.text()

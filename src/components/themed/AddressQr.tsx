@@ -33,7 +33,13 @@ export const AddressQr = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <QrCode data={encodedUri} tokenId={tokenId} pluginId={wallet.currencyInfo.pluginId} onPress={() => onPress(encodedUri)} marginRem={0} />
+      <QrCode
+        data={encodedUri}
+        tokenId={tokenId}
+        pluginId={wallet.currencyInfo.pluginId}
+        onPress={() => onPress(encodedUri)}
+        marginRem={0}
+      />
     </View>
   )
 }

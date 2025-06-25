@@ -1,6 +1,9 @@
 import { ethers } from 'ethers'
 
-import { BorrowPluginBlueprint, makeBorrowPluginFactory } from '../../common/BorrowPluginFactory'
+import {
+  BorrowPluginBlueprint,
+  makeBorrowPluginFactory
+} from '../../common/BorrowPluginFactory'
 import { makeAaveBorrowEngineFactory } from './AaveBorrowEngineFactory'
 import { makeAaveNetworkFactory } from './AaveNetwork'
 import { asEthTokenContractAddress } from './cleaners/asEthTokenContractAddress'
@@ -12,7 +15,8 @@ const maticNetwork = {
   name: 'matic',
   chainId: 137,
   // @ts-expect-error
-  _defaultProvider: providers => new providers.JsonRpcProvider('https://polygon-rpc.com')
+  _defaultProvider: providers =>
+    new providers.JsonRpcProvider('https://polygon-rpc.com')
 }
 
 const aaveMaticNetwork = makeAaveNetworkFactory({
@@ -44,7 +48,8 @@ const aaveMaticBlueprint: BorrowPluginBlueprint = {
   })
 }
 
-export const makeAaveMaticBorrowPlugin = makeBorrowPluginFactory(aaveMaticBlueprint)
+export const makeAaveMaticBorrowPlugin =
+  makeBorrowPluginFactory(aaveMaticBlueprint)
 // #endregion
 
 // -----------------------------------------------------------------------------

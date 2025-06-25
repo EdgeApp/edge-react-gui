@@ -26,7 +26,10 @@ export const SectionHeader = (props: Props) => {
 
   const right =
     typeof rightNode === 'string' ? (
-      <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
+      <EdgeTouchableOpacity
+        onPress={onRightPress}
+        style={styles.rightTappableContainer}
+      >
         <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
       </EdgeTouchableOpacity>
     ) : (

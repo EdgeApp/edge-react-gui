@@ -1,10 +1,19 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
-import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  useAnimatedProps,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
-import { DONE_THRESHOLD, MAX_RATIO, MIN_RATIO, RESYNC_THRESHOLD } from '../../constants/WalletAndCurrencyConstants'
+import {
+  DONE_THRESHOLD,
+  MAX_RATIO,
+  MIN_RATIO,
+  RESYNC_THRESHOLD
+} from '../../constants/WalletAndCurrencyConstants'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
@@ -22,7 +31,9 @@ export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()
   const { size = theme.rem(2), wallet } = props
   // Animation shared state
-  const syncRatio = useSharedValue(wallet.syncRatio < RESYNC_THRESHOLD ? MIN_RATIO : wallet.syncRatio)
+  const syncRatio = useSharedValue(
+    wallet.syncRatio < RESYNC_THRESHOLD ? MIN_RATIO : wallet.syncRatio
+  )
 
   // Subscribe to the sync ratio:
   React.useEffect(() => {
@@ -54,7 +65,9 @@ export const WalletSyncCircle = (props: Props) => {
   const center = size / 2
   // Calculate the final size of the SVG
   const svgSize = size + 4 * strokeWidth
-  const viewBox = `${-strokeWidth * 2} ${-strokeWidth * 2} ${svgSize} ${svgSize}`
+  const viewBox = `${-strokeWidth * 2} ${
+    -strokeWidth * 2
+  } ${svgSize} ${svgSize}`
 
   // Animated Params
   const animatedProps = useAnimatedProps(() => ({

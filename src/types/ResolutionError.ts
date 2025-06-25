@@ -39,8 +39,16 @@ export class ResolutionError extends Error {
   currencyTicker: string
   recordName: string
 
-  constructor(code: ResolutionErrorCode, options: ResolutionErrorOptions = { domain: '' }) {
-    const { domain = '', method = '', currencyTicker = '', recordName = '' } = options
+  constructor(
+    code: ResolutionErrorCode,
+    options: ResolutionErrorOptions = { domain: '' }
+  ) {
+    const {
+      domain = '',
+      method = '',
+      currencyTicker = '',
+      recordName = ''
+    } = options
     super(code)
     this.name = 'ResolutionError'
     this.code = code

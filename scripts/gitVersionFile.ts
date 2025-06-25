@@ -49,14 +49,17 @@ async function main() {
   const branch = process.argv[2] ?? 'master'
 
   // Determine the current version:
-  const packageJson = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), { encoding: 'utf8' }))
+  const packageJson = JSON.parse(
+    fs.readFileSync(join(cwd, 'package.json'), { encoding: 'utf8' })
+  )
   const version = `${packageJson.version}${pickVersionSuffix(branch)}`
 
   updateVersionFile(branch, version)
 }
 
 function updateVersionFile(branch: string, version: string): void {
-  const buildRepoUrl = process.env.BUILD_REPO_URL ?? 'git@github.com:EdgeApp/edge-build-server.git'
+  const buildRepoUrl =
+    process.env.BUILD_REPO_URL ?? 'git@github.com:EdgeApp/edge-build-server.git'
   const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
 
   // Determine the current build number:
@@ -72,7 +75,9 @@ function updateVersionFile(branch: string, version: string): void {
     }
     // Clone repo
     chdir(baseDir)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${buildRepoUrl}`)
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${buildRepoUrl}`
+    )
     const newBuildNum = pickBuildNumber()
     let build
     // Rm edge-build-server
@@ -81,7 +86,8 @@ function updateVersionFile(branch: string, version: string): void {
     if (fs.existsSync(versionFilePath)) {
       const result = fs.readFileSync(versionFilePath, { encoding: 'utf8' })
       const { build: previousBuild } = JSON.parse(result)
-      if (typeof previousBuild !== 'number') throw new Error(`Invalid previous buildNum ${previousBuild}`)
+      if (typeof previousBuild !== 'number')
+        throw new Error(`Invalid previous buildNum ${previousBuild}`)
       build = Math.max(previousBuild + 1, newBuildNum)
     } else {
       build = newBuildNum

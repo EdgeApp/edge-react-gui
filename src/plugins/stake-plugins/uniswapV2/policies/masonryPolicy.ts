@@ -5,7 +5,14 @@ import { sprintf } from 'sprintf-js'
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  PositionAllocation,
+  QuoteAllocation,
+  StakePosition,
+  StakePositionRequest
+} from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
@@ -21,8 +28,14 @@ export interface MasonryPolicyOptions {
   disableClaim?: boolean
 }
 
-export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPolicy => {
-  const { disableStake = false, disableUnstake = false, disableClaim = false } = options ?? {}
+export const makeMasonryPolicy = (
+  options?: MasonryPolicyOptions
+): StakePluginPolicy => {
+  const {
+    disableStake = false,
+    disableUnstake = false,
+    disableClaim = false
+  } = options ?? {}
 
   // Get the pool contract necessary for the staking
   // TODO: Replace the hardcode with a configuration from initOptions
@@ -36,15 +49,28 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
    * @param {string} accountAddress - The address of the account
    * @returns Promise<Date | undefined>
    */
-  async function getUserClaimRewardTime(accountAddress: string): Promise<Date | undefined> {
-    const nextEpochTimestamp = await eco.multipass(p => poolContract.connect(p).nextEpochPoint()) // in unix timestamp
-    const currentEpoch = await eco.multipass(p => poolContract.connect(p).epoch())
-    const mason = await eco.multipass(p => poolContract.connect(p).masons(accountAddress))
+  async function getUserClaimRewardTime(
+    accountAddress: string
+  ): Promise<Date | undefined> {
+    const nextEpochTimestamp = await eco.multipass(p =>
+      poolContract.connect(p).nextEpochPoint()
+    ) // in unix timestamp
+    const currentEpoch = await eco.multipass(p =>
+      poolContract.connect(p).epoch()
+    )
+    const mason = await eco.multipass(p =>
+      poolContract.connect(p).masons(accountAddress)
+    )
     const startTimeEpoch = mason.epochTimerStart
-    const period = await eco.multipass(p => treasuryContract.connect(p).PERIOD())
+    const period = await eco.multipass(p =>
+      treasuryContract.connect(p).PERIOD()
+    )
     const periodInHours = period / 60 / 60 // 6 hours, period is displayed in seconds which is 21600
-    const rewardLockupEpochs = await eco.multipass(p => poolContract.connect(p).rewardLockupEpochs())
-    const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(rewardLockupEpochs)
+    const rewardLockupEpochs = await eco.multipass(p =>
+      poolContract.connect(p).rewardLockupEpochs()
+    )
+    const targetEpochForClaimUnlock =
+      Number(startTimeEpoch) + Number(rewardLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
 
@@ -54,7 +80,9 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       return nextEpochDate
     } else {
       const delta = targetEpochForClaimUnlock - currentEpoch - 1
-      const endDate = new Date(nextEpochDate.getTime() + delta * periodInHours * HOUR)
+      const endDate = new Date(
+        nextEpochDate.getTime() + delta * periodInHours * HOUR
+      )
       return endDate
     }
   }
@@ -66,15 +94,28 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
    * @param {string} accountAddress - The address of the account
    * @returns Promise<Date | undefined>
    */
-  async function getUserUnstakeTime(accountAddress: string): Promise<Date | undefined> {
-    const nextEpochTimestamp = await eco.multipass(p => poolContract.connect(p).nextEpochPoint())
-    const currentEpoch = await eco.multipass(p => poolContract.connect(p).epoch())
-    const mason = await eco.multipass(p => poolContract.connect(p).masons(accountAddress))
+  async function getUserUnstakeTime(
+    accountAddress: string
+  ): Promise<Date | undefined> {
+    const nextEpochTimestamp = await eco.multipass(p =>
+      poolContract.connect(p).nextEpochPoint()
+    )
+    const currentEpoch = await eco.multipass(p =>
+      poolContract.connect(p).epoch()
+    )
+    const mason = await eco.multipass(p =>
+      poolContract.connect(p).masons(accountAddress)
+    )
     const startTimeEpoch = mason.epochTimerStart
-    const period = await eco.multipass(p => treasuryContract.connect(p).PERIOD())
+    const period = await eco.multipass(p =>
+      treasuryContract.connect(p).PERIOD()
+    )
     const periodInHours = period / 60 / 60
-    const withdrawLockupEpochs = await eco.multipass(p => poolContract.connect(p).withdrawLockupEpochs())
-    const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs)
+    const withdrawLockupEpochs = await eco.multipass(p =>
+      poolContract.connect(p).withdrawLockupEpochs()
+    )
+    const targetEpochForClaimUnlock =
+      Number(startTimeEpoch) + Number(withdrawLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
 
@@ -84,7 +125,9 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       return nextEpochDate
     } else {
       const delta = targetEpochForClaimUnlock - currentEpoch - 1
-      const endDate = new Date(nextEpochDate.getTime() + delta * periodInHours * HOUR)
+      const endDate = new Date(
+        nextEpochDate.getTime() + delta * periodInHours * HOUR
+      )
       return endDate
     }
   }
@@ -93,21 +136,29 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, wallet, account } = request
 
-      const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
-      if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+      const policyInfo = pluginInfo.policyInfo.find(
+        p => p.stakePolicyId === stakePolicyId
+      )
+      if (policyInfo == null)
+        throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       // Metadata constants:
       const metadataName = 'Tomb Finance'
       const nativeCurrencyCode = policyInfo.parentCurrencyCode
-      const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(asset => asset.currencyCode)[0]
-      const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.currencyCode)[0]
+      const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(
+        asset => asset.currencyCode
+      )[0]
+      const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(
+        asset => asset.currencyCode
+      )[0]
 
       // Get the signer for the wallet
       const signerSeed = await account.getDisplayPrivateKey(wallet.id)
       const signerAddress = eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
-      if (policyInfo.stakeAssets.length > 1) throw new Error(`Multi-asset staking is not supported`)
+      if (policyInfo.stakeAssets.length > 1)
+        throw new Error(`Multi-asset staking is not supported`)
 
       //
       // Calculate the allocations (stake/unstake/claim) amounts
@@ -118,30 +169,41 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
-            if (currencyCode !== request.currencyCode) throw new Error(`Requested token '${request.currencyCode}' to ${action} not found in policy`)
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(
+            ({ currencyCode, pluginId }) => {
+              if (currencyCode !== request.currencyCode)
+                throw new Error(
+                  `Requested token '${request.currencyCode}' to ${action} not found in policy`
+                )
 
-            return {
-              allocationType: action,
-              pluginId,
-              currencyCode,
-              nativeAmount: request.nativeAmount
+              return {
+                allocationType: action,
+                pluginId,
+                currencyCode,
+                nativeAmount: request.nativeAmount
+              }
             }
-          })
+          )
         )
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const earnedAmount = (await eco.multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
+        const earnedAmount = (
+          await eco.multipass(p =>
+            poolContract.connect(p).earned(signerAddress)
+          )
+        ).toString()
         allocations.push(
-          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
-            return {
-              allocationType: 'claim',
-              pluginId,
-              currencyCode,
-              nativeAmount: earnedAmount
+          ...policyInfo.rewardAssets.map<QuoteAllocation>(
+            ({ currencyCode, pluginId }) => {
+              return {
+                allocationType: 'claim',
+                pluginId,
+                currencyCode,
+                nativeAmount: earnedAmount
+              }
             }
-          })
+          )
         )
       }
 
@@ -153,14 +215,19 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const checkTxResponse = await (async () => {
         switch (action) {
           case 'unstake':
-            return await eco.multipass(p => poolContract.connect(p).canWithdraw(signerAddress))
+            return await eco.multipass(p =>
+              poolContract.connect(p).canWithdraw(signerAddress)
+            )
           case 'claim':
-            return await eco.multipass(p => poolContract.connect(p).canClaimReward(signerAddress))
+            return await eco.multipass(p =>
+              poolContract.connect(p).canClaimReward(signerAddress)
+            )
           default:
             return true
         }
       })()
-      if (!checkTxResponse) throw new Error(`Cannot ${action} for token '${request.currencyCode}'`)
+      if (!checkTxResponse)
+        throw new Error(`Cannot ${action} for token '${request.currencyCode}'`)
 
       // TODO: Change this algorithm to check the balance of every token in the stakeAllocations array when multiple assets are supported
       await Promise.all(
@@ -170,12 +237,18 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
             switch (allocation.allocationType) {
               case 'stake': {
                 const tokenContract = eco.makeContract(allocation.currencyCode)
-                return await eco.multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+                return await eco.multipass(p =>
+                  tokenContract.connect(p).balanceOf(signerAddress)
+                )
               }
               case 'unstake':
-                return await eco.multipass(p => poolContract.connect(p).balanceOf(signerAddress))
+                return await eco.multipass(p =>
+                  poolContract.connect(p).balanceOf(signerAddress)
+                )
               case 'claim':
-                return await eco.multipass(p => poolContract.connect(p).earned(signerAddress))
+                return await eco.multipass(p =>
+                  poolContract.connect(p).earned(signerAddress)
+                )
               case 'networkFee':
                 // Don't do anything with fee
                 break
@@ -187,7 +260,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
           const balanceAmount = fromHex(balanceResponse._hex)
           const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
           if (!isBalanceEnough) {
-            showWarning(sprintf(lstrings.stake_error_insufficient_s, request.currencyCode), { trackError: false })
+            showWarning(
+              sprintf(
+                lstrings.stake_error_insufficient_s,
+                request.currencyCode
+              ),
+              { trackError: false }
+            )
           }
         })
       )
@@ -208,7 +287,12 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const nextNonce = (): number => txCount++
 
       // Transaction builder
-      const txs = makeBuilder(async fn => await eco.multipass(provider => fn({ signer: signer.connect(provider) })))
+      const txs = makeBuilder(
+        async fn =>
+          await eco.multipass(provider =>
+            fn({ signer: signer.connect(provider) })
+          )
+      )
 
       // Stake the Stake-Token Workflow:
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
@@ -222,11 +306,17 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
           txs.build(
             (gasLimit =>
               async function approvePoolContract({ signer }) {
-                const result = await tokenContract.connect(signer).approve(poolContract.address, BigNumber.from(allocation.nativeAmount), {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
+                const result = await tokenContract
+                  .connect(signer)
+                  .approve(
+                    poolContract.address,
+                    BigNumber.from(allocation.nativeAmount),
+                    {
+                      gasLimit,
+                      gasPrice,
+                      nonce: nextNonce()
+                    }
+                  )
                 cacheTxMetadata(result.hash, nativeCurrencyCode, {
                   name: metadataName,
                   category: 'Expense:Fees',
@@ -242,11 +332,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
         txs.build(
           (gasLimit =>
             async function name({ signer }) {
-              const result = await poolContract.connect(signer).stake(request.nativeAmount, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await poolContract
+                .connect(signer)
+                .stake(request.nativeAmount, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
               cacheTxMetadata(result.hash, nativeCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fees',
@@ -265,11 +357,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
         txs.build(
           (gasLimit =>
             async function name({ signer }) {
-              const result = await poolContract.connect(signer).withdraw(request.nativeAmount, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await poolContract
+                .connect(signer)
+                .withdraw(request.nativeAmount, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
               cacheTxMetadata(result.hash, nativeCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fees',
@@ -341,18 +435,31 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       }
     },
     // TODO: Implement support for multi-asset staking
-    async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
+    async fetchStakePosition(
+      request: StakePositionRequest
+    ): Promise<StakePosition> {
       const { stakePolicyId, wallet, account } = request
       const signerSeed = await account.getDisplayPrivateKey(wallet.id)
 
-      const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
-      if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+      const policyInfo = pluginInfo.policyInfo.find(
+        p => p.stakePolicyId === stakePolicyId
+      )
+      if (policyInfo == null)
+        throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       // Get the signer for the wallet
       const signerAddress = eco.makeSigner(signerSeed).getAddress()
-      const tokenContract = eco.makeContract(policyInfo.stakeAssets[0].currencyCode)
+      const tokenContract = eco.makeContract(
+        policyInfo.stakeAssets[0].currencyCode
+      )
 
-      const [stakedAmount, stakeAllocationLockTime, earnedAmount, earnedAllocationsLockTime, tokenBalance] = await Promise.all([
+      const [
+        stakedAmount,
+        stakeAllocationLockTime,
+        earnedAmount,
+        earnedAllocationsLockTime,
+        tokenBalance
+      ] = await Promise.all([
         // Get the amount of staked tokens:
         eco.multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
         // Get the stake allocation lock time:
@@ -393,8 +500,14 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // Action flags
       //
       const canStake = !disableStake && gt(tokenBalance.toString(), '0')
-      const canUnstakeAndClaim = !disableUnstake && gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
-      const canClaim = !disableClaim && gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
+      const canUnstakeAndClaim =
+        !disableUnstake &&
+        gt(stakedAllocations[0].nativeAmount, '0') &&
+        stakedAllocations[0].locktime == null
+      const canClaim =
+        !disableClaim &&
+        gt(earnedAllocations[0].nativeAmount, '0') &&
+        earnedAllocations[0].locktime == null
 
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],

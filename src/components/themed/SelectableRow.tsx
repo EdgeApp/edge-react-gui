@@ -23,7 +23,14 @@ interface Props {
  * of the second row with primary colors.
  */
 export const SelectableRow = (props: Props) => {
-  const { icon, title, subTitle, minimumFontScale = 0.65, marginRem, onPress } = props
+  const {
+    icon,
+    title,
+    subTitle,
+    minimumFontScale = 0.65,
+    marginRem,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -35,7 +42,11 @@ export const SelectableRow = (props: Props) => {
         <View style={styles.textContainer}>
           <EdgeText numberOfLines={1}>{title}</EdgeText>
           {subTitle ? (
-            <EdgeText style={styles.subTitle} numberOfLines={2} minimumFontScale={minimumFontScale}>
+            <EdgeText
+              style={styles.subTitle}
+              numberOfLines={2}
+              minimumFontScale={minimumFontScale}
+            >
               {subTitle}
             </EdgeText>
           ) : null}

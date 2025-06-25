@@ -12,7 +12,10 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets
+} from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import uspImage0 from '../../assets/images/gettingStarted/usp0.png'
@@ -143,7 +146,9 @@ export const GettingStartedScene = (props: Props) => {
       handleCompleteUsps()
     } else {
       // Otherwise, advance to the next slide
-      swipeOffset.value = withTiming(Math.min(Math.floor(swipeOffset.value) + 1, sections.length))
+      swipeOffset.value = withTiming(
+        Math.min(Math.floor(swipeOffset.value) + 1, sections.length)
+      )
     }
   })
 
@@ -218,7 +223,11 @@ export const GettingStartedScene = (props: Props) => {
           </EdgeTouchableOpacity>
         </Space>
       </SkipButton>
-      <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={paginationCount}>
+      <SwipeOffsetDetector
+        swipeOffset={swipeOffset}
+        minOffset={0}
+        maxOffset={paginationCount}
+      >
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
@@ -239,7 +248,11 @@ export const GettingStartedScene = (props: Props) => {
                   distance: 60
                 }}
               >
-                <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
+                <WelcomeHeroTitle
+                  numberOfLines={2}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.5}
+                >
                   {parseMarkedText(lstrings.getting_started_welcome_title)}
                 </WelcomeHeroTitle>
               </EdgeAnim>
@@ -250,7 +263,9 @@ export const GettingStartedScene = (props: Props) => {
                   distance: 40
                 }}
               >
-                <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
+                <WelcomeHeroMessage>
+                  {lstrings.getting_started_welcome_message}
+                </WelcomeHeroMessage>
               </EdgeAnim>
 
               <EdgeAnim
@@ -267,7 +282,11 @@ export const GettingStartedScene = (props: Props) => {
             </WelcomeHero>
             {sections.map((section, index) => {
               return (
-                <HeroItem key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
+                <HeroItem
+                  key={section.key}
+                  swipeOffset={swipeOffset}
+                  itemIndex={index + 1}
+                >
                   <HeroImageContainer>
                     <HeroImage source={section.image} />
                   </HeroImageContainer>
@@ -277,7 +296,10 @@ export const GettingStartedScene = (props: Props) => {
           </HeroContainer>
           <Pagination>
             {Array.from({ length: paginationCount }).map((_, index) => (
-              <Pressable key={index} onPress={() => handlePressIndicator(index)}>
+              <Pressable
+                key={index}
+                onPress={() => handlePressIndicator(index)}
+              >
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>
             ))}
@@ -286,11 +308,25 @@ export const GettingStartedScene = (props: Props) => {
             <Sections swipeOffset={swipeOffset}>
               {sections.map((section, index) => {
                 return (
-                  <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
-                    <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-                      <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
-                      <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
-                      {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{lstrings.getting_started_slide_1_footnote}</Footnote>}
+                  <Section
+                    key={section.key}
+                    swipeOffset={swipeOffset}
+                    itemIndex={index + 1}
+                  >
+                    <ScrollView
+                      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+                    >
+                      <SectionTitle numberOfLines={2}>
+                        {parseMarkedText(section.title)}
+                      </SectionTitle>
+                      <SectionParagraph numberOfLines={undefined}>
+                        {section.message}
+                      </SectionParagraph>
+                      {section.footnote == null ? null : (
+                        <Footnote numberOfLines={undefined}>
+                          {lstrings.getting_started_slide_1_footnote}
+                        </Footnote>
+                      )}
                     </ScrollView>
                   </Section>
                 )
@@ -335,14 +371,21 @@ const Container = styled(View)({
 // Skip Button
 //
 
-const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
-  const { swipeOffset } = props
-  return useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
-    }
-  })
-})
+const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
+  _theme => props => {
+    const { swipeOffset } = props
+    return useAnimatedStyle(() => {
+      return {
+        opacity: interpolate(
+          swipeOffset.value,
+          [0, 1],
+          [0, 1],
+          Extrapolation.CLAMP
+        )
+      }
+    })
+  }
+)
 
 //
 // Hero
@@ -353,24 +396,31 @@ const HeroContainer = styled(View)({
   alignItems: 'center'
 })
 
-const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
-  const { swipeOffset } = props
-  return [
-    {
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1
-    },
-    useAnimatedStyle(() => ({
-      opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
-      transform: [
-        {
-          scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP)
-        }
-      ]
-    }))
-  ]
-})
+const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
+  _theme => props => {
+    const { swipeOffset } = props
+    return [
+      {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1
+      },
+      useAnimatedStyle(() => ({
+        opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
+        transform: [
+          {
+            scale: interpolate(
+              swipeOffset.value,
+              [0, 1],
+              [1, 0],
+              Extrapolation.CLAMP
+            )
+          }
+        ]
+      }))
+    ]
+  }
+)
 
 const WelcomeHeroTitle = styled(Text)(theme => ({
   color: theme.primaryText,
@@ -412,9 +462,22 @@ const HeroItem = styled(Animated.View)<{
       width: '100%'
     },
     useAnimatedStyle(() => {
-      const opacity = interpolate(swipeOffset.value, [itemIndex - 1, itemIndex, itemIndex + 1], [0, 1, 0], Extrapolation.CLAMP)
-      const scale = interpolate(swipeOffset.value, [itemIndex - 1, itemIndex, itemIndex + 1], [0.3, 1, 0.3])
-      const translateX = interpolate(swipeOffset.value, [itemIndex - 1, itemIndex, itemIndex + 1], [isFirstItem ? 0 : translateWidth, 0, -translateWidth])
+      const opacity = interpolate(
+        swipeOffset.value,
+        [itemIndex - 1, itemIndex, itemIndex + 1],
+        [0, 1, 0],
+        Extrapolation.CLAMP
+      )
+      const scale = interpolate(
+        swipeOffset.value,
+        [itemIndex - 1, itemIndex, itemIndex + 1],
+        [0.3, 1, 0.3]
+      )
+      const translateX = interpolate(
+        swipeOffset.value,
+        [itemIndex - 1, itemIndex, itemIndex + 1],
+        [isFirstItem ? 0 : translateWidth, 0, -translateWidth]
+      )
       return {
         opacity,
         transform: [{ translateX }, { scale }]
@@ -463,9 +526,14 @@ const PageIndicator = styled(Animated.View)<{
       width: theme.rem(0.6)
     },
     useAnimatedStyle(() => {
-      const delta = 1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
+      const delta =
+        1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
       const opacity = interpolate(delta, [0, 1], [0.5, 1])
-      const backgroundColor = interpolateColor(delta, [0, 1], [themeIcon, themeIconTappable])
+      const backgroundColor = interpolateColor(
+        delta,
+        [0, 1],
+        [themeIcon, themeIconTappable]
+      )
       return {
         backgroundColor,
         opacity
@@ -496,9 +564,23 @@ const SectionCoverAnimated = styled(Animated.View)<{
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(swipeOffset.value, [0, 1], [`${themeModal}00`, themeModalLikeBackground])
-      const paddingVertical = interpolate(swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
-      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
+      const backgroundColor = interpolateColor(
+        swipeOffset.value,
+        [0, 1],
+        [`${themeModal}00`, themeModalLikeBackground]
+      )
+      const paddingVertical = interpolate(
+        swipeOffset.value,
+        [0, 1],
+        [0, themeRem],
+        Extrapolation.CLAMP
+      )
+      const flexGrow = interpolate(
+        swipeOffset.value,
+        [0, 1],
+        [0, 1.2],
+        Extrapolation.CLAMP
+      )
       return {
         backgroundColor,
         paddingVertical,
@@ -540,8 +622,16 @@ const Section = styled(Animated.View)<{
       height: '100%'
     },
     useAnimatedStyle(() => {
-      const opacity = interpolate(swipeOffset.value, [itemIndex - 1, itemIndex, itemIndex + 1], [0, 1, 0])
-      const translateX = interpolate(swipeOffset.value, [itemIndex - 1, itemIndex, itemIndex + 1], [isFirstItem ? 0 : translateWidth, 0, -translateWidth])
+      const opacity = interpolate(
+        swipeOffset.value,
+        [itemIndex - 1, itemIndex, itemIndex + 1],
+        [0, 1, 0]
+      )
+      const translateX = interpolate(
+        swipeOffset.value,
+        [itemIndex - 1, itemIndex, itemIndex + 1],
+        [isFirstItem ? 0 : translateWidth, 0, -translateWidth]
+      )
       return {
         transform: [{ translateX }],
         opacity

@@ -1,6 +1,20 @@
 import { abs, add, div, gt, mul } from 'biggystring'
-import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import {
+  asArray,
+  asEither,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asTuple,
+  asUnknown,
+  asValue
+} from 'cleaners'
+import {
+  EdgeCurrencyWallet,
+  EdgeSpendInfo,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -34,7 +48,17 @@ interface Props extends WcSmartContractModalProps {
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, dApp, nativeAmount, networkFee, payload: rawPayload, tokenId, topic, requestId, wallet } = props
+  const {
+    bridge,
+    dApp,
+    nativeAmount,
+    networkFee,
+    payload: rawPayload,
+    tokenId,
+    topic,
+    requestId,
+    wallet
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const walletConnect = useWalletConnect()
@@ -45,7 +69,11 @@ export const WcSmartContractModal = (props: Props) => {
 
   const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
 
-  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId } = wallet.currencyInfo
+  const {
+    currencyCode: feeCurrencyCode,
+    displayName: feeDisplayName,
+    pluginId
+  } = wallet.currencyInfo
 
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
   const feeCurrencyBalance = wallet.balanceMap.get(null) ?? '0'
@@ -54,16 +82,33 @@ export const WcSmartContractModal = (props: Props) => {
   const feeDenom = useDisplayDenom(wallet.currencyConfig, null)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
-  const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)
-  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFee)
-  const totalNativeCrypto = mul(add(nativeAmount, amountCryptoAsFeeCrypto), '-1')
+  const amountCurrencyToFeeCurrencyExchangeRate = div(
+    amountDenom.multiplier,
+    feeDenom.multiplier
+  )
+  const amountCryptoAsFeeCrypto = mul(
+    amountCurrencyToFeeCurrencyExchangeRate,
+    networkFee
+  )
+  const totalNativeCrypto = mul(
+    add(nativeAmount, amountCryptoAsFeeCrypto),
+    '-1'
+  )
 
-  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFee, feeCurrencyBalance)
+  const isInsufficientBal =
+    amountCurrencyCode === feeCurrencyCode
+      ? gt(abs(totalNativeCrypto), feeCurrencyBalance)
+      : gt(networkFee, feeCurrencyBalance)
 
   const handleSubmit = () => {
     wcRequestResponse(true)
       .then(() => {
-        Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />).catch(() => {})
+        Airship.show(bridge => (
+          <FlashNotification
+            bridge={bridge}
+            message={lstrings.wc_smartcontract_confirmed}
+          />
+        )).catch(() => {})
       })
       .catch(error => showError(error))
       .finally(props.bridge.resolve)
@@ -77,9 +122,21 @@ export const WcSmartContractModal = (props: Props) => {
 
   const renderWarning = () => {
     return isInsufficientBal ? (
-      <Alert title={lstrings.wc_smartcontract_warning_title} message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)} type="warning" />
+      <Alert
+        title={lstrings.wc_smartcontract_warning_title}
+        message={sprintf(
+          lstrings.wc_smartcontract_insufficient_text,
+          feeCurrencyStr
+        )}
+        type="warning"
+      />
     ) : (
-      <Alert numberOfLines={0} title={lstrings.wc_smartcontract_warning_title} message={lstrings.wc_smartcontract_warning_text} type="warning" />
+      <Alert
+        numberOfLines={0}
+        title={lstrings.wc_smartcontract_warning_title}
+        message={lstrings.wc_smartcontract_warning_text}
+        type="warning"
+      />
     )
   }
 
@@ -102,7 +159,9 @@ export const WcSmartContractModal = (props: Props) => {
         case 'eth_signTypedData':
         case 'eth_signTypedData_v4': {
           const cleanPayload = asEvmSignPayload(payload)
-          const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
+          const typedData =
+            cleanPayload.method === 'eth_signTypedData' ||
+            cleanPayload.method === 'eth_signTypedData_v4'
           const result = await wallet.signMessage(cleanPayload.params[1], {
             otherParams: { typedData }
           })
@@ -111,7 +170,10 @@ export const WcSmartContractModal = (props: Props) => {
         }
         case 'eth_signTransaction': {
           const cleanPayload = asEvmTransactionPayload(payload)
-          const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
+          const spendInfo: EdgeSpendInfo =
+            await wallet.otherMethods.txRpcParamsToSpendInfo(
+              cleanPayload.params[0]
+            )
           const tx = await wallet.makeSpend(spendInfo)
           const signTx = await wallet.signTx(tx)
           await walletConnect.approveRequest(topic, requestId, signTx.signedTx)
@@ -120,7 +182,10 @@ export const WcSmartContractModal = (props: Props) => {
         }
         case 'eth_sendTransaction': {
           const cleanPayload = asEvmTransactionPayload(payload)
-          const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
+          const spendInfo: EdgeSpendInfo =
+            await wallet.otherMethods.txRpcParamsToSpendInfo(
+              cleanPayload.params[0]
+            )
           const tx = await wallet.makeSpend(spendInfo)
           const signedTx = await wallet.signTx(tx)
           const sentTx = await wallet.broadcastTx(signedTx)
@@ -151,18 +216,30 @@ export const WcSmartContractModal = (props: Props) => {
         }
         case 'algo_signTxn': {
           const cleanPayload = asAlgoWcRpcPayload(payload)
-          const signedTxs = await Promise.all(cleanPayload.params[0].map(async txnObj => await wallet.signMessage(txnObj.txn)))
+          const signedTxs = await Promise.all(
+            cleanPayload.params[0].map(
+              async txnObj => await wallet.signMessage(txnObj.txn)
+            )
+          )
           await walletConnect.approveRequest(topic, requestId, signedTxs)
           break
         }
         case 'cosmos_getAccounts':
         case 'cosmos_signDirect':
         case 'cosmos_signAmino': {
-          const cleanPayload = asEither(asCosmosGetAccountsPayload, asCosmosSignDirectPayload, asCosmosSignAminoPayload)(payload)
+          const cleanPayload = asEither(
+            asCosmosGetAccountsPayload,
+            asCosmosSignDirectPayload,
+            asCosmosSignAminoPayload
+          )(payload)
           const result = await wallet.signMessage('', {
             otherParams: cleanPayload
           })
-          await walletConnect.approveRequest(topic, requestId, JSON.parse(result))
+          await walletConnect.approveRequest(
+            topic,
+            requestId,
+            JSON.parse(result)
+          )
         }
       }
     } catch (e: any) {
@@ -173,7 +250,12 @@ export const WcSmartContractModal = (props: Props) => {
 
   const walletImageUri = getCurrencyIconUris(pluginId, tokenId).symbolImage
   const slider = isInsufficientBal ? null : (
-    <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
+    <SafeSlider
+      parentStyle={styles.slider}
+      onSlidingComplete={handleSubmit}
+      disabledText={lstrings.send_confirmation_slide_to_confirm}
+      disabled={false}
+    />
   )
 
   return (
@@ -187,7 +269,10 @@ export const WcSmartContractModal = (props: Props) => {
         </View>
       }
     >
-      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <ScrollView
+        contentContainerStyle={styles.scrollPadding}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
@@ -214,7 +299,12 @@ export const WcSmartContractModal = (props: Props) => {
           />
         )}
         {zeroString(totalNativeCrypto) ? null : (
-          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} tokenId={null} wallet={wallet} />
+          <FiatAmountTile
+            title={lstrings.wc_smartcontract_max_total}
+            nativeCryptoAmount={totalNativeCrypto}
+            tokenId={null}
+            wallet={wallet}
+          />
         )}
         {slider}
       </ScrollView>
@@ -247,7 +337,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 // [message, account, password]: personal_sign (password not supported yet)
 // [address, message]: eth_sign, eth_signTypedData, eth_signTypedData_v4
 
-const asEvmSignMethod = asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_signTypedData_v4')
+const asEvmSignMethod = asValue(
+  'personal_sign',
+  'eth_sign',
+  'eth_signTypedData',
+  'eth_signTypedData_v4'
+)
 const asEvmSignPayload = asObject({
   method: asEvmSignMethod,
   params: asTuple(asString, asString)
@@ -258,7 +353,10 @@ const asEvmSendRawTransactionPayload = asObject({
   method: asEvmSendRawTransactionMethod,
   params: asTuple(asString)
 })
-const asEvmTransactionMethod = asValue('eth_sendTransaction', 'eth_signTransaction')
+const asEvmTransactionMethod = asValue(
+  'eth_sendTransaction',
+  'eth_signTransaction'
+)
 const asEvmTransactionPayload = asObject({
   method: asEvmTransactionMethod,
   params: asTuple(
@@ -287,7 +385,11 @@ const asAlgoWcRpcPayload = asObject({
   )
 })
 
-const asCosmosPayloadMethod = asValue('cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino')
+const asCosmosPayloadMethod = asValue(
+  'cosmos_getAccounts',
+  'cosmos_signDirect',
+  'cosmos_signAmino'
+)
 const asCosmosGetAccountsPayload = asObject({
   method: asValue('cosmos_getAccounts'),
   params: asObject({})
@@ -323,7 +425,13 @@ const asCosmosSignAminoPayload = asObject({
 })
 
 const asPayload = asObject({
-  method: asEither(asCosmosPayloadMethod, asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod, asEvmSendRawTransactionMethod)
+  method: asEither(
+    asCosmosPayloadMethod,
+    asAlgoPayloadMethod,
+    asEvmSignMethod,
+    asEvmTransactionMethod,
+    asEvmSendRawTransactionMethod
+  )
 }).withRest
 
 export const asWcSmartContractModalProps = asObject({

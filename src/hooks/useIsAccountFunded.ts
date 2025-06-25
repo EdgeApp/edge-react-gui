@@ -14,8 +14,12 @@ export function useIsAccountFunded(): boolean {
   const walletsSynced = useSelector(state => {
     const { currencyWallets } = state.core.account
     const { userPausedWalletsSet } = state.ui.settings
-    const unPausedWallets = Object.values(currencyWallets).filter(wallet => !userPausedWalletsSet?.has(wallet.id))
-    const unSyncedWallets = unPausedWallets.filter(wallet => wallet.syncRatio < 1)
+    const unPausedWallets = Object.values(currencyWallets).filter(
+      wallet => !userPausedWalletsSet?.has(wallet.id)
+    )
+    const unSyncedWallets = unPausedWallets.filter(
+      wallet => wallet.syncRatio < 1
+    )
 
     return unSyncedWallets.length === 0
   })
@@ -25,7 +29,13 @@ export function useIsAccountFunded(): boolean {
   // Set account funded status
   React.useEffect(() => {
     if (!walletsSynced) return
-    setAccountFunded(Object.values(currencyWallets).some(wallet => [...wallet.balanceMap.values()].some(balanceVal => !zeroString(balanceVal))))
+    setAccountFunded(
+      Object.values(currencyWallets).some(wallet =>
+        [...wallet.balanceMap.values()].some(
+          balanceVal => !zeroString(balanceVal)
+        )
+      )
+    )
   }, [currencyWallets, walletsSynced])
 
   return accountFunded

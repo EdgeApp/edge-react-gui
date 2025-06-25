@@ -18,13 +18,24 @@ interface Props {
 }
 
 export const FormScene = (props: Props) => {
-  const { headerText, headerTertiary, children, onSliderComplete, sliderDisabled } = props
+  const {
+    headerText,
+    headerTertiary,
+    children,
+    onSliderComplete,
+    sliderDisabled
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <SceneWrapper>
-      <SceneHeader tertiary={headerTertiary} title={headerText} underline withTopMargin />
+      <SceneHeader
+        tertiary={headerTertiary}
+        title={headerText}
+        underline
+        withTopMargin
+      />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         extraScrollHeight={theme.rem(2.75)}
@@ -33,7 +44,11 @@ export const FormScene = (props: Props) => {
       >
         {children}
         <View style={styles.footer}>
-          <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} disabledText={lstrings.send_confirmation_slide_to_confirm} />
+          <SafeSlider
+            onSlidingComplete={onSliderComplete}
+            disabled={sliderDisabled}
+            disabledText={lstrings.send_confirmation_slide_to_confirm}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

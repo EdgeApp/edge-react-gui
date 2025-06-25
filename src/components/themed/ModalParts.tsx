@@ -32,7 +32,9 @@ export function ModalTitle(props: ModalTitleProps) {
   return (
     <View style={styles.titleContainer}>
       {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
-      <Text style={[styles.titleText, centerStyle, padding, androidAdjust]}>{children}</Text>
+      <Text style={[styles.titleText, centerStyle, padding, androidAdjust]}>
+        {children}
+      </Text>
     </View>
   )
 }
@@ -46,7 +48,12 @@ export function ModalFooter(props: ModalFooterProps) {
 
   return (
     <EdgeTouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
-      <AntDesignIcon accessibilityHint={lstrings.modal_close_hint} color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
+      <AntDesignIcon
+        accessibilityHint={lstrings.modal_close_hint}
+        color={theme.iconTappable}
+        name="close"
+        size={theme.rem(1.25)}
+      />
     </EdgeTouchableOpacity>
   )
 }
@@ -64,7 +71,10 @@ export function ModalScrollArea(props: { children: React.ReactNode }) {
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <ScrollView
+        contentContainerStyle={styles.scrollPadding}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         {children}
       </ScrollView>
       <ModalFooterFade />

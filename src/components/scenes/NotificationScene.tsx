@@ -1,6 +1,9 @@
 import * as React from 'react'
 
-import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
+import {
+  NotificationSettings,
+  updateNotificationSettings
+} from '../../actions/NotificationActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -25,7 +28,9 @@ export const NotificationScene = (props: Props) => {
 
   const currencyConfigs = useWatch(account, 'currencyConfig')
 
-  const handlePressToggleSetting = async (toggleSetting: NotificationSettingToggleSetting) => {
+  const handlePressToggleSetting = async (
+    toggleSetting: NotificationSettingToggleSetting
+  ) => {
     try {
       await dispatch(
         updateNotificationSettings({
@@ -57,7 +62,9 @@ export const NotificationScene = (props: Props) => {
         key="price-notifications"
         label={lstrings.settings_price_notifications_switch}
         value={!settings.ignorePriceChanges}
-        onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
+        onPress={async () =>
+          await handlePressToggleSetting('ignorePriceChanges')
+        }
       />
       {pluginIds.map(pluginId => {
         const { currencyInfo } = currencyConfigs[pluginId]
@@ -74,7 +81,12 @@ export const NotificationScene = (props: Props) => {
         if (keysOnlyMode) return null
 
         return (
-          <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
+          <SettingsTappableRow
+            disabled={settings.ignorePriceChanges}
+            key={pluginId}
+            label={currencyInfo.displayName}
+            onPress={handlePress}
+          >
             <CryptoIcon pluginId={pluginId} tokenId={null} />
           </SettingsTappableRow>
         )

@@ -34,7 +34,10 @@ interface State {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-export class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
+export class PasswordReminderModalComponent extends React.PureComponent<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = { checkingPassword: false, password: '' }
@@ -63,7 +66,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { bridge, account } = this.props
     const { password } = this.state
 
-    const isValidPassword = await account.checkPassword(password).catch(err => showError(err))
+    const isValidPassword = await account
+      .checkPassword(password)
+      .catch(err => showError(err))
     if (isValidPassword) {
       this.props.dispatch({
         type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
@@ -86,7 +91,11 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <EdgeModal bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
+      <EdgeModal
+        bridge={bridge}
+        title={lstrings.password_reminder_modal_title}
+        onCancel={this.handleCancel}
+      >
         <Paragraph>{lstrings.password_reminder_modal_body}</Paragraph>
         <ModalFilledTextInput
           autoFocus={false}
@@ -114,11 +123,18 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   }
 }
 
-export function PasswordReminderModal(props: OwnProps): JSX.Element {
+export function PasswordReminderModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
 
-  return <PasswordReminderModalComponent {...props} account={account} dispatch={dispatch} theme={theme} />
+  return (
+    <PasswordReminderModalComponent
+      {...props}
+      account={account}
+      dispatch={dispatch}
+      theme={theme}
+    />
+  )
 }

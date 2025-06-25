@@ -12,14 +12,26 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
-import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
+import {
+  ChangeQuoteRequest,
+  PositionAllocation,
+  StakePlugin,
+  StakePolicy,
+  StakePosition
+} from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
-import { enableStakeTokens, getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import {
+  enableStakeTokens,
+  getAllocationLocktimeMessage,
+  getPolicyIconUris,
+  getPolicyTitleName,
+  getPositionAllocations
+} from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { InfoCardCarousel } from '../../cards/InfoCardCarousel'
@@ -52,13 +64,18 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { stakePlugin, stakePolicyId } = route.params
 
-  const stakeState = useSelector(state => state.staking.walletStakingMap[wallet.id])
+  const stakeState = useSelector(
+    state => state.staking.walletStakingMap[wallet.id]
+  )
   const [stakePolicies] = useAsyncValue(async () => {
     const plugins = await getStakePlugins(wallet.currencyInfo.pluginId)
     return plugins.flatMap(stakePlugin => stakePlugin.getPolicies())
   })
-  const stakePolicy: StakePolicy | undefined = stakePolicies?.find(policy => policy.stakePolicyId === stakePolicyId)
-  const stakePosition: StakePosition | undefined = stakeState?.stakePositionMap[stakePolicyId]
+  const stakePolicy: StakePolicy | undefined = stakePolicies?.find(
+    policy => policy.stakePolicyId === stakePolicyId
+  )
+  const stakePosition: StakePosition | undefined =
+    stakeState?.stakePositionMap[stakePolicyId]
   const isStakeStateLoading = stakeState == null || stakeState.isLoading
 
   const dispatch = useDispatch()
@@ -73,37 +90,58 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // This is because liquid staking actions are dependent on the position state.
   // If the position state is not loaded and update-to-date, then the buttons
   // will not be enabled/disabled properly. So we must wait for the state to load.
-  const waitingOnStateLoading = isStakeStateLoading && stakePolicy?.isLiquidStaking === true
+  const waitingOnStateLoading =
+    isStakeStateLoading && stakePolicy?.isLiquidStaking === true
 
   const displayDenomMap: DenomMap =
     stakePolicy == null
       ? {}
-      : [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
-          denomMap[asset.currencyCode] = dispatch((_, getState) =>
-            selectDisplayDenomByCurrencyCode(getState(), account.currencyConfig[asset.pluginId], asset.currencyCode)
-          )
-          return denomMap
-        }, {})
-  const policyIcons = stakePolicy == null ? { stakeAssetUris: [], rewardAssetUris: [] } : getPolicyIconUris(account.currencyConfig, stakePolicy)
+      : [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce(
+          (denomMap: DenomMap, asset) => {
+            denomMap[asset.currencyCode] = dispatch((_, getState) =>
+              selectDisplayDenomByCurrencyCode(
+                getState(),
+                account.currencyConfig[asset.pluginId],
+                asset.currencyCode
+              )
+            )
+            return denomMap
+          },
+          {}
+        )
+  const policyIcons =
+    stakePolicy == null
+      ? { stakeAssetUris: [], rewardAssetUris: [] }
+      : getPolicyIconUris(account.currencyConfig, stakePolicy)
 
   // Hooks
 
-  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
-  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
-  const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
+  const [stakeAllocations, setStakeAllocations] = React.useState<
+    PositionAllocation[]
+  >([])
+  const [rewardAllocations, setRewardAllocations] = React.useState<
+    PositionAllocation[]
+  >([])
+  const [unstakedAllocations, setUnstakedAllocations] = React.useState<
+    PositionAllocation[]
+  >([])
 
   // Update the position on scene focus
   const isFocused = useIsFocused()
   React.useEffect(() => {
     if (isFocused) {
-      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+      dispatch(
+        updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
+      ).catch(err => showError(err))
     }
   }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
 
   // Update the position every minute
   React.useEffect(() => {
     const task = makePeriodicTask(() => {
-      dispatch(updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)).catch(err => showError(err))
+      dispatch(
+        updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
+      ).catch(err => showError(err))
     }, 60 * 1000)
     task.start()
     return () => task.stop()
@@ -133,37 +171,50 @@ const StakeOverviewSceneComponent = (props: Props) => {
   )
 
   // Handlers
-  const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
-    if (stakePolicy == null) return
-    const sceneTitleMap = {
-      stake: getPolicyTitleName(stakePolicy, countryCode),
-      claim: lstrings.stake_claim_rewards,
-      unstake: lstrings.stake_unstake,
-      unstakeAndClaim: lstrings.stake_unstake_claim,
-      unstakeExact: '' // Only for internal use
-    }
-    const title = sceneTitleMap[modification]
+  const handleModifyPress =
+    (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
+      if (stakePolicy == null) return
+      const sceneTitleMap = {
+        stake: getPolicyTitleName(stakePolicy, countryCode),
+        claim: lstrings.stake_claim_rewards,
+        unstake: lstrings.stake_unstake,
+        unstakeAndClaim: lstrings.stake_unstake_claim,
+        unstakeExact: '' // Only for internal use
+      }
+      const title = sceneTitleMap[modification]
 
-    if (modification === 'unstakeAndClaim') {
-      modification = 'unstake'
-    }
+      if (modification === 'unstakeAndClaim') {
+        modification = 'unstake'
+      }
 
-    if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
-      navigation.navigate('stakeModify', {
-        modification,
-        stakePlugin,
-        stakePolicy,
-        title,
-        walletId: wallet.id
-      })
+      if (
+        stakePosition != null &&
+        stakeAllocations != null &&
+        rewardAllocations != null
+      ) {
+        navigation.navigate('stakeModify', {
+          modification,
+          stakePlugin,
+          stakePolicy,
+          title,
+          walletId: wallet.id
+        })
+      }
     }
-  }
 
   // Renderers
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount, pluginId } = item
-    const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : allocationType === 'earned' ? lstrings.stake_s_earned : lstrings.stake_s_unstaked
-    const title = `${sprintf(titleBase, currencyCode)}${getAllocationLocktimeMessage(item)}`
+    const titleBase =
+      allocationType === 'staked'
+        ? lstrings.stake_s_staked
+        : allocationType === 'earned'
+        ? lstrings.stake_s_earned
+        : lstrings.stake_s_unstaked
+    const title = `${sprintf(
+      titleBase,
+      currencyCode
+    )}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
@@ -179,7 +230,11 @@ const StakeOverviewSceneComponent = (props: Props) => {
     )
   }
 
-  const title = React.useMemo(() => (stakePolicy == null ? '' : getPolicyTitleName(stakePolicy, countryCode)), [stakePolicy, countryCode])
+  const title = React.useMemo(
+    () =>
+      stakePolicy == null ? '' : getPolicyTitleName(stakePolicy, countryCode),
+    [stakePolicy, countryCode]
+  )
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
@@ -188,7 +243,12 @@ const StakeOverviewSceneComponent = (props: Props) => {
       </SceneWrapper>
     )
 
-  const { canStake = false, canClaim = false, canUnstakeAndClaim = false, canUnstake = false } = stakePosition ?? {}
+  const {
+    canStake = false,
+    canClaim = false,
+    canUnstakeAndClaim = false,
+    canUnstake = false
+  } = stakePosition ?? {}
 
   if (stakePolicy == null) return null
 
@@ -218,15 +278,25 @@ const StakeOverviewSceneComponent = (props: Props) => {
           </>
         ) : (
           <FlatList
-            data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
+            data={[
+              ...stakeAllocations,
+              ...rewardAllocations,
+              ...unstakedAllocations
+            ]}
             renderItem={renderCFAT}
             keyExtractor={(allocation: PositionAllocation) =>
-              `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
+              `${allocation.allocationType}${allocation.currencyCode}${
+                allocation.nativeAmount
+              }${getAllocationLocktimeMessage(allocation)}`
             }
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         )}
-        <AlertCardUi4 type="warning" title={lstrings.string_warning} body={lstrings.warning_earn} />
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.string_warning}
+          body={lstrings.warning_earn}
+        />
         {waitingOnStateLoading ? null : (
           <SceneButtons
             primary={{

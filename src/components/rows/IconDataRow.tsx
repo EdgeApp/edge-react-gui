@@ -20,7 +20,16 @@ interface Props {
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
 const IconDataRowComponent = (props: Props) => {
-  const { icon, leftText, leftSubtext, leftTextExtended, rightText, rightSubText, rightSubTextExtended, marginRem } = props
+  const {
+    icon,
+    leftText,
+    leftSubtext,
+    leftTextExtended,
+    rightText,
+    rightSubText,
+    rightSubTextExtended,
+    marginRem
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
@@ -42,7 +51,9 @@ const IconDataRowComponent = (props: Props) => {
       <View style={styles.rightColumn}>
         {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
         <View accessible style={styles.row}>
-          {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
+          {rightSubText != null ? (
+            <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText>
+          ) : null}
           {rightSubTextExtended}
         </View>
       </View>

@@ -26,7 +26,9 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
   const { marginRem, nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const isoFiatCurrencyCode = useSelector(
+    state => state.ui.settings.defaultIsoFiat
+  )
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const { pluginId } = wallet.currencyInfo
 
@@ -34,9 +36,18 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
   return (
     <View style={[styles.container, margin]}>
       <View style={styles.columnLeft}>
-        <CryptoIcon sizeRem={1.5} tokenId={tokenId} pluginId={pluginId} hideSecondary />
+        <CryptoIcon
+          sizeRem={1.5}
+          tokenId={tokenId}
+          pluginId={pluginId}
+          hideSecondary
+        />
         <EdgeText style={styles.text}>
-          <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount} />
+          <CryptoText
+            wallet={wallet}
+            tokenId={tokenId}
+            nativeAmount={nativeAmount}
+          />
         </EdgeText>
       </View>
 

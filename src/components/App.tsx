@@ -22,7 +22,10 @@ function MainApp() {
     <SafeAreaProvider>
       <ThemeProvider>
         <GestureHandlerRootView style={StyleSheet.absoluteFill}>
-          <ErrorBoundary beforeCapture={handleBeforeCapture} fallback={<CrashScene />}>
+          <ErrorBoundary
+            beforeCapture={handleBeforeCapture}
+            fallback={<CrashScene />}
+          >
             <StatusBarManager />
             <EdgeCoreManager />
           </ErrorBoundary>

@@ -27,12 +27,18 @@ import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupModal'
+import {
+  BackupForTransferModal,
+  BackupForTransferModalResult
+} from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
-import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
+import {
+  FlipInputModal2,
+  FlipInputModalResult
+} from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
@@ -41,7 +47,11 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
+import {
+  ExchangedFlipInput2,
+  ExchangedFlipInputAmounts,
+  ExchangedFlipInputRef
+} from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
@@ -69,7 +79,9 @@ export function DevTestScene(props: Props) {
   const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
   const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
   const [filledTextInputValue8, setFilledTextInputValue8] = useState<string>('')
-  const [deepLinkInputValue, setDeepLinkInputValue] = useState<string>(`edge://scene/manageTokens?walletId=${walletId}`)
+  const [deepLinkInputValue, setDeepLinkInputValue] = useState<string>(
+    `edge://scene/manageTokens?walletId=${walletId}`
+  )
 
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
@@ -98,19 +110,38 @@ export function DevTestScene(props: Props) {
     if (selectedWallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
       if (selectedWallet == null) return null
-      return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} feeTokenId={null} onAmountsChanged={onAmountsChanged} />
+      return (
+        <FlipInputModal2
+          bridge={bridge}
+          wallet={selectedWallet.wallet}
+          tokenId={tokenId}
+          feeTokenId={null}
+          onAmountsChanged={onAmountsChanged}
+        />
+      )
     }).catch(error => console.log(error))
   }
 
   const handleMultilineTextInputModal = () => {
     Airship.show<string | undefined>(bridge => (
-      <TextInputModal title="TextInputModal" inputLabel="Input Value" message="This is a multiline TextInputModal" multiline bridge={bridge} />
+      <TextInputModal
+        title="TextInputModal"
+        inputLabel="Input Value"
+        message="This is a multiline TextInputModal"
+        multiline
+        bridge={bridge}
+      />
     )).catch(error => console.log(error))
   }
 
   const handleTextInputModal = () => {
     Airship.show<string | undefined>(bridge => (
-      <TextInputModal title="TextInputModal" inputLabel="Input Value" message="This is a single line TextInputModal" bridge={bridge} />
+      <TextInputModal
+        title="TextInputModal"
+        inputLabel="Input Value"
+        message="This is a single line TextInputModal"
+        bridge={bridge}
+      />
     )).catch(error => console.log(error))
   }
 
@@ -142,12 +173,18 @@ export function DevTestScene(props: Props) {
   const headerCallback = () => console.log('Header pressed')
 
   // Hack. If wallet name first char is lowercase, start with crypto focused, otherwise default to fiat
-  const defaultField = (coreWallet?.name?.charAt(0).toLowerCase() ?? '') === (coreWallet?.name?.charAt(0) ?? '')
+  const defaultField =
+    (coreWallet?.name?.charAt(0).toLowerCase() ?? '') ===
+    (coreWallet?.name?.charAt(0) ?? '')
 
   // Hack. If wallet name 2nd char is lowercase, start with keyboard down
-  const keyboardVisible = (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !== (coreWallet?.name?.charAt(1) ?? '')
+  const keyboardVisible =
+    (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !==
+    (coreWallet?.name?.charAt(1) ?? '')
 
-  const editable = (coreWallet?.name?.charAt(2).toLowerCase() ?? '') === (coreWallet?.name?.charAt(2) ?? '')
+  const editable =
+    (coreWallet?.name?.charAt(2).toLowerCase() ?? '') ===
+    (coreWallet?.name?.charAt(2) ?? '')
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
@@ -157,7 +194,11 @@ export function DevTestScene(props: Props) {
       <SectionView>
         <>
           <SectionHeader leftTitle="Scenes" />
-          <EdgeButton label="AddressFormScene" onPress={handleAddressFormPress} marginRem={0.5} />
+          <EdgeButton
+            label="AddressFormScene"
+            onPress={handleAddressFormPress}
+            marginRem={0.5}
+          />
           <EdgeButton
             label="Review Trigger Test"
             marginRem={0.25}
@@ -167,7 +208,10 @@ export function DevTestScene(props: Props) {
           />
         </>
         <>
-          <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
+          <SectionHeader
+            leftTitle="Modals"
+            rightNode={<EdgeText>Galore</EdgeText>}
+          />
           <EdgeButton
             label="SurveyModal"
             marginRem={0.25}
@@ -177,14 +221,28 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
-          <EdgeButton label="TextInputModal (multiline)" marginRem={0.25} onPress={handleMultilineTextInputModal} />
-          <EdgeButton label="TextInputModal (single line)" marginRem={0.25} onPress={handleTextInputModal} />
-          <EdgeButton label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
+          <EdgeButton
+            label="TextInputModal (multiline)"
+            marginRem={0.25}
+            onPress={handleMultilineTextInputModal}
+          />
+          <EdgeButton
+            label="TextInputModal (single line)"
+            marginRem={0.25}
+            onPress={handleTextInputModal}
+          />
+          <EdgeButton
+            label="FlipInputModal2"
+            marginRem={0.25}
+            onPress={handleFlipInputModal}
+          />
           <EdgeButton
             label="ButtonsModal"
             marginRem={0.25}
             onPress={async () => {
-              const test = await Airship.show<'test1' | 'test2' | 'test3' | undefined>(bridge => (
+              const test = await Airship.show<
+                'test1' | 'test2' | 'test3' | undefined
+              >(bridge => (
                 <ButtonsModal
                   bridge={bridge}
                   title="ButtonsModal"
@@ -234,7 +292,9 @@ export function DevTestScene(props: Props) {
             label="CountryListModal"
             marginRem={0.25}
             onPress={async () => {
-              const test = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode="us" />)
+              const test = await Airship.show<string>(bridge => (
+                <CountryListModal bridge={bridge} countryCode="us" />
+              ))
               console.debug(test)
             }}
           />
@@ -242,7 +302,12 @@ export function DevTestScene(props: Props) {
             label="PasswordReminderModal"
             marginRem={0.25}
             onPress={async () => {
-              await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation as NavigationBase} />)
+              await Airship.show(bridge => (
+                <PasswordReminderModal
+                  bridge={bridge}
+                  navigation={navigation as NavigationBase}
+                />
+              ))
             }}
           />
           <EdgeButton
@@ -262,9 +327,12 @@ export function DevTestScene(props: Props) {
             label="FioCreateHandleModal"
             marginRem={0.25}
             onPress={async () => {
-              const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
+              const isCreateHandle = await Airship.show<boolean>(bridge => (
+                <FioCreateHandleModal bridge={bridge} />
+              ))
               if (isCreateHandle) {
-                const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+                const { freeRegApiToken = '', freeRegRefCode = '' } =
+                  typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
                 navigation.navigate('fioCreateHandle', {
                   freeRegApiToken,
                   freeRegRefCode
@@ -286,18 +354,26 @@ export function DevTestScene(props: Props) {
             label="BackupForTransferModal"
             marginRem={0.25}
             onPress={async () => {
-              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-                return <BackupForTransferModal bridge={bridge} />
-              })
+              await Airship.show(
+                (
+                  bridge: AirshipBridge<
+                    BackupForTransferModalResult | undefined
+                  >
+                ) => {
+                  return <BackupForTransferModal bridge={bridge} />
+                }
+              )
             }}
           />
           <EdgeButton
             label="ScamWarningModal"
             marginRem={0.25}
             onPress={async () => {
-              await Airship.show((bridge: AirshipBridge<'yes' | 'no' | undefined>) => {
-                return <ScamWarningModal bridge={bridge} />
-              })
+              await Airship.show(
+                (bridge: AirshipBridge<'yes' | 'no' | undefined>) => {
+                  return <ScamWarningModal bridge={bridge} />
+                }
+              )
             }}
           />
         </>
@@ -369,7 +445,9 @@ export function DevTestScene(props: Props) {
             onChangeText={setFilledTextInputValue8}
             autoFocus={false}
             placeholder="Test FilledTextInput Custom Error"
-            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+            error={
+              filledTextInputValue8 === '' ? undefined : filledTextInputValue8
+            }
           />
           <EdgeText>Ensure errors above don't push me down</EdgeText>
         </>
@@ -392,23 +470,62 @@ export function DevTestScene(props: Props) {
         )}
 
         <>
-          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+          <SimpleTextInput
+            value={value0}
+            onChangeText={onChangeText0}
+            autoFocus={false}
+            placeholder="Crypto Amount"
+          />
           <EdgeButton label="Set Crypto Amt" onPress={onPress0} />
-          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+          <SimpleTextInput
+            value={value1}
+            onChangeText={onChangeText1}
+            autoFocus={false}
+            placeholder="Fiat Amount"
+          />
           <EdgeButton label="Set Fiat Amt" onPress={onPress1} />
         </>
 
         <>
           <SectionHeader leftTitle="Buttons" />
-          <EdgeButton onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
-            <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
+          <EdgeButton
+            onPress={() => {}}
+            label="Button With Child"
+            marginRem={0.5}
+            type="secondary"
+          >
+            <Fontello
+              name="help_headset"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
           </EdgeButton>
-          <EdgeText>Button with spinner and child (same width as above)</EdgeText>
-          <EdgeButton onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary" spinner>
-            <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
+          <EdgeText>
+            Button with spinner and child (same width as above)
+          </EdgeText>
+          <EdgeButton
+            onPress={() => {}}
+            label="Button With Child"
+            marginRem={0.5}
+            type="secondary"
+            spinner
+          >
+            <Fontello
+              name="help_headset"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
           </EdgeButton>
-          <EdgeButton onPress={() => {}} label="Mini" marginRem={0.5} type="secondary" mini />
-          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>ButtonsViews</EdgeText>
+          <EdgeButton
+            onPress={() => {}}
+            label="Mini"
+            marginRem={0.5}
+            type="secondary"
+            mini
+          />
+          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>
+            ButtonsViews
+          </EdgeText>
           <OutlinedView>
             <ButtonsView
               primary={{ label: 'Primary', onPress: () => {} }}
@@ -429,21 +546,58 @@ export function DevTestScene(props: Props) {
             />
           </OutlinedView>
           <OutlinedView>
-            <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+            <ButtonsView
+              primary={{ label: 'Primary', onPress: () => {} }}
+              secondary={{ label: 'Secondary', onPress: () => {} }}
+              layout="row"
+            />
           </OutlinedView>
           <OutlinedView>
-            <ButtonsView secondary={{ label: 'Secondary', onPress: () => {} }} secondary2={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+            <ButtonsView
+              secondary={{ label: 'Secondary', onPress: () => {} }}
+              secondary2={{ label: 'Secondary', onPress: () => {} }}
+              layout="row"
+            />
           </OutlinedView>
 
-          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>Loose Buttons (0.5rem margin)</EdgeText>
+          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>
+            Loose Buttons (0.5rem margin)
+          </EdgeText>
           <OutlinedView>
-            <EdgeButton marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
-            <EdgeButton marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
+            <EdgeButton
+              marginRem={0.5}
+              onPress={() => {}}
+              label="Mini"
+              type="secondary"
+              mini
+            />
+            <EdgeButton
+              marginRem={0.5}
+              onPress={() => {}}
+              label="Mini"
+              type="secondary"
+              mini
+            />
           </OutlinedView>
           <OutlinedView>
-            <EdgeButton marginRem={0.5} onPress={() => {}} label="Primary" type="primary" />
-            <EdgeButton marginRem={0.5} onPress={() => {}} label="Secondary" type="secondary" />
-            <EdgeButton marginRem={0.5} onPress={() => {}} label="Tertiary" type="tertiary" />
+            <EdgeButton
+              marginRem={0.5}
+              onPress={() => {}}
+              label="Primary"
+              type="primary"
+            />
+            <EdgeButton
+              marginRem={0.5}
+              onPress={() => {}}
+              label="Secondary"
+              type="secondary"
+            />
+            <EdgeButton
+              marginRem={0.5}
+              onPress={() => {}}
+              label="Tertiary"
+              type="tertiary"
+            />
           </OutlinedView>
         </>
         <>
@@ -453,14 +607,18 @@ export function DevTestScene(props: Props) {
             onChangeText={setDeepLinkInputValue}
             autoFocus={false}
             placeholder="DeepLink"
-            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+            error={
+              filledTextInputValue8 === '' ? undefined : filledTextInputValue8
+            }
           />
           <EdgeButton
             marginRem={0.5}
             onPress={() => {
               const parsed = parseDeepLink(deepLinkInputValue)
               console.debug('parsed deeplink: ', parsed)
-              dispatch(launchDeepLink(navigation as NavigationBase, parsed)).catch(e => showError(e))
+              dispatch(
+                launchDeepLink(navigation as NavigationBase, parsed)
+              ).catch(e => showError(e))
             }}
             label="Activate DeepLink"
             type="primary"

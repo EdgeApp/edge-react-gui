@@ -50,10 +50,18 @@ export const WcConnectScene = withWallet((props: Props) => {
   const walletConnect = useWalletConnect()
 
   const { subTitleText, bodyTitleText, dAppImage } = React.useMemo(() => {
-    const subTitleText = sprintf(lstrings.wc_confirm_subtitle, proposal.params.proposer.metadata.name)
-    const bodyTitleText = sprintf(lstrings.wc_confirm_body_title, proposal.params.proposer.metadata.name)
+    const subTitleText = sprintf(
+      lstrings.wc_confirm_subtitle,
+      proposal.params.proposer.metadata.name
+    )
+    const bodyTitleText = sprintf(
+      lstrings.wc_confirm_body_title,
+      proposal.params.proposer.metadata.name
+    )
     const imageUri = proposal.params.proposer.metadata.icons[0] ?? '.svg'
-    const dAppImage = imageUri.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : imageUri
+    const dAppImage = imageUri.endsWith('.svg')
+      ? 'https://content.edge.app/walletConnectLogo.png'
+      : imageUri
     return { subTitleText, bodyTitleText, dAppImage }
   }, [proposal])
 
@@ -70,7 +78,13 @@ export const WcConnectScene = withWallet((props: Props) => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />).catch(e => showError(e))
+      Airship.show(bridge => (
+        <FlashNotification
+          bridge={bridge}
+          message={lstrings.wc_confirm_return_to_browser}
+          onPress={() => {}}
+        />
+      )).catch(e => showError(e))
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error('WalletConnect connection error:', String(error))
@@ -100,17 +114,37 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   const renderWalletSelect = () => {
     const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
-    const walletImage = <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
-    const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
-    return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
+    const walletImage = (
+      <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
+    )
+    const walletAddressStr = truncateString(
+      walletAddress,
+      MAX_ADDRESS_CHARACTERS,
+      true
+    )
+    return (
+      <SelectableRow
+        icon={walletImage}
+        subTitle={walletAddressStr}
+        title={walletNameStr}
+        onPress={handleWalletListModal}
+      />
+    )
   }
 
   return (
     <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
-      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         <View style={styles.listRow}>
-          <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
+          <FastImage
+            resizeMode="contain"
+            style={styles.currencyLogo}
+            source={{ uri: dAppImage }}
+          />
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>

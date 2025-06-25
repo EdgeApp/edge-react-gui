@@ -51,16 +51,21 @@ const strings = {
   action_display_title_create: 'Creating Loan',
   action_display_title_swap: 'Swapping Funds',
 
-  action_display_message_create_3s: '%1$s is creating your loan on %2$s using your %3$s as collateral',
-  action_display_message_swap_4s: '%1$s is swapping your %2$s into %3$s for deposit into %4$s. This may take a few mins to several hours…',
+  action_display_message_create_3s:
+    '%1$s is creating your loan on %2$s using your %3$s as collateral',
+  action_display_message_swap_4s:
+    '%1$s is swapping your %2$s into %3$s for deposit into %4$s. This may take a few mins to several hours…',
   action_display_message_swap_fees_5s:
     '%1$s is swapping your %2$s into %3$s and %4$s (to pay fees) for deposit into %5$s. This may take a few mins to several hours…',
 
   // Complete Display Strings
   action_display_title_complete_default: 'Congratulations!',
-  action_display_message_complete_default: 'Your transactions completed successfully!\nPlease allow time for your accounts to update.',
-  action_display_message_complete_wallet_2s: 'Your loan is complete! \nYou should see %1$s in your %2$s account',
-  action_display_message_complete_bank: 'Your loan is complete! \nYou should see funds in your bank account in 1-4 days',
+  action_display_message_complete_default:
+    'Your transactions completed successfully!\nPlease allow time for your accounts to update.',
+  action_display_message_complete_wallet_2s:
+    'Your loan is complete! \nYou should see %1$s in your %2$s account',
+  action_display_message_complete_bank:
+    'Your loan is complete! \nYou should see funds in your bank account in 1-4 days',
 
   // #endregion
 
@@ -69,7 +74,8 @@ const strings = {
 
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
-  share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
+  share_message:
+    'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
   drawer_borrow_dollars: 'Borrow Dollars',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
@@ -89,21 +95,33 @@ const strings = {
 
   // Error messages:
 
-  error_no_email_account: 'No email account setup on phone. Please setup an email account on your phone to use this feature.',
+  error_no_email_account:
+    'No email account setup on phone. Please setup an email account on your phone to use this feature.',
   invalid_email: 'Please enter a valid email address.',
-  error_paymentprotocol_empty_output_invoice: 'Received no output in payment request',
-  error_paymentprotocol_empty_verification_hex_req: 'Generated empty transaction hex(es)',
-  error_paymentprotocol_currency_not_supported: 'Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.',
-  error_paymentprotocol_invalid_payment_option: 'Payment Protocol invoice does not accept this currency. Accepted currencies: %s',
+  error_paymentprotocol_empty_output_invoice:
+    'Received no output in payment request',
+  error_paymentprotocol_empty_verification_hex_req:
+    'Generated empty transaction hex(es)',
+  error_paymentprotocol_currency_not_supported:
+    'Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.',
+  error_paymentprotocol_invalid_payment_option:
+    'Payment Protocol invoice does not accept this currency. Accepted currencies: %s',
   error_paymentprotocol_fetch: 'Payment Protocol %s fetch error (%s)%s',
-  error_paymentprotocol_multi_output_invoice: 'Multiple outputs found in payment request',
-  error_paymentprotocol_multi_tx_invoice: 'Multiple transactions found in payment request',
-  error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
-  error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
+  error_paymentprotocol_multi_output_invoice:
+    'Multiple outputs found in payment request',
+  error_paymentprotocol_multi_tx_invoice:
+    'Multiple transactions found in payment request',
+  error_paymentprotocol_no_payment_option:
+    'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
+  error_paymentprotocol_tx_verification_failed:
+    'Payment Protocol transaction verification mismatch',
   error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
-  error_amount_too_low_to_stake_s: 'The amount %s is too low to stake successfully',
-  error_balance_below_minimum_to_stake_2s: 'Your balance of %1$s does not meet the minimum %2$s required to stake.',
-  error_inactive_validator: 'The selected validator is inactive. Please select a different validator or try again later.',
+  error_amount_too_low_to_stake_s:
+    'The amount %s is too low to stake successfully',
+  error_balance_below_minimum_to_stake_2s:
+    'Your balance of %1$s does not meet the minimum %2$s required to stake.',
+  error_inactive_validator:
+    'The selected validator is inactive. Please select a different validator or try again later.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -115,17 +133,22 @@ const strings = {
 
   warning_scam_title: 'Scam Warning',
   warning_scam_message_financial_advice_s: '%s will not give financial advice.',
-  warning_scam_message_irreversibility: 'Cryptocurrency transactions are irreversible.',
-  warning_scam_message_unknown_recipients: 'Do not send money to people or organizations you do not know.',
-  warning_scam_footer_s: 'If you have any questions or concerns regarding this send, please contact %s',
+  warning_scam_message_irreversibility:
+    'Cryptocurrency transactions are irreversible.',
+  warning_scam_message_unknown_recipients:
+    'Do not send money to people or organizations you do not know.',
+  warning_scam_footer_s:
+    'If you have any questions or concerns regarding this send, please contact %s',
 
   warning_scam_message: 'Has anyone helped you set up this account?',
-  warning_scam_message_no_1s: 'Great, if you ever have any questions, please reach out to our support team at %1$s.',
+  warning_scam_message_no_1s:
+    'Great, if you ever have any questions, please reach out to our support team at %1$s.',
   warning_scam_message_yes_1s: `Please proceed with caution! Assistance with account creation has the potential for fraud. Users should never share passwords or private keys. Social media and chat platforms have been involved in attacks. Do not send cryptocurrency to strangers. If you believe you're being taken advantage of, please contact our support team at %1$s.`,
 
   warning_token_code_override_2s:
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
-  warning_token_exists_1s: 'The entered token already exists as a built-in token %1$s',
+  warning_token_exists_1s:
+    'The entered token already exists as a built-in token %1$s',
   warning_battery_saver: `Battery Saver Detected! Balances may not update. For the best experience, please turn off battery saver mode.`,
 
   warning_sending_pix_to_email_title: 'Sending PIX payment to email address',
@@ -140,26 +163,34 @@ const strings = {
 
   azteco_success: `You've redeemed an Azteco bitcoin card. Funds should arrive shortly.`,
   azteco_invalid_code: 'Invalid Azteco code.',
-  azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
+  azteco_service_unavailable:
+    'Error contacting Azteco server. Please try again later.',
 
   // Request for Address Protocol
-  reqaddr_error_unsupported_chains: '%1$s does not support the following chains listed in the request: %2$s',
+  reqaddr_error_unsupported_chains:
+    '%1$s does not support the following chains listed in the request: %2$s',
   reqaddr_error_invalid_redir: `Invalid 'redir' query in request for payment address`,
-  reqaddr_error_no_currencies_found: 'No currencies found in request for payment address',
-  reqaddr_error_no_wallets_selected: 'No wallets selected for request for payment address',
-  reqaddr_error_post_redir: 'Post and redir address not found in request for payment address',
+  reqaddr_error_no_currencies_found:
+    'No currencies found in request for payment address',
+  reqaddr_error_no_wallets_selected:
+    'No wallets selected for request for payment address',
+  reqaddr_error_post_redir:
+    'Post and redir address not found in request for payment address',
   reqaddr_application_fragment: 'An application',
   reqaddr_confirm_modal_title: 'Confirm request?',
-  reqaddr_confirm_modal_message: '%1$s is requesting a payment address for %2$s. Choose wallets for request?',
+  reqaddr_confirm_modal_message:
+    '%1$s is requesting a payment address for %2$s. Choose wallets for request?',
 
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
-  max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
+  max_spend_unavailable_modal_message:
+    'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
   access_wallet_description: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   edge_description_warning: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_success: 'Your exchange is being processed!',
-  exchange_congratulations_note: 'Processing may take up to 24 hours to complete.',
+  exchange_congratulations_note:
+    'Processing may take up to 24 hours to complete.',
   no_exchange_amount: 'No Amount Selected',
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
@@ -170,34 +201,41 @@ const strings = {
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
-  addtoken_invalid_information: 'Please enter valid token information and try again',
+  addtoken_invalid_information:
+    'Please enter valid token information and try again',
   addtoken_invalid_1s: 'Please enter valid %1$s and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   addtoken_add: 'Add Custom',
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
-  edittoken_invalid_decimal_places: 'Please enter a valid number of decimal places.',
+  edittoken_invalid_decimal_places:
+    'Please enter a valid number of decimal places.',
   fragment_create_wallet_create_wallet: 'Create Wallet',
   fragment_create_wallet_instructions: 'Tap on wallet to edit name',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Receive',
-  fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
+  fragment_request_address_uri_copied:
+    'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body_1xrp:
     'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
-  request_xrp_minimum_notification_alert_body_1xrp: 'This wallet will always require a 1 XRP minimum',
+  request_xrp_minimum_notification_alert_body_1xrp:
+    'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
-  request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
+  request_xlm_minimum_notification_alert_body:
+    'This wallet will always require a 1 XLM minimum',
   request_dot_minimum_notification_body:
     'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
-  request_dot_minimum_notification_alert_body: 'This wallet will always require a 1 DOT minimum',
+  request_dot_minimum_notification_alert_body:
+    'This wallet will always require a 1 DOT minimum',
   request_lld_minimum_notification_body:
     'Liberland (LLD) wallets require a 1 LLD minimum balance. You must deposit at least 1 LLD to this address before this wallet will show a balance or transactions. 1 LLD will be unspendable for the lifetime of this wallet address.',
-  request_lld_minimum_notification_alert_body: 'This wallet will always require a 1 LLD minimum',
+  request_lld_minimum_notification_alert_body:
+    'This wallet will always require a 1 LLD minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
@@ -219,19 +257,22 @@ const strings = {
   fragment_transaction_list_tx_failed: 'Failed',
   fragment_transaction_list_tx_synchronizing: 'Syncing...',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
-  fragment_transaction_list_unconfirmed_rbf2: 'Awaiting confirmation; may be cancelled',
+  fragment_transaction_list_unconfirmed_rbf2:
+    'Awaiting confirmation; may be cancelled',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_loading_txs: 'Loading Transactions…',
   transaction_list_no_tx_yet: 'No transactions yet',
-  transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
+  transaction_list_no_tx_support_yet:
+    'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
   transaction_list_search_no_result: 'Search returned no results',
   transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
-  fragment_wallets_delete_token_prompt_2s: 'Are you sure you want to disable token %1$s in your %2$s wallet?',
+  fragment_wallets_delete_token_prompt_2s:
+    'Are you sure you want to disable token %1$s in your %2$s wallet?',
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_copy_seed: 'Copy Seed',
@@ -247,44 +288,59 @@ const strings = {
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_rename_wallet: 'Rename Wallet',
-  fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync \n',
+  fragment_wallets_resync_wallet_first_confirm_message_mobile:
+    'Are you sure you want to resync \n',
   fragment_wallets_get_seed_title: 'Reveal Master Private Key',
   fragment_wallets_get_seed_warning_message:
     'Sharing your master private key may put you at risk of fraudulent tokens and loss of funds.\n\nDo not share your key with anyone.\n\nBy entering your password, you are confirming that you understand the risks.',
   fragment_wallets_get_raw_keys_title: 'Reveal Raw Keys',
   fragment_wallets_get_raw_keys_warning_message:
     'Sharing your raw keys may put you at risk of fraudulent tokens and loss of funds.\n\nDo not share your keys with anyone.\n\nBy entering your password, you are confirming that you understand the risks.',
-  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to archive ',
-  fragmet_wallets_delete_fio_extra_message_mobile: 'Archiving this FIO wallet will remove access to any FIO addresses you have linked to this wallet.',
-  fragmet_wallets_delete_eth_extra_message: 'Archiving this wallet will also archive any enabled tokens for this wallet.',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile:
+    'Are you sure you want to archive ',
+  fragmet_wallets_delete_fio_extra_message_mobile:
+    'Archiving this FIO wallet will remove access to any FIO addresses you have linked to this wallet.',
+  fragmet_wallets_delete_eth_extra_message:
+    'Archiving this wallet will also archive any enabled tokens for this wallet.',
   wallet_list_add_wallet: 'Add Wallet',
   wallet_list_add_token: 'Add Token',
   wallet_list_referral_link_currency_invalid: 'Currency to create is invalid',
-  wallet_list_referral_link_currency_loading: 'Hang tight. Creating wallet necessary for this promotion',
-  wallet_list_referral_link_ask_wallet_creation_1s: 'You need a %1$s wallet for this promotion. Would you like to create one?',
+  wallet_list_referral_link_currency_loading:
+    'Hang tight. Creating wallet necessary for this promotion',
+  wallet_list_referral_link_ask_wallet_creation_1s:
+    'You need a %1$s wallet for this promotion. Would you like to create one?',
   wallet_list_wallet_search: 'Search Wallets',
   compromised_key_label: 'Compromised Key',
   create_new_account: 'Create New Account',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_choice_new_button_fragment: 'New Wallet',
-  create_wallet_select_wallet_for_assets: 'Please select the wallet you would like to add the following assets: %s',
+  create_wallet_select_wallet_for_assets:
+    'Please select the wallet you would like to add the following assets: %s',
   create_wallet_import_title: 'Import Wallet',
   create_wallet_import_options_title: 'Import Options',
   create_wallet_import_options_birthday_height: 'Wallet Birthday Height',
-  create_wallet_import_options_birthday_height_description: 'The birthday height is the network block height that your wallet will start synchronizing from.',
+  create_wallet_import_options_birthday_height_description:
+    'The birthday height is the network block height that your wallet will start synchronizing from.',
   create_wallet_import_options_passphrase: 'Seed passphrase',
-  create_wallet_import_options_passphrase_description: 'A passphrase is an optional extra word or phrase you add to your recovery seed.',
+  create_wallet_import_options_passphrase_description:
+    'A passphrase is an optional extra word or phrase you add to your recovery seed.',
   create_wallet_imports_title: 'Import Wallets',
-  create_wallet_import_all_instructions: 'Enter your private seed, private key, or active key to verify and restore the associated wallet',
-  create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
+  create_wallet_import_all_instructions:
+    'Enter your private seed, private key, or active key to verify and restore the associated wallet',
+  create_wallet_import_instructions:
+    'Enter your private seed to verify and restore the associated wallet',
   create_wallet_import_input_prompt: 'Private Seed',
-  create_wallet_import_key_instructions: 'Enter your private key to verify and restore the associated wallet',
+  create_wallet_import_key_instructions:
+    'Enter your private key to verify and restore the associated wallet',
   create_wallet_import_input_key_prompt: 'Private Key',
-  create_wallet_import_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated wallet',
+  create_wallet_import_input_key_or_seed_instructions:
+    'Enter your private seed or private key to verify and restore the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Private Seed',
-  create_wallet_import_polkadot_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
+  create_wallet_import_polkadot_input_key_or_seed_instructions:
+    'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
-  create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
+  create_wallet_import_active_key_instructions:
+    'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_edit: 'Edit',
   create_wallet_tokens: 'Tokens',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
@@ -298,26 +354,37 @@ const strings = {
   create_wallet_all_disabled_import: `No selected assets can be imported. You can create new wallets or go back and select different assets.`,
   create_wallet_some_disabled_import: `The following assets cannot be imported: %s. \nWould you like to continue importing all other assets?`,
   create_wallet_no_assets_selected: 'No assets selected',
-  create_wallet_failed_message: 'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
+  create_wallet_failed_message:
+    'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
   create_wallet_create_account: 'Create Account',
   create_wallet_account_activate: 'Activate Account',
   create_wallet_account_handle: 'Account Handle',
   create_wallet_account_select_instructions_with_cost_4s:
     'All new %1$s wallets require a one time payment to activate the account and name. This payment is required by the %2$s network and not a requirement of %3$s.\n\nThe current cost is equivalent to %4$s but may fluctuate in the future.\n\nPlease select a wallet to pay from:',
-  create_wallet_account_make_payment_2s: 'You are about to make the following payment to activate your %1$s account for your %2$s wallet:',
+  create_wallet_account_make_payment_2s:
+    'You are about to make the following payment to activate your %1$s account for your %2$s wallet:',
   create_wallet_account_select_wallet: 'Select Wallet',
-  create_wallet_account_review_instructions: 'Create a unique account handle, this will also be the name of your %s wallet:',
-  create_wallet_account_requirements_eos: '• Must be exactly 12 characters\n• Must include only lowercase letters a-z or numbers 1-5\n',
-  create_wallet_account_invalid_account_name: 'Invalid account name. Does not fit requirements',
-  create_wallet_account_account_name_unavailable: 'Account name unavailable. Please choose another',
-  create_wallet_account_unknown_error: 'Unknown error checking account name. Please try again later',
-  create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
+  create_wallet_account_review_instructions:
+    'Create a unique account handle, this will also be the name of your %s wallet:',
+  create_wallet_account_requirements_eos:
+    '• Must be exactly 12 characters\n• Must include only lowercase letters a-z or numbers 1-5\n',
+  create_wallet_account_invalid_account_name:
+    'Invalid account name. Does not fit requirements',
+  create_wallet_account_account_name_unavailable:
+    'Account name unavailable. Please choose another',
+  create_wallet_account_unknown_error:
+    'Unknown error checking account name. Please try again later',
+  create_wallet_account_confirm:
+    'Double-check your wallet and payment info before submitting.',
   create_wallet_account_amount_due: 'Amount due:',
   create_wallet_account_error_sending_transaction: 'Error sending transaction',
   create_wallet_account_payment_sent_title: 'Payment Sent',
-  create_wallet_account_payment_sent_message: 'Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.',
-  create_wallet_account_handle_unavailable_modal_title: 'Account Handle Unavailable',
-  create_wallet_account_handle_unavailable_modal_message: 'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
+  create_wallet_account_payment_sent_message:
+    'Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.',
+  create_wallet_account_handle_unavailable_modal_title:
+    'Account Handle Unavailable',
+  create_wallet_account_handle_unavailable_modal_message:
+    'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
   create_wallet_account_metadata_name: '%s Network',
   create_wallet_account_metadata_category: '%s Activation',
   create_wallet_account_metadata_notes:
@@ -329,19 +396,25 @@ const strings = {
   activate_wallet_token_transaction_name_category_generic: 'Token Activation',
   activate_wallet_token_transaction_notes_generic: 'Activate token transaction',
   activate_wallet_token_transaction_name_xrp: 'XRP Ledger',
-  activate_wallet_token_transaction_notes_xrp: 'Activate XRP token by enabling Trust Line to issuer',
+  activate_wallet_token_transaction_notes_xrp:
+    'Activate XRP token by enabling Trust Line to issuer',
   activate_wallet_token_scene_title: 'Activate Token',
   activate_wallet_token_scene_tile_title: 'Token to Activate',
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
     'To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.',
-  activate_wallet_token_scene_body_xrp_extra_point2xrp: 'Token activation will increase the XRP reserve requirement by 0.2 XRP per token activated.',
-  activate_wallet_token_scene_body_algo_extra: 'Token activation will increase the ALGO reserve requirement by 0.1 ALGO per token activated.',
+  activate_wallet_token_scene_body_xrp_extra_point2xrp:
+    'Token activation will increase the XRP reserve requirement by 0.2 XRP per token activated.',
+  activate_wallet_token_scene_body_algo_extra:
+    'Token activation will increase the ALGO reserve requirement by 0.1 ALGO per token activated.',
   activate_wallet_tokens_scene_body:
     'To send and receive the selected tokens you will first need to activate them with one or more blockchain transactions. The transactions in total will cost the following fee shown below. Please confirm using the slider below.',
-  activate_wallet_token_insufficient_funds_s: 'You have insufficient funds to activate this token. You need at least %s to proceed with activation.',
-  activate_wallet_tokens_insufficient_funds_s: 'You have insufficient funds to activate these tokens. You need at least %s to proceed with activation.',
-  activate_wallet_token_success: 'Token successfully activated. It may take a few mins for the activation to be recognized by the network.',
+  activate_wallet_token_insufficient_funds_s:
+    'You have insufficient funds to activate this token. You need at least %s to proceed with activation.',
+  activate_wallet_tokens_insufficient_funds_s:
+    'You have insufficient funds to activate these tokens. You need at least %s to proceed with activation.',
+  activate_wallet_token_success:
+    'Token successfully activated. It may take a few mins for the activation to be recognized by the network.',
   preparing_fio_wallet: 'Preparing FIO wallet',
   fio_address: 'FIO Address: %s',
   fio_pending_requests: 'Pending Requests',
@@ -360,7 +433,8 @@ const strings = {
   help_call_text: 'Get in touch by phone',
   help_visit_site: 'Visit the %1$s site',
   help_site_more_info_text: 'More info on %1$s',
-  help_terms_of_service_text: 'Understand your obligations and risks associated with our platform',
+  help_terms_of_service_text:
+    'Understand your obligations and risks associated with our platform',
   loading: 'Loading…',
   percent_complete_1s: '%1$s Complete',
   validating: 'Validating…',
@@ -380,13 +454,15 @@ const strings = {
   request_qr_your_legacy_address: 'Your Legacy Address',
   request_qr_your_segwit_address: 'Your Segwit Address',
   request_qr_your_sapling_address: 'Your Sapling Address (shielded)',
-  request_qr_your_transparent_address: 'Your Transparent Address (auto-shielded)',
+  request_qr_your_transparent_address:
+    'Your Transparent Address (auto-shielded)',
   request_qr_your_unified_address: 'Your Unified Address (shielded)',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
   request_review_answer_yes: 'Review Now',
-  request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
+  request_review_android_page_link:
+    'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   search_wallets: 'Search Wallets',
   search_tokens: 'Search Tokens',
   search_assets: 'Search Assets',
@@ -395,16 +471,22 @@ const strings = {
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
-  send_confirmation_algo_recipient_not_activated_s: 'Recipient must first activate %1$s before they can receive funds.',
-  send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
-  send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
-  send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
+  send_confirmation_algo_recipient_not_activated_s:
+    'Recipient must first activate %1$s before they can receive funds.',
+  send_confirmation_eos_error_cpu:
+    'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
+  send_confirmation_eos_error_net:
+    'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
+  send_confirmation_eos_error_ram:
+    'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
   send_scan_edge_login_success_title: 'Edge Login Successful',
-  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
+  send_scan_edge_login_success_message:
+    'To continue, please return to the browser or application that requested the Edge Login.',
   send_confirmation_fee_modal_alert_title: 'High Fee Warning',
   send_confirmation_fee_modal_alert_message_fragment:
     'The network is currently congested. Transactions fees may be more expensive (%s) and may take longer than usual to confirm.',
-  send_confirmation_fee_modal_alert_message_fragment_eth: 'Using too low of a fee can result in a failed transaction and loss of the fee spent.',
+  send_confirmation_fee_modal_alert_message_fragment_eth:
+    'Using too low of a fee can result in a failed transaction and loss of the fee spent.',
   sent: 'Sent',
   transaction_failure: 'Transaction Failure',
   transaction_failure_message: '%s.',
@@ -431,7 +513,8 @@ const strings = {
   settings_button_logout: 'Logout',
   settings_button_pin: 'Change PIN',
   settings_exchange_settings: 'Exchange Settings',
-  settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
+  settings_exchange_instruction:
+    'Enable or disable the exchange providers available to you',
   settings_marketing_notifications_switch: 'Enable Marketing Alerts',
   settings_price_notifications_switch: 'Enable Price Alerts',
   settings_hide_spam_transactions: 'Hide spam transactions',
@@ -445,9 +528,12 @@ const strings = {
   swap_preferred_cex: 'Prefer Centralized',
   swap_options_header_decentralized: 'Decentralized\nNo personal info required',
   swap_options_header_centralized: 'Centralized\nMay require personal info',
-  swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
-  swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion always prefers:',
-  swap_token_no_enabled_exchanges_2s: 'No enabled exchanges support %1$s (on %2$s) at this time',
+  swap_preferred_instructions:
+    'When multiple exchanges can fill an order, prefer:',
+  swap_preferred_promo_instructions:
+    'When multiple exchanges can fill an order, the current promotion always prefers:',
+  swap_token_no_enabled_exchanges_2s:
+    'No enabled exchanges support %1$s (on %2$s) at this time',
   swap_minimum_receive_amount: 'Min Receive Amount',
   swap_minimum_amount_1s: 'Min %1$s',
   settings_button_clear_logs: 'Clear Logs',
@@ -471,9 +557,12 @@ const strings = {
     'Edge uses Monero light wallet servers provided by MyMonero. These servers hold the private view key, which they use to scan for transactions. For enhanced privacy, you can run your own Monero light wallet server.',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
-  settings_modal_export_logs_warning: 'Do not enter seeds, private keys, password or other sensitive information',
-  settings_modal_export_logs_directions: 'Select whether to share logs with Edge or export logs to your device.',
-  settings_modal_clear_logs_message: 'Are you sure you want to clear all logs on this device?',
+  settings_modal_export_logs_warning:
+    'Do not enter seeds, private keys, password or other sensitive information',
+  settings_modal_export_logs_directions:
+    'Select whether to share logs with Edge or export logs to your device.',
+  settings_modal_clear_logs_message:
+    'Are you sure you want to clear all logs on this device?',
   settings_modal_clear_logs_success: 'Logs have been cleared',
   settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
@@ -496,23 +585,30 @@ const strings = {
   settings_promotion_add: 'Add promotion code',
   settings_promotion_device_normal: 'This application was installed normally.',
   settings_promotion_device_installer: 'This application was installed via %s.',
-  settings_promotion_device_currencies: 'New accounts will have wallets for: %s',
+  settings_promotion_device_currencies:
+    'New accounts will have wallets for: %s',
   settings_promotion_account_normal: 'This account was created normally.',
   settings_promotion_account_installer: 'This account was created via %s.',
   settings_notifications: 'Notifications',
-  settings_currency_notifications_percent_change_hour: '%1$s%% change within 1 hour',
-  settings_currency_notifications_percent_change_hours: '%1$s%% change within %2$s hours',
+  settings_currency_notifications_percent_change_hour:
+    '%1$s%% change within 1 hour',
+  settings_currency_notifications_percent_change_hours:
+    '%1$s%% change within %2$s hours',
   skip: 'Skip',
   staking_change_add_header: 'Stake %s',
   staking_change_add_amount_title: 'Amount to stake',
-  staking_change_explaner1: 'Stake your coins to earn passive income on your funds',
-  staking_change_explaner2: 'Staked coins are unusable for the duration of the stake',
+  staking_change_explaner1:
+    'Stake your coins to earn passive income on your funds',
+  staking_change_explaner2:
+    'Staked coins are unusable for the duration of the stake',
   staking_change_remove_header: 'Unstake %s',
   staking_change_remove_amount_title: 'Amount to unstake',
   staking_change_remove_unlock_date: 'Unlock date',
   staking_change_unlock_explainer_title: 'Unstaked Funds',
-  staking_change_unlock_explainer1: 'Unstaked funds are not immediately available. ',
-  staking_change_unlock_explainer2: 'These continue to be locked and unusable for 7 days after you unstake the funds.',
+  staking_change_unlock_explainer1:
+    'Unstaked funds are not immediately available. ',
+  staking_change_unlock_explainer2:
+    'These continue to be locked and unusable for 7 days after you unstake the funds.',
   staking_discover: 'Discover',
   staking_earning_pools: 'Earning Pools',
   staking_earn_crypto: 'Earn Crypto',
@@ -529,7 +625,8 @@ const strings = {
   staking_estimated_return: 'Estimated Return: %1$s APY',
   staking_estimated_return_up_to: 'Estimated Return: up to %1$s APY',
   staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
-  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1$s',
+  staking_no_bundled_txs_error:
+    'Not enough bundled transactions for FIO address %1$s',
   string_i_agree: 'I Agree',
   string_expires: `Expires`,
   string_decline: 'Decline',
@@ -555,7 +652,8 @@ const strings = {
   string_first_base_wallet_name: 'My Base',
   string_first_filecoin_wallet_name: 'My Filecoin',
   string_first_filecoin_fevm_wallet_name: 'My Filecoin FEVM',
-  string_first_filecoin_fevm_calibratio_wallet_name: 'My Filecoin FEVM (Calibration)',
+  string_first_filecoin_fevm_calibratio_wallet_name:
+    'My Filecoin FEVM (Calibration)',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
   string_first_bitcoin_testnet4_wallet_name: 'My Bitcoin Testnet4',
@@ -696,8 +794,10 @@ const strings = {
   title_map: 'Map',
   no_exchanges_available: 'No Exchanges Enabled',
   check_exchange_settings: 'Please enable them in your Exchange Settings.',
-  amount_above_limit: 'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
-  amount_below_limit: 'Amount is below the min limit of %1$s %2$s. This min limit is subject to change based on market conditions',
+  amount_above_limit:
+    'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
+  amount_below_limit:
+    'Amount is below the min limit of %1$s %2$s. This min limit is subject to change based on market conditions',
   trade_currency: 'Trade',
   trade_s: 'Trade %1$s',
   swap_s_to_from_crypto: 'Swap %1$s to/from another crypto',
@@ -715,7 +815,8 @@ const strings = {
   transaction_details_view_advanced_data: 'View Advanced Transaction Data',
   transaction_details_tx_id_modal_title: 'Transaction ID',
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
-  transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
+  transaction_history_permission:
+    'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_error_invalid: 'Invalid Transaction',
   sub_category_label: 'Sub-category',
   transaction_details_recipient_addresses: 'Recipient Addresses',
@@ -738,10 +839,14 @@ const strings = {
   confirm_finish: 'Confirm & Finish',
   transaction_details_accelerate_transaction_old_fee_title: 'Old Fee',
   transaction_details_accelerate_transaction_new_fee_title: 'New Fee',
-  transaction_details_accelerate_transaction_slider_disabled: 'Unable to Accelerate Transaction',
-  transaction_details_accelerate_transaction_fee_too_low: 'Accelerated transaction fee is too low. Fee has been updated. Please try again.',
-  transaction_details_accelerate_transaction_sent: 'Your transaction has been accelerated.',
-  transaction_details_accelerate_transaction_lower_amount_tx_title: 'Lower Send Amount',
+  transaction_details_accelerate_transaction_slider_disabled:
+    'Unable to Accelerate Transaction',
+  transaction_details_accelerate_transaction_fee_too_low:
+    'Accelerated transaction fee is too low. Fee has been updated. Please try again.',
+  transaction_details_accelerate_transaction_sent:
+    'Your transaction has been accelerated.',
+  transaction_details_accelerate_transaction_lower_amount_tx_title:
+    'Lower Send Amount',
   transaction_details_accelerate_transaction_lower_amount_tx_message: `In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.`,
   transaction_details_empty_note_placeholder: 'Tap to Add Note (Optional)',
   transaction_details_exchange_details: 'Exchange Details',
@@ -784,7 +889,8 @@ const strings = {
   transaction_details_unstake_subcat_1s: 'Unstake %1$s',
   transaction_details_unstake_subcat_2s: 'Unstake %1$s and %2$s',
   transaction_details_unstake_order_notes_1s: 'Create Unstake %1$s Order',
-  transaction_details_unstake_order_notes_2s: 'Create Unstake %1$s and %2$s Order',
+  transaction_details_unstake_order_notes_2s:
+    'Create Unstake %1$s and %2$s Order',
   transaction_details_token_approval: 'Token Approval',
   transaction_details_token_approval_subcat: 'Token Approval Fee',
   transaction_details_transfer_funds: 'Transfer Funds',
@@ -801,17 +907,20 @@ const strings = {
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description: 'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
+  otp_description:
+    'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
   otp_description_two:
     'If you download %1$s on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
-  otp_enabled_message: 'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
+  otp_enabled_message:
+    'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
   otp_show_code: 'Show backup code',
   otp_hide_code: 'Hide backup code',
   otp_copied_msg: '2FA code successfully copied to clipboard',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
-  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
+  otp_modal_body:
+    '2FA is recommended to keep your device secure from unauthorized access from other devices.',
 
   // OTP Modals
   otp_authentication_header: '2FA has been enabled',
@@ -836,7 +945,8 @@ const strings = {
   legacy_address_modal_continue: 'Continue',
 
   password_reminder_card_title: 'Security Check: Tap to verify password.',
-  password_reminder_card_body: 'Your password is required in case of device theft, loss, or app uninstallation.',
+  password_reminder_card_body:
+    'Your password is required in case of device theft, loss, or app uninstallation.',
   password_reminder_modal_title: 'Verify your password',
   password_reminder_modal_body:
     'To ensure the security of your account.\n\nPlease enter your password below. A successful verification will prevent this warning from appearing for a few logins.',
@@ -846,7 +956,8 @@ const strings = {
   password_reminder_invalid: 'Invalid Password',
 
   password_recovery_reminder_modal_title: 'Password Recovery Setup',
-  password_recovery_reminder_modal_message: "You've been accumulating quite a bit of crypto. Would you like to set up your password recovery?",
+  password_recovery_reminder_modal_message:
+    "You've been accumulating quite a bit of crypto. Would you like to set up your password recovery?",
   password_recovery_reminder_modal_set_up: 'Set Up Now',
   password_check_check_later: 'Later',
   password_check_incorrect_password_title: 'Incorrect Password.',
@@ -854,31 +965,41 @@ const strings = {
   password: 'Password',
 
   buy_crypto_modal_title: 'Wallet Empty',
-  buy_crypto_modal_message: 'Your %s wallet is empty. Would you like to buy %s or exchange another crypto into %s?',
-  buy_crypto_modal_message_no_exchange_s: 'Your %s wallet is empty. Would you like to buy %s?',
-  buy_parent_crypto_modal_message_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
+  buy_crypto_modal_message:
+    'Your %s wallet is empty. Would you like to buy %s or exchange another crypto into %s?',
+  buy_crypto_modal_message_no_exchange_s:
+    'Your %s wallet is empty. Would you like to buy %s?',
+  buy_parent_crypto_modal_message_2s:
+    '%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
   buy_parent_crypto_modal_message_3s:
     '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?',
-  swap_parent_crypto_modal_message_2s: '%1$s%2$s is required to send this transaction. Would you like to exchange another crypto into %2$s?',
-  swap_parent_crypto_modal_message_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to exchange another crypto into %2$s?',
-  buy_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Would you like to buy %2$s?',
-  buy_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s?',
+  swap_parent_crypto_modal_message_2s:
+    '%1$s%2$s is required to send this transaction. Would you like to exchange another crypto into %2$s?',
+  swap_parent_crypto_modal_message_3s:
+    '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to exchange another crypto into %2$s?',
+  buy_parent_crypto_modal_message_no_exchange_2s:
+    '%1$s%2$s is required to send this transaction. Would you like to buy %2$s?',
+  buy_parent_crypto_modal_message_no_exchange_3s:
+    '%1$s%2$s (on %3$s) is required to send this transaction. Would you like to buy %2$s?',
   buy_crypto_decline: 'Not at this time',
   buy_1s: 'Buy %1$s',
   sell_1s: 'Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
-  exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
+  exchange_crypto_modal_message:
+    'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
   private_key_modal_sweep_from_private_key_message:
     'This process needs an on-chain transaction from the original wallet to %1$s. Mining fees are applied and depend on the network status.',
-  private_key_modal_sweep_insufficient_funds: 'The private key has insufficient funds to cover the onchain fees required by the sweep.',
+  private_key_modal_sweep_insufficient_funds:
+    'The private key has insufficient funds to cover the onchain fees required by the sweep.',
   private_key_modal_cancel: 'Cancel',
   sweep_private_key_calculate_fee_title: 'Confirm Sweep',
   sweep_private_key_instructions_fragment: `Sweeping assets incurs a network fee for each asset transferred. If you don't have enough funds, you can return and deselect tokens or tap the row for more options.`,
   sweep_private_key_select_crypto_title: 'Choose Assets to Sweep',
   sweep_private_key_no_funds_found: 'No funds found',
   sweep_private_key_syncing_balances: 'Searching for balances...',
-  sweep_private_key_syncing_balances_slow: 'Looking up balances is taking longer than usual.\nPlease wait...',
+  sweep_private_key_syncing_balances_slow:
+    'Looking up balances is taking longer than usual.\nPlease wait...',
 
   restore: 'Restore',
   restore_wallets_modal_title: 'Restore Wallets',
@@ -910,11 +1031,13 @@ const strings = {
   memo_error_hex: 'Not valid hexadecimal',
   memo_error_hext_too_long_s: 'Cannot be longer than %i bytes',
   memo_error_hext_too_short_s: 'Cannot be shorter than %i bytes',
-  unique_identifier_modal_description: 'Please enter the %s value to be sent to the recipient of this transaction',
+  unique_identifier_modal_description:
+    'Please enter the %s value to be sent to the recipient of this transaction',
   unique_identifier_modal_confirm: 'Confirm',
 
   cannot_delete_last_wallet_modal_title: 'Cannot Archive Wallet',
-  cannot_delete_last_wallet_modal_message_part_1: 'At least one wallet required in this account.',
+  cannot_delete_last_wallet_modal_message_part_1:
+    'At least one wallet required in this account.',
   cannot_delete_last_wallet_modal_message_part_2: `If you'd like to archive this wallet, you'll need to add an additional wallet to this account.`,
 
   enter_amount_label: 'Enter Amount',
@@ -931,8 +1054,10 @@ const strings = {
   trying_to_find: 'Searching for the best exchange rate...',
   mining_fee: 'Max network fee',
   scan_camera_missing_qrcode: 'No QR code detected in images provided.',
-  scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
-  scan_camera_no_matching_wallet: 'You have no matching wallets to handle this link',
+  scan_camera_permission_denied:
+    'To scan a QR Code, please enable Camera access in Settings',
+  scan_camera_no_matching_wallet:
+    'You have no matching wallets to handle this link',
   open_settings: 'Open Settings',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
@@ -949,7 +1074,8 @@ const strings = {
   swap_terms_terms_link: 'Terms of Use',
   swap_terms_statement:
     'This exchange may require you to verify your identity to complete this trade. Please review the terms below and tap Accept to continue or Reject to stop receiving quotes from this exchange.',
-  alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
+  alert_deep_link_no_wallet:
+    'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
   alert_deep_link_no_wallet_for_uri: 'No wallets exist that support this link.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
@@ -959,8 +1085,10 @@ const strings = {
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   error_must_select_state_province_s: 'Must select state/province for %1$s',
   edge_login_failed: 'Failed to Login',
-  edge_login_fail_stale_qr: 'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
-  edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
+  edge_login_fail_stale_qr:
+    'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
+  edge_login_fail_message:
+    'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   quote_centralized_provider: 'Centralized',
@@ -983,12 +1111,14 @@ const strings = {
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
-  estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
+  estimated_exchange_message:
+    'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   search_region: 'Search region',
   buy_sell_crypto_select_state_button: 'Select your state',
   search_states: 'Search states',
-  buy_sell_crypto_no_provider_region: "We're sorry but there are no available providers for your region.",
+  buy_sell_crypto_no_provider_region:
+    "We're sorry but there are no available providers for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_powered_by_space: 'Powered by ',
   tap_to_change_provider: 'Tap to Change Provider',
@@ -1002,11 +1132,14 @@ const strings = {
   wallet_list_modal_enabling_token: 'Enabling Token. Please Wait',
   wallet_list_modal_confirm_s_bank_withdrawal:
     'Borrowing funds for deposit directly into a bank account requires a linked bank account with an %1$s exchange partner. Tap Continue to proceed to link a bank account. (For US users only)',
-  fio_address_first_screen_title: 'Send and Receive with an easy to remember FIO Crypto Handle!',
-  fio_address_features: '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
+  fio_address_first_screen_title:
+    'Send and Receive with an easy to remember FIO Crypto Handle!',
+  fio_address_features:
+    '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
   fio_address_first_screen_end:
     'Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.',
-  fio_domain_reg_text: 'Note that you need to use FIO to register a Crypto Handle on a custom domain.',
+  fio_domain_reg_text:
+    'Note that you need to use FIO to register a Crypto Handle on a custom domain.',
   fio_domain_reg_descr:
     'A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.',
   fio_address_reg_free: 'Register Free Handle',
@@ -1024,10 +1157,13 @@ const strings = {
   fio_address_register_screen_cant_check: "No internet connection, can't check",
   fio_address_register_default_fio_wallet_name: 'FIO Wallet',
   fio_address_register_no_wallet_name: 'No wallet name',
-  fio_address_register_pending: 'Your %s will be registered as soon as payment is received. Tap FIO Names in few minutes.',
-  fio_address_register_pending_free: 'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
+  fio_address_register_pending:
+    'Your %s will be registered as soon as payment is received. Tap FIO Names in few minutes.',
+  fio_address_register_pending_free:
+    'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
   fio_address_register_metadata_name: 'FIO Registration',
-  fio_address_register_pay_title: 'You have already registered a free address for that domain.',
+  fio_address_register_pay_title:
+    'You have already registered a free address for that domain.',
   fio_address_register_pay: 'Payment required to register this address.',
   fio_address_confirm_screen_label: 'FIO Address',
   fio_address_confirm_screen_free_label: 'Free',
@@ -1035,7 +1171,8 @@ const strings = {
   fio_address_confirm_screen_balance_label: 'Available FIO Balance',
   fio_address_confirm_screen_disabled_slider_label: 'Not enough FIO',
   fio_address_details_screen_alert_title: 'FIO Address Created',
-  fio_address_details_screen_alert_message: 'Your FIO Address is now registered and ready for use.',
+  fio_address_details_screen_alert_message:
+    'Your FIO Address is now registered and ready for use.',
   fio_address_details_screen_alert_button: 'View Details',
   fio_address_details_screen_registered: 'Registered',
   fio_address_details_screen_expires: 'Expires',
@@ -1045,45 +1182,62 @@ const strings = {
   title_low_on_bundled_txs: 'Low on Bundled Transactions',
   fio_address_details_bundled_txs_out_soon:
     'You have spent almost all the bundled transactions of your FIO Crypto Handle. Tap to purchase more bundled transactions',
-  fio_address_details_no_bundled_txs: 'Your FIO Crypto Handle has no bundled transactions. Tap to purchase more bundled transactions',
-  fio_address_details_connect_to_wallets: 'Choose wallets to connect to your FIO Crypto Handle',
+  fio_address_details_no_bundled_txs:
+    'Your FIO Crypto Handle has no bundled transactions. Tap to purchase more bundled transactions',
+  fio_address_details_connect_to_wallets:
+    'Choose wallets to connect to your FIO Crypto Handle',
   fio_address_list_screen_button_register: 'Register New Handle',
   fio_address_list_domain_register: 'Register Custom Domain',
   fio_address_list_register_domain: 'Register New Domain',
-  fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
-  fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
+  fio_get_fee_err_msg:
+    'There was an issue getting the FIO fee. Please try again later.',
+  fio_get_reg_info_err_msg:
+    'There was an issue getting registration information.',
   fio_get_reg_info_domain_err_msg: 'Domain does not exist',
   fio_get_reg_info_already_sent_err_msg: 'Registration request is already sent',
-  fio_register_address_err_msg: 'There was an issue registering an address. Please try later.',
+  fio_register_address_err_msg:
+    'There was an issue registering an address. Please try later.',
   fio_error_invalid_address: 'Invalid FIO address',
-  fio_add_bundled_txs_err_msg: 'There was an issue purchasing more bundled transactions. Please try again later.',
-  fio_renew_err_msg: 'There was an issue renewing your %s. Please try again later.',
+  fio_add_bundled_txs_err_msg:
+    'There was an issue purchasing more bundled transactions. Please try again later.',
+  fio_renew_err_msg:
+    'There was an issue renewing your %s. Please try again later.',
   fio_action_fee_label: 'Operation Fee',
   fio_domain_is_public_label: 'Your FIO Domain is public now',
   fio_domain_is_private_label: 'Your FIO Domain is private now',
-  fio_domain_details_expired_soon: 'Your FIO Domain is about to expire.\nWould you like to renew it?',
-  fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
-  transfer_fio_address_exception: 'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
+  fio_domain_details_expired_soon:
+    'Your FIO Domain is about to expire.\nWould you like to renew it?',
+  fio_domain_set_visibility_err:
+    'There was an issue changing visibility of your domain. Please try again later.',
+  transfer_fio_address_exception:
+    'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
-  fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
-  fio_no_bundled_add_err_msg: 'Please add bundled transactions to your FIO Address to continue.',
-  fio_fee_exceeds_supplied_maximum_record_obt_data: 'Failed to record OBT data.',
+  fio_no_bundled_non_fio_err_msg:
+    'If you continue, metadata for this transaction will not be recorded.',
+  fio_no_bundled_add_err_msg:
+    'Please add bundled transactions to your FIO Address to continue.',
+  fio_fee_exceeds_supplied_maximum_record_obt_data:
+    'Failed to record OBT data.',
   fio_no_requests_label: 'No requests',
   fio_reject_request_title: 'FIO Request',
   fio_reject_request_message: 'Reject Request?',
   fio_reject_status: 'Rejected',
   fio_cancel_status: 'Cancelled',
   fio_date_label: 'Date',
-  send_fio_request_error_addr_not_exist: 'The provided FIO address does not exist',
+  send_fio_request_error_addr_not_exist:
+    'The provided FIO address does not exist',
   send_fio_request_error_memo_inline: 'Memo must be less than 64 characters',
   send_fio_request_error_memo_invalid_character: 'Invalid character in memo',
-  fio_request_by_fio_address_error_no_address: 'Before you can request funds using FIO, you must first register your own FIO Address. See side menu.',
+  fio_request_by_fio_address_error_no_address:
+    'Before you can request funds using FIO, you must first register your own FIO Address. See side menu.',
   fio_request_amount: 'Amount:',
   fio_request_by_fio_address_error_invalid_amount_header: 'Invalid Amount',
-  fio_request_by_fio_address_error_invalid_amount: 'Please enter an amount before requesting with FIO',
+  fio_request_by_fio_address_error_invalid_amount:
+    'Please enter an amount before requesting with FIO',
   fio_request_error_header: 'Request Failed',
   fio_request_ok_body: 'Your request has been successfully sent',
-  fio_request_add_bundled_txs_ok_text: 'Bundled transactions have been successfully purchased',
+  fio_request_add_bundled_txs_ok_text:
+    'Bundled transactions have been successfully purchased',
   fio_request_renew_domain_ok_text: 'Your domain has been successfully renewed',
   fio_request_sent_details_to: 'Request sent to',
   fio_request_sent_details_from: 'Request sent from',
@@ -1098,25 +1252,35 @@ const strings = {
   fio_confirm_request_amount: 'Amount',
   fio_confirm_request_memo: 'Memo',
   fio_confirm_request_input_title_memo: 'Enter Request Memo',
-  fio_confirm_request_error_from_same: 'Select a FIO address that is different from your "Send Request To" address',
-  fio_confirm_request_error_to_same: 'Select a FIO address that is different from your "Send Request From" address',
+  fio_confirm_request_error_from_same:
+    'Select a FIO address that is different from your "Send Request To" address',
+  fio_confirm_request_error_to_same:
+    'Select a FIO address that is different from your "Send Request From" address',
   fio_cancel_request_message: 'Do you want to cancel the fio request?',
   fio_cancel_request_error: 'Cancel Request Failed',
   err_token_not_in_wallet_title: 'No %s Wallet',
-  err_token_not_in_wallet_msg: 'Your account does not have a %s wallet to pay this request',
+  err_token_not_in_wallet_msg:
+    'Your account does not have a %s wallet to pay this request',
   err_no_address_title: 'No FIO Address found.',
-  err_address_not_linked_title: 'Recipient address does not have a linked %s wallet',
+  err_address_not_linked_title:
+    'Recipient address does not have a linked %s wallet',
   fio_connect_no_wallets: 'There are no wallets',
   fio_connect_checkbox_text:
     'I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.',
-  fio_connect_wallets_err: 'There was an issue during operation execution. Please try later.',
-  fio_wallet_missing_for_fio_address: 'Sys error. Cannot find FIO Wallet for FIO Address',
-  fio_wallet_missing_for_fio_domain: 'Sys error. Cannot find FIO Wallet for FIO Domain',
-  fio_wallet_missing_for_fio_request: 'Sys error. Cannot find FIO Wallet for FIO Request',
-  fio_connect_wallets_success: 'Wallets connected. Your FIO Address is now connected to your wallets and ready to use.',
+  fio_connect_wallets_err:
+    'There was an issue during operation execution. Please try later.',
+  fio_wallet_missing_for_fio_address:
+    'Sys error. Cannot find FIO Wallet for FIO Address',
+  fio_wallet_missing_for_fio_domain:
+    'Sys error. Cannot find FIO Wallet for FIO Domain',
+  fio_wallet_missing_for_fio_request:
+    'Sys error. Cannot find FIO Wallet for FIO Request',
+  fio_connect_wallets_success:
+    'Wallets connected. Your FIO Address is now connected to your wallets and ready to use.',
   fio_disconnect_wallets_success: 'Wallets disconnected.',
   fio_select_address: 'Select FIO Address',
-  fio_select_address_no_wallet_err: 'There is no FIO wallet found for selected fio address',
+  fio_select_address_no_wallet_err:
+    'There is no FIO wallet found for selected fio address',
   fio_sender_memo_label: 'FIO Memo',
   fio_sender_memo_placeholder: 'Your message.',
   fio_address_to_transfer: 'Address to Transfer',
@@ -1125,10 +1289,12 @@ const strings = {
   fio_free_handle_complete: 'Successfully created your FIO handle',
   fio_free_web3_handle_title_m: 'Claim Your Web3 *Handle*',
   fio_free_handle_title: 'Get a FIO Handle',
-  fio_free_web3_handle_message: 'Give your account a universal Web3 handle powered by FIO to simplify sending and receiving transactions.',
+  fio_free_web3_handle_message:
+    'Give your account a universal Web3 handle powered by FIO to simplify sending and receiving transactions.',
   fio_free_handle_please_wait: 'Please wait for wallet creation to complete...',
   fio_register_handle_button: 'Register Handle',
-  fio_register_handle_error: 'There was an issue registering your handle. Please try again later.',
+  fio_register_handle_error:
+    'There was an issue registering your handle. Please try again later.',
   fio_register_handle_taken_error_s: 'The handle %1$s has already been taken.',
   personalize_wallet_title: 'Personalize Your Wallet',
   get_started_button: 'Get Started',
@@ -1153,17 +1319,22 @@ const strings = {
   invalid_character_error: 'Invalid input characters',
 
   update_header: 'Update Available',
-  update_fresh_new_version: 'A fresh new version of %1$s is now available. Please update to get our hot new features and fixes.',
+  update_fresh_new_version:
+    'A fresh new version of %1$s is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
   price_alert: 'Price Alert',
   // Ethereum (ETH) is up +15% to $2,290 in the last hour.
-  notification_hourly_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last hour.',
-  notification_hourly_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.',
+  notification_hourly_price_change_up:
+    '%1$s %2$s (%3$s) is up %4$s to %5$s in the last hour.',
+  notification_hourly_price_change_down:
+    '%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.',
   // Ethereum (ETH) is up +15% to $2,290 in the last 24 hours.
-  notification_daily_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.',
-  notification_daily_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.',
+  notification_daily_price_change_up:
+    '%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.',
+  notification_daily_price_change_down:
+    '%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.',
   price_change_notification: 'Price Notification',
   price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
@@ -1173,7 +1344,8 @@ const strings = {
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
     "We're sorry but something went wrong\n\n*** DO NOT UNINSTALL %1$s ***\n\nPlease force close the app and reopen to continue using %1$s.\n\nFor help on how to force close the app, tap below",
-  error_boundary_message2: "If the problem persists, tap below to contact us, and we'll do our best to fix the problem.",
+  error_boundary_message2:
+    "If the problem persists, tap below to contact us, and we'll do our best to fix the problem.",
   error_boundary_help_button: 'Help Closing App',
   error_unexpected_title: 'Unexpected Error',
   error_kyc_required_s: 'KYC required: %s',
@@ -1188,7 +1360,8 @@ const strings = {
   export_transaction_csv: 'CSV',
   export_transaction_bitwave_csv: 'Bitwave CSV',
   export_transaction_bitwave_accountid_modal_title: 'Bitwave Account ID',
-  export_transaction_bitwave_accountid_modal_message: 'Please enter the Bitwave account ID for this wallet',
+  export_transaction_bitwave_accountid_modal_message:
+    'Please enter the Bitwave account ID for this wallet',
   export_transaction_bitwave_accountid_modal_input_label: 'Account ID',
   string_export: 'Export',
   string_status: 'Status',
@@ -1211,16 +1384,22 @@ const strings = {
   delete_account_title: 'Delete Account',
   delete_account_body:
     'Deleting your %1$s account will make any funds in your wallets inaccessible. Any future funds that these wallets may receive will also be inaccessible.\n\nAccounts created with %1$s buy / sell partners will remain active. You will need to request deletion for any such accounts directly with the appropriate partners.\n\nIf this account has logged into any other devices, the private keys and information on those devices will remain accessible until the application has been deleted from those devices.\n\nDeletion of this account will make the username available to new accounts.\n\nIf you have any questions or concerns, please contact us at %2$s prior to deleting your account.',
-  delete_account_verification_body: 'To delete your account, please enter your username %1$s',
+  delete_account_verification_body:
+    'To delete your account, please enter your username %1$s',
   delete_account_verification_error: 'Username does not match',
   delete_account_feedback: 'Account %s deleted',
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
-  contacts_permission_modal_body_1: '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
-  contacts_permission_modal_body_2: 'No contact information is shared with %1$s or any other entities. All information is encrypted and only seen by YOU.',
-  contacts_permission_modal_body_3: 'If you deny access, %1$s can still function to buy, sell, trade, and transact cryptocurrency.',
-  contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
-  contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
+  contacts_permission_modal_body_1:
+    '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_body_2:
+    'No contact information is shared with %1$s or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_body_3:
+    'If you deny access, %1$s can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_enable_settings:
+    'To use %1$s, please enable your %2$s permission.',
+  contacts_permission_modal_enable_settings_mandatory:
+    'To use %1$s, please enable your %2$s permission.',
 
   // Migrate Wallet
   migrate_label: 'Migrate',
@@ -1258,8 +1437,10 @@ const strings = {
   loan_add_collateral: 'Add Collateral',
   loan_add_from: 'Add from %s',
   loan_amount_borrow: 'Amount to Borrow',
-  loan_amount_exceeds_s_collateral: 'Total loan value exceeds %1$s of total collateral value.',
-  loan_amount_fees_exceeds_collateral: 'Total collateral value plus fees exceeds wallet balance.',
+  loan_amount_exceeds_s_collateral:
+    'Total loan value exceeds %1$s of total collateral value.',
+  loan_amount_fees_exceeds_collateral:
+    'Total collateral value plus fees exceeds wallet balance.',
   loan_available_equity: 'Available Equity',
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
@@ -1270,7 +1451,8 @@ const strings = {
   loan_close_loan_title: 'Close Loan',
   loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
-  loan_close_insufficient_funds_4s: 'An additional %1$s %2$s or a deposit of %3$s %4$s is required to close your loan.',
+  loan_close_insufficient_funds_4s:
+    'An additional %1$s %2$s or a deposit of %3$s %4$s is required to close your loan.',
   loan_collateral_amount: 'Collateral Amount',
   loan_collateral_destination: 'Collateral Destination',
   loan_collateral_required: 'Collateral Amount Required',
@@ -1296,14 +1478,17 @@ const strings = {
   loan_fragment_withdraw: 'Withdrawal',
   loan_fund_source: 'Fund Source',
   loan_fund_destination: 'Fund Destination',
-  loan_insufficient_funds_warning: 'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.',
+  loan_insufficient_funds_warning:
+    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.',
   loan_interest_rate: 'Interest Rate',
   loan_loading_loans: 'Loading Loans...',
-  loan_loan_amount_input_message_s: 'Loan must be less than %1$s of your total collateral value',
+  loan_loan_amount_input_message_s:
+    'Loan must be less than %1$s of your total collateral value',
   loan_loan_breakdown_title: 'Loan Breakdown',
   loan_loan_to_value_ratio: 'Loan to Value Ratio',
   loan_make_payment: 'Make Payment',
-  loan_no_active_loans: 'You have no active loans.\nCreate a loan and start earning with AAVE!',
+  loan_no_active_loans:
+    'You have no active loans.\nCreate a loan and start earning with AAVE!',
   loan_new_loan: 'New Loan',
   loan_new_collateral: 'New Collateral',
   loan_new_principal: 'New Principal',
@@ -1316,7 +1501,8 @@ const strings = {
   loan_withdraw_collateral: 'Withdraw Collateral',
 
   loan_notification_ltv_threshold_alert_title: 'Loan Liquidation Alert!',
-  loan_notification_ltv_threshold_alert_message: 'You loan is coming close to liquidation and requires your immediate attention!',
+  loan_notification_ltv_threshold_alert_message:
+    'You loan is coming close to liquidation and requires your immediate attention!',
 
   loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
@@ -1332,12 +1518,16 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   send_scene_error_title: 'Error:',
   send_scene_metadata_name_title: 'Payee',
-  send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
-  send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
-  send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
+  send_make_spend_xrp_dest_tag_length_error:
+    'XRP Destination Tag must be 10 characters or less',
+  send_make_spend_xrp_dest_tag_limit_error:
+    'XRP Destination Tag is above its maximum limit',
+  send_make_spend_xrp_dest_tag_format_error:
+    'Please enter a valid Destination Tag',
   send_add_another_address: 'Add Another Address',
   send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
-  send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
+  send_scan_modal_text_modal_message_s:
+    'Enter a %1$s public address or payment protocol URL to send funds to',
   send_scan_modal_text_modal_hint: 'Public Address',
   send_address_expire_title: 'Payment Address Expiration Time',
   send_address_expired_error_message: 'Payment Address Expired',
@@ -1348,8 +1538,12 @@ const strings = {
   // Crypto Exchange Scene
   exchange_generic_error_title: 'Exchange Error',
   exchange_insufficient_funds_title: 'Insufficient Funds',
-  exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
-  exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
+  exchange_insufficient_funds_message:
+    'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_below_balance:
+    'Wallet balance is below the amount entered.',
+  exchange_pending_funds_error:
+    'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to fully confirm.',
   exchange_select_sending_wallet: 'Please select a wallet to swap from',
   exchange_select_receiving_wallet: 'Please select a wallet to swap to',
   exchange_title_receiving: 'I want',
@@ -1367,13 +1561,16 @@ const strings = {
   wc_confirm_title: 'Confirm Connection',
   wc_confirm_subtitle: '%s wants to connect your wallet.',
   wc_confirm_body_title: 'Allow %s to:',
-  wc_confirm_body: 'Request approval for transactions\nView your wallet and balance activity',
+  wc_confirm_body:
+    'Request approval for transactions\nView your wallet and balance activity',
   wc_confirm_select_wallet: 'Select wallet to connect with',
   wc_confirm_return_to_browser: 'You may now return to browser',
   wc_smartcontract_title: 'Smart Contract Call',
   wc_smartcontract_warning_title: 'Warning',
-  wc_smartcontract_warning_text: 'Make sure this is an application you can trust. Executing this transaction gives the application access to your funds.',
-  wc_smartcontract_insufficient_text: "You don't have enough %s to cover network fees.",
+  wc_smartcontract_warning_text:
+    'Make sure this is an application you can trust. Executing this transaction gives the application access to your funds.',
+  wc_smartcontract_insufficient_text:
+    "You don't have enough %s to cover network fees.",
   wc_smartcontract_wallet: 'Wallet',
   wc_smartcontract_dapp: 'DApp',
   wc_smartcontract_network_fee: 'Network Fee',
@@ -1400,9 +1597,11 @@ const strings = {
 
   // Fund Account Modal
   fund_account_modal_title: 'Fund Your Account',
-  fund_account_modal_buy_body: 'Purchase crypto using your bank account, credit card, Apple Pay, and more.',
+  fund_account_modal_buy_body:
+    'Purchase crypto using your bank account, credit card, Apple Pay, and more.',
   fund_account_modal_receive_title: 'Receive Crypto',
-  fund_account_modal_receive_body_1s: 'Transfer crypto from another wallet into %1$s',
+  fund_account_modal_receive_body_1s:
+    'Transfer crypto from another wallet into %1$s',
   fund_account_modal_receive_message:
     'Scan QR code with an external wallet or copy the address by tapping the word "Copy" and paste the address into an external wallet.',
 
@@ -1441,22 +1640,27 @@ const strings = {
   stake_change_unstake_success: 'Funds successfully unstaked',
   stake_change_claim_success: 'Claim transactions sent successfully',
   stake_disabled_slider: 'Enter Amount',
-  stake_warning_multiple_transactions: 'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',
+  stake_warning_multiple_transactions:
+    'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',
   stake_warning_stake:
     'Staking funds will block you from claiming rewards for 16 hours and withdrawing your staked funds for 36 hours.\n\nEvery interaction (stake, unstake, claim rewards) will reset both timers.',
   stake_warning_claim:
     'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose "Claim Rewards and Unstake" instead.',
-  stake_warning_unstake: 'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
+  stake_warning_unstake:
+    'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
-  state_error_pool_full_s: 'The %1$s asset pool is currency full. Please try again later.',
+  state_error_pool_full_s:
+    'The %1$s asset pool is currency full. Please try again later.',
   stake_estimated_staking_fee: 'Estimated Staking Fee',
   stake_estimated_unstaking_fee: 'Estimated Unstaking Fee',
-  stake_staking_fee_message: 'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
-  stake_unstaking_fee_message: 'The specified Unstaking Fee will be deducted from the amount withdrawn reducing the amount received.',
+  stake_staking_fee_message:
+    'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
+  stake_unstaking_fee_message:
+    'The specified Unstaking Fee will be deducted from the amount withdrawn reducing the amount received.',
   stake_future_unstaking_fee: 'Future Unstake Fee Estimate',
   stake_future_unstaking_fee_message:
     'When you unstake these funds, you will incur the estimated unstake fee specified. This amount is only an estimate and is based on the funds currently staked in the pool. The actual fees incurred may be different at the time you unstake.',
@@ -1466,7 +1670,8 @@ const strings = {
   stake_break_even_days_s: '%1$s days',
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
   stake_earn_button_label: 'Earn',
-  stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
+  stake_unable_to_query_locked:
+    'Unable to query locked balance. Please try again later.',
   stake_liquid_staking_warning_title: 'Liquid Staking Pool Notice',
   stake_liquid_staking_warning_header: `This is a liquid-staking pool, meaning the entire wallet's balance is either staked/unstaked in the pool. Wallet funds will remain liquid (transferable), however all current and future funds will be exposed to the risks and rewards of the staking pool while staked.`,
 
@@ -1478,7 +1683,8 @@ const strings = {
 
   // Thorchain savers
   stake_tc_unavailable: 'Thorchain Savers Unavailable',
-  stake_tc_unavailable_message: 'Deposits and withdrawals for Thorchain Savers are paused for up to 90 days.',
+  stake_tc_unavailable_message:
+    'Deposits and withdrawals for Thorchain Savers are paused for up to 90 days.',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
@@ -1495,7 +1701,8 @@ const strings = {
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
   fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
   fiat_plugin_buy_fiat_unsupported_2s: '%1$s does not support buying with %2$s',
-  fiat_plugin_sell_fiat_unsupported_2s: '%1$s does not support selling with %2$s',
+  fiat_plugin_sell_fiat_unsupported_2s:
+    '%1$s does not support selling with %2$s',
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_sell_region_restricted: 'Region restricted from selling %s',
@@ -1504,23 +1711,35 @@ const strings = {
     'There is currently no provider available in your region that supports %1$s. Please try again later or select another payment method.',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
   fiat_plugin_sell_cancelled: 'Sell order cancelled',
-  fiat_plugin_finalizing_quote: 'Finalizing your exchange quote. Please wait as this may take up to a minute',
+  fiat_plugin_finalizing_quote:
+    'Finalizing your exchange quote. Please wait as this may take up to a minute',
   fiat_plugin_buy_cancelled: 'Buy order cancelled',
   fiat_plugin_buy_complete_title: 'Buy Order Complete',
-  fiat_plugin_buy_complete_message_s: 'Your buy order of %1$s %2$s with %3$s %4$s has been completed.',
-  fiat_plugin_buy_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your wallet.',
-  fiat_plugin_buy_complete_message_2_hours_s: 'Please allow up to %1$s hours for the funds to appear in your wallet.',
+  fiat_plugin_buy_complete_message_s:
+    'Your buy order of %1$s %2$s with %3$s %4$s has been completed.',
+  fiat_plugin_buy_complete_message_2_hour_s:
+    'Please allow up to %1$s hour for the funds to appear in your wallet.',
+  fiat_plugin_buy_complete_message_2_hours_s:
+    'Please allow up to %1$s hours for the funds to appear in your wallet.',
   fiat_plugin_buy_failed_try_again: 'Buy order failed. Please try again',
-  fiat_plugin_buy_unknown_status: 'Unknown order status upon completion. Please contact support for assistence.',
+  fiat_plugin_buy_unknown_status:
+    'Unknown order status upon completion. Please contact support for assistence.',
   fiat_plugin_sell_complete_title: 'Sell Order Complete',
-  fiat_plugin_sell_complete_message_s: 'Your sell order of %1$s %2$s for %3$s %4$s has been completed.',
-  fiat_plugin_sell_complete_message_2_hour_s: 'Please allow up to %1$s hour for the funds to appear in your account.',
-  fiat_plugin_sell_complete_message_2_hours_s: 'Please allow up to %1$s hours for the funds to appear in your account.',
-  fiat_plugin_sell_complete_message_3: 'A confirmation email has been sent to your registered email address.',
+  fiat_plugin_sell_complete_message_s:
+    'Your sell order of %1$s %2$s for %3$s %4$s has been completed.',
+  fiat_plugin_sell_complete_message_2_hour_s:
+    'Please allow up to %1$s hour for the funds to appear in your account.',
+  fiat_plugin_sell_complete_message_2_hours_s:
+    'Please allow up to %1$s hours for the funds to appear in your account.',
+  fiat_plugin_sell_complete_message_3:
+    'A confirmation email has been sent to your registered email address.',
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
-  fiat_plugin_sell_failed_to_send_try_again: 'Failed to send funds for sell transaction. Please try again.',
-  fiat_plugin_cannot_continue_camera_permission: 'Cannot continue. Camera permission needed for ID verifications',
-  fiat_plugin_purchase_limit_error_2s: 'Please create a full account to increase the purchase limit above %1$s %2$s',
+  fiat_plugin_sell_failed_to_send_try_again:
+    'Failed to send funds for sell transaction. Please try again.',
+  fiat_plugin_cannot_continue_camera_permission:
+    'Cannot continue. Camera permission needed for ID verifications',
+  fiat_plugin_purchase_limit_error_2s:
+    'Please create a full account to increase the purchase limit above %1$s %2$s',
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
   fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %1$s',
@@ -1534,8 +1753,10 @@ const strings = {
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
-  pause_wallet_toast: 'This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes',
-  unpause_wallet_toast: 'This wallet will now synchronize with the blockchain and detect new transactions and balance changes.',
+  pause_wallet_toast:
+    'This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes',
+  unpause_wallet_toast:
+    'This wallet will now synchronize with the blockchain and detect new transactions and balance changes.',
 
   // #region CoinRanking
 
@@ -1602,9 +1823,12 @@ const strings = {
   otc_enter_contact_to_sell:
     'Please enter your contact information to be reached by one of our exchange partners to coordinate an OTC (Over the Counter) sale.',
   otc_confirmation_title: 'Request Sent',
-  otc_confirmation_message: 'Thank you! You will be contacted in the next 24 hours to complete your request.',
-  otc_email_error_message_1s: 'There was an error opening your email app. Please email %1$s directly to facilitate this transaction.',
-  otc_wire_required_message: 'OTC transactions are done through bank wire transfers. Can your bank send wire transfers?',
+  otc_confirmation_message:
+    'Thank you! You will be contacted in the next 24 hours to complete your request.',
+  otc_email_error_message_1s:
+    'There was an error opening your email app. Please email %1$s directly to facilitate this transaction.',
+  otc_wire_required_message:
+    'OTC transactions are done through bank wire transfers. Can your bank send wire transfers?',
 
   // #endregion GuiPlugins
 
@@ -1613,23 +1837,28 @@ const strings = {
   backup_account: 'Back Up Account',
   backup_delete_confirm_message:
     'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
-  backup_info_message: 'Create a username and password to create a full account and secure your funds. No personal information is required',
+  backup_info_message:
+    'Create a username and password to create a full account and secure your funds. No personal information is required',
   backup_dismiss_button: 'Continue with Guest Account',
   backup_warning_message: 'Without a backup, you risk losing your funds!',
-  backup_web3_handle_warning_message: 'Without a backup, you risk losing your web3 handle!',
+  backup_web3_handle_warning_message:
+    'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
     'To buy, sell, and receive funds, please create a full account. %1$s full accounts require no personal information and use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
   backup_notification_title: 'Create Username & Password',
-  backup_notification_body: 'Funds will be lost if your device is lost or %1$s is uninstalled.',
+  backup_notification_body:
+    'Funds will be lost if your device is lost or %1$s is uninstalled.',
 
   // Backup Message Variants
   backup_title: 'Create Full Account',
   backup_message: 'Create a username and password to continue.',
-  backup_message_subtext: 'Creating a full account ensures you can safely recover your funds in the event that you lose access to your device.',
+  backup_message_subtext:
+    'Creating a full account ensures you can safely recover your funds in the event that you lose access to your device.',
 
-  no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
+  no_access_disclaimer_1s:
+    '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 
   // #endregion Light Account
 
@@ -1641,17 +1870,21 @@ const strings = {
 
   notif_tokens_detected_title: 'Tokens Detected',
   notif_tokens_detected_on_wallet_name_1s: `New tokens were detected and enabled on %1$s. Tap to review.`,
-  notif_tokens_detected_on_address_1s: 'New tokens were detected and enabled on a %1$s address. Tap to review.',
-  notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
+  notif_tokens_detected_on_address_1s:
+    'New tokens were detected and enabled on a %1$s address. Tap to review.',
+  notif_otp_message:
+    'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
   notif_ip_validation_enabled_title: 'IP Validation Protection',
-  notif_ip_validation_enabled_body_1s: '%1$s prevents logins from unrecognized IP addresses. Tap to learn more.',
+  notif_ip_validation_enabled_body_1s:
+    '%1$s prevents logins from unrecognized IP addresses. Tap to learn more.',
 
   // #endregion Notifications
 
   // #region Survey Modal
 
   survey_discover_title_1s: 'How Did You Discover %1$s?',
-  survey_discover_subtitle: 'This survey is anonymous and your response will not be tied to your account.',
+  survey_discover_subtitle:
+    'This survey is anonymous and your response will not be tied to your account.',
   survey_opt_social: 'Social Media',
   survey_opt_search_engine: 'Search Engine',
   survey_opt_x_twitter: 'X/Twitter',
@@ -1702,8 +1935,10 @@ const strings = {
 
   // #region UK Compliance
 
-  uk_deposit_parent_crypto_modal_message_no_exchange_2s: '%1$s%2$s is required to send this transaction. Please deposit %2$s and try again.',
-  uk_deposit_parent_crypto_modal_message_no_exchange_3s: '%1$s%2$s (on %3$s) is required to send this transaction. Please deposit %2$s and try again.',
+  uk_deposit_parent_crypto_modal_message_no_exchange_2s:
+    '%1$s%2$s is required to send this transaction. Please deposit %2$s and try again.',
+  uk_deposit_parent_crypto_modal_message_no_exchange_3s:
+    '%1$s%2$s (on %3$s) is required to send this transaction. Please deposit %2$s and try again.',
   uk_token_agreement_modal_message:
     '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Exchange function.',
 
@@ -1711,6 +1946,8 @@ const strings = {
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
+  unexpected_pending_transactions_error:
+    'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
@@ -1935,9 +2172,12 @@ const strings = {
   wallet_settings_label: 'Wallet settings',
 
   // Reward Card
-  rewards_card_error_retrieving_cards: 'Error retrieving Visa cards. Please try again later.',
-  rewards_card_error_authenticate: 'Error authenticating with Visa® Card program. Please try again later.',
-  rewards_card_error_timeout_loading: 'Timeout error loading Visa®  Card program. Please try again later.',
+  rewards_card_error_retrieving_cards:
+    'Error retrieving Visa cards. Please try again later.',
+  rewards_card_error_authenticate:
+    'Error authenticating with Visa® Card program. Please try again later.',
+  rewards_card_error_timeout_loading:
+    'Timeout error loading Visa®  Card program. Please try again later.',
   rewards_card_call_to_action: `Buy Prepaid Visa® Cards`,
   rewards_card_purchase_disclaimer:
     'Card purchase successful!\n\nNote that newly purchased cards take a few seconds to become available. \n\nCards purchased with Bitcoin require 1 confirmation and could take 10-30 minutes to become available.',

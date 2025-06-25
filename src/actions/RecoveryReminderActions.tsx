@@ -16,7 +16,9 @@ const levels = ['20', '200', '2000', '20000', '200000'] as const
  * Show a modal if the user's balance is over one of the limits &
  * they don't have recovery set up.
  */
-export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<void> {
+export function checkPasswordRecovery(
+  navigation: NavigationBase
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -36,7 +38,9 @@ export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<v
         type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
         data: level
       })
-      writePasswordRecoveryReminders(account, level).catch(error => showError(error))
+      writePasswordRecoveryReminders(account, level).catch(error =>
+        showError(error)
+      )
       showReminderModal(navigation).catch(error => showError(error))
       return
     }

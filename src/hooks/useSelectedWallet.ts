@@ -12,7 +12,9 @@ export interface SelectedWallet {
 
 export function useSelectedWallet(): SelectedWallet | undefined {
   const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
-  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const currencyCode = useSelector(
+    state => state.ui.wallets.selectedCurrencyCode
+  )
 
   // Grab the wallet from the account:
   const account = useSelector(state => state.core.account)

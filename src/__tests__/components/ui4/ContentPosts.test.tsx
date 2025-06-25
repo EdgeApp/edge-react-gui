@@ -21,11 +21,15 @@ describe('filterBlogCards', () => {
   }
 
   it('should return all cards if no countryCode provided in the data', () => {
-    expect(filterContentPosts(asBlogPostsGeo([dummyData, dummyData]), 'US').length).toBe(2)
+    expect(
+      filterContentPosts(asBlogPostsGeo([dummyData, dummyData]), 'US').length
+    ).toBe(2)
   })
 
   it('should return all cards if no countryCode provided in the data and device country', () => {
-    expect(filterContentPosts(asBlogPostsGeo([dummyData, dummyData])).length).toBe(2)
+    expect(
+      filterContentPosts(asBlogPostsGeo([dummyData, dummyData])).length
+    ).toBe(2)
   })
 
   it('should return all cards if countryCodes/excludeCountryCodes not defined in data', () => {

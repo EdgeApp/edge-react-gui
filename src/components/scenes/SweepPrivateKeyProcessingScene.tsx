@@ -56,12 +56,16 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
   }
 
   const onCancel = () => {
-    memoryWalletPromise.then(async memoryWallet => await memoryWallet.close()).catch(() => {})
+    memoryWalletPromise
+      .then(async memoryWallet => await memoryWallet.close())
+      .catch(() => {})
     navigation.goBack()
   }
 
   const onDone = (memoryWallet: EdgeMemoryWallet) => {
-    const sweepPrivateKeyList: SweepPrivateKeyItem[] = [{ key: 'null', displayName: displayName, pluginId, tokenId: null }]
+    const sweepPrivateKeyList: SweepPrivateKeyItem[] = [
+      { key: 'null', displayName: displayName, pluginId, tokenId: null }
+    ]
     for (const [tokenId, bal] of memoryWallet.balanceMap.entries()) {
       if (zeroString(bal) || tokenId == null) continue
       sweepPrivateKeyList.unshift({

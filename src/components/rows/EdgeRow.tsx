@@ -20,7 +20,13 @@ const textHeights = {
   large: 0
 }
 
-export type RowActionIcon = 'copy' | 'editable' | 'questionable' | 'none' | 'touchable' | 'delete'
+export type RowActionIcon =
+  | 'copy'
+  | 'editable'
+  | 'questionable'
+  | 'none'
+  | 'touchable'
+  | 'delete'
 
 interface Props {
   body?: string
@@ -54,7 +60,9 @@ export const EdgeRow = (props: Props) => {
     // Handlers:
     onLongPress,
     onPress,
-    rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable'
+    rightButtonType = onLongPress == null && onPress == null
+      ? 'none'
+      : 'touchable'
   } = props
 
   const theme = useTheme()
@@ -67,7 +75,10 @@ export const EdgeRow = (props: Props) => {
   // TODO: Merge styles.containerTemp into styles.container permanently.
   // Explicitly setting the container style here to avoid unit test snapshot
   // diffs.
-  const containerStyle: StyleProp<ViewStyle> = React.useMemo(() => [styles.container, margin], [styles.container, margin])
+  const containerStyle: StyleProp<ViewStyle> = React.useMemo(
+    () => [styles.container, margin],
+    [styles.container, margin]
+  )
 
   const handlePress = useHandler(async () => {
     if (rightButtonType === 'copy' && body != null) {
@@ -93,18 +104,34 @@ export const EdgeRow = (props: Props) => {
   const content = (
     <>
       {icon == null ? null : icon}
-      <View style={[styles.content, rightButtonVisible ? styles.tappableIconMargin : styles.fullWidth]}>
+      <View
+        style={[
+          styles.content,
+          rightButtonVisible ? styles.tappableIconMargin : styles.fullWidth
+        ]}
+      >
         {title == null ? null : (
-          <EdgeText ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+          <EdgeText
+            ellipsizeMode="tail"
+            style={error ? styles.textHeaderError : styles.textHeader}
+          >
             {title}
           </EdgeText>
         )}
         {loading ? (
-          <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+          <ActivityIndicator
+            style={styles.loader}
+            color={theme.primaryText}
+            size="large"
+          />
         ) : children != null ? (
           children
         ) : body != null ? (
-          <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
+          <EdgeText
+            style={styles.textBody}
+            numberOfLines={numberOfLines}
+            ellipsizeMode="tail"
+          >
             {body}
           </EdgeText>
         ) : null}
@@ -120,11 +147,41 @@ export const EdgeRow = (props: Props) => {
             onLongPress={handleLongPress}
             disabled={loading}
           >
-            {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {rightButtonType === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {rightButtonType === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {rightButtonType === 'touchable' ? (
+              <FontAwesome5
+                name="chevron-right"
+                style={styles.tappableIcon}
+                size={theme.rem(1)}
+              />
+            ) : null}
+            {rightButtonType === 'editable' ? (
+              <FontAwesomeIcon
+                name="edit"
+                style={styles.tappableIcon}
+                size={theme.rem(1)}
+              />
+            ) : null}
+            {rightButtonType === 'copy' ? (
+              <FontAwesomeIcon
+                name="copy"
+                style={styles.tappableIcon}
+                size={theme.rem(1)}
+              />
+            ) : null}
+            {rightButtonType === 'delete' ? (
+              <FontAwesomeIcon
+                name="times"
+                style={styles.tappableIcon}
+                size={theme.rem(1)}
+              />
+            ) : null}
+            {rightButtonType === 'questionable' ? (
+              <SimpleLineIcons
+                name="question"
+                style={styles.tappableIcon}
+                size={theme.rem(1)}
+              />
+            ) : null}
           </EdgeTouchableOpacity>
         ) : null
       }
@@ -135,7 +192,14 @@ export const EdgeRow = (props: Props) => {
   // TODO: If a right button is specified, onPress/onLogPress is ignored! Refine
   // API and possibly restructure JSX.
   return isTappable && !rightButtonVisible ? (
-    <EdgeTouchableOpacity accessible={false} disabled={loading} style={containerStyle} testID={testID} onLongPress={handleLongPress} onPress={handlePress}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      disabled={loading}
+      style={containerStyle}
+      testID={testID}
+      onLongPress={handleLongPress}
+      onPress={handlePress}
+    >
       {content}
     </EdgeTouchableOpacity>
   ) : (

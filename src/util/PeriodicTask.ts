@@ -21,7 +21,11 @@ export interface PeriodicTask {
 /**
  * Schedule a repeating task, with the specified gap between runs.
  */
-export function makePeriodicTask(task: () => void | Promise<void>, msGap: number, opts: PeriodicTaskOptions = {}): PeriodicTask {
+export function makePeriodicTask(
+  task: () => void | Promise<void>,
+  msGap: number,
+  opts: PeriodicTaskOptions = {}
+): PeriodicTask {
   const { onError = (e: unknown) => {} } = opts
 
   // A started task will keep bouncing between running & waiting.
@@ -34,7 +38,9 @@ export function makePeriodicTask(task: () => void | Promise<void>, msGap: number
     timeout = undefined
     if (!out.started) return
     running = true
-    new Promise(resolve => resolve(task())).catch(onError).then(startWaiting, startWaiting)
+    new Promise(resolve => resolve(task()))
+      .catch(onError)
+      .then(startWaiting, startWaiting)
   }
 
   function startWaiting(): void {

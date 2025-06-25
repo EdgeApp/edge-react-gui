@@ -6,7 +6,8 @@ export const edgeConfig: AppConfig = {
   appId: undefined,
   appName: 'Edge',
   appNameShort: 'Edge',
-  appStore: 'https://apps.apple.com/us/app/edge-crypto-bitcoin-wallet/id1344400091',
+  appStore:
+    'https://apps.apple.com/us/app/edge-crypto-bitcoin-wallet/id1344400091',
   backupAccountSite: 'https://edge.app/light-account-creation/',
   configName: 'edge',
   darkTheme: edgeDark,
@@ -17,13 +18,16 @@ export const edgeConfig: AppConfig = {
     { pluginId: 'bitcoincash', tokenId: null },
     { pluginId: 'dash', tokenId: null }
   ],
-  forceCloseUrl: 'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
-  ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
+  forceCloseUrl:
+    'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
+  ip2faSite:
+    'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,
   notificationServers: ['https://push2.edge.app'],
   phoneNumber: '+1-619-777-5688',
-  playStore: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
+  playStore:
+    'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   referralServers: ['https://referral1.edge.app'],
   supportsEdgeLogin: true,
   supportEmail: 'support@edge.app',

@@ -55,14 +55,29 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   // Handle toggling the token on or off:
   const [pending, handleToggle] = usePendingPressAnimation(async () => {
-    if (!isEnabled) await approveTokenTerms(account, wallet.currencyInfo.pluginId, countryCode)
+    if (!isEnabled)
+      await approveTokenTerms(
+        account,
+        wallet.currencyInfo.pluginId,
+        countryCode
+      )
 
-    const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
+    const newIds = isEnabled
+      ? wallet.enabledTokenIds.filter(id => id !== tokenId)
+      : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)
     if (isEnabled) {
-      logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
+      logActivity(
+        `Disable Token: ${getWalletName(wallet)} ${wallet.type} ${
+          wallet.id
+        } ${tokenId}`
+      )
     } else {
-      logActivity(`Enable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
+      logActivity(
+        `Enable Token: ${getWalletName(wallet)} ${wallet.type} ${
+          wallet.id
+        } ${tokenId}`
+      )
     }
   })
 
@@ -89,15 +104,27 @@ export const ManageTokensRowComponent = (props: Props) => {
       </View>
       {!isCustom ? null : (
         <EdgeTouchableOpacity style={styles.editIcon} onPress={handleEdit}>
-          <FontAwesomeIcon color={theme.iconTappable} name="edit" size={theme.rem(1)} accessibilityHint={lstrings.edit_icon_hint} accessibilityRole="button" />
+          <FontAwesomeIcon
+            color={theme.iconTappable}
+            name="edit"
+            size={theme.rem(1)}
+            accessibilityHint={lstrings.edit_icon_hint}
+            accessibilityRole="button"
+          />
         </EdgeTouchableOpacity>
       )}
       <View pointerEvents="none" style={styles.switchBox}>
-        <AnimatedSpinner color={theme.iconTappable} style={[styles.spinner, spinnerStyle]} accessibilityHint={lstrings.spinner_hint} />
+        <AnimatedSpinner
+          color={theme.iconTappable}
+          style={[styles.spinner, spinnerStyle]}
+          accessibilityHint={lstrings.spinner_hint}
+        />
         <AnimatedSwitch
           ios_backgroundColor={theme.toggleButtonOff}
           accessibilityHint={lstrings.toggle_button_hint}
-          accessibilityActions={[{ name: 'activate', label: lstrings.toggle_button_hint }]}
+          accessibilityActions={[
+            { name: 'activate', label: lstrings.toggle_button_hint }
+          ]}
           accessibilityValue={{
             text: isEnabled ? lstrings.on_hint : lstrings.off_hint
           }}

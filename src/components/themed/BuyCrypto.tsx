@@ -3,7 +3,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  DONE_THRESHOLD,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
@@ -15,7 +18,9 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
-const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
+const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
+  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto
+)
 
 interface OwnProps {
   wallet: EdgeCurrencyWallet
@@ -43,13 +48,22 @@ export const BuyCrypto = (props: Props) => {
 
   return (
     <>
-      {!allowedPluginIds.includes(pluginId) || tokenId != null || hideNonUkCompliantFeat ? null : (
+      {!allowedPluginIds.includes(pluginId) ||
+      tokenId != null ||
+      hideNonUkCompliantFeat ? null : (
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
-              <CryptoIcon pluginId={pluginId} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+              <CryptoIcon
+                pluginId={pluginId}
+                tokenId={tokenId}
+                marginRem={[0.25, 0]}
+                sizeRem={2.25}
+              />
 
-              <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.buy_1s, displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>
+                {sprintf(lstrings.buy_1s, displayName)}
+              </EdgeText>
             </View>
           </View>
         </ButtonBox>
@@ -57,11 +71,20 @@ export const BuyCrypto = (props: Props) => {
       <View style={styles.noTransactionContainer}>
         {syncRatio < DONE_THRESHOLD ? (
           <>
-            <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_loading_txs}</EdgeText>
-            <EdgeText style={styles.transactionsLoadingText}>{sprintf(lstrings.percent_complete_1s, toPercentString(syncRatio))}</EdgeText>
+            <EdgeText style={styles.noTransactionText}>
+              {lstrings.transaction_list_loading_txs}
+            </EdgeText>
+            <EdgeText style={styles.transactionsLoadingText}>
+              {sprintf(
+                lstrings.percent_complete_1s,
+                toPercentString(syncRatio)
+              )}
+            </EdgeText>
           </>
         ) : (
-          <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_no_tx_yet}</EdgeText>
+          <EdgeText style={styles.noTransactionText}>
+            {lstrings.transaction_list_no_tx_yet}
+          </EdgeText>
         )}
       </View>
     </>

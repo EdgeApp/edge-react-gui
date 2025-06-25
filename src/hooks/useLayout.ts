@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
 
-export const useLayout = (): [LayoutRectangle, (e: LayoutChangeEvent) => void] => {
+export const useLayout = (): [
+  LayoutRectangle,
+  (e: LayoutChangeEvent) => void
+] => {
   const [layout, setLayout] = React.useState({
     x: 0,
     y: 0,
