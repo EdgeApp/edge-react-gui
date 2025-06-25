@@ -210,12 +210,12 @@ interface BitySellOrderRequest {
     bic_swift: string
     owner: {
       name: string
-      address: string
-      address_complement?: string
-      city: string
+      street_name: string
+      building_number: string
+      town_name: string
       country: string
-      state: string
-      zip: string
+      country_subdivision: string
+      post_code: string
     }
   }
   partner_fee: { factor: number }
@@ -976,12 +976,12 @@ const executeSellOrderFetch = async (
         bic_swift: sepaInfo.swift,
         owner: {
           name: sepaInfo.name,
-          address: homeAddress.address,
-          address_complement: homeAddress.address2,
-          city: homeAddress.city,
-          state: homeAddress.state,
-          zip: homeAddress.postalCode,
-          country: homeAddress.country
+          street_name: homeAddress.address,
+          building_number: homeAddress.address2 ?? '',
+          town_name: homeAddress.city,
+          country: homeAddress.country,
+          country_subdivision: homeAddress.state,
+          post_code: homeAddress.postalCode
         }
       },
       partner_fee: { factor: partnerFee }
