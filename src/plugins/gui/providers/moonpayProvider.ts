@@ -539,8 +539,14 @@ export const moonpayProvider: FiatProviderFactory = {
 
         const fiatCode = removeIsoPrefix(params.fiatCurrencyCode).toLowerCase()
         let url
+        const walletAddress = (
+          await params.wallet?.getAddresses({ tokenId: null })
+        )?.[0]?.publicAddress
+        const walletAddressParam =
+          walletAddress == null ? '' : `&walletAddress=${walletAddress}`
+
         if (direction === 'buy') {
-          url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
+          url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}${walletAddressParam}`
         } else {
           url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/sell_quote/?apiKey=${apiKey}&quoteCurrencyCode=${fiatCode}&payoutMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
         }
