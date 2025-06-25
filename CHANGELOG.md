@@ -10,6 +10,7 @@
 - added: Support for Zano alias name resolution.
 - added: Add `walletAddress` param to Moonpay buy quotes.
 - changed: Don't allow multiple pending EVM transactions.
+- fixed: Specify build target in deploy.ts to fix Apple silicon build environments
 
 ## 4.30.0 (2025-06-24)
 
