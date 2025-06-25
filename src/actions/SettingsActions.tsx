@@ -288,16 +288,18 @@ export async function showReEnableOtpModal(
   }
 }
 
-export function showUnlockSettingsModal(): ThunkAction<Promise<boolean>> {
+export function showUnlockSettingsModal(): ThunkAction<
+  Promise<string | undefined>
+> {
   return async (dispatch, getState) => {
-    const passwordValid = await dispatch(validatePassword())
-    if (passwordValid) {
+    const password = await dispatch(validatePassword())
+    if (password != null) {
       dispatch({
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: false
       })
     }
-    return passwordValid
+    return password
   }
 }
 
