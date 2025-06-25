@@ -68,6 +68,7 @@ type AllowedPaymentTypes = Record<
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
+    iach: true,
     applepay: true,
     credit: true,
     googlepay: true,
@@ -77,6 +78,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     spei: true
   },
   sell: {
+    iach: true,
     colombiabank: true,
     credit: true,
     mexicobank: true,
@@ -97,6 +99,9 @@ const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
   'method-id_bridgerpay_revolutpay',
+
+  // iach
+  'method-id-trustly',
 
   // XXX Hack. Fake payment methods for googlepay/applepay
   'fake-id-googlepay',
@@ -368,6 +373,9 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(
 }, {})
 
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
+  // iach
+  'method-id-trustly': 'iach',
+
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
   'method-id_bridgerpay_revolutpay': 'revolut',
@@ -392,6 +400,7 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
 const REVERSE_PAYMENT_METHOD_MAP: Partial<{
   [Payment in FiatPaymentType]: PaymentMethodId
 }> = {
+  iach: 'method-id-trustly',
   applepay: 'method-id-credit-card',
   credit: 'method-id-credit-card',
   googlepay: 'method-id-credit-card',
