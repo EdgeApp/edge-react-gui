@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Support for Paybis ACH buy
+
 ## 4.31.0 (staging)
 
 - added: "Change Username" setting
