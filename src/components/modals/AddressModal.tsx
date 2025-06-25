@@ -153,12 +153,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   onChangeTextDelayed = async (domain: string) => {
     this.setState({ errorLabel: undefined, validLabel: undefined })
+    this.updateUri(domain)
     try {
       const { currencyCode } = this.props
       if (this.checkIfDomain(domain)) {
         await this.resolveName(domain, currencyCode)
       }
-      this.updateUri(domain)
       await this.checkIfFioAddress(domain)
     } catch (error) {
       showDevError(error)
