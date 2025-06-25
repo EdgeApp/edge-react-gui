@@ -80,20 +80,20 @@ export const fioCodeToEdgeAsset = (
   // Bail out if we don't know about this chain:
   if (pluginId == null) return
 
+  // If the token code matches the chain code, we want the main asset:
+  if (fioTokenCode === fioChainCode) return { pluginId, tokenId: null }
+
   // Find the token being asked for:
   const fioTokens = fioAssets[pluginId]?.tokenCodes ?? {}
   const tokenId =
-    // If the token code matches the chain code, we want the main asset:
-    fioTokenCode === fioAssets[pluginId]?.chainCode
-      ? null
-      : // Otherwise, check the special token mappings for this chain:
-        Object.keys(fioTokens).find(
-          tokenId => fioTokens[tokenId] === fioTokenCode
-        ) ??
-        // Otherwise, do a normal token lookup:
-        getTokenId(account.currencyConfig[pluginId], fioTokenCode)
+    // Check the special token mappings for this chain:
+    Object.keys(fioTokens).find(
+      tokenId => fioTokens[tokenId] === fioTokenCode
+    ) ??
+    // Otherwise, do a normal token lookup:
+    getTokenId(account.currencyConfig[pluginId], fioTokenCode)
 
-  // Bail out if we couldn't find a matching token or main asset (null):
+  // Bail out if we couldn't find a matching token:
   if (tokenId === undefined) return
 
   return { pluginId, tokenId }
