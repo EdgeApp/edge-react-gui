@@ -39,6 +39,93 @@ const DEFAULT_BUNDLE_SET_VALUE = 1
 
 export const BUNDLED_TXS_AMOUNT_ALERT = 5
 
+// These should match the methods in edge-currency-accountbased:
+interface FioMakeSpendParams {
+  addBundledTransactions: {
+    fioAddress: string
+    bundleSets: number
+  }
+
+  addPublicAddresses: {
+    fioAddress: string
+    publicAddresses: Array<{
+      token_code: string
+      chain_code: string
+      public_address: string
+    }>
+  }
+
+  cancelFundsRequest: {
+    fioAddress: string
+    fioRequestId: number
+  }
+
+  recordObtData: {
+    payeeFioAddress: string
+    payeePublicAddress: string
+    payerFioAddress: string
+    payerPublicAddress: string
+    amount: string
+    memo: string
+    chainCode: string
+    tokenCode: string
+    obtId: string
+
+    fioRequestId?: number
+    status?: 'cancelled' | 'rejected' | 'requested' | 'sent_to_blockchain'
+  }
+
+  registerFioAddress: {
+    fioAddress: string
+  }
+
+  registerFioDomain: {
+    fioDomain: string
+  }
+
+  rejectFundsRequest: {
+    payerFioAddress: string
+    fioRequestId: number
+  }
+
+  removePublicAddresses: {
+    fioAddress: string
+    publicAddresses: Array<{
+      token_code: string
+      chain_code: string
+      public_address: string
+    }>
+  }
+
+  renewFioDomain: {
+    fioDomain: string
+  }
+
+  requestFunds: {
+    payeeFioAddress: string
+    payeeTokenPublicAddress: string
+    payerFioAddress: string
+    payerFioPublicKey: string
+    amount: string
+    chainCode: string
+    tokenCode: string
+    memo: string
+  }
+
+  setFioDomainVisibility: {
+    fioDomain: string
+    isPublic: boolean
+  }
+
+  transferFioAddress: {
+    fioAddress: string
+  }
+
+  transferFioDomain: {
+    fioDomain: string
+  }
+}
+
 interface DiskletConnectedWallets {
   [fullCurrencyCode: string]: {
     walletId: string
@@ -65,7 +152,7 @@ export const FIO_FAKE_RECORD_OBT_DATA_REQUEST = {
   chainCode: '',
   obtId: '',
   memo: '',
-  status: 'sent_to_blockchain'
+  status: 'sent_to_blockchain' as const
 }
 export class FioError extends Error {
   code: string
@@ -162,10 +249,10 @@ export const setFioExpiredCheckToDisklet = async (
   }
 }
 
-export const fioMakeSpend = async (
+export const fioMakeSpend = async <Name extends keyof FioMakeSpendParams>(
   fioWallet: EdgeCurrencyWallet,
-  actionName: string,
-  params: unknown
+  actionName: Name,
+  params: FioMakeSpendParams[Name]
 ): Promise<EdgeTransaction> => {
   const fakeSpendTarget = { publicAddress: '', nativeAmount: '0' }
   const spendInfo: EdgeSpendInfo = {
@@ -1180,14 +1267,12 @@ export const getTransferFee = async (
     try {
       if (forDomain) {
         const edgeTx = await fioMakeSpend(fioWallet, 'transferFioDomain', {
-          fioAddress: '',
           fioDomain: ''
         })
         return parseInt(edgeTx.networkFee)
       } else {
         const edgeTx = await fioMakeSpend(fioWallet, 'transferFioAddress', {
-          fioAddress: '',
-          fioDomain: ''
+          fioAddress: ''
         })
         return parseInt(edgeTx.networkFee)
       }

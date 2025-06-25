@@ -242,8 +242,9 @@ export class FioRequestConfirmationConnected extends React.Component<
             fioCurrencyCode,
             fioCurrencyCode
           )
-        } catch (e: any) {
-          console.log(e)
+        } catch (error: unknown) {
+          showError(error)
+          return
         }
 
         const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(
