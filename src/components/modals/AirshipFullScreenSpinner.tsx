@@ -29,6 +29,7 @@ interface Props<T> {
 
 export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
   opacity: Animated.Value
+  unmounted = false
 
   constructor(props: Props<T>) {
     super(props)
@@ -46,6 +47,8 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
     }).start()
 
     const hide = () => {
+      if (this.unmounted) return
+
       // Animate out:
       Animated.timing(this.opacity, {
         toValue: 0,
@@ -64,6 +67,10 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
     } else {
       setTimeout(hide, fadeInTime + visibleTime)
     }
+  }
+
+  componentWillUnmount(): void {
+    this.unmounted = true
   }
 
   render() {

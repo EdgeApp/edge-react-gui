@@ -282,17 +282,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -301,128 +296,148 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -837,39 +852,64 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -924,7 +964,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
@@ -1679,17 +1719,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -1698,128 +1733,148 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -2234,39 +2289,64 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -2321,7 +2401,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
@@ -3304,17 +3384,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -3323,128 +3398,148 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -4045,39 +4140,64 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   </View>
                 </View>
               </View>
-              <BVLinearGradient
-                colors={
-                  [
-                    452984831,
-                    452984831,
-                  ]
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                endPoint={
+              }
+            />
+            <View
+              style={
+                [
                   {
-                    "x": 1,
-                    "y": 0.5,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
                   {
-                    "x": 0,
-                    "y": 0.5,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "borderBottomColor": "rgba(255, 255, 255, .1)",
-                      "borderBottomWidth": 1,
-                      "height": 1,
-                    },
-                    {
-                      "margin": 11,
-                    },
-                  ]
-                }
-              />
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
               <View
                 style={
                   [
@@ -4132,7 +4252,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       ]
                     }
                   >
-                    Add Destination Address
+                    Add Another Address
                   </Text>
                 </View>
                 <View
@@ -4887,17 +5007,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -4906,128 +5021,148 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -5449,6 +5584,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -6129,17 +6268,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -6148,128 +6282,148 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -6667,6 +6821,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -7347,17 +7505,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -7366,128 +7519,148 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -7703,6 +7876,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -8383,17 +8560,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -8402,128 +8574,148 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -9061,6 +9253,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -9741,17 +9937,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -9760,128 +9951,148 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -10377,6 +10588,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -11057,17 +11272,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -11076,128 +11286,148 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -11627,6 +11857,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}
@@ -12307,17 +12541,12 @@ exports[`SendScene2 Render SendScene 1`] = `
               style={
                 [
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginVertical": 0,
                   },
                 ]
               }
@@ -12326,128 +12555,148 @@ exports[`SendScene2 Render SendScene 1`] = `
                 style={
                   [
                     {
-                      "flexDirection": "column",
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
                       },
                       {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "marginRight": 34,
                       },
-                      null,
                     ]
                   }
                 >
-                  Send from Wallet
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  ellipsizeMode="tail"
-                  minimumFontScale={0.65}
-                  numberOfLines={3}
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Send from Wallet
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    My Bitcoin (BTC)
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
                   }
                 >
-                  My Bitcoin (BTC)
-                </Text>
-              </View>
-              <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={false}
-                collapsable={false}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "alignItems": "flex-end",
-                    "height": "100%",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                    "position": "absolute",
-                    "right": 0,
-                    "width": "100%",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 22,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -12842,6 +13091,10 @@ exports[`SendScene2 Render SendScene 1`] = `
             </View>
           </View>
         </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        />
         <View
           entering={BaseAnimationMock {}}
           layout={BaseAnimationMock {}}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
 import { ENV } from '../../env'
@@ -64,25 +64,25 @@ describe('TransactionListTop', () => {
 
   it('should render', () => {
     ENV.ENABLE_VISA_PROGRAM = false
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('should render (with ENABLE_VISA_PROGRAM)', () => {
     ENV.ENABLE_VISA_PROGRAM = true
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

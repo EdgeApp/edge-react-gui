@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
-<StyledComponent(View)
+<View
   marginRemStyle={
     {
       "marginBottom": 0,
@@ -11,173 +11,381 @@ exports[`FilledTextInput should render with some props 1`] = `
     }
   }
   multiline={true}
+  style={
+    {
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 0,
+      "marginTop": 0,
+    }
+  }
 >
-  <ExtendedTouchable
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
     accessible={false}
-    onPress={[Function]}
+    disableAnimation={
+      {
+        "value": 0,
+      }
+    }
+    focusAnimation={
+      {
+        "value": 0,
+      }
+    }
+    focusable={true}
+    multiline={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    scale={
+      {
+        "value": 1,
+      }
+    }
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "borderRadius": 11,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "flexGrow": 1,
+          "flexShrink": 1,
+          "paddingHorizontal": 17,
+        },
+        {
+          "backgroundColor": undefined,
+          "borderColor": undefined,
+          "marginHorizontal": undefined,
+          "opacity": undefined,
+          "paddingVertical": 22,
+        },
+      ]
+    }
     testID="string"
   >
-    <StyledComponent(View)
-      disableAnimation={
-        {
-          "value": 0,
-        }
-      }
-      focusAnimation={
-        {
-          "value": 0,
-        }
-      }
-      multiline={true}
+    <View
       scale={
+        {
+          "value": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "stretch",
+            "aspectRatio": 1,
+          },
+          {
+            "opacity": 0,
+            "width": 0,
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "anticon",
+            "fontSize": 0,
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          }
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      focusValue={
         {
           "value": 1,
         }
       }
-    >
-      <StyledComponent(View)
-        scale={
+      hasPlaceholder={true}
+      style={
+        [
           {
-            "value": 0,
-          }
-        }
-      >
-        <Unknown
-          color={
-            {
-              "value": undefined,
-            }
-          }
-          size={
-            {
-              "value": 0,
-            }
-          }
-        />
-      </StyledComponent(View)>
-      <StyledComponent(View)
-        focusValue={
+            "alignItems": "flex-start",
+            "alignSelf": "flex-start",
+            "flex": 1,
+            "flexDirection": "row",
+            "left": 0,
+          },
+          {
+            "marginBottom": NaN,
+            "marginTop": undefined,
+          },
+        ]
+      }
+    >
+      <View
+        shift={
           {
             "value": 1,
           }
         }
-        hasPlaceholder={true}
+        style={
+          [
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "left": 8.8,
+              "margin": 0,
+              "paddingHorizontal": 0,
+              "paddingVertical": 0,
+              "position": "absolute",
+              "top": 0,
+            },
+            {
+              "transform": [
+                {
+                  "translateY": undefined,
+                },
+                {
+                  "translateX": undefined,
+                },
+              ],
+            },
+          ]
+        }
       >
-        <StyledComponent(View)
-          shift={
-            {
-              "value": 1,
-            }
-          }
-        >
-          <StyledComponent(Text)
-            disableAnimation={
-              {
-                "value": 0,
-              }
-            }
-            focusAnimation={
-              {
-                "value": 0,
-              }
-            }
-            scale={
-              {
-                "value": 1,
-              }
-            }
-            shift={
-              {
-                "value": 1,
-              }
-            }
-          >
-            string
-          </StyledComponent(Text)>
-        </StyledComponent(View)>
-        <StyledComponentWithRef(TextInput)
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoCapitalize="none"
-          autoCorrect={true}
-          autoFocus={true}
-          blurOnSubmit={false}
-          defaultValue="string"
+        <Text
           disableAnimation={
             {
               "value": 0,
             }
           }
-          editable={true}
           focusAnimation={
             {
               "value": 0,
             }
           }
-          inputAccessoryViewID="string"
-          keyboardType="default"
-          maxLength={11}
-          multiline={true}
-          numberOfLines={20}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="done"
           scale={
             {
               "value": 1,
             }
           }
-          selectionColor="rgba(255, 255, 255, .25)"
-          testID="string.textInput"
-          textAlignVertical="top"
-        />
-      </StyledComponent(View)>
-      <StyledComponent(TouchableOpacity)
-        accessible={true}
-        extendTappable="full"
-        onPress={[Function]}
-        testID="string.clearIcon"
-      >
-        <StyledComponent(View)
-          scale={
+          shift={
             {
-              "value": 22,
+              "value": 1,
+            }
+          }
+          style={
+            [
+              {
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": undefined,
+                "fontSize": undefined,
+              },
+            ]
+          }
+        >
+          string
+        </Text>
+      </View>
+      <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        autoCapitalize="none"
+        autoCorrect={true}
+        autoFocus={true}
+        blurOnSubmit={false}
+        defaultValue="string"
+        disableAnimation={
+          {
+            "value": 0,
+          }
+        }
+        editable={true}
+        focusAnimation={
+          {
+            "value": 0,
+          }
+        }
+        inputAccessoryViewID="string"
+        keyboardType="default"
+        maxLength={11}
+        multiline={true}
+        numberOfLines={20}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        onSubmitEditing={[Function]}
+        returnKeyType="done"
+        scale={
+          {
+            "value": 1,
+          }
+        }
+        selectionColor="rgba(255, 255, 255, .25)"
+        style={
+          [
+            {
+              "color": "hsla(0, 0%, 100%, 0.20)",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "margin": 0,
+              "paddingHorizontal": 0,
+              "paddingVertical": 0,
+              "transform": [
+                {
+                  "translateY": -0,
+                },
+              ],
+            },
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+          ]
+        }
+        testID="string.textInput"
+        textAlignVertical="top"
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "marginHorizontal": -22,
+          "marginVertical": -28,
+          "opacity": 1,
+          "paddingHorizontal": 22,
+          "paddingVertical": 28,
+        }
+      }
+      testID="string.clearIcon"
+    >
+      <View
+        scale={
+          {
+            "value": 22,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "stretch",
+              "aspectRatio": 1,
+            },
+            {
+              "opacity": 22,
+              "width": 22,
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "anticon",
+              "fontSize": 22,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
             }
           }
         >
-          <Unknown
-            color={
-              {
-                "value": undefined,
-              }
-            }
-            size={
-              {
-                "value": 22,
-              }
-            }
-          />
-        </StyledComponent(View)>
-      </StyledComponent(TouchableOpacity)>
-    </StyledComponent(View)>
-  </ExtendedTouchable>
-  <StyledComponent(View)
+          
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
     noLayoutFlow={false}
+    style={
+      [
+        {
+          "flexDirection": "row",
+          "height": 22,
+          "justifyContent": "space-between",
+          "paddingHorizontal": 11,
+        },
+        {},
+      ]
+    }
   >
-    <StyledComponent(Text)
+    <Text
       danger={true}
+      style={
+        [
+          {
+            "color": "#E85466",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "includeFontPadding": false,
+          },
+        ]
+      }
     >
       string
-    </StyledComponent(Text)>
-    <StyledComponent(Text)>
+    </Text>
+    <Text
+      style={
+        [
+          {
+            "color": "#3dd9f4",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "includeFontPadding": false,
+          },
+        ]
+      }
+    >
       5
-    </StyledComponent(Text)>
-  </StyledComponent(View)>
-</StyledComponent(View)>
+    </Text>
+  </View>
+</View>
 `;

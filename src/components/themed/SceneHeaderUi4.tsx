@@ -8,6 +8,7 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   title: string
+  children?: React.ReactNode
 }
 
 /**
@@ -17,13 +18,16 @@ interface Props {
  * he is compliant to this request by peer-review.
  */
 export const SceneHeaderUi4 = (props: Props) => {
-  const { title } = props
+  const { title, children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>{title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}</View>
+      <View style={styles.titleContainer}>
+        {title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}
+        {children}
+      </View>
       <DividerLineUi4 extendRight />
     </View>
   )

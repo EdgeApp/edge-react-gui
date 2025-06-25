@@ -31,18 +31,34 @@ interface Props {
   maximumHeight?: 'small' | 'medium' | 'large'
   rightButtonType?: RowActionIcon
   title?: string
+  testID?: string
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
+
   /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
 }
 
 export const EdgeRow = (props: Props) => {
+  const {
+    body,
+    children,
+    error,
+    icon,
+    loading,
+    marginRem,
+    maximumHeight = 'medium',
+    testID,
+    title,
+
+    // Handlers:
+    onLongPress,
+    onPress,
+    rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable'
+  } = props
+
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, onLongPress, onPress } = props
-  const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
@@ -96,7 +112,14 @@ export const EdgeRow = (props: Props) => {
       {
         // If right action icon button is visible, only the icon dims on row tap
         rightButtonVisible ? (
-          <EdgeTouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+          <EdgeTouchableOpacity
+            accessible={false}
+            style={styles.tappableIconContainer}
+            testID={testID}
+            onPress={handlePress}
+            onLongPress={handleLongPress}
+            disabled={loading}
+          >
             {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
@@ -112,7 +135,7 @@ export const EdgeRow = (props: Props) => {
   // TODO: If a right button is specified, onPress/onLogPress is ignored! Refine
   // API and possibly restructure JSX.
   return isTappable && !rightButtonVisible ? (
-    <EdgeTouchableOpacity style={containerStyle} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+    <EdgeTouchableOpacity accessible={false} disabled={loading} style={containerStyle} testID={testID} onLongPress={handleLongPress} onPress={handlePress}>
       {content}
     </EdgeTouchableOpacity>
   ) : (

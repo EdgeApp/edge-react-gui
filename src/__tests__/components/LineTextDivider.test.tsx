@@ -1,21 +1,23 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
 
 import { LineTextDividerComponent } from '../../components/themed/LineTextDivider'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('LineTextDivider', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeChild: React.ReactNode = 'hello'
 
-    const actual = renderer.render(
-      <LineTextDividerComponent title="string" lowerCased>
-        {fakeChild}
-      </LineTextDividerComponent>
+    const rendered = render(
+      <FakeProviders>
+        <LineTextDividerComponent title="string" lowerCased>
+          {fakeChild}
+        </LineTextDividerComponent>
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

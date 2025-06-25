@@ -10,15 +10,16 @@ interface Props extends SceneContainerViewProps {
    * The `title` prop for the {@link SceneHeaderUi4} component.
    */
   headerTitle?: string
+  headerTitleChildren?: React.ReactNode
   children?: React.ReactNode
 }
 
 export function SceneContainer(props: Props) {
-  const { children, headerTitle, ...sceneContainerProps } = props
+  const { children, headerTitle, headerTitleChildren, ...sceneContainerProps } = props
 
   return (
     <SceneContainerView {...sceneContainerProps}>
-      {headerTitle != null ? <SceneHeaderUi4 title={headerTitle} /> : null}
+      {headerTitle != null ? <SceneHeaderUi4 title={headerTitle}>{headerTitleChildren}</SceneHeaderUi4> : null}
       {children}
     </SceneContainerView>
   )

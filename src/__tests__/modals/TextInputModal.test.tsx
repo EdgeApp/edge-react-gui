@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { TextInputModal } from '../../components/modals/TextInputModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
@@ -15,24 +15,24 @@ describe('TextInputModal', () => {
   }
 
   it('should render with a blank input field', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TextInputModal bridge={fakeAirshipBridge} title="title" message="message" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('should render with a populated input field', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TextInputModal bridge={fakeAirshipBridge} title="title" message="message" initialValue="initialValue" />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

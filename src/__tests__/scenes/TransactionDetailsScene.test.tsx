@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -71,7 +71,7 @@ describe('TransactionDetailsScene', () => {
   }
 
   it('should render', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
           {...fakeEdgeAppSceneProps('transactionDetails', {
@@ -98,12 +98,12 @@ describe('TransactionDetailsScene', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
           {...fakeEdgeAppSceneProps('transactionDetails', {
@@ -133,7 +133,7 @@ describe('TransactionDetailsScene', () => {
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

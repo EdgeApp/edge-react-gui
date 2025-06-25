@@ -2,7 +2,26 @@
 
 ## Unreleased (develop)
 
-## 4.29.0 (staging)
+## 4.30.0 (staging)
+
+- added: Additional app review prompt triggers
+- added: Additional user information fields for Kado OTC orders
+- added: Apple AdServices integration and reporting
+- added: KeyboardAccessoryView-based `KavButton`
+- changed: Dismissing Password Reminder banner now behaves the same as dismissing the `PasswordReminderModal`
+- changed: Autocomplete `networkLocation` fields returned from `getTokenDetails` in `EditTokenScene`
+- changed: `FiatPluginEnterAmountScene` next button to use `KavButton`
+- changed: `SendScene2` row/card grouping updated
+- changed: Fees are no longer estimated before amounts are entered in `SendScene2`
+- changed: Remove boot logo animation on Android.
+- changed: Recent wallets added to the top of the Wallet List when searching
+- changed: `OSMOSIS_INIT` type updated to accept api keys
+- fixed: Connecting tokens to FIO addresses failing if there was a "." in the currency code
+- fixed: (ETH) Improper Kiln staking balance shown.
+- fixed: Informative insufficient funds error message for Velo staking
+- fixed: Chart price data not updating when `assetId` changes
+
+## 4.29.0 (2025-06-10)
 
 - added: Add eCash.
 - added: Thorchain TCY stake and unstake

@@ -1,9 +1,9 @@
 import { describe, expect, it, jest } from '@jest/globals'
+import { fireEvent, render } from '@testing-library/react-native'
 import { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TestRenderer from 'react-test-renderer'
 
 import { ButtonsView } from '../../components/buttons/ButtonsView'
 import { EdgeButton } from '../../components/buttons/EdgeButton'
@@ -14,7 +14,7 @@ const testIconUri = 'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.pn
 
 describe('Buttons', () => {
   it('should render simple loose buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeButton label="Primary" type="primary" />
         <EdgeButton label="Secondary" type="secondary" />
@@ -24,11 +24,11 @@ describe('Buttons', () => {
         <EdgeButton label="Tertiary (mini)" type="tertiary" mini />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render spinning buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeButton label="Primary" type="primary" spinner />
         <EdgeButton label="Secondary" type="secondary" spinner />
@@ -38,13 +38,13 @@ describe('Buttons', () => {
         <EdgeButton label="Tertiary (mini)" type="tertiary" mini spinner />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render with child icons', () => {
     const icon = <FastImage source={{ uri: testIconUri }} />
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <EdgeButton label="Primary" type="primary">
           {icon}
@@ -85,48 +85,48 @@ describe('Buttons', () => {
         </EdgeButton>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
-  it('should handle onPress events', () => {
+  it('should handle press events', async () => {
     const mockOnPress: Mock<() => void | Promise<void>> = jest.fn()
 
     // Press enabled
-    const testRenderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
-        <EdgeButton onPress={mockOnPress}>
+        <EdgeButton testID="button" onPress={mockOnPress}>
           <EdgeText>Press Me</EdgeText>
         </EdgeButton>
       </FakeProviders>
     )
 
-    testRenderer.root.findByType(TouchableOpacity).props.onPress()
+    const node = await rendered.getByTestId('button')
+    fireEvent.press(node)
     expect(mockOnPress).toHaveBeenCalled()
 
-    // TODO: Use @testing-library to simulate a real press event to test
-    // disabled states
+    // TODO: test disabled states
   })
 
   it('should render in a ButtonsView in a column layout with 1 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a column layout with 2 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a column layout with 3 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView
           primary={{ label: 'Primary', onPress: () => {} }}
@@ -135,29 +135,29 @@ describe('Buttons', () => {
         />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a row layout with 1 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a row layout with 2 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a row layout with 3 buttons', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <ButtonsView
           primary={{ label: 'Primary', onPress: () => {} }}
@@ -167,11 +167,11 @@ describe('Buttons', () => {
         />
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a column layout in a flex:1 View', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <View style={{ flex: 1 }}>
           <ButtonsView
@@ -184,11 +184,11 @@ describe('Buttons', () => {
         </View>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 
   it('should render in a ButtonsView in a row layout in a flex:1 View', () => {
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders>
         <View style={{ flex: 1 }}>
           <ButtonsView
@@ -201,6 +201,6 @@ describe('Buttons', () => {
         </View>
       </FakeProviders>
     )
-    expect(renderer.toJSON()).toMatchSnapshot()
+    expect(rendered.toJSON()).toMatchSnapshot()
   })
 })

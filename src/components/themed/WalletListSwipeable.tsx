@@ -11,7 +11,7 @@ import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCrea
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
+import { FlatListItem, WalletListItem } from '../../types/types'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
@@ -57,6 +57,7 @@ function WalletListSwipeableComponent(props: Props) {
   const theme = useTheme()
   const dispatch = useDispatch()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
   const account = useSelector(state => state.core.account)
 
   // This list is shown when we're in a searching state
@@ -93,7 +94,25 @@ function WalletListSwipeableComponent(props: Props) {
   })
 
   // Filter based on the search text:
-  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searchText), [sortedWalletList, searchText])
+  const searchedWalletList = React.useMemo(() => {
+    const list = searchWalletList(sortedWalletList, searchText)
+    if (searchText === '' || mostRecentWallets.length === 0) return list
+
+    // Make a list of recent wallets:
+    const recentWallets: WalletListItem[] = []
+    for (const { id, currencyCode } of mostRecentWallets) {
+      const item = list.find(
+        item =>
+          item.type === 'asset' &&
+          item.wallet.id === id &&
+          (item.token?.currencyCode ?? item.wallet.currencyInfo.currencyCode).toLowerCase() === currencyCode.toLowerCase()
+      )
+      if (item != null) recentWallets.push(item)
+    }
+
+    // Put the recent wallets in the front:
+    return [...recentWallets, ...list.filter(item => !recentWallets.includes(item))]
+  }, [sortedWalletList, searchText, mostRecentWallets])
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {

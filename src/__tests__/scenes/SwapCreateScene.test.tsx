@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
+import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import TestRenderer from 'react-test-renderer'
 
 import { SwapCreateScene } from '../../components/scenes/SwapCreateScene'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
@@ -11,13 +11,13 @@ describe('SwapCreateScene', () => {
   it('should render with loading props', () => {
     const rootState: FakeState = { ...fakeRootState }
 
-    const renderer = TestRenderer.create(
+    const rendered = render(
       <FakeProviders initialState={rootState}>
         <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
       </FakeProviders>
     )
 
-    expect(renderer.toJSON()).toMatchSnapshot()
-    renderer.unmount()
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
   })
 })

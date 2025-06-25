@@ -13,7 +13,7 @@ import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
-import { EmailFormScene } from '../plugins/gui/scenes/EmailFormScene'
+import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -111,6 +111,7 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
+import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
@@ -327,8 +328,8 @@ const EdgeBuyTabScreen = () => {
         }}
       />
       <BuyStack.Screen
-        name="guiPluginEmailForm"
-        component={EmailFormScene}
+        name="guiPluginContactForm"
+        component={ContactFormScene}
         options={{
           headerRight: () => null
         }}
@@ -388,8 +389,8 @@ const EdgeSellTabScreen = () => {
         }}
       />
       <SellStack.Screen
-        name="guiPluginEmailForm"
-        component={EmailFormScene}
+        name="guiPluginContactForm"
+        component={ContactFormScene}
         options={{
           headerRight: () => null
         }}
@@ -792,6 +793,7 @@ const EdgeAppStack = () => {
         }}
       />
       <AppStack.Screen name="request" component={RequestScene} />
+      <AppStack.Screen name="reviewTriggerTest" component={ReviewTriggerTestScene} />
       <AppStack.Screen name="securityAlerts" component={SecurityAlertsScene} options={{ headerShown: false }} />
       <AppStack.Screen name="send2" component={SendScene2} />
       <AppStack.Screen

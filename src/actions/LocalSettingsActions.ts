@@ -8,7 +8,7 @@ import { ThunkAction } from '../types/reduxTypes'
 import { asLocalAccountSettings, asNotifInfo, LocalAccountSettings, NotifInfo, NotifState, PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
 
-const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
 const [watchAccountSettings, emitAccountSettings] = makeEvent<LocalAccountSettings>()

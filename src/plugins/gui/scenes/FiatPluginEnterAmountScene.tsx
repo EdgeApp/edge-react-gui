@@ -5,15 +5,14 @@ import { Image, TextStyle, View } from 'react-native'
 
 import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
-import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp30, fadeInUp60, fadeInUp90 } from '../../../components/common/EdgeAnim'
+import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInUp30, fadeInUp60 } from '../../../components/common/EdgeAnim'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
-import { SectionView } from '../../../components/layout/SectionView'
+import { KavButton } from '../../../components/keyboard/KavButton'
+import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
-import { MainButton } from '../../../components/themed/MainButton'
-import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
@@ -187,133 +186,126 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
 
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications hasTabs>
-      <EdgeAnim enter={fadeInUp90}>
-        <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
-          {headerIcon}
-        </SceneHeader>
-      </EdgeAnim>
-      <SectionView>
-        <View style={styles.container}>
-          {swapInputLocations ? (
-            <View style={styles.textFields}>
-              <EdgeAnim enter={fadeInUp60}>
-                <FilledTextInput
-                  disabled={disableInput === 2}
-                  numeric
-                  maxDecimals={6}
-                  autoCorrect={false}
-                  autoFocus
-                  autoCapitalize="none"
-                  keyboardType="decimal-pad"
-                  placeholder={label2}
-                  onChangeText={handleChangeText2}
-                  onSubmitEditing={handleSubmit}
-                  returnKeyType="done"
-                  showSpinner={spinner2}
-                  textsizeRem={1.5}
-                  value={value2 ?? '0'}
-                  verticalRem={0.5}
-                />
-              </EdgeAnim>
-              <EdgeAnim enter={fadeInUp30}>
-                <FilledTextInput
-                  disabled={disableInput === 1}
-                  numeric
-                  maxDecimals={2}
-                  autoCorrect={false}
-                  autoFocus={false}
-                  autoCapitalize="none"
-                  keyboardType="decimal-pad"
-                  placeholder={label1}
-                  onChangeText={handleChangeText1}
-                  onSubmitEditing={handleSubmit}
-                  returnKeyType="done"
-                  showSpinner={spinner1}
-                  textsizeRem={1.5}
-                  value={value1 ?? '0'}
-                  verticalRem={0.5}
-                />
-              </EdgeAnim>
-              {onMax != null ? (
-                <View style={styles.maxButton}>
-                  <ButtonsView
-                    tertiary={{
-                      label: lstrings.string_max_cap,
-                      onPress: handleMax
-                    }}
+    <>
+      <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications hasTabs>
+        <SceneContainer headerTitle={headerTitle} headerTitleChildren={headerIcon}>
+          <View style={styles.container}>
+            {swapInputLocations ? (
+              <View style={styles.textFields}>
+                <EdgeAnim enter={fadeInUp60}>
+                  <FilledTextInput
+                    disabled={disableInput === 2}
+                    numeric
+                    maxDecimals={6}
+                    autoCorrect={false}
+                    autoFocus
+                    autoCapitalize="none"
+                    keyboardType="decimal-pad"
+                    placeholder={label2}
+                    onChangeText={handleChangeText2}
+                    onSubmitEditing={handleSubmit}
+                    returnKeyType="done"
+                    showSpinner={spinner2}
+                    textsizeRem={1.5}
+                    value={value2 ?? '0'}
+                    verticalRem={0.5}
                   />
-                </View>
-              ) : null}
-            </View>
-          ) : (
-            <View style={styles.textFields}>
-              <EdgeAnim enter={fadeInUp60}>
-                <FilledTextInput
-                  disabled={disableInput === 1}
-                  numeric
-                  maxDecimals={2}
-                  autoCorrect={false}
-                  autoFocus
-                  autoCapitalize="none"
-                  keyboardType="decimal-pad"
-                  placeholder={label1}
-                  onChangeText={handleChangeText1}
-                  onSubmitEditing={handleSubmit}
-                  returnKeyType="done"
-                  showSpinner={spinner1}
-                  textsizeRem={1.5}
-                  value={value1 ?? '0'}
-                  verticalRem={0.5}
-                />
-              </EdgeAnim>
-              <EdgeAnim enter={fadeInUp30}>
-                <FilledTextInput
-                  disabled={disableInput === 2}
-                  numeric
-                  maxDecimals={6}
-                  autoCorrect={false}
-                  autoFocus={false}
-                  autoCapitalize="none"
-                  keyboardType="decimal-pad"
-                  placeholder={label2}
-                  onChangeText={handleChangeText2}
-                  onSubmitEditing={handleSubmit}
-                  returnKeyType="done"
-                  showSpinner={spinner2}
-                  textsizeRem={1.5}
-                  value={value2 ?? '0'}
-                  verticalRem={0.5}
-                />
-              </EdgeAnim>
-              {onMax != null ? (
-                <View style={styles.maxButton}>
-                  <ButtonsView
-                    tertiary={{
-                      label: lstrings.string_max_cap,
-                      onPress: handleMax
-                    }}
+                </EdgeAnim>
+                <EdgeAnim enter={fadeInUp30}>
+                  <FilledTextInput
+                    disabled={disableInput === 1}
+                    numeric
+                    maxDecimals={2}
+                    autoCorrect={false}
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    keyboardType="decimal-pad"
+                    placeholder={label1}
+                    onChangeText={handleChangeText1}
+                    onSubmitEditing={handleSubmit}
+                    returnKeyType="done"
+                    showSpinner={spinner1}
+                    textsizeRem={1.5}
+                    value={value1 ?? '0'}
+                    verticalRem={0.5}
                   />
-                </View>
-              ) : null}
-            </View>
-          )}
-          <>
-            <EdgeAnim enter={fadeInDown30}>
-              <EdgeText numberOfLines={2} style={statusTextStyle}>
-                {statusText.content}
-              </EdgeText>
-            </EdgeAnim>
-            <EdgeAnim enter={fadeInDown60}>
-              <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy?.poweredByText ?? ''} onPress={handlePoweredByPress} />
-            </EdgeAnim>
-            <EdgeAnim enter={fadeInDown90}>
-              <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[0.5, 0]} onPress={handleSubmit} />
-            </EdgeAnim>
-          </>
-        </View>
-      </SectionView>
-    </SceneWrapper>
+                </EdgeAnim>
+                {onMax != null ? (
+                  <View style={styles.maxButton}>
+                    <ButtonsView
+                      tertiary={{
+                        label: lstrings.string_max_cap,
+                        onPress: handleMax
+                      }}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            ) : (
+              <View style={styles.textFields}>
+                <EdgeAnim enter={fadeInUp60}>
+                  <FilledTextInput
+                    disabled={disableInput === 1}
+                    numeric
+                    maxDecimals={2}
+                    autoCorrect={false}
+                    autoFocus
+                    autoCapitalize="none"
+                    keyboardType="decimal-pad"
+                    placeholder={label1}
+                    onChangeText={handleChangeText1}
+                    returnKeyType="done"
+                    showSpinner={spinner1}
+                    textsizeRem={1.5}
+                    value={value1 ?? '0'}
+                    verticalRem={0.5}
+                  />
+                </EdgeAnim>
+                <EdgeAnim enter={fadeInUp30}>
+                  <FilledTextInput
+                    disabled={disableInput === 2}
+                    numeric
+                    maxDecimals={6}
+                    autoCorrect={false}
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    keyboardType="decimal-pad"
+                    placeholder={label2}
+                    onChangeText={handleChangeText2}
+                    returnKeyType="done"
+                    showSpinner={spinner2}
+                    textsizeRem={1.5}
+                    value={value2 ?? '0'}
+                    verticalRem={0.5}
+                  />
+                </EdgeAnim>
+                {onMax != null ? (
+                  <View style={styles.maxButton}>
+                    <ButtonsView
+                      tertiary={{
+                        label: lstrings.string_max_cap,
+                        onPress: handleMax
+                      }}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            )}
+            <>
+              <EdgeAnim enter={fadeInDown30}>
+                <EdgeText numberOfLines={2} style={statusTextStyle}>
+                  {statusText.content}
+                </EdgeText>
+              </EdgeAnim>
+              <EdgeAnim enter={fadeInDown60}>
+                <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy?.poweredByText ?? ''} onPress={handlePoweredByPress} />
+              </EdgeAnim>
+            </>
+          </View>
+        </SceneContainer>
+      </SceneWrapper>
+      <KavButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} onPress={handleSubmit} hasTabs hasNotifications />
+    </>
   )
 })
 
@@ -325,11 +317,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     includeFontPadding: false
   }
   return {
-    sceneHeader: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
-    },
     container: {
       alignItems: 'center',
       paddingTop: theme.rem(0.5),

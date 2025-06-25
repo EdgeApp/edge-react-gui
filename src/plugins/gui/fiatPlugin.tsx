@@ -9,6 +9,7 @@ import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { updateFiatPurchaseCount } from '../../actions/RequestReviewActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
@@ -20,6 +21,7 @@ import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPlugin
 import { FiatProviderLink } from '../../types/DeepLinkTypes'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { Dispatch } from '../../types/reduxTypes'
 import { BuyTabSceneProps, NavigationBase, SellTabSceneProps } from '../../types/routerTypes'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
@@ -90,6 +92,7 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
   onLogEvent: OnLogEvent
+  dispatch: Dispatch
 }): Promise<void> => {
   const {
     disablePlugins = {},
@@ -106,7 +109,8 @@ export const executePlugin = async (params: {
     pluginPromotions,
     providerId,
     regionCode,
-    onLogEvent
+    onLogEvent,
+    dispatch
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
   const isBuy = direction === 'buy'
@@ -199,10 +203,10 @@ export const executePlugin = async (params: {
     async emailForm(params) {
       return await new Promise((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
-        navigation.navigate('guiPluginEmailForm', {
+        navigation.navigate('guiPluginContactForm', {
           message: params.message,
-          onSubmit: async (email: string) => {
-            resolve(email)
+          onSubmit: async (email: string, firstName: string, lastName: string) => {
+            resolve({ email, firstName, lastName })
           },
           onClose: async () => {
             resolve(undefined)
@@ -332,6 +336,9 @@ export const executePlugin = async (params: {
     },
     trackConversion: async (event: TrackingEventName, opts: { conversionValues: BuyConversionValues | SellConversionValues }) => {
       onLogEvent(event, opts)
+      if (event === 'Buy_Success' || event === 'Sell_Success') {
+        dispatch(updateFiatPurchaseCount()).catch(() => {})
+      }
     },
     exitScene: async () => {
       navigation.pop()

@@ -1,194 +1,989 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressRegister should render with loading props 1`] = `
-<Memo(SceneWrapperComponent)
-  scroll={true}
->
-  <Memo(SceneHeaderComponent)
-    style={
+[
+  <BVLinearGradient
+    colors={
+      [
+        4279900698,
+        4279900698,
+      ]
+    }
+    endPoint={
       {
-        "flexDirection": "row-reverse",
-        "justifyContent": "flex-end",
-        "marginRight": 22,
-        "marginTop": 11,
+        "x": 1,
+        "y": 1,
       }
     }
-    title="Register FIO Crypto Handle"
-    underline={true}
-    withTopMargin={true}
-  >
-    <Image
-      resizeMode="cover"
-      source={
-        {
-          "testUri": "../../../src/assets/images/details_fioAddress.png",
-        }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
       }
-      style={
-        {
-          "height": 34,
-          "marginRight": 11,
-          "width": 37,
-        }
-      }
-    />
-  </Memo(SceneHeaderComponent)>
-  <View
+    }
     style={
       {
-        "marginHorizontal": 11,
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
       }
     }
   >
-    <View
-      style={
-        [
-          {
-            "paddingBottom": 22,
-            "paddingHorizontal": 11,
-          },
-          {
-            "paddingTop": 34,
-          },
-        ]
-      }
-    >
-      <EdgeText
-        numberOfLines={2}
-        style={
-          {
-            "color": "#FFFFFF",
-            "fontSize": 22,
-          }
-        }
-      >
-        Send and Receive with an easy to remember FIO Crypto Handle!
-      </EdgeText>
-    </View>
-    <View
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={0}
+      bbWidth={0}
+      focusable={false}
+      height={0}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
       style={
         {
-          "paddingBottom": 22,
-          "paddingHorizontal": 11,
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
         }
       }
+      vbHeight={0}
+      vbWidth={0}
+      width={0}
     >
-      <EdgeText
-        numberOfLines={3}
-        style={
+      <RNSVGGroup
+        fill={
           {
-            "color": "#3dd9f4",
-            "fontSize": 22,
-            "textAlign": "left",
+            "payload": 4278190080,
+            "type": 0,
           }
         }
       >
-        • Works across all tokens and coins
+        <RNSVGDefs>
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -1,
+                0.125,
+                -167772161,
+                0.25,
+                -637534209,
+                0.75,
+                654311423,
+                0.875,
+                184549375,
+                1,
+                16777215,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad0"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -216279,
+                0.0588,
+                -216279,
+                0.1765,
+                -167988439,
+                0.29410000000000003,
+                -637750487,
+                0.7646999999999999,
+                654095145,
+                0.8824,
+                184333097,
+                1,
+                16560937,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad1"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -16719740,
+                0.4667,
+                -16719740,
+                0.5333,
+                -184491900,
+                0.6,
+                -654253948,
+                0.8667,
+                637591684,
+                0.9333,
+                167829636,
+                1,
+                57476,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad2"
+            rx="50%"
+            ry="50%"
+          />
+        </RNSVGDefs>
+        <RNSVGGroup
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          opacity={0.1}
+        >
+          <RNSVGCircle
+            cx="10%"
+            cy="10%"
+            fill={
+              {
+                "brushRef": "grad0",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={224.73239436619718}
+          />
+          <RNSVGCircle
+            cx="95%"
+            cy="30%"
+            fill={
+              {
+                "brushRef": "grad1",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={238.7781690140845}
+          />
+          <RNSVGCircle
+            cx="-15%"
+            cy="100%"
+            fill={
+              {
+                "brushRef": "grad2",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={421.37323943661977}
+          />
+        </RNSVGGroup>
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </BVLinearGradient>,
+  <RCTScrollView
+    collapsable={false}
+    contentContainerStyle={
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
+    onScroll={[Function]}
+    scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
+    style={
+      {
+        "height": 1334,
+        "maxHeight": 1334,
+        "padding": 0,
+        "width": 750,
+      }
+    }
+  >
+    <View>
+      <View
+        style={
+          [
+            {
+              "justifyContent": "center",
+              "marginHorizontal": 22,
+              "paddingBottom": 22,
+            },
+            {
+              "marginTop": 22,
+            },
+            {
+              "flexDirection": "row-reverse",
+              "justifyContent": "flex-end",
+              "marginRight": 22,
+              "marginTop": 11,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 27,
+                },
+                null,
+              ]
+            }
+          >
+            Register FIO Crypto Handle
+          </Text>
+        </View>
+        <Image
+          resizeMode="cover"
+          source={
+            {
+              "testUri": "../../../src/assets/images/details_fioAddress.png",
+            }
+          }
+          style={
+            {
+              "height": 34,
+              "marginRight": 11,
+              "width": 37,
+            }
+          }
+        />
+      </View>
+      <BVLinearGradient
+        colors={
+          [
+            452984831,
+            452984831,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0.5,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0.5,
+          }
+        }
+        style={
+          [
+            {
+              "alignSelf": "stretch",
+              "height": 1,
+            },
+            {
+              "marginBottom": 0,
+              "marginLeft": 22,
+              "marginRight": 0,
+              "marginTop": 0,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          {
+            "marginHorizontal": 11,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "paddingBottom": 22,
+                "paddingHorizontal": 11,
+              },
+              {
+                "paddingTop": 34,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={2}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 22,
+                },
+                null,
+              ]
+            }
+          >
+            Send and Receive with an easy to remember FIO Crypto Handle!
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "paddingBottom": 22,
+              "paddingHorizontal": 11,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={3}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+                null,
+              ]
+            }
+          >
+            • Works across all tokens and coins
 • Secured from your wallet
 • Completely decentralized
-      </EdgeText>
-    </View>
-    <View
-      style={
-        {
-          "paddingBottom": 22,
-          "paddingHorizontal": 11,
-        }
-      }
-    >
-      <EdgeText
-        numberOfLines={5}
-        style={
-          {
-            "color": "#3dd9f4",
-            "fontSize": 22,
-            "textAlign": "left",
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "paddingBottom": 22,
+              "paddingHorizontal": 11,
+            }
           }
-        }
-      >
-        Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
-      </EdgeText>
-    </View>
-    <View
-      onLayout={[Function]}
-    >
-      <EdgeCard
-        sections={true}
-      >
-        <EdgeRow
-          onPress={[Function]}
-          rightButtonType="editable"
-          title="Choose a FIO Crypto Handle"
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={5}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+                null,
+              ]
+            }
+          >
+            Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
+          </Text>
+        </View>
+        <View
+          onLayout={[Function]}
         >
           <View
             style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      },
+                      {
+                        "marginRight": 34,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Choose a FIO Crypto Handle
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#888888",
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      Your Crypto Handle name here
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "borderBottomColor": "rgba(255, 255, 255, .1)",
+                      "borderBottomWidth": 1,
+                      "height": 1,
+                    },
+                    {
+                      "margin": 11,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      },
+                      {
+                        "marginRight": 34,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Choose FIO Domain for Your Crypto Handle
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={3}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    @edge
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {
+                          "fontWeight": "900",
+                        },
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "marginTop": 34,
+            }
+          }
+        >
+          <View
+            absolute={false}
+            layout="solo"
+            style={
               {
-                "flexDirection": "row",
+                "alignItems": "center",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "justifyContent": "center",
+                "margin": 11,
+                "marginHorizontal": 11,
               }
             }
           >
-            <EdgeText
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": true,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "color": "#888888",
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "flexBasis": "auto",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "justifyContent": "center",
+                  "margin": -11,
+                  "opacity": 1,
+                  "padding": 11,
                 }
               }
             >
-              Your Crypto Handle name here
-            </EdgeText>
+              <BVLinearGradient
+                colors={
+                  [
+                    4280299823,
+                    4278214733,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 34,
+                      "flexDirection": "row",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "justifyContent": "center",
+                    },
+                    {
+                      "alignSelf": "center",
+                    },
+                    {
+                      "height": 67,
+                      "paddingHorizontal": 34,
+                    },
+                    {
+                      "opacity": 0.3,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Medium",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ],
+                      null,
+                    ]
+                  }
+                >
+                  Next
+                </Text>
+              </BVLinearGradient>
+            </View>
           </View>
-        </EdgeRow>
-        <EdgeRow
-          body="Loading…"
-          onPress={[Function]}
-          rightButtonType="touchable"
-          title="Choose FIO Domain for Your Crypto Handle"
-        />
-      </EdgeCard>
-    </View>
-    <View
-      style={
-        {
-          "marginTop": 34,
-        }
-      }
-    >
-      <Memo
-        primary={
-          {
-            "disabled": true,
-            "label": "Next",
-            "onPress": [Function],
-            "type": "primary",
+        </View>
+        <View
+          style={
+            {
+              "paddingBottom": 674,
+            }
           }
-        }
-      />
+        />
+      </View>
     </View>
-    <Memo(EdgeAnimInner)
-      enter={
-        {
-          "type": "fadeIn",
-        }
-      }
-      exit={
-        {
-          "type": "fadeOut",
-        }
-      }
-      visible={false}
-    >
-      <AlertCardUi4
-        title=""
-        type="error"
-      />
-    </Memo(EdgeAnimInner)>
-    <View
-      style={
-        {
-          "paddingBottom": 674,
-        }
-      }
-    />
-  </View>
-</Memo(SceneWrapperComponent)>
+  </RCTScrollView>,
+]
 `;
