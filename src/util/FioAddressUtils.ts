@@ -1412,19 +1412,6 @@ export const convertFIOToEdgeCodes = (
   return { chainCode, tokenCode }
 }
 
-export const convertEdgeToFIOCodes = (
-  pluginId: string,
-  edgeChainCode: string,
-  edgeTokenCode: string
-) => {
-  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
-  const fioChainCode = fioAssets[pluginId]?.chainCode ?? edgeChainCode
-  const fioTokenCode =
-    edgeTokenCode === edgeChainCode ? fioChainCode : edgeTokenCode
-
-  return { fioChainCode, fioTokenCode }
-}
-
 const asBitpayResponse = asObject({
   success: asObject({
     charge: asObject({

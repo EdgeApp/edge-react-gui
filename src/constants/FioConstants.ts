@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
 import { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
@@ -97,4 +97,30 @@ export const fioCodeToEdgeAsset = (
   if (tokenId === undefined) return
 
   return { pluginId, tokenId }
+}
+
+export const tokenIdToFioCode = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): { fioChainCode: string; fioTokenCode: string } => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+
+  const { pluginId } = currencyConfig.currencyInfo
+  const fioChainCode =
+    fioAssets[pluginId]?.chainCode ?? currencyConfig.currencyInfo.currencyCode
+
+  // We want the main asset:
+  if (tokenId == null) return { fioChainCode, fioTokenCode: fioChainCode }
+
+  const fioTokenCode =
+    // Check the special token mappings for this chain:
+    fioAssets[pluginId]?.tokenCodes?.[tokenId] ??
+    // Otherwise, do a normal token lookup:
+    currencyConfig.allTokens[tokenId]?.currencyCode
+
+  if (fioTokenCode == null) {
+    throw new Error(`Cannot find ${tokenId} on ${pluginId}`)
+  }
+
+  return { fioChainCode, fioTokenCode }
 }

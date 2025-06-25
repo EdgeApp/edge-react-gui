@@ -1,7 +1,10 @@
 import { describe, it } from '@jest/globals'
 import { EdgeAccount } from 'edge-core-js'
 
-import { fioCodeToEdgeAsset } from '../../constants/FioConstants'
+import {
+  fioCodeToEdgeAsset,
+  tokenIdToFioCode
+} from '../../constants/FioConstants'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 
 const fakeCurrencyConfig: EdgeAccount['currencyConfig'] = {
@@ -84,5 +87,41 @@ describe('fioCodeToEdgeAsset', () => {
     expect(fioCodeToEdgeAsset(fakeAccount, 'FOO', 'FOO')).toStrictEqual(
       undefined
     )
+  })
+})
+
+describe('tokenIdToFioCode', () => {
+  it('Should find normal currencies', async () => {
+    expect(tokenIdToFioCode(fakeCurrencyConfig.ethereum, null)).toStrictEqual({
+      fioChainCode: 'ETH',
+      fioTokenCode: 'ETH'
+    })
+
+    expect(
+      tokenIdToFioCode(
+        fakeCurrencyConfig.ethereum,
+        'dac17f958d2ee523a2206206994597c13d831ec7'
+      )
+    ).toStrictEqual({
+      fioChainCode: 'ETH',
+      fioTokenCode: 'USDT'
+    })
+  })
+
+  it('Should find renamed currencies', async () => {
+    expect(tokenIdToFioCode(fakeCurrencyConfig.bobevm, null)).toStrictEqual({
+      fioChainCode: 'BOBNETWORK',
+      fioTokenCode: 'BOBNETWORK'
+    })
+
+    expect(
+      tokenIdToFioCode(
+        fakeCurrencyConfig.ripple,
+        'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'
+      )
+    ).toStrictEqual({
+      fioChainCode: 'XRP',
+      fioTokenCode: 'USDGH'
+    })
   })
 })
