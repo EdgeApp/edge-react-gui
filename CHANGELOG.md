@@ -2,9 +2,12 @@
 
 ## Unreleased (develop)
 
-- added: Support for Zano alias name resolution.
+## 4.31.0 (staging)
 
-## 4.30.0 (staging)
+- added: Support for Zano alias name resolution.
+- changed: Don't allow multiple pending EVM transactions.
+
+## 4.30.0 (2025-06-24)
 
 - added: Additional app review prompt triggers
 - added: Additional user information fields for Kado OTC orders
