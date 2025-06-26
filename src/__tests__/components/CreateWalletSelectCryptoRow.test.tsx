@@ -4,6 +4,8 @@ import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListRow', () => {
@@ -11,12 +13,7 @@ describe('WalletListRow', () => {
     core: {
       account: {
         currencyConfig: {
-          bitcoin: {
-            currencyInfo: {
-              currencyCode: 'BTC',
-              pluginId: 'bitcoin'
-            }
-          }
+          bitcoin: makeFakeCurrencyConfig(btcCurrencyInfo)
         },
         watch: () => () => {}
       }

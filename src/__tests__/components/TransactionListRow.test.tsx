@@ -3,33 +3,20 @@ import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { TransactionCard } from '../../components/themed/TransactionListRow'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {
-    const currencyInfo = {
-      pluginId: 'bitcoin',
-      currencyCode: 'BTC',
-      displayName: 'Bitcoin',
-      assetDisplayName: 'Bitcoin',
-      requiredConfirmations: 1,
-      denominations: [
-        { name: 'BTC', multiplier: '100000000', symbol: '₿' },
-        { name: 'mBTC', multiplier: '100000', symbol: 'm₿' },
-        { name: 'bits', multiplier: '100', symbol: 'ƀ' },
-        { name: 'sats', multiplier: '1', symbol: 's' }
-      ]
-    }
+    const fakeCurrencyConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
     const fakeWallet: any = {
       id: 'lmnop',
       pluginId: 'bitcoin',
       watch: () => {},
-      currencyConfig: {
-        allTokens: {},
-        currencyInfo
-      },
-      currencyInfo,
+      currencyConfig: fakeCurrencyConfig,
+      currencyInfo: fakeCurrencyConfig.currencyInfo,
       fiatCurrencyCode: 'iso:USD'
     }
 
@@ -37,10 +24,7 @@ describe('TransactionListRow', () => {
       core: {
         account: {
           currencyConfig: {
-            bitcoin: {
-              allTokens: {},
-              currencyInfo
-            }
+            bitcoin: fakeCurrencyConfig
           }
         }
       }

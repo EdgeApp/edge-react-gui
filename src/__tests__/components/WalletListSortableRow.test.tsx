@@ -1,9 +1,9 @@
 import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
-import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
 import { WalletListSortableRow } from '../../components/themed/WalletListSortableRow'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListSortableRow', () => {
@@ -18,30 +18,22 @@ describe('WalletListSortableRow', () => {
   })
 
   it('should render with fake wallet', () => {
-    const fakeCurrencyInfo: Partial<EdgeCurrencyInfo> = {
+    const fakeCurrencyConfig = makeFakeCurrencyConfig({
       pluginId: 'fake',
       currencyCode: 'FAKE',
       denominations: [{ name: 'FAKE', multiplier: '1' }]
-    }
+    })
     const fakeState: FakeState = {
       core: {
         account: {
-          currencyConfig: {
-            fake: {
-              allTokens: {},
-              currencyInfo: fakeCurrencyInfo
-            }
-          },
+          currencyConfig: { fake: fakeCurrencyConfig },
           watch: () => () => {}
         }
       }
     }
     const fakeWallet: any = {
-      currencyConfig: {
-        allTokens: {},
-        currencyInfo: fakeCurrencyInfo
-      },
-      currencyInfo: fakeCurrencyInfo,
+      currencyConfig: fakeCurrencyConfig,
+      currencyInfo: fakeCurrencyConfig.currencyInfo,
       name: 'Test wallet',
       balanceMap: new Map()
     }

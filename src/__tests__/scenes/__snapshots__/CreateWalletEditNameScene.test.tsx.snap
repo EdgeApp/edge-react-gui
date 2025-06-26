@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
 <View
@@ -964,7 +964,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   ]
                 }
               >
-                POLY (undefined)
+                POLY (Ethereum)
               </Text>
               <Text
                 adjustsFontSizeToFit={true}

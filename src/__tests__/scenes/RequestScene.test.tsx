@@ -5,6 +5,7 @@ import * as React from 'react'
 import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
@@ -37,10 +38,7 @@ describe('Request', () => {
   it('should render with loaded props', () => {
     const fakeWallet: any = {
       currencyInfo: btcCurrencyInfo,
-      currencyConfig: {
-        allTokens: {},
-        currencyInfo: btcCurrencyInfo
-      },
+      currencyConfig: makeFakeCurrencyConfig(btcCurrencyInfo),
       balanceMap: new Map([[null, '1234']]),
       on: () => () => {}
     }
