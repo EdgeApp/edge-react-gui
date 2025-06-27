@@ -556,6 +556,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
             finalProvidersArray = fiatAmountProviders
             sourceFieldCurrencyCode = displayFiatCurrencyCode
             quoteParams = {
+              wallet: coreWallet,
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
               pluginUtils,
