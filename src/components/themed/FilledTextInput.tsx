@@ -210,12 +210,15 @@ export const FilledTextInput = React.forwardRef<
     inputAccessoryViewID,
     keyboardType,
     maxLength,
-    returnKeyType,
     secureTextEntry,
     testID,
     textsizeRem,
     ...marginRemProps
   } = props
+  const returnKeyType =
+    Platform.OS === 'ios' && props.returnKeyType === 'none'
+      ? undefined
+      : props.returnKeyType
   const theme = useTheme()
   const themeRem = theme.rem(1)
 
