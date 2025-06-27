@@ -1,5 +1,5 @@
 diff --git a/ios/edge/Info.plist b/ios/edge/Info.plist
-index 58d1ff436..4315f7715 100644
+index 58d1ff436..bf3e7f714 100644
 --- a/ios/edge/Info.plist
 +++ b/ios/edge/Info.plist
 @@ -35,7 +35,7 @@

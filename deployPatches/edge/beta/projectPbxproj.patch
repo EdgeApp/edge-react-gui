@@ -1,16 +1,7 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index 443ab795d..fe9770aaf 100644
+index 443ab795d..a7104ecff 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
-@@ -472,7 +472,7 @@
- 			isa = XCBuildConfiguration;
- 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-edge.debug.xcconfig */;
- 			buildSettings = {
--				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-+				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
- 				CLANG_ENABLE_MODULES = YES;
- 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
- 				CURRENT_PROJECT_VERSION = 1;
 @@ -487,8 +487,8 @@
  				MARKETING_VERSION = 1.0;
  				OTHER_LDFLAGS = "$(inherited)";
@@ -22,15 +13,6 @@ index 443ab795d..fe9770aaf 100644
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-@@ -504,7 +504,7 @@
- 			isa = XCBuildConfiguration;
- 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-edge.release.xcconfig */;
- 			buildSettings = {
--				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-+				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
- 				CLANG_ENABLE_MODULES = YES;
- 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
- 				CURRENT_PROJECT_VERSION = 1;
 @@ -518,8 +518,8 @@
  				MARKETING_VERSION = 1.0;
  				OTHER_LDFLAGS = "$(inherited)";
