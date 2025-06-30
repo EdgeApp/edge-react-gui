@@ -286,7 +286,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       <GuiFormField
         fieldType="address"
         autofocus
-        label={lstrings.form_field_title_address_line_1}
+        label={lstrings.form_field_title_street_name}
         value={formData.address}
         fieldRef={rAddressInput}
         onChangeText={handleChangeAddress}
@@ -300,7 +300,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       />
       <GuiFormField
         fieldType="address2"
-        label={lstrings.form_field_title_address_line_2}
+        label={lstrings.form_field_title_apt_unit_number}
         value={formData.address2}
         onChangeText={handleChangeAddress2}
         onBlur={handleHideAddressHints}

@@ -30,6 +30,7 @@
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
 - fixed: Chart price data not updating when `assetId` changes
+- fixed: Use Bity's new address field format.
 
 ## 4.29.0 (2025-06-10)
 
