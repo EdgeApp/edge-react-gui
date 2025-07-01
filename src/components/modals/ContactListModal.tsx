@@ -1,18 +1,20 @@
 import * as React from 'react'
 import { Image } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { check } from 'react-native-permissions'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { permissionNames } from '../../reducers/PermissionsReducer'
+import { useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
-import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
-import { maybeShowContactsPermissionModal } from './ContactsPermissionModal'
+import { ContactPermissionsSection } from './ContactPermissionsSection'
+import { EdgeModal } from './EdgeModal'
 import { ListModal } from './ListModal'
 
 export interface ContactModalResult {
@@ -30,7 +32,7 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const contacts = useSelector(state => state.contacts)
-  const dispatch = useDispatch()
+  const [hasContactsPermission, setHasContactsPermission] = React.useState<boolean | null>(null)
 
   const rowComponent = ({
     givenName,
@@ -70,16 +72,37 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const handleSubmitEditing = (contactName: string) =>
     bridge.resolve({ contactName, thumbnailPath: null })
 
+  const checkPermissions = async () => {
+    const permission = await check(permissionNames.contacts).catch(() => 'denied')
+    setHasContactsPermission(permission === 'granted')
+  }
+
+  const handlePermissionGranted = () => {
+    setHasContactsPermission(true)
+  }
+
+  const handleCancel = () => bridge.resolve(undefined)
+
   useAsyncEffect(
     async () => {
-      const result = await dispatch(maybeShowContactsPermissionModal())
-      if (result === 'allow') {
-        await requestContactsPermission(true)
-      }
+      await checkPermissions()
     },
     [],
     'ContactListModal'
   )
+
+  // If we don't have permissions, show the embedded permissions section
+  if (hasContactsPermission === false) {
+    return (
+      <EdgeModal 
+        title={sprintf(lstrings.transaction_details_person_input, contactType)}
+        bridge={bridge} 
+        onCancel={handleCancel}
+      >
+        <ContactPermissionsSection onPermissionGranted={handlePermissionGranted} />
+      </EdgeModal>
+    )
+  }
 
   return (
     <ListModal
