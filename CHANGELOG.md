@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Support for Paybis ACH buy
+- fixed: Fixed viewport issues on ChnageMiningFeeScene.
 
 ## 4.31.0 (staging)
 
