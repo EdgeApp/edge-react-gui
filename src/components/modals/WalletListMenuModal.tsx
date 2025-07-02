@@ -123,7 +123,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'viewXPub'
   },
   {
-    pluginIds: ['monero', 'piratechain', 'zcash'],
+    pluginIds: ['monero', 'piratechain', 'zcash', 'zano'],
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
