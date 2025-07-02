@@ -22,11 +22,11 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
@@ -45,7 +45,6 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   const { migrateWalletList } = route.params
 
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
@@ -330,26 +329,6 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     }
   )
 
-  const renderNextButton = React.useMemo(() => {
-    return (
-      <View style={styles.bottomButton}>
-        <MainButton
-          spinner={!done}
-          disabled={!done}
-          label={!done ? undefined : lstrings.string_done_cap}
-          type="secondary"
-          marginRem={[0, 0, 1]}
-          onPress={() =>
-            navigation.navigate('edgeTabs', {
-              screen: 'walletsTab',
-              params: { screen: 'walletList' }
-            })
-          }
-        />
-      </View>
-    )
-  }, [done, navigation, styles.bottomButton])
-
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
@@ -374,20 +353,22 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             scrollEnabled={done}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {renderNextButton}
+          <SceneButtons
+            primary={{
+              label: lstrings.string_done_cap,
+              disabled: !done,
+              onPress: () =>
+                navigation.navigate('edgeTabs', {
+                  screen: 'walletsTab',
+                  params: { screen: 'walletList' }
+                })
+            }}
+          />
         </View>
       )}
     </SceneWrapper>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  bottomButton: {
-    alignSelf: 'center',
-    bottom: theme.rem(1),
-    position: 'absolute'
-  }
-}))
 
 const makeSpendSignAndBroadcast = async (
   wallet: EdgeCurrencyWallet,
