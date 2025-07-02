@@ -186,5 +186,21 @@ export const NotificationService = (props: Props) => {
     'NotificationServices'
   )
 
+  // Make sure the backup banner is always shown on login if needed. We do this
+  // separately in this effect so that we can hide the banner during current
+  // login session if they so choose.
+  useAsyncEffect(
+    async () => {
+      if (!isLightAccountReminder) return
+
+      await writeAccountNotifInfo(account, 'lightAccountReminder', {
+        isBannerHidden: false,
+        isCompleted: false
+      })
+    },
+    [isLightAccountReminder],
+    'NotificationServices'
+  )
+
   return null
 }
