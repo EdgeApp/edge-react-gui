@@ -192,7 +192,6 @@ const CreateWalletImportComponent = (props: Props) => {
             autoComplete="off"
             onChangeText={setImportText}
             onSubmitEditing={handleNext}
-            returnKeyType="none"
             ref={textInputRef}
           />
           <SceneButtons

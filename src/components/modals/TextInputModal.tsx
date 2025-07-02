@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
@@ -132,13 +132,7 @@ export function TextInputModal(props: Props) {
           autoCorrect={autoCorrect}
           keyboardType={keyboardType}
           placeholder={inputLabel}
-          returnKeyType={
-            multiline
-              ? Platform.OS === 'ios'
-                ? undefined
-                : 'none'
-              : returnKeyType
-          }
+          returnKeyType={multiline ? undefined : returnKeyType}
           secureTextEntry={secureTextEntry}
           multiline={multiline}
           // Our props:

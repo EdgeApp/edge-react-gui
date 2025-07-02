@@ -55,7 +55,6 @@ export type FilledTextInputReturnKeyType =
   | 'next'
   | 'search'
   | 'send'
-  | 'none' // Defaults to 'done'
 
 export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
@@ -215,10 +214,7 @@ export const FilledTextInput = React.forwardRef<
     textsizeRem,
     ...marginRemProps
   } = props
-  const returnKeyType =
-    Platform.OS === 'ios' && props.returnKeyType === 'none'
-      ? undefined
-      : props.returnKeyType
+  const returnKeyType = Platform.OS === 'ios' ? undefined : props.returnKeyType
   const theme = useTheme()
   const themeRem = theme.rem(1)
 

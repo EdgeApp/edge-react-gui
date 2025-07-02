@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FilledTextInput should render with some props 1`] = `
 <View
@@ -236,7 +236,6 @@ exports[`FilledTextInput should render with some props 1`] = `
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        returnKeyType="done"
         scale={
           {
             "value": 1,

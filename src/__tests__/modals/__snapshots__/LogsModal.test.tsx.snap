@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LogsModal should render with a logs modal 1`] = `
 [
@@ -548,7 +548,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 onChangeText={[Function]}
                 onFocus={[Function]}
                 onSubmitEditing={[Function]}
-                returnKeyType="done"
                 scale={
                   {
                     "value": 1,
