@@ -17390,10 +17390,10 @@ rn-id-blurview@^1.2.1:
   resolved "https://registry.yarnpkg.com/rn-id-blurview/-/rn-id-blurview-1.2.1.tgz#b7e3550d90cf1215f4136667d539b31e05cd25d4"
   integrity sha512-i4GbRGiuflTL2wTeu+Ux61OQEegqFJ13QDeFbEQjukr+u3ESfcFaoGAKbaGafHKbdL5LvSja1tkkBB0mQUzuUg==
 
-rn-qr-generator@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/rn-qr-generator/-/rn-qr-generator-1.3.1.tgz#d9bd8bcb7d8f5d069b538c3298acff9550a12483"
-  integrity sha512-lqdKCfHN1PpcIuOyJ1zUg9NR3Mo53zQ0ZEhHuSChf9/1+/kwxY04eU8plGi3nmsmMfvv9RJSsePNSav2LeADlg==
+rn-qr-generator@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/rn-qr-generator/-/rn-qr-generator-1.4.4.tgz#388f5c6890033c9adc80dc512ceeccf07e2ac652"
+  integrity sha512-UCysUaFHtQWByMA8fmbn/hbbqPNW9vCKpWrCQ9VqVnM3Z39KgMOpIo2W3yLTVENu45A4E1YDy/f8B2Vh29JRTQ==
 
 rollup-plugin-node-resolve@4.0.0:
   version "4.0.0"
