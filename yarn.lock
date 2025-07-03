@@ -16765,10 +16765,10 @@ react-native-sound@^0.11.0:
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.0.tgz#ad60b55ba8c6dc89917f381ad3713f2738de530f"
   integrity sha512-4bGAZfni6E2L695NQjOZwNLBQGXgBGYC4Sy+h99K5h0HqNZjCqR0+aLel+ezASxEJDpaH83gylNObXpiqJgdwg==
 
-react-native-store-review@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.4.1.tgz#c9f1dbe95bb7968d6ac8e873ec28df9046d15681"
-  integrity sha512-24RCu4CAkA4AjfTxGzWGiop7TMulZpe2Mg4UlUeM96eOEmU0aGgo2S9MGS0gWFM5VCES7250s33DpzXp6GevqQ==
+react-native-store-review@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.4.3.tgz#a524374b1a897b1de1b05d6257640296f1693e3c"
+  integrity sha512-RSQ6vx2j4p41GwTqNv2VV7yold62j5qDbGEBAjFi6gkXMrMpxFMg+82FPjbh6012tqv6Ebzwfqw6S4m4d7sddw==
 
 react-native-svg-transformer@^1.5.1:
   version "1.5.1"

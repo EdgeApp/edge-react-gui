@@ -597,7 +597,7 @@ PODS:
     - RNSound/Core (= 0.11.0)
   - RNSound/Core (0.11.0):
     - React
-  - RNStoreReview (0.4.1):
+  - RNStoreReview (0.4.3):
     - React-Core
   - RNSVG (15.3.0):
     - React-Core
@@ -1204,7 +1204,7 @@ SPEC CHECKSUMS:
   RNSentry: 30748d76efd178fc033671cb65689992805045d5
   RNShare: ec3bd4a4432757294f6a802edbc359b9fc68cc54
   RNSound: 436aa4de81ae87b90e1781b5dd9247df3aa4622a
-  RNStoreReview: 30ae7a0ce3e2dd1d753df104bb20d4bea1f8a96e
+  RNStoreReview: 613c43e9132998ed41a65946e20c223c91b36464
   RNSVG: e77adf5edb2302f0f10dd03a09e92bb9420d914e
   RNVectorIcons: 2d86acb67d3b496b55ec50893f751ce5ce74783e
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
