@@ -51,16 +51,12 @@ export interface MapObject<T> {
 }
 
 export interface GuiContact {
-  hasThumbnail: boolean
-  emailAddresses: string[]
-  postalAddresses: string[]
-  middleName: string
-  company: string
-  jobTitle: string
-  familyName: string
-  thumbnailPath: string
-  recordID: string
+  // These are all we use.
+  // See 'react-native-contacts' for other possible fields.
   givenName: string
+  familyName: string
+  hasThumbnail: boolean
+  thumbnailPath: string
 }
 
 /**

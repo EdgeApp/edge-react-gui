@@ -407,7 +407,7 @@ PODS:
   - react-native-compat (2.11.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-contacts (7.0.4):
+  - react-native-contacts (8.0.5):
     - React-Core
   - react-native-get-random-values (1.9.0):
     - React-Core
@@ -1153,7 +1153,7 @@ SPEC CHECKSUMS:
   react-native-adservices: 18087a4a5106c5133b0cde73701bf875e3163cfc
   react-native-camera: 806a323ba17579a335ee43a70622f6b8aae98de8
   react-native-compat: c5c101132cacb720def1c72b40cdf0398e34d31e
-  react-native-contacts: f4efe82376487f1b87411e22b867e85cc4fb1d3c
+  react-native-contacts: 092c5fe3150a5f0cfee0e494c2c144053c2aa137
   react-native-get-random-values: 419569b6ed3d15bfb9b6781b2f2e058f8e8d2698
   react-native-image-picker: f02b573847436881b851f74b7afbf26a0b0107aa
   react-native-in-app-review: b3d1eed3d1596ebf6539804778272c4c65e4a400

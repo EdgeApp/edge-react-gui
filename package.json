@@ -123,7 +123,7 @@
     "react-native-bootsplash": "^6.3.8",
     "react-native-camera": "^1.13.1",
     "react-native-confetti-cannon": "^1.5.2",
-    "react-native-contacts": "^7.0.4",
+    "react-native-contacts": "^8.0.5",
     "react-native-custom-tabs": "https://github.com/adminphoeniixx/react-native-custom-tabs#develop",
     "react-native-device-info": "^13.2.0",
     "react-native-email-link": "^1.14.5",

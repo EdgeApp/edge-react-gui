@@ -250,30 +250,39 @@ exports[`TransactionDetailsScene should render 1`] = `
               ]
             }
           >
-            <Text
-              allowFontScaling={false}
-              selectable={false}
+            <View
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 45,
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "#FFFFFF",
+                    "borderRadius": 22,
+                    "height": 45,
                     "marginRight": 11,
+                    "width": 45,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
               }
             >
-              
-            </Text>
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
             <View
               style={
                 [
@@ -2716,30 +2725,39 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               ]
             }
           >
-            <Text
-              allowFontScaling={false}
-              selectable={false}
+            <View
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 45,
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "#FFFFFF",
+                    "borderRadius": 22,
+                    "height": 45,
                     "marginRight": 11,
+                    "width": 45,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
               }
             >
-              
-            </Text>
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
             <View
               style={
                 [
