@@ -16612,10 +16612,10 @@ react-native-haptic-feedback@^1.14.0:
   resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.14.0.tgz#b50f49dedda4980b3c37c5780823f753cf3ee717"
   integrity sha512-dSXZ6gAzl+W/L7BPjOpnT0bx0cgQiSr0sB3DjyDJbGIdVr4ISaktZC6gC9xYFTv2kMq0+KtbKi+dpd0WtxYZMw==
 
-react-native-image-colors@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-2.3.0.tgz#a4dcd6e486b5bd2bc1c07600467d925f56fed36e"
-  integrity sha512-zC858erFF9W+6vUDkoU9Ryqx8IT5a9chp+ZkBShvKHmX3pAkGG2H3JlLjQFOiPw8/n7IZjLJovru9zvnACIhxg==
+react-native-image-colors@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-2.4.0.tgz#6af1d5fe0e994331de789c1fa33788971f755aec"
+  integrity sha512-qlC31+UNVthByNLVuYSEQeZghOXn3uy1GLF6lHKlvT1HM1GGFH/LXNhU8iXAoQvUyzNa1bEAOTo09Hwinvp/rA==
   dependencies:
     node-vibrant "3.1.6"
 

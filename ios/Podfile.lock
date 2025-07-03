@@ -119,7 +119,7 @@ PODS:
   - hermes-engine (0.71.15):
     - hermes-engine/Pre-built (= 0.71.15)
   - hermes-engine/Pre-built (0.71.15)
-  - ImageColors (2.3.0):
+  - ImageColors (2.4.0):
     - ExpoModulesCore
   - libevent (2.1.12)
   - libwebp (1.3.2):
@@ -1128,7 +1128,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
   hermes-engine: 04437e4291ede4af0c76c25e7efd0eacb8fd25e5
-  ImageColors: 4eff2e3e9c3192904109a860de3b46a99ec3ab80
+  ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
