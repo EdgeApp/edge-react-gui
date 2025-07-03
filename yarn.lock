@@ -16624,10 +16624,10 @@ react-native-image-picker@^7.1.2:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-7.1.2.tgz#383849d1953caf4578874a1f5e5dd11c737bd5cd"
   integrity sha512-b5y5nP60RIPxlAXlptn2QwlIuZWCUDWa/YPUVjgHc0Ih60mRiOg1PSzf0IjHSLeOZShCpirpvSPGnDExIpTRUg==
 
-react-native-in-app-review@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/react-native-in-app-review/-/react-native-in-app-review-4.3.3.tgz#61f09f110de18f0a470a9bb55b9f49600390085f"
-  integrity sha512-Q9sXBtK8tCBYFPCGmMgeMlkxXC5e6vAyPZK26OC1oOKUuKUd0QORnryk/qbwnuN4fLshHQN8UKlLgyHLGRuK3A==
+react-native-in-app-review@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/react-native-in-app-review/-/react-native-in-app-review-4.3.5.tgz#8de11288f4bf69a7bc14cd6f1cfd59129ae7ec65"
+  integrity sha512-ooqAqV0ghz5WrTtXS2WShON0aP4oOnHG2hCgL8p+TWOFIYyTpaCcLgMYC82XXZoAl9+ip2r1/F8l5i4VcyEWhg==
 
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
