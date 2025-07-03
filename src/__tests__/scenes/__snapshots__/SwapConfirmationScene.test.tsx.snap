@@ -545,6 +545,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                     ]
                   }
+                  transform={
+                    [
+                      {
+                        "rotateZ": "-90deg",
+                      },
+                    ]
+                  }
                   vbHeight={61}
                   vbWidth={61}
                   width={61}
@@ -1207,6 +1214,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "flex": 0,
                         "height": 61,
                         "width": 61,
+                      },
+                    ]
+                  }
+                  transform={
+                    [
+                      {
+                        "rotateZ": "-90deg",
                       },
                     ]
                   }
