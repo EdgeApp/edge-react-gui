@@ -34,7 +34,7 @@
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-kotlin": "cd android; ./gradlew formatKotlin",
     "fix-java": "cd android; ./format-java.sh",
-    "fix-swift": "swift-format format -i ios/*.swift",
+    "fix-swift": "swift-format format -i ios/*.swift ios/edge/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
     "gitVersionFile": "node -r sucrase/register scripts/gitVersionFile.ts",
     "ios": "react-native run-ios",
