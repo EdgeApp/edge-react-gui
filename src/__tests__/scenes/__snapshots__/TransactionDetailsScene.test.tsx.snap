@@ -266,6 +266,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             >
               <FastImageView
+                defaultSource={null}
                 resizeMode="cover"
                 source={
                   {
@@ -2741,6 +2742,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             >
               <FastImageView
+                defaultSource={null}
                 resizeMode="cover"
                 source={
                   {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Card should allow child elements to expand within the card 1`] = `
 <View
@@ -589,6 +589,7 @@ exports[`Card should render with icon URI 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {

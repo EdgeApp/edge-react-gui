@@ -822,6 +822,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1026,6 +1027,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1060,6 +1062,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1264,6 +1267,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1298,6 +1302,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1502,6 +1507,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1536,6 +1542,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1740,6 +1747,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -1774,6 +1782,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
