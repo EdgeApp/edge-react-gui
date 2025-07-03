@@ -9353,10 +9353,10 @@ edge-currency-accountbased@^4.52.1:
     xrpl "^2.10.0"
     yaob "^0.3.6"
 
-edge-currency-monero@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.5.0.tgz#4c751a773ad7e677bee7df77d433306352c4aca4"
-  integrity sha512-LUBTh3kVqGm5VsjNFGpBYf0YqbrOnzcS/KTj1YOQFHxxGINf7s8SBqLvsrMrWSgQRZPG05QC3DWmMcZVv+nRuw==
+edge-currency-monero@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.5.1.tgz#57b8f311d3a2f57c519401d0ff3d9c1b6ac0749d"
+  integrity sha512-uCLqDz2qnTdTqQXX7bbz/bRX8Pq6pKG35JsIpW9bny6cz0wJLklrp/f1/MGoDIUKZbdVw3I9symuxNQAdc97pg==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
