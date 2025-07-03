@@ -411,7 +411,7 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.11.0):
     - React-Core
-  - react-native-image-picker (7.1.2):
+  - react-native-image-picker (8.2.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-in-app-review (4.3.5):
@@ -1155,7 +1155,7 @@ SPEC CHECKSUMS:
   react-native-compat: 59fb2a6dccf3785ba7ce40fca0fe43539eda4969
   react-native-contacts: 092c5fe3150a5f0cfee0e494c2c144053c2aa137
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
-  react-native-image-picker: f02b573847436881b851f74b7afbf26a0b0107aa
+  react-native-image-picker: 2c5cb28d24f5a3abc6e58652dd717aa80d38b82f
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: d7eb26730f87cc9b27e8998dd0491a8a4da98c45
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c

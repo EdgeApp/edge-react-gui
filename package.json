@@ -136,7 +136,7 @@
     "react-native-get-random-values": "^1.11.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-colors": "^2.4.0",
-    "react-native-image-picker": "^7.1.2",
+    "react-native-image-picker": "^8.2.1",
     "react-native-in-app-review": "^4.3.5",
     "react-native-keyboard-accessory": "^0.1.16",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
