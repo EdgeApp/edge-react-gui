@@ -141,7 +141,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keyboard-controller": "1.10.2",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-localize": "^3.1.0",
+    "react-native-localize": "^3.4.2",
     "react-native-mail": "^6.1.1",
     "react-native-mymonero-core": "^0.3.2",
     "react-native-patina": "^0.1.6",

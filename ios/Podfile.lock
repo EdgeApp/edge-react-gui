@@ -564,7 +564,7 @@ PODS:
   - RNGestureHandler (2.16.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - RNLocalize (3.1.0):
+  - RNLocalize (3.4.2):
     - React-Core
   - RNPermissions (4.1.5):
     - React-Core
@@ -1194,7 +1194,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: fb5a9b0a3043d5d3e6e9fe7b27b78fcc3a0f753f
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: be422bc1b0a1deb4be02c41f0b8aea1438216d55
-  RNLocalize: 080849cb8a824d9f759b8a5ae00c8321d46dbed0
+  RNLocalize: 6a87f0490f1793d7a70042e4c55eb9a1ba6dd5b4
   RNPermissions: c53f3a6231338accf1a641ab6261f87ac59cfb2f
   RNQrGenerator: 79441166c804207b55a7737b9031590efe0d59d9
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
