@@ -95,7 +95,7 @@ const getFirstCurrencyAddress = async (params: {
   )
   if (walletId != null) {
     const wallet = currencyWallets[walletId]
-    const address = await wallet.getReceiveAddress({ tokenId: null })
+    const address = (await wallet.getAddresses({ tokenId: null }))[0]
     return address.publicAddress
   }
 
@@ -134,6 +134,6 @@ const getFirstCurrencyAddress = async (params: {
     }`
   )
 
-  const address = await wallet.getReceiveAddress({ tokenId: null })
+  const address = (await wallet.getAddresses({ tokenId: null }))[0]
   return address.publicAddress
 }

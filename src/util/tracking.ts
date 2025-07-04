@@ -394,8 +394,12 @@ async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
   // @ts-expect-error
   if (!global.posthog) return
 
-  // @ts-expect-error
-  global.posthog.capture(event, values)
+  try {
+    // @ts-expect-error
+    global.posthog.capture(event, values)
+  } catch (e) {
+    console.warn('Failed to log to Posthog', e)
+  }
 }
 
 /**

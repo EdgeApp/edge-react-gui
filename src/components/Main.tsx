@@ -910,7 +910,6 @@ const EdgeAppStack = () => {
         name="migrateWalletCompletion"
         component={MigrateWalletCompletionScene}
         options={{
-          headerLeft: () => null,
           headerRight: () => null
         }}
       />
