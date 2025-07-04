@@ -632,6 +632,8 @@
   "check_exchange_settings": "Bitte aktivieren sie diese in ihrern Tauschbörsen-Einstellungen.",
   "amount_above_limit": "Der Betrag liegt über dem Maximallimit von %1$s %2$s. Dieses Maximallimit kann je nach Marktbedingungen geändert werden",
   "amount_below_limit": "Der Betrag liegt unter dem Min. Limit von %1$s %2$s. Dieses Min. Limit kann je nach Marktbedingungen geändert werden",
+  "no_amount_below_limit": "Amount is below the min limit. Try again with a higher amount or enable more providers in Settings → Exchange Settings",
+  "no_amount_above_limit": "Amount is above the max limit. Try again with a lower amount or enable more providers in Settings → Exchange Settings",
   "trade_currency": "Trade",
   "trade_s": "Trade %1$s",
   "swap_s_to_from_crypto": "Swap %1$s to/from another crypto",
