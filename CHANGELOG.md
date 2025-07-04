@@ -7,6 +7,8 @@
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
+- fixed: Account for minimum account balances when migrating/sweeping
+- fixed: Button UI styling in `MigrateWalletCompletionScene`
 - fixed: Map from FIO codes to Edge-supported currencies more correctly.
 
 ## 4.31.0 (staging)

@@ -1418,6 +1418,8 @@ const strings = {
   migrate_unknown_error_fragment: 'Unknown error',
   migrate_wallets_modal_message: `The following wallets were found to be potentially impacted by a recent security incident:\n%1$s\nIt is highly recommended that you discontinue using these wallets and migrate the assets to a new wallet in your account. Would you like to use the automated Migrate Wallets feature to do so?`,
   migrate_wallet_tx_notes: 'Migrate funds to %1$s',
+  migrate_wallet_below_minimum_balance_2s:
+    'Migration would leave new wallet below minimum balance. At least %1$s %2$s is required.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',

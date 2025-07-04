@@ -1,4 +1,4 @@
-import { add, sub } from 'biggystring'
+import { add, lt, sub } from 'biggystring'
 import {
   EdgeCurrencyWallet,
   EdgeSpendInfo,
@@ -15,6 +15,7 @@ import {
   writeSyncedSettings
 } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -22,6 +23,7 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { convertNativeToDenomination } from '../../util/utils'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -243,6 +245,35 @@ const MigrateWalletCompletionComponent = (props: Props) => {
                 ]
               }
               const amountToSend = sub(maxAmount, feeTotal)
+
+              // Validate that the new wallet will have sufficient balance after
+              // migration to meet minimum balance requirements
+              const { currencyInfo } = newWallet
+              const specialCurrencyInfo = getSpecialCurrencyInfo(
+                currencyInfo.pluginId
+              )
+              const minimumNativeBalance =
+                specialCurrencyInfo.minimumPopupModals?.minimumNativeBalance ??
+                '0'
+
+              if (lt(amountToSend, minimumNativeBalance)) {
+                const denom = currencyInfo.denominations.find(
+                  d => d.name === currencyInfo.currencyCode
+                )
+                if (denom != null) {
+                  const exchangeAmount = convertNativeToDenomination(
+                    denom.multiplier
+                  )(minimumNativeBalance)
+                  throw new Error(
+                    sprintf(
+                      lstrings.migrate_wallet_below_minimum_balance_2s,
+                      exchangeAmount,
+                      currencyInfo.currencyCode
+                    )
+                  )
+                }
+              }
+
               spendInfo = {
                 ...spendInfo,
                 spendTargets: [
