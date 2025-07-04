@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Support for Paybis ACH buy
+- added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
 
