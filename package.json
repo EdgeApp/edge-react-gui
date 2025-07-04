@@ -174,7 +174,7 @@
     "sprintf-js": "^1.1.1",
     "url": "^0.11.0",
     "url-parse": "^1.5.2",
-    "use-context-selector": "^1.4.1",
+    "use-context-selector": "^2.0.0",
     "yaob": "^0.3.12",
     "yavent": "^0.1.5"
   },
