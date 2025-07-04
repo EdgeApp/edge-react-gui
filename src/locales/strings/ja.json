@@ -632,6 +632,8 @@
   "check_exchange_settings": "エクスチェンジ設定で取引所を有効化してください。",
   "amount_above_limit": "%1$s %2$sの最大限度を超えています。この最大限度は、市場の状況に基づいて変更される場合があります。",
   "amount_below_limit": "%1$s %2$sの最小限度を下回っています。この最小限度は、市場の状況に基づいて変更される場合があります。",
+  "no_amount_below_limit": "Amount is below the min limit. Try again with a higher amount or enable more providers in Settings → Exchange Settings",
+  "no_amount_above_limit": "Amount is above the max limit. Try again with a lower amount or enable more providers in Settings → Exchange Settings",
   "trade_currency": "Trade",
   "trade_s": "Trade %1$s",
   "swap_s_to_from_crypto": "Swap %1$s to/from another crypto",
