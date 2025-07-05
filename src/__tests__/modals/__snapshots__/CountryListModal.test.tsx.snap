@@ -1909,7 +1909,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       }
       getItem={[Function]}
       getItemCount={[Function]}
-      handlerTag={2}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
@@ -1934,16 +1934,6 @@ exports[`CountryListModal should render with a country list 1`] = `
       }
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-          {
-            "current": null,
-          },
-        ]
-      }
     >
       <View>
         <View
