@@ -26,6 +26,10 @@ tags:
 - inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
 - assertVisible: "Submit"
 - tapOn: "Submit"
+- assertVisible: "Security is Our Priority"
+- tapOn: "Cancel"
+- assertVisible: "Assets"
+- tapOn: "Assets"
 - extendedWaitUntil:
     visible: "Wallets"
     timeout: 120000
