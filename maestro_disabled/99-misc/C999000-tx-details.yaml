@@ -17,11 +17,11 @@ tags:
 
 - extendedWaitUntil:
     visible: My Bitcoin
-    timeout: 120000
+    timeout: 15000
 - tapOn: My Bitcoin
 - extendedWaitUntil:
     visible: 0.00003462 BTC
-    timeout: 120000
+    timeout: 15000
 - tapOn: "Sent Bitcoin"
 
 - assertVisible: "Recipient Name"

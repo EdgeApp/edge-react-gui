@@ -21,11 +21,11 @@ tags:
 
 - extendedWaitUntil:
     visible: FIRO
-    timeout: 120000
+    timeout: 15000
 - tapOn: FIRO
 - extendedWaitUntil:
     visible: 0.369074 FIRO
-    timeout: 120000
+    timeout: 15000
 - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -34,7 +34,7 @@ tags:
 # - tapOn: DGB
 # - extendedWaitUntil:
 #     visible: 18.79649375 DGB
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -43,7 +43,7 @@ tags:
 # - tapOn: DOGE
 # - extendedWaitUntil:
 #     visible: 25.81052584 DOGE
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -52,7 +52,7 @@ tags:
 # - tapOn: RVN
 # - extendedWaitUntil:
 #     visible: 22.85548 RVN
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -61,7 +61,7 @@ tags:
 # - tapOn: BCH
 # - extendedWaitUntil:
 #     visible: 0.00588867 BCH
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -70,7 +70,7 @@ tags:
 # - tapOn: DASH
 # - extendedWaitUntil:
 #     visible: 0.03081175 DASH
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -79,7 +79,7 @@ tags:
 # - tapOn: QTUM
 # - extendedWaitUntil:
 #     visible: 0.17765112 QTUM
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -88,7 +88,7 @@ tags:
 # - tapOn: BTG
 # - extendedWaitUntil:
 #     visible: 0.05370395 BTG
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -97,7 +97,7 @@ tags:
 # - tapOn: LTC
 # - extendedWaitUntil:
 #     visible: 0.00921812 LTC
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -106,7 +106,7 @@ tags:
 # - tapOn: BTC
 # - extendedWaitUntil:
 #     visible: 0.00013643 BTC
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 # - scrollUntilVisible:
@@ -115,7 +115,7 @@ tags:
 # - tapOn: GRS
 # - extendedWaitUntil:
 #     visible: 1.43161025 GRS
-#     timeout: 120000
+#     timeout: 15000
 # - tapOn: Wallets
 
 - stopApp

@@ -20,6 +20,6 @@ tags:
 - extendedWaitUntil:
     visible: "Username and password are correct. This device cannot log in due\
     \ to an unrecognized IP address."
-    timeout: 120000
+    timeout: 15000
 
 - stopApp
