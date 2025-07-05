@@ -55,8 +55,6 @@ tags:
 
 - assertVisible: "Assets"
 - tapOn: "Assets"
-- extendedWaitUntil:
-    visible: "Wallets"
-    timeout: 120000
+- assertVisible: "Wallets"
 
 - stopApp
