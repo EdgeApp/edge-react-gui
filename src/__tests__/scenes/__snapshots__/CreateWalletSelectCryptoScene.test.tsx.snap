@@ -726,7 +726,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       extraData={Set {}}
       getItem={[Function]}
       getItemCount={[Function]}
-      handlerTag={1}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
@@ -751,16 +751,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       }
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-          {
-            "current": null,
-          },
-        ]
-      }
     >
       <View>
         <View

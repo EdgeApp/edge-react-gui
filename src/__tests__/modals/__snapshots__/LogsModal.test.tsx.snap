@@ -158,7 +158,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
     </View>
     <RCTScrollView
       collapsable={false}
-      handlerTag={2}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
@@ -174,13 +174,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
           "flexGrow": 0,
           "flexShrink": 1,
         }
-      }
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-        ]
       }
     >
       <View>

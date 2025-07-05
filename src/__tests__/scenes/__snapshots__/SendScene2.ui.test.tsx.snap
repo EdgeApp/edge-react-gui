@@ -1740,7 +1740,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={1}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -3835,7 +3835,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={2}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -5954,7 +5954,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={3}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -7645,7 +7645,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={4}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -9312,7 +9312,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={5}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -10731,7 +10731,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={6}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -12604,7 +12604,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={7}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -14435,7 +14435,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={8}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {
@@ -16200,7 +16200,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={9}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {

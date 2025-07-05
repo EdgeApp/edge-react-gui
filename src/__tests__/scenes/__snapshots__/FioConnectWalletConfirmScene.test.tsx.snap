@@ -628,7 +628,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={1}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
               jestAnimatedStyle={
                 {

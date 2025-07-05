@@ -529,7 +529,7 @@ exports[`WalletListModal should render with loading props 1`] = `
       data={[]}
       getItem={[Function]}
       getItemCount={[Function]}
-      handlerTag={2}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
@@ -549,16 +549,6 @@ exports[`WalletListModal should render with loading props 1`] = `
       scrollEventThrottle={50}
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-          {
-            "current": null,
-          },
-        ]
-      }
     >
       <View />
     </RCTScrollView>

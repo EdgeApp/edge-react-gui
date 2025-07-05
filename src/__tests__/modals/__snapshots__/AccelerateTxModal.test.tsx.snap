@@ -411,7 +411,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
           <View
             collapsable={false}
             forwardedRef={[Function]}
-            handlerTag={2}
+            handlerTag={-1}
             handlerType="PanGestureHandler"
             jestAnimatedStyle={
               {
