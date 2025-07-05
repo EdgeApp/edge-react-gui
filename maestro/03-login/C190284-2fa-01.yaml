@@ -28,6 +28,10 @@ tags:
 - tapOn: "Submit"
 - assertVisible: "Security is Our Priority"
 - tapOn: "Cancel"
+# If the 2FA warning shows up for another device, deny it
+- tapOn:
+    text: "Deny"
+    optional: true
 - assertVisible: "Assets"
 - tapOn: "Assets"
 - extendedWaitUntil:
