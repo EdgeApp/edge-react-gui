@@ -23,7 +23,7 @@ tags:
     timeout: 120000
 - assertVisible: "Enter Backup Code"
 - tapOn: "Enter Backup Code"
-- inputText: "W2GMZ53PT2QBSZZE"
+- inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
 - assertVisible: "Submit"
 - tapOn: "Submit"
 - extendedWaitUntil:
