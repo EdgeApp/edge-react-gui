@@ -17,14 +17,14 @@ tags:
 
 - extendedWaitUntil:
     visible: FIRO
-    timeout: 120000
+    timeout: 15000
 
 - stopApp
 - launchApp
 
 - extendedWaitUntil:
     visible: ${MAESTRO_EDGE_UTXO_USERNAME}
-    timeout: 120000
+    timeout: 15000
 
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_1}
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_2}
@@ -33,6 +33,6 @@ tags:
 
 - extendedWaitUntil:
     visible: FIRO
-    timeout: 120000
+    timeout: 15000
 
 - stopApp

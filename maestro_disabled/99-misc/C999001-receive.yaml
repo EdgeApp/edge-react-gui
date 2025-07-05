@@ -18,11 +18,11 @@ tags:
 
 - extendedWaitUntil:
     visible: DGB
-    timeout: 120000
+    timeout: 15000
 - tapOn: DGB
 - extendedWaitUntil:
     visible: 18.79649375 DGB
-    timeout: 120000
+    timeout: 15000
 - tapOn: Receive
 
 - assertVisible: "You have 18.796493 DGB"

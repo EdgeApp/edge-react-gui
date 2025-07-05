@@ -19,7 +19,7 @@ tags:
 
 - extendedWaitUntil:
     visible: "Markets"
-    timeout: 120000
+    timeout: 15000
 - tapOn: "Markets"
 - assertVisible: "Help"
 - assertVisible:

@@ -20,7 +20,7 @@ tags:
 - extendedWaitUntil:
     visible: "Username and password are correct. This device cannot log in because\
     \ it does not have the right 2-factor code."
-    timeout: 120000
+    timeout: 15000
 - assertVisible: "Enter Backup Code"
 - tapOn: "Enter Backup Code"
 - inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
