@@ -24,7 +24,7 @@ tags:
     optional: true
 
 - extendedWaitUntil:
-    visible: "Wallets"
+    visible: "Assets"
     timeout: 15000
 - assertVisible:
     id: "sideMenuButton"

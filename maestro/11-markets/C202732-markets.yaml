@@ -24,10 +24,13 @@ tags:
     optional: true
 
 - extendedWaitUntil:
-    visible: "Markets"
+    visible: "Assets"
     timeout: 15000
+- assertVisible:
+    id: "sideMenuButton"
+- tapOn:
+    id: "sideMenuButton"
 - tapOn: "Markets"
-- assertVisible: "Help"
 - assertVisible:
     id: "sideMenuButton"
 - assertVisible: "Rank"
