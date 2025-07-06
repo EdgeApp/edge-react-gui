@@ -17,11 +17,20 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
+# If the request notifications modal show with "Security is Our Priority"
+# Cancel it
+- tapOn:
+    text: "Cancel"
+    optional: true
+
 - extendedWaitUntil:
-    visible: "Markets"
-    timeout: 120000
+    visible: "Assets"
+    timeout: 15000
+- assertVisible:
+    id: "sideMenuButton"
+- tapOn:
+    id: "sideMenuButton"
 - tapOn: "Markets"
-- assertVisible: "Help"
 - assertVisible:
     id: "sideMenuButton"
 - assertVisible: "Rank"

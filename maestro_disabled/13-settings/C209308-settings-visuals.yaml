@@ -22,7 +22,7 @@ tags:
 
 - extendedWaitUntil:
     visible: "Wallets"
-    timeout: 120000
+    timeout: 15000
 - assertVisible:
     id: "sideMenuButton"
 - tapOn:

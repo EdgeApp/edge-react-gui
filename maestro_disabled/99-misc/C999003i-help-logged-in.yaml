@@ -21,7 +21,7 @@ tags:
 
 - extendedWaitUntil:
     visible: "FIRO"
-    timeout: 120000
+    timeout: 15000
 - assertVisible: "Help"
 - tapOn: "Help"
 - assertVisible: "Thanks for using Edge!"
@@ -33,7 +33,7 @@ tags:
 - tapOn: "Knowledge Base"
 - extendedWaitUntil:
     visible: "Knowledge Base"
-    timeout: 120000
+    timeout: 15000
 - assertVisible:
     id: "chevronBack"
 - tapOn:

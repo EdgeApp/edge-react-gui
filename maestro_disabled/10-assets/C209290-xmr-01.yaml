@@ -20,11 +20,11 @@ tags:
 
 - extendedWaitUntil:
     visible: XMR
-    timeout: 120000
+    timeout: 15000
 - tapOn: XMR
 - extendedWaitUntil:
     visible: 0.0112 XMR
-    timeout: 120000
+    timeout: 15000
 - tapOn: Wallets
 #- assertVisible: ɱ 0.0112
 

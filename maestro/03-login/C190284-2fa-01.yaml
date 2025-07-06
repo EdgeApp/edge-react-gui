@@ -20,14 +20,41 @@ tags:
 - extendedWaitUntil:
     visible: "Username and password are correct. This device cannot log in because\
     \ it does not have the right 2-factor code."
-    timeout: 120000
+    timeout: 15000
 - assertVisible: "Enter Backup Code"
 - tapOn: "Enter Backup Code"
-- inputText: "W2GMZ53PT2QBSZZE"
+- inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
 - assertVisible: "Submit"
 - tapOn: "Submit"
-- extendedWaitUntil:
-    visible: "Wallets"
-    timeout: 120000
+
+# If the request notifications modal show with "Security is Our Priority"
+# Cancel it
+- tapOn:
+    text: "Cancel"
+    optional: true
+
+# If the 2FA warning shows up for another device, deny it
+- tapOn:
+    text: "Deny"
+    optional: true
+- tapOn:
+    text: "Deny All"
+    optional: true
+- tapOn:
+    text: "Deny"
+    optional: true
+- tapOn:
+    text: "Deny All"
+    optional: true
+- tapOn:
+    text: "SKIP"
+    optional: true
+- tapOn:
+    text: "SKIP"
+    optional: true
+
+- assertVisible: "Assets"
+- tapOn: "Assets"
+- assertVisible: "Wallets"
 
 - stopApp
