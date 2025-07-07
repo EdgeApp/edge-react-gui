@@ -167,6 +167,10 @@ interface SpecialCurrencyInfo {
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
+  /**
+   * This disables the transaction list for the wallet.
+   * (Default: false)
+   */
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
