@@ -7,13 +7,15 @@ import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { FioConnectionWalletItem } from '../../../types/types'
+import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import {
   FIO_NO_BUNDLED_ERR_CODE,
+  FioConnectAddress,
   updatePubAddressesForFioAddress
 } from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
@@ -78,13 +80,10 @@ export const FioConnectWalletConfirmComponent = (
     setAcknowledge(!acknowledge)
   })
 
-  const renderWalletLine = (wallet: FioConnectionWalletItem) => {
-    const label = `${wallet.name} (${wallet.currencyCode})`
+  const renderWalletLine = (item: FioConnectionWalletItem) => {
+    const label = `${getWalletName(item.wallet)} (${item.fioTokenCode})`
     return (
-      <EdgeText
-        key={`${wallet.id}-${wallet.currencyCode}`}
-        style={styles.content}
-      >
+      <EdgeText key={item.key} style={styles.content}>
         {label}
       </EdgeText>
     )
@@ -116,15 +115,15 @@ export const FioConnectWalletConfirmComponent = (
 
       // Connect wallets
       let promiseArray = walletsToConnect.map(
-        async (wallet: FioConnectionWalletItem) => ({
-          walletId: wallet.id,
-          tokenCode: wallet.currencyCode,
-          chainCode: wallet.chainCode,
-          publicAddress: await getCompatibleAddress(wallet.edgeWallet)
+        async (item: FioConnectionWalletItem) => ({
+          walletId: item.wallet.id,
+          fioChainCode: item.fioChainCode,
+          fioTokenCode: item.fioTokenCode,
+          publicAddress: await getCompatibleAddress(item.wallet)
         })
       )
 
-      let publicAddresses = await Promise.all(promiseArray)
+      let publicAddresses: FioConnectAddress[] = await Promise.all(promiseArray)
 
       const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(
         account,
@@ -142,11 +141,11 @@ export const FioConnectWalletConfirmComponent = (
 
       // Disconnect wallets
       promiseArray = walletsToDisconnect.map(
-        async (wallet: FioConnectionWalletItem) => ({
-          walletId: wallet.id,
-          tokenCode: wallet.currencyCode,
-          chainCode: wallet.chainCode,
-          publicAddress: await getCompatibleAddress(wallet.edgeWallet)
+        async (item: FioConnectionWalletItem) => ({
+          walletId: item.wallet.id,
+          fioChainCode: item.fioChainCode,
+          fioTokenCode: item.fioTokenCode,
+          publicAddress: await getCompatibleAddress(item.wallet)
         })
       )
 
@@ -179,8 +178,8 @@ export const FioConnectWalletConfirmComponent = (
             if (
               updatedCcWallets.findIndex(
                 ({ walletId, fullCurrencyCode }) =>
-                  walletId === walletToConnect.id &&
-                  fullCurrencyCode === walletToConnect.fullCurrencyCode
+                  walletId === walletToConnect.wallet.id &&
+                  fullCurrencyCode === walletToConnect.fullFioCode
               ) < 0
             ) {
               walletsToConnectLeft.push(walletToConnect)
@@ -194,8 +193,8 @@ export const FioConnectWalletConfirmComponent = (
             if (
               removedCcWallets.findIndex(
                 ({ walletId, fullCurrencyCode }) =>
-                  walletId === walletToDisconnect.id &&
-                  fullCurrencyCode === walletToDisconnect.fullCurrencyCode
+                  walletId === walletToDisconnect.wallet.id &&
+                  fullCurrencyCode === walletToDisconnect.fullFioCode
               ) < 0
             ) {
               walletsToDisconnectLeft.push(walletToDisconnect)

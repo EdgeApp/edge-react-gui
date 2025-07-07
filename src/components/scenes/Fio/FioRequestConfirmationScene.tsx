@@ -9,6 +9,7 @@ import {
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { tokenIdToFioCode } from '../../../constants/FioConstants'
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
@@ -23,7 +24,6 @@ import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
-  convertEdgeToFIOCodes,
   fioMakeSpend,
   fioSignAndBroadcast,
   getRemainingBundles
@@ -159,7 +159,6 @@ export class FioRequestConfirmationConnected extends React.Component<
   onConfirm = async () => {
     const {
       account,
-      chainCode,
       exchangeDenomination,
       fioPlugin,
       isConnected,
@@ -242,14 +241,14 @@ export class FioRequestConfirmationConnected extends React.Component<
             fioCurrencyCode,
             fioCurrencyCode
           )
-        } catch (e: any) {
-          console.log(e)
+        } catch (error: unknown) {
+          showError(error)
+          return
         }
 
-        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(
-          wallet.currencyInfo.pluginId,
-          chainCode,
-          exchangeDenomination.name
+        const { fioChainCode, fioTokenCode } = tokenIdToFioCode(
+          wallet.currencyConfig,
+          tokenId
         )
 
         // send fio request

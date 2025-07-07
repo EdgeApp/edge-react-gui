@@ -6,6 +6,7 @@
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
+- fixed: Map from FIO codes to Edge-supported currencies more correctly.
 
 ## 4.31.0 (staging)
 

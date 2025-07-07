@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
 <View
@@ -624,12 +624,12 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           {
             "currencyCode": "ETH",
             "displayName": "Ethereum",
-            "key": "create-undefined-ethereum",
+            "key": "create-wallet:ethereum-ethereum",
             "keyOptions": {},
             "pluginId": "ethereum",
             "tokenId": null,
             "type": "create",
-            "walletType": undefined,
+            "walletType": "wallet:ethereum",
           },
           {
             "createWalletIds": [

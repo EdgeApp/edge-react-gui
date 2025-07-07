@@ -54,11 +54,11 @@ export interface HandleActivationInfo {
   activationCost: string
 }
 
+/** Matches `asGetAccountActivationQuote` from EosEngine */
 export interface AccountActivationPaymentInfo {
   paymentAddress: string
   amount: string
   currencyCode: string
-  exchangeAmount: string
   expireTime: number
 }
 
@@ -81,7 +81,6 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
       paymentAddress: '',
       amount: '',
       currencyCode: '',
-      exchangeAmount: '',
       expireTime: 0
     })
   const paymentCurrencyCode = activationPaymentInfo.currencyCode

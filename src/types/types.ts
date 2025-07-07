@@ -343,18 +343,6 @@ export interface FioRequest {
   fioWalletId?: string
 }
 
-export interface FioConnectionWalletItem {
-  key: string
-  id: string
-  edgeWallet: EdgeCurrencyWallet
-  symbolImage?: string
-  name: string
-  currencyCode: string
-  chainCode: string
-  fullCurrencyCode: string
-  isConnected: boolean
-}
-
 export interface FioObtRecord {
   payer_fio_address: string
   payee_fio_address: string

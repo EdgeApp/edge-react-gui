@@ -1,5 +1,10 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeMemo,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -8,14 +13,11 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { fioCodeToEdgeAsset } from '../../../constants/FioConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
-import {
-  getCurrencyCode,
-  getTokenIdForced
-} from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -406,7 +408,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
         const currencyCode = getCurrencyCode(wallet, tokenId)
         onSelectWallet(walletId, currencyCode)
-        await this.sendCrypto(fioRequest, walletId, currencyCode)
+        await this.sendCrypto(fioRequest, walletId, tokenId)
         return
       }
 
@@ -425,7 +427,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           const wallet = account.currencyWallets[walletId]
           const currencyCode = getCurrencyCode(wallet, tokenId)
           onSelectWallet(walletId, currencyCode)
-          await this.sendCrypto(fioRequest, walletId, currencyCode)
+          await this.sendCrypto(fioRequest, walletId, tokenId)
         }
         return
       }
@@ -451,32 +453,30 @@ class FioRequestList extends React.Component<Props, LocalState> {
   sendCrypto = async (
     pendingRequest: FioRequest,
     walletId: string,
-    selectedCurrencyCode: string
+    tokenId: EdgeTokenId
   ) => {
-    const { account, fioWallets = [], currencyWallets, navigation } = this.props
-    const fioWalletByAddress =
-      fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) ||
-      null
-    if (!fioWalletByAddress)
+    const { fioWallets = [], currencyWallets, navigation } = this.props
+    const fioWallet = fioWallets.find(
+      wallet => wallet.id === pendingRequest.fioWalletId
+    )
+    if (fioWallet == null) {
       return showError(lstrings.fio_wallet_missing_for_fio_address)
-    const currencyWallet = currencyWallets[walletId]
-    const exchangeDenomination = getExchangeDenomByCurrencyCode(
-      currencyWallet.currencyConfig,
-      pendingRequest.content.token_code.toUpperCase()
+    }
+    const wallet = currencyWallets[walletId]
+    const exchangeDenomination = getExchangeDenom(
+      wallet.currencyConfig,
+      tokenId
     )
     let nativeAmount = mul(
       pendingRequest.content.amount,
       exchangeDenomination.multiplier
     )
     nativeAmount = toFixed(nativeAmount, 0, 0)
-    const currencyCode = pendingRequest.content.token_code.toUpperCase()
 
-    const parsedUri = await currencyWallet.parseUri(
+    const parsedUri = await wallet.parseUri(
       pendingRequest.content.payee_public_address,
-      currencyCode
+      getCurrencyCode(wallet, tokenId)
     )
-    const { pluginId } = currencyWallet.currencyInfo
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     const memos: EdgeMemo[] | undefined =
       parsedUri.uniqueIdentifier != null
@@ -506,14 +506,10 @@ class FioRequestList extends React.Component<Props, LocalState> {
       },
       beforeTransaction: async () => {
         try {
-          const edgeTx = await fioMakeSpend(
-            fioWalletByAddress,
-            'recordObtData',
-            {
-              ...FIO_FAKE_RECORD_OBT_DATA_REQUEST,
-              payerFioAddress: pendingRequest.payer_fio_address
-            }
-          )
+          const edgeTx = await fioMakeSpend(fioWallet, 'recordObtData', {
+            ...FIO_FAKE_RECORD_OBT_DATA_REQUEST,
+            payerFioAddress: pendingRequest.payer_fio_address
+          })
           if (edgeTx.networkFee !== '0') {
             showError(lstrings.fio_no_bundled_err_msg)
             throw new Error(lstrings.fio_no_bundled_err_msg)
@@ -528,7 +524,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
           navigation.replace('transactionDetails', {
             edgeTransaction,
-            walletId: currencyWallet.id
+            walletId
           })
         }
       }
