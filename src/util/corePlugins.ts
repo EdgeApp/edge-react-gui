@@ -14,6 +14,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   binance: true,
   binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
   bobevm: true,
+  botanix: ENV.BOTANIX_INIT,
   cardano: ENV.CARDANO_INIT,
   cardanotestnet: ENV.CARDANO_TESTNET_INIT,
   celo: ENV.CELO_INIT,

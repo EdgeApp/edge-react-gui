@@ -169,6 +169,7 @@ export const asEnvConfig = asObject({
       nowNodesApiKey: asOptional(asString, '')
     })
   ),
+  BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
   CARDANO_INIT: asCorePluginInit(
     asObject({
       blockfrostProjectId: asOptional(asString),
