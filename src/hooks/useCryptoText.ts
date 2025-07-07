@@ -12,7 +12,13 @@ interface Props {
   withSymbol?: boolean
 }
 
-export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol, hideBalance }: Props): string => {
+export const useCryptoText = ({
+  wallet,
+  tokenId,
+  nativeAmount,
+  withSymbol,
+  hideBalance
+}: Props): string => {
   const {
     denomination: exchangeDenomination,
     fiatDenomination,

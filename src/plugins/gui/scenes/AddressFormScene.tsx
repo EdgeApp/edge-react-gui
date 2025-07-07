@@ -8,7 +8,11 @@ import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { ExpandableList } from '../../../components/common/ExpandableList'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
-import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  useTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
@@ -16,7 +20,11 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { ADDRESS_FORM_DISKLET_NAME, asHomeAddress, HomeAddress } from '../../../types/FormTypes'
+import {
+  ADDRESS_FORM_DISKLET_NAME,
+  asHomeAddress,
+  HomeAddress
+} from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
@@ -66,7 +74,8 @@ export const AddressFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route, navigation } = props
-  const { countryCode, headerTitle, /* headerIconUri, */ onSubmit, onClose } = route.params
+  const { countryCode, headerTitle, /* headerIconUri, */ onSubmit, onClose } =
+    route.params
   const disklet = useSelector(state => state.core.disklet)
 
   const [formData, setFormData] = React.useState<HomeAddress>({
@@ -79,7 +88,9 @@ export const AddressFormScene = React.memo((props: Props) => {
   })
   const [isNeedsFuzzySearch, setIsNeedsFuzzySearch] = React.useState(false)
   const [searchResults, setSearchResults] = React.useState<HomeAddress[]>([])
-  const [prevAddressQuery, setPrevAddressQuery] = React.useState<string | undefined>(undefined)
+  const [prevAddressQuery, setPrevAddressQuery] = React.useState<
+    string | undefined
+  >(undefined)
   const [isHintsDropped, setIsHintsDropped] = React.useState(false)
   const [hintHeight, setHintHeight] = React.useState<number>(0)
 
@@ -108,7 +119,10 @@ export const AddressFormScene = React.memo((props: Props) => {
       const displaySearchResult2 = `${searchResult.city}, ${searchResult.state}, ${countryCode}`
 
       return (
-        <EdgeTouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
+        <EdgeTouchableOpacity
+          key={searchResults.indexOf(searchResult)}
+          onPress={addressHintPress(searchResult)}
+        >
           <View style={styles.rowContainer} onLayout={handleHintLayout}>
             <EdgeText>{displaySearchResult1}</EdgeText>
             <EdgeText>{displaySearchResult2}</EdgeText>
@@ -116,7 +130,13 @@ export const AddressFormScene = React.memo((props: Props) => {
         </EdgeTouchableOpacity>
       )
     })
-  }, [searchResults, countryCode, addressHintPress, handleHintLayout, styles.rowContainer])
+  }, [
+    searchResults,
+    countryCode,
+    addressHintPress,
+    handleHintLayout,
+    styles.rowContainer
+  ])
 
   const handleShowAddressHints = useHandler(() => {
     setIsHintsDropped(true)
@@ -138,7 +158,11 @@ export const AddressFormScene = React.memo((props: Props) => {
       } else if (prevAddressQuery !== addressQuery) {
         // Fetch fuzzy search results
         try {
-          const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(addressQuery)}`)
+          const res = await fetch(
+            `https://photon.komoot.io/api/?q=${encodeURIComponent(
+              addressQuery
+            )}`
+          )
           const json = await res.json()
 
           // Filter valid addresses by country code and if the required address
@@ -147,14 +171,25 @@ export const AddressFormScene = React.memo((props: Props) => {
           const searchResults: HomeAddress[] = kmootResult.features
             .filter(rawFeature => {
               try {
-                const cleanedProperties = asKmootValidProperties(rawFeature.properties)
-                return cleanedProperties.countrycode.toUpperCase() === countryCode
+                const cleanedProperties = asKmootValidProperties(
+                  rawFeature.properties
+                )
+                return (
+                  cleanedProperties.countrycode.toUpperCase() === countryCode
+                )
               } catch {
                 return false
               }
             })
             .map(feature => {
-              const { housenumber, street, city, state, postcode, countrycode } = asKmootValidProperties(feature.properties)
+              const {
+                housenumber,
+                street,
+                city,
+                state,
+                postcode,
+                countrycode
+              } = asKmootValidProperties(feature.properties)
               return {
                 address: `${street} ${housenumber ?? ''}`,
                 address2: undefined,
@@ -225,7 +260,11 @@ export const AddressFormScene = React.memo((props: Props) => {
   // Initialize scene with any saved form data from disklet
   useAsyncEffect(
     async () => {
-      const diskletFormData = await getDiskletFormData(disklet, ADDRESS_FORM_DISKLET_NAME, asHomeAddress)
+      const diskletFormData = await getDiskletFormData(
+        disklet,
+        ADDRESS_FORM_DISKLET_NAME,
+        asHomeAddress
+      )
       if (diskletFormData != null && diskletFormData.country === countryCode) {
         setFormData(diskletFormData)
       }
@@ -234,7 +273,9 @@ export const AddressFormScene = React.memo((props: Props) => {
     'AddressFormScene'
   )
 
-  const disableNextButton = (Object.keys(formData) as Array<keyof HomeAddress>).some(
+  const disableNextButton = (
+    Object.keys(formData) as Array<keyof HomeAddress>
+  ).some(
     key =>
       // Disable next on empty non-optional fields
       key !== 'address2' && formData[key].trim() === ''
@@ -245,17 +286,21 @@ export const AddressFormScene = React.memo((props: Props) => {
       <GuiFormField
         fieldType="address"
         autofocus
-        label={lstrings.form_field_title_address_line_1}
+        label={lstrings.form_field_title_street_name}
         value={formData.address}
         fieldRef={rAddressInput}
         onChangeText={handleChangeAddress}
         onFocus={handleShowAddressHints}
         onBlur={handleHideAddressHints}
       />
-      <ExpandableList isExpanded={isHintsDropped} items={addressHints} maxDisplayedItems={MAX_DISPLAYED_HINTS} />
+      <ExpandableList
+        isExpanded={isHintsDropped}
+        items={addressHints}
+        maxDisplayedItems={MAX_DISPLAYED_HINTS}
+      />
       <GuiFormField
         fieldType="address2"
-        label={lstrings.form_field_title_address_line_2}
+        label={lstrings.form_field_title_apt_unit_number}
         value={formData.address2}
         onChangeText={handleChangeAddress2}
         onBlur={handleHideAddressHints}
@@ -298,7 +343,10 @@ export const AddressFormScene = React.memo((props: Props) => {
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={headerTitle} underline withTopMargin />
           {Platform.OS === 'ios' ? (
-            <ScrollView contentContainerStyle={[{ ...insetStyle, ...styles.container }]} keyboardShouldPersistTaps="handled">
+            <ScrollView
+              contentContainerStyle={[{ ...insetStyle, ...styles.container }]}
+              keyboardShouldPersistTaps="handled"
+            >
               {scrollContent}
             </ScrollView>
           ) : (

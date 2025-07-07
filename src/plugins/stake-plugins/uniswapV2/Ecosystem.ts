@@ -8,12 +8,18 @@ interface ContractInfo {
   address: string
 }
 
-export const makeEcosystem = (contractInfoMap: ContractInfoMap, rpcProviderUrls: string[]) => {
-  const providers = rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
+export const makeEcosystem = (
+  contractInfoMap: ContractInfoMap,
+  rpcProviderUrls: string[]
+) => {
+  const providers = rpcProviderUrls.map(
+    url => new ethers.providers.JsonRpcProvider(url)
+  )
 
   const getContractInfo = (key: string): ContractInfo => {
     const contractInfo = contractInfoMap[key]
-    if (contractInfo == null) throw new Error(`Could not find contract info for ${String(key)}`)
+    if (contractInfo == null)
+      throw new Error(`Could not find contract info for ${String(key)}`)
     return contractInfo
   }
 
@@ -24,7 +30,9 @@ export const makeEcosystem = (contractInfoMap: ContractInfoMap, rpcProviderUrls:
   }
 
   let lastServerIndex = 0
-  const multipass = async (fn: (provider: ethers.providers.BaseProvider) => Promise<any>) => {
+  const multipass = async (
+    fn: (provider: ethers.providers.BaseProvider) => Promise<any>
+  ) => {
     const provider = providers[lastServerIndex % providers.length]
     try {
       return await fn(provider)
@@ -35,7 +43,10 @@ export const makeEcosystem = (contractInfoMap: ContractInfoMap, rpcProviderUrls:
     }
   }
 
-  const makeSigner = (seed: string, provider: ethers.providers.BaseProvider = providers[0]) => new ethers.Wallet(seed, provider)
+  const makeSigner = (
+    seed: string,
+    provider: ethers.providers.BaseProvider = providers[0]
+  ) => new ethers.Wallet(seed, provider)
 
   return {
     getContractInfo,

@@ -82,7 +82,10 @@ jest.mock('rn-qr-generator', () => ({
 }))
 
 // force timezone to UTC
-jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
+jest.mock(
+  'dateformat',
+  () => (number, format) => require('dateformat')(number, format, true)
+)
 
 jest.mock('react-native-device-info', () => ({
   getBrand() {
@@ -221,9 +224,13 @@ jest.mock('react-native-localize', () => ({
   }
 }))
 
-jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock')
+)
 
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
 
 for (const log in global.console) {
   global.console[log] = jest.fn()

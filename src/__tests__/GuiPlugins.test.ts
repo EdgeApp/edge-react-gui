@@ -3,7 +3,11 @@ import { describe, expect, it } from '@jest/globals'
 import buyPluginJsonRaw from '../constants/plugins/buyPluginList.json'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../constants/plugins/sellPluginList.json'
-import { asGuiPluginJson, GuiPlugin, GuiPluginRow } from '../types/GuiPluginTypes'
+import {
+  asGuiPluginJson,
+  GuiPlugin,
+  GuiPluginRow
+} from '../types/GuiPluginTypes'
 import { filterGuiPluginJson, makePluginUri } from '../util/GuiPluginTools'
 
 const buyPluginJson = asGuiPluginJson(buyPluginJsonRaw)
@@ -19,15 +23,21 @@ describe('Production plugin data', () => {
   })
 
   it('Buy plugins match snapshot on iOS + US', () => {
-    expect(filterGuiPluginJson(buyPluginJson, 'ios', 'US', {})).toMatchSnapshot()
+    expect(
+      filterGuiPluginJson(buyPluginJson, 'ios', 'US', {})
+    ).toMatchSnapshot()
   })
 
   it('Sell plugins match snapshot on iOS + US', () => {
-    expect(filterGuiPluginJson(sellPluginJson, 'ios', 'US', {})).toMatchSnapshot()
+    expect(
+      filterGuiPluginJson(sellPluginJson, 'ios', 'US', {})
+    ).toMatchSnapshot()
   })
 
   it('Buy plugins match snapshot on android + IL', () => {
-    expect(filterGuiPluginJson(buyPluginJson, 'android', 'IL', {})).toMatchSnapshot()
+    expect(
+      filterGuiPluginJson(buyPluginJson, 'android', 'IL', {})
+    ).toMatchSnapshot()
   })
 })
 
@@ -109,9 +119,15 @@ describe('GuiPlugins tools', () => {
       promoCode: 'deals'
     }
 
-    expect(makePluginUri(testPlugin, opts)).toEqual('file://test/sell?api_key=edge&kickback')
-    expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual('file://test/?api_key=edge&kickback')
-    expect(makePluginUri({ ...testPlugin, queryPromoCode: 'cheat' }, opts)).toEqual('file://test/sell?api_key=edge&kickback&cheat=deals')
+    expect(makePluginUri(testPlugin, opts)).toEqual(
+      'file://test/sell?api_key=edge&kickback'
+    )
+    expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual(
+      'file://test/?api_key=edge&kickback'
+    )
+    expect(
+      makePluginUri({ ...testPlugin, queryPromoCode: 'cheat' }, opts)
+    ).toEqual('file://test/sell?api_key=edge&kickback&cheat=deals')
   })
 })
 

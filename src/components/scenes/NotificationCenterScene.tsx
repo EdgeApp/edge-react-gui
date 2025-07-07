@@ -3,7 +3,11 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions.tsx'
-import { useAccountSettings, writeAccountNotifInfo, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
+import {
+  useAccountSettings,
+  writeAccountNotifInfo,
+  writeLocalAccountSettings
+} from '../../actions/LocalSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -32,14 +36,21 @@ export const NotificationCenterScene = (props: Props) => {
   const accountSettings = useAccountSettings()
   const { notifState, accountNotifDismissInfo } = useAccountSettings()
 
-  const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
+  const detectedTokensRedux = useSelector(
+    state => state.core.enabledDetectedTokens
+  )
   const account = useSelector(state => state.core.account)
   const wallets = useWatch(account, 'currencyWallets')
 
   const handlePasswordReminderPress = useHandler(async () => {
     // Password reminder completion state handled by the modal, if they actually
     // complete it.
-    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation as NavigationBase} />)
+    await Airship.show(bridge => (
+      <PasswordReminderModal
+        bridge={bridge}
+        navigation={navigation as NavigationBase}
+      />
+    ))
   })
 
   const handleOtpReminderPress = useHandler(async () => {
@@ -48,7 +59,13 @@ export const NotificationCenterScene = (props: Props) => {
 
   const handle2FaEnabledPress = useHandler(async () => {
     await openBrowserUri(config.ip2faSite)
-    await writeLocalAccountSettings(account, { ...accountSettings, accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true } })
+    await writeLocalAccountSettings(account, {
+      ...accountSettings,
+      accountNotifDismissInfo: {
+        ...accountNotifDismissInfo,
+        ip2FaNotifShown: true
+      }
+    })
   })
 
   const handleBackupPress = useHandler(async () => {
@@ -58,11 +75,19 @@ export const NotificationCenterScene = (props: Props) => {
 
   const pinnedNotifInfoKeys = Object.keys(notifState)
     .filter(key => notifState[key].isPriority && !notifState[key].isCompleted)
-    .sort((a, b) => notifState[b].dateReceived.valueOf() - notifState[a].dateReceived.valueOf())
+    .sort(
+      (a, b) =>
+        notifState[b].dateReceived.valueOf() -
+        notifState[a].dateReceived.valueOf()
+    )
 
   const recentNotifKeys = Object.keys(notifState)
     .filter(key => !notifState[key].isPriority && !notifState[key].isCompleted)
-    .sort((a, b) => notifState[b].dateReceived.valueOf() - notifState[a].dateReceived.valueOf())
+    .sort(
+      (a, b) =>
+        notifState[b].dateReceived.valueOf() -
+        notifState[a].dateReceived.valueOf()
+    )
 
   // TODO: Change state handling so animations somehow work, without relying
   // on the cards themselves to animate in/out.
@@ -113,7 +138,10 @@ export const NotificationCenterScene = (props: Props) => {
                   date={date}
                   type="info"
                   title={lstrings.notif_ip_validation_enabled_title}
-                  message={sprintf(lstrings.notif_ip_validation_enabled_body_1s, config.appName)}
+                  message={sprintf(
+                    lstrings.notif_ip_validation_enabled_body_1s,
+                    config.appName
+                  )}
                   iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
                   onPress={handle2FaEnabledPress}
                   pinned
@@ -127,7 +155,10 @@ export const NotificationCenterScene = (props: Props) => {
                   date={date}
                   type="warning"
                   title={lstrings.backup_notification_title}
-                  message={sprintf(lstrings.backup_notification_body, config.appName)}
+                  message={sprintf(
+                    lstrings.backup_notification_body,
+                    config.appName
+                  )}
                   onPress={handleBackupPress}
                   pinned
                 />
@@ -166,7 +197,9 @@ export const NotificationCenterScene = (props: Props) => {
             if (params == null) return null
             const { walletId } = params
             if (walletId == null || wallets[walletId] == null) {
-              console.warn(`newToken notification display failed with unknown walletId: ${walletId}`)
+              console.warn(
+                `newToken notification display failed with unknown walletId: ${walletId}`
+              )
               return null
             }
             const { name, currencyInfo } = wallets[walletId]
@@ -196,8 +229,14 @@ export const NotificationCenterScene = (props: Props) => {
                 title={lstrings.notif_tokens_detected_title}
                 message={
                   name == null || name.trim() === ''
-                    ? sprintf(lstrings.notif_tokens_detected_on_address_1s, currencyInfo.currencyCode)
-                    : sprintf(lstrings.notif_tokens_detected_on_wallet_name_1s, name)
+                    ? sprintf(
+                        lstrings.notif_tokens_detected_on_address_1s,
+                        currencyInfo.currencyCode
+                      )
+                    : sprintf(
+                        lstrings.notif_tokens_detected_on_wallet_name_1s,
+                        name
+                      )
                 }
                 onPress={handlePressNewToken}
                 onClose={completeNotif(key)}
@@ -210,7 +249,13 @@ export const NotificationCenterScene = (props: Props) => {
 
             // Make sure we have valid content
             const { title, body, messageId, ctaUrl } = promoCard
-            if (title == null || body == null || messageId == null || ctaUrl == null) return null
+            if (
+              title == null ||
+              body == null ||
+              messageId == null ||
+              ctaUrl == null
+            )
+              return null
 
             const handlePromoPress = async () => {
               try {
@@ -234,7 +279,10 @@ export const NotificationCenterScene = (props: Props) => {
                 type="info"
                 title={title}
                 message={body}
-                iconUri={getThemedIconUri(theme, 'notifications/icon-notification')}
+                iconUri={getThemedIconUri(
+                  theme,
+                  'notifications/icon-notification'
+                )}
                 onPress={handlePromoPress}
                 onClose={completeNotif(key)}
               />
@@ -251,7 +299,9 @@ export const NotificationCenterScene = (props: Props) => {
     <SceneWrapper scroll>
       {pinnedNotifs == null && recentNotifs == null ? (
         <View style={styles.emptyContainer}>
-          <EdgeText style={styles.emptyText}>{lstrings.notifications_none}</EdgeText>
+          <EdgeText style={styles.emptyText}>
+            {lstrings.notifications_none}
+          </EdgeText>
         </View>
       ) : null}
       {pinnedNotifs}

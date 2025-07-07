@@ -15,4 +15,11 @@ export interface ThemeProps {
 
 // Provide the theme context methods:
 const themeContext = makeThemeContext(config.darkTheme)
-export const { ThemeProvider, useTheme, withTheme, changeTheme, getTheme, watchTheme } = themeContext
+export const {
+  ThemeProvider,
+  useTheme,
+  withTheme,
+  changeTheme,
+  getTheme,
+  watchTheme
+} = themeContext

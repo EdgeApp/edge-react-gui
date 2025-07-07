@@ -1,12 +1,20 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { useAccountSettings, writeAccountNotifInfo, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
+import {
+  useAccountSettings,
+  writeAccountNotifInfo,
+  writeLocalAccountSettings
+} from '../../actions/LocalSettingsActions'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -33,8 +41,13 @@ interface Props {
   footerHeight: number
 }
 
-const hideBanner = async (account: EdgeAccount, accountNotifStateKey: string) => {
-  await writeAccountNotifInfo(account, accountNotifStateKey, { isBannerHidden: true })
+const hideBanner = async (
+  account: EdgeAccount,
+  accountNotifStateKey: string
+) => {
+  await writeAccountNotifInfo(account, accountNotifStateKey, {
+    isBannerHidden: true
+  })
 }
 
 const NotificationViewComponent = (props: Props) => {
@@ -46,13 +59,17 @@ const NotificationViewComponent = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
+  const detectedTokensRedux = useSelector(
+    state => state.core.enabledDetectedTokens
+  )
   const wallets = useWatch(account, 'currencyWallets')
 
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
-  const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
+  const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<
+    React.ReactElement[]
+  >([])
 
   const handleBackupClose = useHandler(async () => {
     await hideBanner(account, 'lightAccountReminder')
@@ -75,17 +92,25 @@ const NotificationViewComponent = (props: Props) => {
 
   const handlePasswordReminderPress = useHandler(async () => {
     await handlePasswordReminderClose()
-    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />)
+    await Airship.show(bridge => (
+      <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />
+    ))
   })
 
   const handle2FaEnabledClose = useHandler(async () => {
     // Update both notifState and accountNotifDismissInfo in a single write
     await writeLocalAccountSettings(account, {
       ...accountSettings,
-      accountNotifDismissInfo: { ...accountNotifDismissInfo, ip2FaNotifShown: true },
+      accountNotifDismissInfo: {
+        ...accountNotifDismissInfo,
+        ip2FaNotifShown: true
+      },
       notifState: {
         ...accountSettings.notifState,
-        ip2FaReminder: { ...(accountSettings.notifState.ip2FaReminder ?? {}), isBannerHidden: true }
+        ip2FaReminder: {
+          ...(accountSettings.notifState.ip2FaReminder ?? {}),
+          isBannerHidden: true
+        }
       }
     })
   })
@@ -109,7 +134,7 @@ const NotificationViewComponent = (props: Props) => {
 
   // Show a tokens detected notification per walletId found in newTokens
   React.useEffect(() => {
-    const newNotifs: React.JSX.Element[] = []
+    const newNotifs: React.ReactElement[] = []
     Object.keys(wallets).forEach(walletId => {
       const newTokenKey = `newToken-${walletId}`
       const newTokenIds = detectedTokensRedux[walletId]
@@ -130,8 +155,14 @@ const NotificationViewComponent = (props: Props) => {
         })
       }
 
-      const isShowNewTokenNotif = notifState[newTokenKey] != null && !notifState[newTokenKey].isBannerHidden
-      if (isShowNewTokenNotif && newTokenIds != null && newTokenIds.length > 0) {
+      const isShowNewTokenNotif =
+        notifState[newTokenKey] != null &&
+        !notifState[newTokenKey].isBannerHidden
+      if (
+        isShowNewTokenNotif &&
+        newTokenIds != null &&
+        newTokenIds.length > 0
+      ) {
         const { name, currencyInfo } = wallets[walletId]
 
         newNotifs.push(
@@ -141,8 +172,14 @@ const NotificationViewComponent = (props: Props) => {
             title={lstrings.notif_tokens_detected_title}
             message={
               name == null || name.trim() === ''
-                ? sprintf(lstrings.notif_tokens_detected_on_address_1s, currencyInfo.currencyCode)
-                : sprintf(lstrings.notif_tokens_detected_on_wallet_name_1s, name)
+                ? sprintf(
+                    lstrings.notif_tokens_detected_on_address_1s,
+                    currencyInfo.currencyCode
+                  )
+                : sprintf(
+                    lstrings.notif_tokens_detected_on_wallet_name_1s,
+                    name
+                  )
             }
             onPress={handlePressNewToken}
             onClose={handleCloseNewToken}
@@ -170,7 +207,11 @@ const NotificationViewComponent = (props: Props) => {
       footerOpenRatio={footerOpenRatio}
       onLayout={handleLayout}
     >
-      <EdgeAnim visible={!lightAccountReminder.isBannerHidden} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!lightAccountReminder.isBannerHidden}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="warning"
           title={lstrings.backup_notification_title}
@@ -181,10 +222,18 @@ const NotificationViewComponent = (props: Props) => {
           testID="notifBackup"
         />
       </EdgeAnim>
-      <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={autoDetectTokenCards.length > 0}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         {autoDetectTokenCards}
       </EdgeAnim>
-      <EdgeAnim visible={!otpReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!otpReminder.isBannerHidden && !account.isDuressAccount}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="warning"
           title={lstrings.otp_reset_modal_header}
@@ -194,7 +243,11 @@ const NotificationViewComponent = (props: Props) => {
           testID="notifOtp"
         />
       </EdgeAnim>
-      <EdgeAnim visible={!pwReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!pwReminder.isBannerHidden && !account.isDuressAccount}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="info"
           title={lstrings.password_reminder_card_title}
@@ -204,11 +257,18 @@ const NotificationViewComponent = (props: Props) => {
           testID="notifPassword"
         />
       </EdgeAnim>
-      <EdgeAnim visible={!ip2FaReminder.isBannerHidden && !account.isDuressAccount} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim
+        visible={!ip2FaReminder.isBannerHidden && !account.isDuressAccount}
+        enter={fadeIn}
+        exit={fadeOut}
+      >
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}
-          message={sprintf(lstrings.notif_ip_validation_enabled_body_1s, config.appName)}
+          message={sprintf(
+            lstrings.notif_ip_validation_enabled_body_1s,
+            config.appName
+          )}
           iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
           onPress={handle2FaEnabledPress}
           onClose={handle2FaEnabledClose}
@@ -233,7 +293,13 @@ const NotificationCardsContainer = styled(Animated.View)<{
       bottom: theme.rem(0.5)
     },
     useAnimatedStyle(() => {
-      const maybeMenuBarHeight = hasTabs ? interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) : 0
+      const maybeMenuBarHeight = hasTabs
+        ? interpolate(
+            footerOpenRatio.value,
+            [0, 1],
+            [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]
+          )
+        : 0
       const offsetFooterHeight = footerOpenRatio.value * footerHeight
       return {
         transform: [

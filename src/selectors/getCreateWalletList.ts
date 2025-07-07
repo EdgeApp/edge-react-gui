@@ -1,6 +1,9 @@
 import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 
-import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
+import {
+  SPECIAL_CURRENCY_INFO,
+  WALLET_TYPE_ORDER
+} from '../constants/WalletAndCurrencyConstants'
 import { EdgeAsset, WalletListItem } from '../types/types'
 import { isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
@@ -63,14 +66,24 @@ interface CreateWalletListOpts {
   disableLegacy?: boolean
 }
 
-export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
-  const { filteredWalletList = [], filterActivation, allowedAssets = [], excludeAssets = [], disableLegacy = false } = opts
+export const getCreateWalletList = (
+  account: EdgeAccount,
+  opts: CreateWalletListOpts = {}
+): WalletCreateItem[] => {
+  const {
+    filteredWalletList = [],
+    filterActivation,
+    allowedAssets = [],
+    excludeAssets = [],
+    disableLegacy = false
+  } = opts
   const segwitSpecialCases = new Set(['bitcoin', 'litecoin', 'digibyte'])
   const existingWalletsMap = new Map<string, Set<EdgeTokenId>>()
   for (const item of filteredWalletList) {
     if (item.type !== 'asset') continue
     const { wallet, tokenId } = item
-    const tokenIdSet = existingWalletsMap.get(wallet.currencyInfo.pluginId) ?? new Set()
+    const tokenIdSet =
+      existingWalletsMap.get(wallet.currencyInfo.pluginId) ?? new Set()
     tokenIdSet.add(tokenId)
     existingWalletsMap.set(wallet.currencyInfo.pluginId, tokenIdSet)
   }
@@ -78,7 +91,9 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     disable: {}
   }
 
-  const createAssetMap = (assets: EdgeAsset[]): Map<string, Set<EdgeTokenId>> => {
+  const createAssetMap = (
+    assets: EdgeAsset[]
+  ): Map<string, Set<EdgeTokenId>> => {
     const assetsMap = new Map<string, Set<EdgeTokenId>>()
     for (const asset of assets) {
       const tokenIdSet = assetsMap.get(asset.pluginId) ?? new Set()
@@ -94,9 +109,11 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     // if the wallet already exists, then it is not allowed
     !existingWalletsMap.get(pluginId)?.has(tokenId) &&
     // if allowedAssets is empty, then all assets are allowed
-    (allowedAssetsMap.size === 0 || allowedAssetsMap.get(pluginId)?.has(tokenId)) &&
+    (allowedAssetsMap.size === 0 ||
+      allowedAssetsMap.get(pluginId)?.has(tokenId)) &&
     // if excludedAssets is not empty, then the asset must not be in the excluded list
-    (excludedAssetsMap.size === 0 || !excludedAssetsMap.get(pluginId)?.has(tokenId))
+    (excludedAssetsMap.size === 0 ||
+      !excludedAssetsMap.get(pluginId)?.has(tokenId))
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
@@ -110,7 +127,8 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     if (filterActivation && requiresActivation(pluginId)) continue
 
     const currencyConfig = account.currencyConfig[pluginId]
-    const { currencyCode, displayName, walletType } = currencyConfig.currencyInfo
+    const { currencyCode, displayName, walletType } =
+      currencyConfig.currencyInfo
 
     if (isAllowed(pluginId, null))
       if (!disableLegacy && segwitSpecialCases.has(pluginId)) {
@@ -152,10 +170,14 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     if (tokenIds.length === 0) continue
 
     // Identify which wallets could add the token
-    const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+    const createWalletIds = Object.keys(account.currencyWallets).filter(
+      walletId =>
+        account.currencyWallets[walletId].currencyInfo.pluginId === pluginId
+    )
 
     for (const tokenId of tokenIds) {
-      const { currencyCode, displayName, networkLocation } = builtinTokens[tokenId]
+      const { currencyCode, displayName, networkLocation } =
+        builtinTokens[tokenId]
 
       // Fix for when the token code and chain code are the same (like EOS/TLOS)
       if (currencyCode === currencyInfo.currencyCode) continue
@@ -193,23 +215,41 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
   return walletList
 }
 
-export const filterWalletCreateItemListBySearchText = (createWalletList: WalletCreateItem[], searchText: string): WalletCreateItem[] => {
+export const filterWalletCreateItemListBySearchText = (
+  createWalletList: WalletCreateItem[],
+  searchText: string
+): WalletCreateItem[] => {
   const out: WalletCreateItem[] = []
   const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
-    const { currencyCode, displayName, networkLocation = {}, pluginId, walletType } = item
-    if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
+    const {
+      currencyCode,
+      displayName,
+      networkLocation = {},
+      pluginId,
+      walletType
+    } = item
+    if (
+      normalizeForSearch(currencyCode).includes(searchTarget) ||
+      normalizeForSearch(displayName).includes(searchTarget)
+    ) {
       out.push(item)
       continue
     }
     // Do an additional search for pluginId for mainnet create items
-    if (walletType != null && normalizeForSearch(pluginId).includes(searchTarget)) {
+    if (
+      walletType != null &&
+      normalizeForSearch(pluginId).includes(searchTarget)
+    ) {
       out.push(item)
       continue
     }
     // See if the search term can be found in the networkLocation object ie. contractAddress
     for (const value of Object.values(networkLocation)) {
-      if (typeof value === 'string' && normalizeForSearch(value).includes(searchTarget)) {
+      if (
+        typeof value === 'string' &&
+        normalizeForSearch(value).includes(searchTarget)
+      ) {
         out.push(item)
         break
       }
@@ -219,7 +259,8 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
 }
 
 function requiresActivation(pluginId: string) {
-  const { isAccountActivationRequired = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  const { isAccountActivationRequired = false } =
+    SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   return isAccountActivationRequired
 }
 

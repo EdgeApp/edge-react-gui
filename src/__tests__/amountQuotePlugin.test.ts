@@ -21,7 +21,14 @@ describe('creditCardPlugin', function () {
       }
       const result = createPriorityArray(prio)
       console.error(result)
-      expect(JSON.stringify(result)).toBe(JSON.stringify([{ pro1: true }, { pro5: true }, { pro4: true, pro6: true }, { pro2: true, pro3: true }]))
+      expect(JSON.stringify(result)).toBe(
+        JSON.stringify([
+          { pro1: true },
+          { pro5: true },
+          { pro4: true, pro6: true },
+          { pro2: true, pro3: true }
+        ])
+      )
     })
   })
   describe('getBestError', function () {
@@ -34,7 +41,9 @@ describe('creditCardPlugin', function () {
         }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '50 USD'))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '50 USD')
+      )
     })
     test('underLimit', function () {
       const errors: FiatProviderQuoteError[] = [
@@ -45,7 +54,9 @@ describe('creditCardPlugin', function () {
         }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '50 USD'))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '50 USD')
+      )
     })
     test('regionRestricted', function () {
       const errors: FiatProviderQuoteError[] = [
@@ -56,10 +67,14 @@ describe('creditCardPlugin', function () {
         }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE)
+      )
     })
     test('assetUnsupported', function () {
-      const errors: FiatProviderQuoteError[] = [{ providerId: '', errorType: 'assetUnsupported' }]
+      const errors: FiatProviderQuoteError[] = [
+        { providerId: '', errorType: 'assetUnsupported' }
+      ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
       expect(errorText).toBe(lstrings.fiat_plugin_asset_unsupported)
     })
@@ -82,7 +97,9 @@ describe('creditCardPlugin', function () {
         }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '1 USD'))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '1 USD')
+      )
     })
     test('overLimit 1 2 3', function () {
       const errors: FiatProviderQuoteError[] = [
@@ -103,7 +120,9 @@ describe('creditCardPlugin', function () {
         }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '3 USD'))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_amount_over_limit, '3 USD')
+      )
     })
     test('overLimit underLimit regionRestricted assetUnsupported', function () {
       const errors: FiatProviderQuoteError[] = [
@@ -125,7 +144,9 @@ describe('creditCardPlugin', function () {
         { providerId: '', errorType: 'assetUnsupported' }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '2 USD'))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_amount_under_limit, '2 USD')
+      )
     })
     test('regionRestricted assetUnsupported', function () {
       const errors: FiatProviderQuoteError[] = [
@@ -137,7 +158,9 @@ describe('creditCardPlugin', function () {
         { providerId: '', errorType: 'assetUnsupported' }
       ]
       const { errorText } = getBestError(errors, 'USD', 'buy')
-      expect(errorText).toBe(sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE))
+      expect(errorText).toBe(
+        sprintf(lstrings.fiat_plugin_buy_region_restricted, FAKE_CODE)
+      )
     })
   })
 })

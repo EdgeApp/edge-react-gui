@@ -8,7 +8,10 @@ import { BorrowCollateral, BorrowDebt } from '../plugins/borrow-plugins/types'
 import { useSelector } from '../types/reactRedux'
 import { mulToPrecision } from './utils'
 
-export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowDebt[] | BorrowCollateral[]): string => {
+export const useTotalFiatAmount = (
+  wallet: EdgeCurrencyWallet,
+  borrowArray: BorrowDebt[] | BorrowCollateral[]
+): string => {
   const {
     currencyConfig: { allTokens },
     currencyInfo
@@ -21,10 +24,17 @@ export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: Borr
     const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
     // @ts-expect-error
     return borrowArray.reduce((total, obj) => {
-      const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
+      const { currencyCode, denominations } =
+        obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
       const denom = denominations.find(denom => denom.name === currencyCode)
       const multiplier = denom?.multiplier ?? '1'
-      return add(total, mul(div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)), getExchangeRate(`${currencyCode}_${defaultIsoFiat}`)))
+      return add(
+        total,
+        mul(
+          div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)),
+          getExchangeRate(`${currencyCode}_${defaultIsoFiat}`)
+        )
+      )
     }, '0')
   }, [allTokens, borrowArray, currencyInfo, exchangeRates, defaultIsoFiat])
 }
@@ -37,13 +47,18 @@ export const getWalletPickerExcludeWalletIds = (
   return Object.keys(wallets).filter(walletId => {
     switch (loanManageType) {
       case 'loan-manage-deposit':
-        return walletId !== borrowEngineWallet.id && wallets[walletId].currencyInfo.pluginId !== 'bitcoin'
+        return (
+          walletId !== borrowEngineWallet.id &&
+          wallets[walletId].currencyInfo.pluginId !== 'bitcoin'
+        )
       case 'loan-manage-borrow':
       case 'loan-manage-repay':
       case 'loan-manage-withdraw':
         return walletId !== borrowEngineWallet.id
       default:
-        showError(`getWalletPickerExcludeWalletIds unhandled case: ${loanManageType}. Allowing all wallets.`)
+        showError(
+          `getWalletPickerExcludeWalletIds unhandled case: ${loanManageType}. Allowing all wallets.`
+        )
         return false
     }
   })

@@ -3,7 +3,12 @@
  */
 export function matchJson(a: any, b: any): boolean {
   // Use simple equality, unless a and b are proper objects:
-  if (typeof a !== 'object' || typeof b !== 'object' || a == null || b == null) {
+  if (
+    typeof a !== 'object' ||
+    typeof b !== 'object' ||
+    a == null ||
+    b == null
+  ) {
     return a === b
   }
 
@@ -23,8 +28,12 @@ export function matchJson(a: any, b: any): boolean {
 
   // These are both regular objects, so grab the keys,
   // ignoring entries where the value is `undefined`:
-  const aKeys = Object.getOwnPropertyNames(a).filter(key => a[key] !== undefined)
-  const bKeys = Object.getOwnPropertyNames(b).filter(key => b[key] !== undefined)
+  const aKeys = Object.getOwnPropertyNames(a).filter(
+    key => a[key] !== undefined
+  )
+  const bKeys = Object.getOwnPropertyNames(b).filter(
+    key => b[key] !== undefined
+  )
   if (aKeys.length !== bKeys.length) return false
 
   // We know that both objects have the same number of properties,

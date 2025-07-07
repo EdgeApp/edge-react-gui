@@ -1,4 +1,14 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 import { asBase16 } from './util/cleaners/asHex'
 
@@ -38,7 +48,10 @@ export const asEnvConfig = asObject({
   IP_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
   SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'SENTRY_MAP_UPLOAD_URL'),
-  SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(asString, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN'),
+  SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(
+    asString,
+    'SENTRY_MAP_UPLOAD_AUTH_TOKEN'
+  ),
   SENTRY_ORGANIZATION_SLUG: asOptional(asString, 'SENTRY_ORGANIZATION_SLUG'),
   SENTRY_PROJECT_SLUG: asOptional(asString, 'SENTRY_PROJECT_SLUG'),
 
@@ -364,7 +377,10 @@ export const asEnvConfig = asObject({
     asObject({
       apiKey: asOptional(asString, ''),
       feePercentage: asOptional(asNumber, 0.0075),
-      feeReceiveAddress: asOptional(asString, '0xd75eB391357b89C48eb64Ea621A785FF9B77e661')
+      feeReceiveAddress: asOptional(
+        asString,
+        '0xd75eB391357b89C48eb64Ea621A785FF9B77e661'
+      )
     })
   ),
   ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),
@@ -400,7 +416,22 @@ export const asEnvConfig = asObject({
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
-  MUTE_CONSOLE_OUTPUT: asOptional(asArray(asValue('log', 'info', 'warn', 'error', 'debug', 'trace', 'group', 'groupCollapsed', 'groupEnd')), []),
+  MUTE_CONSOLE_OUTPUT: asOptional(
+    asArray(
+      asValue(
+        'log',
+        'info',
+        'warn',
+        'error',
+        'debug',
+        'trace',
+        'group',
+        'groupCollapsed',
+        'groupEnd'
+      )
+    ),
+    []
+  ),
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_MAESTRO_BUILD: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),

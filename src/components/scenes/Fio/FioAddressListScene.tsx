@@ -17,7 +17,12 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioNameRow } from '../../FioAddress/FioName'
 import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
 import { showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
@@ -49,7 +54,10 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     prevLoading: false
   }
 
-  static getDerivedStateFromProps(props: Props, state: LocalState): LocalState | null {
+  static getDerivedStateFromProps(
+    props: Props,
+    state: LocalState
+  ): LocalState | null {
     const { loading } = props
     const { prevLoading, initLoading } = state
     if (!loading && prevLoading && initLoading) {
@@ -77,9 +85,12 @@ export class FioAddressList extends React.Component<Props, LocalState> {
   }
 
   componentDidMount(): void {
-    this.willFocusSubscription = this.props.navigation.addListener('focus', () => {
-      this.fetchData().catch(err => showError(err))
-    })
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'focus',
+      () => {
+        this.fetchData().catch(err => showError(err))
+      }
+    )
   }
 
   componentWillUnmount(): void {
@@ -98,7 +109,9 @@ export class FioAddressList extends React.Component<Props, LocalState> {
   onDomainPress = (fioDomain: FioDomain) => {
     const { fioWallets, navigation } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
-    const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
+    const fioWallet = fioWallets.find(
+      (fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId
+    )
     if (fioWallet == null) return
     navigation.navigate('fioDomainSettings', {
       walletId: fioWallet.id,
@@ -118,35 +131,67 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return (
       <>
         <SceneWrapper>
-          <ScrollView style={styles.section} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-            <SceneHeader title={lstrings.title_fio_address} underline withTopMargin />
+          <ScrollView
+            style={styles.section}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          >
+            <SceneHeader
+              title={lstrings.title_fio_address}
+              underline
+              withTopMargin
+            />
             <View style={styles.list}>
-              {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
+              {!fioAddresses.length && (
+                <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>
+              )}
               {fioAddresses.map((address: FioAddress) => (
                 <FioNameRow
                   key={`${address.name}`}
                   name={address.name}
                   bundledTxs={String(address.bundledTxs)}
-                  icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
+                  icon={
+                    <Image source={fioAddressLogo} style={styles.iconImg} />
+                  }
                   onPress={() => this.onAddressPress(address)}
                 />
               ))}
             </View>
-            <SceneHeader title={lstrings.title_fio_domains} underline withTopMargin />
+            <SceneHeader
+              title={lstrings.title_fio_domains}
+              underline
+              withTopMargin
+            />
             <View style={styles.list}>
-              {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
+              {!fioDomains.length && (
+                <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>
+              )}
               {fioDomains.map((domain: FioDomain) => (
                 <FioNameRow
                   key={`${domain.name}`}
                   name={domain.name}
                   expiration={domain.expiration}
-                  icon={<IonIcon name="at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  icon={
+                    <IonIcon
+                      name="at"
+                      style={styles.iconIon}
+                      color={theme.icon}
+                      size={theme.rem(1.5)}
+                    />
+                  }
                   onPress={() => this.onDomainPress(domain)}
                 />
               ))}
             </View>
-            <EdgeAnim visible={loading && !initLoading} enter={fadeIn} exit={fadeOut}>
-              <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
+            <EdgeAnim
+              visible={loading && !initLoading}
+              enter={fadeIn}
+              exit={fadeOut}
+            >
+              <ActivityIndicator
+                color={theme.iconTappable}
+                style={styles.loading}
+                size="large"
+              />
             </EdgeAnim>
           </ScrollView>
           <View style={styles.buttons}>
@@ -163,7 +208,9 @@ export class FioAddressList extends React.Component<Props, LocalState> {
           </View>
         </SceneWrapper>
 
-        {!initLoading ? null : <FullScreenLoader indicatorStyles={styles.loading} />}
+        {!initLoading ? null : (
+          <FullScreenLoader indicatorStyles={styles.loading} />
+        )}
       </>
     )
   }

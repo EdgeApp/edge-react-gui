@@ -1,4 +1,13 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId, EdgeTokenMap, JsonObject } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeToken,
+  EdgeTokenId,
+  EdgeTokenMap,
+  JsonObject
+} from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -25,7 +34,9 @@ export type FindTokenParams =
       networkLocation: JsonObject
     }
 
-export const findTokenIdByNetworkLocation = (params: FindTokenParams): EdgeTokenId | undefined => {
+export const findTokenIdByNetworkLocation = (
+  params: FindTokenParams
+): EdgeTokenId | undefined => {
   const { networkLocation } = params
   let allTokens: EdgeTokenMap
   if ('allTokens' in params) {
@@ -68,21 +79,36 @@ export const findTokenIdByNetworkLocation = (params: FindTokenParams): EdgeToken
   // If we get here, return undefined as we found no match
 }
 
-export const getTokenId = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeTokenId | undefined => {
+export const getTokenId = (
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string
+): EdgeTokenId | undefined => {
   if (currencyConfig == null) return
   if (currencyConfig.currencyInfo.currencyCode === currencyCode) return null
   const { allTokens } = currencyConfig
-  const tokenId = Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+  const tokenId = Object.keys(allTokens).find(
+    edgeToken => allTokens[edgeToken].currencyCode === currencyCode
+  )
   return tokenId
 }
 
-export const getTokenIdForced = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId => {
+export const getTokenIdForced = (
+  account: EdgeAccount,
+  pluginId: string,
+  currencyCode: string
+): EdgeTokenId => {
   const tokenId = getTokenId(account.currencyConfig[pluginId], currencyCode)
-  if (tokenId === undefined) throw new Error(`getTokenIdForced: tokenId not found for ${currencyCode} in ${pluginId}`)
+  if (tokenId === undefined)
+    throw new Error(
+      `getTokenIdForced: tokenId not found for ${currencyCode} in ${pluginId}`
+    )
   return tokenId
 }
 
-export function getCurrencyCodeMultiplier(currencyConfig: EdgeCurrencyConfig, currencyCode: string): string {
+export function getCurrencyCodeMultiplier(
+  currencyConfig: EdgeCurrencyConfig,
+  currencyCode: string
+): string {
   const { currencyInfo, allTokens } = currencyConfig
   for (const denomination of currencyInfo.denominations) {
     if (denomination.name === currencyCode) {
@@ -101,11 +127,16 @@ export function getCurrencyCodeMultiplier(currencyConfig: EdgeCurrencyConfig, cu
   return '1'
 }
 
-export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: string): EdgeTokenId => {
+export const getWalletTokenId = (
+  wallet: EdgeCurrencyWallet,
+  currencyCode: string
+): EdgeTokenId => {
   const { currencyConfig, currencyInfo } = wallet
   if (currencyInfo.currencyCode === currencyCode) return null
   const { allTokens } = currencyConfig ?? {}
-  const tokenId = Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+  const tokenId = Object.keys(allTokens).find(
+    edgeToken => allTokens[edgeToken].currencyCode === currencyCode
+  )
   if (tokenId == null) {
     throw new Error(`Cannot find tokenId for currencyCode ${currencyCode}`)
   }
@@ -115,13 +146,18 @@ export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: strin
 /**
  * Get the currencyCode associated with a tokenId
  */
-export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
+export const getCurrencyCode = (
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId
+): string => {
   if (tokenId == null) {
     return wallet.currencyInfo.currencyCode
   } else {
     if (wallet.currencyConfig.allTokens[tokenId] == null) {
       // Fail gracefully if we don't have the token for some reason
-      console.warn(`getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`)
+      console.warn(
+        `getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`
+      )
       return ''
     }
     return wallet.currencyConfig.allTokens[tokenId].currencyCode
@@ -131,7 +167,11 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId
 /**
  * Get the currencyCode associated with a tokenId
  */
-export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: string, tokenId: EdgeTokenId): string | undefined => {
+export const getCurrencyCodeWithAccount = (
+  account: EdgeAccount,
+  pluginId: string,
+  tokenId: EdgeTokenId
+): string | undefined => {
   if (account.currencyConfig[pluginId] == null) {
     return
   }
@@ -141,14 +181,19 @@ export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: strin
   } else {
     if (account.currencyConfig[pluginId].allTokens[tokenId] == null) {
       // Fail gracefully if we don't have the token for some reason
-      console.warn(`getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`)
+      console.warn(
+        `getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`
+      )
       return ''
     }
     return account.currencyConfig[pluginId].allTokens[tokenId].currencyCode
   }
 }
 
-export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): EdgeToken | undefined => {
+export const getToken = (
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId
+): EdgeToken | undefined => {
   if (tokenId == null) {
     // Either special handling should be done by the caller, or the workflow should not allow this to execute.
   } else {
@@ -161,7 +206,11 @@ export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): Edge
   }
 }
 
-export function checkAssetFilter(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
+export function checkAssetFilter(
+  details: EdgeAsset,
+  allowedAssets?: EdgeAsset[],
+  excludeAssets?: EdgeAsset[]
+): boolean {
   if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
     return false
   }
@@ -176,7 +225,10 @@ export function checkAssetFilter(details: EdgeAsset, allowedAssets?: EdgeAsset[]
  */
 export function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
   for (const asset of assets) {
-    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
+    if (
+      asset.pluginId === target.pluginId &&
+      asset.tokenId === target.tokenId
+    ) {
       return true
     }
   }
@@ -186,10 +238,14 @@ export function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
 /**
  * The `currencyCodes` are in the format "ETH:DAI",
  */
-export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
+export const currencyCodesToEdgeAssets = (
+  account: EdgeAccount,
+  currencyCodes: string[]
+): EdgeAsset[] => {
   const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
     (map: { [chainCode: string]: string }, pluginId) => {
-      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+      const chainCode =
+        account.currencyConfig[pluginId].currencyInfo.currencyCode
       if (map[chainCode] == null) map[chainCode] = pluginId
       return map
     },
@@ -205,13 +261,20 @@ export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: s
     if (currencyConfig == null) continue
 
     // Add the mainnet EdgeAsset if we haven't yet
-    if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
+    if (
+      edgeTokenIds.find(
+        edgeTokenId =>
+          edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId
+      ) == null
+    ) {
       edgeTokenIds.push({ pluginId, tokenId: null })
     }
 
     // Add tokens
     if (child != null) {
-      const tokenId = Object.keys(currencyConfig.builtinTokens).find(tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child)
+      const tokenId = Object.keys(currencyConfig.builtinTokens).find(
+        tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child
+      )
       if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
     }
   }
@@ -222,9 +285,13 @@ export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: s
 /**
  * Find the currencyInfo for the given walletType
  */
-export const findCurrencyInfo = (account: EdgeAccount, walletType: string): EdgeCurrencyInfo | undefined => {
+export const findCurrencyInfo = (
+  account: EdgeAccount,
+  walletType: string
+): EdgeCurrencyInfo | undefined => {
   for (const pluginId of Object.keys(account.currencyConfig)) {
     const config = account.currencyConfig[pluginId]
-    if (config.currencyInfo.walletType === walletType) return config.currencyInfo
+    if (config.currencyInfo.walletType === walletType)
+      return config.currencyInfo
   }
 }

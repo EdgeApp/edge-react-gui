@@ -170,7 +170,10 @@ export const edgeDark: Theme = {
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
-  assetBackgroundGradientColors: [palette.backgroundBlack, palette.backgroundBlack],
+  assetBackgroundGradientColors: [
+    palette.backgroundBlack,
+    palette.backgroundBlack
+  ],
   assetBackgroundGradientStart: { x: 0, y: 0 },
   assetBackgroundGradientEnd: { x: 0, y: 1 },
   assetBackgroundColorScale: 0.1,
@@ -384,7 +387,10 @@ export const edgeDark: Theme = {
   fontFaceDefault: palette.QuicksandRegular,
   fontFaceMedium: palette.QuicksandMedium,
   fontFaceBold: palette.QuicksandBold,
-  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
+  fontFaceSymbols:
+    Platform.OS === 'android'
+      ? palette.SFUITextRegular
+      : palette.QuicksandRegular,
 
   // TouchableHighlights underlay
   underlayColor: palette.white,
@@ -511,12 +517,22 @@ export const edgeDark: Theme = {
   // Basic Card Styles
   cardBaseColor: palette.whiteOp10,
   cardGradientWarning: {
-    colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
+    colors: [
+      palette.warningOuter,
+      palette.warningInner,
+      palette.warningInner,
+      palette.warningOuter
+    ],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
   cardGradientError: {
-    colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
+    colors: [
+      palette.errorOuter,
+      palette.errorInner,
+      palette.errorInner,
+      palette.errorOuter
+    ],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },

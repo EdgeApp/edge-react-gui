@@ -5,7 +5,11 @@ import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { lstrings } from '../../locales/strings'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
+import {
+  filterWalletCreateItemListBySearchText,
+  getCreateWalletList,
+  WalletCreateItem
+} from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
@@ -69,14 +73,18 @@ export function WalletList(props: Props) {
 
   // Subscribe to the common wallet list:
   const account = useSelector(state => state.core.account)
-  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
+  const mostRecentWallets = useSelector(
+    state => state.ui.settings.mostRecentWallets
+  )
   const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   const handlePress = React.useMemo(
     () =>
       onPress ??
       ((walletId: string, tokenId: EdgeTokenId) => {
-        dispatch(selectWalletToken({ navigation, walletId, tokenId })).catch(err => showError(err))
+        dispatch(selectWalletToken({ navigation, walletId, tokenId })).catch(
+          err => showError(err)
+        )
       }),
     [dispatch, navigation, onPress]
   )
@@ -102,28 +110,42 @@ export function WalletList(props: Props) {
 
       // Apply the currency filters:
       const { pluginId } = wallet.currencyInfo
-      return checkAssetFilter({ pluginId, tokenId }, allowedAssets, excludeAssets)
-    })
-  }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
-
-  const parentWalletSection: Array<WalletListItem | string> = React.useMemo(() => {
-    const out: Array<WalletListItem | string> = []
-    if (parentWalletId != null) {
-      // Always show a "Parent Wallet" header:
-      out.push(lstrings.wallet_list_modal_header_parent)
-
-      // The parent wallet should always be available from sortedWalletList:
-      const parentWalletListItem = sortedWalletList.find(
-        walletListItem => walletListItem.type === 'asset' && walletListItem.wallet?.id === parentWalletId && walletListItem.tokenId == null
+      return checkAssetFilter(
+        { pluginId, tokenId },
+        allowedAssets,
+        excludeAssets
       )
-      if (parentWalletListItem != null)
-        out.push({
-          ...parentWalletListItem,
-          key: `parent-${parentWalletListItem.key}`
-        })
-    }
-    return out
-  }, [parentWalletId, sortedWalletList])
+    })
+  }, [
+    allowedAssets,
+    allowedWalletIds,
+    excludeAssets,
+    excludeWalletIds,
+    sortedWalletList
+  ])
+
+  const parentWalletSection: Array<WalletListItem | string> =
+    React.useMemo(() => {
+      const out: Array<WalletListItem | string> = []
+      if (parentWalletId != null) {
+        // Always show a "Parent Wallet" header:
+        out.push(lstrings.wallet_list_modal_header_parent)
+
+        // The parent wallet should always be available from sortedWalletList:
+        const parentWalletListItem = sortedWalletList.find(
+          walletListItem =>
+            walletListItem.type === 'asset' &&
+            walletListItem.wallet?.id === parentWalletId &&
+            walletListItem.tokenId == null
+        )
+        if (parentWalletListItem != null)
+          out.push({
+            ...parentWalletListItem,
+            key: `parent-${parentWalletListItem.key}`
+          })
+      }
+      return out
+    }, [parentWalletId, sortedWalletList])
 
   // Extract recent wallets:
   const recentWalletList = React.useMemo(() => {
@@ -166,10 +188,20 @@ export function WalletList(props: Props) {
       }),
       searchText
     )
-  }, [account, allowedAssets, excludeAssets, filterActivation, filteredWalletList, searchText, showCreateWallet])
+  }, [
+    account,
+    allowedAssets,
+    excludeAssets,
+    filterActivation,
+    filteredWalletList,
+    searchText,
+    showCreateWallet
+  ])
 
   // Merge the lists, filtering based on the search term:
-  const walletList = React.useMemo<Array<WalletListItem | WalletCreateItem | string>>(() => {
+  const walletList = React.useMemo<
+    Array<WalletListItem | WalletCreateItem | string>
+  >(() => {
     const walletList: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
       ...searchWalletList(filteredWalletList, searchText)
@@ -192,21 +224,41 @@ export function WalletList(props: Props) {
       lstrings.wallet_list_modal_header_all,
       ...walletList
     ]
-  }, [createWalletList, filteredWalletList, parentWalletSection, recentWalletList, searchText])
+  }, [
+    createWalletList,
+    filteredWalletList,
+    parentWalletSection,
+    recentWalletList,
+    searchText
+  ])
 
   // rendering -------------------------------------------------------------
 
   const renderRow = React.useCallback(
     (item: FlatListItem<WalletListItem | WalletCreateItem | string>) => {
-      if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
+      if (typeof item.item === 'string')
+        return <WalletListSectionHeader title={item.item} />
 
       switch (item.item.type) {
         case 'asset': {
           const { token, tokenId, wallet } = item.item
-          return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+          return (
+            <WalletListCurrencyRow
+              token={token}
+              tokenId={tokenId}
+              wallet={wallet}
+              onPress={handlePress}
+            />
+          )
         }
         case 'create':
-          return <WalletListCreateRow createItem={item.item} createWalletId={createWalletId} onPress={handlePress} />
+          return (
+            <WalletListCreateRow
+              createItem={item.item}
+              createWalletId={createWalletId}
+              onPress={handlePress}
+            />
+          )
         case 'loading':
           return <WalletListLoadingRow />
       }
@@ -230,7 +282,9 @@ export function WalletList(props: Props) {
   )
 }
 
-const keyExtractor = (item: WalletListItem | WalletCreateItem | string): string => {
+const keyExtractor = (
+  item: WalletListItem | WalletCreateItem | string
+): string => {
   if (typeof item === 'string') return item
   return item.key
 }

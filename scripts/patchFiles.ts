@@ -51,15 +51,31 @@ async function main() {
   ]
 
   for (const file of sentryFiles) {
-    await searchReplace(file, 'SENTRY_MAP_UPLOAD_URL', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(
+      file,
+      'SENTRY_MAP_UPLOAD_URL',
+      env.SENTRY_MAP_UPLOAD_URL
+    )
     await searchReplace(file, 'SENTRY_DSN_URL', env.SENTRY_DSN_URL)
-    await searchReplace(file, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN', env.SENTRY_MAP_UPLOAD_AUTH_TOKEN)
-    await searchReplace(file, 'SENTRY_ORGANIZATION_SLUG', env.SENTRY_ORGANIZATION_SLUG)
+    await searchReplace(
+      file,
+      'SENTRY_MAP_UPLOAD_AUTH_TOKEN',
+      env.SENTRY_MAP_UPLOAD_AUTH_TOKEN
+    )
+    await searchReplace(
+      file,
+      'SENTRY_ORGANIZATION_SLUG',
+      env.SENTRY_ORGANIZATION_SLUG
+    )
     await searchReplace(file, 'SENTRY_PROJECT_SLUG', env.SENTRY_PROJECT_SLUG)
   }
 }
 
-export async function searchReplace(file: string, search: string, replace: string): Promise<void> {
+export async function searchReplace(
+  file: string,
+  search: string,
+  replace: string
+): Promise<void> {
   console.log(`${file} ${search} ${replace}`)
   const text = fs.readFileSync(file, { encoding: 'utf8' })
   const newText = text.split(search).join(replace)

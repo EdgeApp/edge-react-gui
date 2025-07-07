@@ -32,7 +32,9 @@ export interface AaveNetwork {
   IPriceOracle: ethers.Contract
 
   // Helpers
-  getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
+  getAllReservesTokens: () => Promise<
+    Array<{ symbol: string; address: string }>
+  >
   getReserveTokenContracts: (address: string) => Promise<{
     aToken: ethers.Contract
     sToken: ethers.Contract
@@ -74,7 +76,9 @@ interface FunctionCache {
 
 const RAY = BigNumber.from('10').pow('27')
 
-export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
+export const makeAaveNetworkFactory = (
+  blueprint: AaveNetworkBlueprint
+): AaveNetwork => {
   const { provider, contractAddresses, enabledTokens } = blueprint
 
   const fnCache: FunctionCache = {
@@ -82,11 +86,27 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     getReserveTokenAprRates: {}
   }
 
-  const lendingPool = new ethers.Contract(contractAddresses.lendingPool, LENDING_POOL_ABI, provider)
-  const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
-  const IPriceOracle = new ethers.Contract(contractAddresses.IPriceOracle, IPRICEORACLE_ABI, provider)
+  const lendingPool = new ethers.Contract(
+    contractAddresses.lendingPool,
+    LENDING_POOL_ABI,
+    provider
+  )
+  const protocolDataProvider = new ethers.Contract(
+    contractAddresses.protocolDataProvider,
+    PROTOCOL_DATA_PROVIDER_ABI,
+    provider
+  )
+  const IPriceOracle = new ethers.Contract(
+    contractAddresses.IPriceOracle,
+    IPRICEORACLE_ABI,
+    provider
+  )
 
-  const paraSwapRepayAdapter = new ethers.Contract(contractAddresses.paraSwapRepayAdapter, PARASWAP_ABI, provider)
+  const paraSwapRepayAdapter = new ethers.Contract(
+    contractAddresses.paraSwapRepayAdapter,
+    PARASWAP_ABI,
+    provider
+  )
 
   const instance: AaveNetwork = {
     provider,
@@ -105,23 +125,40 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     },
 
     async getAllReservesTokens() {
-      if (fnCache.getAllReservesTokens != null) return fnCache.getAllReservesTokens
+      if (fnCache.getAllReservesTokens != null)
+        return fnCache.getAllReservesTokens
 
-      const reserveTokens: Array<[string, string]> = await protocolDataProvider.getAllReservesTokens()
-      const out: Array<{ symbol: string; address: string }> = reserveTokens.map(([symbol, address]) => ({ symbol, address }))
+      const reserveTokens: Array<[string, string]> =
+        await protocolDataProvider.getAllReservesTokens()
+      const out: Array<{ symbol: string; address: string }> = reserveTokens.map(
+        ([symbol, address]) => ({ symbol, address })
+      )
 
-      fnCache.getAllReservesTokens = out.filter(reserveToken => enabledTokens[reserveToken.symbol])
+      fnCache.getAllReservesTokens = out.filter(
+        reserveToken => enabledTokens[reserveToken.symbol]
+      )
       return fnCache.getAllReservesTokens
     },
 
     async getReserveTokenContracts(address) {
-      if (fnCache.getReserveTokenContracts[address] != null) return fnCache.getReserveTokenContracts[address]
+      if (fnCache.getReserveTokenContracts[address] != null)
+        return fnCache.getReserveTokenContracts[address]
 
-      const reserveTokenAddresses = await protocolDataProvider.getReserveTokensAddresses(address)
-      const [aTokenAddress, sTokenAddress, vTokenAddress] = reserveTokenAddresses
+      const reserveTokenAddresses =
+        await protocolDataProvider.getReserveTokensAddresses(address)
+      const [aTokenAddress, sTokenAddress, vTokenAddress] =
+        reserveTokenAddresses
       const aToken = new ethers.Contract(aTokenAddress, A_TOKEN_ABI, provider)
-      const sToken = new ethers.Contract(sTokenAddress, STABLE_DEBT_TOKEN_ABI, provider)
-      const vToken = new ethers.Contract(vTokenAddress, VARIABLE_DEBT_TOKEN_ABI, provider)
+      const sToken = new ethers.Contract(
+        sTokenAddress,
+        STABLE_DEBT_TOKEN_ABI,
+        provider
+      )
+      const vToken = new ethers.Contract(
+        vTokenAddress,
+        VARIABLE_DEBT_TOKEN_ABI,
+        provider
+      )
 
       fnCache.getReserveTokenContracts[address] = { aToken, sToken, vToken }
       return fnCache.getReserveTokenContracts[address]
@@ -130,7 +167,9 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     async getReserveTokenBalances(address) {
       const reserveTokens = await instance.getAllReservesTokens()
       const whenReserveTokenBalances = reserveTokens.map(async token => {
-        const { aToken, vToken } = await instance.getReserveTokenContracts(token.address)
+        const { aToken, vToken } = await instance.getReserveTokenContracts(
+          token.address
+        )
         const [aBalance, vBalance, { variableApr }] = await Promise.all([
           aToken.balanceOf(address),
           vToken.balanceOf(address),
@@ -148,12 +187,16 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     },
 
     async getReserveTokenAprRates(tokenAddress) {
-      if (fnCache.getReserveTokenAprRates[tokenAddress] != null) return fnCache.getReserveTokenAprRates[tokenAddress]
+      if (fnCache.getReserveTokenAprRates[tokenAddress] != null)
+        return fnCache.getReserveTokenAprRates[tokenAddress]
 
-      const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
+      const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] =
+        await lendingPool.getReserveData(tokenAddress)
 
-      const variableApr = parseFloat(variableBorrowRate.toString()) / parseFloat(RAY.toString())
-      const stableApr = parseFloat(stableBorrowRate.toString()) / parseFloat(RAY.toString())
+      const variableApr =
+        parseFloat(variableBorrowRate.toString()) / parseFloat(RAY.toString())
+      const stableApr =
+        parseFloat(stableBorrowRate.toString()) / parseFloat(RAY.toString())
 
       fnCache.getReserveTokenAprRates[tokenAddress] = {
         variableApr,

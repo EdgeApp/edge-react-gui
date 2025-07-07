@@ -60,7 +60,10 @@ export const fakeNavigation: NavigationProp<any> = {
   setOptions() {}
 }
 
-export function fakeSceneProps<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): EdgeSceneProps<Name> {
+export function fakeSceneProps<Name extends keyof AppParamList>(
+  name: Name,
+  params: AppParamList[Name]
+): EdgeSceneProps<Name> {
   return {
     navigation: fakeNavigation,
     route: {
@@ -81,30 +84,50 @@ export const fakeCompositeNavigation = {
   // Include other methods as needed
 } as any // HACK: Type assertion due to incomplete implementation
 
-export function fakeRootSceneProps<Name extends keyof RootParamList>(name: Name, params: RootParamList[Name]): RootSceneProps<Name> {
+export function fakeRootSceneProps<Name extends keyof RootParamList>(
+  name: Name,
+  params: RootParamList[Name]
+): RootSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeDrawerSceneProps<Name extends keyof DrawerParamList>(name: Name, params: DrawerParamList[Name]): DrawerSceneProps<Name> {
+export function fakeDrawerSceneProps<Name extends keyof DrawerParamList>(
+  name: Name,
+  params: DrawerParamList[Name]
+): DrawerSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeEdgeAppSceneProps<Name extends keyof EdgeAppStackParamList>(name: Name, params: EdgeAppStackParamList[Name]): EdgeAppSceneProps<Name> {
+export function fakeEdgeAppSceneProps<Name extends keyof EdgeAppStackParamList>(
+  name: Name,
+  params: EdgeAppStackParamList[Name]
+): EdgeAppSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeBuyTabSceneProps<Name extends keyof BuyTabParamList>(name: Name, params: BuyTabParamList[Name]): BuyTabSceneProps<Name> {
+export function fakeBuyTabSceneProps<Name extends keyof BuyTabParamList>(
+  name: Name,
+  params: BuyTabParamList[Name]
+): BuyTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeSellTabSceneProps<Name extends keyof SellTabParamList>(name: Name, params: SellTabParamList[Name]): SellTabSceneProps<Name> {
+export function fakeSellTabSceneProps<Name extends keyof SellTabParamList>(
+  name: Name,
+  params: SellTabParamList[Name]
+): SellTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeSwapTabSceneProps<Name extends keyof SwapTabParamList>(name: Name, params: SwapTabParamList[Name]): SwapTabSceneProps<Name> {
+export function fakeSwapTabSceneProps<Name extends keyof SwapTabParamList>(
+  name: Name,
+  params: SwapTabParamList[Name]
+): SwapTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeWalletsTabSceneProps<Name extends keyof WalletsTabParamList>(name: Name, params: WalletsTabParamList[Name]): WalletsTabSceneProps<Name> {
+export function fakeWalletsTabSceneProps<
+  Name extends keyof WalletsTabParamList
+>(name: Name, params: WalletsTabParamList[Name]): WalletsTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }

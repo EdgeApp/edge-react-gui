@@ -121,7 +121,10 @@ describe('RequestReviewActions', () => {
           depositAmountUsd: 100
         }
       }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       // Call the action with $50 deposit
       const action = updateDepositAmount(50)
@@ -140,7 +143,10 @@ describe('RequestReviewActions', () => {
         depositAmountUsd: initialAmount
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       // Make a deposit that crosses the threshold
       const action = updateDepositAmount(20) // This should trigger review
@@ -164,7 +170,10 @@ describe('RequestReviewActions', () => {
         nextTriggerDate: tomorrow
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       // Make a deposit
       const action = updateDepositAmount(50)
@@ -173,7 +182,9 @@ describe('RequestReviewActions', () => {
       // We now verify review was not triggered by checking deposit amount is still accumulated
       // (not reset, which would indicate a review trigger)
       const reviewTriggerData = await readReviewTriggerData(mockAccount)
-      expect(reviewTriggerData.depositAmountUsd).toBe(DEPOSIT_AMOUNT_THRESHOLD + 150) // Continues accumulating
+      expect(reviewTriggerData.depositAmountUsd).toBe(
+        DEPOSIT_AMOUNT_THRESHOLD + 150
+      ) // Continues accumulating
     })
 
     test('handles empty or corrupt data file gracefully', async () => {
@@ -196,7 +207,10 @@ describe('RequestReviewActions', () => {
         transactionCount: TRANSACTION_COUNT_THRESHOLD - 1
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       const action = updateTransactionCount()
       await action(mockDispatch, getState)
@@ -213,7 +227,10 @@ describe('RequestReviewActions', () => {
         fiatPurchaseCount: FIAT_PURCHASE_COUNT_THRESHOLD - 1
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       const action = updateFiatPurchaseCount()
       await action(mockDispatch, getState)
@@ -231,7 +248,10 @@ describe('RequestReviewActions', () => {
         accountUpgraded: false
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       const action = markAccountUpgraded()
       await action(mockDispatch, getState)
@@ -252,7 +272,10 @@ describe('RequestReviewActions', () => {
         daysSinceUpgrade: ['2022-12-30', '2022-12-31']
       }
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       const action = trackAppUsageAfterUpgrade()
       await action(mockDispatch, getState)
@@ -269,15 +292,27 @@ describe('RequestReviewActions', () => {
     test('migrates data from legacy file', async () => {
       // Set up a clean test disklet and account
       const testDisklet = makeMemoryDisklet()
-      const testAccount = { disklet: testDisklet, localDisklet: testDisklet } as unknown as EdgeAccount
+      const testAccount = {
+        disklet: testDisklet,
+        localDisklet: testDisklet
+      } as unknown as EdgeAccount
 
       // Create empty settings file first (no reviewTrigger property)
       const initialSettings = { ...defaultSettings, reviewTrigger: undefined }
-      await testDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await testDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       // Set up legacy data file with numeric string for swapCount
-      const mockSwapCountData = { swapCount: '7', hasReviewBeenRequested: false }
-      await testDisklet.setText(SWAP_COUNT_DATA_FILE, JSON.stringify(mockSwapCountData))
+      const mockSwapCountData = {
+        swapCount: '7',
+        hasReviewBeenRequested: false
+      }
+      await testDisklet.setText(
+        SWAP_COUNT_DATA_FILE,
+        JSON.stringify(mockSwapCountData)
+      )
 
       // Directly call readReviewTriggerData to see what it reads
       const readData = await readReviewTriggerData(testAccount)
@@ -303,11 +338,17 @@ describe('RequestReviewActions', () => {
 
       // Setup settings WITH review trigger data - this should be used instead of legacy
       const initialSettings = { ...defaultSettings, reviewTrigger: initialData }
-      await mockDisklet.setText(LOCAL_SETTINGS_FILENAME, JSON.stringify(initialSettings))
+      await mockDisklet.setText(
+        LOCAL_SETTINGS_FILENAME,
+        JSON.stringify(initialSettings)
+      )
 
       // Setup a legacy file with a DIFFERENT swap count
       const legacyData = { swapCount: 7 }
-      await mockDisklet.setText(SWAP_COUNT_DATA_FILE, JSON.stringify(legacyData))
+      await mockDisklet.setText(
+        SWAP_COUNT_DATA_FILE,
+        JSON.stringify(legacyData)
+      )
 
       // Run our action
       const action = updateDepositAmount(100)

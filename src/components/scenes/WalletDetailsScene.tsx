@@ -1,6 +1,11 @@
 import { useRoute } from '@react-navigation/native'
 import { gt, mul } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTokenMap,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
@@ -24,9 +29,17 @@ import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, RouteProp, WalletsTabSceneProps } from '../../types/routerTypes'
+import {
+  NavigationBase,
+  RouteProp,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
 import { coinrankListData, infoServerData } from '../../util/network'
-import { calculateSpamThreshold, convertNativeToDenomination, darkenHexColor } from '../../util/utils'
+import {
+  calculateSpamThreshold,
+  convertNativeToDenomination,
+  darkenHexColor
+} from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
@@ -63,11 +76,20 @@ function WalletDetailsComponent(props: Props) {
 
   const { width: screenWidth } = useSafeAreaFrame()
 
-  const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
+  const tokenId = checkToken(
+    route.params.tokenId,
+    wallet.currencyConfig.allTokens
+  )
   const { pluginId } = wallet.currencyInfo
-  const { currencyCode, displayName } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+  const { currencyCode, displayName } =
+    tokenId == null
+      ? wallet.currencyInfo
+      : wallet.currencyConfig.allTokens[tokenId]
 
-  const educationCards = (infoServerData.rollup?.assetInfoCards ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`] ?? []
+  const educationCards =
+    (infoServerData.rollup?.assetInfoCards ?? {})[
+      `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+    ] ?? []
 
   // State:
   const scrollViewRef = React.useRef<AnimatedScrollView>(null)
@@ -77,10 +99,15 @@ function WalletDetailsComponent(props: Props) {
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
-  const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+  const exchangeDenom = getExchangeDenomByCurrencyCode(
+    wallet.currencyConfig,
+    currencyCode
+  )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const defaultFiat = defaultIsoFiat.replace('iso:', '')
-  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
+  const exchangeRate = useSelector(state =>
+    getExchangeRate(state, currencyCode, defaultIsoFiat)
+  )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null
@@ -96,11 +123,16 @@ function WalletDetailsComponent(props: Props) {
   // Fiat Balance Formatting
   // Note that we use the user's preferred fiat here,
   // which may differ from the coingeckoFiat used on the chart itself.
-  const exchangeAmount = convertNativeToDenomination(exchangeDenom.multiplier)(exchangeDenom.multiplier)
+  const exchangeAmount = convertNativeToDenomination(exchangeDenom.multiplier)(
+    exchangeDenom.multiplier
+  )
   const fiatRate = mul(exchangeAmount, exchangeRate ?? 0)
-  const fiatRateFormat = `${formatNumber(fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0, {
-    toFixed: gt(fiatRate, '1000') ? 0 : 2
-  })} ${defaultFiat}/${currencyCode}`
+  const fiatRateFormat = `${formatNumber(
+    fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0,
+    {
+      toFixed: gt(fiatRate, '1000') ? 0 : 2
+    }
+  )} ${defaultFiat}/${currencyCode}`
 
   const spamThreshold = React.useMemo<string | undefined>(() => {
     if (spamFilterOn) {
@@ -114,7 +146,8 @@ function WalletDetailsComponent(props: Props) {
     spamThreshold
   })
 
-  const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  const { isTransactionListUnsupported = false } =
+    SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Assemble the data for the section list:
   const listItems = React.useMemo(() => {
@@ -142,8 +175,16 @@ function WalletDetailsComponent(props: Props) {
   useAsyncEffect(
     async () => {
       if (unactivatedTokenIds.length > 0) {
-        if (unactivatedTokenIds.some(unactivatedTokenId => unactivatedTokenId === tokenId)) {
-          await dispatch(activateWalletTokens(navigation as NavigationBase, wallet, [tokenId]))
+        if (
+          unactivatedTokenIds.some(
+            unactivatedTokenId => unactivatedTokenId === tokenId
+          )
+        ) {
+          await dispatch(
+            activateWalletTokens(navigation as NavigationBase, wallet, [
+              tokenId
+            ])
+          )
         }
       }
     },
@@ -229,7 +270,14 @@ function WalletDetailsComponent(props: Props) {
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+    [
+      handleChangeText,
+      handleDoneSearching,
+      handleFooterLayoutHeight,
+      handleStartSearching,
+      isSearching,
+      searchText
+    ]
   )
 
   const accentColors: AccentColors = {
@@ -239,7 +287,10 @@ function WalletDetailsComponent(props: Props) {
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
   if (iconColor != null) {
-    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
     backgroundColors[0] = scaledColor
   }
 
@@ -287,11 +338,21 @@ function WalletDetailsComponent(props: Props) {
           <DividerLineUi4 extendRight />
           <InfoCardCarousel
             enterAnim={fadeInDown10}
-            cards={(infoServerData.rollup?.assetStatusCards2 ?? {})[`${pluginId}${tokenId == null ? '' : `_${tokenId}`}`]}
+            cards={
+              (infoServerData.rollup?.assetStatusCards2 ?? {})[
+                `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+              ]
+            }
             navigation={navigation as NavigationBase}
             screenWidth={screenWidth}
           />
-          {assetId != null && <SectionHeaderUi4 leftTitle={displayName} rightNode={lstrings.coin_rank_see_more} onRightPress={handlePressCoinRanking} />}
+          {assetId != null && (
+            <SectionHeaderUi4
+              leftTitle={displayName}
+              rightNode={lstrings.coin_rank_see_more}
+              onRightPress={handlePressCoinRanking}
+            />
+          )}
           {assetId != null && (
             <EdgeCard>
               <Paragraph>
@@ -309,7 +370,12 @@ function WalletDetailsComponent(props: Props) {
             {listItems.length > 0 ? (
               <EdgeCard sections>
                 {listItems.map((tx: EdgeTransaction) => (
-                  <TransactionView key={tx.txid} navigation={navigation as NavigationBase} transaction={tx} wallet={wallet} />
+                  <TransactionView
+                    key={tx.txid}
+                    navigation={navigation as NavigationBase}
+                    transaction={tx}
+                    wallet={wallet}
+                  />
                 ))}
               </EdgeCard>
             ) : listItems.length === 0 && !atEnd ? (
@@ -317,16 +383,33 @@ function WalletDetailsComponent(props: Props) {
             ) : isTransactionListUnsupported ? (
               <ExplorerCard wallet={wallet} tokenId={tokenId} />
             ) : isSearching ? (
-              <EdgeText style={styles.noResultsText}>{lstrings.transaction_list_search_no_result}</EdgeText>
+              <EdgeText style={styles.noResultsText}>
+                {lstrings.transaction_list_search_no_result}
+              </EdgeText>
             ) : (
-              <BuyCrypto navigation={navigation as NavigationBase} wallet={wallet} tokenId={tokenId} />
+              <BuyCrypto
+                navigation={navigation as NavigationBase}
+                wallet={wallet}
+                tokenId={tokenId}
+              />
             )}
           </View>
           {educationCards.length === 0 ? null : (
             <>
               <DividerLineUi4 extendRight />
-              <SectionHeaderUi4 leftTitle={config.appName === 'Edge' ? lstrings.edge_ucation : lstrings.education} />
-              <InfoCardCarousel enterAnim={fadeInDown10} cards={educationCards} navigation={navigation as NavigationBase} screenWidth={screenWidth} />
+              <SectionHeaderUi4
+                leftTitle={
+                  config.appName === 'Edge'
+                    ? lstrings.edge_ucation
+                    : lstrings.education
+                }
+              />
+              <InfoCardCarousel
+                enterAnim={fadeInDown10}
+                cards={educationCards}
+                navigation={navigation as NavigationBase}
+                screenWidth={screenWidth}
+              />
             </>
           )}
         </Reanimated.ScrollView>
@@ -339,7 +422,10 @@ export const WalletDetailsTitle = (params: { customTitle?: string }) => {
   const route = useRoute<RouteProp<'walletDetails'>>()
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[route.params.walletId]
-  const title = sprintf(lstrings.create_wallet_account_metadata_name, wallet?.currencyInfo.displayName)
+  const title = sprintf(
+    lstrings.create_wallet_account_metadata_name,
+    wallet?.currencyInfo.displayName
+  )
   return <HeaderTitle title={title} />
 }
 
@@ -360,7 +446,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
  * If the token gets deleted, the scene will crash.
  * Fall back to the main currency code if this happens.
  */
-function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId {
+function checkToken(
+  tokenId: EdgeTokenId,
+  allTokens: EdgeTokenMap
+): EdgeTokenId {
   if (tokenId == null) return null
   if (allTokens[tokenId] == null) return null
   return tokenId

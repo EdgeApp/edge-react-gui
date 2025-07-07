@@ -2,7 +2,11 @@ import { EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
 import { ActivityIndicator, View, ViewStyle } from 'react-native'
-import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming
+} from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'

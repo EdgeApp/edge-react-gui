@@ -53,7 +53,10 @@ module.exports = {
   },
   output: {
     filename: 'plugin-bundle.js',
-    path: path.join(path.resolve(__dirname), 'android/app/src/main/assets/edge-core')
+    path: path.join(
+      path.resolve(__dirname),
+      'android/app/src/main/assets/edge-core'
+    )
   },
   performance: { hints: false },
   plugins: [

@@ -1,8 +1,14 @@
 import { asEither, asObject, asString } from 'cleaners'
 
 import { ENV } from '../env'
-import { PaymentProtoError, translatePaymentProtoError } from '../types/PaymentProtoError'
-import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
+import {
+  PaymentProtoError,
+  translatePaymentProtoError
+} from '../types/PaymentProtoError'
+import {
+  ResolutionError,
+  translateResolutionError
+} from '../types/ResolutionError'
 
 const asErrorMessage = asEither(
   asString,
@@ -38,7 +44,8 @@ export function translateError(error: unknown): string {
   }
 
   // GUI Error types:
-  if (error instanceof PaymentProtoError) return translatePaymentProtoError(error)
+  if (error instanceof PaymentProtoError)
+    return translatePaymentProtoError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)
 
   return asErrorMessage(error)

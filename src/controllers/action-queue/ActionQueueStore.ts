@@ -7,7 +7,12 @@ import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
-import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from './types'
+import {
+  ActionProgram,
+  ActionProgramState,
+  ActionQueueItem,
+  ActionQueueMap
+} from './types'
 import { checkEffectIsDone } from './util/checkEffectIsDone'
 import { makeInitialProgramState } from './util/makeInitialProgramState'
 
@@ -26,12 +31,19 @@ export interface ActionQueueStore {
   getActionQueueMap: () => Promise<ActionQueueMap>
 }
 
-export const makeActionQueueStore = (account: EdgeAccount, clientId: string): ActionQueueStore => {
+export const makeActionQueueStore = (
+  account: EdgeAccount,
+  clientId: string
+): ActionQueueStore => {
   // Use localDisklet (unencrypted) for debuggin purposes
   const baseDisklet = debugStore ? account.localDisklet : account.disklet
   const disklet = navigateDisklet(baseDisklet, ACTION_QUEUE_DATASTORE_ID)
 
-  async function persistToDisk(path: string, data: unknown, cleaner: Cleaner<any>) {
+  async function persistToDisk(
+    path: string,
+    data: unknown,
+    cleaner: Cleaner<any>
+  ) {
     try {
       const uncleanData = uncleaner(cleaner)(data)
       const serializedData = JSON.stringify(uncleanData)
@@ -42,7 +54,10 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
       throw error
     }
   }
-  async function readFromDisk<T>(path: string, cleaner: Cleaner<T>): Promise<T> {
+  async function readFromDisk<T>(
+    path: string,
+    cleaner: Cleaner<T>
+  ): Promise<T> {
     const serializedData = await disklet.getText(path)
     // console.log(`### READ ${path}`, serializedData)
     try {
@@ -54,11 +69,16 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
   }
 
   const instance: ActionQueueStore = {
-    async createActionQueueItem(program: ActionProgram): Promise<ActionProgramState> {
+    async createActionQueueItem(
+      program: ActionProgram
+    ): Promise<ActionProgramState> {
       const { programId } = program
 
       // Initial program state
-      const programState: ActionProgramState = makeInitialProgramState(clientId, programId)
+      const programState: ActionProgramState = makeInitialProgramState(
+        clientId,
+        programId
+      )
 
       // Only add the mockMode field if environment is configured with the flag enabled
       if (ENV.ACTION_QUEUE.mockMode) program.mockMode = true
@@ -66,26 +86,45 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
       // Save to disk
       await Promise.all([
         persistToDisk(`${programId}/ActionProgram`, program, asActionProgram),
-        persistToDisk(`${programId}/ActionProgramState`, programState, asActionProgramState)
+        persistToDisk(
+          `${programId}/ActionProgramState`,
+          programState,
+          asActionProgramState
+        )
       ])
 
       // Return initial state
       return programState
     },
     async getActionQueueItem(programId: string): Promise<ActionQueueItem> {
-      const program = await readFromDisk(`${programId}/ActionProgram`, asActionProgram)
-      const state = await readFromDisk(`${programId}/ActionProgramState`, asActionProgramState)
+      const program = await readFromDisk(
+        `${programId}/ActionProgram`,
+        asActionProgram
+      )
+      const state = await readFromDisk(
+        `${programId}/ActionProgramState`,
+        asActionProgramState
+      )
 
       return { program, state }
     },
-    async updateActionQueueItem(programState: ActionProgramState): Promise<void> {
+    async updateActionQueueItem(
+      programState: ActionProgramState
+    ): Promise<void> {
       const { programId } = programState
 
-      await persistToDisk(`${programId}/ActionProgramState`, programState, asActionProgramState)
+      await persistToDisk(
+        `${programId}/ActionProgramState`,
+        programState,
+        asActionProgramState
+      )
     },
     async getActionQueueItems(): Promise<ActionQueueItem[]> {
       const listing = await disklet.list()
-      const programIds = Object.entries(listing).reduce((ids: string[], [id, type]) => (type === 'folder' ? [...ids, id] : ids), [])
+      const programIds = Object.entries(listing).reduce(
+        (ids: string[], [id, type]) => (type === 'folder' ? [...ids, id] : ids),
+        []
+      )
       const promises = programIds.map(
         async programId =>
           await instance.getActionQueueItem(programId).catch(err => {
@@ -96,14 +135,21 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
             return undefined
           })
       )
-      const items: ActionQueueItem[] = filterUndefined(await Promise.all(promises))
+      const items: ActionQueueItem[] = filterUndefined(
+        await Promise.all(promises)
+      )
 
       return items
     },
     async getActionQueueMap(): Promise<ActionQueueMap> {
       const queueItems = await instance.getActionQueueItems()
-      const filteredItems = queueItems.filter(item => !checkEffectIsDone(item.state.effect))
-      const queueMap = filteredItems.reduce((map, item) => ({ ...map, [item.program.programId]: item }), {})
+      const filteredItems = queueItems.filter(
+        item => !checkEffectIsDone(item.state.effect)
+      )
+      const queueMap = filteredItems.reduce(
+        (map, item) => ({ ...map, [item.program.programId]: item }),
+        {}
+      )
 
       return queueMap
     }
@@ -111,20 +157,29 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
   return instance
 }
 
-export const useRunningActionQueueId = (programType: LoanProgramType, walletId: string): string | undefined => {
-  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
-  const loanAccount = useSelector(state => state.loanManager.loanAccounts[walletId])
+export const useRunningActionQueueId = (
+  programType: LoanProgramType,
+  walletId: string
+): string | undefined => {
+  const actionQueueMap: ActionQueueMap = useSelector(
+    state => state.actionQueue.actionQueueMap
+  )
+  const loanAccount = useSelector(
+    state => state.loanManager.loanAccounts[walletId]
+  )
   if (loanAccount == null) return
 
-  const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {
-    if (programEdge.programType === programType) {
-      const actionQueueItem = actionQueueMap[programEdge.programId]
-      if (actionQueueItem == null) return false
-      if (checkEffectIsDone(actionQueueItem.state.effect)) return false
-      return true
+  const programEdge = loanAccount.programEdges.find(
+    (programEdge: LoanProgramEdge) => {
+      if (programEdge.programType === programType) {
+        const actionQueueItem = actionQueueMap[programEdge.programId]
+        if (actionQueueItem == null) return false
+        if (checkEffectIsDone(actionQueueItem.state.effect)) return false
+        return true
+      }
+      return false
     }
-    return false
-  })
+  )
 
   return programEdge?.programId
 }

@@ -68,12 +68,21 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         bridge={bridge}
         onCancel={this.handleDone}
         borderRadius={0}
-        backgroundColor={darkMode ? theme.dateModalBackgroundDark : theme.dateModalBackgroundLight}
+        backgroundColor={
+          darkMode
+            ? theme.dateModalBackgroundDark
+            : theme.dateModalBackgroundLight
+        }
       >
         <EdgeTouchableOpacity onPress={this.handleDone}>
           <Text style={textStyle}>{lstrings.string_done_cap}</Text>
         </EdgeTouchableOpacity>
-        <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} />
+        <DateTimePicker
+          display="spinner"
+          mode="date"
+          onChange={this.handleChange}
+          value={date}
+        />
       </AirshipModal>
     )
   }
@@ -107,4 +116,5 @@ export function DateModalAndroid(props: Props) {
   )
 }
 
-export const DateModal = Platform.OS === 'android' ? DateModalAndroid : withTheme(DateModalIos)
+export const DateModal =
+  Platform.OS === 'android' ? DateModalAndroid : withTheme(DateModalIos)

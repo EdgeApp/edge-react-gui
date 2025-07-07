@@ -22,7 +22,11 @@ interface Props {
 
   // Callbacks:
   onLongPress?: () => void
-  onPress?: (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => void
+  onPress?: (
+    walletId: string,
+    tokenId: EdgeTokenId,
+    customAsset?: CustomAsset
+  ) => void
 }
 
 const WalletListCurrencyRowComponent = (props: Props) => {
@@ -38,7 +42,9 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
+  const pausedWallets = useSelector(
+    state => state.ui.settings.userPausedWalletsSet
+  )
   const isPaused = pausedWallets != null && pausedWallets.has(wallet.id)
   const isDisabled = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
   const { pluginId } = wallet.currencyInfo
@@ -64,14 +70,23 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return customAsset != null ? (
     // TODO: Update to UI4
-    <EdgeTouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      style={styles.row}
+      onLongPress={handleLongPress}
+      onPress={handlePress}
+    >
       <CustomAssetRow customAsset={customAsset} />
     </EdgeTouchableOpacity>
   ) : (
     <EdgeCard
       overlay={
         isPaused || isDisabled ? (
-          <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
+          <EdgeText style={styles.overlayLabel}>
+            {isPaused
+              ? lstrings.fragment_wallets_wallet_paused
+              : lstrings.fragment_wallets_wallet_disabled}
+          </EdgeText>
         ) : null
       }
       onLongPress={handleLongPress}

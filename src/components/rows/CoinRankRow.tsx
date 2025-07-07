@@ -7,7 +7,12 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { toPercentString } from '../../locales/intl'
-import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../types/coinrankTypes'
+import {
+  AssetSubText,
+  CoinRanking,
+  CoinRankingData,
+  PercentChangeTimeFrame
+} from '../../types/coinrankTypes'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../util/logger'
@@ -31,17 +36,29 @@ const REFRESH_INTERVAL_RANGE = 10000
 type Timeout = ReturnType<typeof setTimeout>
 
 const CoinRankRowComponent = (props: Props) => {
-  const { navigation, index, percentChangeTimeFrame, assetSubText, coinRanking, fiatCurrencyCode } = props
+  const {
+    navigation,
+    index,
+    percentChangeTimeFrame,
+    assetSubText,
+    coinRanking,
+    fiatCurrencyCode
+  } = props
   const { coinRankingDatas } = coinRanking
 
-  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
+  const fiatSymbol = React.useMemo(
+    () => getFiatSymbol(fiatCurrencyCode),
+    [fiatCurrencyCode]
+  )
 
   const mounted = React.useRef<boolean>(true)
-  const timeoutHandler = React.useRef<Timeout | undefined>()
+  const timeoutHandler = React.useRef<Timeout | undefined>(undefined)
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [coinRow, setCoinRow] = React.useState<CoinRankingData | undefined>(coinRankingDatas[index])
+  const [coinRow, setCoinRow] = React.useState<CoinRankingData | undefined>(
+    coinRankingDatas[index]
+  )
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
@@ -53,7 +70,8 @@ const CoinRankRowComponent = (props: Props) => {
 
   React.useEffect(() => {
     const newTimer = () => {
-      const nextRefresh = MIN_REFRESH_INTERVAL + Math.random() * REFRESH_INTERVAL_RANGE
+      const nextRefresh =
+        MIN_REFRESH_INTERVAL + Math.random() * REFRESH_INTERVAL_RANGE
       timeoutHandler.current = setTimeout(loop, nextRefresh)
     }
     const loop = () => {
@@ -66,14 +84,28 @@ const CoinRankRowComponent = (props: Props) => {
         return newTimer()
       }
 
-      const { percentChange: newPercentChange, price: newPrice, currencyCode: newCurrencyCode } = newCoinRow
+      const {
+        percentChange: newPercentChange,
+        price: newPrice,
+        currencyCode: newCurrencyCode
+      } = newCoinRow
       const { percentChange, price, currencyCode } = coinRow
       const pctf = percentChange[percentChangeTimeFrame]
       const newPctf = newPercentChange[percentChangeTimeFrame]
 
-      if (newPrice !== price || pctf !== newPctf || currencyCode !== newCurrencyCode) {
-        debugLog(LOG_COINRANK, `Refresh Row ${index} old: ${currencyCode} ${price} ${pctf}`)
-        debugLog(LOG_COINRANK, `            ${index} new: ${newCurrencyCode} ${newPrice} ${newPctf}`)
+      if (
+        newPrice !== price ||
+        pctf !== newPctf ||
+        currencyCode !== newCurrencyCode
+      ) {
+        debugLog(
+          LOG_COINRANK,
+          `Refresh Row ${index} old: ${currencyCode} ${price} ${pctf}`
+        )
+        debugLog(
+          LOG_COINRANK,
+          `            ${index} new: ${newCurrencyCode} ${newPrice} ${newPctf}`
+        )
         setCoinRow(newCoinRow)
       }
       newTimer()
@@ -95,8 +127,12 @@ const CoinRankRowComponent = (props: Props) => {
 
   if (coinRow == null) return null
 
-  const { currencyCode, price, marketCap, volume24h, percentChange, rank } = coinRow
-  debugLog(LOG_COINRANK, `CoinRankRow index=${index} rank=${rank} currencyCode=${currencyCode}`)
+  const { currencyCode, price, marketCap, volume24h, percentChange, rank } =
+    coinRow
+  debugLog(
+    LOG_COINRANK,
+    `CoinRankRow index=${index} rank=${rank} currencyCode=${currencyCode}`
+  )
 
   let numDecimals
   let assetSubTextValue
@@ -125,14 +161,21 @@ const CoinRankRowComponent = (props: Props) => {
   }
 
   numDecimals = getNumDecimals(assetSubTextScaled)
-  const assetSubTextValueString = round(assetSubTextScaled.toString(), -numDecimals)
+  const assetSubTextValueString = round(
+    assetSubTextScaled.toString(),
+    -numDecimals
+  )
   const assetSubTextString = `${fiatSymbol}${assetSubTextValueString} ${assetSubTextDenom}`
 
   // Calculate percent change string
   const percentChangeRaw = percentChange[percentChangeTimeFrame]
   numDecimals = getNumDecimals(percentChangeRaw, 2)
 
-  const decimalChangeRaw = div(String(percentChangeRaw), '100', DECIMAL_PRECISION)
+  const decimalChangeRaw = div(
+    String(percentChangeRaw),
+    '100',
+    DECIMAL_PRECISION
+  )
   const percentChangeString = toPercentString(decimalChangeRaw, {
     intlOpts: { noGrouping: true }
   })
@@ -148,7 +191,11 @@ const CoinRankRowComponent = (props: Props) => {
   const percentString = `${plusMinus}${percentChangeString}`
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={styles.container} onPress={handlePress}>
+    <EdgeTouchableOpacity
+      accessible={false}
+      style={styles.container}
+      onPress={handlePress}
+    >
       <View style={styles.rank}>
         <EdgeText accessible numberOfLines={1} disableFontScaling>
           {rank}
@@ -157,7 +204,9 @@ const CoinRankRowComponent = (props: Props) => {
       <View style={styles.iconRowDataContainer}>
         <FastImage style={styles.icon} source={imageUrlObject} />
         <View style={styles.leftColumn}>
-          <EdgeText style={styles.currencyCode}>{currencyCode.toUpperCase()}</EdgeText>
+          <EdgeText style={styles.currencyCode}>
+            {currencyCode.toUpperCase()}
+          </EdgeText>
           <EdgeText style={styles.assetSubText}>{assetSubTextString}</EdgeText>
         </View>
         <View style={styles.middleColumn}>

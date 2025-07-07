@@ -32,7 +32,8 @@ interface Props extends EdgeAppSceneProps<'createWalletAccountSetup'> {
 export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   const { navigation, route, wallet: existingWallet } = props
   const { accountHandle: initialValue = '' } = route.params
-  const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } = existingWallet.currencyInfo
+  const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } =
+    existingWallet.currencyInfo
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
@@ -62,7 +63,9 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
       .catch(error => {
         console.log('checkHandleAvailability error: ', error)
         if (error.name === 'ErrorAccountUnavailable') {
-          setErrorMessage(lstrings.create_wallet_account_account_name_unavailable)
+          setErrorMessage(
+            lstrings.create_wallet_account_account_name_unavailable
+          )
         } else if (error.name === 'ErrorInvalidAccountName') {
           setErrorMessage(lstrings.create_wallet_account_invalid_account_name)
         } else {
@@ -81,12 +84,22 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   return (
     <SceneWrapper scroll>
       <View style={{ alignSelf: 'center' }}>
-        <CryptoIcon marginRem={1} pluginId={existingPluginId} sizeRem={4} tokenId={null} />
+        <CryptoIcon
+          marginRem={1}
+          pluginId={existingPluginId}
+          sizeRem={4}
+          tokenId={null}
+        />
       </View>
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.
       Switch to MessageText if we ever define that: */}
-      <Paragraph>{sprintf(lstrings.create_wallet_account_review_instructions, existingCurrencyCode)}</Paragraph>
+      <Paragraph>
+        {sprintf(
+          lstrings.create_wallet_account_review_instructions,
+          existingCurrencyCode
+        )}
+      </Paragraph>
       <Paragraph>{lstrings.create_wallet_account_requirements_eos}</Paragraph>
       <FilledTextInput
         aroundRem={1}

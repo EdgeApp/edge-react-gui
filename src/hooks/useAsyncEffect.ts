@@ -18,7 +18,11 @@ interface State {
  * Runs an effect when its dependencies change, just like `useEffect`,
  * but awaits the returned promise before starting the next run.
  */
-export function useAsyncEffect(effect: AsyncEffect, deps: unknown[] = [], tag: string): void {
+export function useAsyncEffect(
+  effect: AsyncEffect,
+  deps: unknown[] = [],
+  tag: string
+): void {
   const state = React.useRef<State>({
     closed: false,
     dirty: false,

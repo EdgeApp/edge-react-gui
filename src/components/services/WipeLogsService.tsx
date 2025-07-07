@@ -23,19 +23,30 @@ export const WipeLogsService = () => {
   useEffect(() => {
     const handler = async () => {
       console.log('Checking for expired logs')
-      const dataItem = await disklet.getText(LOG_WIPE_INFO_FILENAME).catch(err => {
-        console.warn(`Failed to access ${LOG_WIPE_INFO_FILENAME} data: ${String(err)}`)
-      })
+      const dataItem = await disklet
+        .getText(LOG_WIPE_INFO_FILENAME)
+        .catch(err => {
+          console.warn(
+            `Failed to access ${LOG_WIPE_INFO_FILENAME} data: ${String(err)}`
+          )
+        })
       const logWipeInfo = asMaybe(asLogWipeInfo)(dataItem)
 
-      if (logWipeInfo?.lastWipeTimestamp == null || logWipeInfo.lastWipeTimestamp.valueOf() < WIPE_LOGS_BEFORE_TIME.valueOf()) {
+      if (
+        logWipeInfo?.lastWipeTimestamp == null ||
+        logWipeInfo.lastWipeTimestamp.valueOf() <
+          WIPE_LOGS_BEFORE_TIME.valueOf()
+      ) {
         console.log('Wiping expired logs...')
         await clearAllLogs()
         const newLogWipeInfo: LogWipeInfo = {
           lastWipeTimestamp: new Date()
         }
 
-        await disklet.setText(LOG_WIPE_INFO_FILENAME, wasLogWipeInfo(newLogWipeInfo))
+        await disklet.setText(
+          LOG_WIPE_INFO_FILENAME,
+          wasLogWipeInfo(newLogWipeInfo)
+        )
         console.log('Completed wipe of expired logs')
       }
     }

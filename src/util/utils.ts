@@ -1,5 +1,13 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeDenomination, EdgePluginMap, EdgeToken, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyConfig,
+  EdgeCurrencyInfo,
+  EdgeDenomination,
+  EdgePluginMap,
+  EdgeToken,
+  EdgeTokenMap,
+  EdgeTransaction
+} from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
@@ -14,7 +22,12 @@ import {
   getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
-import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
+import {
+  toLocaleDate,
+  toLocaleDateTime,
+  toLocaleTime,
+  truncateDecimalsPeriod
+} from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
@@ -24,7 +37,8 @@ import { base58 } from './encoding'
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
 
-export const normalizeForSearch = (str: string, delimiter: string = '') => str.replace(/\s/g, delimiter).toLowerCase()
+export const normalizeForSearch = (str: string, delimiter: string = '') =>
+  str.replace(/\s/g, delimiter).toLowerCase()
 
 // Taken from pixkey.ts in edge-currency-accountbased
 export const isEmail = (text: string) =>
@@ -33,7 +47,11 @@ export const isEmail = (text: string) =>
   )
 
 // Replaces extra chars with '...' either in the middle or end of the input string
-export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
+export const truncateString = (
+  input: string | number,
+  maxLength: number,
+  isMidTrunc: boolean = false
+) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
   const strLen = inputStr.length
   if (strLen >= maxLength) {
@@ -58,7 +76,11 @@ export const isValidInput = (input: string): boolean =>
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
-export const truncateDecimals = (input: string, precision: number = DEFAULT_TRUNCATE_PRECISION, allowBlank: boolean = false): string => {
+export const truncateDecimals = (
+  input: string,
+  precision: number = DEFAULT_TRUNCATE_PRECISION,
+  allowBlank: boolean = false
+): string => {
   if (input === '') {
     if (allowBlank) {
       input = ''
@@ -71,7 +93,9 @@ export const truncateDecimals = (input: string, precision: number = DEFAULT_TRUN
   }
   const [integers, decimals] = input.split('.')
 
-  return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
+  return precision > 0
+    ? `${integers}.${decimals.slice(0, precision)}`
+    : integers
 }
 
 // Counts zeros after decimal place in number. '0.00036' => 3
@@ -97,7 +121,8 @@ export const roundUpToLeastSignificant = (input: string): string => {
   return add(input, oneExtra)
 }
 
-export const zeroString = (input?: string): boolean => input == null || input === '' || eq(input, '0')
+export const zeroString = (input?: string): boolean =>
+  input == null || input === '' || eq(input, '0')
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
@@ -115,7 +140,10 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   }
 }
 
-export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number): string => {
+export const sanitizeDecimalAmount = (
+  amount: string,
+  maxEntryDecimals: number
+): string => {
   // Replace all commas into periods
   amount = amount.replace(',', '.')
 
@@ -135,16 +163,27 @@ export const hexToDecimal = (num: string) => {
   return add(numberString, '0', 10)
 }
 
-export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
+export const roundedFee = (
+  nativeAmount: string,
+  decimalPlacesBeyondLeadingZeros: number,
+  multiplier: string
+): string => {
   if (nativeAmount === '') return nativeAmount
   const displayAmount = div(nativeAmount, multiplier, DECIMAL_PRECISION)
-  const precision = zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
+  const precision =
+    zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
   const truncatedAmount = truncateDecimals(displayAmount, precision)
-  if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
+  if (gt(displayAmount, truncatedAmount))
+    return `${roundUpToLeastSignificant(truncatedAmount)} `
   return `${truncatedAmount} `
 }
 
-export const convertCurrencyFromExchangeRates = (exchangeRates: GuiExchangeRates, fromCurrencyCode: string, toCurrencyCode: string, amount: string): string => {
+export const convertCurrencyFromExchangeRates = (
+  exchangeRates: GuiExchangeRates,
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: string
+): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = mul(amount, rate)
@@ -164,9 +203,11 @@ export const convertNativeToDisplay = convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
 export const convertNativeToExchange = convertNativeToDenomination
 
-export const mulToPrecision = (multiplier: string): number => multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
+export const mulToPrecision = (multiplier: string): number =>
+  multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
 
-export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes(item) ? [...array, item] : array)
+export const getNewArrayWithItem = (array: any[], item: any) =>
+  !array.includes(item) ? [...array, item] : array
 
 const restrictedCurrencyCodes = ['BTC']
 
@@ -187,9 +228,14 @@ export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
   return denom
 }
 
-export const getSupportedFiats = (defaultCurrencyCode?: string): GuiFiatType[] => {
+export const getSupportedFiats = (
+  defaultCurrencyCode?: string
+): GuiFiatType[] => {
   const out: GuiFiatType[] = []
-  if (defaultCurrencyCode != null && FIAT_CODES_SYMBOLS[defaultCurrencyCode] != null) {
+  if (
+    defaultCurrencyCode != null &&
+    FIAT_CODES_SYMBOLS[defaultCurrencyCode] != null
+  ) {
     out.push({
       label: `${defaultCurrencyCode} - ${FIAT_CODES_SYMBOLS[defaultCurrencyCode]}`,
       value: defaultCurrencyCode
@@ -221,7 +267,10 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 
 // multiplier / exchange rate / ( 1 / unit )
 // 100000000 / $16500 / (1/$0.001) = ~6 sats
-export const calculateSpamThreshold = (rate: number, denom: EdgeDenomination) => {
+export const calculateSpamThreshold = (
+  rate: number,
+  denom: EdgeDenomination
+) => {
   if (rate === 0) return '0'
   return div(div(denom.multiplier, rate.toString()), '1000')
 }
@@ -234,18 +283,28 @@ export interface PrecisionAdjustParams {
 
 export function precisionAdjust(params: PrecisionAdjustParams): number {
   const { exchangeSecondaryToPrimaryRatio } = params
-  const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
+  const order = Math.floor(
+    Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001
+  ) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
   if (isNaN(exchangeRateOrderOfMagnitude)) return 0
 
   // Get the exchange rate in tenth of pennies
-  const exchangeRateString = mul(exchangeRateOrderOfMagnitude.toString(), mul(params.secondaryExchangeMultiplier, '10'))
+  const exchangeRateString = mul(
+    exchangeRateOrderOfMagnitude.toString(),
+    mul(params.secondaryExchangeMultiplier, '10')
+  )
 
-  const precisionAdjust = div(exchangeRateString, params.primaryExchangeMultiplier, DECIMAL_PRECISION)
+  const precisionAdjust = div(
+    exchangeRateString,
+    params.primaryExchangeMultiplier,
+    DECIMAL_PRECISION
+  )
 
   if (lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
-    let order = 2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
+    let order =
+      2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
     order = Math.abs(order)
     if (order > 0) {
       return order
@@ -273,7 +332,11 @@ export const monthsBetween = (startDate: Date, endDate: Date): number => {
   return months <= 0 ? 0 : months
 }
 
-export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
+export async function runWithTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  error: Error = new Error(`Timeout of ${ms}ms exceeded`)
+): Promise<T> {
   const timeout: Promise<T> = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)
@@ -287,18 +350,28 @@ export async function snooze(ms: number): Promise<void> {
 }
 
 let prevTotal = '0'
-export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): string => {
+export const getTotalFiatAmountFromExchangeRates = (
+  state: RootState,
+  isoFiatCurrencyCode: string
+): string => {
   const log: string[] = ['', '']
   let total = '0'
   const { exchangeRates } = state
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
-    log.push(`LogTot: pluginId:${wallet.currencyInfo.pluginId} wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`)
+    log.push(
+      `LogTot: pluginId:${
+        wallet.currencyInfo.pluginId
+      } wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`
+    )
     for (const tokenId of wallet.balanceMap.keys()) {
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
-      log.push(`\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`)
+      const rate =
+        exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+      log.push(
+        `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
+      )
 
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
@@ -313,15 +386,27 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       const {
         denominations: [denomination]
       } = info
-      log.push(`LogTot: mult=${denomination.multiplier} name=${denomination.name}`)
+      log.push(
+        `LogTot: mult=${denomination.multiplier} name=${denomination.name}`
+      )
 
       // Do the conversion:
-      const exchangeBalance = div(nativeBalance, denomination.multiplier, DECIMAL_PRECISION)
+      const exchangeBalance = div(
+        nativeBalance,
+        denomination.multiplier,
+        DECIMAL_PRECISION
+      )
       const fiatBalance = mul(rate, exchangeBalance)
       const newTotal = add(total, fiatBalance)
-      log.push(`LogTot: nativeBalance=${nativeBalance} / multiplier=${denomination.multiplier} => exchangeBalance=${exchangeBalance}`)
-      log.push(`LogTot: rate=${rate} * exchangeBalance=${exchangeBalance} => fiatBalance=${fiatBalance}`)
-      log.push(`LogTot: total=${total} + fiatBalance=${fiatBalance} => newTotal=${newTotal}`)
+      log.push(
+        `LogTot: nativeBalance=${nativeBalance} / multiplier=${denomination.multiplier} => exchangeBalance=${exchangeBalance}`
+      )
+      log.push(
+        `LogTot: rate=${rate} * exchangeBalance=${exchangeBalance} => fiatBalance=${fiatBalance}`
+      )
+      log.push(
+        `LogTot: total=${total} + fiatBalance=${fiatBalance} => newTotal=${newTotal}`
+      )
       total = newTotal
     }
   }
@@ -336,7 +421,10 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
 type AsyncFunction = () => Promise<any>
 
-export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
+export async function asyncWaterfall(
+  asyncFuncs: AsyncFunction[],
+  timeoutMs: number = 5000
+): Promise<any> {
   let pending = asyncFuncs.length
   const promises: Array<Promise<any>> = []
   for (const func of asyncFuncs) {
@@ -397,7 +485,10 @@ export async function openLink(url: string): Promise<void> {
   }
 }
 
-export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
+export function maxPrimaryCurrencyConversionDecimals(
+  primaryPrecision: number,
+  precisionAdjustValue: number
+): number {
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }
@@ -427,22 +518,54 @@ export const convertTransactionFeeToDisplayFee = (
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
     feeNativeAmount = transaction?.parentNetworkFee
-  } else if (transaction?.networkFee != null) feeNativeAmount = transaction?.networkFee
+  } else if (transaction?.networkFee != null)
+    feeNativeAmount = transaction?.networkFee
 
   if (feeNativeAmount != null && gt(feeNativeAmount, '0')) {
-    const cryptoFeeSymbol = feeDisplayDenomination && feeDisplayDenomination.symbol ? feeDisplayDenomination.symbol : ''
-    const displayMultiplier = feeDisplayDenomination ? feeDisplayDenomination.multiplier : ''
-    const exchangeMultiplier = feeDefaultDenomination ? feeDefaultDenomination.multiplier : ''
-    const cryptoFeeExchangeDenomAmount = feeNativeAmount ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount) : ''
-    const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
-    const cryptoAmount = mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-    const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
-    const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
-    const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
+    const cryptoFeeSymbol =
+      feeDisplayDenomination && feeDisplayDenomination.symbol
+        ? feeDisplayDenomination.symbol
+        : ''
+    const displayMultiplier = feeDisplayDenomination
+      ? feeDisplayDenomination.multiplier
+      : ''
+    const exchangeMultiplier = feeDefaultDenomination
+      ? feeDefaultDenomination.multiplier
+      : ''
+    const cryptoFeeExchangeDenomAmount = feeNativeAmount
+      ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount)
+      : ''
+    const exchangeToDisplayMultiplierRatio = div(
+      exchangeMultiplier,
+      displayMultiplier,
+      DECIMAL_PRECISION
+    )
+    const cryptoAmount = mul(
+      cryptoFeeExchangeDenomAmount,
+      exchangeToDisplayMultiplierRatio
+    )
+    const cryptoFeeExchangeAmount =
+      convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
+    const fiatFeeAmount = convertCurrencyFromExchangeRates(
+      exchangeRates,
+      currencyCode,
+      isoFiatCurrencyCode,
+      cryptoFeeExchangeAmount
+    )
+    const feeAmountInUSD = convertCurrencyFromExchangeRates(
+      exchangeRates,
+      currencyCode,
+      'iso:USD',
+      cryptoFeeExchangeAmount
+    )
     const fiatAmount = {
       amount: toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
       style:
-        parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
+        parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD
+          ? feeStyle.danger
+          : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD
+          ? feeStyle.warning
+          : undefined
     }
 
     return {
@@ -484,10 +607,15 @@ export function unixToLocaleDateTime(unixDate: number): {
 export const toListString = (elements: string[]): string => {
   if (elements.length === 0) return ''
   if (elements.length === 1) return elements[0]
-  if (elements.length === 2) return sprintf(lstrings.util_s_and_s, elements[0], elements[1])
+  if (elements.length === 2)
+    return sprintf(lstrings.util_s_and_s, elements[0], elements[1])
 
   const firstPart = elements.slice(0, elements.length - 2)
-  const lastPart = sprintf(lstrings.util_s_and_s, elements[elements.length - 2], elements[elements.length - 1])
+  const lastPart = sprintf(
+    lstrings.util_s_and_s,
+    elements[elements.length - 2],
+    elements[elements.length - 1]
+  )
   return firstPart.join(', ') + `, ${lastPart}`
 }
 
@@ -496,8 +624,12 @@ export const toListString = (elements: string[]): string => {
  * Returns null if Edge does not support the specified chain.
  * Not case sensitive.
  */
-export const getPluginIdFromChainCode = (chainCode: string): string | undefined => {
-  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase())
+export const getPluginIdFromChainCode = (
+  chainCode: string
+): string | undefined => {
+  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(
+    key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase()
+  )
   return pluginId
 }
 
@@ -505,7 +637,9 @@ export interface MiniCurrencyConfig {
   allTokens: EdgeTokenMap
   currencyInfo: EdgeCurrencyInfo
 }
-export type CurrencyConfigMap = EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
+export type CurrencyConfigMap =
+  | EdgePluginMap<EdgeCurrencyConfig>
+  | EdgePluginMap<MiniCurrencyConfig>
 
 export const shuffleArray = <T>(array: T[]): T[] => {
   let currentIndex = array.length
@@ -533,7 +667,10 @@ export const shuffleArray = <T>(array: T[]): T[] => {
  * returns the first promise that resolves.
  * If all promises reject, rejects an array of errors.
  */
-export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: number): Promise<T[]> {
+export async function fuzzyTimeout<T>(
+  promises: Array<Promise<T>>,
+  timeoutMs: number
+): Promise<T[]> {
   return await new Promise((resolve, reject) => {
     let done = false
     const results: T[] = []
@@ -592,7 +729,8 @@ export const formatLargeNumberString = (num: number): string => {
 }
 
 export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
-export const datelog = (...args: any) => console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
+export const datelog = (...args: any) =>
+  console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
 
 export const base58ToUuid = (base58String: string): string => {
   const bytes = base58.parse(base58String)
@@ -606,8 +744,12 @@ export const base58ToUuid = (base58String: string): string => {
  * @param scaleFactor 0-1 with 0 being black, 1 is unchanged
  * @returns darkened hex color string
  */
-export const darkenHexColor = (hexColor: string, scaleFactor: number): string => {
-  if (scaleFactor < 0 || scaleFactor > 1) throw new Error('scaleFactor must be between 0-1')
+export const darkenHexColor = (
+  hexColor: string,
+  scaleFactor: number
+): string => {
+  if (scaleFactor < 0 || scaleFactor > 1)
+    throw new Error('scaleFactor must be between 0-1')
   hexColor = hexColor.replace('#', '')
 
   // Check for short and long hexadecimal color codes
@@ -632,7 +774,9 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
   const scaledB = Math.round(b * scaleFactor)
 
   // Convert the scaled values back to hexadecimal
-  const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG.toString(16).padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
+  const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG
+    .toString(16)
+    .padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
 
   return scaledHexColor
 }
@@ -642,7 +786,10 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
  */
 export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
-  return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
+  return Array.from(
+    { length: 3 },
+    (_, i) => osVersionRaw.split('.')[i] || '0'
+  ).join('.')
 }
 
 export const removeIsoPrefix = (currencyCode: string): string => {
@@ -650,5 +797,7 @@ export const removeIsoPrefix = (currencyCode: string): string => {
 }
 
 export const getDisplayUsername = (loginId: string, username?: string) => {
-  return username == null ? sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3)) : username
+  return username == null
+    ? sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))
+    : username
 }

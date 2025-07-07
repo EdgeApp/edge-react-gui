@@ -5,14 +5,24 @@ import { ActivityIndicator, View } from 'react-native'
 import { useReorderableDrag } from 'react-native-reorderable-list'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { FIAT_PRECISION, getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
+import {
+  FIAT_PRECISION,
+  getFiatSymbol
+} from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatNumberInput } from '../../locales/intl'
-import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
+import {
+  DECIMAL_PRECISION,
+  decimalOrZero,
+  truncateDecimals
+} from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -31,10 +41,13 @@ function WalletListSortableRowComponent(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const showBalance = useSelector(
+    state => state.ui.settings.isAccountBalanceVisible
+  )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const exchangeDenomination = wallet == null ? null : getExchangeDenom(wallet.currencyConfig, null)
+  const exchangeDenomination =
+    wallet == null ? null : getExchangeDenom(wallet.currencyConfig, null)
 
   if (wallet == null || exchangeDenomination == null) {
     return (
@@ -48,24 +61,44 @@ function WalletListSortableRowComponent(props: Props) {
 
   const { currencyCode } = wallet.currencyInfo
   const fiatSymbol = getFiatSymbol(defaultIsoFiat)
-  const displayDenomination = dispatch((_, getState) => selectDisplayDenom(getState(), wallet.currencyConfig, null))
+  const displayDenomination = dispatch((_, getState) =>
+    selectDisplayDenom(getState(), wallet.currencyConfig, null)
+  )
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
   const symbol = displayDenomination.symbol
   const tokenId = getWalletTokenId(wallet, currencyCode)
 
   const balance = wallet.balanceMap.get(tokenId) ?? '0'
-  const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
-  const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
-  const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-  const fiatBalance = calculateFiatBalance(wallet, defaultIsoFiat, exchangeDenomination, exchangeRates)
-  const fiatBalanceFormat = fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
+  const preliminaryCryptoAmount = truncateDecimals(
+    div(balance, multiplier, DECIMAL_PRECISION)
+  )
+  const finalCryptoAmount = formatNumberInput(
+    decimalOrZero(preliminaryCryptoAmount, 6)
+  ) // make it show zero if infinitesimal number
+  const finalCryptoAmountString = showBalance
+    ? `${symbol || ''} ${finalCryptoAmount}`
+    : ''
+  const fiatBalance = calculateFiatBalance(
+    wallet,
+    defaultIsoFiat,
+    exchangeDenomination,
+    exchangeRates
+  )
+  const fiatBalanceFormat =
+    fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
   const fiatBalanceSymbol = showBalance && fiatSymbol ? fiatSymbol : ''
-  const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
+  const fiatBalanceString = showBalance
+    ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION })
+    : ''
 
   return (
     <View style={[styles.container, styles.rowContainer]}>
-      <EdgeTouchableOpacity delayLongPress={1} style={styles.handleContainer} onLongPress={handleDrag}>
+      <EdgeTouchableOpacity
+        delayLongPress={1}
+        style={styles.handleContainer}
+        onLongPress={handleDrag}
+      >
         <View style={styles.iconContainer}>
           <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
@@ -76,11 +109,15 @@ function WalletListSortableRowComponent(props: Props) {
       <View style={styles.detailsContainer}>
         <View style={styles.detailsRow}>
           <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-          <EdgeText style={styles.detailsValue}>{finalCryptoAmountString}</EdgeText>
+          <EdgeText style={styles.detailsValue}>
+            {finalCryptoAmountString}
+          </EdgeText>
         </View>
         <View style={styles.detailsRow}>
           <EdgeText style={styles.detailsName}>{name}</EdgeText>
-          <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalanceString}</EdgeText>
+          <EdgeText style={styles.detailsFiat}>
+            {fiatBalanceSymbol + fiatBalanceString}
+          </EdgeText>
         </View>
       </View>
     </View>

@@ -29,26 +29,39 @@ export function EarnOptionCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { stakePolicy, currencyConfig, isOpenPosition, countryCode, onPress } = props
+  const { stakePolicy, currencyConfig, isOpenPosition, countryCode, onPress } =
+    props
   const { apy, yieldType, stakeProviderInfo } = stakePolicy
 
   const { stakeAssets, rewardAssets } = stakePolicy
-  const stakeCurrencyCodes = stakeAssets.map(asset => asset.displayName ?? asset.currencyCode).join(' + ')
-  const rewardCurrencyCodes = rewardAssets.map(asset => asset.displayName ?? asset.currencyCode).join(', ')
+  const stakeCurrencyCodes = stakeAssets
+    .map(asset => asset.displayName ?? asset.currencyCode)
+    .join(' + ')
+  const rewardCurrencyCodes = rewardAssets
+    .map(asset => asset.displayName ?? asset.currencyCode)
+    .join(', ')
 
-  const stakeText = sprintf(isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s, stakeCurrencyCodes)
+  const stakeText = sprintf(
+    isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s,
+    stakeCurrencyCodes
+  )
   const rewardText = isOpenPosition
     ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
     : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
 
   const policyIcons = getPolicyIconUris(currencyConfig, stakePolicy)
 
-  let apyText: string = yieldType === 'variable' ? lstrings.stake_variable_apy : lstrings.stake_stable_apy
+  let apyText: string =
+    yieldType === 'variable'
+      ? lstrings.stake_variable_apy
+      : lstrings.stake_stable_apy
 
   // Fill in the actual numeric apy values, if they exist
   if (apy != null && apy > 0) {
     const variablePrefix = yieldType === 'stable' ? '' : '~ '
-    apyText = variablePrefix + sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
+    apyText =
+      variablePrefix +
+      sprintf(lstrings.stake_apy_1s, toPercentString(apy / 100))
   }
 
   return (
@@ -58,7 +71,10 @@ export function EarnOptionCard(props: Props) {
           <TitleText>{stakeText}</TitleText>
           <EdgeText style={styles.rewardText}>{rewardText}</EdgeText>
           <EdgeText style={styles.apyText}>{apyText}</EdgeText>
-          <EdgeText style={styles.providerText} numberOfLines={1}>{`${lstrings.plugin_powered_by_space}${stakeProviderInfo.displayName}`}</EdgeText>
+          <EdgeText
+            style={styles.providerText}
+            numberOfLines={1}
+          >{`${lstrings.plugin_powered_by_space}${stakeProviderInfo.displayName}`}</EdgeText>
         </View>
 
         <PairIcons icons={policyIcons.stakeAssetUris} />

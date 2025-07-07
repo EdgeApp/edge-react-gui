@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
@@ -18,7 +22,11 @@ export const HeaderBackground = (props: any) => {
   return (
     <HeaderBackgroundContainerView scrollY={scrollY}>
       <BlurBackgroundNoRoundedCorners />
-      <HeaderLinearGradient colors={theme.headerBackground} start={theme.headerBackgroundStart} end={theme.headerBackgroundEnd} />
+      <HeaderLinearGradient
+        colors={theme.headerBackground}
+        start={theme.headerBackgroundStart}
+        end={theme.headerBackgroundEnd}
+      />
       <DividerLine colors={theme.headerOutlineColors} />
     </HeaderBackgroundContainerView>
   )

@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 interface Props {
   // The props.key of the visible child, or undefined to hide everything:
@@ -25,14 +30,24 @@ interface Props {
  * so as two components fade past each other during an animation,
  * the last child in the list will receive any touches.
  */
-export function CrossFade(props: Props): JSX.Element {
+export function CrossFade(props: Props): React.ReactElement {
   const { activeKey, children, duration = 500 } = props
 
-  const out: JSX.Element[] = []
+  const out: React.ReactElement[] = []
   React.Children.forEach(children, child => {
-    if (child != null && typeof child === 'object' && 'key' in child && typeof child.key === 'string') {
+    if (
+      child != null &&
+      typeof child === 'object' &&
+      'key' in child &&
+      typeof child.key === 'string'
+    ) {
       out.push(
-        <CrossFadeChild key={child.key} activeKey={activeKey} childKey={child.key} duration={duration}>
+        <CrossFadeChild
+          key={child.key}
+          activeKey={activeKey}
+          childKey={child.key}
+          duration={duration}
+        >
           {child}
         </CrossFadeChild>
       )
@@ -52,7 +67,9 @@ function CrossFadeChild(props: ChildProps) {
   const { activeKey, childKey, children, duration } = props
   const active = childKey === activeKey
 
-  const [mode, setMode] = React.useState<'visible' | 'hiding' | 'hidden'>(active ? 'visible' : 'hidden')
+  const [mode, setMode] = React.useState<'visible' | 'hiding' | 'hidden'>(
+    active ? 'visible' : 'hidden'
+  )
   const opacity = useSharedValue(active ? 1 : 0)
 
   React.useEffect(() => {

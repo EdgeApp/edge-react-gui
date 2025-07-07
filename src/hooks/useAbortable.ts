@@ -31,7 +31,9 @@ export class AbortError extends Error {}
  *   will throw a `AbortError` if the promise is aborted.
  * @returns A promise and a function to abort the promise.
  */
-export const useAbortable = <Args extends unknown[], R>(definition: (maybeAbort: CheckAbortFn) => AbortableRoutine<Args, R>) => {
+export const useAbortable = <Args extends unknown[], R>(
+  definition: (maybeAbort: CheckAbortFn) => AbortableRoutine<Args, R>
+) => {
   const handler = useHandler((...args: Args): Abortable<R> => {
     let shouldAbort = false
     function maybeAbort<T>(value: T): T {

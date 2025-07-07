@@ -32,7 +32,11 @@ interface Props {
 export function Providers(props: Props) {
   const { context } = props
   const theme = useTheme()
-  const isDesktop = Platform.OS === 'windows' || Platform.OS === 'macos' || Platform.OS === 'web' || DeviceInfo.getDeviceType() === 'Desktop'
+  const isDesktop =
+    Platform.OS === 'windows' ||
+    Platform.OS === 'macos' ||
+    Platform.OS === 'web' ||
+    DeviceInfo.getDeviceType() === 'Desktop'
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.

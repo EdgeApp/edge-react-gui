@@ -23,14 +23,20 @@ import { initCoinrankList, initInfoServer } from './util/network'
 export type Environment = 'development' | 'testing' | 'production'
 
 const appVersion = getVersion()
-const environment: Environment = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+const environment: Environment =
+  __DEV__ || appVersion === '99.99.99'
+    ? 'development'
+    : appVersion.includes('-')
+    ? 'testing'
+    : 'production'
 
 if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   console.log('Sentry keys not set. Sentry disabled.')
 } else {
   Sentry.init({
     dsn: ENV.SENTRY_DSN_URL,
-    tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
+    tracesSampleRate:
+      environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
     maxBreadcrumbs: 25,
     environment,
 
@@ -48,7 +54,10 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
 
 // Uncomment the next line to remove popup warning/error boxes.
 // LogBox.ignoreAllLogs()
-LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
+LogBox.ignoreLogs([
+  'Require cycle:',
+  'Attempted to end a Span which has already ended.'
+])
 
 // Mute specific console output types.
 // Useful for debugging using console output, i.e. mute everything but `debug`
@@ -189,7 +198,9 @@ if (ENABLE_PERF_LOGGING) {
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
       perfTotals[label] += elapsed
       perfCounters[label]++
-      clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)
+      clog(
+        `${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`
+      )
       delete perfTimers[label]
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)

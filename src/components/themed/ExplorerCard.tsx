@@ -11,7 +11,9 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
-const transactionListUnsupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
+const transactionListUnsupportedPluginIds = Object.keys(
+  SPECIAL_CURRENCY_INFO
+).filter(
   pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported
 )
 
@@ -50,13 +52,22 @@ export const ExplorerCard = (props: Props) => {
       <ButtonBox onPress={handlePress} paddingRem={1}>
         {addressExplorer === '' ? null : (
           <View style={styles.container}>
-            <CryptoIcon pluginId={pluginId} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
-            <EdgeText style={styles.explorerButtonText}>{lstrings.transaction_details_advance_details_show_explorer}</EdgeText>
+            <CryptoIcon
+              pluginId={pluginId}
+              tokenId={tokenId}
+              marginRem={[0.25, 0]}
+              sizeRem={2.25}
+            />
+            <EdgeText style={styles.explorerButtonText}>
+              {lstrings.transaction_details_advance_details_show_explorer}
+            </EdgeText>
           </View>
         )}
       </ButtonBox>
       <View style={styles.noTransactionContainer}>
-        <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_no_tx_support_yet}</EdgeText>
+        <EdgeText style={styles.noTransactionText}>
+          {lstrings.transaction_list_no_tx_support_yet}
+        </EdgeText>
       </View>
     </View>
   )

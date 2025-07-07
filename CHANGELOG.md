@@ -2,7 +2,15 @@
 
 ## Unreleased (develop)
 
-## 4.30.0 (staging)
+## 4.31.0 (staging)
+
+- added: "Change Username" setting
+- added: Support for Zano alias name resolution.
+- changed: Don't allow multiple pending EVM transactions.
+- fixed: Specify build target in deploy.ts to fix Apple silicon build environments
+- fixed: Maestro tests to successfully run again
+
+## 4.30.0 (2025-06-24)
 
 - added: Additional app review prompt triggers
 - added: Additional user information fields for Kado OTC orders
@@ -20,6 +28,7 @@
 - fixed: (ETH) Improper Kiln staking balance shown.
 - fixed: Informative insufficient funds error message for Velo staking
 - fixed: Chart price data not updating when `assetId` changes
+- fixed: Use Bity's new address field format.
 
 ## 4.29.0 (2025-06-10)
 

@@ -4,7 +4,10 @@ import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
+import {
+  FIO_ADDRESS_DELIMITER,
+  FIO_DOMAIN_DEFAULT
+} from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -13,7 +16,12 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { EdgeModal } from '../modals/EdgeModal'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  useTheme
+} from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
@@ -62,7 +70,10 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
   }
 
-  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
+  static getDerivedStateFromProps(
+    props: Props,
+    state: State
+  ): Partial<State> | null {
     const { publicDomains, userDomains } = props
 
     const prevDomainsJson = JSON.stringify([...publicDomains, ...userDomains])
@@ -81,7 +92,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
         label: `${FIO_ADDRESS_DELIMITER}${fioDomain.name}`
       })
     }
-    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
+    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) =>
+      userDomainA.value.name < userDomainB.value.name ? -1 : 1
+    )
 
     return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
   }
@@ -144,7 +157,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
         <EdgeTouchableOpacity onPress={() => this.selectItem(value)}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
-            <EdgeText style={styles.domainListRowFree}>{value.isFree ? lstrings.fio_domain_free : ''}</EdgeText>
+            <EdgeText style={styles.domainListRowFree}>
+              {value.isFree ? lstrings.fio_domain_free : ''}
+            </EdgeText>
           </View>
         </EdgeTouchableOpacity>
       )
@@ -161,7 +176,11 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
+      <EdgeModal
+        bridge={bridge}
+        onCancel={() => bridge.resolve(undefined)}
+        title={lstrings.fio_address_choose_domain_label}
+      >
         <SimpleTextInput
           aroundRem={0.5}
           autoCorrect={false}
@@ -221,10 +240,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function DomainListModal(props: OwnProps): JSX.Element {
+export function DomainListModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
   const userDomains = useSelector(state => state.ui.fioAddress.fioDomains)
 
-  return <DomainListModalComponent {...props} theme={theme} userDomains={userDomains} />
+  return (
+    <DomainListModalComponent
+      {...props}
+      theme={theme}
+      userDomains={userDomains}
+    />
+  )
 }

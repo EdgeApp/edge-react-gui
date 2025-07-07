@@ -44,15 +44,17 @@ export const ExchangeQuote = (props: Props) => {
     tokenId: feeTokenId,
     withSymbol: false
   })
-  const { denomination: feeDenomination, isoFiatCurrencyCode } = useTokenDisplayData({
-    currencyConfig: fromWallet.currencyConfig,
-    tokenId: feeTokenId
-  })
+  const { denomination: feeDenomination, isoFiatCurrencyCode } =
+    useTokenDisplayData({
+      currencyConfig: fromWallet.currencyConfig,
+      tokenId: feeTokenId
+    })
 
-  const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({
-    currencyConfig: fromWallet.currencyConfig,
-    tokenId: fromTokenId
-  })
+  const { currencyCode: fromCurrencyCode, denomination: fromDenomination } =
+    useTokenDisplayData({
+      currencyConfig: fromWallet.currencyConfig,
+      tokenId: fromTokenId
+    })
 
   const feeFiatText = useFiatText({
     autoPrecision: true,
@@ -65,13 +67,31 @@ export const ExchangeQuote = (props: Props) => {
   })
 
   const feeFiatAmount = useSelector(state => {
-    const cryptoAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, networkFee.currencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const cryptoAmount = div(
+      feeNativeAmount,
+      feeDenomination.multiplier,
+      DECIMAL_PRECISION
+    )
+    return convertCurrency(
+      state,
+      networkFee.currencyCode,
+      isoFiatCurrencyCode,
+      cryptoAmount
+    )
   })
 
   const fromFiatAmount = useSelector(state => {
-    const cryptoAmount = div(fromNativeAmount, fromDenomination.multiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, fromCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const cryptoAmount = div(
+      fromNativeAmount,
+      fromDenomination.multiplier,
+      DECIMAL_PRECISION
+    )
+    return convertCurrency(
+      state,
+      fromCurrencyCode,
+      isoFiatCurrencyCode,
+      cryptoAmount
+    )
   })
 
   const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
@@ -95,7 +115,11 @@ export const ExchangeQuote = (props: Props) => {
     />
   )
 
-  const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {
+  const renderRow = (
+    label: React.ReactNode,
+    value: React.ReactNode,
+    style: any = {}
+  ) => {
     return (
       <View style={[styles.row, style]}>
         <View style={styles.label}>{label}</View>
@@ -106,19 +130,25 @@ export const ExchangeQuote = (props: Props) => {
 
   const renderBottom = () => {
     if (fromTo === 'from') {
-      const feeTextStyle = showFeeWarning ? styles.bottomWarningText : styles.bottomText
+      const feeTextStyle = showFeeWarning
+        ? styles.bottomWarningText
+        : styles.bottomText
 
       return (
         <View style={styles.bottomContainer}>
           {renderRow(
             <EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>,
-            <EdgeText style={feeTextStyle}>{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
+            <EdgeText
+              style={feeTextStyle}
+            >{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
             {
               ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
             }
           )}
           {renderRow(
-            <EdgeText style={styles.bottomText}>{lstrings.string_total_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>
+              {lstrings.string_total_amount}
+            </EdgeText>,
             <EdgeText style={styles.bottomText}>{totalFiatText}</EdgeText>
           )}
         </View>
@@ -128,10 +158,15 @@ export const ExchangeQuote = (props: Props) => {
       return (
         <View style={styles.bottomContainer}>
           {renderRow(
-            <EdgeText style={styles.bottomText}>{lstrings.swap_minimum_receive_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>
+              {lstrings.swap_minimum_receive_amount}
+            </EdgeText>,
             <EdgeText style={styles.bottomText}>{minCryptoAmountText}</EdgeText>
           )}
-          {renderRow(<></>, <EdgeText style={styles.bottomText}>({minFiatAmountText})</EdgeText>)}
+          {renderRow(
+            <></>,
+            <EdgeText style={styles.bottomText}>({minFiatAmountText})</EdgeText>
+          )}
         </View>
       )
     } else {

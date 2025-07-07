@@ -21,19 +21,37 @@ interface StakingOptionCardProps {
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingOptionCard({ apy, currencyLogos, isStaked, primaryText, secondaryText, stakeProviderInfo }: StakingOptionCardProps) {
+export function StakingOptionCard({
+  apy,
+  currencyLogos,
+  isStaked,
+  primaryText,
+  secondaryText,
+  stakeProviderInfo
+}: StakingOptionCardProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const aprText: string | undefined = apy != null ? apy.toFixed(2) + '%' : undefined
+  const aprText: string | undefined =
+    apy != null ? apy.toFixed(2) + '%' : undefined
 
   const renderStakeProvider = () => {
     if (stakeProviderInfo == null) return null
     const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
-    const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
+    const swapProviderIcon = getStakeProviderIcon(
+      pluginId,
+      stakeProviderId,
+      theme
+    )
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        {swapProviderIcon ? (
+          <FastImage
+            style={styles.swapProviderIcon}
+            resizeMode={FastImage.resizeMode.contain}
+            source={{ uri: swapProviderIcon }}
+          />
+        ) : null}
         <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )
@@ -41,7 +59,9 @@ export function StakingOptionCard({ apy, currencyLogos, isStaked, primaryText, s
 
   return (
     <Space topRem={1.5}>
-      <EdgeCard gradientBackground={isStaked ? theme.cardGradientLearn : undefined}>
+      <EdgeCard
+        gradientBackground={isStaked ? theme.cardGradientLearn : undefined}
+      >
         <View style={styles.iconsContainer}>
           <View style={styles.icon}>
             <PairIcons icons={currencyLogos} />
@@ -51,7 +71,11 @@ export function StakingOptionCard({ apy, currencyLogos, isStaked, primaryText, s
           <EdgeText style={styles.primaryText}>{primaryText}</EdgeText>
           {renderStakeProvider()}
           <EdgeText style={styles.secondaryText}>{secondaryText}</EdgeText>
-          {aprText == null ? null : <EdgeText style={styles.secondaryText}>{sprintf(lstrings.stake_estimated_apr_s, aprText)}</EdgeText>}
+          {aprText == null ? null : (
+            <EdgeText style={styles.secondaryText}>
+              {sprintf(lstrings.stake_estimated_apr_s, aprText)}
+            </EdgeText>
+          )}
         </View>
       </EdgeCard>
     </Space>

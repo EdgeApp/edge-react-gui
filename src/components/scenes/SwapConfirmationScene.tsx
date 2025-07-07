@@ -13,7 +13,10 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { useUnmount } from '../../hooks/useUnmount'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
@@ -21,13 +24,29 @@ import { SwapTabSceneProps } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCode, getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  getCurrencyCodeMultiplier
+} from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
-import { convertCurrencyFromExchangeRates, convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchange,
+  DECIMAL_PRECISION
+} from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
-import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import {
+  EdgeAnim,
+  fadeInDown30,
+  fadeInDown60,
+  fadeInDown90,
+  fadeInDown120,
+  fadeInUp30,
+  fadeInUp60,
+  fadeInUp90
+} from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -96,7 +115,10 @@ export const SwapConfirmationScene = (props: Props) => {
   )
 
   const sectionList = React.useMemo(() => {
-    const rightTitle = quoteFor === 'to' ? lstrings.quote_exchange_cost : lstrings.quote_payout_amount
+    const rightTitle =
+      quoteFor === 'to'
+        ? lstrings.quote_exchange_cost
+        : lstrings.quote_payout_amount
     return [
       {
         title: { title: lstrings.quote_selected_quote, rightTitle },
@@ -117,7 +139,11 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const swapConfig = account.swapConfig[pluginId]
   const exchangeName = swapConfig?.swapInfo.displayName ?? '' // HACK: for unit tests to run
-  const feePercent = div(selectedQuote.networkFee.nativeAmount, selectedQuote.fromNativeAmount, 2)
+  const feePercent = div(
+    selectedQuote.networkFee.nativeAmount,
+    selectedQuote.fromNativeAmount,
+    2
+  )
   const showFeeWarning = gt(feeFiat, '0.01') && gte(feePercent, '0.05')
 
   const handleExchangeTimerExpired = useHandler(() => {
@@ -159,8 +185,23 @@ export const SwapConfirmationScene = (props: Props) => {
     setCalledApprove(true)
     setPending(true)
 
-    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await dispatch(getSwapInfo(selectedQuote))
-    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
+    const {
+      fromDisplayAmount,
+      fee,
+      fromFiat,
+      fromTotalFiat,
+      toDisplayAmount,
+      toFiat
+    } = await dispatch(getSwapInfo(selectedQuote))
+    const {
+      isEstimate,
+      fromNativeAmount,
+      toNativeAmount,
+      networkFee,
+      pluginId,
+      expirationDate,
+      request
+    } = selectedQuote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, toTokenId, fromWallet, fromTokenId } = request
     try {
@@ -180,7 +221,9 @@ export const SwapConfirmationScene = (props: Props) => {
       isEstimate: ${isEstimate.toString()}
       fromNativeAmount: ${fromNativeAmount}
       toNativeAmount: ${toNativeAmount}
-      expirationDate: ${expirationDate ? expirationDate.toISOString() : 'no expiration'}
+      expirationDate: ${
+        expirationDate ? expirationDate.toISOString() : 'no expiration'
+      }
       networkFee:
         currencyCode ${networkFee.currencyCode}
         nativeAmount ${networkFee.nativeAmount}
@@ -211,8 +254,10 @@ export const SwapConfirmationScene = (props: Props) => {
               currencyConfig: fromWallet.currencyConfig
             }),
             isBuiltInAsset:
-              (toTokenId == null || toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
-              (fromTokenId == null || fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
+              (toTokenId == null ||
+                toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
+              (fromTokenId == null ||
+                fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
             orderId: result.orderId,
             swapProviderId: pluginId
           }
@@ -231,25 +276,37 @@ export const SwapConfirmationScene = (props: Props) => {
   const renderTimer = () => {
     const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={handleExchangeTimerExpired} expiration={expirationDate} />
+    return (
+      <CircleTimer
+        timeExpired={handleExchangeTimerExpired}
+        expiration={expirationDate}
+      />
+    )
   }
 
-  const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
-    const quote = item.item
-    return (
-      <EdgeTouchableOpacity
-        onPress={() => {
-          setSelectedQuote(quote)
-          Airship.clear()
-        }}
-      >
-        <SwapProviderRow quote={quote} />
-      </EdgeTouchableOpacity>
-    )
-  })
+  const renderRow = useHandler(
+    (item: { item: EdgeSwapQuote; section: Section; index: number }) => {
+      const quote = item.item
+      return (
+        <EdgeTouchableOpacity
+          onPress={() => {
+            setSelectedQuote(quote)
+            Airship.clear()
+          }}
+        >
+          <SwapProviderRow quote={quote} />
+        </EdgeTouchableOpacity>
+      )
+    }
+  )
 
   const renderSectionHeader = useHandler((sectionObj: { section: Section }) => {
-    return <WalletListSectionHeader title={sectionObj.section.title.title} rightTitle={sectionObj.section.title.rightTitle} />
+    return (
+      <WalletListSectionHeader
+        title={sectionObj.section.title.title}
+        rightTitle={sectionObj.section.title.rightTitle}
+      />
+    )
   })
 
   const handleItemLayout = useRowLayout()
@@ -289,30 +346,49 @@ export const SwapConfirmationScene = (props: Props) => {
     if (canBePartial === true) {
       if (maxFulfillmentSeconds != null) {
         const t = Math.ceil(maxFulfillmentSeconds / 60)
-        canBePartialString = sprintf(lstrings.can_be_partial_quote_with_max_body, t.toString())
+        canBePartialString = sprintf(
+          lstrings.can_be_partial_quote_with_max_body,
+          t.toString()
+        )
       } else {
         canBePartialString = lstrings.can_be_partial_quote_body
       }
     }
     await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={lstrings.can_be_partial_quote_title} message={canBePartialString} buttons={{ ok: { label: lstrings.string_ok } }} />
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.can_be_partial_quote_title}
+        message={canBePartialString}
+        buttons={{ ok: { label: lstrings.string_ok } }}
+      />
     ))
   }
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
       <View style={styles.container}>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
+          <SceneHeader
+            title={lstrings.title_exchange}
+            underline
+            withTopMargin
+          />
         </EdgeAnim>
 
         {showFeeWarning ? (
           <EdgeAnim enter={fadeInUp60}>
-            <AlertCardUi4 title={lstrings.transaction_details_fee_warning} type="warning" />
+            <AlertCardUi4
+              title={lstrings.transaction_details_fee_warning}
+              type="warning"
+            />
           </EdgeAnim>
         ) : null}
 
         <EdgeAnim enter={fadeInUp30}>
-          <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
+          <ExchangeQuote
+            quote={selectedQuote}
+            fromTo="from"
+            showFeeWarning={showFeeWarning}
+          />
         </EdgeAnim>
         <EdgeAnim>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
@@ -321,11 +397,20 @@ export const SwapConfirmationScene = (props: Props) => {
           <ExchangeQuote quote={selectedQuote} fromTo="to" />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown60}>
-          <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
+          <PoweredByCard
+            iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
+            poweredByText={exchangeName}
+            onPress={handlePoweredByTap}
+          />
         </EdgeAnim>
         {selectedQuote.isEstimate ? (
           <EdgeAnim enter={fadeInDown90}>
-            <AlertCardUi4 title={lstrings.estimated_quote} body={lstrings.estimated_exchange_message} type="warning" onPress={handleForEstimateExplanation} />
+            <AlertCardUi4
+              title={lstrings.estimated_quote}
+              body={lstrings.estimated_exchange_message}
+              type="warning"
+              onPress={handleForEstimateExplanation}
+            />
           </EdgeAnim>
         ) : null}
         {selectedQuote.canBePartial ? (
@@ -340,7 +425,12 @@ export const SwapConfirmationScene = (props: Props) => {
         ) : null}
 
         <EdgeAnim enter={fadeInDown120}>
-          <Slider parentStyle={styles.slider} onSlidingComplete={handleSlideComplete} disabled={pending} showSpinner={pending} />
+          <Slider
+            parentStyle={styles.slider}
+            onSlidingComplete={handleSlideComplete}
+            disabled={pending}
+            showSpinner={pending}
+          />
         </EdgeAnim>
         {renderTimer()}
       </View>
@@ -365,7 +455,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // TODO: Use new hooks and utility methods for all conversions here
-const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> => {
+const getSwapInfo = (
+  quote: EdgeSwapQuote
+): ThunkAction<Promise<GuiSwapInfo>> => {
   return async (_dispatch, getState) => {
     const state = getState()
     const { defaultFiat, defaultIsoFiat } = state.ui.settings
@@ -378,39 +470,107 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
     // Format from amount:
-    const fromDisplayDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, fromTokenId)
-    const fromDisplayAmountTemp = div(quote.fromNativeAmount, fromDisplayDenomination.multiplier, DECIMAL_PRECISION)
+    const fromDisplayDenomination = selectDisplayDenom(
+      state,
+      fromWallet.currencyConfig,
+      fromTokenId
+    )
+    const fromDisplayAmountTemp = div(
+      quote.fromNativeAmount,
+      fromDisplayDenomination.multiplier,
+      DECIMAL_PRECISION
+    )
     const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
     // Format from fiat:
-    const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
-    const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
-    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, defaultIsoFiat, fromBalanceInCryptoDisplay))
+    const fromExchangeDenomination = getExchangeDenom(
+      fromWallet.currencyConfig,
+      fromTokenId
+    )
+    const fromBalanceInCryptoDisplay = convertNativeToExchange(
+      fromExchangeDenomination.multiplier
+    )(quote.fromNativeAmount)
+    const fromBalanceInFiatRaw = parseFloat(
+      convertCurrency(
+        state,
+        fromCurrencyCode,
+        defaultIsoFiat,
+        fromBalanceInCryptoDisplay
+      )
+    )
     const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
     // Format crypto fee:
-    const feeDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, null)
+    const feeDenomination = selectDisplayDenom(
+      state,
+      fromWallet.currencyConfig,
+      null
+    )
     const feeNativeAmount = quote.networkFee.nativeAmount
-    const feeTempAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+    const feeTempAmount = div(
+      feeNativeAmount,
+      feeDenomination.multiplier,
+      DECIMAL_PRECISION
+    )
     const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
     // Format fiat fee:
-    const multiplier = getCurrencyCodeMultiplier(fromWallet.currencyConfig, fromWallet.currencyInfo.currencyCode)
-    const feeDenominatedAmount = div(feeNativeAmount, multiplier, multiplier.length)
-    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, defaultIsoFiat, feeDenominatedAmount))
+    const multiplier = getCurrencyCodeMultiplier(
+      fromWallet.currencyConfig,
+      fromWallet.currencyInfo.currencyCode
+    )
+    const feeDenominatedAmount = div(
+      feeNativeAmount,
+      multiplier,
+      multiplier.length
+    )
+    const feeFiatAmountRaw = parseFloat(
+      convertCurrency(
+        state,
+        request.fromWallet.currencyInfo.currencyCode,
+        defaultIsoFiat,
+        feeDenominatedAmount
+      )
+    )
     const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
     const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`
-    const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
+    const fromTotalFiat = formatNumber(
+      add(
+        fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION),
+        feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)
+      ),
+      { toFixed: 2 }
+    )
 
     // Format to amount:
-    const toDisplayDenomination = selectDisplayDenom(state, toWallet.currencyConfig, toTokenId)
-    const toDisplayAmountTemp = div(quote.toNativeAmount, toDisplayDenomination.multiplier, DECIMAL_PRECISION)
+    const toDisplayDenomination = selectDisplayDenom(
+      state,
+      toWallet.currencyConfig,
+      toTokenId
+    )
+    const toDisplayAmountTemp = div(
+      quote.toNativeAmount,
+      toDisplayDenomination.multiplier,
+      DECIMAL_PRECISION
+    )
     const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
     // Format to fiat:
-    const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
-    const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
-    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, defaultIsoFiat, toBalanceInCryptoDisplay))
+    const toExchangeDenomination = getExchangeDenom(
+      toWallet.currencyConfig,
+      toTokenId
+    )
+    const toBalanceInCryptoDisplay = convertNativeToExchange(
+      toExchangeDenomination.multiplier
+    )(quote.toNativeAmount)
+    const toBalanceInFiatRaw = parseFloat(
+      convertCurrency(
+        state,
+        toCurrencyCode,
+        defaultIsoFiat,
+        toBalanceInCryptoDisplay
+      )
+    )
     const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
     const swapInfo: GuiSwapInfo = {
@@ -425,9 +585,20 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
   }
 }
 
-const getBetterQuoteRate = (quoteA: EdgeSwapQuote, quoteB: EdgeSwapQuote): EdgeSwapQuote => {
-  const aRate = div(quoteA.toNativeAmount, quoteA.fromNativeAmount, DECIMAL_PRECISION)
-  const bRate = div(quoteB.toNativeAmount, quoteB.fromNativeAmount, DECIMAL_PRECISION)
+const getBetterQuoteRate = (
+  quoteA: EdgeSwapQuote,
+  quoteB: EdgeSwapQuote
+): EdgeSwapQuote => {
+  const aRate = div(
+    quoteA.toNativeAmount,
+    quoteA.fromNativeAmount,
+    DECIMAL_PRECISION
+  )
+  const bRate = div(
+    quoteB.toNativeAmount,
+    quoteB.fromNativeAmount,
+    DECIMAL_PRECISION
+  )
   return gte(aRate, bRate) ? quoteA : quoteB
 }
 
@@ -453,7 +624,10 @@ export const pickBestQuote = (quotes: EdgeSwapQuote[]): EdgeSwapQuote => {
 
     // Neither quotes are isDex. If both quotes are estimates or fixed,
     // pick the better rate
-    if ((!isEstimate && !isBestQuoteEstimate) || (isEstimate && isBestQuoteEstimate)) {
+    if (
+      (!isEstimate && !isBestQuoteEstimate) ||
+      (isEstimate && isBestQuoteEstimate)
+    ) {
       return getBetterQuoteRate(quote, bestQuote)
     }
 

@@ -34,36 +34,69 @@ export const CurrencyView = (props: Props) => {
 
   // Currency code for display:
   const { allTokens } = currencyConfig
-  const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
+  const tokenFromId =
+    token != null ? token : tokenId == null ? null : allTokens[tokenId]
   const { currencyCode } = tokenFromId == null ? currencyInfo : tokenFromId
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
   const compromised = useSelector(state => {
-    const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
+    const { modalShown = 0 } =
+      state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
     return modalShown > 0
   })
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>{lstrings.compromised_key_label}</Text> {name}
+        <Text style={{ color: theme.warningText }}>
+          {lstrings.compromised_key_label}
+        </Text>{' '}
+        {name}
       </>
     )
   }
 
   // Balance stuff:
-  const hideBalance = useSelector(state => !state.ui.settings.isAccountBalanceVisible)
+  const hideBalance = useSelector(
+    state => !state.ui.settings.isAccountBalanceVisible
+  )
   const balance = useWalletBalance(wallet, tokenId)
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
   const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
-  const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
-  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
-  const fiatBalanceText = (
-    <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} currencyConfig={wallet.currencyConfig} hideBalance={hideBalance} />
+  const tickerText =
+    wallet != null ? (
+      <AssetChangeTextUi4
+        wallet={wallet}
+        tokenId={tokenId}
+        style={styles.primaryText}
+      />
+    ) : null
+  const cryptoText = (
+    <CryptoText
+      wallet={wallet}
+      tokenId={tokenId}
+      nativeAmount={nativeAmount ?? balance}
+      withSymbol
+      hideBalance={hideBalance}
+    />
   )
-  const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} currencyConfig={wallet.currencyConfig} />
+  const fiatBalanceText = (
+    <FiatText
+      nativeCryptoAmount={nativeAmount ?? balance}
+      tokenId={tokenId}
+      currencyConfig={wallet.currencyConfig}
+      hideBalance={hideBalance}
+    />
+  )
+  const fiatRateText = (
+    <FiatText
+      nativeCryptoAmount={denomination.multiplier}
+      tokenId={tokenId}
+      currencyConfig={wallet.currencyConfig}
+    />
+  )
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {
@@ -73,7 +106,8 @@ export const CurrencyView = (props: Props) => {
   // Show the network label if it's a token or an ETH mainnet currency code on
   // non-ethereum networks (i.e. Optimism)
   const firstRow =
-    tokenFromId == null && (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? (
+    tokenFromId == null &&
+    (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? (
       <View style={styles.rowContainer}>
         <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
         <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
@@ -83,7 +117,9 @@ export const CurrencyView = (props: Props) => {
         <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
         <View style={styles.rowContainer}>
           <View style={styles.networkContainer}>
-            <EdgeText style={styles.networkLabelText}>{wallet.currencyInfo.displayName}</EdgeText>
+            <EdgeText style={styles.networkLabelText}>
+              {wallet.currencyInfo.displayName}
+            </EdgeText>
           </View>
           <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
         </View>

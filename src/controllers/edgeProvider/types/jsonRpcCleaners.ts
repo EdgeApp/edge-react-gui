@@ -1,4 +1,14 @@
-import { asEither, asNull, asNumber, asObject, asOptional, asString, asUnknown, asValue, Cleaner } from 'cleaners'
+import {
+  asEither,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asUnknown,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 /**
  * Pre-defined JSON-RPC error codes.

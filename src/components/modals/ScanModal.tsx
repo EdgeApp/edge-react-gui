@@ -20,7 +20,12 @@ import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showDevError, showError, showToast } from '../services/AirshipInstance'
+import {
+  Airship,
+  showDevError,
+  showError,
+  showToast
+} from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
@@ -43,7 +48,14 @@ interface Props {
 }
 
 export const ScanModal = (props: Props) => {
-  const { bridge, textModalAutoFocus, textModalBody, textModalHint, textModalTitle, scanModalTitle } = props
+  const {
+    bridge,
+    textModalAutoFocus,
+    textModalBody,
+    textModalHint,
+    textModalTitle,
+    scanModalTitle
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -146,20 +158,30 @@ export const ScanModal = (props: Props) => {
   const [cameraContainerLayout, handleLayoutCameraContainer] = useLayout()
   const [peepholeSpaceLayout, handleLayoutPeepholeSpace] = useLayout()
 
-  const holeSize = Math.round((Math.min(peepholeSpaceLayout.height, peepholeSpaceLayout.width) * 2) / 3)
+  const holeSize = Math.round(
+    (Math.min(peepholeSpaceLayout.height, peepholeSpaceLayout.width) * 2) / 3
+  )
   const holeX = (peepholeSpaceLayout.width - holeSize) / 2
-  const holeY = headerContainerLayout.y + headerContainerLayout.height + (peepholeSpaceLayout.height - holeSize) / 2
+  const holeY =
+    headerContainerLayout.y +
+    headerContainerLayout.height +
+    (peepholeSpaceLayout.height - holeSize) / 2
 
   const renderModalContent = () => {
     if (!scanEnabled) {
       return null
     }
 
-    const flashMode = torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
+    const flashMode = torchEnabled
+      ? RNCamera.Constants.FlashMode.torch
+      : RNCamera.Constants.FlashMode.off
 
     return (
       <>
-        <View style={styles.cameraContainer} onLayout={handleLayoutCameraContainer}>
+        <View
+          style={styles.cameraContainer}
+          onLayout={handleLayoutCameraContainer}
+        >
           <RNCamera
             style={styles.cameraArea}
             captureAudio={false}
@@ -179,23 +201,53 @@ export const ScanModal = (props: Props) => {
         />
 
         <View style={styles.overlayContainer}>
-          <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
+          <View
+            style={styles.headerContainer}
+            onLayout={handleLayoutHeaderContainer}
+          >
             <SceneHeader title={scanModalTitle} underline withTopMargin />
           </View>
-          <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
-            <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
-            <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
-              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
+          <View
+            style={[
+              styles.inner,
+              { flexDirection: isLandscape ? 'row' : 'column' }
+            ]}
+          >
+            <View
+              style={styles.peepholeSpace}
+              onLayout={handleLayoutPeepholeSpace}
+            />
+            <View
+              style={[
+                styles.buttonsContainer,
+                { flexDirection: isLandscape ? 'column-reverse' : 'row' }
+              ]}
+            >
+              <EdgeTouchableOpacity
+                style={styles.iconButton}
+                onPress={handleFlash}
+              >
+                <Ionicon
+                  style={styles.icon}
+                  name={flashMode ? 'flash' : 'flash-outline'}
+                />
                 <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
               </EdgeTouchableOpacity>
-              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+              <EdgeTouchableOpacity
+                style={styles.iconButton}
+                onPress={handleAlbum}
+              >
                 <Ionicon style={styles.icon} name="albums-outline" />
                 <EdgeText>{lstrings.fragment_send_album}</EdgeText>
               </EdgeTouchableOpacity>
-              <EdgeTouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+              <EdgeTouchableOpacity
+                style={styles.iconButton}
+                onPress={handleTextInput}
+              >
                 <Ionicon style={styles.icon} name="pencil-outline" />
-                <EdgeText>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+                <EdgeText>
+                  {lstrings.enter_as_in_enter_address_with_keyboard}
+                </EdgeText>
               </EdgeTouchableOpacity>
             </View>
           </View>
@@ -204,7 +256,8 @@ export const ScanModal = (props: Props) => {
     )
   }
 
-  return cameraPermission === RNPermissions.RESULTS.GRANTED || cameraPermission === RNPermissions.RESULTS.LIMITED ? (
+  return cameraPermission === RNPermissions.RESULTS.GRANTED ||
+    cameraPermission === RNPermissions.RESULTS.LIMITED ? (
     <AirshipModal
       bridge={bridge}
       margin={[airshipMarginTop, 0, 0]}
@@ -225,13 +278,18 @@ export const ScanModal = (props: Props) => {
         title={lstrings.warning_scam_title}
         type="warning"
         body={[
-          sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName),
+          sprintf(
+            lstrings.warning_scam_message_financial_advice_s,
+            config.appName
+          ),
           lstrings.warning_scam_message_irreversibility,
           lstrings.warning_scam_message_unknown_recipients
         ]}
         footer={sprintf(lstrings.warning_scam_footer_s, config.supportEmail)}
       />
-      <ModalButtons primary={{ onPress: handleSettings, label: lstrings.open_settings }} />
+      <ModalButtons
+        primary={{ onPress: handleSettings, label: lstrings.open_settings }}
+      />
     </EdgeModal>
   )
 }

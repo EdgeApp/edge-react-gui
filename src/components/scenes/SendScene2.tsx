@@ -22,7 +22,11 @@ import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  FIO_STR,
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
@@ -39,10 +43,27 @@ import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
+import {
+  addToFioAddressCache,
+  checkRecordSendFee,
+  FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM,
+  FIO_NO_BUNDLED_ERR_CODE,
+  recordSend
+} from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { createEdgeMemo, getLegacyUniqueIdentifier, getMemoError, getMemoLabel, getMemoTitle } from '../../util/memoUtils'
-import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
+import {
+  createEdgeMemo,
+  getLegacyUniqueIdentifier,
+  getMemoError,
+  getMemoLabel,
+  getMemoTitle
+} from '../../util/memoUtils'
+import {
+  convertTransactionFeeToDisplayFee,
+  darkenHexColor,
+  DECIMAL_PRECISION,
+  zeroString
+} from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { AccentColors } from '../common/DotsBackground'
@@ -50,7 +71,11 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
+import {
+  FlipInputModal2,
+  FlipInputModalRef,
+  FlipInputModalResult
+} from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -58,11 +83,18 @@ import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
+import {
+  ExchangedFlipInputAmounts,
+  ExchangeFlipInputFields
+} from '../themed/ExchangedFlipInput2'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SendFromFioRows } from '../themed/SendFromFioRows'
-import { AddressEntryMethod, AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
+import {
+  AddressEntryMethod,
+  AddressTile2,
+  ChangeAddressResult
+} from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -98,7 +130,9 @@ export interface SendScene2Params {
   onBack?: () => void
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
   beforeTransaction?: () => Promise<void>
-  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
+  alternateBroadcast?: (
+    edgeTransaction: EdgeTransaction
+  ) => Promise<EdgeTransaction>
   // Useful to disable during for test runtime
   doCheckAndShowGetCryptoModal?: boolean
 }
@@ -157,18 +191,27 @@ const SendComponent = (props: Props) => {
   } = route.params
 
   const openCameraRef = React.useRef<boolean>(openCamera)
-  const initExpireDate = isoExpireDate != null ? new Date(isoExpireDate) : undefined
-  const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
+  const initExpireDate =
+    isoExpireDate != null ? new Date(isoExpireDate) : undefined
+  const [processingAmountChanged, setProcessingAmountChanged] =
+    React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
-  const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
+  const [fieldChanged, setFieldChanged] =
+    useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
-  const [minNativeAmount, setMinNativeAmount] = useState<string | undefined>(initMinNativeAmount)
+  const [minNativeAmount, setMinNativeAmount] = useState<string | undefined>(
+    initMinNativeAmount
+  )
   const [expireDate, setExpireDate] = useState<Date | undefined>(initExpireDate)
   const [error, setError] = useState<Error | undefined>(undefined)
-  const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
+  const [edgeTransaction, setEdgeTransaction] =
+    useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
-  const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
-  const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<AddressEntryMethod | undefined>(undefined)
+  const [spendingLimitExceeded, setSpendingLimitExceeded] =
+    useState<boolean>(false)
+  const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<
+    AddressEntryMethod | undefined
+  >(undefined)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -182,10 +225,18 @@ const SendComponent = (props: Props) => {
 
   const countryCode = useSelector(state => state.ui.countryCode)
   const account = useSelector<EdgeAccount>(state => state.core.account)
-  const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
-  const pinSpendingLimitsEnabled = useSelector<boolean>(state => state.ui.settings.spendingLimits.transaction.isEnabled)
-  const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount ?? 0)
-  const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
+  const exchangeRates = useSelector<GuiExchangeRates>(
+    state => state.exchangeRates
+  )
+  const pinSpendingLimitsEnabled = useSelector<boolean>(
+    state => state.ui.settings.spendingLimits.transaction.isEnabled
+  )
+  const pinSpendingLimitsAmount = useSelector<number>(
+    state => state.ui.settings.spendingLimits.transaction.amount ?? 0
+  )
+  const defaultIsoFiat = useSelector<string>(
+    state => state.ui.settings.defaultIsoFiat
+  )
   const hasNotifications = useSelector(state => state.ui.notificationHeight > 0)
 
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -209,10 +260,18 @@ const SendComponent = (props: Props) => {
     }
   })
 
-  const [tokenId, setTokenId] = useState<EdgeTokenId>(spendInfo.tokenId ?? tokenIdProp)
+  const [tokenId, setTokenId] = useState<EdgeTokenId>(
+    spendInfo.tokenId ?? tokenIdProp
+  )
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
-  const cryptoDisplayDenomination = useDisplayDenom(coreWallet.currencyConfig, tokenId)
-  const cryptoExchangeDenomination = getExchangeDenom(coreWallet.currencyConfig, tokenId)
+  const cryptoDisplayDenomination = useDisplayDenom(
+    coreWallet.currencyConfig,
+    tokenId
+  )
+  const cryptoExchangeDenomination = getExchangeDenom(
+    coreWallet.currencyConfig,
+    tokenId
+  )
   const parentDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, null)
   const parentExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, null)
   const iconColor = useIconColor({ pluginId, tokenId })
@@ -226,9 +285,13 @@ const SendComponent = (props: Props) => {
     initialMount.current = false
   }
 
-  const pendingInsufficientFees = React.useRef<InsufficientFundsError | undefined>(undefined)
+  const pendingInsufficientFees = React.useRef<
+    InsufficientFundsError | undefined
+  >(undefined)
 
-  async function showInsufficientFees(error: InsufficientFundsError): Promise<void> {
+  async function showInsufficientFees(
+    error: InsufficientFundsError
+  ): Promise<void> {
     await showInsufficientFeesModal({
       coreError: error,
       countryCode,
@@ -250,10 +313,17 @@ const SendComponent = (props: Props) => {
         spendTarget.publicAddress = parsedUri?.publicAddress
         spendTarget.nativeAmount = parsedUri?.nativeAmount
 
-        if (spendInfo.spendTargets.length > 2 && spendTarget.nativeAmount == null) {
+        if (
+          spendInfo.spendTargets.length > 2 &&
+          spendTarget.nativeAmount == null
+        ) {
           // Check if the last two spend targets have the same amount within 0.5%
-          const prevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 2].nativeAmount
-          const pprevAmount = spendInfo.spendTargets[spendInfo.spendTargets.length - 3].nativeAmount
+          const prevAmount =
+            spendInfo.spendTargets[spendInfo.spendTargets.length - 2]
+              .nativeAmount
+          const pprevAmount =
+            spendInfo.spendTargets[spendInfo.spendTargets.length - 3]
+              .nativeAmount
 
           if (prevAmount != null && pprevAmount != null) {
             const diff = abs(sub(prevAmount, pprevAmount))
@@ -286,7 +356,10 @@ const SendComponent = (props: Props) => {
     needsScrollToEnd.current = true
   }
 
-  const renderAddressAmountTile = (index: number, spendTarget: EdgeSpendTarget) => {
+  const renderAddressAmountTile = (
+    index: number,
+    spendTarget: EdgeSpendTarget
+  ) => {
     const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
     const { fioAddress } = otherParams
     let title = ''
@@ -330,8 +403,12 @@ const SendComponent = (props: Props) => {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
-      const title = lstrings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
-      const doOpenCamera = openCameraRef.current || (publicAddress === '' && lastAddressEntryMethod === 'scan')
+      const title =
+        lstrings.send_scene_send_to_address +
+        (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
+      const doOpenCamera =
+        openCameraRef.current ||
+        (publicAddress === '' && lastAddressEntryMethod === 'scan')
       if (openCameraRef.current) openCameraRef.current = false
 
       return (
@@ -353,18 +430,19 @@ const SendComponent = (props: Props) => {
     return null
   }
 
-  const handleAmountsChanged = (spendTarget: EdgeSpendTarget) => (amounts: ExchangedFlipInputAmounts) => {
-    const { nativeAmount, fieldChanged: newField } = amounts
-    spendTarget.nativeAmount = nativeAmount === '' ? undefined : nativeAmount
+  const handleAmountsChanged =
+    (spendTarget: EdgeSpendTarget) => (amounts: ExchangedFlipInputAmounts) => {
+      const { nativeAmount, fieldChanged: newField } = amounts
+      spendTarget.nativeAmount = nativeAmount === '' ? undefined : nativeAmount
 
-    // This works since the spendTarget object is guaranteed to be inside
-    // the spendInfo object
-    setProcessingAmountChanged(true)
-    setSpendInfo({ ...spendInfo })
-    setMaxSpendSetter(-1)
-    setFieldChanged(newField)
-    needsScrollToEnd.current = true
-  }
+      // This works since the spendTarget object is guaranteed to be inside
+      // the spendInfo object
+      setProcessingAmountChanged(true)
+      setSpendInfo({ ...spendInfo })
+      setMaxSpendSetter(-1)
+      setFieldChanged(newField)
+      needsScrollToEnd.current = true
+    }
 
   const handleFeesChange = useHandler(() => {
     if (coreWallet == null) return
@@ -381,37 +459,42 @@ const SendComponent = (props: Props) => {
     })
   })
 
-  const handleFlipInputModal = (index: number, spendTarget: EdgeSpendTarget) => () => {
-    const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
-    Airship.show<FlipInputModalResult>(bridge => (
-      <FlipInputModal2
-        ref={flipInputModalRef}
-        bridge={bridge}
-        startNativeAmount={spendTarget.nativeAmount}
-        feeTokenId={null}
-        forceField={fieldChanged}
-        onAmountsChanged={handleAmountsChanged(spendTarget)}
-        onMaxSet={() => setMaxSpendSetter(index)}
-        onFeesChange={noChangeMiningFee ? undefined : handleFeesChange}
-        wallet={coreWallet}
-        tokenId={tokenId}
-        feeNativeAmount={feeNativeAmount}
-      />
-    ))
-      .catch(error => showError(error))
-      .finally(() => {
-        const insufficientFunds = pendingInsufficientFees.current
-        if (insufficientFunds != null) {
-          pendingInsufficientFees.current = undefined
-          showInsufficientFees(insufficientFunds).catch(error => showError(error))
-        }
-      })
-  }
+  const handleFlipInputModal =
+    (index: number, spendTarget: EdgeSpendTarget) => () => {
+      const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
+      Airship.show<FlipInputModalResult>(bridge => (
+        <FlipInputModal2
+          ref={flipInputModalRef}
+          bridge={bridge}
+          startNativeAmount={spendTarget.nativeAmount}
+          feeTokenId={null}
+          forceField={fieldChanged}
+          onAmountsChanged={handleAmountsChanged(spendTarget)}
+          onMaxSet={() => setMaxSpendSetter(index)}
+          onFeesChange={noChangeMiningFee ? undefined : handleFeesChange}
+          wallet={coreWallet}
+          tokenId={tokenId}
+          feeNativeAmount={feeNativeAmount}
+        />
+      ))
+        .catch(error => showError(error))
+        .finally(() => {
+          const insufficientFunds = pendingInsufficientFees.current
+          if (insufficientFunds != null) {
+            pendingInsufficientFees.current = undefined
+            showInsufficientFees(insufficientFunds).catch(error =>
+              showError(error)
+            )
+          }
+        })
+    }
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
     const { publicAddress, nativeAmount } = spendTarget
     if (publicAddress != null && !hiddenFeaturesMap.amount) {
-      const title = lstrings.fio_request_amount + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
+      const title =
+        lstrings.fio_request_amount +
+        (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
           title={title}
@@ -431,7 +514,7 @@ const SendComponent = (props: Props) => {
   }
 
   const renderAddressAmountPairs = () => {
-    const out: Array<JSX.Element | null> = []
+    const out: Array<React.ReactElement | null> = []
     for (let i = 0; i < spendInfo.spendTargets.length; i++) {
       const spendTarget = spendInfo.spendTargets[i]
       let element
@@ -450,14 +533,19 @@ const SendComponent = (props: Props) => {
 
   const handleWalletPress = useHandler(() => {
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.fio_src_wallet} navigation={navigation as NavigationBase} />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={lstrings.fio_src_wallet}
+        navigation={navigation as NavigationBase}
+      />
     ))
       .then(result => {
         if (result?.type !== 'wallet') {
           return
         }
         setWalletId(result.walletId)
-        const { pluginId: newPluginId } = currencyWallets[result.walletId].currencyInfo
+        const { pluginId: newPluginId } =
+          currencyWallets[result.walletId].currencyInfo
         if (pluginId !== newPluginId || tokenId !== result.tokenId) {
           setTokenId(result.tokenId)
           setSpendInfo({ tokenId: result.tokenId, spendTargets: [{}] })
@@ -490,15 +578,31 @@ const SendComponent = (props: Props) => {
 
   const renderAddAddress = () => {
     const { pluginId } = coreWallet.currencyInfo
-    const maxSpendTargets = getSpecialCurrencyInfo(pluginId)?.maxSpendTargets ?? 1
-    if (maxSpendTargets < 2 || hiddenFeaturesMap.address || hiddenFeaturesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
+    const maxSpendTargets =
+      getSpecialCurrencyInfo(pluginId)?.maxSpendTargets ?? 1
+    if (
+      maxSpendTargets < 2 ||
+      hiddenFeaturesMap.address ||
+      hiddenFeaturesMap.amount ||
+      lockTilesMap.address ||
+      lockTilesMap.amount
+    ) {
       return null
     }
     const numTargets = spendInfo.spendTargets.length
-    const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
-    const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
+    const lastTargetHasAddress =
+      spendInfo.spendTargets[numTargets - 1].publicAddress != null
+    const lastTargetHasAmount =
+      spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_another_address} onPress={handleAddAddress} maximumHeight="small" />
+      return (
+        <EdgeRow
+          rightButtonType="touchable"
+          title={lstrings.send_add_another_address}
+          onPress={handleAddAddress}
+          maximumHeight="small"
+        />
+      )
     } else {
       return null
     }
@@ -512,7 +616,12 @@ const SendComponent = (props: Props) => {
     if (expireDate == null) return null
 
     return (
-      <CountdownTile title={lstrings.send_address_expire_title} isoExpireDate={expireDate.toISOString()} onDone={handleTimeoutDone} maximumHeight="small" />
+      <CountdownTile
+        title={lstrings.send_address_expire_title}
+        isoExpireDate={expireDate.toISOString()}
+        onDone={handleTimeoutDone}
+        maximumHeight="small"
+      />
     )
   }
 
@@ -524,7 +633,10 @@ const SendComponent = (props: Props) => {
   }
 
   const renderFees = () => {
-    if (spendInfo.spendTargets[0].publicAddress != null && spendInfo.spendTargets[0].nativeAmount != null) {
+    if (
+      spendInfo.spendTargets[0].publicAddress != null &&
+      spendInfo.spendTargets[0].nativeAmount != null
+    ) {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
@@ -544,13 +656,20 @@ const SendComponent = (props: Props) => {
         feeExchangeDenomination
       )
 
-      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
+      const fiatAmount =
+        transactionFee.fiatAmount === '0'
+          ? '0'
+          : ` ${transactionFee.fiatAmount}`
+      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
+        transactionFee.cryptoAmount
+      } (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
         <EdgeRow
-          rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'}
+          rightButtonType={
+            noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'
+          }
           title={`${lstrings.wc_smartcontract_network_fee}:`}
           onPress={noChangeMiningFee ? undefined : handleFeesChange}
         >
@@ -558,8 +677,10 @@ const SendComponent = (props: Props) => {
             <View style={styles.calcFeeView}>
               <EdgeText
                 style={{
-                  // @ts-expect-error
-                  color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+                  color: feeSyntaxStyle
+                    ? // @ts-expect-error
+                      theme[feeSyntaxStyle]
+                    : theme.primaryText
                 }}
               >
                 {lstrings.send_confirmation_calculating_fee}
@@ -570,8 +691,10 @@ const SendComponent = (props: Props) => {
           ) : (
             <EdgeText
               style={{
-                // @ts-expect-error
-                color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+                color: feeSyntaxStyle
+                  ? // @ts-expect-error
+                    theme[feeSyntaxStyle]
+                  : theme.primaryText
               }}
             >
               {feeSyntax}
@@ -595,14 +718,16 @@ const SendComponent = (props: Props) => {
     }
   }
 
-  const handleFioAddressSelect = useHandler((fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
-    setFioSender({
-      ...fioSender,
-      fioAddress,
-      fioWallet,
-      fioError
-    })
-  })
+  const handleFioAddressSelect = useHandler(
+    (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
+      setFioSender({
+        ...fioSender,
+        fioAddress,
+        fioWallet,
+        fioError
+      })
+    }
+  )
 
   const handleMemoChange = useHandler((memo: string, memoError: string) => {
     setFioSender({
@@ -614,7 +739,9 @@ const SendComponent = (props: Props) => {
 
   const renderSelectFioAddress = () => {
     if (hiddenFeaturesMap.fioAddressSelect) return null
-    const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
+    const fioTarget = spendInfo.spendTargets.some(
+      target => target.otherParams?.fioAddress != null
+    )
 
     // HACK: CardUi4 somehow recognizes SelectFioAddress2 as a valid element
     // even when that component is returning null. Return null here instead so
@@ -663,7 +790,10 @@ const SendComponent = (props: Props) => {
             inputLabel={memoTitle}
             keyboardType={memoOption.type === 'number' ? 'numeric' : 'default'}
             maxLength={maxLength}
-            message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
+            message={sprintf(
+              lstrings.unique_identifier_modal_description,
+              memoLabel
+            )}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
             onSubmit={async value =>
@@ -687,7 +817,9 @@ const SendComponent = (props: Props) => {
             value
           }
 
-          const spendInfoMemoIndex = spendInfo.memos.findIndex(memo => memo.type === memoOption.type)
+          const spendInfoMemoIndex = spendInfo.memos.findIndex(
+            memo => memo.type === memoOption.type
+          )
           if (spendInfoMemoIndex === -1) {
             spendInfo.memos.push(edgeMemo)
           } else {
@@ -698,7 +830,11 @@ const SendComponent = (props: Props) => {
       }
 
       return (
-        <EdgeRow rightButtonType="touchable" title={memoTitle} onPress={handleMemo}>
+        <EdgeRow
+          rightButtonType="touchable"
+          title={memoTitle}
+          onPress={handleMemo}
+        >
           <EdgeText>{value ?? addButtonText}</EdgeText>
         </EdgeRow>
       )
@@ -706,7 +842,7 @@ const SendComponent = (props: Props) => {
 
     let legacyUniqueIdentifier = getLegacyUniqueIdentifier(spendTarget)
 
-    const rows: Array<JSX.Element | null> = []
+    const rows: Array<React.ReactElement | null> = []
     for (let i = 0; i < memoOptions.length; i++) {
       if (memoOptions[i].hidden) continue
 
@@ -714,7 +850,9 @@ const SendComponent = (props: Props) => {
         rows.push(renderOption(memoOptions[i], legacyUniqueIdentifier))
         legacyUniqueIdentifier = undefined
       } else {
-        const memoValue = spendInfo?.memos?.find(memo => memo.type === memoOptions[i].type)?.value ?? ''
+        const memoValue =
+          spendInfo?.memos?.find(memo => memo.type === memoOptions[i].type)
+            ?.value ?? ''
         rows.push(renderOption(memoOptions[i], memoValue))
       }
     }
@@ -727,14 +865,20 @@ const SendComponent = (props: Props) => {
 
   const handleChangePin = useHandler((pin: string) => {
     setPinValue(pin)
-    if (pin.length >= PIN_MAX_LENGTH && pinInputRef.current != null && pinInputRef.current.blur != null) {
+    if (
+      pin.length >= PIN_MAX_LENGTH &&
+      pinInputRef.current != null &&
+      pinInputRef.current.blur != null
+    ) {
       pinInputRef.current.blur()
     }
   })
 
   const renderInfoTiles = () => {
     if (!infoTiles || !infoTiles.length) return null
-    return infoTiles.map(({ label, value }) => <EdgeRow key={label} title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => (
+      <EdgeRow key={label} title={label} body={value} />
+    ))
   }
 
   const renderAuthentication = () => {
@@ -743,7 +887,11 @@ const SendComponent = (props: Props) => {
 
     const pinLength = pinValue?.length ?? 0
     return (
-      <EdgeRow rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
+      <EdgeRow
+        rightButtonType="touchable"
+        title={lstrings.four_digit_pin}
+        onPress={handleFocusPin}
+      >
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
@@ -767,15 +915,25 @@ const SendComponent = (props: Props) => {
     const { publicAddress } = spendInfo.spendTargets[0]
 
     if (publicAddress === '' || publicAddress == null) {
-      const scamMessage = sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName)
-      const scamFooter = sprintf(lstrings.warning_scam_footer_s, config.supportEmail)
+      const scamMessage = sprintf(
+        lstrings.warning_scam_message_financial_advice_s,
+        config.appName
+      )
+      const scamFooter = sprintf(
+        lstrings.warning_scam_footer_s,
+        config.supportEmail
+      )
 
       return (
         <AlertCardUi4
           marginRem={[1.5, 0.5]}
           title={lstrings.warning_scam_title}
           type="warning"
-          body={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
+          body={[
+            scamMessage,
+            lstrings.warning_scam_message_irreversibility,
+            lstrings.warning_scam_message_unknown_recipients
+          ]}
           footer={scamFooter}
         />
       )
@@ -783,14 +941,31 @@ const SendComponent = (props: Props) => {
     return null
   }
 
-  const recordFioObtData = async (spendTarget: EdgeSpendTarget, currencyCode: string, txid: string) => {
+  const recordFioObtData = async (
+    spendTarget: EdgeSpendTarget,
+    currencyCode: string,
+    txid: string
+  ) => {
     if (fioSender == null) return
-    const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
+    const {
+      fioAddress: payerFioAddress,
+      fioWallet,
+      memo,
+      skipRecord = false
+    } = fioSender
     if (skipRecord) return
 
-    const { nativeAmount, publicAddress: payeePublicAddress = '', otherParams = {} } = spendTarget
+    const {
+      nativeAmount,
+      publicAddress: payeePublicAddress = '',
+      otherParams = {}
+    } = spendTarget
     const { fioAddress: payeeFioAddress } = otherParams
-    if (payeeFioAddress == null || payerFioAddress == null || fioWallet == null) {
+    if (
+      payeeFioAddress == null ||
+      payerFioAddress == null ||
+      fioWallet == null
+    ) {
       return
     }
 
@@ -809,13 +984,22 @@ const SendComponent = (props: Props) => {
         })
       } catch (e: any) {
         const message = String(e)
-        message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+        message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM)
+          ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data)
+          : showError(e)
       }
       return
     }
 
     await recordSend(fioWallet, payerFioAddress, {
-      amount: nativeAmount != null ? div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION) : '0',
+      amount:
+        nativeAmount != null
+          ? div(
+              nativeAmount,
+              cryptoExchangeDenomination.multiplier,
+              DECIMAL_PRECISION
+            )
+          : '0',
       chainCode: coreWallet.currencyInfo.currencyCode,
       currencyCode: currencyCode,
       memo,
@@ -847,7 +1031,11 @@ const SendComponent = (props: Props) => {
     try {
       // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
       // a FIO request since we want to make sure that can go through.
-      if (fioSender.fioWallet != null && fioSender.fioAddress !== '' && fioPendingRequest == null) {
+      if (
+        fioSender.fioWallet != null &&
+        fioSender.fioAddress !== '' &&
+        fioPendingRequest == null
+      ) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
 
@@ -866,7 +1054,11 @@ const SendComponent = (props: Props) => {
       for (const target of spendInfo.spendTargets) {
         const { fioAddress } = target.otherParams ?? {}
         if (fioAddress != null) {
-          const displayAmount = div(target.nativeAmount ?? '', cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+          const displayAmount = div(
+            target.nativeAmount ?? '',
+            cryptoDisplayDenomination.multiplier,
+            DECIMAL_PRECISION
+          )
           const { name } = cryptoDisplayDenomination
           notes.push(`To ${fioAddress} <- ${displayAmount} ${name} \n`)
           payeeFioAddresses.push(fioAddress)
@@ -887,12 +1079,21 @@ const SendComponent = (props: Props) => {
       }
 
       if (payeeName != null && fioSender != null) {
-        let fioNotes = sprintf(`${lstrings.sent}\n`, `${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`)
-        fioNotes += fioSender.memo ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}\n` : ''
+        let fioNotes = sprintf(
+          `${lstrings.sent}\n`,
+          `${lstrings.fragment_send_from_label.toLowerCase()} ${
+            fioSender.fioAddress
+          }`
+        )
+        fioNotes += fioSender.memo
+          ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}\n`
+          : ''
         if (notes.length > 1) {
           fioNotes += notes.join('\n')
         }
-        broadcastedTx.metadata.notes = `${fioNotes}\n${broadcastedTx.metadata?.notes ?? ''}`
+        broadcastedTx.metadata.notes = `${fioNotes}\n${
+          broadcastedTx.metadata?.notes ?? ''
+        }`
       }
 
       const { name, type, id } = coreWallet
@@ -909,7 +1110,9 @@ const SendComponent = (props: Props) => {
         feeRateUsed
       } = signedTx
 
-      logActivity(`broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+      logActivity(
+        `broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`
+      )
       logActivity(`
   currencyCode: ${currencyCode}
   nativeAmount: ${nativeAmount}
@@ -927,7 +1130,9 @@ const SendComponent = (props: Props) => {
 
       for (const target of spendInfo.spendTargets) {
         // Write FIO OBT per spendTarget
-        await recordFioObtData(target, currencyCode, broadcastedTx.txid).catch(error => showError(error))
+        await recordFioObtData(target, currencyCode, broadcastedTx.txid).catch(
+          error => showError(error)
+        )
       }
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
@@ -959,7 +1164,10 @@ const SendComponent = (props: Props) => {
       let message = sprintf(lstrings.transaction_failure_message, e.message)
       e.message = 'broadcastError'
       if (e.name === 'ErrorAlgoRecipientNotActivated') {
-        message = sprintf(lstrings.send_confirmation_algo_recipient_not_activated_s, currencyCode)
+        message = sprintf(
+          lstrings.send_confirmation_algo_recipient_not_activated_s,
+          currencyCode
+        )
       }
       if (e.name === 'ErrorEosInsufficientCpu') {
         message = lstrings.send_confirmation_eos_error_cpu
@@ -967,18 +1175,24 @@ const SendComponent = (props: Props) => {
         message = lstrings.send_confirmation_eos_error_net
       } else if (e.name === 'ErrorEosInsufficientRam') {
         message = lstrings.send_confirmation_eos_error_ram
-      } else if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
-        const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.fio_no_bundled_err_msg}
-            message={`${lstrings.fio_no_bundled_non_fio_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`}
-            buttons={{
-              ok: { label: lstrings.legacy_address_modal_continue },
-              cancel: { label: lstrings.string_cancel_cap }
-            }}
-          />
-        ))
+      } else if (
+        e.code &&
+        e.code === FIO_NO_BUNDLED_ERR_CODE &&
+        currencyCode !== FIO_STR
+      ) {
+        const answer = await Airship.show<'ok' | 'cancel' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.fio_no_bundled_err_msg}
+              message={`${lstrings.fio_no_bundled_non_fio_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`}
+              buttons={{
+                ok: { label: lstrings.legacy_address_modal_continue },
+                cancel: { label: lstrings.string_cancel_cap }
+              }}
+            />
+          )
+        )
         if (answer === 'ok') {
           // Retry the spend w/o FIO OBT data
           fioSender.skipRecord = true
@@ -1005,7 +1219,13 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation as NavigationBase, coreWallet, tokenId)).catch(err => showError(err))
+      dispatch(
+        checkAndShowGetCryptoModal(
+          navigation as NavigationBase,
+          coreWallet,
+          tokenId
+        )
+      ).catch(err => showError(err))
     }
   })
   useUnmount(() => {
@@ -1037,11 +1257,23 @@ const SendComponent = (props: Props) => {
           })
         }
         if (pinSpendingLimitsEnabled) {
-          const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
-          const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
-          const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+          const rate =
+            exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ??
+            INFINITY_STRING
+          const totalNativeAmount = spendInfo.spendTargets.reduce(
+            (prev, target) => add(target.nativeAmount ?? '0', prev),
+            '0'
+          )
+          const totalExchangeAmount = div(
+            totalNativeAmount,
+            cryptoExchangeDenomination.multiplier,
+            DECIMAL_PRECISION
+          )
           const fiatAmount = mul(totalExchangeAmount, rate)
-          const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
+          const exceeded = gte(
+            fiatAmount,
+            pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION)
+          )
           setSpendingLimitExceeded(exceeded)
         }
 
@@ -1049,10 +1281,21 @@ const SendComponent = (props: Props) => {
           for (const target of spendInfo.spendTargets) {
             if (target.nativeAmount == null) continue
             if (lt(target.nativeAmount, minNativeAmount)) {
-              const minDisplayAmount = div(minNativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+              const minDisplayAmount = div(
+                minNativeAmount,
+                cryptoDisplayDenomination.multiplier,
+                DECIMAL_PRECISION
+              )
               const { name } = cryptoDisplayDenomination
 
-              setError(new Error(sprintf(lstrings.error_spend_amount_less_then_min_s, `${minDisplayAmount} ${name}`)))
+              setError(
+                new Error(
+                  sprintf(
+                    lstrings.error_spend_amount_less_then_min_s,
+                    `${minDisplayAmount} ${name}`
+                  )
+                )
+              )
               setEdgeTransaction(null)
               setFeeNativeAmount('')
               setProcessingAmountChanged(false)
@@ -1082,14 +1325,27 @@ const SendComponent = (props: Props) => {
       } catch (e: any) {
         const insufficientFunds = asMaybeInsufficientFundsError(e)
         if (insufficientFunds != null) {
-          const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
+          const errorCurrencyCode = getCurrencyCode(
+            coreWallet,
+            insufficientFunds.tokenId
+          )
 
           // Give extra information about the network name like Base or Arbitrum
           // where the mainnet token is ETH but the network is not Ethereum.
-          if (errorCurrencyCode === 'ETH' && coreWallet.currencyInfo.pluginId !== 'ethereum') {
-            e.message = sprintf(lstrings.insufficient_funds_2s, errorCurrencyCode, coreWallet.currencyInfo.displayName)
+          if (
+            errorCurrencyCode === 'ETH' &&
+            coreWallet.currencyInfo.pluginId !== 'ethereum'
+          ) {
+            e.message = sprintf(
+              lstrings.insufficient_funds_2s,
+              errorCurrencyCode,
+              coreWallet.currencyInfo.displayName
+            )
           } else {
-            e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
+            e.message = sprintf(
+              lstrings.stake_error_insufficient_s,
+              errorCurrencyCode
+            )
           }
 
           if (spendInfo.tokenId !== insufficientFunds.tokenId) {
@@ -1097,9 +1353,18 @@ const SendComponent = (props: Props) => {
             if (flipInputModalRef.current != null) {
               pendingInsufficientFees.current = insufficientFunds
             } else {
-              await showInsufficientFees(insufficientFunds).catch(error => showError(error))
+              await showInsufficientFees(insufficientFunds).catch(error =>
+                showError(error)
+              )
             }
           }
+        }
+
+        if (
+          e instanceof Error &&
+          e.message === 'Unexpected pending transactions'
+        ) {
+          e.message = lstrings.unexpected_pending_transactions_error
         }
 
         setError(e)
@@ -1124,10 +1389,15 @@ const SendComponent = (props: Props) => {
     edgeTransaction == null ||
     processingAmountChanged ||
     error != null ||
-    (zeroString(spendInfo.spendTargets[0].nativeAmount) && !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
+    (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
+      !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
   ) {
     disableSlider = true
-  } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
+  } else if (
+    pinSpendingLimitsEnabled &&
+    spendingLimitExceeded &&
+    (pinValue?.length ?? 0) < PIN_MAX_LENGTH
+  ) {
     disableSlider = true
     disabledText = lstrings.spending_limits_enter_pin
   }
@@ -1139,7 +1409,10 @@ const SendComponent = (props: Props) => {
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
   if (iconColor != null) {
-    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
     backgroundColors[0] = scaledColor
   }
 
@@ -1207,12 +1480,21 @@ const SendComponent = (props: Props) => {
                 {renderAuthentication()}
               </EdgeCard>
             </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>{renderScamWarning()}</EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+              {renderScamWarning()}
+            </EdgeAnim>
           </StyledKeyboardAwareScrollView>
-          <StyledSliderView hasNotifications={hasNotifications} insetBottom={insetStyle.paddingBottom}>
+          <StyledSliderView
+            hasNotifications={hasNotifications}
+            insetBottom={insetStyle.paddingBottom}
+          >
             {showSlider && (
               <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-                <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />
+                <SafeSlider
+                  disabledText={disabledText}
+                  onSlidingComplete={handleSliderComplete}
+                  disabled={disableSlider}
+                />
               </EdgeAnim>
             )}
           </StyledSliderView>
@@ -1222,10 +1504,12 @@ const SendComponent = (props: Props) => {
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(theme => ({
-  margin: theme.rem(0.5),
-  marginBottom: 0
-}))
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(
+  theme => ({
+    margin: theme.rem(0.5),
+    marginBottom: 0
+  })
+)
 
 const StyledSliderView = styled(View)<{
   insetBottom: number

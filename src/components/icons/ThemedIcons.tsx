@@ -1,5 +1,8 @@
 import React from 'react'
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { type Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -35,7 +38,9 @@ interface IconChoice {
   name: string
 }
 
-function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
+function AnimatedFontIcon(
+  props: AnimatedIconProps & IconChoice
+): React.ReactElement {
   const { accessible, color, IconComponent, name, size } = props
   const theme = useTheme()
   const defaultColor = theme.icon
@@ -62,22 +67,38 @@ function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
   )
 }
 
-function ThemedFontIcon(props: IconProps & IconChoice): JSX.Element {
+function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
   const theme = useTheme()
-  const { accessible, color = theme.icon, IconComponent, name, size = theme.rem(1) } = props
+  const {
+    accessible,
+    color = theme.icon,
+    IconComponent,
+    name,
+    size = theme.rem(1)
+  } = props
 
   const style = {
     color: color,
     fontSize: size
   }
-  return <IconComponent accessible={accessible} name={name} adjustsFontSizeToFit style={style} />
+  return (
+    <IconComponent
+      accessible={accessible}
+      name={name}
+      adjustsFontSizeToFit
+      style={style}
+    />
+  )
 }
 
 //
 // HOC's
 //
 
-function makeAnimatedFontIcon(IconComponent: typeof Icon, name: string): AnimatedIconComponent {
+function makeAnimatedFontIcon(
+  IconComponent: typeof Icon,
+  name: string
+): AnimatedIconComponent {
   return props => AnimatedFontIcon({ ...props, IconComponent, name })
 }
 
@@ -89,7 +110,9 @@ function makeFontIcon(IconComponent: typeof Icon, name: string): IconComponent {
 // Font Icons
 //
 
-export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): JSX.Element {
+export function EyeIconAnimated(
+  props: AnimatedIconProps & { off: boolean }
+): React.ReactElement {
   const { off, ...rest } = props
 
   // Swapping between two icons causes rendering glitches,
@@ -102,7 +125,10 @@ export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): JS
 }
 
 export const ChevronBack = makeFontIcon(MaterialIcons, 'arrow-back-ios')
-export const ChevronBackAnimated = makeAnimatedFontIcon(MaterialIcons, 'arrow-back-ios')
+export const ChevronBackAnimated = makeAnimatedFontIcon(
+  MaterialIcons,
+  'arrow-back-ios'
+)
 
 export const CloseIcon = makeFontIcon(AntDesignIcon, 'close')
 export const CloseIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'close')

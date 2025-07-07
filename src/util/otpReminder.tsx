@@ -6,20 +6,30 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { OTP_REMINDER_MILLISECONDS, readOtpSettings, writeOtpSettings } from './otpUtils'
+import {
+  OTP_REMINDER_MILLISECONDS,
+  readOtpSettings,
+  writeOtpSettings
+} from './otpUtils'
 
 /**
  * Return an otp reminder modal, with or without a "don't ask again" button,
  * depending on if they've seen this before.
  */
-export async function showOtpReminderModal(account: EdgeAccount): Promise<void> {
+export async function showOtpReminderModal(
+  account: EdgeAccount
+): Promise<void> {
   const { created } = account
   const { lastChecked } = await readOtpSettings(account)
   Keyboard.dismiss()
 
   // Return a modal if we have never shown it before, and the account is old
   // enough:
-  if (lastChecked == null && (created == null || Date.now() > created.valueOf() + OTP_REMINDER_MILLISECONDS)) {
+  if (
+    lastChecked == null &&
+    (created == null ||
+      Date.now() > created.valueOf() + OTP_REMINDER_MILLISECONDS)
+  ) {
     const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -39,7 +49,9 @@ export async function showOtpReminderModal(account: EdgeAccount): Promise<void> 
   } else {
     // Return a modal with the "Don't ask again" button if we showed the first
     // modal already:
-    const result = await Airship.show<'enable' | 'cancel' | 'dontAsk' | undefined>(bridge => (
+    const result = await Airship.show<
+      'enable' | 'cancel' | 'dontAsk' | undefined
+    >(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.otp_reset_modal_header}

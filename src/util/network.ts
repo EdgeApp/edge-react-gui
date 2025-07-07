@@ -1,5 +1,9 @@
 import { asObject, asString, Cleaner } from 'cleaners'
-import { EdgeFetchFunction, EdgeFetchOptions, EdgeFetchResponse } from 'edge-core-js'
+import {
+  EdgeFetchFunction,
+  EdgeFetchOptions,
+  EdgeFetchResponse
+} from 'edge-core-js'
 import { asInfoRollup, InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
@@ -39,7 +43,13 @@ export async function cleanMultiFetch<T>(
   timeout: number = 5000,
   doFetch?: EdgeFetchFunction
 ): Promise<T> {
-  const response = await fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
+  const response = await fetchWaterfall(
+    shuffleArray(servers),
+    path,
+    options,
+    timeout,
+    doFetch
+  )
   if (!response.ok) {
     const text = await response.text()
     console.error(text)
@@ -57,20 +67,58 @@ async function multiFetch(
   timeout: number = 5000,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> {
-  return await fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
+  return await fetchWaterfall(
+    shuffleArray(servers),
+    path,
+    options,
+    timeout,
+    doFetch
+  )
 }
 
-export const fetchInfo = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
+export const fetchInfo = async (
+  path: string,
+  options?: EdgeFetchOptions,
+  timeout?: number,
+  doFetch?: EdgeFetchFunction
+): Promise<EdgeFetchResponse> => {
   return await multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
 }
-export const fetchRates = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
+export const fetchRates = async (
+  path: string,
+  options?: EdgeFetchOptions,
+  timeout?: number,
+  doFetch?: EdgeFetchFunction
+): Promise<EdgeFetchResponse> => {
   return await multiFetch(RATES_SERVERS, path, options, timeout, doFetch)
 }
-export const fetchReferral = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return await multiFetch(config.referralServers ?? [], path, options, timeout, doFetch)
+export const fetchReferral = async (
+  path: string,
+  options?: EdgeFetchOptions,
+  timeout?: number,
+  doFetch?: EdgeFetchFunction
+): Promise<EdgeFetchResponse> => {
+  return await multiFetch(
+    config.referralServers ?? [],
+    path,
+    options,
+    timeout,
+    doFetch
+  )
 }
-export const fetchPush = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return await multiFetch(config.notificationServers, path, options, timeout, doFetch)
+export const fetchPush = async (
+  path: string,
+  options?: EdgeFetchOptions,
+  timeout?: number,
+  doFetch?: EdgeFetchFunction
+): Promise<EdgeFetchResponse> => {
+  return await multiFetch(
+    config.notificationServers,
+    path,
+    options,
+    timeout,
+    doFetch
+  )
 }
 
 export const infoServerData: { rollup?: InfoRollup } = {}
@@ -82,9 +130,15 @@ export const initInfoServer = async () => {
 
   const queryInfo = async () => {
     try {
-      const response = await fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
+      const response = await fetchInfo(
+        `v1/inforollup/${
+          config.appId ?? 'edge'
+        }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
+      )
       if (!response.ok) {
-        console.warn(`initInfoServer error ${response.status}: ${await response.text()}`)
+        console.warn(
+          `initInfoServer error ${response.status}: ${await response.text()}`
+        )
       } else {
         const infoData = await response.json()
         infoServerData.rollup = asInfoRollup(infoData)

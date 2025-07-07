@@ -66,7 +66,14 @@ describe('TransactionListTop', () => {
     ENV.ENABLE_VISA_PROGRAM = false
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
+        <TransactionListTop
+          isEmpty={false}
+          navigation={fakeCompositeNavigation}
+          searching={false}
+          tokenId={null}
+          wallet={fakeWallet}
+          isLightAccount={false}
+        />
       </FakeProviders>
     )
 
@@ -78,7 +85,14 @@ describe('TransactionListTop', () => {
     ENV.ENABLE_VISA_PROGRAM = true
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <TransactionListTop isEmpty={false} navigation={fakeCompositeNavigation} searching={false} tokenId={null} wallet={fakeWallet} isLightAccount={false} />
+        <TransactionListTop
+          isEmpty={false}
+          navigation={fakeCompositeNavigation}
+          searching={false}
+          tokenId={null}
+          wallet={fakeWallet}
+          isLightAccount={false}
+        />
       </FakeProviders>
     )
 

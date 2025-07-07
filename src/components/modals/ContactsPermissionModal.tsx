@@ -30,7 +30,9 @@ let isModalShowing = false
  * @returns Result of Contacts Access modal or undefined if no modal shown or
  * the modal was dismissed somehow.
  */
-export function maybeShowContactsPermissionModal(): ThunkAction<Promise<ContactsPermissionResult | undefined>> {
+export function maybeShowContactsPermissionModal(): ThunkAction<
+  Promise<ContactsPermissionResult | undefined>
+> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -44,11 +46,15 @@ export function maybeShowContactsPermissionModal(): ThunkAction<Promise<Contacts
     if (contactsPermissionShown) return
 
     // Bail if we already have permission:
-    const contactsPermissionOn = (await check(permissionNames.contacts).catch(_error => 'denied')) === 'granted'
+    const contactsPermissionOn =
+      (await check(permissionNames.contacts).catch(_error => 'denied')) ===
+      'granted'
     if (contactsPermissionOn) return
 
     // Show the modal:
-    const result = await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
+    const result = await Airship.show<ContactsPermissionResult | undefined>(
+      bridge => <ContactsPermissionModal bridge={bridge} />
+    )
     await writeContactsPermissionShown(account, true)
 
     return result
@@ -64,9 +70,18 @@ function ContactsPermissionModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const message1 = sprintf(lstrings.contacts_permission_modal_body_1, config.appName)
-  const message2 = sprintf(lstrings.contacts_permission_modal_body_2, config.appName)
-  const message3 = sprintf(lstrings.contacts_permission_modal_body_3, config.appName)
+  const message1 = sprintf(
+    lstrings.contacts_permission_modal_body_1,
+    config.appName
+  )
+  const message2 = sprintf(
+    lstrings.contacts_permission_modal_body_2,
+    config.appName
+  )
+  const message3 = sprintf(
+    lstrings.contacts_permission_modal_body_3,
+    config.appName
+  )
 
   return (
     <ButtonsModal
@@ -80,9 +95,15 @@ function ContactsPermissionModal(props: Props) {
     >
       <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
-          <Fontello name="address-book" size={theme.rem(1.5)} color={theme.icon} />
+          <Fontello
+            name="address-book"
+            size={theme.rem(1.5)}
+            color={theme.icon}
+          />
         </View>
-        <EdgeText style={styles.header}>{lstrings.contacts_permission_modal_title}</EdgeText>
+        <EdgeText style={styles.header}>
+          {lstrings.contacts_permission_modal_title}
+        </EdgeText>
       </View>
       <EdgeText numberOfLines={0} style={styles.message}>
         {message1}

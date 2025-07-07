@@ -43,13 +43,24 @@ export const SwapProviderRow = (props: Props) => {
         <SmallText>{lstrings.quote_partial_settlement}</SmallText>
       </WarningText>
     ) : undefined
-  const maybeVariableSymbol = quote.minReceiveAmount || quote.canBePartial ? '~ ' : ''
+  const maybeVariableSymbol =
+    quote.minReceiveAmount || quote.canBePartial ? '~ ' : ''
 
   return (
     <IconDataRow
-      icon={<FastImage style={styles.providerIcon} source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} resizeMode="contain" />}
+      icon={
+        <FastImage
+          style={styles.providerIcon}
+          source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }}
+          resizeMode="contain"
+        />
+      }
       leftText={quote.swapInfo.displayName}
-      leftSubtext={quote.swapInfo.isDex ? lstrings.quote_dex_provider : lstrings.quote_centralized_provider}
+      leftSubtext={
+        quote.swapInfo.isDex
+          ? lstrings.quote_dex_provider
+          : lstrings.quote_centralized_provider
+      }
       rightText={`${maybeVariableSymbol}${costOrReceiveAmount}`}
       rightSubText={minReceiveAmountOrPartial}
     />

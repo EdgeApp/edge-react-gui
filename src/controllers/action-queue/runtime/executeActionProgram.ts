@@ -1,35 +1,68 @@
 import { ENV } from '../../../env'
 import { logActivity } from '../../../util/logger'
-import { effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from '../push'
-import { ActionEffect, ActionProgram, ActionProgramState, EffectCheckResult, ExecutionContext, ExecutionResults } from '../types'
+import {
+  effectCanBeATrigger,
+  prepareNewPushEvents,
+  uploadPushEvents
+} from '../push'
+import {
+  ActionEffect,
+  ActionProgram,
+  ActionProgramState,
+  EffectCheckResult,
+  ExecutionContext,
+  ExecutionResults
+} from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
 import { dryrunActionProgram } from './dryrunActionProgram'
 
-export const executeActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
+export const executeActionProgram = async (
+  context: ExecutionContext,
+  program: ActionProgram,
+  state: ActionProgramState
+): Promise<ExecutionResults> => {
   const { effect } = state
 
   //
   // Dryrun Phase
   //
 
-  if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
+  if (
+    ENV.ACTION_QUEUE?.enableDryrun &&
+    effect != null &&
+    (await effectCanBeATrigger(context, effect))
+  ) {
     try {
       logActivity(`Starting action program dry-run`, {
         programId: program.programId
       })
 
-      const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
+      const dryrunOutputs = await dryrunActionProgram(
+        context,
+        program,
+        state,
+        true
+      )
 
       if (dryrunOutputs.length > 0) {
         // Convert each dryrun result into an array of push events for the push-server.
-        const pushEventInfos = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
+        const pushEventInfos = await prepareNewPushEvents(
+          context,
+          program,
+          effect,
+          dryrunOutputs
+        )
 
         // Send PushEvents to the push server:
-        const newPushEvents = pushEventInfos.map(({ newPushEvent }) => newPushEvent)
+        const newPushEvents = pushEventInfos.map(
+          ({ newPushEvent }) => newPushEvent
+        )
         await uploadPushEvents(context, { createEvents: newPushEvents })
 
         // Mutate the nextState accordingly; effect should be awaiting push events:
-        const nextChildEffects = pushEventInfos.map(({ pushEventEffect }) => pushEventEffect)
+        const nextChildEffects = pushEventInfos.map(
+          ({ pushEventEffect }) => pushEventEffect
+        )
         let nextEffect: ActionEffect
         if (effect.type === 'seq') {
           // Drop the last effect because it is to be replaced by the first push-event effect
@@ -41,7 +74,10 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
             childEffects: [...prevChildEffects, ...nextChildEffects]
           }
         } else {
-          if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+          if (nextChildEffects.length > 1)
+            throw new Error(
+              'Unexpected push events length for non-seq/par program'
+            )
           nextEffect = nextChildEffects[0]
         }
 
@@ -89,7 +125,9 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
     return {
       nextState: {
         ...state,
-        ...(effectCheck.updatedEffect ? { effect: effectCheck.updatedEffect } : {}),
+        ...(effectCheck.updatedEffect
+          ? { effect: effectCheck.updatedEffect }
+          : {}),
         effective: effectCheck.isEffective,
         lastExecutionTime: Date.now(),
         nextExecutionTime: Date.now() + effectCheck.delay

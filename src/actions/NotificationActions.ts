@@ -6,7 +6,12 @@ import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
-import { asDevicePayload, DevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
+import {
+  asDevicePayload,
+  DevicePayload,
+  DeviceUpdatePayload,
+  NewPushEvent
+} from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
@@ -30,7 +35,9 @@ export interface NotificationSettings {
   }
 }
 
-export function registerNotificationsV2(changeFiat: boolean = false): ThunkAction<Promise<void>> {
+export function registerNotificationsV2(
+  changeFiat: boolean = false
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings
@@ -79,11 +86,14 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
               event =>
                 event.trigger.type === 'price-change' &&
                 event.trigger.pluginId === currencyInfo.pluginId &&
-                (!changeFiat || event.trigger.currencyPair.includes(defaultIsoFiat))
+                (!changeFiat ||
+                  event.trigger.currencyPair.includes(defaultIsoFiat))
             )
           ) {
             // Add new push event
-            createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
+            createEvents.push(
+              newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true)
+            )
           }
         }
 
@@ -91,8 +101,13 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         for (const event of serverSettings.events) {
           const { trigger } = event
           if (trigger.type === 'price-change') {
-            const currencyInfo = activeCurrencyInfos.find(currencyInfo => currencyInfo.pluginId === trigger.pluginId)
-            if (currencyInfo != null && SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode) {
+            const currencyInfo = activeCurrencyInfos.find(
+              currencyInfo => currencyInfo.pluginId === trigger.pluginId
+            )
+            if (
+              currencyInfo != null &&
+              SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode
+            ) {
               removeEvents.push(event.eventId)
             }
           }
@@ -117,7 +132,9 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         if (Object.keys(v1Settings.notifications.currencyCodes).length === 0) {
           // v1 settings don't exist either so let's create them
           for (const currencyInfo of activeCurrencyInfos) {
-            createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
+            createEvents.push(
+              newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true)
+            )
           }
         } else {
           // v1 settings do exist let's migrate them to v2
@@ -125,15 +142,33 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
             '1': boolean
             '24': boolean
             fallbackSettings?: boolean
-          }> = await Promise.all(activeCurrencyInfos.map(async info => await fetchLegacySettings(userId, info.currencyCode)))
+          }> = await Promise.all(
+            activeCurrencyInfos.map(
+              async info => await fetchLegacySettings(userId, info.currencyCode)
+            )
+          )
 
           for (const [i, setting] of currencySettings.entries()) {
             if (setting.fallbackSettings) {
               // Settings didn't exist for that currency code so we'll create them using default options
-              createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, true, true))
+              createEvents.push(
+                newPriceChangeEvent(
+                  activeCurrencyInfos[i],
+                  defaultIsoFiat,
+                  true,
+                  true
+                )
+              )
             } else {
               // Settings did exist for that currency code so we'll use them
-              createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, setting[1], setting[24]))
+              createEvents.push(
+                newPriceChangeEvent(
+                  activeCurrencyInfos[i],
+                  defaultIsoFiat,
+                  setting[1],
+                  setting[24]
+                )
+              )
             }
           }
         }
@@ -157,17 +192,23 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   }
 }
 
-export function updateNotificationSettings(data: DeviceUpdatePayload): ThunkAction<Promise<void>> {
+export function updateNotificationSettings(
+  data: DeviceUpdatePayload
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     dispatch({
       type: 'NOTIFICATION_SETTINGS_UPDATE',
-      data: serverSettingsToNotificationSettings(await updateServerSettings(state.core.context, data))
+      data: serverSettingsToNotificationSettings(
+        await updateServerSettings(state.core.context, data)
+      )
     })
   }
 }
 
-const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): NotificationSettings => {
+const serverSettingsToNotificationSettings = (
+  serverSettings: DevicePayload
+): NotificationSettings => {
   const data: NotificationSettings = {
     ignoreMarketing: serverSettings.ignoreMarketing,
     ignorePriceChanges: serverSettings.ignorePriceChanges,
@@ -190,9 +231,14 @@ const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): No
   return data
 }
 
-async function updateServerSettings(context: EdgeContext, data: DeviceUpdatePayload): Promise<DevicePayload> {
+async function updateServerSettings(
+  context: EdgeContext,
+  data: DeviceUpdatePayload
+): Promise<DevicePayload> {
   const deviceId = context.clientId
-  const loginIds = context.localUsers.map(row => base64.stringify(base58.parse(row.loginId)))
+  const loginIds = context.localUsers.map(row =>
+    base64.stringify(base58.parse(row.loginId))
+  )
   const deviceToken = await messaging()
     .getToken()
     .catch(() => '')
@@ -224,7 +270,9 @@ export const newPriceChangeEvent = (
 ): NewPushEvent => {
   const { currencyCode, displayName, pluginId } = currencyInfo
 
-  const fiatDenomination = getDenomFromIsoCode(removeIsoPrefix(isoFiatCurrencyCode))
+  const fiatDenomination = getDenomFromIsoCode(
+    removeIsoPrefix(isoFiatCurrencyCode)
+  )
   const fiatSymbol = fiatDenomination.symbol ?? ''
 
   const fiatSymbolString = `${fiatSymbol}#to_price#`
@@ -246,7 +294,14 @@ export const newPriceChangeEvent = (
 
     directions: [
       // [hourUp, hourDown, dayUp, dayDown]
-      `${sprintf(lstrings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(
+        lstrings.notification_hourly_price_change_up,
+        String.fromCodePoint(0x1f4c8),
+        displayName,
+        currencyCode,
+        changeUpString,
+        fiatSymbolString
+      )}`,
       `${sprintf(
         lstrings.notification_hourly_price_change_down,
         String.fromCodePoint(0x1f4c9),
@@ -255,8 +310,22 @@ export const newPriceChangeEvent = (
         changeDownString,
         fiatSymbolString
       )}`,
-      `${sprintf(lstrings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
-      `${sprintf(lstrings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
+      `${sprintf(
+        lstrings.notification_daily_price_change_up,
+        String.fromCodePoint(0x1f4c8),
+        displayName,
+        currencyCode,
+        changeUpString,
+        fiatSymbolString
+      )}`,
+      `${sprintf(
+        lstrings.notification_daily_price_change_down,
+        String.fromCodePoint(0x1f4c9),
+        displayName,
+        currencyCode,
+        changeDownString,
+        fiatSymbolString
+      )}`
     ],
     pluginId: currencyInfo.pluginId,
     dailyChange: dailyChangeEnabled ? 10 : undefined,
@@ -272,11 +341,16 @@ export const newPriceChangeEvent = (
   return event
 }
 
-export const fetchLegacySettings = async (userId: string, currencyCode: string) => {
+export const fetchLegacySettings = async (
+  userId: string,
+  currencyCode: string
+) => {
   const deviceId = await getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
-  return await legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
+  return await legacyGet(
+    `user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`
+  )
 }
 
 async function legacyGet(path: string) {

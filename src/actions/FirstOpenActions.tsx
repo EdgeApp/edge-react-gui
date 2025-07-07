@@ -125,22 +125,28 @@ export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         // Get the attribution data from Apple for the token
-        const response = await fetch('https://api-adservices.apple.com/api/v1/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain'
-          },
-          body: attributionToken
-        })
+        const response = await fetch(
+          'https://api-adservices.apple.com/api/v1/',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            body: attributionToken
+          }
+        )
 
         // If we get a 404, wait and retry as per Apple's recommendation
         if (response.status === 404 && attempt < maxRetries) {
-          console.log(`Apple Ads attribution API returned 404, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`)
+          console.log(
+            `Apple Ads attribution API returned 404, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`
+          )
           await snooze(retryDelay)
           continue
         }
 
-        if (!response.ok) throw new Error(`API call failed with status: ${response.status}`)
+        if (!response.ok)
+          throw new Error(`API call failed with status: ${response.status}`)
 
         const data = await response.json()
         return asAppleAdsAttribution(data)

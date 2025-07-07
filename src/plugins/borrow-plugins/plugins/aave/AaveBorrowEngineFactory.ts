@@ -8,7 +8,14 @@ import { showError } from '../../../../components/services/AirshipInstance'
 import { MAX_AMOUNT } from '../../../../constants/valueConstants'
 import { DECIMAL_PRECISION, snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
-import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
+import {
+  asTxInfo,
+  CallInfo,
+  makeApprovableCall,
+  makeSideEffectApprovableAction,
+  makeTxCalls,
+  TxInfo
+} from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
 import {
@@ -35,10 +42,13 @@ export interface BorrowEngineBlueprint {
   asTokenContractAddress: Cleaner<string>
 }
 
-export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
+export const makeAaveBorrowEngineFactory = (
+  blueprint: BorrowEngineBlueprint
+) => {
   return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
     const { aaveNetwork, asTokenContractAddress } = blueprint
-    const walletAddress = (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
+    const walletAddress = (await wallet.getReceiveAddress({ tokenId: null }))
+      .publicAddress
 
     const REFERRAL_CODE = 0 // No referral code is used for AAVE contract calls
     const INTEREST_RATE_MODE = 2 // Only variable is supported for now
@@ -63,8 +73,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       throw new Error(`Cannot find token for contract address: ${address}`)
     }
     const adjustCollateral = (tokenId: EdgeTokenId, amount: string) => {
-      if (instance.collaterals.length === 0) throw new Error(`Invalid execution time; too early invocation`)
-      const index = instance.collaterals.findIndex(collateral => collateral.tokenId === tokenId)
+      if (instance.collaterals.length === 0)
+        throw new Error(`Invalid execution time; too early invocation`)
+      const index = instance.collaterals.findIndex(
+        collateral => collateral.tokenId === tokenId
+      )
       if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
       // Update entry
       const collateral = instance.collaterals[index]
@@ -73,7 +86,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       instance.collaterals = [...instance.collaterals]
     }
     const adjustDebt = (tokenId: EdgeTokenId, amount: string) => {
-      if (instance.debts.length === 0) throw new Error(`Invalid execution time; too early invocation`)
+      if (instance.debts.length === 0)
+        throw new Error(`Invalid execution time; too early invocation`)
       const index = instance.debts.findIndex(debt => debt.tokenId === tokenId)
       if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
       // Update entry
@@ -83,20 +97,32 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       instance.debts = [...instance.debts]
     }
     const getToken = (tokenId: EdgeTokenId): EdgeToken => {
-      if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
+      if (tokenId == null)
+        throw new Error(
+          'Getting wrapped native token not supported yet. ' +
+            'Explicitly pass in tokenId for the wrapped token.'
+        )
       const token = wallet.currencyConfig.allTokens[tokenId]
-      if (token == null) throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
+      if (token == null)
+        throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
       return token
     }
     const getTokenAddress = (token: EdgeToken) => {
       const tokenAddress = asMaybe(asTokenContractAddress)(token)
-      if (tokenAddress == null) throw new Error(`Unable to find contract address for ${token.displayName} (${token.currencyCode})`)
+      if (tokenAddress == null)
+        throw new Error(
+          `Unable to find contract address for ${token.displayName} (${token.currencyCode})`
+        )
       return tokenAddress
     }
     const updateLtv = async () => {
-      const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+      const userData = await aaveNetwork.lendingPool.getUserAccountData(
+        walletAddress
+      )
       const { totalCollateralETH, totalDebtETH } = userData
-      const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+      const loanToValue =
+        parseFloat(totalDebtETH.toString()) /
+        parseFloat(totalCollateralETH.toString())
       instance.loanToValue = isNaN(loanToValue) ? 0 : loanToValue
     }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
@@ -115,20 +141,37 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       if (overrides?.gasPrice == null) {
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         overrides = { ...overrides, gasPrice }
-        console.warn(`getApproveAllowanceTx was called without a gasPrice overrides parameter. The caller should pass the gasPrice instead.`)
+        console.warn(
+          `getApproveAllowanceTx was called without a gasPrice overrides parameter. The caller should pass the gasPrice instead.`
+        )
       }
       return asGracefulTxInfo(
-        await tokenContract.populateTransaction.approve(spenderAddress, BigNumber.from(allowanceAmount), {
-          gasLimit: '500000',
-          ...overrides
-        })
+        await tokenContract.populateTransaction.approve(
+          spenderAddress,
+          BigNumber.from(allowanceAmount),
+          {
+            gasLimit: '500000',
+            ...overrides
+          }
+        )
       )
     }
-    const getLoanAssetETHValue = async (loanAsset: BorrowCollateral | BorrowDebt): Promise<string> => {
-      if (loanAsset.tokenId == null) throw new Error('getLoanAssetETHValue: No tokenId on supplied collateral or debt')
-      const loanAssetMult = getToken(loanAsset.tokenId).denominations[0].multiplier
-      const loanAssetEthPrice = await aaveNetwork.getAssetPrice(loanAsset.tokenId.toLowerCase())
-      const loanAssetEthValue = div(mul(loanAsset.nativeAmount, loanAssetEthPrice.toString()), loanAssetMult)
+    const getLoanAssetETHValue = async (
+      loanAsset: BorrowCollateral | BorrowDebt
+    ): Promise<string> => {
+      if (loanAsset.tokenId == null)
+        throw new Error(
+          'getLoanAssetETHValue: No tokenId on supplied collateral or debt'
+        )
+      const loanAssetMult = getToken(loanAsset.tokenId).denominations[0]
+        .multiplier
+      const loanAssetEthPrice = await aaveNetwork.getAssetPrice(
+        loanAsset.tokenId.toLowerCase()
+      )
+      const loanAssetEthValue = div(
+        mul(loanAsset.nativeAmount, loanAssetEthPrice.toString()),
+        loanAssetMult
+      )
       return loanAssetEthValue
     }
 
@@ -154,20 +197,25 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
 
         if (now >= RESYNC_TIMES.BALANCE) {
           // Collaterals and Debts:
-          const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-          const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
-            return {
-              tokenId: addressToTokenId(address),
-              nativeAmount: aBalance.toString()
+          const reserveTokenBalances =
+            await aaveNetwork.getReserveTokenBalances(walletAddress)
+          const collaterals: BorrowCollateral[] = reserveTokenBalances.map(
+            ({ address, aBalance }) => {
+              return {
+                tokenId: addressToTokenId(address),
+                nativeAmount: aBalance.toString()
+              }
             }
-          })
-          const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
-            return {
-              tokenId: addressToTokenId(address),
-              nativeAmount: vBalance.toString(),
-              apr: variableApr
+          )
+          const debts: BorrowDebt[] = reserveTokenBalances.map(
+            ({ address, vBalance, variableApr }) => {
+              return {
+                tokenId: addressToTokenId(address),
+                nativeAmount: vBalance.toString(),
+                apr: variableApr
+              }
             }
-          })
+          )
           instance.collaterals = collaterals
           instance.debts = debts
           instance.syncRatio = 1
@@ -176,7 +224,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         }
       } catch (error: any) {
         // TODO: Handle error cases such as rate limits
-        console.log(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
+        console.log(
+          `Failed to load BorrowEngine for wallet '${wallet.id}': ${String(
+            error
+          )}`
+        )
         console.log(error)
       } finally {
         // Loop delay
@@ -211,24 +263,39 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       // Modifications
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+        if (zeroString(nativeAmount))
+          throw new Error(
+            'BorrowEngine: withdraw request contains no nativeAmount.'
+          )
 
         validateWalletParam(fromWallet)
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
 
-        const spenderAddress = (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
+        const spenderAddress = (
+          await wallet.getReceiveAddress({ tokenId: null })
+        ).publicAddress
 
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
-        const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
+        const onBehalfOf =
+          fromWallet === wallet
+            ? spenderAddress
+            : (await fromWallet.getReceiveAddress({ tokenId: null }))
+                .publicAddress
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
-        const approveTx = await getApproveAllowanceTx(nativeAmount, onBehalfOf, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
+        const approveTx = await getApproveAllowanceTx(
+          nativeAmount,
+          onBehalfOf,
+          aaveNetwork.lendingPool.address,
+          tokenContract,
+          { gasPrice }
+        )
         if (approveTx != null) {
           txCallInfos.push({
             tx: approveTx,
@@ -243,7 +310,13 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         }
 
         const depositTx = asGracefulTxInfo(
-          await aaveNetwork.lendingPool.populateTransaction.deposit(asset, amount, onBehalfOf, REFERRAL_CODE, { gasLimit: '800000', gasPrice })
+          await aaveNetwork.lendingPool.populateTransaction.deposit(
+            asset,
+            amount,
+            onBehalfOf,
+            REFERRAL_CODE,
+            { gasLimit: '800000', gasPrice }
+          )
         )
         txCallInfos.push({
           tx: depositTx,
@@ -268,10 +341,16 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, toWallet = wallet } = request
 
-        const collateral = instance.collaterals.find(collateral => collateral.tokenId === tokenId)
-        if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
+        const collateral = instance.collaterals.find(
+          collateral => collateral.tokenId === tokenId
+        )
+        if (collateral == null)
+          throw new Error(`No collateral to withdraw for ${tokenId}`)
 
-        if (lt(nativeAmount, '0')) throw new Error(`BorrowEngine: invalid withdraw request nativeAmount ${request.nativeAmount}.`)
+        if (lt(nativeAmount, '0'))
+          throw new Error(
+            `BorrowEngine: invalid withdraw request nativeAmount ${request.nativeAmount}.`
+          )
 
         validateWalletParam(toWallet)
 
@@ -281,13 +360,23 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const asset = tokenAddress
         // Anything above the current collateral amount will be automatically
         // converted to the MAX_AMOUNT in order to withdraw all collateral.
-        const contractTokenAmount = BigNumber.from(gt(nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount)
-        const to = (await toWallet.getReceiveAddress({ tokenId: null })).publicAddress
+        const contractTokenAmount = BigNumber.from(
+          gt(nativeAmount, collateral.nativeAmount)
+            ? MAX_AMOUNT
+            : request.nativeAmount
+        )
+        const to = (await toWallet.getReceiveAddress({ tokenId: null }))
+          .publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
         const withdrawTx = asGracefulTxInfo(
-          await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, contractTokenAmount, to, { gasLimit: '800000', gasPrice })
+          await aaveNetwork.lendingPool.populateTransaction.withdraw(
+            asset,
+            contractTokenAmount,
+            to,
+            { gasLimit: '800000', gasPrice }
+          )
         )
 
         // Cap the withdraw amount to the total collateral
@@ -312,22 +401,34 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: borrow request contains no nativeAmount.')
+        if (zeroString(nativeAmount))
+          throw new Error(
+            'BorrowEngine: borrow request contains no nativeAmount.'
+          )
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
 
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
-        const onBehalfOf = (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
+        const onBehalfOf = (
+          await fromWallet.getReceiveAddress({ tokenId: null })
+        ).publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
         const borrowTx = asGracefulTxInfo(
-          await aaveNetwork.lendingPool.populateTransaction.borrow(asset, amount, INTEREST_RATE_MODE, REFERRAL_CODE, onBehalfOf, {
-            gasLimit: '800000',
-            gasPrice
-          })
+          await aaveNetwork.lendingPool.populateTransaction.borrow(
+            asset,
+            amount,
+            INTEREST_RATE_MODE,
+            REFERRAL_CODE,
+            onBehalfOf,
+            {
+              gasLimit: '800000',
+              gasPrice
+            }
+          )
         )
 
         const borrowAction = await makeApprovableCall({
@@ -358,22 +459,30 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const nativeAmount = min(request.nativeAmount, debt.nativeAmount)
 
         // nativeAmount can't be zero
-        if (nativeAmount === '0') throw new Error('BorrowEngine: repay request contains no nativeAmount.')
+        if (nativeAmount === '0')
+          throw new Error(
+            'BorrowEngine: repay request contains no nativeAmount.'
+          )
 
-        const fromAddress = (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
+        const fromAddress = (
+          await fromWallet.getReceiveAddress({ tokenId: null })
+        ).publicAddress
 
         const debtToken = getToken(tokenId)
         const debtTokenAddress = getTokenAddress(getToken(tokenId))
         // HACK: Action queue doesn't wait until borrowEngine has synced before using it
         if (instance.debts.find(debt => debt.tokenId === tokenId) == null) {
-          const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-          instance.debts = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
-            return {
-              tokenId: addressToTokenId(address),
-              nativeAmount: vBalance.toString(),
-              apr: variableApr
+          const reserveTokenBalances =
+            await aaveNetwork.getReserveTokenBalances(walletAddress)
+          instance.debts = reserveTokenBalances.map(
+            ({ address, vBalance, variableApr }) => {
+              return {
+                tokenId: addressToTokenId(address),
+                nativeAmount: vBalance.toString(),
+                apr: variableApr
+              }
             }
-          })
+          )
         }
 
         const amountToCover = BigNumber.from(nativeAmount)
@@ -384,24 +493,47 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
 
         // Repay with collateral
         if (fromTokenId != null) {
-          if (fromTokenId == null) throw new Error('Native wrapped collateral not supported for closeWithCollateral')
-          if (tokenId == null) throw new Error('Native wrapped debt not supported for closeWithCollateral')
+          if (fromTokenId == null)
+            throw new Error(
+              'Native wrapped collateral not supported for closeWithCollateral'
+            )
+          if (tokenId == null)
+            throw new Error(
+              'Native wrapped debt not supported for closeWithCollateral'
+            )
 
           const collateralToken = getToken(fromTokenId)
           const collateralTokenAddress = getTokenAddress(collateralToken)
 
           // Build ParaSwap swap info
           // Cap the amount to swap at the debt amount
-          const amountToSwap = amountToCover.mul(100 + PARASWAP_SLIPPAGE_PERCENT).div(100)
-          const chainId = fromWallet.currencyInfo.defaultSettings?.otherSettings.chainParams.chainId
+          const amountToSwap = amountToCover
+            .mul(100 + PARASWAP_SLIPPAGE_PERCENT)
+            .div(100)
+          const chainId =
+            fromWallet.currencyInfo.defaultSettings?.otherSettings.chainParams
+              .chainId
           const paraswap = new ParaSwap(chainId, 'https://apiv5.paraswap.io')
-          const priceRoute = await paraswap.getRate(collateralTokenAddress, debtTokenAddress, amountToSwap.toString(), fromAddress, SwapSide.BUY, {
-            partner: 'aave',
-            excludeContractMethods: [ContractMethod.simpleBuy]
-          })
+          const priceRoute = await paraswap.getRate(
+            collateralTokenAddress,
+            debtTokenAddress,
+            amountToSwap.toString(),
+            fromAddress,
+            SwapSide.BUY,
+            {
+              partner: 'aave',
+              excludeContractMethods: [ContractMethod.simpleBuy]
+            }
+          )
 
-          if ('message' in priceRoute) throw new Error('BorrowEngine: Error getting priceRoute: ' + priceRoute.message)
-          const priceWithSlippage = ethers.BigNumber.from(priceRoute.srcAmount).mul(101).div(100).toString()
+          if ('message' in priceRoute)
+            throw new Error(
+              'BorrowEngine: Error getting priceRoute: ' + priceRoute.message
+            )
+          const priceWithSlippage = ethers.BigNumber.from(priceRoute.srcAmount)
+            .mul(101)
+            .div(100)
+            .toString()
           const swapTxParams = await paraswap.buildTx(
             collateralTokenAddress,
             debtTokenAddress,
@@ -415,12 +547,24 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
             undefined,
             { ignoreChecks: true }
           )
-          if ('message' in swapTxParams) throw new Error('BorrowEngine: Error getting swapTxParams: ' + swapTxParams.message)
+          if ('message' in swapTxParams)
+            throw new Error(
+              'BorrowEngine: Error getting swapTxParams: ' +
+                swapTxParams.message
+            )
 
           // Approve the AAVE aToken
-          const aCollateralContract = (await aaveNetwork.getReserveTokenContracts(collateralTokenAddress)).aToken
+          const aCollateralContract = (
+            await aaveNetwork.getReserveTokenContracts(collateralTokenAddress)
+          ).aToken
           const { paraSwapRepayAdapter } = aaveNetwork
-          const approveTx = await getApproveAllowanceTx(amountToSwap.toString(), fromAddress, paraSwapRepayAdapter.address, aCollateralContract, { gasPrice })
+          const approveTx = await getApproveAllowanceTx(
+            amountToSwap.toString(),
+            fromAddress,
+            paraSwapRepayAdapter.address,
+            aCollateralContract,
+            { gasPrice }
+          )
           if (approveTx != null) {
             txCallInfos.push({
               tx: approveTx,
@@ -441,7 +585,10 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               priceRoute.destAmount,
               2, // 1 = stable, 2 = variable
               gte(request.nativeAmount, debt.nativeAmount) ? 164 : 0, // buyAllBalanceOffset 164 = Augustus V5 buy. Function call to handle the slight interest accrued after the tx is broadcasted when closing the full principal
-              ethers.utils.defaultAbiCoder.encode(['bytes', 'address'], [swapTxParams.data, swapTxParams.to]),
+              ethers.utils.defaultAbiCoder.encode(
+                ['bytes', 'address'],
+                [swapTxParams.data, swapTxParams.to]
+              ),
               {
                 amount: '0',
                 deadline: '0',
@@ -472,9 +619,17 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           actions.push(mutateStateAction)
         } else {
           // Repay with wallet funds
-          const tokenContract = await aaveNetwork.makeTokenContract(debtTokenAddress)
+          const tokenContract = await aaveNetwork.makeTokenContract(
+            debtTokenAddress
+          )
 
-          const approveTx = await getApproveAllowanceTx(amountToCover.toString(), fromAddress, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
+          const approveTx = await getApproveAllowanceTx(
+            amountToCover.toString(),
+            fromAddress,
+            aaveNetwork.lendingPool.address,
+            tokenContract,
+            { gasPrice }
+          )
           if (approveTx != null) {
             txCallInfos.push({
               tx: approveTx,
@@ -489,10 +644,16 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           }
 
           const repayTx = asGracefulTxInfo(
-            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amountToCover, INTEREST_RATE_MODE, fromAddress, {
-              gasLimit: '800000',
-              gasPrice
-            })
+            await aaveNetwork.lendingPool.populateTransaction.repay(
+              debtTokenAddress,
+              amountToCover,
+              INTEREST_RATE_MODE,
+              fromAddress,
+              {
+                gasLimit: '800000',
+                gasPrice
+              }
+            )
           )
 
           txCallInfos.push({
@@ -524,31 +685,51 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const tokenAddress = getTokenAddress(token)
 
         if (tokenAddress == null) {
-          throw new Error(`getAprQuote: AAVE requires a contract address, but tokenId '${tokenId ?? ''}' has none`)
+          throw new Error(
+            `getAprQuote: AAVE requires a contract address, but tokenId '${
+              tokenId ?? ''
+            }' has none`
+          )
         }
 
-        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(tokenAddress)
+        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(
+          tokenAddress
+        )
 
         return variableApr
       },
-      async calculateProjectedLtv(request: CalculateLtvRequest): Promise<string> {
+      async calculateProjectedLtv(
+        request: CalculateLtvRequest
+      ): Promise<string> {
         const { collaterals: newCollaterals, debts: newDebts } = request
 
         const debts = newDebts.filter(a => !zeroString(a.nativeAmount))
-        const collaterals = newCollaterals.filter(a => !zeroString(a.nativeAmount))
+        const collaterals = newCollaterals.filter(
+          a => !zeroString(a.nativeAmount)
+        )
 
         // Collaterals will always be present, but debts might be empty
         if (collaterals.length > 0) {
           // Calculate the ETH value of the modified debts/collaterals using
           // AAVE's price oracle
-          const calculateTotalLoanAssetETH = async (prev: Promise<string>, loanAsset: BorrowCollateral | BorrowDebt) =>
-            add(await prev, await getLoanAssetETHValue(loanAsset))
+          const calculateTotalLoanAssetETH = async (
+            prev: Promise<string>,
+            loanAsset: BorrowCollateral | BorrowDebt
+          ) => add(await prev, await getLoanAssetETHValue(loanAsset))
 
-          const totalCollateralETH = await collaterals.reduce(calculateTotalLoanAssetETH, Promise.resolve<string>('0'))
-          const totalDebtETH = await debts.reduce(calculateTotalLoanAssetETH, Promise.resolve<string>('0'))
+          const totalCollateralETH = await collaterals.reduce(
+            calculateTotalLoanAssetETH,
+            Promise.resolve<string>('0')
+          )
+          const totalDebtETH = await debts.reduce(
+            calculateTotalLoanAssetETH,
+            Promise.resolve<string>('0')
+          )
 
           // Recalculate LTV
-          return zeroString(totalCollateralETH) ? '0' : div(totalDebtETH, totalCollateralETH, DECIMAL_PRECISION)
+          return zeroString(totalCollateralETH)
+            ? '0'
+            : div(totalDebtETH, totalCollateralETH, DECIMAL_PRECISION)
         } else {
           console.log('calculateProjectedLtv: No collaterals found')
           return '0'

@@ -37,7 +37,12 @@ export const SettingsLabelRowComponent = (props: Props) => {
 
   const rightText = <Text style={style}>{right}</Text>
   return (
-    <SettingsRow disabled={disabled} label={label} right={rightText} onPress={onPress}>
+    <SettingsRow
+      disabled={disabled}
+      label={label}
+      right={rightText}
+      onPress={onPress}
+    >
       {children}
     </SettingsRow>
   )

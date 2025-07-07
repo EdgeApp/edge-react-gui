@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, test } from '@jest/globals'
 
-import { formatNumber, formatNumberInput, IntlLocaleType, isValidInput, prettifyNumber, setIntlLocale, truncateDecimalsPeriod } from '../locales/intl'
+import {
+  formatNumber,
+  formatNumberInput,
+  IntlLocaleType,
+  isValidInput,
+  prettifyNumber,
+  setIntlLocale,
+  truncateDecimalsPeriod
+} from '../locales/intl'
 import { truncateDecimals } from '../util/utils'
 
 const EN_US_LOCALE: IntlLocaleType = {
@@ -290,14 +298,18 @@ describe('Integration with functionality', function () {
       const precision = 1
       const expected = ''
       const allowBlank = true
-      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(
+        expected
+      )
     })
     test("allowBlank=false '' => 0", function () {
       const input = ''
       const precision = 1
       const expected = '0'
       const allowBlank = false
-      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(
+        expected
+      )
     })
   })
 })

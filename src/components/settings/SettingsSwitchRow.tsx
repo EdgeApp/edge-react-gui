@@ -49,7 +49,12 @@ const SettingsSwitchRowComponent = (props: Props) => {
     </View>
   )
   return (
-    <SettingsRow disabled={disabled} label={label} right={right} onPress={onPress}>
+    <SettingsRow
+      disabled={disabled}
+      label={label}
+      right={right}
+      onPress={onPress}
+    >
       {children}
     </SettingsRow>
   )

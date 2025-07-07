@@ -27,11 +27,19 @@ describe('WalletListRow', () => {
     const pluginId = 'bitcoin'
     const walletName = 'My bitcoin wallet'
     const onPress = () => undefined
-    const rightSide = <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
+    const rightSide = (
+      <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
+    )
 
     const rendered = render(
       <FakeProviders initialState={mockState}>
-        <CreateWalletSelectCryptoRow pluginId={pluginId} tokenId={null} walletName={walletName} onPress={onPress} rightSide={rightSide} />
+        <CreateWalletSelectCryptoRow
+          pluginId={pluginId}
+          tokenId={null}
+          walletName={walletName}
+          onPress={onPress}
+          rightSide={rightSide}
+        />
       </FakeProviders>
     )
 

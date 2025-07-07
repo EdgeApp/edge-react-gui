@@ -3,7 +3,15 @@ import { ListRenderItem, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { Category, displayCategories, formatCategory, getSubcategories, joinCategory, setNewSubcategory, splitCategory } from '../../actions/CategoriesActions'
+import {
+  Category,
+  displayCategories,
+  formatCategory,
+  getSubcategories,
+  joinCategory,
+  setNewSubcategory,
+  splitCategory
+} from '../../actions/CategoriesActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -117,7 +125,11 @@ export function CategoryModal(props: Props) {
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <EdgeTouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={async () => await handleCategoryUpdate(item.raw)}>
+    <EdgeTouchableHighlight
+      delayPressIn={60}
+      style={styles.rowContainer}
+      onPress={async () => await handleCategoryUpdate(item.raw)}
+    >
       <>
         <View style={styles.rowContent}>
           <View style={styles.rowCategoryTextWrap}>
@@ -135,10 +147,19 @@ export function CategoryModal(props: Props) {
   ))
 
   return (
-    <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.category_modal_title}>
+    <EdgeModal
+      bridge={bridge}
+      onCancel={handleCancel}
+      title={lstrings.category_modal_title}
+    >
       <View style={styles.inputCategoryRow}>
         {categoryOrder.map(item => (
-          <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
+          <MinimalButton
+            key={item}
+            highlighted={category === item}
+            label={displayCategories[item]}
+            onPress={() => setCategory(item)}
+          />
         ))}
       </View>
       <ModalFilledTextInput

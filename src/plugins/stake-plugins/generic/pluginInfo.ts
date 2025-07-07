@@ -6,4 +6,12 @@ import { glifpool } from './pluginInfo/filecoinGlifpool'
 import { tarotpool } from './pluginInfo/optimismTarotPool'
 import { thorchainYield } from './pluginInfo/thorchainYield'
 
-export const genericPlugins = [glifpool, glifpoolCalibration, tarotpool, coreumnative, kilnpool, kilncardanopool, thorchainYield]
+export const genericPlugins = [
+  glifpool,
+  glifpoolCalibration,
+  tarotpool,
+  coreumnative,
+  kilnpool,
+  kilncardanopool,
+  thorchainYield
+]

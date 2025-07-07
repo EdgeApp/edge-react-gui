@@ -1,10 +1,20 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
-import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
+import {
+  addEdgeCorePlugins,
+  EdgeAccount,
+  EdgeContext,
+  EdgeCurrencyWallet,
+  lockEdgeCorePlugins,
+  makeFakeEdgeWorld
+} from 'edge-core-js'
 import * as React from 'react'
 
-import { SendScene2, SendScene2Params } from '../../components/scenes/SendScene2'
+import {
+  SendScene2,
+  SendScene2Params
+} from '../../components/scenes/SendScene2'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
@@ -115,7 +125,9 @@ describe('SendScene2', () => {
             tokenId: null,
             spendInfo: {
               tokenId: null,
-              spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' }
+              ]
             },
             doCheckAndShowGetCryptoModal: false
           })}
@@ -143,7 +155,9 @@ describe('SendScene2', () => {
             tokenId: null,
             spendInfo: {
               tokenId: null,
-              spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' }
+              ]
             },
             doCheckAndShowGetCryptoModal: false
           })}

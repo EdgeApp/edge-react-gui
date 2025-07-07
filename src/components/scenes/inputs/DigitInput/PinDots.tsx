@@ -20,7 +20,10 @@ export function PinDots({ maxLength, pinLength }: Props) {
   return (
     <View style={styles.container}>
       {[...new Array(maxLength)].map((_, index) => (
-        <View key={index} style={[styles.circle, pinLength > index && styles.circleFilled]} />
+        <View
+          key={index}
+          style={[styles.circle, pinLength > index && styles.circleFilled]}
+        />
       ))}
     </View>
   )

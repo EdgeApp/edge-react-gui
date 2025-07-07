@@ -25,7 +25,9 @@ export const SceneHeaderUi4 = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        {title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}
+        {title == null ? null : (
+          <EdgeText style={styles.title}>{title}</EdgeText>
+        )}
         {children}
       </View>
       <DividerLineUi4 extendRight />

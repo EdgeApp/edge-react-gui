@@ -1,10 +1,20 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../../actions/PaymentProtoActions'
-import { FIO_PLUGIN_ID, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
+import {
+  FIO_PLUGIN_ID,
+  FIO_STR
+} from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
@@ -15,7 +25,11 @@ import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
-import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import {
+  logEvent,
+  TrackingEventName,
+  TrackingValues
+} from '../../../util/tracking'
 import { EdgeButton } from '../../buttons/EdgeButton'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -23,8 +37,17 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showDevError, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  Airship,
+  showDevError,
+  showError
+} from '../../services/AirshipInstance'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
 export interface FioAddressRegisterSelectWalletParams {
@@ -67,7 +90,10 @@ interface LocalState {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-export class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> {
+export class FioAddressRegisterSelectWallet extends React.Component<
+  Props,
+  LocalState
+> {
   state: LocalState = {
     loading: false,
     activationCost: 40,
@@ -87,7 +113,13 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { fioAddress, selectedDomain, isFallback } = route.params
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, bitpayUrl, feeValue, supportedAssets, paymentInfo } = await getRegInfo(
+        const {
+          activationCost,
+          bitpayUrl,
+          feeValue,
+          supportedAssets,
+          paymentInfo
+        } = await getRegInfo(
           this.props.fioPlugin,
           fioAddress,
           selectedWallet,
@@ -99,7 +131,10 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           activationCost,
           bitpayUrl,
           feeValue,
-          supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }],
+          supportedAssets: [
+            ...supportedAssets,
+            { pluginId: 'fio', tokenId: null }
+          ],
           paymentInfo
         })
       } catch (e: any) {
@@ -152,7 +187,14 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   proceed = async (walletId: string, tokenId: EdgeTokenId) => {
-    const { account, isConnected, navigation, route, wallet: selectedWallet, onLogEvent } = this.props
+    const {
+      account,
+      isConnected,
+      navigation,
+      route,
+      wallet: selectedWallet,
+      onLogEvent
+    } = this.props
     const { fioAddress } = route.params
     const { bitpayUrl, feeValue, paymentInfo: allPaymentInfo } = this.state
     const wallet = account.currencyWallets[walletId]
@@ -161,7 +203,9 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     if (isConnected) {
       if (pluginId === FIO_PLUGIN_ID) {
         const { fioWallets } = this.props
-        const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
+        const paymentWallet = fioWallets.find(
+          fioWallet => fioWallet.id === walletId
+        )
         if (paymentWallet == null) return
         navigation.navigate('fioNameConfirm', {
           fioName: fioAddress,
@@ -173,7 +217,8 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         const paymentCurrencyCode = getCurrencyCode(wallet, tokenId)
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const { amount: exchangeAmount } = allPaymentInfo[pluginId][tokenId ?? '']
+        const { amount: exchangeAmount } =
+          allPaymentInfo[pluginId][tokenId ?? '']
 
         const cryptoAmount = new CryptoAmount({
           exchangeAmount,
@@ -181,35 +226,43 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           currencyConfig: wallet.currencyConfig
         })
 
-        await launchPaymentProto(this.props.navigation as NavigationBase, this.props.account, bitpayUrl, {
-          wallet: wallet,
-          metadata: {
-            name: lstrings.fio_address_register_metadata_name,
-            notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
-          },
-          onDone: (edgeTransaction?: EdgeTransaction) => {
-            if (edgeTransaction != null) {
-              Airship.show<'ok' | undefined>(bridge => (
-                <ButtonsModal
-                  bridge={bridge}
-                  title={`${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`}
-                  message={sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label)}
-                  buttons={{
-                    ok: { label: lstrings.string_ok_cap }
-                  }}
-                />
-              )).catch(() => {})
+        await launchPaymentProto(
+          this.props.navigation as NavigationBase,
+          this.props.account,
+          bitpayUrl,
+          {
+            wallet: wallet,
+            metadata: {
+              name: lstrings.fio_address_register_metadata_name,
+              notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
+            },
+            onDone: (edgeTransaction?: EdgeTransaction) => {
+              if (edgeTransaction != null) {
+                Airship.show<'ok' | undefined>(bridge => (
+                  <ButtonsModal
+                    bridge={bridge}
+                    title={`${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`}
+                    message={sprintf(
+                      lstrings.fio_address_register_pending,
+                      lstrings.fio_address_register_form_field_label
+                    )}
+                    buttons={{
+                      ok: { label: lstrings.string_ok_cap }
+                    }}
+                  />
+                )).catch(() => {})
 
-              onLogEvent('Fio_Handle_Register', {
-                conversionValues: {
-                  conversionType: 'crypto',
-                  cryptoAmount
-                }
-              })
-              navigation.navigate('edgeTabs', { screen: 'home' })
+                onLogEvent('Fio_Handle_Register', {
+                  conversionValues: {
+                    conversionType: 'crypto',
+                    cryptoAmount
+                  }
+                })
+                navigation.navigate('edgeTabs', { screen: 'home' })
+              }
             }
           }
-        })
+        )
       }
     } else {
       showError(lstrings.fio_network_alert_text)
@@ -221,20 +274,43 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { selectedDomain, fioAddress } = route.params
     const { activationCost, paymentWallet, loading } = this.state
 
-    const nextDisabled = !activationCost || activationCost === 0 || (!selectedDomain.walletId && (!paymentWallet || !paymentWallet.id))
+    const nextDisabled =
+      !activationCost ||
+      activationCost === 0 ||
+      (!selectedDomain.walletId && (!paymentWallet || !paymentWallet.id))
     const costStr = loading ? lstrings.loading : `${activationCost} ${FIO_STR}`
-    const walletName = !paymentWallet || !paymentWallet.id ? lstrings.choose_your_wallet : getWalletName(account.currencyWallets[paymentWallet.id])
+    const walletName =
+      !paymentWallet || !paymentWallet.id
+        ? lstrings.choose_your_wallet
+        : getWalletName(account.currencyWallets[paymentWallet.id])
 
     return (
       <>
         <EdgeCard sections marginRem={[0.5, 0.5, 2, 0.5]}>
-          <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+          <EdgeRow
+            title={lstrings.fio_address_register_form_field_label}
+            body={fioAddress}
+          />
           {!selectedDomain.walletId && (
-            <EdgeRow rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+            <EdgeRow
+              rightButtonType="touchable"
+              title={lstrings.create_wallet_account_select_wallet}
+              body={walletName}
+              onPress={this.onWalletPress}
+            />
           )}
-          <EdgeRow title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
+          <EdgeRow
+            title={lstrings.create_wallet_account_amount_due}
+            body={costStr}
+            loading={loading}
+          />
         </EdgeCard>
-        <EdgeButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
+        <EdgeButton
+          disabled={nextDisabled}
+          onPress={this.onNextPress}
+          label={lstrings.string_next_capitalized}
+          type="primary"
+        />
       </>
     )
   }
@@ -243,10 +319,17 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { theme } = this.props
     const { errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
+    const detailsText = sprintf(
+      lstrings.fio_address_payment_required_text,
+      config.appName
+    )
     return (
       <SceneWrapper scroll padding={theme.rem(0.5)}>
-        <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+        <Image
+          source={theme.fioAddressLogo}
+          style={styles.image}
+          resizeMode="cover"
+        />
         <EdgeText style={styles.instructionalText} numberOfLines={10}>
           {detailsText}
         </EdgeText>
@@ -289,14 +372,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressRegisterSelectWalletConnected = connect<StateProps, DispatchProps, OwnProps>(
+const FioAddressRegisterSelectWalletConnected = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   (state, ownProps) => {
     const { wallet } = ownProps
     return {
       account: state.core.account,
       fioWallets: state.ui.wallets.fioWallets,
       fioPlugin: state.core.account.currencyConfig.fio,
-      fioDisplayDenomination: selectDisplayDenom(state, wallet.currencyConfig, null),
+      fioDisplayDenomination: selectDisplayDenom(
+        state,
+        wallet.currencyConfig,
+        null
+      ),
       defaultFiatCode: state.ui.settings.defaultIsoFiat,
       isConnected: state.network.isConnected
     }
@@ -314,4 +405,6 @@ const FioAddressRegisterSelectWalletConnected = connect<StateProps, DispatchProp
   })
 )(withTheme(FioAddressRegisterSelectWallet))
 
-export const FioAddressRegisterSelectWalletScene = withWallet(FioAddressRegisterSelectWalletConnected)
+export const FioAddressRegisterSelectWalletScene = withWallet(
+  FioAddressRegisterSelectWalletConnected
+)

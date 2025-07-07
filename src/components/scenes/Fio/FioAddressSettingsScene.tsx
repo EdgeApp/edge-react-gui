@@ -7,8 +7,16 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
-import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import {
+  addBundledTxs,
+  getAddBundledTxsFee,
+  getTransferFee
+} from '../../../util/FioAddressUtils'
+import {
+  logEvent,
+  TrackingEventName,
+  TrackingValues
+} from '../../../util/tracking'
 import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -17,7 +25,12 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { SendScene2Params } from '../SendScene2'
@@ -53,7 +66,10 @@ type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 /**
  * FIO "Reload and Transfer" scene.
  */
-export class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
+export class FioAddressSettingsComponent extends React.Component<
+  Props,
+  LocalState
+> {
   state: LocalState = {
     showAddBundledTxs: false,
     showTransfer: false
@@ -85,7 +101,11 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     // todo: styles for message
     const transferredMessage = `${fioAddressName} ${lstrings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={lstrings.fio_domain_transferred} buttons={{ ok: { label: lstrings.string_ok_cap } }}>
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.fio_domain_transferred}
+        buttons={{ ok: { label: lstrings.string_ok_cap } }}
+      >
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
@@ -104,9 +124,13 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     this.setState({ showTransfer: false, showAddBundledTxs: false })
   }
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+    await getTransferFee(fioWallet)
 
-  onAddBundledTxsSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
+  onAddBundledTxsSubmit = async (
+    fioWallet: EdgeCurrencyWallet,
+    fee: number
+  ) => {
     const { isConnected, route, onLogEvent } = this.props
     const { fioAddressName } = route.params
 
@@ -166,7 +190,9 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: lstrings.fio_address_to_transfer, value: fioAddressName }]
+      infoTiles: [
+        { label: lstrings.fio_address_to_transfer, value: fioAddressName }
+      ]
     }
 
     navigation.navigate('send2', sendParams)
@@ -180,11 +206,23 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
 
     return (
       <SceneWrapper scroll>
-        <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
+        <SceneHeader
+          title={lstrings.title_fio_address_settings}
+          underline
+          withTopMargin
+        />
         <View style={styles.container}>
           <EdgeCard sections>
-            <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-            {bundledTxs != null ? <EdgeRow title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+            <EdgeRow
+              title={lstrings.fio_address_register_form_field_label}
+              body={fioAddressName}
+            />
+            {bundledTxs != null ? (
+              <EdgeRow
+                title={lstrings.fio_address_details_screen_bundled_txs}
+                body={`${bundledTxs}`}
+              />
+            ) : null}
           </EdgeCard>
           {showAddBundledTxs && (
             <FioActionSubmit
@@ -226,7 +264,11 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 }
 
-const FioAddressSettingsConnected = connect<StateProps, DispatchProps, OwnProps>(
+const FioAddressSettingsConnected = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   state => ({
     isConnected: state.network.isConnected
   }),

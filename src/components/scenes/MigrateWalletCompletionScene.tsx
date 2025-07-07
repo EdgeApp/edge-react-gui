@@ -1,12 +1,19 @@
 import { add, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeSpendInfo,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { readSyncedSettings, writeSyncedSettings } from '../../actions/SettingsActions'
+import {
+  readSyncedSettings,
+  writeSyncedSettings
+} from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -50,7 +57,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
       const walletId = createWalletIds[0]
 
       // Find the bundle with the main currency at the end of it
-      const index = bundles.findIndex(bundle => walletId === bundle[0].createWalletIds[0])
+      const index = bundles.findIndex(
+        bundle => walletId === bundle[0].createWalletIds[0]
+      )
 
       if (index === -1) {
         bundles.push([asset]) // create bundle for this walletId
@@ -74,17 +83,25 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   // State to manage row status icons
   const [itemStatus, setItemStatus] = React.useState(() => {
-    return sortedMigrateWalletList.reduce((map: { [key: string]: 'pending' | 'complete' | 'error' }, item) => {
-      map[item.key] = 'pending'
-      return map
-    }, {})
+    return sortedMigrateWalletList.reduce(
+      (map: { [key: string]: 'pending' | 'complete' | 'error' }, item) => {
+        map[item.key] = 'pending'
+        return map
+      },
+      {}
+    )
   })
 
   const flatListRef = React.useRef<FlatList<MigrateWalletItem>>(null)
 
-  const handleItemStatus = (item: MigrateWalletItem, status: 'complete' | 'error') => {
+  const handleItemStatus = (
+    item: MigrateWalletItem,
+    status: 'complete' | 'error'
+  ) => {
     setItemStatus(currentState => ({ ...currentState, [item.key]: status }))
-    const index = sortedMigrateWalletList.findIndex(asset => asset.key === item.key)
+    const index = sortedMigrateWalletList.findIndex(
+      asset => asset.key === item.key
+    )
     flatListRef.current?.scrollToIndex({
       animated: true,
       index,
@@ -121,9 +138,16 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         // Create new wallet
         const createNewWalletPromise = async () => {
           const previouslyCreatedWalletInfo = account.allKeys.find(
-            keys => keys.migratedFromWalletId === oldWalletId && !keys.archived && !keys.deleted && !keys.hidden
+            keys =>
+              keys.migratedFromWalletId === oldWalletId &&
+              !keys.archived &&
+              !keys.deleted &&
+              !keys.hidden
           )
-          let newWallet = previouslyCreatedWalletInfo != null ? currencyWallets[previouslyCreatedWalletInfo.id] : undefined
+          let newWallet =
+            previouslyCreatedWalletInfo != null
+              ? currencyWallets[previouslyCreatedWalletInfo.id]
+              : undefined
 
           let createdNewWallet = false
           if (newWallet == null) {
@@ -136,17 +160,28 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           }
 
           // Change old wallet name
-          if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
+          if (createdNewWallet)
+            await oldWallet.renameWallet(
+              `${oldWalletName}${lstrings.migrate_wallet_old_fragment}`
+            )
 
           const addressInfo = await newWallet.getReceiveAddress({
             tokenId: null
           })
-          const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
+          const newPublicAddress =
+            addressInfo.segwitAddress ?? addressInfo.publicAddress
 
-          const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
+          const tokenItems = bundle.filter(
+            (pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null
+          )
 
           // Enable tokens on new wallet
-          const tokenIdsToEnable = [...new Set([...newWallet.enabledTokenIds, ...tokenItems.map(pair => pair.tokenId)])]
+          const tokenIdsToEnable = [
+            ...new Set([
+              ...newWallet.enabledTokenIds,
+              ...tokenItems.map(pair => pair.tokenId)
+            ])
+          ]
           await newWallet.changeEnabledTokenIds(tokenIdsToEnable)
 
           // Send tokens
@@ -163,9 +198,14 @@ const MigrateWalletCompletionComponent = (props: Props) => {
               const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
               tokenSpendInfo = {
                 ...tokenSpendInfo,
-                spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }]
+                spendTargets: [
+                  { ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }
+                ]
               }
-              const tx = await makeSpendSignAndBroadcast(oldWallet, tokenSpendInfo)
+              const tx = await makeSpendSignAndBroadcast(
+                oldWallet,
+                tokenSpendInfo
+              )
               successfullyTransferredTokenIds.push(item.tokenId)
               const txFee = tx.parentNetworkFee ?? tx.networkFee
               feeTotal = add(feeTotal, txFee)
@@ -177,7 +217,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           }
 
           // Disable empty tokens
-          await oldWallet.changeEnabledTokenIds(tokenIdsToEnable.filter(tokenId => !successfullyTransferredTokenIds.includes(tokenId)))
+          await oldWallet.changeEnabledTokenIds(
+            tokenIdsToEnable.filter(
+              tokenId => !successfullyTransferredTokenIds.includes(tokenId)
+            )
+          )
 
           if (!hasError) {
             // Send mainnet
@@ -195,12 +239,16 @@ const MigrateWalletCompletionComponent = (props: Props) => {
               const maxAmount = await oldWallet.getMaxSpendable(spendInfo)
               spendInfo = {
                 ...spendInfo,
-                spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: maxAmount }]
+                spendTargets: [
+                  { ...spendInfo.spendTargets[0], nativeAmount: maxAmount }
+                ]
               }
               const amountToSend = sub(maxAmount, feeTotal)
               spendInfo = {
                 ...spendInfo,
-                spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }]
+                spendTargets: [
+                  { ...spendInfo.spendTargets[0], nativeAmount: amountToSend }
+                ]
               }
               await makeSpendSignAndBroadcast(oldWallet, spendInfo)
               handleItemStatus(mainnetItem, 'complete')
@@ -237,22 +285,50 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   )
 
   const renderStatus = useHandler((item: MigrateWalletItem) => {
-    let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
-    if (itemStatus[item.key] === 'complete') icon = <IonIcon name="checkmark-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+    let icon = (
+      <ActivityIndicator
+        style={{ paddingRight: theme.rem(0.3125) }}
+        color={theme.iconTappable}
+      />
+    )
+    if (itemStatus[item.key] === 'complete')
+      icon = (
+        <IonIcon
+          name="checkmark-circle-outline"
+          size={theme.rem(1.5)}
+          color={theme.iconTappable}
+        />
+      )
     if (itemStatus[item.key] === 'error')
-      icon = <IonIcon name="warning-outline" style={{ paddingRight: theme.rem(0.0625) }} size={theme.rem(1.5)} color={theme.dangerText} />
+      icon = (
+        <IonIcon
+          name="warning-outline"
+          style={{ paddingRight: theme.rem(0.0625) }}
+          size={theme.rem(1.5)}
+          color={theme.dangerText}
+        />
+      )
     return icon
   })
 
-  const renderRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
-    const { item } = data
-    const { createWalletIds } = item
+  const renderRow = useHandler(
+    (data: ListRenderItemInfo<MigrateWalletItem>) => {
+      const { item } = data
+      const { createWalletIds } = item
 
-    const walletId = createWalletIds[0]
-    const wallet = currencyWallets[walletId]
-    if (wallet == null) return null
-    return <CreateWalletSelectCryptoRow pluginId={item.pluginId} tokenId={item.tokenId} walletName={getWalletName(wallet)} rightSide={renderStatus(item)} />
-  })
+      const walletId = createWalletIds[0]
+      const wallet = currencyWallets[walletId]
+      if (wallet == null) return null
+      return (
+        <CreateWalletSelectCryptoRow
+          pluginId={item.pluginId}
+          tokenId={item.tokenId}
+          walletName={getWalletName(wallet)}
+          rightSide={renderStatus(item)}
+        />
+      )
+    }
+  )
 
   const renderNextButton = React.useMemo(() => {
     return (
@@ -313,12 +389,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const makeSpendSignAndBroadcast = async (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
+const makeSpendSignAndBroadcast = async (
+  wallet: EdgeCurrencyWallet,
+  spendInfo: EdgeSpendInfo
+): Promise<EdgeTransaction> => {
   const edgeUnsignedTransaction = await wallet.makeSpend(spendInfo)
   const edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
-  const edgeBroadcastedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+  const edgeBroadcastedTransaction = await wallet.broadcastTx(
+    edgeSignedTransaction
+  )
   await wallet.saveTx(edgeBroadcastedTransaction)
   return edgeBroadcastedTransaction
 }
 
-export const MigrateWalletCompletionScene = React.memo(MigrateWalletCompletionComponent)
+export const MigrateWalletCompletionScene = React.memo(
+  MigrateWalletCompletionComponent
+)

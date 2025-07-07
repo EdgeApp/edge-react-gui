@@ -11,7 +11,10 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import {
+  getExchangeDenomByCurrencyCode,
+  selectDisplayDenomByCurrencyCode
+} from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
@@ -22,7 +25,12 @@ import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
@@ -82,15 +90,24 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   React.useEffect(() => {
     setLocks(
       stakingStatus.stakedAmounts
-        .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
+        .filter(
+          ({ unlockDate }) =>
+            unlockDate != null &&
+            new Date(unlockDate).getTime() >= new Date().getTime()
+        )
         .map(({ nativeAmount, unlockDate }) => {
-          const displayAmount = convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount)
+          const displayAmount = convertNativeToDenomination(
+            currencyDenomination.multiplier
+          )(nativeAmount)
           const formattedAmount = formatNumber(displayAmount)
           return {
             // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
             id: new Date(unlockDate).toDateString(),
-            // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
-            title: sprintf(lstrings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
+            title: sprintf(
+              lstrings.staking_locked_title,
+              // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
+              formatTimeDate(new Date(unlockDate), true)
+            ),
             amount: formattedAmount
           }
         })
@@ -128,11 +145,18 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   return (
     <>
       <SceneWrapper scroll>
-        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_overview_header, currencyCode)} underline withTopMargin>
+        <SceneHeader
+          style={styles.sceneHeader}
+          title={sprintf(lstrings.staking_overview_header, currencyCode)}
+          underline
+          withTopMargin
+        >
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <View style={styles.container}>
-          <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
+          <EdgeText style={styles.explainerText}>
+            {lstrings.staking_overview_explainer}
+          </EdgeText>
 
           <EdgeCard>
             <EdgeRow title="Currently Staked">
@@ -190,7 +214,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>(
+export const FioStakingOverviewScene = connect<
+  StateProps,
+  DispatchProps,
+  OwnProps
+>(
   (state, ownProps) => {
     const {
       route: {
@@ -205,13 +233,39 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
     const stakedNativeAmount = staked
 
-    const currencyDenomination = selectDisplayDenomByCurrencyCode(state, currencyWallet.currencyConfig, currencyCode)
-    const stakingCryptoAmountFormat = formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(stakedNativeAmount), '0'))
+    const currencyDenomination = selectDisplayDenomByCurrencyCode(
+      state,
+      currencyWallet.currencyConfig,
+      currencyCode
+    )
+    const stakingCryptoAmountFormat = formatNumber(
+      add(
+        convertNativeToDenomination(currencyDenomination.multiplier)(
+          stakedNativeAmount
+        ),
+        '0'
+      )
+    )
 
-    const defaultDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, currencyCode)
-    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakedNativeAmount ?? '0')
-    const stakingFiatBalance = convertCurrency(state, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
-    const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+    const defaultDenomination = getExchangeDenomByCurrencyCode(
+      currencyWallet.currencyConfig,
+      currencyCode
+    )
+    const stakingDefaultCryptoAmount = convertNativeToDenomination(
+      defaultDenomination.multiplier
+    )(stakedNativeAmount ?? '0')
+    const stakingFiatBalance = convertCurrency(
+      state,
+      currencyCode,
+      defaultIsoFiat,
+      stakingDefaultCryptoAmount
+    )
+    const stakingFiatBalanceFormat = formatNumber(
+      stakingFiatBalance && gt(stakingFiatBalance, '0.000001')
+        ? stakingFiatBalance
+        : 0,
+      { toFixed: 2 }
+    )
 
     return {
       currencyWallet,

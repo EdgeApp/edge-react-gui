@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { SharedValue, useSharedValue, withTiming } from 'react-native-reanimated'
+import {
+  SharedValue,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { showError } from '../components/services/AirshipInstance'
 import { triggerHaptic } from '../util/haptic'
@@ -38,7 +42,9 @@ export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
  * The same as `usePendingPress`, but returns an animated value.
  * This looks nicer, and avoids a re-render.
  */
-export function usePendingPressAnimation(onPress?: OnPress): [SharedValue<number>, () => void] {
+export function usePendingPressAnimation(
+  onPress?: OnPress
+): [SharedValue<number>, () => void] {
   const pending = React.useRef(false)
   const animation = useSharedValue(0)
 

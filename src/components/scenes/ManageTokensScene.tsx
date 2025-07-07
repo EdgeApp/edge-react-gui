@@ -64,14 +64,19 @@ function ManageTokensSceneComponent(props: Props) {
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
 
   // Optimize the enabled tokens:
-  const enabledTokenSet = React.useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])
+  const enabledTokenSet = React.useMemo(
+    () => new Set(enabledTokenIds),
+    [enabledTokenIds]
+  )
 
   // Sort the token list:
   const sortedTokenIds = React.useMemo(() => {
     // Make a table of preferred tokenId's:
     const preferredIdSet = new Set<string>()
     for (const currencyCode of PREFERRED_TOKENS) {
-      const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === currencyCode)
+      const tokenId = Object.keys(allTokens).find(
+        tokenId => allTokens[tokenId].currencyCode === currencyCode
+      )
       if (tokenId != null) preferredIdSet.add(tokenId)
     }
 
@@ -112,11 +117,19 @@ function ManageTokensSceneComponent(props: Props) {
 
   // Split the list of tokens based on if there were auto-detected tokens given
   const autoDetectedTokenIds = React.useMemo(
-    () => (newTokenIds ? filteredTokenIds.filter(filteredTokenId => newTokenIds.includes(filteredTokenId)) : []),
+    () =>
+      newTokenIds
+        ? filteredTokenIds.filter(filteredTokenId =>
+            newTokenIds.includes(filteredTokenId)
+          )
+        : [],
     [filteredTokenIds, newTokenIds]
   )
 
-  const extraData = React.useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
+  const extraData = React.useMemo(
+    () => ({ allTokens, enabledTokenSet, customTokens }),
+    [allTokens, enabledTokenSet, customTokens]
+  )
 
   const sectionList = React.useMemo<Section[] | null>(() => {
     if (autoDetectedTokenIds.length === 0) {
@@ -131,7 +144,9 @@ function ManageTokensSceneComponent(props: Props) {
           title: lstrings.managetokens_all_tokens_header,
 
           // Omit the auto-detected tokens we're already showing above
-          data: filteredTokenIds.filter(filteredTokenId => !autoDetectedTokenIds.includes(filteredTokenId))
+          data: filteredTokenIds.filter(
+            filteredTokenId => !autoDetectedTokenIds.includes(filteredTokenId)
+          )
         }
       ]
     }
@@ -171,8 +186,19 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <Title leftIcon={<CryptoIcon sizeRem={1.5} tokenId={null} pluginId={wallet.currencyInfo.pluginId} />} text={walletName} />
-        <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
+        <Title
+          leftIcon={
+            <CryptoIcon
+              sizeRem={1.5}
+              tokenId={null}
+              pluginId={wallet.currencyInfo.pluginId}
+            />
+          }
+          text={walletName}
+        />
+        <EdgeText style={styles.subTitle}>
+          {lstrings.managetokens_top_instructions}
+        </EdgeText>
         <FilledTextInput
           topRem={1}
           placeholder={lstrings.search_tokens}
@@ -183,7 +209,13 @@ function ManageTokensSceneComponent(props: Props) {
         />
       </SceneHeader>
       {sectionList == null ? (
-        <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} style={styles.list} />
+        <FlatList
+          data={filteredTokenIds}
+          extraData={extraData}
+          keyExtractor={keyExtractor}
+          renderItem={renderRow}
+          style={styles.list}
+        />
       ) : (
         <SectionList
           getItemLayout={handleItemLayout}
@@ -205,7 +237,11 @@ function ManageTokensSceneComponent(props: Props) {
               label: lstrings.string_done_cap,
               onPress: navigation.goBack
             }}
-            secondary={wallet.currencyInfo.customTokenTemplate == null ? undefined : { label: lstrings.addtoken_add, onPress: handleAdd }}
+            secondary={
+              wallet.currencyInfo.customTokenTemplate == null
+                ? undefined
+                : { label: lstrings.addtoken_add, onPress: handleAdd }
+            }
             layout="column"
           />
         </View>

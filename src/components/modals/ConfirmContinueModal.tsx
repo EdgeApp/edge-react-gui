@@ -32,7 +32,15 @@ interface Props {
 }
 
 export function ConfirmContinueModal(props: Props) {
-  const { bridge, body, children, isSkippable = false, title, warning, onPress } = props
+  const {
+    bridge,
+    body,
+    children,
+    isSkippable = false,
+    title,
+    warning,
+    onPress
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -55,7 +63,19 @@ export function ConfirmContinueModal(props: Props) {
       title={
         // TODO: warning icon should be part of ModalUi4
         title == null ? null : (
-          <ModalTitle icon={warning == null ? null : <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />}>{title}</ModalTitle>
+          <ModalTitle
+            icon={
+              warning == null ? null : (
+                <Ionicons
+                  name="warning"
+                  size={theme.rem(1.75)}
+                  color={theme.warningIcon}
+                />
+              )
+            }
+          >
+            {title}
+          </ModalTitle>
         )
       }
       scroll
@@ -66,14 +86,33 @@ export function ConfirmContinueModal(props: Props) {
       <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
       <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
-          <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
-          <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
-            {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} accessibilityHint={lstrings.check_icon_hint} />}
+          <EdgeText style={styles.checkboxText}>
+            {lstrings.confirm_continue_modal_button_text}
+          </EdgeText>
+          <View
+            style={[
+              styles.checkCircleContainer,
+              isAgreed ? styles.checkCircleContainerAgreed : undefined
+            ]}
+          >
+            {isAgreed && (
+              <Feather
+                name="check"
+                color={theme.iconTappable}
+                size={theme.rem(0.75)}
+                accessibilityHint={lstrings.check_icon_hint}
+              />
+            )}
           </View>
         </View>
       </EdgeTouchableWithoutFeedback>
       <Fade visible={isAgreed}>
-        <MainButton label={lstrings.confirm_finish} marginRem={1} type="primary" onPress={handleAgreed} />
+        <MainButton
+          label={lstrings.confirm_finish}
+          marginRem={1}
+          type="primary"
+          onPress={handleAgreed}
+        />
       </Fade>
     </EdgeModal>
   )

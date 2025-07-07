@@ -27,7 +27,12 @@ export const ChangePasswordScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <ChangePasswordScreen account={account} context={context} onComplete={handleComplete} onLogEvent={handleLogEvent} />
+      <ChangePasswordScreen
+        account={account}
+        context={context}
+        onComplete={handleComplete}
+        onLogEvent={handleLogEvent}
+      />
     </SceneWrapper>
   )
 }

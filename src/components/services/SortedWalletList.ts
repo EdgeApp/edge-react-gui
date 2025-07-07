@@ -5,7 +5,11 @@ import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates, WalletListAssetItem, WalletListItem } from '../../types/types'
+import {
+  GuiExchangeRates,
+  WalletListAssetItem,
+  WalletListItem
+} from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { normalizeForSearch } from '../../util/utils'
@@ -135,9 +139,12 @@ export function SortedWalletList(props: Props) {
 
   // Phase 3: Check for differences.
   const dispatch = useDispatch()
-  const lastList = React.useRef<WalletListItem[] | undefined>()
+  const lastList = React.useRef<WalletListItem[] | undefined>(undefined)
   React.useEffect(() => {
-    if (lastList.current == null || !matchWalletList(sorted, lastList.current)) {
+    if (
+      lastList.current == null ||
+      !matchWalletList(sorted, lastList.current)
+    ) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })
     }
     lastList.current = sorted
@@ -220,7 +227,11 @@ function stableSort<T>(items: T[], compare: (a: T, b: T) => number): T[] {
  * This uses floating-point math for speed,
  * since rates are approximate and big math is super-expensive.
  */
-function getFiat(item: WalletListAssetItem, isoFiatCurrencyCode: string, exchangeRates: GuiExchangeRates): number {
+function getFiat(
+  item: WalletListAssetItem,
+  isoFiatCurrencyCode: string,
+  exchangeRates: GuiExchangeRates
+): number {
   const { token, wallet } = item
 
   // The core does not yet report balances by tokenId, just by currencyCode:
@@ -235,7 +246,9 @@ function getFiat(item: WalletListAssetItem, isoFiatCurrencyCode: string, exchang
   const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
 
   // Do the conversion:
-  return rate * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
+  return (
+    rate * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
+  )
 }
 
 /**
@@ -253,7 +266,10 @@ function matchWalletList(a: WalletListItem[], b: WalletListItem[]): boolean {
 /**
  * Filters a wallet list using a search string.
  */
-export function searchWalletList(list: WalletListItem[], searchText: string): WalletListItem[] {
+export function searchWalletList(
+  list: WalletListItem[],
+  searchText: string
+): WalletListItem[] {
   if (searchText === '') return list
 
   const target = normalizeForSearch(searchText)
@@ -263,7 +279,8 @@ export function searchWalletList(list: WalletListItem[], searchText: string): Wa
     const { token, wallet } = item
 
     // Grab wallet and token information:
-    const { currencyCode, displayName } = token == null ? wallet.currencyInfo : token
+    const { currencyCode, displayName } =
+      token == null ? wallet.currencyInfo : token
     const name = getWalletName(wallet)
 
     const contractAddress = token?.networkLocation?.contractAddress ?? ''

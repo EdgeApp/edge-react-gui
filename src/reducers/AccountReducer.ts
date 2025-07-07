@@ -1,7 +1,11 @@
 import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
-import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
+import {
+  AccountReferral,
+  Promotion,
+  ReferralCache
+} from '../types/ReferralTypes'
 
 /**
  * App state tied to the core account object.
@@ -26,13 +30,19 @@ const defaultReferralCache: ReferralCache = {
 }
 
 const accountInner = combineReducers<AccountState, Action>({
-  accountReferral(state: AccountReferral = defaultAccountReferral, action: Action): AccountReferral {
+  accountReferral(
+    state: AccountReferral = defaultAccountReferral,
+    action: Action
+  ): AccountReferral {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {
         const { referral } = action.data
         // Activating a promo link can race with the intial load,
         // so keep any promotions we already have:
-        const promotions = mergePromotions(referral.promotions, state.promotions)
+        const promotions = mergePromotions(
+          referral.promotions,
+          state.promotions
+        )
         return { ...referral, promotions }
       }
       case 'ACCOUNT_SWAP_IGNORED': {
@@ -59,7 +69,11 @@ const accountInner = combineReducers<AccountState, Action>({
         }
       }
       case 'ACTIVE_PROMOTION_ADDED': {
-        const activePromotions = state.activePromotions.some(id => id === action.data) ? state.activePromotions : [...state.activePromotions, action.data]
+        const activePromotions = state.activePromotions.some(
+          id => id === action.data
+        )
+          ? state.activePromotions
+          : [...state.activePromotions, action.data]
         return { ...state, activePromotions }
       }
       case 'PROMOTION_ADDED': {
@@ -69,8 +83,12 @@ const accountInner = combineReducers<AccountState, Action>({
       }
       case 'PROMOTION_REMOVED': {
         const installerId = action.data
-        const promotions = state.promotions.filter(promo => promo.installerId !== installerId)
-        const activePromotions = state.activePromotions.filter(id => id !== installerId)
+        const promotions = state.promotions.filter(
+          promo => promo.installerId !== installerId
+        )
+        const activePromotions = state.activePromotions.filter(
+          id => id !== installerId
+        )
         return { ...state, promotions, activePromotions }
       }
       default:
@@ -82,7 +100,10 @@ const accountInner = combineReducers<AccountState, Action>({
     return action.type === 'ACCOUNT_REFERRAL_LOADED' ? true : state
   },
 
-  referralCache(state: ReferralCache = defaultReferralCache, action: Action): ReferralCache {
+  referralCache(
+    state: ReferralCache = defaultReferralCache,
+    action: Action
+  ): ReferralCache {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {
         const { cache } = action.data
@@ -99,7 +120,10 @@ const accountInner = combineReducers<AccountState, Action>({
 })
 
 // Shared logout logic:
-export const account: Reducer<AccountState, Action> = (state: AccountState | undefined, action: Action) => {
+export const account: Reducer<AccountState, Action> = (
+  state: AccountState | undefined,
+  action: Action
+) => {
   if (action.type === 'LOGOUT') {
     return accountInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }

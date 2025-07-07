@@ -8,14 +8,20 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export function CurrencySettingsTitle() {
-  const route = useRoute<RouteProp<'currencySettings' | 'currencyNotificationSettings'>>()
+  const route =
+    useRoute<RouteProp<'currencySettings' | 'currencyNotificationSettings'>>()
   const { currencyInfo } = route.params
   const { displayName, pluginId } = currencyInfo
 
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>
-      <CryptoIcon marginRem={iconPadding} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
+      <CryptoIcon
+        marginRem={iconPadding}
+        pluginId={pluginId}
+        tokenId={null}
+        sizeRem={1.25}
+      />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )

@@ -1,13 +1,32 @@
 import { addBreadcrumb, captureException } from '@sentry/react-native'
 import detectBundler from 'detect-bundler'
-import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
-import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased/rn'
+import {
+  EdgeContext,
+  EdgeContextOptions,
+  EdgeCrashReporter,
+  EdgeFakeWorld,
+  EdgeNativeIo,
+  MakeEdgeContext,
+  MakeFakeEdgeWorld
+} from 'edge-core-js'
+import {
+  debugUri as accountbasedDebugUri,
+  makePluginIo as makeAccountbasedIo,
+  pluginUri as accountbasedUri
+} from 'edge-currency-accountbased/rn'
 import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
 import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
 import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
-import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
-import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
+import {
+  debugUri as currencyPluginsDebugUri,
+  makePluginIo as makeCurrencyPluginsIo,
+  pluginUri as currencyPluginsUri
+} from 'edge-currency-plugins'
+import {
+  debugUri as exchangeDebugUri,
+  pluginUri as exchangeUri
+} from 'edge-exchange-plugins'
 import * as React from 'react'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
@@ -150,12 +169,19 @@ export function EdgeCoreManager(props: Props) {
     console.log('EdgeContext failed', error)
     hideSplash()
     Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} title="Edge core failed to load" message={String(error)} />
+      <ButtonsModal
+        bridge={bridge}
+        buttons={{ ok: { label: lstrings.string_ok_cap } }}
+        title="Edge core failed to load"
+        message={String(error)}
+      />
     )).catch(() => {})
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
-    world.makeEdgeContext({ ...contextOptions }).then(handleContext, handleError)
+    world
+      .makeEdgeContext({ ...contextOptions })
+      .then(handleContext, handleError)
   })
 
   const pluginUris = [
@@ -163,14 +189,19 @@ export function EdgeCoreManager(props: Props) {
     ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
     ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri,
     // For remaining Monero plugin:
-    ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
+    ENV.DEBUG_PLUGINS
+      ? 'http://localhost:8101/plugin-bundle.js'
+      : 'edge-core/plugin-bundle.js'
   ]
 
   let infoServer: string | undefined
   let loginServer: string | undefined
   let syncServer: string | undefined
 
-  if ((ENV.ENABLE_TEST_SERVERS == null && isMaestro()) || ENV.ENABLE_TEST_SERVERS === true) {
+  if (
+    (ENV.ENABLE_TEST_SERVERS == null && isMaestro()) ||
+    ENV.ENABLE_TEST_SERVERS === true
+  ) {
     console.log('Using test servers')
     infoServer = INFO_TEST_SERVER
     loginServer = LOGIN_TEST_SERVER
@@ -194,7 +225,12 @@ export function EdgeCoreManager(props: Props) {
           {...contextOptions}
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_CURRENCY_PLUGINS || ENV.DEBUG_PLUGINS}
+          allowDebugging={
+            ENV.DEBUG_ACCOUNTBASED ||
+            ENV.DEBUG_CORE ||
+            ENV.DEBUG_CURRENCY_PLUGINS ||
+            ENV.DEBUG_PLUGINS
+          }
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}
@@ -204,7 +240,11 @@ export function EdgeCoreManager(props: Props) {
           syncServer={syncServer}
         />
       )}
-      {context == null ? <LoadingSplashScreen /> : <Providers key={`redux${counter.current}`} context={context} />}
+      {context == null ? (
+        <LoadingSplashScreen />
+      ) : (
+        <Providers key={`redux${counter.current}`} context={context} />
+      )}
     </>
   )
 }

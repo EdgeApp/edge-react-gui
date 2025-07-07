@@ -12,7 +12,11 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
+import {
+  getTotalFiatAmountFromExchangeRates,
+  removeIsoPrefix,
+  zeroString
+} from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -45,9 +49,13 @@ export const BalanceCard = (props: Props) => {
   const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const account = useSelector(state => state.core.account)
-  const isBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const isBalanceVisible = useSelector(
+    state => state.ui.settings.isAccountBalanceVisible
+  )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
+  const fiatAmount = useSelector(state =>
+    getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat)
+  )
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   const activeWalletIds = useWatch(account, 'activeWalletIds')
@@ -62,15 +70,28 @@ export const BalanceCard = (props: Props) => {
 
         // Both the wallet and its rate need to be loaded:
         const wallet = currencyWallets[walletId]
-        return wallet != null && exchangeRates[`${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`] != null
+        return (
+          wallet != null &&
+          exchangeRates[
+            `${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`
+          ] != null
+        )
       }),
-    [activeWalletIds, currencyWalletErrors, currencyWallets, exchangeRates, defaultIsoFiat]
+    [
+      activeWalletIds,
+      currencyWalletErrors,
+      currencyWallets,
+      exchangeRates,
+      defaultIsoFiat
+    ]
   )
   const [digitHeight, setDigitHeight] = React.useState(0)
 
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
-  const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
+  const formattedFiat = isBalanceVisible
+    ? formatNumber(fiatAmount, { toFixed: 2 })
+    : lstrings.redacted_placeholder
   const handleToggleAccountBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
@@ -79,7 +100,11 @@ export const BalanceCard = (props: Props) => {
     if (hideNonUkCompliantFeat) {
       // Only one available option for UK compliance:
       const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={lstrings.select_wallet_to_send_from}
+          navigation={navigation}
+        />
       ))
       if (result?.type === 'wallet') {
         const { walletId, tokenId } = result
@@ -90,7 +115,14 @@ export const BalanceCard = (props: Props) => {
         })
       }
     } else {
-      Airship.show(bridge => <TransferModal depositOrSend="send" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+      Airship.show(bridge => (
+        <TransferModal
+          depositOrSend="send"
+          bridge={bridge}
+          account={account}
+          navigation={navigation}
+        />
+      )).catch(() => {})
     }
   })
 
@@ -98,7 +130,12 @@ export const BalanceCard = (props: Props) => {
     if (hideNonUkCompliantFeat) {
       // Only one available option for UK compliance:
       const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={lstrings.select_receive_asset}
+          navigation={navigation}
+          showCreateWallet
+        />
       ))
 
       if (result?.type === 'wallet') {
@@ -107,7 +144,14 @@ export const BalanceCard = (props: Props) => {
         navigation.navigate('request', { tokenId, walletId })
       }
     } else {
-      Airship.show(bridge => <TransferModal depositOrSend="deposit" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
+      Airship.show(bridge => (
+        <TransferModal
+          depositOrSend="deposit"
+          bridge={bridge}
+          account={account}
+          navigation={navigation}
+        />
+      )).catch(() => {})
     }
   })
 
@@ -115,33 +159,58 @@ export const BalanceCard = (props: Props) => {
     setDigitHeight(event.nativeEvent.layout.height)
   })
 
-  const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
+  const balanceString =
+    fiatSymbol.length !== 1
+      ? `${formattedFiat} ${fiatCurrencyCode}`
+      : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
   const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
   return (
     <EdgeCard>
       {/* For passing to the animated number. Do the measurement here to avoid flicker */}
-      <Text style={[styles.balanceText, styles.measuredDigit]} onLayout={handleDigitLayout}>
+      <Text
+        style={[styles.balanceText, styles.measuredDigit]}
+        onLayout={handleDigitLayout}
+      >
         0
       </Text>
-      <EdgeTouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
+      <EdgeTouchableOpacity
+        style={styles.balanceContainer}
+        onPress={handleToggleAccountBalanceVisibility}
+      >
         <View style={styles.titleContainer}>
-          <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
-          <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
+          <EdgeText style={theme.cardTextShadow}>
+            {lstrings.fragment_wallets_balance_text}
+          </EdgeText>
+          <IonIcon
+            name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
+            style={styles.eyeIcon}
+            color={theme.iconTappable}
+            size={theme.rem(1)}
+          />
         </View>
         <View style={styles.balanceTextContainer}>
           {!exchangeRatesReady && zeroString(fiatAmount) ? (
             <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
           ) : animateNumber ? (
-            <AnimatedNumber digitHeight={digitHeight} numberString={balanceString} textStyle={styles.balanceText} />
+            <AnimatedNumber
+              digitHeight={digitHeight}
+              numberString={balanceString}
+              textStyle={styles.balanceText}
+            />
           ) : (
             <EdgeText style={styles.balanceText}>{balanceString}</EdgeText>
           )}
         </View>
       </EdgeTouchableOpacity>
       {onViewAssetsPress == null ? null : (
-        <EdgeTouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
-          <EdgeText style={styles.tappableText}>{lstrings.view_assets}</EdgeText>
+        <EdgeTouchableOpacity
+          style={styles.rightButtonContainer}
+          onPress={onViewAssetsPress}
+        >
+          <EdgeText style={styles.tappableText}>
+            {lstrings.view_assets}
+          </EdgeText>
         </EdgeTouchableOpacity>
       )}
 

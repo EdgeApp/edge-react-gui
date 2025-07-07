@@ -9,7 +9,12 @@ describe('EdgeText', () => {
   it('should render with some props', () => {
     const rendered = render(
       <FakeProviders>
-        <EdgeText ellipsizeMode="tail" numberOfLines={2} style={{}} disableFontScaling={false}>
+        <EdgeText
+          ellipsizeMode="tail"
+          numberOfLines={2}
+          style={{}}
+          disableFontScaling={false}
+        >
           Hello world
         </EdgeText>
       </FakeProviders>

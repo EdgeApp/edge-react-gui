@@ -14,12 +14,20 @@ describe('parseMarkedText', () => {
   it('Should emphases text', () => {
     const result = parseMarkedText(`I *am* emphasized`)
 
-    asTuple(asValue('I '), asJsxElement(asValue('am')), asValue(' emphasized'))(result)
+    asTuple(
+      asValue('I '),
+      asJsxElement(asValue('am')),
+      asValue(' emphasized')
+    )(result)
   })
 
   it('Should ignore unbalanced markers characters text', () => {
     const result = parseMarkedText(`I *am* emphasized. And*, I am not.`)
-    asTuple(asValue('I '), asJsxElement(asValue('am')), asValue(' emphasized. And*, I am not.'))(result)
+    asTuple(
+      asValue('I '),
+      asJsxElement(asValue('am')),
+      asValue(' emphasized. And*, I am not.')
+    )(result)
 
     const result2 = parseMarkedText(`This is an * (asterisk)`)
     asTuple(asValue('This is an * (asterisk)'))(result2)

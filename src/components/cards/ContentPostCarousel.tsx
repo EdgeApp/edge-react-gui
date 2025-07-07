@@ -20,7 +20,16 @@ export const ContentPostCarousel = (props: Props) => {
   const { width } = useSafeAreaFrame()
   const theme = useTheme()
 
-  const renderContentPost: ListRenderItem<ContentPost> = useHandler(({ item }) => <ContentPostCard contentPost={item} />)
+  const renderContentPost: ListRenderItem<ContentPost> = useHandler(
+    ({ item }) => <ContentPostCard contentPost={item} />
+  )
 
-  return <EdgeCarousel data={contentPosts} renderItem={renderContentPost} height={theme.rem(13)} width={width} />
+  return (
+    <EdgeCarousel
+      data={contentPosts}
+      renderItem={renderContentPost}
+      height={theme.rem(13)}
+      width={width}
+    />
+  )
 }

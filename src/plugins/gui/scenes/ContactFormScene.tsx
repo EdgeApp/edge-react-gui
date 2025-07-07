@@ -7,7 +7,11 @@ import { Paragraph } from '../../../components/themed/EdgeText'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { asEmailContactInfo, EMAIL_CONTACT_FORM_DISKLET_NAME, EmailContactInfo } from '../../../types/FormTypes'
+import {
+  asEmailContactInfo,
+  EMAIL_CONTACT_FORM_DISKLET_NAME,
+  EmailContactInfo
+} from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
@@ -16,7 +20,11 @@ import { GuiFormField } from '../components/GuiFormField'
 export interface FiatPluginEmailFormParams {
   message?: string
   onClose: () => void
-  onSubmit: (email: string, firstName: string, lastName: string) => Promise<void>
+  onSubmit: (
+    email: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<void>
 }
 
 interface Props extends BuyTabSceneProps<'guiPluginContactForm'> {}
@@ -77,7 +85,11 @@ export const ContactFormScene = React.memo((props: Props) => {
         firstName,
         lastName
       }
-      await setDiskletForm(disklet, EMAIL_CONTACT_FORM_DISKLET_NAME, contactInfo)
+      await setDiskletForm(
+        disklet,
+        EMAIL_CONTACT_FORM_DISKLET_NAME,
+        contactInfo
+      )
     } catch (error) {
       console.warn(`Error saving contact form: ${String(error)}`)
       // Continue with submission even if saving fails
@@ -91,7 +103,11 @@ export const ContactFormScene = React.memo((props: Props) => {
   useAsyncEffect(
     async () => {
       try {
-        const savedContactInfo = await getDiskletFormData(disklet, EMAIL_CONTACT_FORM_DISKLET_NAME, asEmailContactInfo)
+        const savedContactInfo = await getDiskletFormData(
+          disklet,
+          EMAIL_CONTACT_FORM_DISKLET_NAME,
+          asEmailContactInfo
+        )
         if (savedContactInfo != null) {
           setEmail(savedContactInfo.email)
           setFirstName(savedContactInfo.firstName)
@@ -109,10 +125,29 @@ export const ContactFormScene = React.memo((props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
       <SceneContainer headerTitle={lstrings.enter_contact_info}>
-        {params.message == null ? null : <Paragraph>{params.message}</Paragraph>}
-        <GuiFormField fieldType="text" autofocus label={lstrings.form_field_title_first_name} onChangeText={setFirstName} value={firstName} />
-        <GuiFormField fieldType="text" label={lstrings.form_field_title_last_name} onChangeText={setLastName} value={lastName} />
-        <GuiFormField fieldType="text" label={lstrings.form_field_title_email_address} onChangeText={handleEmailChange} value={email} error={emailError} />
+        {params.message == null ? null : (
+          <Paragraph>{params.message}</Paragraph>
+        )}
+        <GuiFormField
+          fieldType="text"
+          autofocus
+          label={lstrings.form_field_title_first_name}
+          onChangeText={setFirstName}
+          value={firstName}
+        />
+        <GuiFormField
+          fieldType="text"
+          label={lstrings.form_field_title_last_name}
+          onChangeText={setLastName}
+          value={lastName}
+        />
+        <GuiFormField
+          fieldType="text"
+          label={lstrings.form_field_title_email_address}
+          onChangeText={handleEmailChange}
+          value={email}
+          error={emailError}
+        />
         <SceneButtons
           primary={{
             label: lstrings.submit,

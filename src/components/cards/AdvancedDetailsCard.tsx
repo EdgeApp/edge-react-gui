@@ -28,7 +28,10 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 export class AdvancedDetailsCardComponent extends PureComponent<Props> {
-  getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
+  getRecipientAddress = () =>
+    this.props.transaction.spendTargets
+      ? this.props.transaction.spendTargets[0].publicAddress
+      : ''
 
   openUrl = () => {
     const { url } = this.props
@@ -48,10 +51,14 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     const { networkFeeOption, requestedCustomFee } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
-      return `${lstrings.mining_fee_custom_label_choice}\n${this.renderFees(requestedCustomFee)}`
+      return `${lstrings.mining_fee_custom_label_choice}\n${this.renderFees(
+        requestedCustomFee
+      )}`
     }
 
-    return networkFeeOption != null ? feeString[networkFeeOption] : lstrings.mining_fee_standard_label_choice
+    return networkFeeOption != null
+      ? feeString[networkFeeOption]
+      : lstrings.mining_fee_standard_label_choice
   }
 
   renderFees(fees: any = {}): string {
@@ -59,8 +66,13 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
 
     for (const feeKey of Object.keys(fees)) {
       // @ts-expect-error
-      const feeFullString = `${localizedFeeText[feeKey] ?? feeKey} ${fees[feeKey]}`
-      feeValueText = feeValueText === '' ? feeValueText + feeFullString : feeValueText + `\n${feeFullString}`
+      const feeFullString = `${localizedFeeText[feeKey] ?? feeKey} ${
+        fees[feeKey]
+      }`
+      feeValueText =
+        feeValueText === ''
+          ? feeValueText + feeFullString
+          : feeValueText + `\n${feeFullString}`
     }
 
     return feeValueText
@@ -68,7 +80,15 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
 
   render() {
     const { url } = this.props
-    const { feeRateUsed, networkFeeOption, ourReceiveAddresses, signedTx, txid, txSecret, deviceDescription } = this.props.transaction
+    const {
+      feeRateUsed,
+      networkFeeOption,
+      ourReceiveAddresses,
+      signedTx,
+      txid,
+      txSecret,
+      deviceDescription
+    } = this.props.transaction
     const recipientAddress = this.getRecipientAddress()
     let receiveAddressesString
     if (ourReceiveAddresses != null && ourReceiveAddresses.length > 0) {
@@ -85,10 +105,32 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
             onPress={this.openUrl}
           />
         )}
-        {receiveAddressesString != null && <EdgeRow rightButtonType="copy" title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
-        {networkFeeOption != null && <EdgeRow title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
-        {feeRateUsed != null && <EdgeRow title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
-        {txSecret != null && <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
+        {receiveAddressesString != null && (
+          <EdgeRow
+            rightButtonType="copy"
+            title={lstrings.my_receive_addresses_title}
+            body={receiveAddressesString}
+          />
+        )}
+        {networkFeeOption != null && (
+          <EdgeRow
+            title={lstrings.transaction_details_advance_details_fee_setting}
+            body={this.renderFeeOptions()}
+          />
+        )}
+        {feeRateUsed != null && (
+          <EdgeRow
+            title={lstrings.transaction_details_advance_details_fee_used}
+            body={this.renderFees(feeRateUsed)}
+          />
+        )}
+        {txSecret != null && (
+          <EdgeRow
+            rightButtonType="copy"
+            title={lstrings.transaction_details_advance_details_txSecret}
+            body={txSecret}
+          />
+        )}
         {txSecret != null && recipientAddress !== '' && txid !== '' && (
           <EdgeRow
             rightButtonType="touchable"
@@ -98,10 +140,20 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
           />
         )}
         {signedTx != null && signedTx !== '' ? (
-          <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
+          <EdgeRow
+            rightButtonType="copy"
+            title={lstrings.transaction_details_advance_details_raw_txbytes}
+            body={signedTx}
+            maximumHeight="small"
+          />
         ) : null}
 
-        {deviceDescription != null && <EdgeRow title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
+        {deviceDescription != null && (
+          <EdgeRow
+            title={lstrings.transaction_details_advance_details_device}
+            body={deviceDescription}
+          />
+        )}
       </EdgeCard>
     )
   }

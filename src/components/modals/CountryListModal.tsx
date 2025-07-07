@@ -17,17 +17,28 @@ interface Props {
   bridge: AirshipBridge<string>
 }
 
-export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props) => {
+export const CountryListModal = ({
+  countryCode: rawCountryCode,
+  bridge
+}: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const countryCode = rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
+  const countryCode =
+    rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
 
   const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
     const source = { uri: `${FLAG_LOGO_URL}/${logoName}.png` }
 
-    return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
+    return (
+      <SelectableRow
+        icon={<FastImage source={source} style={styles.image} />}
+        subTitle={alpha}
+        title={name}
+        onPress={() => bridge.resolve(alpha)}
+      />
+    )
   }
 
   const rowDataFilter = (searchText: string, country: CountryData) => {
@@ -49,7 +60,9 @@ export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props)
 
   const handleSubmitEditing = useHandler((text: string) => {
     // Filter the countryCodes array based on the input text
-    const filteredCountries = countryCodes.filter(country => rowDataFilter(text, country))
+    const filteredCountries = countryCodes.filter(country =>
+      rowDataFilter(text, country)
+    )
 
     // Resolve the first filtered country's alpha-2 code
     if (filteredCountries.length > 0) {

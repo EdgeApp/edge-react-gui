@@ -15,7 +15,9 @@ export function normalizeError(error: unknown): Error {
   }
   if (Array.isArray(error)) {
     const normalizedErrors = error.map(normalizeError)
-    const normalizedMessage = `[${normalizedErrors.map(e => e.message).join(', ')}]`
+    const normalizedMessage = `[${normalizedErrors
+      .map(e => e.message)
+      .join(', ')}]`
     return new AggregateErrorFix(normalizedErrors, normalizedMessage)
   }
 

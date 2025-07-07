@@ -19,10 +19,10 @@ tags:
 
 - extendedWaitUntil:
     visible: "Wallets"
-    timeout: 120000
+    timeout: 15000
 - extendedWaitUntil:
     visible: "My XRP"
-    timeout: 120000
+    timeout: 15000
 - assertVisible:
     text: "Exchange"
 - tapOn: "Exchange"

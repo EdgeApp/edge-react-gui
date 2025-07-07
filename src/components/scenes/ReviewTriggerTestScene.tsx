@@ -2,7 +2,10 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
-import { readLocalAccountSettings, writeLocalAccountSettings } from '../../actions/LocalSettingsActions'
+import {
+  readLocalAccountSettings,
+  writeLocalAccountSettings
+} from '../../actions/LocalSettingsActions'
 import {
   ACCOUNT_UPGRADE_DAYS_THRESHOLD,
   DEPOSIT_AMOUNT_THRESHOLD,
@@ -42,7 +45,9 @@ export const ReviewTriggerTestScene = (props: Props) => {
   // Get current account from Redux state
   const account = useSelector((state: RootState) => state.core.account)
 
-  const [reviewData, setReviewData] = useState<ReviewTriggerData | undefined>(undefined)
+  const [reviewData, setReviewData] = useState<ReviewTriggerData | undefined>(
+    undefined
+  )
 
   const [depositAmount, setDepositAmount] = useState('0')
 
@@ -130,12 +135,17 @@ export const ReviewTriggerTestScene = (props: Props) => {
   // Handler for tracking app usage after upgrade
   const handleTrackAppUsageAfterUpgrade = useHandler(async () => {
     try {
-      const newDate = await Airship.show<Date | undefined>(bridge => <DateModal bridge={bridge} initialValue={new Date()} />)
+      const newDate = await Airship.show<Date | undefined>(bridge => (
+        <DateModal bridge={bridge} initialValue={new Date()} />
+      ))
       await dispatch(trackAppUsageAfterUpgrade(newDate))
       showToast('Tracked app usage after upgrade')
       await refreshReviewData()
     } catch (error) {
-      console.log('Error tracking app usage after upgrade:', JSON.stringify(error))
+      console.log(
+        'Error tracking app usage after upgrade:',
+        JSON.stringify(error)
+      )
       showToast('Error tracking app usage after upgrade')
     }
   })
@@ -148,7 +158,10 @@ export const ReviewTriggerTestScene = (props: Props) => {
 
       // Remove review trigger data if it exists
       if (settings.reviewTrigger != null) {
-        await writeLocalAccountSettings(account, { ...settings, reviewTrigger: asReviewTriggerData({}) })
+        await writeLocalAccountSettings(account, {
+          ...settings,
+          reviewTrigger: asReviewTriggerData({})
+        })
         showToast('Reset review trigger data')
         await refreshReviewData()
       } else {
@@ -163,7 +176,14 @@ export const ReviewTriggerTestScene = (props: Props) => {
   // Handler for setting next trigger date
   const handleSetNextTriggerDate = useHandler(async () => {
     const date = await Airship.show<Date | undefined>(bridge => (
-      <DateModal bridge={bridge} initialValue={reviewData?.nextTriggerDate != null ? new Date(reviewData.nextTriggerDate) : new Date()} />
+      <DateModal
+        bridge={bridge}
+        initialValue={
+          reviewData?.nextTriggerDate != null
+            ? new Date(reviewData.nextTriggerDate)
+            : new Date()
+        }
+      />
     ))
     if (date != null) {
       try {
@@ -201,24 +221,35 @@ export const ReviewTriggerTestScene = (props: Props) => {
                 Swap Count: {reviewData.swapCount} / {SWAP_COUNT_THRESHOLD}
               </EdgeText>
               <EdgeText style={styles.statusText}>
-                Deposit Amount: ${reviewData.depositAmountUsd.toFixed(2)} / ${DEPOSIT_AMOUNT_THRESHOLD}
+                Deposit Amount: ${reviewData.depositAmountUsd.toFixed(2)} / $
+                {DEPOSIT_AMOUNT_THRESHOLD}
               </EdgeText>
               <EdgeText style={styles.statusText}>
-                Transaction Count: {reviewData.transactionCount} / {TRANSACTION_COUNT_THRESHOLD}
+                Transaction Count: {reviewData.transactionCount} /{' '}
+                {TRANSACTION_COUNT_THRESHOLD}
               </EdgeText>
               <EdgeText style={styles.statusText}>
-                Fiat Purchase Count: {reviewData.fiatPurchaseCount} / {FIAT_PURCHASE_COUNT_THRESHOLD}
-              </EdgeText>
-              <EdgeText style={styles.statusText}>Account Upgraded: {reviewData.accountUpgraded ? 'Yes' : 'No'}</EdgeText>
-              <EdgeText style={styles.statusText}>
-                Days Since Upgrade: {reviewData.daysSinceUpgrade.length} / {ACCOUNT_UPGRADE_DAYS_THRESHOLD}
+                Fiat Purchase Count: {reviewData.fiatPurchaseCount} /{' '}
+                {FIAT_PURCHASE_COUNT_THRESHOLD}
               </EdgeText>
               <EdgeText style={styles.statusText}>
-                Next Trigger Date: {reviewData.nextTriggerDate != null ? new Date(reviewData.nextTriggerDate).toISOString() : 'Not set'}
+                Account Upgraded: {reviewData.accountUpgraded ? 'Yes' : 'No'}
+              </EdgeText>
+              <EdgeText style={styles.statusText}>
+                Days Since Upgrade: {reviewData.daysSinceUpgrade.length} /{' '}
+                {ACCOUNT_UPGRADE_DAYS_THRESHOLD}
+              </EdgeText>
+              <EdgeText style={styles.statusText}>
+                Next Trigger Date:{' '}
+                {reviewData.nextTriggerDate != null
+                  ? new Date(reviewData.nextTriggerDate).toISOString()
+                  : 'Not set'}
               </EdgeText>
             </>
           ) : (
-            <EdgeText style={styles.statusText}>No review trigger data</EdgeText>
+            <EdgeText style={styles.statusText}>
+              No review trigger data
+            </EdgeText>
           )}
         </EdgeCard>
         <EdgeButton label="Request Review" onPress={handleRequestReview} />
@@ -238,17 +269,32 @@ export const ReviewTriggerTestScene = (props: Props) => {
 
         {/* Counts section */}
         <SectionHeader leftTitle="Counts" />
-        <EdgeButton label="Increment Transaction Count" onPress={handleUpdateTransactionCount} />
-        <EdgeButton label="Increment Fiat Purchase Count" onPress={handleUpdateFiatPurchaseCount} />
+        <EdgeButton
+          label="Increment Transaction Count"
+          onPress={handleUpdateTransactionCount}
+        />
+        <EdgeButton
+          label="Increment Fiat Purchase Count"
+          onPress={handleUpdateFiatPurchaseCount}
+        />
 
         {/* Account upgrade section */}
         <SectionHeader leftTitle="Account Upgrade Actions" />
-        <EdgeButton label="Mark Account Upgraded" onPress={handleMarkAccountUpgraded} />
-        <EdgeButton label="Track App Usage After Upgrade" onPress={handleTrackAppUsageAfterUpgrade} />
+        <EdgeButton
+          label="Mark Account Upgraded"
+          onPress={handleMarkAccountUpgraded}
+        />
+        <EdgeButton
+          label="Track App Usage After Upgrade"
+          onPress={handleTrackAppUsageAfterUpgrade}
+        />
 
         {/* Next trigger date section */}
         <SectionHeader leftTitle="Next Trigger Date" />
-        <EdgeButton label="Set Next Trigger Date" onPress={handleSetNextTriggerDate} />
+        <EdgeButton
+          label="Set Next Trigger Date"
+          onPress={handleSetNextTriggerDate}
+        />
 
         {/* Data management section */}
         <SectionHeader leftTitle="Data Management" />

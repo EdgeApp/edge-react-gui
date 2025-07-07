@@ -33,16 +33,30 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
 
   const handlePress = React.useCallback(() => onPress(), [onPress])
 
-  const renderInitial = () => (paymentMethod == null && wallet == null ? <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText> : null)
+  const renderInitial = () =>
+    paymentMethod == null && wallet == null ? (
+      <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText>
+    ) : null
 
   const renderAccount = () => (
     <View style={styles.currencyRow}>
       {paymentMethod != null ? (
-        <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} />
+        <PaymentMethodRow
+          paymentMethod={paymentMethod}
+          pluginId="wyre"
+          marginRem={[0, 0.5, 0, 0.5]}
+        />
       ) : customAsset != null ? (
-        <CustomAssetRow customAsset={customAsset} marginRem={[0, 0.5, 0, 0.5]} />
+        <CustomAssetRow
+          customAsset={customAsset}
+          marginRem={[0, 0.5, 0, 0.5]}
+        />
       ) : wallet == null ? null : (
-        <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
+        <CurrencyRow
+          tokenId={tokenId}
+          wallet={wallet}
+          marginRem={[0, 0.5, 0, 0.5]}
+        />
       )}
     </View>
   )

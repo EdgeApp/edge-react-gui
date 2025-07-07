@@ -22,7 +22,15 @@ import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
 import { TappableCard } from './TappableCard'
 
-const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine; iconUri: string; onPress: () => void }) => {
+const LoanSummaryCardComponent = ({
+  borrowEngine,
+  iconUri,
+  onPress
+}: {
+  borrowEngine: BorrowEngine
+  iconUri: string
+  onPress: () => void
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -32,7 +40,9 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const syncRatio = useWatch(borrowEngine, 'syncRatio')
   const isLoading = syncRatio < 1
 
-  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const isoFiatCurrencyCode = useSelector(
+    state => state.ui.settings.defaultIsoFiat
+  )
   const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
@@ -58,7 +68,9 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
 
   try {
     // TODO: Calculate amount-adjusted cumulative interest
-    const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
+    const displayInterestTotal = toPercentString(
+      debts.length === 0 ? '0' : debts[0].apr
+    )
 
     return (
       <Space aroundRem={0.5}>
@@ -66,20 +78,32 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
         <Peek isShown={!isLoading}>
           <TappableCard onPress={onPress}>
             <View style={styles.cardContainer}>
-              {isDevMode ? <EdgeText>{`${currencyWallet.name}`}</EdgeText> : null}
+              {isDevMode ? (
+                <EdgeText>{`${currencyWallet.name}`}</EdgeText>
+              ) : null}
               <View style={styles.row}>
                 <FastImage style={styles.icon} source={{ uri: iconUri }} />
-                <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
+                <EdgeText style={styles.textMain}>
+                  {displayBorrowTotal}
+                </EdgeText>
                 <EdgeText>{fiatCurrencyCode}</EdgeText>
               </View>
               <View style={styles.spacedRow}>
                 <View style={styles.column}>
-                  <EdgeText style={styles.textSecondary}>{lstrings.loan_collateral_value}</EdgeText>
-                  <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
+                  <EdgeText style={styles.textSecondary}>
+                    {lstrings.loan_collateral_value}
+                  </EdgeText>
+                  <EdgeText style={styles.textPrimary}>
+                    {displayCollateralTotal}
+                  </EdgeText>
                 </View>
                 <View style={styles.column}>
-                  <EdgeText style={styles.textSecondary}>{lstrings.loan_interest_rate}</EdgeText>
-                  <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
+                  <EdgeText style={styles.textSecondary}>
+                    {lstrings.loan_interest_rate}
+                  </EdgeText>
+                  <EdgeText style={styles.textPrimary}>
+                    {displayInterestTotal}
+                  </EdgeText>
                 </View>
               </View>
             </View>
@@ -91,7 +115,14 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     showError(err.message)
 
     // Render a failed card
-    return <Alert marginRem={[0.5, 0.5, 0.5, 0.5]} title={lstrings.send_scene_error_title} message={lstrings.loan_failed_loan} type="error" />
+    return (
+      <Alert
+        marginRem={[0.5, 0.5, 0.5, 0.5]}
+        title={lstrings.send_scene_error_title}
+        message={lstrings.loan_failed_loan}
+        type="error"
+      />
+    )
   }
 }
 

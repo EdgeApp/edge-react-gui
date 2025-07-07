@@ -26,12 +26,16 @@ interface Props {
   navigation: NavigationBase
 }
 
+interface NameDates {
+  [fioName: string]: Date
+}
+
 export const FioService = (props: Props) => {
   const { account, navigation } = props
   const dispatch = useDispatch()
 
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
+  const expiredLastChecks = React.useRef<NameDates | undefined>(undefined)
   const expireReminderShown = React.useRef(false)
   const expiredChecking = React.useRef(false)
   const walletsCheckedForExpired = React.useRef<{
@@ -109,12 +113,16 @@ export const FioService = (props: Props) => {
   useAsyncEffect(
     async () => {
       await account.waitForAllWallets()
-      const task = makePeriodicTask(refreshNamesToCheckExpired, EXPIRE_CHECK_TIMEOUT, {
-        onError(e: unknown) {
-          console.error('refreshNamesToCheckExpired error:', e)
-          showDevError(e)
+      const task = makePeriodicTask(
+        refreshNamesToCheckExpired,
+        EXPIRE_CHECK_TIMEOUT,
+        {
+          onError(e: unknown) {
+            console.error('refreshNamesToCheckExpired error:', e)
+            showDevError(e)
+          }
         }
-      })
+      )
       task.start()
 
       return () => task.stop()

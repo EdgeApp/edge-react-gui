@@ -8,7 +8,13 @@ import * as React from 'react'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { getAccounts, getClient, getWalletIdFromSessionNamespace, waitingClients, walletConnectClient } from '../../hooks/useWalletConnect'
+import {
+  getAccounts,
+  getClient,
+  getWalletIdFromSessionNamespace,
+  waitingClients,
+  walletConnectClient
+} from '../../hooks/useWalletConnect'
 import { asLegacyTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
@@ -32,7 +38,10 @@ export const WalletConnectService = (props: Props) => {
     if (session == null) return
     const { currencyWallets } = account
     const accounts = await getAccounts(currencyWallets)
-    const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
+    const walletId = getWalletIdFromSessionNamespace(
+      session.namespaces,
+      accounts
+    )
     if (walletId == null) {
       console.log('walletConnect unrecognized session request')
       return
@@ -41,10 +50,16 @@ export const WalletConnectService = (props: Props) => {
     const wallet = currencyWallets[walletId]
     if (wallet.otherMethods.parseWalletConnectV2Payload == null) return
     try {
-      const parsedPayload = await wallet.otherMethods.parseWalletConnectV2Payload(request.params.request)
-      const { nativeAmount, networkFee, tokenId } = payloadAmounts(parsedPayload)
+      const parsedPayload =
+        await wallet.otherMethods.parseWalletConnectV2Payload(
+          request.params.request
+        )
+      const { nativeAmount, networkFee, tokenId } =
+        payloadAmounts(parsedPayload)
       const iconUri = session.peer.metadata.icons[0] ?? '.svg'
-      const icon = iconUri.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : iconUri
+      const icon = iconUri.endsWith('.svg')
+        ? 'https://content.edge.app/walletConnectLogo.png'
+        : iconUri
       const dApp = {
         peerMeta: { name: session.peer.metadata.name, icons: [icon] }
       }
@@ -70,7 +85,10 @@ export const WalletConnectService = (props: Props) => {
     async () => {
       if (walletConnectClient.client == null) {
         let projectId: string | undefined
-        if (typeof ENV.WALLET_CONNECT_INIT === 'object' && ENV.WALLET_CONNECT_INIT.projectId != null) {
+        if (
+          typeof ENV.WALLET_CONNECT_INIT === 'object' &&
+          ENV.WALLET_CONNECT_INIT.projectId != null
+        ) {
           projectId = ENV.WALLET_CONNECT_INIT.projectId
         }
 
@@ -96,18 +114,29 @@ export const WalletConnectService = (props: Props) => {
           }
         }
       }
-      const handleSessionRequestSync = (event: Web3WalletTypes.SessionRequest) => {
+      const handleSessionRequestSync = (
+        event: Web3WalletTypes.SessionRequest
+      ) => {
         handleSessionRequest(event).catch(err => showError(err))
       }
 
-      if (walletConnectClient.client?.events.listenerCount('session_request') === 0) {
-        walletConnectClient.client.on('session_request', handleSessionRequestSync)
+      if (
+        walletConnectClient.client?.events.listenerCount('session_request') ===
+        0
+      ) {
+        walletConnectClient.client.on(
+          'session_request',
+          handleSessionRequestSync
+        )
       }
       console.log('WalletConnect initialized')
       waitingClients.forEach(f => f(walletConnectClient.client as Web3Wallet))
 
       return () => {
-        walletConnectClient.client?.events.removeListener('session_request', handleSessionRequestSync)
+        walletConnectClient.client?.events.removeListener(
+          'session_request',
+          handleSessionRequestSync
+        )
       }
     },
     [],

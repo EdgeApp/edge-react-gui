@@ -1,5 +1,13 @@
 import { eq } from 'biggystring'
-import { EdgeAccount, EdgeAssetAction, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction, EdgeTxAction } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeAssetAction,
+  EdgeAssetAmount,
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeTransaction,
+  EdgeTxAction
+} from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -40,7 +48,9 @@ export function getSubcategories(): ThunkAction<Promise<void>> {
   }
 }
 
-export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<void>> {
+export function setNewSubcategory(
+  newSubcategory: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -64,7 +74,10 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
  * The category must fit our enum type, or we will use a fallback.
  * The subcategory can be localized and freely edited.
  */
-export function splitCategory(fullCategory: string = '', defaultCategory: Category = 'income'): EdgeCategory {
+export function splitCategory(
+  fullCategory: string = '',
+  defaultCategory: Category = 'income'
+): EdgeCategory {
   if (fullCategory.length > 0 && !fullCategory.includes(':')) {
     fullCategory += ':'
   }
@@ -122,7 +135,10 @@ export interface CategoriesFile {
   categories: string[]
 }
 
-async function writeSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
+async function writeSyncedSubcategories(
+  account: EdgeAccount,
+  subcategories: CategoriesFile
+) {
   const stringifiedSubcategories = JSON.stringify(subcategories)
   try {
     await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
@@ -131,7 +147,9 @@ async function writeSyncedSubcategories(account: EdgeAccount, subcategories: Cat
   }
 }
 
-async function readSyncedSubcategories(account: EdgeAccount): Promise<string[]> {
+async function readSyncedSubcategories(
+  account: EdgeAccount
+): Promise<string[]> {
   try {
     const text = await account.disklet.getText(CATEGORIES_FILENAME)
     const categoriesJson = JSON.parse(text)
@@ -279,18 +297,37 @@ export interface ActionDisplayInfo {
   assetAction?: EdgeAssetAction
 }
 
-export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
-  const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
+export const getTxActionDisplayInfo = (
+  tx: EdgeTransaction,
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet
+): ActionDisplayInfo => {
+  const {
+    assetAction,
+    chainAction,
+    chainAssetAction,
+    metadata,
+    savedAction,
+    swapData,
+    tokenId
+  } = tx
   const { currencyConfig, currencyInfo } = wallet
 
-  const displayName = tokenId == null ? currencyInfo.assetDisplayName : currencyConfig.allTokens[tokenId]?.displayName ?? ''
+  const displayName =
+    tokenId == null
+      ? currencyInfo.assetDisplayName
+      : currencyConfig.allTokens[tokenId]?.displayName ?? ''
 
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
 
-  const getCurrencyCodes = (assets: EdgeAssetAmount[]) => assets.map(asset => getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId))
+  const getCurrencyCodes = (assets: EdgeAssetAmount[]) =>
+    assets.map(asset =>
+      getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId)
+    )
 
-  const isSentTransaction = tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
+  const isSentTransaction =
+    tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
 
   let payeeText: string | undefined
   let edgeCategory: EdgeCategory
@@ -318,7 +355,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   // Override with swapData
   if (swapData != null) {
     const { payoutCurrencyCode } = swapData
-    payeeText = sprintf(lstrings.transaction_details_swap_to_subcat_1s, payoutCurrencyCode)
+    payeeText = sprintf(
+      lstrings.transaction_details_swap_to_subcat_1s,
+      payoutCurrencyCode
+    )
   }
 
   if (action != null && assetAct != null) {
@@ -334,8 +374,12 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         switch (assetActionType) {
           case 'transfer': {
             const txSrc = action.payoutWalletId !== wallet.id
-            const toFromStr = txSrc ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
-            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? displayName
+            const toFromStr = txSrc
+              ? lstrings.transaction_details_swap_to_subcat_1s
+              : lstrings.transaction_details_swap_from_subcat_1s
+            const walletName =
+              account.currencyWallets[action.payoutWalletId]?.name ??
+              displayName
             edgeCategory = {
               category: 'transfer',
               subcategory: sprintf(toFromStr, walletName)
@@ -354,13 +398,26 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'swapOrderFill': {
             // Determine if the swap destination was to a different asset or if the
             // swap source was from a different asset.
-            const txSrcSameAsset = action.fromAsset.tokenId === tokenId && action.fromAsset.pluginId === wallet.currencyInfo.pluginId
-            const toFromStr = txSrcSameAsset ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
-            const otherAsset = txSrcSameAsset ? action.toAsset : action.fromAsset
+            const txSrcSameAsset =
+              action.fromAsset.tokenId === tokenId &&
+              action.fromAsset.pluginId === wallet.currencyInfo.pluginId
+            const toFromStr = txSrcSameAsset
+              ? lstrings.transaction_details_swap_to_subcat_1s
+              : lstrings.transaction_details_swap_from_subcat_1s
+            const otherAsset = txSrcSameAsset
+              ? action.toAsset
+              : action.fromAsset
 
             edgeCategory = {
               category: 'exchange',
-              subcategory: sprintf(toFromStr, getCurrencyCodeWithAccount(account, otherAsset.pluginId, otherAsset.tokenId))
+              subcategory: sprintf(
+                toFromStr,
+                getCurrencyCodeWithAccount(
+                  account,
+                  otherAsset.pluginId,
+                  otherAsset.tokenId
+                )
+              )
             }
             direction = txSrcSameAsset ? 'send' : 'receive'
             break
@@ -377,7 +434,9 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'swapOrderCancel': {
             edgeCategory = {
               category: 'expense',
-              subcategory: sprintf(lstrings.transaction_details_swap_order_cancel)
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_order_cancel
+              )
             }
             direction = 'send'
             break
@@ -392,11 +451,20 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         switch (assetActionType) {
           case 'stake': {
             let subcategory
-            if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_stake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
+            if (action.stakeAssets.length === 1)
+              subcategory = sprintf(
+                lstrings.transaction_details_stake_subcat_1s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(lstrings.transaction_details_stake_subcat_2s, ...getCurrencyCodes(action.stakeAssets))
+              subcategory = sprintf(
+                lstrings.transaction_details_stake_subcat_2s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else {
-              console.warn(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              console.warn(
+                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
+              )
               break
             }
             edgeCategory = { category: 'transfer', subcategory }
@@ -404,11 +472,20 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           case 'stakeOrder': {
-            if (action.stakeAssets.length === 1) notes = sprintf(lstrings.transaction_details_unstake_order_notes_1s, ...getCurrencyCodes(action.stakeAssets))
+            if (action.stakeAssets.length === 1)
+              notes = sprintf(
+                lstrings.transaction_details_unstake_order_notes_1s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else if (action.stakeAssets.length === 2)
-              notes = sprintf(lstrings.transaction_details_unstake_order_notes_2s, ...getCurrencyCodes(action.stakeAssets))
+              notes = sprintf(
+                lstrings.transaction_details_unstake_order_notes_2s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else {
-              console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              console.error(
+                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
+              )
               break
             }
 
@@ -421,15 +498,28 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           }
           case 'claim': {
             let subcategory
-            if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
+            if (action.stakeAssets.length === 1)
+              subcategory = sprintf(
+                lstrings.transaction_details_unstake_subcat_1s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(lstrings.transaction_details_unstake_subcat_2s, ...getCurrencyCodes(action.stakeAssets))
+              subcategory = sprintf(
+                lstrings.transaction_details_unstake_subcat_2s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else {
-              console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              console.error(
+                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
+              )
               break
             }
             edgeCategory = { category: 'transfer', subcategory }
-            if (action.stakeAssets.every(asset => asset.pluginId === currencyInfo.pluginId)) {
+            if (
+              action.stakeAssets.every(
+                asset => asset.pluginId === currencyInfo.pluginId
+              )
+            ) {
               direction = 'receive'
             } else {
               direction = 'send'
@@ -438,11 +528,20 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           }
           case 'unstake': {
             let subcategory
-            if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
+            if (action.stakeAssets.length === 1)
+              subcategory = sprintf(
+                lstrings.transaction_details_unstake_subcat_1s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(lstrings.transaction_details_unstake_subcat_2s, ...getCurrencyCodes(action.stakeAssets))
+              subcategory = sprintf(
+                lstrings.transaction_details_unstake_subcat_2s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else {
-              console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              console.error(
+                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
+              )
               break
             }
             edgeCategory = { category: 'transfer', subcategory }
@@ -451,11 +550,20 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           }
           case 'claimOrder':
           case 'unstakeOrder': {
-            if (action.stakeAssets.length === 1) notes = sprintf(lstrings.transaction_details_unstake_order_notes_1s, ...getCurrencyCodes(action.stakeAssets))
+            if (action.stakeAssets.length === 1)
+              notes = sprintf(
+                lstrings.transaction_details_unstake_order_notes_1s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else if (action.stakeAssets.length === 2)
-              notes = sprintf(lstrings.transaction_details_unstake_order_notes_2s, ...getCurrencyCodes(action.stakeAssets))
+              notes = sprintf(
+                lstrings.transaction_details_unstake_order_notes_2s,
+                ...getCurrencyCodes(action.stakeAssets)
+              )
             else {
-              console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
+              console.error(
+                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
+              )
               break
             }
 
@@ -486,10 +594,15 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'buy': {
             payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
-            const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+            const { fiatCurrencyCode } = cleanFiatCurrencyCode(
+              fiatAsset.fiatCurrencyCode
+            )
             edgeCategory = {
               category: 'exchange',
-              subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode)
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_from_subcat_1s,
+                fiatCurrencyCode
+              )
             }
             direction = 'receive'
             break
@@ -497,10 +610,15 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'sell': {
             payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
-            const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+            const { fiatCurrencyCode } = cleanFiatCurrencyCode(
+              fiatAsset.fiatCurrencyCode
+            )
             edgeCategory = {
               category: 'exchange',
-              subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode)
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_to_subcat_1s,
+                fiatCurrencyCode
+              )
             }
             direction = 'send'
             break
@@ -536,7 +654,10 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         unsupported = true
     }
 
-    if (unsupported) console.error(`Unsupported EdgeTxAction assetAction:assetActionType '${assetAction}:${assetActionType}'`)
+    if (unsupported)
+      console.error(
+        `Unsupported EdgeTxAction assetAction:assetActionType '${assetAction}:${assetActionType}'`
+      )
   }
   const savedData: EdgeMetadata = {
     name: payeeText,
@@ -545,9 +666,18 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   }
 
   const mergedData: EdgeMetadata = {
-    name: metadata?.name != null && metadata.name.length > 0 ? metadata.name : savedData.name,
-    category: metadata?.category != null && metadata.category.length > 0 ? metadata.category : savedData.category,
-    notes: metadata?.notes != null && metadata.notes.length > 0 ? metadata.notes : savedData.notes
+    name:
+      metadata?.name != null && metadata.name.length > 0
+        ? metadata.name
+        : savedData.name,
+    category:
+      metadata?.category != null && metadata.category.length > 0
+        ? metadata.category
+        : savedData.category,
+    notes:
+      metadata?.notes != null && metadata.notes.length > 0
+        ? metadata.notes
+        : savedData.notes
   }
 
   return {

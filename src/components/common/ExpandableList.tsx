@@ -3,7 +3,13 @@ import { Platform, ScrollView, View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -27,9 +33,11 @@ export const ExpandableList = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const [localBridge, setLocalBridge] = React.useState<AirshipBridge<undefined>>()
+  const [localBridge, setLocalBridge] =
+    React.useState<AirshipBridge<undefined>>()
   const [itemHeight, setItemHeight] = React.useState(0)
-  const [dropdownLayoutStyle, setDropdownLayoutStyle] = React.useState<ViewStyle | null>()
+  const [dropdownLayoutStyle, setDropdownLayoutStyle] =
+    React.useState<ViewStyle | null>()
 
   /** To measure the positioning and width of the anchor view */
   const anchorViewRef = React.useRef<View>(null)
@@ -45,14 +53,21 @@ export const ExpandableList = (props: Props) => {
       duration: 250,
       easing: Easing.inOut(Easing.circle)
     }),
-    opacity: isExpanded && items.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 })
+    opacity:
+      isExpanded && items.length > 0
+        ? sAnimationMult.value
+        : withTiming(0, { duration: 500 })
   }))
 
   const aFadeoutStyle = useAnimatedStyle(() => {
     const isShowFade = items.length > maxDisplayedItems && isExpanded
     return {
-      opacity: isShowFade ? withTiming(1, { duration: 500 }) : withTiming(0, { duration: 250 }),
-      height: isShowFade ? withTiming(48, { duration: 500 }) : withTiming(0, { duration: 250 })
+      opacity: isShowFade
+        ? withTiming(1, { duration: 500 })
+        : withTiming(0, { duration: 250 }),
+      height: isShowFade
+        ? withTiming(48, { duration: 500 })
+        : withTiming(0, { duration: 250 })
     }
   })
 
@@ -74,13 +89,31 @@ export const ExpandableList = (props: Props) => {
           setLocalBridge(bridge)
 
           return (
-            <Animated.View style={[styles.dropdownContainer, aContainerHeightStyle, dropdownLayoutStyle]}>
-              <ShadowedView style={[styles.shadowViewStyle, Platform.OS === 'android' && styles.shadowViewStyleAndroidAdjust]}>
-                <ScrollView keyboardShouldPersistTaps="always" style={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+            <Animated.View
+              style={[
+                styles.dropdownContainer,
+                aContainerHeightStyle,
+                dropdownLayoutStyle
+              ]}
+            >
+              <ShadowedView
+                style={[
+                  styles.shadowViewStyle,
+                  Platform.OS === 'android' &&
+                    styles.shadowViewStyleAndroidAdjust
+                ]}
+              >
+                <ScrollView
+                  keyboardShouldPersistTaps="always"
+                  style={styles.scrollContainer}
+                  scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+                >
                   {items}
                 </ScrollView>
                 {!isExpanded ? null : (
-                  <Animated.View style={[styles.fadeoutContainer, aFadeoutStyle]}>
+                  <Animated.View
+                    style={[styles.fadeoutContainer, aFadeoutStyle]}
+                  >
                     <GradientFadeOut />
                   </Animated.View>
                 )}
@@ -119,7 +152,9 @@ export const ExpandableList = (props: Props) => {
     }
   }, [dropdownLayoutStyle, anchorViewRef, theme, isExpanded, widthRem])
 
-  const handleRowLayout = (event: { nativeEvent: { layout: { height: number } } }) => {
+  const handleRowLayout = (event: {
+    nativeEvent: { layout: { height: number } }
+  }) => {
     if (event != null && itemHeight === 0) {
       const { height } = event.nativeEvent.layout
       setItemHeight(height)
@@ -127,7 +162,11 @@ export const ExpandableList = (props: Props) => {
   }
 
   return (
-    <View ref={anchorViewRef} style={styles.anchorContainer} collapsable={false}>
+    <View
+      ref={anchorViewRef}
+      style={styles.anchorContainer}
+      collapsable={false}
+    >
       {items.length === 0 ? null : (
         <View style={styles.dummyMeasureContainer} onLayout={handleRowLayout}>
           {items[0]}

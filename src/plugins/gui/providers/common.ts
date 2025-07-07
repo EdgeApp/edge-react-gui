@@ -1,7 +1,11 @@
 import { asObject, asString } from 'cleaners'
 
 import { FiatPluginRegionCode } from '../fiatPluginTypes'
-import { FiatProviderError, FiatProviderExactRegions, FiatProviderSupportedRegions } from '../fiatProviderTypes'
+import {
+  FiatProviderError,
+  FiatProviderExactRegions,
+  FiatProviderSupportedRegions
+} from '../fiatProviderTypes'
 
 export const RETURN_URL_SUCCESS = 'https://edge.app/redirect/success/'
 export const RETURN_URL_FAIL = 'https://edge.app/redirect/fail/'
@@ -16,7 +20,11 @@ export const NOT_SUCCESS_TOAST_HIDE_MS = 5000
  * @param supportedRegions FiatProviderSupportedRegions object
  * @returns void if supported, throws otherwise
  */
-export const validateRegion = (providerId: string, regionCode: FiatPluginRegionCode, supportedRegions: FiatProviderSupportedRegions): void => {
+export const validateRegion = (
+  providerId: string,
+  regionCode: FiatPluginRegionCode,
+  supportedRegions: FiatProviderSupportedRegions
+): void => {
   const { countryCode, stateProvinceCode } = regionCode
   const countryInfo = supportedRegions[countryCode]
   if (countryInfo == null) return
@@ -41,7 +49,11 @@ export const validateRegion = (providerId: string, regionCode: FiatPluginRegionC
  * @param supportedRegions - The object containing the supported regions for the provider.
  * @throws {FiatProviderError} - If the region is not supported, with an error type of 'regionRestricted'.
  */
-export const validateExactRegion = (providerId: string, regionCode: FiatPluginRegionCode, supportedRegions: FiatProviderExactRegions): void => {
+export const validateExactRegion = (
+  providerId: string,
+  regionCode: FiatPluginRegionCode,
+  supportedRegions: FiatProviderExactRegions
+): void => {
   const { countryCode, stateProvinceCode } = regionCode
   const countryInfo = supportedRegions[countryCode]
   if (countryInfo == null || countryInfo === false) {
@@ -72,7 +84,11 @@ export const validateExactRegion = (providerId: string, regionCode: FiatPluginRe
  * @param stateProvinceCode - The optional state/province code to add.
  * @returns void
  */
-export const addExactRegion = (allowedCountryCodes: FiatProviderExactRegions, countryCode: string, stateProvinceCode?: string): void => {
+export const addExactRegion = (
+  allowedCountryCodes: FiatProviderExactRegions,
+  countryCode: string,
+  stateProvinceCode?: string
+): void => {
   if (stateProvinceCode == null) {
     allowedCountryCodes[countryCode] = true
   } else {

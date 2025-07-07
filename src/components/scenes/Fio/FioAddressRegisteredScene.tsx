@@ -5,7 +5,12 @@ import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 
 export interface FioAddressRegisterSuccessParams {
@@ -47,11 +52,17 @@ export class FioAddressRegistered extends React.Component<Props> {
             <View style={styles.image}>
               <Image source={theme.fioAddressLogo} />
             </View>
-            <Text style={styles.text}>{lstrings.fio_address_details_screen_registered}</Text>
+            <Text style={styles.text}>
+              {lstrings.fio_address_details_screen_registered}
+            </Text>
             <Text style={styles.title}>{fioName}</Text>
             {this.renderExpDate()}
           </View>
-          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList')} label={lstrings.title_fio_names} />
+          <MainButton
+            marginRem={[4, 0, 2]}
+            onPress={() => navigation.navigate('fioAddressList')}
+            label={lstrings.title_fio_names}
+          />
         </View>
       </SceneWrapper>
     )

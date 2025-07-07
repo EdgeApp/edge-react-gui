@@ -35,7 +35,12 @@ interface TransferOption {
  * Renders a modal with descritive options for transferring crypto in/out of
  * Edge, i.e.: buying/selling/sending/receiving crypto
  */
-export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Props) => {
+export const TransferModal = ({
+  account,
+  bridge,
+  depositOrSend,
+  navigation
+}: Props) => {
   const theme = useTheme()
   const style = styles(theme)
   const dispatch = useDispatch()
@@ -52,7 +57,11 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const handleSend = useHandler(async () => {
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={lstrings.select_wallet_to_send_from}
+        navigation={navigation}
+      />
     ))
     if (result?.type === 'wallet') {
       const { walletId, tokenId } = result
@@ -69,7 +78,12 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
     Airship.clear()
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={lstrings.select_receive_asset}
+        navigation={navigation}
+        showCreateWallet
+      />
     ))
 
     if (result?.type === 'wallet') {
@@ -142,10 +156,26 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const options = depositOrSend === 'deposit' ? depositOptions : sendOptions
   return (
-    <EdgeModal bridge={bridge} title={depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle} onCancel={handleCancel}>
+    <EdgeModal
+      bridge={bridge}
+      title={
+        depositOrSend === 'deposit'
+          ? lstrings.loan_fragment_deposit
+          : lstrings.fragment_send_subtitle
+      }
+      onCancel={handleCancel}
+    >
       {options.map((option, index) => {
         const { title, icon, onPress } = option
-        return <SelectableRow marginRem={0.5} key={title} title={title} onPress={onPress} icon={<View style={style.iconContainer}>{icon}</View>} />
+        return (
+          <SelectableRow
+            marginRem={0.5}
+            key={title}
+            title={title}
+            onPress={onPress}
+            icon={<View style={style.iconContainer}>{icon}</View>}
+          />
+        )
       })}
     </EdgeModal>
   )

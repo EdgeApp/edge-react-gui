@@ -183,7 +183,9 @@ interface SpecialCurrencyInfo {
 /*
  * Accepts a walletType or pluginId
  */
-export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo => {
+export const getSpecialCurrencyInfo = (
+  pluginId: string
+): SpecialCurrencyInfo => {
   if (SPECIAL_CURRENCY_INFO[pluginId]) {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
@@ -299,7 +301,8 @@ export const SPECIAL_CURRENCY_INFO: {
   stellar: {
     initWalletName: lstrings.string_first_stellar_wallet_name,
     chainCode: 'XLM',
-    dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
+    dummyPublicAddress:
+      'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
       modalMessage: lstrings.request_xlm_minimum_notification_body,
@@ -320,14 +323,16 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_xrp_minimum_notification_alert_body_1xrp
     },
     displayBuyCrypto: false,
-    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra_point2xrp,
+    tokenActivationAdditionalReserveText:
+      lstrings.activate_wallet_token_scene_body_xrp_extra_point2xrp,
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'XRP'
   },
   monero: {
     initWalletName: lstrings.string_first_monero_wallet_name,
     chainCode: 'XMR',
-    dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
+    dummyPublicAddress:
+      '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false,
     unstoppableDomainsTicker: 'XMR',
     maxSpendTargets: 16
@@ -337,7 +342,8 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ADA',
     noChangeMiningFee: true,
     noMaxSpend: true,
-    dummyPublicAddress: 'addr1qyh498v7479sljadw8mdlmshnlt3n30ewzpqnmvrsz2v8rpqt56tgy6jhzgcc7v8mlh7lhw9a9j2hdlmek4arx2238us9e5fq0',
+    dummyPublicAddress:
+      'addr1qyh498v7479sljadw8mdlmshnlt3n30ewzpqnmvrsz2v8rpqt56tgy6jhzgcc7v8mlh7lhw9a9j2hdlmek4arx2238us9e5fq0',
     isImportKeySupported: true,
     isStakingSupported: true,
     unstoppableDomainsTicker: 'ADA'
@@ -347,7 +353,8 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ADA',
     noChangeMiningFee: true,
     noMaxSpend: true,
-    dummyPublicAddress: 'addr_test1qqke2p8jjn322vrm4pns3w0geks83yk965n2myqt4z5dvrcx5reaxqm5g2yhcn76d67lca5hcgfzun7zssej3ashtnxqkghlfn',
+    dummyPublicAddress:
+      'addr_test1qqke2p8jjn322vrm4pns3w0geks83yk965n2myqt4z5dvrcx5reaxqm5g2yhcn76d67lca5hcgfzun7zssej3ashtnxqkghlfn',
     isImportKeySupported: true
   },
   eos: {
@@ -583,7 +590,8 @@ export const SPECIAL_CURRENCY_INFO: {
   sui: {
     initWalletName: lstrings.string_first_sui_wallet_name,
     chainCode: 'SUI',
-    dummyPublicAddress: '0x9e58c463e1eed8294d1161d90093afa588236064edac6d78960249e834653805',
+    dummyPublicAddress:
+      '0x9e58c463e1eed8294d1161d90093afa588236064edac6d78960249e834653805',
     isImportKeySupported: true,
     noChangeMiningFee: true,
     unstoppableDomainsTicker: 'SUI'
@@ -814,7 +822,8 @@ export const SPECIAL_CURRENCY_INFO: {
   zano: {
     initWalletName: lstrings.string_first_zano_wallet_name,
     chainCode: 'ZANO',
-    dummyPublicAddress: 'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
+    dummyPublicAddress:
+      'ZxDVeKjCvceATxJ75a6BULddbcytgxHweGjRPqioF9pgF9YSUkFe7fo56WgGr6izuPjg74p4iJvPeY4xNntuoerK1WKNMJQoZ',
     noChangeMiningFee: true,
     isImportKeySupported: true,
     maxSpendTargets: 16,
@@ -834,7 +843,8 @@ export const SPECIAL_CURRENCY_INFO: {
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,
     chainCode: 'ZEC',
-    dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
+    dummyPublicAddress:
+      'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     isImportKeySupported: true,
     keysOnlyMode:
@@ -849,12 +859,15 @@ export const SPECIAL_CURRENCY_INFO: {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
         displayDescription: {
-          message: lstrings.create_wallet_import_options_birthday_height_description,
-          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri:
+            'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
         },
         required: true,
         inputType: 'number-pad',
-        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
+        inputValidation: (input: string) =>
+          /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
       }
     ],
     unstoppableDomainsTicker: 'ZEC'
@@ -862,7 +875,8 @@ export const SPECIAL_CURRENCY_INFO: {
   piratechain: {
     initWalletName: lstrings.string_first_piratechain_wallet_name,
     chainCode: 'ARRR',
-    dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
+    dummyPublicAddress:
+      'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
     keysOnlyMode: Platform.OS === 'android' && Platform.constants.Version < 28,
@@ -871,12 +885,15 @@ export const SPECIAL_CURRENCY_INFO: {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
         displayDescription: {
-          message: lstrings.create_wallet_import_options_birthday_height_description,
-          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri:
+            'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
         },
         required: true,
         inputType: 'number-pad',
-        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
+        inputValidation: (input: string) =>
+          /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
       }
     ],
     unstoppableDomainsTicker: 'ARRR'
@@ -931,9 +948,11 @@ export const SPECIAL_CURRENCY_INFO: {
   algorand: {
     initWalletName: lstrings.string_first_algorand_wallet_name,
     chainCode: 'ALGO',
-    dummyPublicAddress: 'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
+    dummyPublicAddress:
+      'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
     noChangeMiningFee: true,
-    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
+    tokenActivationAdditionalReserveText:
+      lstrings.activate_wallet_token_scene_body_algo_extra,
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'algorand',
@@ -1164,5 +1183,16 @@ export const FIO_DOMAIN_DEFAULT = {
 }
 export const FIO_ADDRESS_DELIMITER = '@'
 
-export const UNSTOPPABLE_DOMAINS = ['.coin', '.wallet', '.bitcoin', '.x', '.888', '.nft', '.dao', '.blockchain', '.zil', '.crypto']
+export const UNSTOPPABLE_DOMAINS = [
+  '.coin',
+  '.wallet',
+  '.bitcoin',
+  '.x',
+  '.888',
+  '.nft',
+  '.dao',
+  '.blockchain',
+  '.zil',
+  '.crypto'
+]
 export const ENS_DOMAINS = ['.eth', '.luxe', '.kred', '.xyz', '.art']

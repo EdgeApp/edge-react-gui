@@ -20,7 +20,14 @@ interface Props {
 }
 
 export function IconMessageCard(props: Props) {
-  const { iconOrUri, message, title, testIds, onPress = () => {}, onClose } = props
+  const {
+    iconOrUri,
+    message,
+    title,
+    testIds,
+    onPress = () => {},
+    onClose
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const imageSrc = React.useMemo(() => {
@@ -31,10 +38,22 @@ export function IconMessageCard(props: Props) {
     <ButtonBox marginRem={0.5} onPress={onPress}>
       <EdgeCard>
         <View style={styles.cardContainer}>
-          {typeof iconOrUri === 'string' && imageSrc != null ? <FastImage resizeMode="contain" source={imageSrc} style={styles.icon} /> : iconOrUri}
+          {typeof iconOrUri === 'string' && imageSrc != null ? (
+            <FastImage
+              resizeMode="contain"
+              source={imageSrc}
+              style={styles.icon}
+            />
+          ) : (
+            iconOrUri
+          )}
           <View style={styles.textContainer}>
             {title == null ? null : (
-              <EdgeText testID={testIds.title} numberOfLines={0} style={styles.title}>
+              <EdgeText
+                testID={testIds.title}
+                numberOfLines={0}
+                style={styles.title}
+              >
                 {title}
               </EdgeText>
             )}

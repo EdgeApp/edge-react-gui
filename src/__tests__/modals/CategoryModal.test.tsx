@@ -32,7 +32,10 @@ describe('CategoryModal', () => {
   it('should render with a subcategory', () => {
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <CategoryModal bridge={fakeAirshipBridge} initialCategory="Income:Paycheck" />
+        <CategoryModal
+          bridge={fakeAirshipBridge}
+          initialCategory="Income:Paycheck"
+        />
       </FakeProviders>
     )
 

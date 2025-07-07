@@ -40,11 +40,15 @@ export const core = combineReducers<CoreState, Action>({
   },
 
   context(state: EdgeContext = defaultContext, action: Action): EdgeContext {
-    return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.context : state
+    return action.type === 'CORE/CONTEXT/ADD_CONTEXT'
+      ? action.data.context
+      : state
   },
 
   disklet(state: Disklet = defaultDisklet, action: Action): Disklet {
-    return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.disklet : state
+    return action.type === 'CORE/CONTEXT/ADD_CONTEXT'
+      ? action.data.disklet
+      : state
   },
 
   otpErrorShown(state: boolean = false, action: Action): boolean {
@@ -58,17 +62,25 @@ export const core = combineReducers<CoreState, Action>({
     }
   },
 
-  enabledDetectedTokens(state: { [walletId: string]: string[] } = {}, action: Action): { [walletId: string]: string[] } {
+  enabledDetectedTokens(
+    state: { [walletId: string]: string[] } = {},
+    action: Action
+  ): { [walletId: string]: string[] } {
     switch (action.type) {
       case 'CORE/NEW_TOKENS': {
         const newState = { ...state }
         const { walletId, enablingTokenIds } = action.data
 
-        if (enablingTokenIds.length === 0) showError(`enabledDetectedTokens: Received empty tokens array for ${walletId}`)
+        if (enablingTokenIds.length === 0)
+          showError(
+            `enabledDetectedTokens: Received empty tokens array for ${walletId}`
+          )
 
         if (newState[walletId] != null) {
           // Merge token arrays
-          newState[walletId] = Array.from(new Set([...newState[walletId], ...enablingTokenIds]))
+          newState[walletId] = Array.from(
+            new Set([...newState[walletId], ...enablingTokenIds])
+          )
         } else {
           newState[walletId] = enablingTokenIds
         }

@@ -7,7 +7,10 @@ import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 
-export function handleOtpError(navigation: NavigationBase, otpError: OtpError): ThunkAction<void> {
+export function handleOtpError(
+  navigation: NavigationBase,
+  otpError: OtpError
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account, otpErrorShown } = state.core
@@ -28,9 +31,16 @@ interface ValidatePasswordOptions {
   warningMessage?: string
 }
 
-export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkAction<Promise<boolean>> {
+export function validatePassword(
+  opts: ValidatePasswordOptions = {}
+): ThunkAction<Promise<string | undefined>> {
   return async (dispatch, getState) => {
-    const { message, submitLabel, title = lstrings.confirm_password_text, warningMessage } = opts
+    const {
+      message,
+      submitLabel,
+      title = lstrings.confirm_password_text,
+      warningMessage
+    } = opts
     const state = getState()
     const { account } = state.core
     const password = await Airship.show<string | undefined>(bridge => (
@@ -54,6 +64,6 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
       />
     ))
 
-    return password != null
+    return password
   }
 }

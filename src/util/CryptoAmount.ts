@@ -40,7 +40,9 @@ type ExchangeOrNativeAmountArgs =
     }
 
 // Combines both requirements.
-type CryptoAmountConstructorArgs = AssetBaseArgs & TokenOrCurrencyCodeArgs & ExchangeOrNativeAmountArgs
+type CryptoAmountConstructorArgs = AssetBaseArgs &
+  TokenOrCurrencyCodeArgs &
+  ExchangeOrNativeAmountArgs
 
 /**
  * One-stop shop for any information pertaining to a crypto asset.
@@ -70,7 +72,13 @@ export class CryptoAmount {
    * Must construct CryptoAmount with currencyConfig and one of either: tokenId or currencyCode
    */
   public constructor(args: CryptoAmountConstructorArgs) {
-    const { currencyCode, currencyConfig, exchangeAmount, nativeAmount, tokenId } = args
+    const {
+      currencyCode,
+      currencyConfig,
+      exchangeAmount,
+      nativeAmount,
+      tokenId
+    } = args
     this.currencyConfig = currencyConfig
 
     // Populate tokenId, derived from currencyCode
@@ -78,7 +86,9 @@ export class CryptoAmount {
       // Ensure currencyCode is recognized, if given as a constructor argument.
       const foundTokenId = getTokenId(currencyConfig, currencyCode)
       if (foundTokenId === undefined) {
-        throw new Error(`CryptoAmount: Could not find tokenId for currencyCode: ${currencyCode}, pluginId: ${currencyConfig.currencyInfo.pluginId}.`)
+        throw new Error(
+          `CryptoAmount: Could not find tokenId for currencyCode: ${currencyCode}, pluginId: ${currencyConfig.currencyInfo.pluginId}.`
+        )
       } else {
         this.tokenId = foundTokenId
       }
@@ -91,10 +101,17 @@ export class CryptoAmount {
       try {
         asBiggystring(exchangeAmount.toString())
       } catch (e) {
-        throw new Error(`CryptoAmount: Error instantiating with exchangeAmount: ${String(e)}\n${JSON.stringify(args)}`)
+        throw new Error(
+          `CryptoAmount: Error instantiating with exchangeAmount: ${String(
+            e
+          )}\n${JSON.stringify(args)}`
+        )
       }
 
-      this.nativeAmount = mul(this.getExchangeDenom().multiplier, exchangeAmount.toString())
+      this.nativeAmount = mul(
+        this.getExchangeDenom().multiplier,
+        exchangeAmount.toString()
+      )
       if (this.nativeAmount.includes('.')) {
         this.nativeAmount = this.nativeAmount.split('.')[0]
       }
@@ -119,7 +136,10 @@ export class CryptoAmount {
    * Else, the mainnet, parent, network or chain code.
    */
   get currencyCode(): string {
-    const { currencyCode } = this.tokenId == null ? this.currencyConfig.currencyInfo : this.currencyConfig.allTokens[this.tokenId]
+    const { currencyCode } =
+      this.tokenId == null
+        ? this.currencyConfig.currencyInfo
+        : this.currencyConfig.allTokens[this.tokenId]
     return currencyCode
   }
 
@@ -159,14 +179,21 @@ export class CryptoAmount {
   /**
    * Automatically uses 2 decimal/cent places if unspecified.
    */
-  displayDollarValue(exchangeRates: GuiExchangeRates, precision?: number): string {
+  displayDollarValue(
+    exchangeRates: GuiExchangeRates,
+    precision?: number
+  ): string {
     return this.displayFiatValue(exchangeRates, 'iso:USD', precision)
   }
 
   /**
    * Automatically uses 2 decimal/cent places if unspecified.
    */
-  displayFiatValue(exchangeRates: GuiExchangeRates, isoFiatCode: string, precision?: number) {
+  displayFiatValue(
+    exchangeRates: GuiExchangeRates,
+    isoFiatCode: string,
+    precision?: number
+  ) {
     return this.fiatValue(exchangeRates, isoFiatCode)
       .toFixed(precision ?? 2)
       .toString()
@@ -179,11 +206,17 @@ export class CryptoAmount {
    */
   getExchangeAmount(precision?: number): string {
     const { multiplier } = this.getExchangeDenom()
-    return div(this.nativeAmount, multiplier, precision ?? mulToPrecision(multiplier))
+    return div(
+      this.nativeAmount,
+      multiplier,
+      precision ?? mulToPrecision(multiplier)
+    )
   }
 
   getExchangeDenom(): EdgeDenomination {
     const { allTokens, currencyInfo } = this.currencyConfig
-    return this.tokenId == null ? currencyInfo.denominations[0] : allTokens[this.tokenId].denominations[0]
+    return this.tokenId == null
+      ? currencyInfo.denominations[0]
+      : allTokens[this.tokenId].denominations[0]
   }
 }

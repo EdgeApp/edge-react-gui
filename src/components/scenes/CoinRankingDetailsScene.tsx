@@ -6,10 +6,16 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
+import {
+  createWallet,
+  getUniqueWalletName
+} from '../../actions/CreateWalletActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import { Fontello } from '../../assets/vector/index'
-import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import {
+  WalletListModal,
+  WalletListResult
+} from '../../components/modals/WalletListModal'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -18,10 +24,20 @@ import { useWatch } from '../../hooks/useWatch'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { filterStakePolicies, StakePolicy } from '../../plugins/stake-plugins/types'
+import {
+  filterStakePolicies,
+  StakePolicy
+} from '../../plugins/stake-plugins/types'
 import { defaultWalletStakingState } from '../../reducers/StakingReducer'
-import { getCoingeckoFiat, getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { asCoinRankingData, CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
+import {
+  getCoingeckoFiat,
+  getDefaultFiat
+} from '../../selectors/SettingsSelectors'
+import {
+  asCoinRankingData,
+  CoinRankingData,
+  CoinRankingDataPercentChange
+} from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
@@ -39,7 +55,11 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
+type CoinRankingDataValueType =
+  | string
+  | number
+  | CoinRankingDataPercentChange
+  | undefined
 
 export interface CoinRankingDetailsParams {
   assetId: string
@@ -80,9 +100,21 @@ const COINRANKINGDATA_TITLE_MAP: { [key: string]: string } = {
   allTimeLowDate: '' // Appended to allTimeLow
 }
 
-const PERCENT_CHANGE_DATA_KEYS: string[] = ['hours1', 'hours24', 'days7', 'days30', 'year1']
+const PERCENT_CHANGE_DATA_KEYS: string[] = [
+  'hours1',
+  'hours24',
+  'days7',
+  'days30',
+  'year1'
+]
 
-const COLUMN_LEFT_DATA_KEYS: Array<keyof CoinRankingData> = ['price', 'priceChange24h', 'percentChange', 'high24h', 'low24h']
+const COLUMN_LEFT_DATA_KEYS: Array<keyof CoinRankingData> = [
+  'price',
+  'priceChange24h',
+  'percentChange',
+  'high24h',
+  'low24h'
+]
 
 const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
   'rank',
@@ -105,7 +137,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const walletStakingStateMap = useSelector(state => state.staking.walletStakingMap ?? defaultWalletStakingState)
+  const walletStakingStateMap = useSelector(
+    state => state.staking.walletStakingMap ?? defaultWalletStakingState
+  )
   const countryCode = useSelector(state => state.ui.countryCode)
 
   const currencyConfigMap = useWatch(account, 'currencyConfig')
@@ -122,7 +156,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     if (assetId == null) {
       throw new Error('No currencyCode or coinRankingData provided')
     }
-    const response = await fetchRates(`v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`)
+    const response = await fetchRates(
+      `v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`
+    )
     if (!response.ok) {
       const text = await response.text()
       throw new Error(`Unable to fetch coin ranking data. ${text}`)
@@ -136,7 +172,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const coinRankingData = fetchedCoinRankingData ?? initCoinRankingData
 
-  const { currencyCode: coinRankingCurrencyCode, currencyName } = coinRankingData ?? {}
+  const { currencyCode: coinRankingCurrencyCode, currencyName } =
+    coinRankingData ?? {}
   // `coinRankingCurrencyCode` is lowercase and that breaks a lot of our utility
   // calls
   const currencyCode = coinRankingCurrencyCode?.toUpperCase() ?? ''
@@ -149,14 +186,19 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     // Search for mainnet coins:
     for (const pluginId of Object.keys(account.currencyConfig)) {
       const config = account.currencyConfig[pluginId]
-      if (config.currencyInfo.currencyCode.toLowerCase() === currencyCode.toLowerCase()) out.push({ tokenId: null, pluginId })
+      if (
+        config.currencyInfo.currencyCode.toLowerCase() ===
+        currencyCode.toLowerCase()
+      )
+        out.push({ tokenId: null, pluginId })
     }
     // Search for tokens:
     for (const pluginId of Object.keys(account.currencyConfig)) {
       const config = account.currencyConfig[pluginId]
       for (const tokenId of Object.keys(config.allTokens)) {
         const token = config.allTokens[tokenId]
-        if (token.currencyCode.toLowerCase() === currencyCode.toLowerCase()) out.push({ tokenId, pluginId })
+        if (token.currencyCode.toLowerCase() === currencyCode.toLowerCase())
+          out.push({ tokenId, pluginId })
       }
     }
     return out
@@ -164,7 +206,12 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   /** Find all wallets that can hold this asset */
   const matchingWallets = React.useMemo(
-    () => Object.values(currencyWallets).filter(wallet => matchingEdgeAssets.some(asset => asset.pluginId === wallet.currencyInfo.pluginId)),
+    () =>
+      Object.values(currencyWallets).filter(wallet =>
+        matchingEdgeAssets.some(
+          asset => asset.pluginId === wallet.currencyInfo.pluginId
+        )
+      ),
     [matchingEdgeAssets, currencyWallets]
   )
 
@@ -178,7 +225,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       isStakingSupported(wallet.currencyInfo.pluginId) &&
       walletStakingStateMap[wallet.id] != null &&
       filterStakePolicies(
-        Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(stakePolicy => stakePolicy),
+        Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(
+          stakePolicy => stakePolicy
+        ),
         { wallet, currencyCode }
       ).length > 0
     )
@@ -189,11 +238,19 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     if (coinRankingData != null && matchingWallets.length > 0) {
       // Start with a looser filter that does not include the stake policy,
       // because it has not yet been initialized
-      const uninitializedStakingWallets = matchingWallets.filter(wallet => isStakingSupported(wallet.currencyInfo.pluginId))
+      const uninitializedStakingWallets = matchingWallets.filter(wallet =>
+        isStakingSupported(wallet.currencyInfo.pluginId)
+      )
 
       for (const wallet of uninitializedStakingWallets) {
-        if (walletStakingStateMap[wallet.id] != null && Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0) continue
-        dispatch(updateStakingState(currencyCode, wallet)).catch(err => showError(err))
+        if (
+          walletStakingStateMap[wallet.id] != null &&
+          Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0
+        )
+          continue
+        dispatch(updateStakingState(currencyCode, wallet)).catch(err =>
+          showError(err)
+        )
       }
     }
     // We don't want other dependencies to cause a flood of update requests that
@@ -209,11 +266,15 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       // FIO has special handling
       return []
     }
-    for (const pluginId of pluginIds.filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true)) {
+    for (const pluginId of pluginIds.filter(
+      pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true
+    )) {
       const stakePlugins = await getStakePlugins(pluginId)
 
       for (const stakePlugin of stakePlugins) {
-        for (const stakePolicy of stakePlugin.getPolicies({ pluginId, currencyCode }).filter(stakePolicy => !stakePolicy.deprecated)) {
+        for (const stakePolicy of stakePlugin
+          .getPolicies({ pluginId, currencyCode })
+          .filter(stakePolicy => !stakePolicy.deprecated)) {
           out.push(stakePolicy)
         }
       }
@@ -232,7 +293,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   /** True if currency supports staking, regardless of if wallets are owned */
   const isEarnShown =
-    (allStakePolicies?.length ?? 0) > 0 && matchingEdgeAssets.some(asset => SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true)
+    (allStakePolicies?.length ?? 0) > 0 &&
+    matchingEdgeAssets.some(
+      asset =>
+        SPECIAL_CURRENCY_INFO[asset.pluginId]?.isStakingSupported === true
+    )
 
   const imageUrlObject = React.useMemo(
     () => ({
@@ -251,7 +316,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     }
   }
 
-  const parseCoinRankingData = (dataKey: string, data: CoinRankingDataValueType): string => {
+  const parseCoinRankingData = (
+    dataKey: string,
+    data: CoinRankingDataValueType
+  ): string => {
     // Start with either a plain number string, truncated large number string,
     // or some other alphanumeric string
     const baseString = formatData(data)
@@ -276,19 +344,32 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
-        extendedString = coinRankingData?.marketCapChangePercent24h != null ? ` (${toPercentString(coinRankingData.marketCapChangePercent24h / 100)})` : ''
+        extendedString =
+          coinRankingData?.marketCapChangePercent24h != null
+            ? ` (${toPercentString(
+                coinRankingData.marketCapChangePercent24h / 100
+              )})`
+            : ''
         break
       case 'allTimeHigh': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
         })} ${coingeckoFiat}`
-        return coinRankingData?.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
+        return coinRankingData?.allTimeHighDate != null
+          ? `${fiatString} - ${toLocaleDate(
+              new Date(coinRankingData.allTimeHighDate)
+            )}`
+          : fiatString
       }
       case 'allTimeLow': {
         const fiatString = `${formatFiatString({
           fiatAmount: baseString
         })} ${coingeckoFiat}`
-        return coinRankingData?.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
+        return coinRankingData?.allTimeLowDate != null
+          ? `${fiatString} - ${toLocaleDate(
+              new Date(coinRankingData.allTimeLowDate)
+            )}`
+          : fiatString
       }
       default:
         // If no special modifications, just return simple data formatting
@@ -298,29 +379,66 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     return `${baseString}${extendedString}`
   }
 
-  const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): JSX.Element => {
+  const renderRow = (
+    dataKey: string,
+    data: CoinRankingDataValueType,
+    index: number
+  ): React.ReactElement => {
     return (
-      <EdgeAnim style={styles.row} key={dataKey} enter={{ type: 'fadeInDown', distance: 20 * index }}>
-        <EdgeText style={styles.rowTitle}>{COINRANKINGDATA_TITLE_MAP[dataKey]}</EdgeText>
-        <EdgeText style={styles.rowBody}>{parseCoinRankingData(dataKey, data)}</EdgeText>
+      <EdgeAnim
+        style={styles.row}
+        key={dataKey}
+        enter={{ type: 'fadeInDown', distance: 20 * index }}
+      >
+        <EdgeText style={styles.rowTitle}>
+          {COINRANKINGDATA_TITLE_MAP[dataKey]}
+        </EdgeText>
+        <EdgeText style={styles.rowBody}>
+          {parseCoinRankingData(dataKey, data)}
+        </EdgeText>
       </EdgeAnim>
     )
   }
 
-  const renderRows = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[]): JSX.Element[] => {
+  const renderRows = (
+    coinRankingData: CoinRankingData | CoinRankingDataPercentChange,
+    keysFilter: string[]
+  ): React.ReactElement[] => {
     return renderRowsInner(coinRankingData, keysFilter, 0)
   }
 
-  const renderRowsInner = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[], index: number): JSX.Element[] => {
-    const rows: JSX.Element[] = []
+  const renderRowsInner = (
+    coinRankingData: CoinRankingData | CoinRankingDataPercentChange,
+    keysFilter: string[],
+    index: number
+  ): React.ReactElement[] => {
+    const rows: React.ReactElement[] = []
 
     keysFilter.forEach((key: string) => {
-      if (Object.keys(coinRankingData).some(coinRankingDataKey => coinRankingDataKey === key)) {
+      if (
+        Object.keys(coinRankingData).some(
+          coinRankingDataKey => coinRankingDataKey === key
+        )
+      ) {
         if (key === 'percentChange') {
-          rows.push(...renderRowsInner((coinRankingData as CoinRankingData).percentChange, PERCENT_CHANGE_DATA_KEYS, index))
+          rows.push(
+            ...renderRowsInner(
+              (coinRankingData as CoinRankingData).percentChange,
+              PERCENT_CHANGE_DATA_KEYS,
+              index
+            )
+          )
         } else {
           index++
-          rows.push(renderRow(key, coinRankingData[key as keyof (CoinRankingData | CoinRankingDataPercentChange)], index))
+          rows.push(
+            renderRow(
+              key,
+              coinRankingData[
+                key as keyof (CoinRankingData | CoinRankingDataPercentChange)
+              ],
+              index
+            )
+          )
         }
       }
     })
@@ -345,8 +463,14 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
     // If no wallet exists, auto create one.
     // Only do this if there is only one possible match that we know of
-    if (filteredMatchingWallets.length === 0 && filteredEdgeAssets.length === 1) {
-      const walletName = getUniqueWalletName(account, filteredEdgeAssets[0].pluginId)
+    if (
+      filteredMatchingWallets.length === 0 &&
+      filteredEdgeAssets.length === 1
+    ) {
+      const walletName = getUniqueWalletName(
+        account,
+        filteredEdgeAssets[0].pluginId
+      )
       const targetWallet = await dispatch(
         createWallet(account, {
           name: walletName,
@@ -354,7 +478,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         })
       )
       if (filteredEdgeAssets[0].tokenId != null) {
-        await targetWallet.changeEnabledTokenIds([...targetWallet.enabledTokenIds, filteredEdgeAssets[0].tokenId])
+        await targetWallet.changeEnabledTokenIds([
+          ...targetWallet.enabledTokenIds,
+          filteredEdgeAssets[0].tokenId
+        ])
       }
       return {
         type: 'wallet',
@@ -364,7 +491,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     }
 
     // If only one wallet, auto-select it
-    if (filteredMatchingWallets.length === 1 && filteredEdgeAssets.length === 1) {
+    if (
+      filteredMatchingWallets.length === 1 &&
+      filteredEdgeAssets.length === 1
+    ) {
       return {
         type: 'wallet',
         tokenId: filteredEdgeAssets[0].tokenId,
@@ -374,7 +504,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
     // Else, If multiple wallets, show picker. Tokens also can be added here.
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation as NavigationBase} headerTitle={title} allowedAssets={filteredEdgeAssets} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        navigation={navigation as NavigationBase}
+        headerTitle={title}
+        allowedAssets={filteredEdgeAssets}
+        showCreateWallet
+      />
     ))
     // User aborted the flow. Callers will also noop.
     if (result?.type !== 'wallet') return
@@ -383,7 +519,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleBuyPress = useHandler(async () => {
     if (matchingEdgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult(matchingEdgeAssets, matchingWallets, lstrings.fiat_plugin_select_asset_to_purchase)
+    const forcedWalletResult = await chooseWalletListResult(
+      matchingEdgeAssets,
+      matchingWallets,
+      lstrings.fiat_plugin_select_asset_to_purchase
+    )
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -399,7 +539,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
 
   const handleSellPress = useHandler(async () => {
     if (matchingEdgeAssets.length === 0) return
-    const forcedWalletResult = await chooseWalletListResult(matchingEdgeAssets, matchingWallets, lstrings.fiat_plugin_select_asset_to_sell)
+    const forcedWalletResult = await chooseWalletListResult(
+      matchingEdgeAssets,
+      matchingWallets,
+      lstrings.fiat_plugin_select_asset_to_sell
+    )
     if (forcedWalletResult == null) return
 
     navigation.navigate('edgeTabs', {
@@ -416,7 +560,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const handleSwapPress = useHandler(async () => {
     if (matchingEdgeAssets.length === 0) return
 
-    const walletListResult = await chooseWalletListResult(matchingEdgeAssets, matchingWallets, lstrings.select_wallet)
+    const walletListResult = await chooseWalletListResult(
+      matchingEdgeAssets,
+      matchingWallets,
+      lstrings.select_wallet
+    )
     if (walletListResult == null) return
 
     const { walletId, tokenId } = walletListResult
@@ -461,7 +609,11 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   })
 
   const handleStakePress = useHandler(async () => {
-    const walletListResult = await chooseWalletListResult(edgeStakingAssets, stakingWallets, lstrings.select_wallet)
+    const walletListResult = await chooseWalletListResult(
+      edgeStakingAssets,
+      stakingWallets,
+      lstrings.select_wallet
+    )
     if (walletListResult == null) return
     const { walletId } = walletListResult
 
@@ -485,43 +637,87 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         <View style={styles.container}>
           <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
             <FastImage style={styles.icon} source={imageUrlObject} />
-            <EdgeText style={styles.title}>{`${currencyName} (${currencyCode})`}</EdgeText>
+            <EdgeText
+              style={styles.title}
+            >{`${currencyName} (${currencyCode})`}</EdgeText>
           </EdgeAnim>
           <SwipeChart assetId={coinRankingData.assetId} />
-          <EdgeAnim style={styles.buttonsContainer} visible={matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null} enter={fadeInDown}>
+          <EdgeAnim
+            style={styles.buttonsContainer}
+            visible={
+              matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null
+            }
+            enter={fadeInDown}
+          >
             {hideNonUkCompliantFeat ? null : (
               <>
                 <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
-                  <Fontello name="buy" size={theme.rem(2)} color={theme.primaryText} />
+                  <Fontello
+                    name="buy"
+                    size={theme.rem(2)}
+                    color={theme.primaryText}
+                  />
                 </IconButton>
-                <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
-                  <Fontello name="sell" size={theme.rem(2)} color={theme.primaryText} />
+                <IconButton
+                  label={lstrings.title_sell}
+                  onPress={handleSellPress}
+                >
+                  <Fontello
+                    name="sell"
+                    size={theme.rem(2)}
+                    color={theme.primaryText}
+                  />
                 </IconButton>
               </>
             )}
             {countryCode == null || !isEarnShown ? null : (
               <IconButton
-                label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-                superscriptLabel={allStakePolicies == null ? undefined : getBestApyText(filterStakePolicies(allStakePolicies, { currencyCode }))}
+                label={getUkCompliantString(
+                  countryCode,
+                  'stake_earn_button_label'
+                )}
+                superscriptLabel={
+                  allStakePolicies == null
+                    ? undefined
+                    : getBestApyText(
+                        filterStakePolicies(allStakePolicies, { currencyCode })
+                      )
+                }
                 onPress={handleStakePress}
               >
-                <Feather name="percent" size={theme.rem(2)} color={theme.primaryText} />
+                <Feather
+                  name="percent"
+                  size={theme.rem(2)}
+                  color={theme.primaryText}
+                />
               </IconButton>
             )}
             <IconButton label={lstrings.swap} onPress={handleSwapPress}>
-              <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.primaryText} />
+              <Ionicons
+                name="swap-horizontal"
+                size={theme.rem(2)}
+                color={theme.primaryText}
+              />
             </IconButton>
           </EdgeAnim>
           {defaultFiat === coingeckoFiat ? null : (
             <AlertCardUi4
               type="warning"
               title={lstrings.coin_rank_currency_rates_warning_title}
-              body={sprintf(lstrings.coin_rank_currency_rates_warning_message_2s, coingeckoFiat, defaultFiat)}
+              body={sprintf(
+                lstrings.coin_rank_currency_rates_warning_message_2s,
+                coingeckoFiat,
+                defaultFiat
+              )}
             />
           )}
           <View style={styles.columns}>
-            <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
-            <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
+            <View style={styles.column}>
+              {renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}
+            </View>
+            <View style={styles.column}>
+              {renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}
+            </View>
           </View>
         </View>
       ) : (
@@ -531,7 +727,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   )
 }
 
-export const CoinRankingDetailsScene = React.memo(CoinRankingDetailsSceneComponent)
+export const CoinRankingDetailsScene = React.memo(
+  CoinRankingDetailsSceneComponent
+)
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {

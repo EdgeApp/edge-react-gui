@@ -9,7 +9,15 @@ import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import VELODROME_V2_VOTER from '../../../abi/VELODROME_V2_VOTER.json'
 import { cacheTxMetadata } from '../../metadataCache'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeAssetInfo, StakePosition, StakePositionRequest } from '../../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  PositionAllocation,
+  QuoteAllocation,
+  StakeAssetInfo,
+  StakePosition,
+  StakePositionRequest
+} from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
@@ -31,7 +39,9 @@ export interface UniswapV2LpPolicyOptions {
   tokenBContract: ethers.Contract
 }
 
-export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): StakePluginPolicy => {
+export const makeVelodromeV2StakePolicy = (
+  options: UniswapV2LpPolicyOptions
+): StakePluginPolicy => {
   // Declare contracts:
   const {
     disableStake = false,
@@ -51,7 +61,8 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: StakeAssetInfo) => `${assetId.pluginId}:${assetId.currencyCode}`
+  const serializeAssetId = (assetId: StakeAssetInfo) =>
+    `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
@@ -64,33 +75,50 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
     }
   }> {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
-    const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
+    const lpTokenSupply = (
+      await eco.multipass(p => lpTokenContract.connect(p).totalSupply())
+    ).toString()
     // 2. Get the amount of each token reserve in the LP-pool contract
     const reservesMap = await getTokenReservesMap()
     // 3. Get the amount of each token in for the policy
     return policyInfo.stakeAssets.reduce((acc, assetId, index) => {
       const address = assetToContractAddress(policyInfo, assetId)
       const reserve = reservesMap[address]
-      if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
+      if (reserve == null)
+        throw new Error(
+          `Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`
+        )
       const nativeAmount = div(mul(reserve, lpTokenAmount), lpTokenSupply)
       return { ...acc, [serializeAssetId(assetId)]: { nativeAmount } }
     }, {})
   }
 
-  async function getExpectedLiquidityAmount(policyInfo: StakePolicyInfo, allocation: QuoteAllocation): Promise<string> {
+  async function getExpectedLiquidityAmount(
+    policyInfo: StakePolicyInfo,
+    allocation: QuoteAllocation
+  ): Promise<string> {
     // 1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
-    const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
+    const lpTokenSupply = (
+      await eco.multipass(p => lpTokenContract.connect(p).totalSupply())
+    ).toString()
     const reservesMap = await getTokenReservesMap()
     const tokenContractAddress = assetToContractAddress(policyInfo, allocation)
     const tokenSupplyInReserve = reservesMap[tokenContractAddress]
-    const liquidity = round(mul(div(allocation.nativeAmount, tokenSupplyInReserve, DECIMALS), fromHex(lpTokenSupply)))
+    const liquidity = round(
+      mul(
+        div(allocation.nativeAmount, tokenSupplyInReserve, DECIMALS),
+        fromHex(lpTokenSupply)
+      )
+    )
     return liquidity
   }
 
   async function getTokenReservesMap(): Promise<{
     [contractAddress: string]: string
   }> {
-    const reservesResponse = await eco.multipass(p => lpTokenContract.connect(p).getReserves())
+    const reservesResponse = await eco.multipass(p =>
+      lpTokenContract.connect(p).getReserves()
+    )
     const { _reserve0, _reserve1 } = reservesResponse
     const [token0, token1] = await Promise.all([
       eco.multipass(p => lpTokenContract.connect(p).token0()),
@@ -103,7 +131,10 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
     return reservesMap
   }
 
-  function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: StakeAssetInfo): string {
+  function assetToContractAddress(
+    policyInfo: StakePolicyInfo,
+    assetId: StakeAssetInfo
+  ): string {
     const contractInfo = eco.getContractInfo(assetId.currencyCode)
     const { address } = contractInfo
     return address.toLowerCase()
@@ -113,18 +144,30 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, wallet, account } = request
 
-      const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
-      if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+      const policyInfo = pluginInfo.policyInfo.find(
+        p => p.stakePolicyId === stakePolicyId
+      )
+      if (policyInfo == null)
+        throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
-      const requestAsset = [...policyInfo.stakeAssets, ...policyInfo.rewardAssets].find(asset => asset.currencyCode === request.currencyCode)
-      if (requestAsset == null) throw new Error(`Asset '${request.currencyCode}' not found in policy '${stakePolicyId}'`)
+      const requestAsset = [
+        ...policyInfo.stakeAssets,
+        ...policyInfo.rewardAssets
+      ].find(asset => asset.currencyCode === request.currencyCode)
+      if (requestAsset == null)
+        throw new Error(
+          `Asset '${request.currencyCode}' not found in policy '${stakePolicyId}'`
+        )
 
       const parentCurrencyCode = policyInfo.parentCurrencyCode
       const tokenACurrencyCode = policyInfo.stakeAssets[0].currencyCode
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
-      const isTokenANative = tokenACurrencyCode === policyInfo.parentCurrencyCode
-      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
-      if (isTokenANative && isTokenBNative) throw new Error('Stake plugin does not support two native assets')
+      const isTokenANative =
+        tokenACurrencyCode === policyInfo.parentCurrencyCode
+      const isTokenBNative =
+        tokenBCurrencyCode === policyInfo.parentCurrencyCode
+      if (isTokenANative && isTokenBNative)
+        throw new Error('Stake plugin does not support two native assets')
 
       // Metadata constants:
       const metadataName = 'Velodrome Finance'
@@ -135,7 +178,8 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
-      if (policyInfo.stakeAssets.length > 2) throw new Error(`Staking more than two assets is not supported`)
+      if (policyInfo.stakeAssets.length > 2)
+        throw new Error(`Staking more than two assets is not supported`)
 
       //
       // Calculate the allocations (stake/unstake/claim) amounts
@@ -146,38 +190,52 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
         const reservesMap = await getTokenReservesMap()
-        const requestTokenContractAddress = assetToContractAddress(policyInfo, requestAsset)
+        const requestTokenContractAddress = assetToContractAddress(
+          policyInfo,
+          requestAsset
+        )
         const requestTokenReserves = reservesMap[requestTokenContractAddress]
 
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, currencyCode }, index) => {
-            const tokenContractAddress = assetToContractAddress(policyInfo, {
-              pluginId,
-              currencyCode
-            })
-            const tokenReserves = reservesMap[tokenContractAddress]
-            const nativeAmount = div(mul(tokenReserves, request.nativeAmount), requestTokenReserves)
-            return {
-              allocationType: action,
-              pluginId,
-              currencyCode,
-              nativeAmount
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(
+            ({ pluginId, currencyCode }, index) => {
+              const tokenContractAddress = assetToContractAddress(policyInfo, {
+                pluginId,
+                currencyCode
+              })
+              const tokenReserves = reservesMap[tokenContractAddress]
+              const nativeAmount = div(
+                mul(tokenReserves, request.nativeAmount),
+                requestTokenReserves
+              )
+              return {
+                allocationType: action,
+                pluginId,
+                currencyCode,
+                nativeAmount
+              }
             }
-          })
+          )
         )
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const rewardNativeAmount = (await eco.multipass(p => stakingContract.connect(p).earned(signerAddress))).toString()
+        const rewardNativeAmount = (
+          await eco.multipass(p =>
+            stakingContract.connect(p).earned(signerAddress)
+          )
+        ).toString()
         allocations.push(
-          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
-            return {
-              allocationType: 'claim',
-              pluginId,
-              currencyCode,
-              nativeAmount: rewardNativeAmount
+          ...policyInfo.rewardAssets.map<QuoteAllocation>(
+            ({ currencyCode, pluginId }) => {
+              return {
+                allocationType: 'claim',
+                pluginId,
+                currencyCode,
+                nativeAmount: rewardNativeAmount
+              }
             }
-          })
+          )
         )
       }
 
@@ -197,33 +255,54 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       const nextNonce = (): number => txCount++
 
       // Transaction builder
-      const txs = makeBuilder(async fn => await eco.multipass(provider => fn({ signer: signer.connect(provider) })))
+      const txs = makeBuilder(
+        async fn =>
+          await eco.multipass(provider =>
+            fn({ signer: signer.connect(provider) })
+          )
+      )
 
       //
       // Stake
       //
       if (action === 'stake') {
         // 1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
-        const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
-        const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, lpTokenBalance)
+        const lpTokenBalance = (
+          await eco.multipass(p =>
+            lpTokenContract.connect(p).balanceOf(signerAddress)
+          )
+        ).toString()
+        const assetAmountsFromLp = await lpTokenToAssetPairAmounts(
+          policyInfo,
+          lpTokenBalance
+        )
         await Promise.all(
           allocations
             .filter(allocation => allocation.allocationType === 'stake')
             .map(async allocation => {
               const balanceResponse = await (async () => {
-                const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
+                const isNativeToken =
+                  allocation.currencyCode === policyInfo.parentCurrencyCode
                 if (isNativeToken) {
-                  return await eco.multipass(async p => await p.getBalance(signerAddress))
+                  return await eco.multipass(
+                    async p => await p.getBalance(signerAddress)
+                  )
                 }
                 const tokenAContract = eco.makeContract(allocation.currencyCode)
-                return await eco.multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
+                return await eco.multipass(p =>
+                  tokenAContract.connect(p).balanceOf(signerAddress)
+                )
               })()
               const balanceAmount = fromHex(balanceResponse._hex)
-              const fromLpToken = assetAmountsFromLp[serializeAssetId(allocation)].nativeAmount
+              const fromLpToken =
+                assetAmountsFromLp[serializeAssetId(allocation)].nativeAmount
               const totalBalance = add(balanceAmount, fromLpToken)
               const isBalanceEnough = lte(allocation.nativeAmount, totalBalance)
               if (!isBalanceEnough) {
-                throw new HumanFriendlyError(lstrings.stake_error_insufficient_s, allocation.currencyCode)
+                throw new HumanFriendlyError(
+                  lstrings.stake_error_insufficient_s,
+                  allocation.currencyCode
+                )
               }
             })
         )
@@ -234,7 +313,8 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
             // We don't need to approve the stake pool contract for the token earned token contract
             if (allocation.allocationType === 'claim') return
             // We don't need to approve the native token asset
-            const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
+            const isNativeToken =
+              allocation.currencyCode === policyInfo.parentCurrencyCode
             if (isNativeToken) return
 
             const tokenContract = eco.makeContract(allocation.currencyCode)
@@ -242,14 +322,23 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
-                  const allowanceResult = await tokenContract.allowance(signer.address, spenderAddress)
+                  const allowanceResult = await tokenContract.allowance(
+                    signer.address,
+                    spenderAddress
+                  )
                   if (allowanceResult.gte(allocation.nativeAmount)) return
 
-                  const result = await tokenContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
+                  const result = await tokenContract
+                    .connect(signer)
+                    .approve(
+                      spenderAddress,
+                      BigNumber.from(allocation.nativeAmount),
+                      {
+                        gasLimit,
+                        gasPrice,
+                        nonce: nextNonce()
+                      }
+                    )
                   cacheTxMetadata(result.hash, parentCurrencyCode, {
                     name: metadataName,
                     category: 'Expense:Fees',
@@ -264,24 +353,61 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         txs.build(
           ((gasLimit, lpTokenBalance) =>
             async function addLiquidity({ signer }) {
-              const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenACurrencyCode)
-              const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenBCurrencyCode)
+              const tokenAAllocation = allocations.find(
+                allocation =>
+                  allocation.allocationType === action &&
+                  allocation.currencyCode === tokenACurrencyCode
+              )
+              const tokenBAllocation = allocations.find(
+                allocation =>
+                  allocation.allocationType === action &&
+                  allocation.currencyCode === tokenBCurrencyCode
+              )
 
-              if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
-              if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
+              if (tokenAAllocation == null)
+                throw new Error(
+                  `Contract token ${tokenACurrencyCode} not found in asset pair`
+                )
+              if (tokenBAllocation == null)
+                throw new Error(
+                  `Contract token ${tokenBCurrencyCode} not found in asset pair`
+                )
 
               // Existing liquidity that may be unstaked due to a previous failed attempt to stake, or some other reason
-              const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
+              const expectedLiquidityAmount = await getExpectedLiquidityAmount(
+                policyInfo,
+                tokenAAllocation
+              )
               // Figure out how much LP-tokens we need to add
-              const assetAmountsFromExpectedLiquidity = await lpTokenToAssetPairAmounts(policyInfo, expectedLiquidityAmount)
-              const tokenAAmountFromExpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenAAllocation)].nativeAmount
-              const tokenBAmountFromexpectedLiquidity = assetAmountsFromExpectedLiquidity[serializeAssetId(tokenBAllocation)].nativeAmount
+              const assetAmountsFromExpectedLiquidity =
+                await lpTokenToAssetPairAmounts(
+                  policyInfo,
+                  expectedLiquidityAmount
+                )
+              const tokenAAmountFromExpectedLiquidity =
+                assetAmountsFromExpectedLiquidity[
+                  serializeAssetId(tokenAAllocation)
+                ].nativeAmount
+              const tokenBAmountFromexpectedLiquidity =
+                assetAmountsFromExpectedLiquidity[
+                  serializeAssetId(tokenBAllocation)
+                ].nativeAmount
 
               // Prepare the contract parameters
               const amountTokenADesired = tokenAAmountFromExpectedLiquidity
-              const amountTokenAMin = round(mul(tokenAAmountFromExpectedLiquidity, SLIPPAGE_FACTOR.toString()))
+              const amountTokenAMin = round(
+                mul(
+                  tokenAAmountFromExpectedLiquidity,
+                  SLIPPAGE_FACTOR.toString()
+                )
+              )
               const amountTokenBDesired = tokenBAmountFromexpectedLiquidity
-              const amountTokenBMin = round(mul(tokenBAmountFromexpectedLiquidity, SLIPPAGE_FACTOR.toString()))
+              const amountTokenBMin = round(
+                mul(
+                  tokenBAmountFromexpectedLiquidity,
+                  SLIPPAGE_FACTOR.toString()
+                )
+              )
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
@@ -290,7 +416,9 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
                 result = await swapRouterContract
                   .connect(signer)
                   .addLiquidityETH(
-                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isTokenANative
+                      ? tokenBContract.address
+                      : tokenAContract.address,
                     isStablePool,
                     isTokenANative ? amountTokenBDesired : amountTokenADesired,
                     isTokenANative ? amountTokenBMin : amountTokenAMin,
@@ -301,7 +429,9 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
                       gasLimit,
                       gasPrice,
                       nonce: nextNonce(),
-                      value: isTokenANative ? amountTokenADesired : amountTokenBDesired
+                      value: isTokenANative
+                        ? amountTokenADesired
+                        : amountTokenBDesired
                     }
                   )
               } else {
@@ -347,12 +477,19 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
               // Decode the log data in the receipt to get the liquidity token transfer amount
               //
               const receipt = await result.wait(1)
-              const transferTopicHash = ethers.utils.id('Transfer(address,address,uint256)')
-              // @ts-expect-error
-              const transferTopics = receipt.logs.filter(log => log.topics[0] === transferTopicHash)
+              const transferTopicHash = ethers.utils.id(
+                'Transfer(address,address,uint256)'
+              )
+              const transferTopics = receipt.logs.filter(
+                // @ts-expect-error
+                log => log.topics[0] === transferTopicHash
+              )
               // The last token transfer log is the LP-token transfer
               const lpTokenTransfer = transferTopics.slice(-1)[0]
-              const decodedData = ethers.utils.defaultAbiCoder.decode(['uint256'], lpTokenTransfer.data)
+              const decodedData = ethers.utils.defaultAbiCoder.decode(
+                ['uint256'],
+                lpTokenTransfer.data
+              )
               const addedLiquidityAmount = decodedData[0].toString()
 
               return { liquidity: add(addedLiquidityAmount, lpTokenBalance) }
@@ -367,8 +504,14 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         */
 
         const voterAddress = await stakingContract.connect(signer).voter()
-        const voterContract = new ethers.Contract(voterAddress, VELODROME_V2_VOTER, signer)
-        const isAlive = await voterContract.connect(signer).isAlive(voterAddress)
+        const voterContract = new ethers.Contract(
+          voterAddress,
+          VELODROME_V2_VOTER,
+          signer
+        )
+        const isAlive = await voterContract
+          .connect(signer)
+          .isAlive(voterAddress)
 
         if (isAlive) {
           // 1. Approve Pool Contract on LP-Contract:
@@ -376,14 +519,19 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
             (gasLimit =>
               async function approveStakingPool({ signer, liquidity }) {
                 const spenderAddress = stakingContract.address
-                const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+                const allowanceResult = await lpTokenContract.allowance(
+                  signer.address,
+                  spenderAddress
+                )
                 if (allowanceResult.gte(liquidity)) return
 
-                const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
+                const approveResult = await lpTokenContract
+                  .connect(signer)
+                  .approve(spenderAddress, BigNumber.from(liquidity), {
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
+                  })
                 cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
                   name: metadataName,
                   category: 'Expense:Fees',
@@ -396,11 +544,13 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
           txs.build(
             (gasLimit =>
               async function stakeLiquidity({ signer, liquidity }) {
-                const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
+                const result = await stakingContract
+                  .connect(signer)
+                  ['deposit(uint256)'](liquidity, {
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
+                  })
 
                 // Amounts need to be calculated here
                 cacheTxMetadata(result.hash, parentCurrencyCode, {
@@ -418,40 +568,74 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       //
 
       if (action === 'unstake') {
-        const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
+        const lpTokenBalance = (
+          await eco.multipass(p =>
+            lpTokenContract.connect(p).balanceOf(signerAddress)
+          )
+        ).toString()
 
-        const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenACurrencyCode)
-        const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenBCurrencyCode)
+        const tokenAAllocation = allocations.find(
+          allocation =>
+            allocation.allocationType === action &&
+            allocation.currencyCode === tokenACurrencyCode
+        )
+        const tokenBAllocation = allocations.find(
+          allocation =>
+            allocation.allocationType === action &&
+            allocation.currencyCode === tokenBCurrencyCode
+        )
 
-        if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
-        if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
+        if (tokenAAllocation == null)
+          throw new Error(
+            `Contract token ${tokenACurrencyCode} not found in asset pair`
+          )
+        if (tokenBAllocation == null)
+          throw new Error(
+            `Contract token ${tokenBCurrencyCode} not found in asset pair`
+          )
 
         // 1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
-        const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
+        const expectedLiquidityAmount = await getExpectedLiquidityAmount(
+          policyInfo,
+          tokenAAllocation
+        )
 
         // 2. Check liquidity amount balances
-        const stakedLpTokenBalanceResponse = await eco.multipass(p => stakingContract.connect(p).balanceOf(signerAddress))
+        const stakedLpTokenBalanceResponse = await eco.multipass(p =>
+          stakingContract.connect(p).balanceOf(signerAddress)
+        )
         const stakedLpTokenBalance = fromHex(stakedLpTokenBalanceResponse._hex)
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
-        const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
+        const isBalanceEnough = gte(
+          totalLpTokenBalance,
+          expectedLiquidityAmount
+        )
         if (!isBalanceEnough) {
-          showWarning(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode), { trackError: false })
+          showWarning(
+            sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode),
+            { trackError: false }
+          )
         }
 
         // 3. Withdraw LP-token from Pool Contract
         txs.build(
           ((gasLimit, lpTokenBalance) =>
             async function unstakeLiquidity({ signer }) {
-              const amountToUnstake = sub(expectedLiquidityAmount, lpTokenBalance)
+              const amountToUnstake = sub(
+                expectedLiquidityAmount,
+                lpTokenBalance
+              )
 
               // We don't need to unstake liquidity from the pool
               if (lte(amountToUnstake, '0')) return
 
-              const result = await stakingContract.connect(signer).withdraw(amountToUnstake, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await stakingContract
+                .connect(signer)
+                .withdraw(amountToUnstake, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
               // Reward transaction metadata
               policyInfo.rewardAssets
                 .map(asset => asset.currencyCode)
@@ -474,11 +658,13 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         txs.build(
           (gasLimit =>
             async function claimReward({ signer }) {
-              const result = await stakingContract.connect(signer).getReward(signer.address, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await stakingContract
+                .connect(signer)
+                .getReward(signer.address, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
 
               policyInfo.rewardAssets
                 .map(asset => asset.currencyCode)
@@ -502,14 +688,23 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         txs.build(
           (gasLimit =>
             async function approveSwapRouter({ signer }) {
-              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+              const allowanceResult = await lpTokenContract.allowance(
+                signer.address,
+                spenderAddress
+              )
               if (allowanceResult.gte(expectedLiquidityAmount)) return
 
-              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(expectedLiquidityAmount), {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await lpTokenContract
+                .connect(signer)
+                .approve(
+                  spenderAddress,
+                  BigNumber.from(expectedLiquidityAmount),
+                  {
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
+                  }
+                )
               cacheTxMetadata(result.hash, parentCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fees',
@@ -522,8 +717,12 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         txs.build(
           (gasLimit =>
             async function removeLiquidity({ signer }) {
-              const amountTokenAMin = round(mul(tokenAAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
-              const amountTokenBMin = round(mul(tokenBAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const amountTokenAMin = round(
+                mul(tokenAAllocation.nativeAmount, SLIPPAGE_FACTOR.toString())
+              )
+              const amountTokenBMin = round(
+                mul(tokenBAllocation.nativeAmount, SLIPPAGE_FACTOR.toString())
+              )
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
@@ -531,7 +730,9 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
                 result = await swapRouterContract
                   .connect(signer)
                   .removeLiquidityETH(
-                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isTokenANative
+                      ? tokenBContract.address
+                      : tokenAContract.address,
                     isStablePool,
                     expectedLiquidityAmount,
                     isTokenANative ? amountTokenBMin : amountTokenAMin,
@@ -592,11 +793,13 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         txs.build(
           (gasLimit =>
             async function claimReward({ signer }) {
-              const result = await stakingContract.connect(signer).getReward(signer.address, {
-                gasLimit,
-                gasPrice,
-                nonce: nextNonce()
-              })
+              const result = await stakingContract
+                .connect(signer)
+                .getReward(signer.address, {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
 
               policyInfo.rewardAssets
                 .map(asset => asset.currencyCode)
@@ -643,68 +846,105 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         approve
       }
     },
-    async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
+    async fetchStakePosition(
+      request: StakePositionRequest
+    ): Promise<StakePosition> {
       const { stakePolicyId, wallet, account } = request
       const signerSeed = await account.getDisplayPrivateKey(wallet.id)
 
-      const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
-      if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+      const policyInfo = pluginInfo.policyInfo.find(
+        p => p.stakePolicyId === stakePolicyId
+      )
+      if (policyInfo == null)
+        throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       const tokenACurrencyCode = policyInfo.stakeAssets[0].currencyCode
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
-      const isTokenANative = tokenACurrencyCode === policyInfo.parentCurrencyCode
-      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
+      const isTokenANative =
+        tokenACurrencyCode === policyInfo.parentCurrencyCode
+      const isTokenBNative =
+        tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
       const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
-      const [{ stakedLpTokenBalance, assetAmountsFromStakedLp }, rewardNativeAmount, tokenABalance, tokenBBalance, { lpTokenBalance, assetAmountsFromLp }] =
-        await Promise.all([
-          // Get staked allocations:
-          // 1. Get the amount of LP-tokens staked in the pool contract
-          eco
-            .multipass(p => {
-              return stakingContract.connect(p).balanceOf(signerAddress)
-            })
-            .then(async stakedLpTokenBalanceResponse => {
-              const stakedLpTokenBalance = stakedLpTokenBalanceResponse.toString()
-              // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
-              const assetAmountsFromStakedLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
-              return { stakedLpTokenBalance, assetAmountsFromStakedLp }
-            }),
-          // Get reward amount:
-          eco.multipass(p => stakingContract.connect(p).earned(signerAddress)).then(String),
-          // Get token A balance:
-          eco.multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
-          // Get token B balance:
-          eco.multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
-          // Get LP token balance:
-          eco
-            .multipass(p => {
-              return lpTokenContract.connect(p).balanceOf(signerAddress)
-            })
-            .then(async lpTokenBalanceResponse => {
-              const lpTokenBalance = lpTokenBalanceResponse.toString()
-              // 2. Get the conversion amounts for each stakeAsset using the LP-token amount
-              const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, lpTokenBalance)
-              return { lpTokenBalance, assetAmountsFromLp }
-            })
-        ])
+      const [
+        { stakedLpTokenBalance, assetAmountsFromStakedLp },
+        rewardNativeAmount,
+        tokenABalance,
+        tokenBBalance,
+        { lpTokenBalance, assetAmountsFromLp }
+      ] = await Promise.all([
+        // Get staked allocations:
+        // 1. Get the amount of LP-tokens staked in the pool contract
+        eco
+          .multipass(p => {
+            return stakingContract.connect(p).balanceOf(signerAddress)
+          })
+          .then(async stakedLpTokenBalanceResponse => {
+            const stakedLpTokenBalance = stakedLpTokenBalanceResponse.toString()
+            // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
+            const assetAmountsFromStakedLp = await lpTokenToAssetPairAmounts(
+              policyInfo,
+              stakedLpTokenBalance
+            )
+            return { stakedLpTokenBalance, assetAmountsFromStakedLp }
+          }),
+        // Get reward amount:
+        eco
+          .multipass(p => stakingContract.connect(p).earned(signerAddress))
+          .then(String),
+        // Get token A balance:
+        eco
+          .multipass(p =>
+            isTokenANative
+              ? p.getBalance(signerAddress)
+              : tokenAContract.connect(p).balanceOf(signerAddress)
+          )
+          .then(String),
+        // Get token B balance:
+        eco
+          .multipass(p =>
+            isTokenBNative
+              ? p.getBalance(signerAddress)
+              : tokenBContract.balanceOf(signerAddress)
+          )
+          .then(String),
+        // Get LP token balance:
+        eco
+          .multipass(p => {
+            return lpTokenContract.connect(p).balanceOf(signerAddress)
+          })
+          .then(async lpTokenBalanceResponse => {
+            const lpTokenBalance = lpTokenBalanceResponse.toString()
+            // 2. Get the conversion amounts for each stakeAsset using the LP-token amount
+            const assetAmountsFromLp = await lpTokenToAssetPairAmounts(
+              policyInfo,
+              lpTokenBalance
+            )
+            return { lpTokenBalance, assetAmountsFromLp }
+          })
+      ])
 
       // 3. Use the conversion amounts to create the staked allocations
-      const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((assetId, index) => {
-        const { nativeAmount: stakedNativeAmount } = assetAmountsFromStakedLp[serializeAssetId(assetId)]
-        const { nativeAmount } = assetAmountsFromLp[serializeAssetId(assetId)]
-        if (stakedNativeAmount == null || nativeAmount == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
+      const stakedAllocations: PositionAllocation[] =
+        policyInfo.stakeAssets.map((assetId, index) => {
+          const { nativeAmount: stakedNativeAmount } =
+            assetAmountsFromStakedLp[serializeAssetId(assetId)]
+          const { nativeAmount } = assetAmountsFromLp[serializeAssetId(assetId)]
+          if (stakedNativeAmount == null || nativeAmount == null)
+            throw new Error(
+              `Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`
+            )
 
-        return {
-          pluginId: assetId.pluginId,
-          currencyCode: assetId.currencyCode,
-          allocationType: 'staked',
-          nativeAmount: add(stakedNativeAmount, nativeAmount),
-          locktime: undefined
-        }
-      })
+          return {
+            pluginId: assetId.pluginId,
+            currencyCode: assetId.currencyCode,
+            allocationType: 'staked',
+            nativeAmount: add(stakedNativeAmount, nativeAmount),
+            locktime: undefined
+          }
+        })
 
       // Get earned allocations:
       const earnedAllocations: PositionAllocation[] = [
@@ -722,10 +962,15 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       //
 
       // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
-      const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
+      const canStake =
+        !disableStake &&
+        ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) ||
+          gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstakeAndClaim = !disableUnstake && (gt(stakedLpTokenBalance, '0') || gt(lpTokenBalance, '0'))
+      const canUnstakeAndClaim =
+        !disableUnstake &&
+        (gt(stakedLpTokenBalance, '0') || gt(lpTokenBalance, '0'))
 
       // You can claim so long as there is some reward balance (there are no timelocks)
       const canClaim = !disableClaim && gt(rewardNativeAmount, '0')

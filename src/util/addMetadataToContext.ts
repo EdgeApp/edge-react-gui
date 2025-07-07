@@ -6,7 +6,11 @@
  * @param prefixKeys optional prefix keys to add to each entry
  * @returns void (modifies context object)
  */
-export function addMetadataToContext(context: Record<string, unknown>, metadata: object, prefixKeys: string[] = []): void {
+export function addMetadataToContext(
+  context: Record<string, unknown>,
+  metadata: object,
+  prefixKeys: string[] = []
+): void {
   for (const [key, value] of Object.entries(metadata)) {
     const allKeys = [...prefixKeys, key]
     const fullKey = allKeys.join(' > ')

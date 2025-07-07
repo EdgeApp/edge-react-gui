@@ -39,15 +39,27 @@ export function SwapProcessingScene(props: Props) {
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
 
-  const fromDenomination = useDisplayDenom(swapRequest.fromWallet.currencyConfig, swapRequest.fromTokenId)
-  const toDenomination = useDisplayDenom(swapRequest.toWallet.currencyConfig, swapRequest.toTokenId)
+  const fromDenomination = useDisplayDenom(
+    swapRequest.fromWallet.currencyConfig,
+    swapRequest.fromTokenId
+  )
+  const toDenomination = useDisplayDenom(
+    swapRequest.toWallet.currencyConfig,
+    swapRequest.toTokenId
+  )
 
   const doWork = async (): Promise<EdgeSwapQuote[]> => {
-    const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
+    const quotes = await account.fetchSwapQuotes(
+      swapRequest,
+      swapRequestOptions
+    )
     return quotes
   }
 
-  const onError = async (navigation: NavigationBase, error: unknown): Promise<void> => {
+  const onError = async (
+    navigation: NavigationBase,
+    error: unknown
+  ): Promise<void> => {
     const errorDisplayInfo = processSwapQuoteError({
       error,
       swapRequest,
@@ -67,7 +79,10 @@ export function SwapProcessingScene(props: Props) {
     })
 
     const insufficientFunds = asMaybeInsufficientFundsError(error)
-    if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
+    if (
+      insufficientFunds != null &&
+      swapRequest.fromTokenId !== insufficientFunds.tokenId
+    ) {
       await showInsufficientFeesModal({
         coreError: insufficientFunds,
         countryCode,
@@ -120,9 +135,21 @@ function processSwapQuoteError({
     }
   }
 
+  if (
+    error instanceof Error &&
+    error.message === 'Unexpected pending transactions'
+  ) {
+    return {
+      title: lstrings.exchange_insufficient_funds_title,
+      message: lstrings.exchange_pending_funds_error,
+      error
+    }
+  }
+
   const aboveLimit = asMaybeSwapAboveLimitError(error)
   if (aboveLimit != null) {
-    const currentCurrencyDenomination = aboveLimit.direction === 'to' ? toDenomination : fromDenomination
+    const currentCurrencyDenomination =
+      aboveLimit.direction === 'to' ? toDenomination : fromDenomination
 
     const { nativeMax } = aboveLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -130,14 +157,19 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name),
+      message: sprintf(
+        lstrings.amount_above_limit,
+        displayMax,
+        currentCurrencyDenomination.name
+      ),
       error
     }
   }
 
   const belowLimit = asMaybeSwapBelowLimitError(error)
   if (belowLimit) {
-    const currentCurrencyDenomination = belowLimit.direction === 'to' ? toDenomination : fromDenomination
+    const currentCurrencyDenomination =
+      belowLimit.direction === 'to' ? toDenomination : fromDenomination
 
     const { nativeMin } = belowLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -145,15 +177,25 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name),
+      message: sprintf(
+        lstrings.amount_below_limit,
+        displayMin,
+        currentCurrencyDenomination.name
+      ),
       error
     }
   }
 
   const currencyError = asMaybeSwapCurrencyError(error)
   if (currencyError != null) {
-    const fromCurrencyCode = getCurrencyCode(swapRequest.fromWallet, swapRequest.fromTokenId)
-    const toCurrencyCode = getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId)
+    const fromCurrencyCode = getCurrencyCode(
+      swapRequest.fromWallet,
+      swapRequest.fromTokenId
+    )
+    const toCurrencyCode = getCurrencyCode(
+      swapRequest.toWallet,
+      swapRequest.toTokenId
+    )
 
     return {
       title: lstrings.exchange_generic_error_title,
@@ -195,8 +237,14 @@ function trackSwapError(error: unknown, swapRequest: EdgeSwapRequest): void {
     scope.setTags({
       errorType: 'swapQuoteFailure',
       swapFromWalletKind: swapRequest.fromWallet.currencyInfo.pluginId,
-      swapFromCurrency: getCurrencyCode(swapRequest.fromWallet, swapRequest.fromTokenId),
-      swapToCurrency: getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId),
+      swapFromCurrency: getCurrencyCode(
+        swapRequest.fromWallet,
+        swapRequest.fromTokenId
+      ),
+      swapToCurrency: getCurrencyCode(
+        swapRequest.toWallet,
+        swapRequest.toTokenId
+      ),
       swapToWalletKind: swapRequest.toWallet.currencyInfo.pluginId,
       swapDirectionType: swapRequest.quoteFor
     })

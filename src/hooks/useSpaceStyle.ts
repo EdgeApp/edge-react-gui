@@ -1,7 +1,11 @@
 import { useMemo } from 'react'
 import { ViewStyle } from 'react-native'
 
-import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from './useMarginRemStyle'
+import {
+  MarginRemProps,
+  MarginRemStyle,
+  useMarginRemStyle
+} from './useMarginRemStyle'
 
 export interface SpaceProps extends MarginRemProps {
   //
@@ -50,11 +54,33 @@ export interface SpaceProps extends MarginRemProps {
   row?: boolean
 }
 
-export type SpaceStyle = Pick<ViewStyle, 'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'> & MarginRemStyle
+export type SpaceStyle = Pick<
+  ViewStyle,
+  'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'
+> &
+  MarginRemStyle
 
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
-  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, row = false } = props
-  const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
+  const {
+    aroundRem,
+    horizontalRem,
+    verticalRem,
+    topRem,
+    bottomRem,
+    leftRem,
+    rightRem,
+    expand = false,
+    row = false
+  } = props
+  const {
+    alignBottom,
+    alignLeft,
+    alignRight,
+    alignTop,
+    alignCenter,
+    alignHorizontal,
+    alignVertical
+  } = props
 
   const topFill = boolify(alignBottom, alignVertical, alignCenter)
   const bottomFill = boolify(alignTop, alignVertical, alignCenter)
@@ -76,10 +102,26 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const flexDirection = row ? 'row' : 'column'
 
   // Alignment:
-  const horizontalAlignment = leftFill && rightFill ? 'center' : rightFill ? 'flex-start' : leftFill ? 'flex-end' : undefined
-  const verticalAlignment = topFill && bottomFill ? 'center' : bottomFill ? 'flex-start' : topFill ? 'flex-end' : undefined
+  const horizontalAlignment =
+    leftFill && rightFill
+      ? 'center'
+      : rightFill
+      ? 'flex-start'
+      : leftFill
+      ? 'flex-end'
+      : undefined
+  const verticalAlignment =
+    topFill && bottomFill
+      ? 'center'
+      : bottomFill
+      ? 'flex-start'
+      : topFill
+      ? 'flex-end'
+      : undefined
   const alignItems = row ? verticalAlignment : horizontalAlignment
-  const justifyContent = row ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
+  const justifyContent = row
+    ? horizontalAlignment ?? (expand ? 'space-between' : undefined)
+    : verticalAlignment
 
   // Flex:
   const alignSelf = expand ? 'stretch' : undefined
@@ -94,7 +136,14 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
       justifyContent,
       ...marginRemStyle
     }),
-    [alignItems, alignSelf, flexDirection, flexGrow, justifyContent, marginRemStyle]
+    [
+      alignItems,
+      alignSelf,
+      flexDirection,
+      flexGrow,
+      justifyContent,
+      marginRemStyle
+    ]
   )
 
   return style

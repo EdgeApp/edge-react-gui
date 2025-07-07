@@ -7,7 +7,11 @@ import Animated from 'react-native-reanimated'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
+import {
+  filterWalletCreateItemListBySearchText,
+  getCreateWalletList,
+  WalletCreateItem
+} from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
@@ -57,7 +61,9 @@ function WalletListSwipeableComponent(props: Props) {
   const theme = useTheme()
   const dispatch = useDispatch()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
-  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
+  const mostRecentWallets = useSelector(
+    state => state.ui.settings.mostRecentWallets
+  )
   const account = useSelector(state => state.core.account)
 
   // This list is shown when we're in a searching state
@@ -74,24 +80,26 @@ function WalletListSwipeableComponent(props: Props) {
     [account, searching, searchText, sortedWalletList]
   )
 
-  const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
-    dispatch(
-      selectWalletToken({
-        navigation: navigation as NavigationBase,
-        walletId,
-        tokenId
-      })
-    )
-      .then(
-        activationNotRequired =>
-          activationNotRequired &&
-          navigation.navigate('walletDetails', {
-            walletId,
-            tokenId
-          })
+  const handleCreateWallet = useHandler(
+    async (walletId: string, tokenId: EdgeTokenId) => {
+      dispatch(
+        selectWalletToken({
+          navigation: navigation as NavigationBase,
+          walletId,
+          tokenId
+        })
       )
-      .finally(onReset)
-  })
+        .then(
+          activationNotRequired =>
+            activationNotRequired &&
+            navigation.navigate('walletDetails', {
+              walletId,
+              tokenId
+            })
+        )
+        .finally(onReset)
+    }
+  )
 
   // Filter based on the search text:
   const searchedWalletList = React.useMemo(() => {
@@ -105,19 +113,30 @@ function WalletListSwipeableComponent(props: Props) {
         item =>
           item.type === 'asset' &&
           item.wallet.id === id &&
-          (item.token?.currencyCode ?? item.wallet.currencyInfo.currencyCode).toLowerCase() === currencyCode.toLowerCase()
+          (
+            item.token?.currencyCode ?? item.wallet.currencyInfo.currencyCode
+          ).toLowerCase() === currencyCode.toLowerCase()
       )
       if (item != null) recentWallets.push(item)
     }
 
     // Put the recent wallets in the front:
-    return [...recentWallets, ...list.filter(item => !recentWallets.includes(item))]
+    return [
+      ...recentWallets,
+      ...list.filter(item => !recentWallets.includes(item))
+    ]
   }, [sortedWalletList, searchText, mostRecentWallets])
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {
     if (onRefresh == null) return undefined
-    return <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
+    return (
+      <RefreshControl
+        refreshing={false}
+        onRefresh={onRefresh}
+        tintColor={theme.searchListRefreshControlIndicator}
+      />
+    )
   }, [theme, onRefresh])
 
   // Renders a single row:
@@ -140,22 +159,39 @@ function WalletListSwipeableComponent(props: Props) {
     const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (wallet != null) {
       return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
-          <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
+        <EdgeAnim
+          disableAnimation={disableAnimation}
+          enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}
+        >
+          <WalletListSwipeableCurrencyRow
+            navigation={navigation}
+            token={token}
+            tokenId={tokenId}
+            wallet={wallet}
+          />
         </EdgeAnim>
       )
     }
     if (walletId != null) {
       return (
-        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
-          <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+        <EdgeAnim
+          disableAnimation={disableAnimation}
+          enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}
+        >
+          <WalletListSwipeableLoadingRow
+            navigation={navigation}
+            walletId={walletId}
+          />
         </EdgeAnim>
       )
     }
     return null
   })
 
-  const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
+  const data = React.useMemo(
+    () => [...searchedWalletList, ...createWalletList],
+    [searchedWalletList, createWalletList]
+  )
 
   const handleScroll = useSceneScrollHandler()
 
@@ -166,7 +202,13 @@ function WalletListSwipeableComponent(props: Props) {
       paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
       paddingRight: insetStyle.paddingRight + theme.rem(0.5)
     }
-  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, theme])
+  }, [
+    insetStyle.paddingBottom,
+    insetStyle.paddingLeft,
+    insetStyle.paddingRight,
+    insetStyle.paddingTop,
+    theme
+  ])
 
   return (
     <AnimatedFlatList

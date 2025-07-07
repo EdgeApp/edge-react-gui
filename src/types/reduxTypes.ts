@@ -16,4 +16,7 @@ export interface Store extends Redux.Store<RootState, Action> {
   dispatch: Dispatch
 }
 
-export type ThunkAction<Return> = (dispatch: Dispatch, getState: GetState) => Return
+export type ThunkAction<Return> = (
+  dispatch: Dispatch,
+  getState: GetState
+) => Return

@@ -29,19 +29,26 @@ export const WalletRestoreCard = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const { currencyCode, displayName, pluginId } = findCurrencyInfo(account, walletInfo.type) ?? {}
-  const currencyConfig = pluginId == null ? undefined : account.currencyConfig[pluginId]
+  const { currencyCode, displayName, pluginId } =
+    findCurrencyInfo(account, walletInfo.type) ?? {}
+  const currencyConfig =
+    pluginId == null ? undefined : account.currencyConfig[pluginId]
 
   const [isSelected, setIsSelected] = React.useState(false)
 
-  const dateLabel = walletInfo.created == null ? '' : toLocaleTime(walletInfo.created)
+  const dateLabel =
+    walletInfo.created == null ? '' : toLocaleTime(walletInfo.created)
 
   // Primary Currency icon
   const primaryCurrencyIconUrl = React.useMemo(() => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
-    const icon = getCurrencyIconUris(pluginId, null, SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false)
+    const icon = getCurrencyIconUris(
+      pluginId,
+      null,
+      SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false
+    )
     return icon.symbolImageDarkMono
   }, [pluginId])
 
@@ -91,7 +98,12 @@ export const WalletRestoreCard = (props: Props) => {
       <View style={styles.outerContainer}>
         <View style={styles.iconContainer}>
           <ShadowedView style={shadowStyle}>
-            {primaryCurrencyIcon == null ? null : <FastImage style={StyleSheet.absoluteFill} source={primaryCurrencyIcon} />}
+            {primaryCurrencyIcon == null ? null : (
+              <FastImage
+                style={StyleSheet.absoluteFill}
+                source={primaryCurrencyIcon}
+              />
+            )}
           </ShadowedView>
         </View>
         <View style={styles.textContainer}>

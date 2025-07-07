@@ -25,7 +25,14 @@ export interface CryptoIconProps {
 }
 
 export const CryptoIcon = (props: CryptoIconProps) => {
-  const { hideSecondary = false, marginRem, mono = false, secondaryIconOverride, sizeRem = 2, tokenId } = props
+  const {
+    hideSecondary = false,
+    marginRem,
+    mono = false,
+    secondaryIconOverride,
+    sizeRem = 2,
+    tokenId
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -36,14 +43,18 @@ export const CryptoIcon = (props: CryptoIconProps) => {
 
   // Primary Currency icon
   const icon = getCurrencyIconUris(pluginId, tokenId, useChainIcon)
-  const primaryCurrencyIconUrl = mono ? icon.symbolImageDarkMono : icon.symbolImage
+  const primaryCurrencyIconUrl = mono
+    ? icon.symbolImageDarkMono
+    : icon.symbolImage
   const primaryCurrencyIcon = { uri: primaryCurrencyIconUrl }
 
   // Secondary (parent) currency icon (if it's a token)
   let secondaryCurrencyIcon = secondaryIconOverride
   if (secondaryIconOverride == null && (tokenId != null || useChainIcon)) {
     const icon = getCurrencyIconUris(pluginId, null)
-    secondaryCurrencyIcon = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
+    secondaryCurrencyIcon = {
+      uri: mono ? icon.symbolImageDarkMono : icon.symbolImage
+    }
   }
 
   // Main view styling
@@ -70,8 +81,15 @@ export const CryptoIcon = (props: CryptoIconProps) => {
   return (
     <View style={spacingStyle}>
       <ShadowedView style={shadowStyle}>
-        {primaryCurrencyIcon != null ? <FastImage style={StyleSheet.absoluteFill} source={primaryCurrencyIcon} /> : null}
-        {hideSecondary ? null : secondaryCurrencyIcon != null ? <FastImage style={styles.parentIcon} source={secondaryCurrencyIcon} /> : null}
+        {primaryCurrencyIcon != null ? (
+          <FastImage
+            style={StyleSheet.absoluteFill}
+            source={primaryCurrencyIcon}
+          />
+        ) : null}
+        {hideSecondary ? null : secondaryCurrencyIcon != null ? (
+          <FastImage style={styles.parentIcon} source={secondaryCurrencyIcon} />
+        ) : null}
       </ShadowedView>
     </View>
   )

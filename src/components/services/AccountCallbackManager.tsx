@@ -4,11 +4,17 @@ import * as React from 'react'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
-import { checkFioObtData, refreshConnectedWallets } from '../../actions/FioActions'
+import {
+  checkFioObtData,
+  refreshConnectedWallets
+} from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
-import { updateDepositAmount, updateTransactionCount } from '../../actions/RequestReviewActions'
+import {
+  updateDepositAmount,
+  updateTransactionCount
+} from '../../actions/RequestReviewActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
@@ -16,7 +22,12 @@ import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSele
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
-import { convertCurrencyFromExchangeRates, convertNativeToExchange, datelog, snooze } from '../../util/utils'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchange,
+  datelog,
+  snooze
+} from '../../util/utils'
 import { Airship } from './AirshipInstance'
 
 const REFRESH_RATES_MS = 30000
@@ -105,23 +116,49 @@ export function AccountCallbackManager(props: Props) {
           }
         }
 
-        console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
+        console.log(
+          `${walletPrefix(wallet)}: onNewTransactions: ${transactions
+            .map(tx => tx.txid)
+            .join(' ')}`
+        )
 
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
-        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => console.warn(err))
+        if (receivedTxs.length > 0)
+          dispatch(checkFioObtData(wallet, receivedTxs)).catch(err =>
+            console.warn(err)
+          )
 
         // Review triggers: deposit & transaction count
         for (const tx of transactions) {
-          const actionType = tx.savedAction?.actionType ?? tx.chainAction?.actionType
+          const actionType =
+            tx.savedAction?.actionType ?? tx.chainAction?.actionType
 
           if (!tx.isSend) {
             dispatch(updateTransactionCount()).catch(err => console.warn(err))
-            const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, tx.currencyCode)
-            const cryptoAmount = Math.abs(parseFloat(convertNativeToExchange(exchangeDenom.multiplier)(tx.nativeAmount)))
-            const usdAmount = parseFloat(convertCurrencyFromExchangeRates(exchangeRates, tx.currencyCode, 'iso:USD', String(cryptoAmount)))
+            const exchangeDenom = getExchangeDenomByCurrencyCode(
+              wallet.currencyConfig,
+              tx.currencyCode
+            )
+            const cryptoAmount = Math.abs(
+              parseFloat(
+                convertNativeToExchange(exchangeDenom.multiplier)(
+                  tx.nativeAmount
+                )
+              )
+            )
+            const usdAmount = parseFloat(
+              convertCurrencyFromExchangeRates(
+                exchangeRates,
+                tx.currencyCode,
+                'iso:USD',
+                String(cryptoAmount)
+              )
+            )
             if (usdAmount > 0) {
-              dispatch(updateDepositAmount(usdAmount)).catch(err => console.warn(err))
+              dispatch(updateDepositAmount(usdAmount)).catch(err =>
+                console.warn(err)
+              )
             }
           } else if (actionType !== 'swap' && actionType !== 'fiat') {
             dispatch(updateTransactionCount()).catch(err => console.warn(err))
@@ -152,11 +189,19 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('transactionsChanged', transactions => {
-        console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
+        console.log(
+          `${walletPrefix(wallet)}: onTransactionsChanged: ${transactions
+            .map(tx => tx.txid)
+            .join(' ')}`
+        )
       }),
 
       wallet.on('enabledDetectedTokens', enablingTokenIds => {
-        console.log(`${walletPrefix(wallet)}: onNewTokens: ${JSON.stringify(enablingTokenIds)}`)
+        console.log(
+          `${walletPrefix(wallet)}: onNewTokens: ${JSON.stringify(
+            enablingTokenIds
+          )}`
+        )
         dispatch({
           type: 'CORE/NEW_TOKENS',
           data: { walletId: wallet.id, enablingTokenIds }

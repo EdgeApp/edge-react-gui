@@ -52,7 +52,9 @@ export const LoanDashboardScene = (props: Props) => {
 
   const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
-  const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
+  const lastResyncTimestamp = useSelector(
+    state => state.loanManager.lastResyncTimestamp
+  )
 
   const isLoansLoading = syncRatio < 0
 
@@ -73,7 +75,11 @@ export const LoanDashboardScene = (props: Props) => {
   const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const hardPluginWalletIds = activeWalletIds.filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(currencyWallets[walletId]?.currencyInfo.pluginId))
+  const hardPluginWalletIds = activeWalletIds.filter(walletId =>
+    SUPPORTED_WALLET_PLUGIN_IDS.includes(
+      currencyWallets[walletId]?.currencyInfo.pluginId
+    )
+  )
 
   //
   // Effects
@@ -81,7 +87,10 @@ export const LoanDashboardScene = (props: Props) => {
 
   useAsyncEffect(
     async () => {
-      if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
+      if (await isShowLoanWelcomeModal(account.disklet))
+        await Airship.show<'ok' | undefined>(bridge => (
+          <LoanWelcomeModal bridge={bridge} />
+        ))
     },
     [],
     'LoanDashboardScene:2'
@@ -129,14 +138,21 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const [createPluginId] = SUPPORTED_WALLET_PLUGIN_IDS.filter(pluginId => account.currencyConfig[pluginId] != null)
+      const [createPluginId] = SUPPORTED_WALLET_PLUGIN_IDS.filter(
+        pluginId => account.currencyConfig[pluginId] != null
+      )
       if (createPluginId == null) {
-        throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+        throw new Error(
+          `Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(
+            ', '
+          )}`
+        )
       }
       newLoanWallet = await dispatch(
         createWallet(account, {
           name: `AAVE Loan Account`,
-          walletType: account.currencyConfig[createPluginId].currencyInfo.walletType
+          walletType:
+            account.currencyConfig[createPluginId].currencyInfo.walletType
         })
       )
     }
@@ -145,8 +161,14 @@ export const LoanDashboardScene = (props: Props) => {
       // Initialize new loan with the wallet from any of the above sources
       setIsNewLoanLoading(true)
       const newLoanWalletPluginId = newLoanWallet.currencyInfo.pluginId
-      const newBorrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === newLoanWalletPluginId)
-      if (newBorrowPlugin == null) throw new Error('Unable to find compatible borrow plugin for ' + newLoanWalletPluginId)
+      const newBorrowPlugin = borrowPlugins.find(
+        borrowPlugin =>
+          borrowPlugin.borrowInfo.currencyPluginId === newLoanWalletPluginId
+      )
+      if (newBorrowPlugin == null)
+        throw new Error(
+          'Unable to find compatible borrow plugin for ' + newLoanWalletPluginId
+        )
       newBorrowPlugin
         .makeBorrowEngine(newLoanWallet)
         .then(newBorrowEngine => {
@@ -162,7 +184,9 @@ export const LoanDashboardScene = (props: Props) => {
         .finally(() => setIsNewLoanLoading(false))
     }
   })
-  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-dashboard'))
+  const handleInfoIconPress = useUrlHandler(
+    sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-dashboard')
+  )
 
   //
   // Render
@@ -175,7 +199,14 @@ export const LoanDashboardScene = (props: Props) => {
     const handleLoanPress = () => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
     }
-    return <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} key={loanAccount.id} />
+    return (
+      <LoanSummaryCard
+        onPress={handleLoanPress}
+        borrowEngine={loanAccount.borrowEngine}
+        iconUri={iconUri}
+        key={loanAccount.id}
+      />
+    )
   })
 
   const renderFooter = () => {
@@ -191,9 +222,19 @@ export const LoanDashboardScene = (props: Props) => {
             <FillLoader />
           </Space>
         ) : (
-          <EdgeTouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-            <Ionicon name="add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.loan_new_loan}</EdgeText>
+          <EdgeTouchableOpacity
+            onPress={handleAddLoan}
+            style={styles.addButtonsContainer}
+          >
+            <Ionicon
+              name="add"
+              style={styles.addItem}
+              size={theme.rem(1.5)}
+              color={theme.iconTappable}
+            />
+            <EdgeText style={[styles.addItem, styles.addItemText]}>
+              {lstrings.loan_new_loan}
+            </EdgeText>
           </EdgeTouchableOpacity>
         )}
       </>
@@ -214,19 +255,27 @@ export const LoanDashboardScene = (props: Props) => {
       <SceneHeader
         tertiary={
           <EdgeTouchableOpacity onPress={handleInfoIconPress}>
-            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+            <Ionicon
+              name="information-circle-outline"
+              size={theme.rem(1.25)}
+              color={theme.iconTappable}
+            />
           </EdgeTouchableOpacity>
         }
         title={lstrings.loan_dashboard_title}
         underline
         withTopMargin
       />
-      <EdgeText style={styles.textSectionHeader}>{lstrings.loan_active_loans_title}</EdgeText>
+      <EdgeText style={styles.textSectionHeader}>
+        {lstrings.loan_active_loans_title}
+      </EdgeText>
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
             <Space expand alignCenter horizontalRem={1} bottomRem={2.5}>
-              <EdgeText style={styles.emptyText}>{lstrings.loan_loading_loans}</EdgeText>
+              <EdgeText style={styles.emptyText}>
+                {lstrings.loan_loading_loans}
+              </EdgeText>
             </Space>
           ) : (
             <>

@@ -25,19 +25,35 @@ interface Props {
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { denomination, maxCryptoChars, nativeCryptoAmount, title, currencyConfig, tokenId, type = 'none', onPress } = props
+  const {
+    denomination,
+    maxCryptoChars,
+    nativeCryptoAmount,
+    title,
+    currencyConfig,
+    tokenId,
+    type = 'none',
+    onPress
+  } = props
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
 
   // Convert wallet native denomination to exchange denomination
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
-  const cryptoAmountDenom = div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
+  const cryptoAmountDenom = div(
+    nativeCryptoAmount,
+    cryptoDenomMult,
+    DECIMAL_PRECISION
+  )
 
   // Default to 10 displayed chars for crypto amount
   const fmtCryptoAmount = trimEnd(
     formatNumber(cryptoAmountDenom, {
-      toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars
+      toFixed:
+        maxCryptoChars === undefined
+          ? MAX_CRYPTO_AMOUNT_CHARACTERS
+          : maxCryptoChars
     })
   )
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `
@@ -50,7 +66,11 @@ export const CryptoFiatAmountTile = (props: Props) => {
       <EdgeRow rightButtonType={type} title={title} onPress={onPress}>
         <EdgeText>
           {cryptoAmountText}
-          <FiatText currencyConfig={currencyConfig} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />
+          <FiatText
+            currencyConfig={currencyConfig}
+            tokenId={tokenId}
+            nativeCryptoAmount={absCryptoAmount}
+          />
         </EdgeText>
       </EdgeRow>
     </EdgeCard>

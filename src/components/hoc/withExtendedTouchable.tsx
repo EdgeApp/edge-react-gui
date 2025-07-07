@@ -1,5 +1,16 @@
-import React, { ComponentType, ReactNode, useEffect, useRef, useState } from 'react'
-import { GestureResponderEvent, TouchableHighlightProps, TouchableOpacityProps, TouchableWithoutFeedbackProps } from 'react-native'
+import React, {
+  ComponentType,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
+import {
+  GestureResponderEvent,
+  TouchableHighlightProps,
+  TouchableOpacityProps,
+  TouchableWithoutFeedbackProps
+} from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { showError } from '../services/AirshipInstance'
@@ -17,10 +28,17 @@ type PropsWithOptionalChildren<P = unknown> = P & { children?: ReactNode }
 
 const DEBOUNCE_DELAY = 500
 
-export function withExtendedTouchable<T extends TouchableOpacityProps | TouchableWithoutFeedbackProps | TouchableHighlightProps>(
+export function withExtendedTouchable<
+  T extends
+    | TouchableOpacityProps
+    | TouchableWithoutFeedbackProps
+    | TouchableHighlightProps
+>(
   WrappedComponent: ComponentType<PropsWithOptionalChildren<T>>
 ): React.FC<PropsWithOptionalChildren<T> & ExtendedProps> {
-  const ExtendedTouchable: React.FC<PropsWithOptionalChildren<T> & ExtendedProps> = ({
+  const ExtendedTouchable: React.FC<
+    PropsWithOptionalChildren<T> & ExtendedProps
+  > = ({
     children,
     onPress,
     onLongPress,
@@ -58,7 +76,10 @@ export function withExtendedTouchable<T extends TouchableOpacityProps | Touchabl
 
         // Also layer on debounce state toggling if enabled
         if (debounce) {
-          timeoutRef.current = setTimeout(() => setIsDebouncing(false), DEBOUNCE_DELAY)
+          timeoutRef.current = setTimeout(
+            () => setIsDebouncing(false),
+            DEBOUNCE_DELAY
+          )
         }
       } catch (err) {
         showError(err)
@@ -79,7 +100,12 @@ export function withExtendedTouchable<T extends TouchableOpacityProps | Touchabl
 
     // HACK: Can't get typescript to not complain when defining restProps as T
     return children == null ? null : (
-      <WrappedComponent disabled={isDebouncing || isAwaiting} onPress={handlePress} onLongPress={handleLongPress} {...(restProps as any)}>
+      <WrappedComponent
+        disabled={isDebouncing || isAwaiting}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        {...(restProps as any)}
+      >
         {isAwaiting && awaitChild != null ? awaitChild : children}
       </WrappedComponent>
     )

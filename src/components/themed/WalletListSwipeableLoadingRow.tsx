@@ -39,7 +39,14 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     setTimeout(() => {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} navigation={navigation} walletId={walletId} tokenId={null} />).catch(err => showError(err))
+    Airship.show(bridge => (
+      <WalletListMenuModal
+        bridge={bridge}
+        navigation={navigation}
+        walletId={walletId}
+        tokenId={null}
+      />
+    )).catch(err => showError(err))
   })
 
   // rendering -----------------------------------------------------------
@@ -58,13 +65,22 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
 
   const row =
     currencyWalletErrors[walletId] != null ? (
-      <WalletListErrorRow error={currencyWalletErrors[walletId]} onLongPress={handleMenu} />
+      <WalletListErrorRow
+        error={currencyWalletErrors[walletId]}
+        onLongPress={handleMenu}
+      />
     ) : (
       <WalletListLoadingRow onLongPress={handleMenu} />
     )
 
   return (
-    <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
+    <SwipeableRow
+      ref={rowRef}
+      renderRight={renderMenuUnderlay}
+      rightDetent={theme.rem(2.5)}
+      rightThreshold={theme.rem(5)}
+      onRightSwipe={handleMenu}
+    >
       {row}
     </SwipeableRow>
   )
@@ -84,4 +100,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableLoadingRow = React.memo(WalletListSwipeableLoadingRowComponent)
+export const WalletListSwipeableLoadingRow = React.memo(
+  WalletListSwipeableLoadingRowComponent
+)

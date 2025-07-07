@@ -1,6 +1,9 @@
 import { ActionProgramState } from '../types'
 
-export const makeInitialProgramState = (clientId: string, programId: string): ActionProgramState => {
+export const makeInitialProgramState = (
+  clientId: string,
+  programId: string
+): ActionProgramState => {
   return {
     clientId,
     programId,

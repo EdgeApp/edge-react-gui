@@ -1,4 +1,9 @@
-import { EdgeAccount, EdgeNetworkFee, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeNetworkFee,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 
 import { Dispatch, GetState } from '../../types/reduxTypes'
 import { CleanError } from './cleaners'
@@ -18,7 +23,11 @@ export interface ParActionOp {
   actions: ActionOp[]
   displayKey?: ParActionOpDisplayKey
 }
-export type ParActionOpDisplayKey = 'borrow' | 'close' | 'create' | 'swap-deposit-fees'
+export type ParActionOpDisplayKey =
+  | 'borrow'
+  | 'close'
+  | 'create'
+  | 'swap-deposit-fees'
 
 export interface BroadcastTxActionOp {
   type: 'broadcast-tx'
@@ -155,7 +164,14 @@ export interface DoneEffect {
   cancelled?: boolean
 }
 
-export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
+export type ActionEffect =
+  | SeqEffect
+  | ParEffect
+  | AddressBalanceEffect
+  | PushEventEffect
+  | PriceLevelEffect
+  | TxConfsEffect
+  | DoneEffect
 
 //
 // Action Program
@@ -213,7 +229,9 @@ export interface EffectCheckResult {
   updatedEffect?: ActionEffect
 }
 export interface ExecutableAction {
-  dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput | null>
+  dryrun: (
+    pendingTxMap: Readonly<PendingTxMap>
+  ) => Promise<ExecutionOutput | null>
   execute: () => Promise<ExecutionOutput>
 }
 export interface ExecutionContext {
@@ -221,7 +239,10 @@ export interface ExecutionContext {
   clientId: string
 
   // Methods
-  evaluateAction: (program: ActionProgram, state: ActionProgramState) => Promise<ExecutableAction>
+  evaluateAction: (
+    program: ActionProgram,
+    state: ActionProgramState
+  ) => Promise<ExecutableAction>
   checkActionEffect: (effect: ActionEffect) => Promise<EffectCheckResult>
 
   // Redux Methods

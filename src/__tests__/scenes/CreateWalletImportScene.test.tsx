@@ -8,7 +8,8 @@ import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {
-  const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children
+  const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) =>
+    blob.children
   return { KeyboardAwareScrollView }
 })
 

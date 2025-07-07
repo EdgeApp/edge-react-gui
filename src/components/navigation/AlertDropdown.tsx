@@ -42,17 +42,29 @@ export function AlertDropdown(props: Props) {
   })
 
   return (
-    <AirshipDropdown autoHideMs={persistent ? 0 : undefined} bridge={bridge} backgroundColor={color}>
+    <AirshipDropdown
+      autoHideMs={persistent ? 0 : undefined}
+      bridge={bridge}
+      backgroundColor={color}
+    >
       <View style={styles.container}>
         <EdgeTouchableOpacity style={styles.content} onPress={handleOnPress}>
           <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
           <Text style={styles.text}>
-            <Text style={styles.textBold}>{warning ? lstrings.alert_dropdown_warning : lstrings.alert_dropdown_alert}</Text>
+            <Text style={styles.textBold}>
+              {warning
+                ? lstrings.alert_dropdown_warning
+                : lstrings.alert_dropdown_alert}
+            </Text>
             {message}
           </Text>
         </EdgeTouchableOpacity>
         <EdgeTouchableOpacity onPress={handleClose}>
-          <AntDesignIcon name="closecircle" size={theme.rem(1)} style={styles.icon} />
+          <AntDesignIcon
+            name="closecircle"
+            size={theme.rem(1)}
+            style={styles.icon}
+          />
         </EdgeTouchableOpacity>
       </View>
     </AirshipDropdown>

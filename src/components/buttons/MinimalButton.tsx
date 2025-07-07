@@ -50,13 +50,27 @@ const MinimalButtonComponent = (props: Props) => {
   )
 
   return (
-    <EdgeTouchableOpacity disabled={disabled || pending} style={memoizedStyle} onPress={handlePress}>
+    <EdgeTouchableOpacity
+      disabled={disabled || pending}
+      style={memoizedStyle}
+      onPress={handlePress}
+    >
       {pending ? null : (
-        <Text adjustsFontSizeToFit minimumFontScale={0.25} numberOfLines={1} style={highlighted ? styles.labelSelected : styles.label}>
+        <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={highlighted ? styles.labelSelected : styles.label}
+        >
           {label}
         </Text>
       )}
-      {!pending ? null : <ActivityIndicator color={theme.secondaryButtonText} style={styles.spinner} />}
+      {!pending ? null : (
+        <ActivityIndicator
+          color={theme.secondaryButtonText}
+          style={styles.spinner}
+        />
+      )}
     </EdgeTouchableOpacity>
   )
 }

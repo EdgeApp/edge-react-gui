@@ -86,7 +86,12 @@ describe('Crypto', () => {
       saltLength: crypto.constants.RSA_PSS_SALTLEN_DIGEST
     }
 
-    const isVerified = crypto.verify('sha512', Buffer.from(hashedData), key, Buffer.from(signature, 'base64'))
+    const isVerified = crypto.verify(
+      'sha512',
+      Buffer.from(hashedData),
+      key,
+      Buffer.from(signature, 'base64')
+    )
     expect(isVerified).toBe(true)
   })
 })

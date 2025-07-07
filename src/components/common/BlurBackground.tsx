@@ -11,7 +11,13 @@ export const BlurBackground = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={[styles.blurView, styles.roundCorner]} overlayColor="rgba(0, 0, 0, 0)" />
+  return (
+    <BlurView
+      blurType={theme.isDark ? 'dark' : 'light'}
+      style={[styles.blurView, styles.roundCorner]}
+      overlayColor="rgba(0, 0, 0, 0)"
+    />
+  )
 }
 
 /** A blur background WITHOUT rounded corners. For the scene header/footer */
@@ -19,7 +25,13 @@ export const BlurBackgroundNoRoundedCorners = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={styles.blurView} overlayColor="rgba(0, 0, 0, 0)" />
+  return (
+    <BlurView
+      blurType={theme.isDark ? 'dark' : 'light'}
+      style={styles.blurView}
+      overlayColor="rgba(0, 0, 0, 0)"
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -29,7 +41,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // entire screen for the BlurView by default. We change this default
     // behavior with the transparent overlayColor, so we add this background
     // color to compensate and to match iOS colors/shades.
-    backgroundColor: isAndroid ? (theme.isDark ? '#161616aa' : '#ffffff55') : undefined
+    backgroundColor: isAndroid
+      ? theme.isDark
+        ? '#161616aa'
+        : '#ffffff55'
+      : undefined
   },
   roundCorner: {
     // Weird quirk: iOS needs rounding at this component level to properly round

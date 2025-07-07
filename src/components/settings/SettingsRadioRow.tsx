@@ -35,14 +35,31 @@ const SettingsRadioRowComponent = (props: Props) => {
     fontSize: theme.rem(1.25),
     marginHorizontal: theme.rem(0.5)
   }
-  const accessibilityHint = `${value ? lstrings.on_hint : lstrings.off_hint} ${label}`
+  const accessibilityHint = `${
+    value ? lstrings.on_hint : lstrings.off_hint
+  } ${label}`
   const rightIcon = value ? (
-    <IonIcon name="radio-button-on" style={style} accessibilityRole="radio" accessibilityHint={accessibilityHint} />
+    <IonIcon
+      name="radio-button-on"
+      style={style}
+      accessibilityRole="radio"
+      accessibilityHint={accessibilityHint}
+    />
   ) : (
-    <IonIcon name="radio-button-off" style={style} accessibilityRole="radio" accessibilityHint={accessibilityHint} />
+    <IonIcon
+      name="radio-button-off"
+      style={style}
+      accessibilityRole="radio"
+      accessibilityHint={accessibilityHint}
+    />
   )
   return (
-    <SettingsRow disabled={disabled} label={label} right={rightIcon} onPress={onPress}>
+    <SettingsRow
+      disabled={disabled}
+      label={label}
+      right={rightIcon}
+      onPress={onPress}
+    >
       {children}
     </SettingsRow>
   )

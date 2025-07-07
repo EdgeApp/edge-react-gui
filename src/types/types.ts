@@ -1,5 +1,22 @@
-import { asArray, asBoolean, asDate, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
+import {
+  asArray,
+  asBoolean,
+  asDate,
+  asEither,
+  asMaybe,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue
+} from 'cleaners'
+import {
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeToken,
+  EdgeTokenId
+} from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
@@ -100,7 +117,12 @@ export interface GuiReceiveAddress {
 }
 
 export interface CurrencyConverter {
-  convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+  convertCurrency: (
+    state: RootState,
+    currencyCode: string,
+    isoFiatCurrencyCode: string,
+    balanceInCryptoDisplay: string
+  ) => number
 }
 
 const asPasswordReminder = asObject({
@@ -125,7 +147,9 @@ export const asSpendingLimits = asObject({
 const asAccountNotifDismissInfo = asObject({
   ip2FaNotifShown: asMaybe(asBoolean, false)
 })
-export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
+export type AccountNotifDismissInfo = ReturnType<
+  typeof asAccountNotifDismissInfo
+>
 
 const asTokenWarningsShown = asArray(asString)
 
@@ -217,7 +241,10 @@ const asLocalAccountSettingsInner = asObject({
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
-  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({})),
+  accountNotifDismissInfo: asMaybe(
+    asAccountNotifDismissInfo,
+    asAccountNotifDismissInfo({})
+  ),
   tokenWarningsShown: asMaybe(asTokenWarningsShown, []),
   reviewTrigger: asMaybe(asReviewTriggerData)
 })
@@ -232,8 +259,12 @@ const asDeviceSettingsInner = asObject({
   isSurveyDiscoverShown: asMaybe(asBoolean, false)
 })
 
-export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
-export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () => asDeviceSettingsInner({}))
+export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () =>
+  asLocalAccountSettingsInner({})
+)
+export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () =>
+  asDeviceSettingsInner({})
+)
 
 export type DefaultScreen = ReturnType<typeof asDefaultScreen>
 export type PasswordReminder = ReturnType<typeof asPasswordReminder>
@@ -248,7 +279,10 @@ export interface GuiExchangeRates {
   [pair: string]: number
 }
 // Same as GuiExchangeRates but with better ergonomics. Limited to current and 24 hour rates.
-export type GuiExchangeRatesMap = Map<string, Map<string, { currentRate: number; yesterdayRate: number }>>
+export type GuiExchangeRatesMap = Map<
+  string,
+  Map<string, { currentRate: number; yesterdayRate: number }>
+>
 
 export interface StateProvinceData {
   name: string

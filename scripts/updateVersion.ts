@@ -34,17 +34,29 @@ async function main() {
   console.log(versionFile)
 
   // Update the native project files:
-  await Promise.all([updateAndroid(disklet, versionFile), updateIos(cwd, versionFile)])
+  await Promise.all([
+    updateAndroid(disklet, versionFile),
+    updateIos(cwd, versionFile)
+  ])
 }
 
 /**
  * Inserts the build information into the Android project files.
  */
-async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promise<void> {
+async function updateAndroid(
+  disklet: Disklet,
+  versionFile: VersionFile
+): Promise<void> {
   let gradle = await disklet.getText('android/app/build.gradle')
 
-  gradle = gradle.replace(/versionName "[0-9.]+"/g, `versionName "${versionFile.version}"`)
-  gradle = gradle.replace(/versionCode [0-9]+/g, `versionCode ${versionFile.build}`)
+  gradle = gradle.replace(
+    /versionName "[0-9.]+"/g,
+    `versionName "${versionFile.version}"`
+  )
+  gradle = gradle.replace(
+    /versionCode [0-9]+/g,
+    `versionCode ${versionFile.build}`
+  )
 
   await disklet.setText('android/app/build.gradle', gradle)
 }
@@ -53,10 +65,13 @@ async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promis
  * Inserts the build information into the iOS project files.
  */
 function updateIos(cwd: string, versionFile: VersionFile): void {
-  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, {
-    cwd: path.join(cwd, 'ios'),
-    stdio: 'inherit'
-  })
+  childProcess.execSync(
+    `agvtool new-marketing-version ${versionFile.version}`,
+    {
+      cwd: path.join(cwd, 'ios'),
+      stdio: 'inherit'
+    }
+  )
   childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, {
     cwd: path.join(cwd, 'ios'),
     stdio: 'inherit'

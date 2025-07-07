@@ -1,4 +1,9 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId, JsonObject } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeToken,
+  EdgeTokenId,
+  JsonObject
+} from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -46,8 +51,12 @@ function EditTokenSceneComponent(props: Props) {
   const account = useSelector(state => state.core.account)
 
   // Extract our initial state from the token:
-  const [currencyCode, setCurrencyCode] = React.useState(route.params.currencyCode ?? '')
-  const [displayName, setDisplayName] = React.useState(route.params.displayName ?? '')
+  const [currencyCode, setCurrencyCode] = React.useState(
+    route.params.currencyCode ?? ''
+  )
+  const [displayName, setDisplayName] = React.useState(
+    route.params.displayName ?? ''
+  )
   const [decimalPlaces, setDecimalPlaces] = React.useState<string>(() => {
     const { multiplier } = route.params
     if (multiplier == null || !/^10*$/.test(multiplier)) return '18'
@@ -75,7 +84,8 @@ function EditTokenSceneComponent(props: Props) {
   })
 
   // Keep track of whether we auto-completed a token:
-  const [didAutoCompleteToken, setDidAutoCompleteToken] = React.useState<boolean>(false)
+  const [didAutoCompleteToken, setDidAutoCompleteToken] =
+    React.useState<boolean>(false)
   const isAutoCompleteTokenLoading = React.useRef<boolean>(false)
 
   const handleDelete = useHandler(async () => {
@@ -91,7 +101,11 @@ function EditTokenSceneComponent(props: Props) {
             label: lstrings.string_delete,
             async onPress() {
               await wallet.currencyConfig.removeCustomToken(tokenId)
-              logActivity(`Delete Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`)
+              logActivity(
+                `Delete Custom Token: ${account.username} -- ${getWalletName(
+                  wallet
+                )} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`
+              )
 
               navigation.goBack()
               return true
@@ -120,12 +134,22 @@ function EditTokenSceneComponent(props: Props) {
       if (item.type === 'number') {
         const number = parseInt(value)
         if (isNaN(number)) {
-          return await showMessage(sprintf(lstrings.addtoken_invalid_1s, translateDescription(item.displayName)))
+          return await showMessage(
+            sprintf(
+              lstrings.addtoken_invalid_1s,
+              translateDescription(item.displayName)
+            )
+          )
         }
         networkLocation[item.key] = number
       } else if (item.type === 'string') {
         if (value === '') {
-          return await showMessage(sprintf(lstrings.addtoken_invalid_1s, translateDescription(item.displayName)))
+          return await showMessage(
+            sprintf(
+              lstrings.addtoken_invalid_1s,
+              translateDescription(item.displayName)
+            )
+          )
         }
         networkLocation[item.key] = value
       }
@@ -156,19 +180,33 @@ function EditTokenSceneComponent(props: Props) {
       const newTokenId = await currencyConfig.getTokenId(customTokenInput)
 
       // Check if custom token input conflicts with built-in tokens.
-      const matchingBuiltinTokenId = Object.keys(builtinTokens).find(builtinTokenId => builtinTokenId === newTokenId)
+      const matchingBuiltinTokenId = Object.keys(builtinTokens).find(
+        builtinTokenId => builtinTokenId === newTokenId
+      )
       if (matchingBuiltinTokenId != null) {
-        await showMessage(sprintf(lstrings.warning_token_exists_1s, builtinTokens[matchingBuiltinTokenId].currencyCode))
+        await showMessage(
+          sprintf(
+            lstrings.warning_token_exists_1s,
+            builtinTokens[matchingBuiltinTokenId].currencyCode
+          )
+        )
         return
       }
 
-      const isMatchingBuiltinCurrencyCode = Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
+      const isMatchingBuiltinCurrencyCode =
+        Object.values(builtinTokens).find(
+          builtInToken => builtInToken.currencyCode === currencyCode
+        ) != null
       const approveAdd = !isMatchingBuiltinCurrencyCode
         ? true
         : await Airship.show<boolean>(bridge => (
             <ConfirmContinueModal
               bridge={bridge}
-              body={sprintf(lstrings.warning_token_code_override_2s, currencyCode, config.supportEmail)}
+              body={sprintf(
+                lstrings.warning_token_code_override_2s,
+                currencyCode,
+                config.supportEmail
+              )}
               title={lstrings.string_warning}
               warning
               isSkippable
@@ -188,8 +226,17 @@ function EditTokenSceneComponent(props: Props) {
           await currencyConfig.addCustomToken(customTokenInput)
         }
 
-        await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, newTokenId])
-        logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${newTokenId} -- ${currencyCode} -- ${decimals}`)
+        await wallet.changeEnabledTokenIds([
+          ...wallet.enabledTokenIds,
+          newTokenId
+        ])
+        logActivity(
+          `Add Custom Token: ${account.username} -- ${getWalletName(
+            wallet
+          )} -- ${
+            wallet.type
+          } -- ${newTokenId} -- ${currencyCode} -- ${decimals}`
+        )
       }
       navigation.goBack()
     }
@@ -209,16 +256,22 @@ function EditTokenSceneComponent(props: Props) {
     }
 
     isAutoCompleteTokenLoading.current = true
-    const [token] = await wallet.currencyConfig.getTokenDetails({ contractAddress: searchString }).catch(() => [])
+    const [token] = await wallet.currencyConfig
+      .getTokenDetails({ contractAddress: searchString })
+      .catch(() => [])
     isAutoCompleteTokenLoading.current = false
 
     if (token != null) {
       setCurrencyCode(token.currencyCode)
       setDisplayName(token.displayName)
-      setDecimalPlaces((token.denominations[0].multiplier.length - 1).toString())
+      setDecimalPlaces(
+        (token.denominations[0].multiplier.length - 1).toString()
+      )
       setLocation(location => {
         const out = new Map(location)
-        for (const [key, value] of Object.entries(token.networkLocation ?? {})) {
+        for (const [key, value] of Object.entries(
+          token.networkLocation ?? {}
+        )) {
           out.set(key, value.replace(/\s/g, ''))
         }
         return out
@@ -268,8 +321,17 @@ function EditTokenSceneComponent(props: Props) {
 
   return (
     <SceneWrapper avoidKeyboard>
-      <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+      <SceneHeader
+        title={
+          tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token
+        }
+        underline
+      />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContainer}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         {renderCustomTokenTemplateRows()}
         <FilledTextInput
           aroundRem={0.5}

@@ -7,7 +7,9 @@ import { ExecutionOutput } from '../controllers/action-queue/types'
 export interface NetworkFeeMap {
   [currencyCode: string]: EdgeNetworkFee | undefined
 }
-export const getExecutionNetworkFees = (executionOutputs: ExecutionOutput[]): NetworkFeeMap => {
+export const getExecutionNetworkFees = (
+  executionOutputs: ExecutionOutput[]
+): NetworkFeeMap => {
   const networkFeeMap: NetworkFeeMap = {}
 
   for (const output of executionOutputs) {

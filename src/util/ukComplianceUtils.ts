@@ -25,20 +25,39 @@ const UK_COMPLIANT_STRING_MAP: {
     default: 'stake_x_to_earn_y',
     gb: 'transaction_details_stake_subcat_1s'
   },
-  insufficient_fees_2s: { default: 'buy_parent_crypto_modal_message_2s', gb: 'swap_parent_crypto_modal_message_2s' },
-  insufficient_fees_3s: { default: 'buy_parent_crypto_modal_message_3s', gb: 'swap_parent_crypto_modal_message_3s' },
-  token_agreement_modal_message: { default: 'token_agreement_modal_message', gb: 'uk_token_agreement_modal_message' }
+  insufficient_fees_2s: {
+    default: 'buy_parent_crypto_modal_message_2s',
+    gb: 'swap_parent_crypto_modal_message_2s'
+  },
+  insufficient_fees_3s: {
+    default: 'buy_parent_crypto_modal_message_3s',
+    gb: 'swap_parent_crypto_modal_message_3s'
+  },
+  token_agreement_modal_message: {
+    default: 'token_agreement_modal_message',
+    gb: 'uk_token_agreement_modal_message'
+  }
 }
 
 const formatString = (template: string, values: string[]): string => {
-  return template.replace(/%(\d+)\$s/g, (_, index) => values[parseInt(index) - 1] || '')
+  return template.replace(
+    /%(\d+)\$s/g,
+    (_, index) => values[parseInt(index) - 1] || ''
+  )
 }
 
 /**
  * Returns the UK compliant version of the string
  */
-export const getUkCompliantString = (countryCode: string | undefined, key: CompliantStringKeys, ...values: string[]): string => {
+export const getUkCompliantString = (
+  countryCode: string | undefined,
+  key: CompliantStringKeys,
+  ...values: string[]
+): string => {
   const compliantStringKeys = UK_COMPLIANT_STRING_MAP[key]
-  const template = countryCode === 'GB' ? lstrings[compliantStringKeys.gb] : lstrings[compliantStringKeys.default]
+  const template =
+    countryCode === 'GB'
+      ? lstrings[compliantStringKeys.gb]
+      : lstrings[compliantStringKeys.default]
   return formatString(template, values)
 }

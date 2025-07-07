@@ -109,7 +109,8 @@ describe('convertNativeToDenomination', function () {
     const nativeToDisplayRatio = '100000000'
     const nativeAmount = '100000000'
     const expected = '1'
-    const actual = convertNativeToDenomination(nativeToDisplayRatio)(nativeAmount)
+    const actual =
+      convertNativeToDenomination(nativeToDisplayRatio)(nativeAmount)
     expect(actual).toBe(expected)
   })
 })
@@ -316,7 +317,12 @@ describe('precisionAdjust', function () {
   for (const key in tests) {
     // @ts-expect-error
     const { input, output } = tests[key]
-    const { displayDenominationMultiplier, primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio } = input
+    const {
+      displayDenominationMultiplier,
+      primaryExchangeMultiplier,
+      secondaryExchangeMultiplier,
+      exchangeSecondaryToPrimaryRatio
+    } = input
 
     test(key, function () {
       const precisionAdjustmentValue = precisionAdjust({
@@ -325,9 +331,12 @@ describe('precisionAdjust', function () {
         exchangeSecondaryToPrimaryRatio
       })
       expect(precisionAdjustmentValue).toBe(output.precisionAdjustmentValue)
-      expect(maxPrimaryCurrencyConversionDecimals(log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
-        output.maxPrimaryCurrencyConversionDecimals
-      )
+      expect(
+        maxPrimaryCurrencyConversionDecimals(
+          log10(displayDenominationMultiplier),
+          precisionAdjustmentValue
+        )
+      ).toBe(output.maxPrimaryCurrencyConversionDecimals)
     })
   }
 })
@@ -370,7 +379,8 @@ describe('getDisplayDenomination', function () {
                 denominations: [
                   {
                     name: 'TKN',
-                    multiplier: '10000000000000000000000000000000000000000000000000'
+                    multiplier:
+                      '10000000000000000000000000000000000000000000000000'
                   }
                 ],
                 contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
@@ -398,7 +408,8 @@ describe('getDisplayDenomination', function () {
                   denominations: [
                     {
                       name: 'TKN',
-                      multiplier: '10000000000000000000000000000000000000000000000000'
+                      multiplier:
+                        '10000000000000000000000000000000000000000000000000'
                     }
                   ],
                   contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
@@ -443,8 +454,15 @@ describe('getDisplayDenomination', function () {
   ]
   input.forEach((currency, index) => {
     test(`Display Denomination of ${currency.currencyCode}`, function () {
-      const currencyConfig = state.core.account.currencyConfig[currency.pluginId]
-      expect(selectDisplayDenomByCurrencyCode(state as any, currencyConfig as any, currency.currencyCode)).toMatchObject(output[index])
+      const currencyConfig =
+        state.core.account.currencyConfig[currency.pluginId]
+      expect(
+        selectDisplayDenomByCurrencyCode(
+          state as any,
+          currencyConfig as any,
+          currency.currencyCode
+        )
+      ).toMatchObject(output[index])
     })
   })
 })
@@ -511,7 +529,9 @@ describe('roundedFee', function () {
   input.forEach((obj, index) => {
     const { amount, decimalPlacesBeyondLeadingZeros, multiplier } = obj
     test(`${title} ${amount}`, function () {
-      expect(roundedFee(amount, decimalPlacesBeyondLeadingZeros, multiplier)).toBe(output[index])
+      expect(
+        roundedFee(amount, decimalPlacesBeyondLeadingZeros, multiplier)
+      ).toBe(output[index])
     })
   })
 })

@@ -1,6 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { getReturnCurrencyCode, upgradeExtendedCurrencyCodes } from '../controllers/edgeProvider/EdgeProviderServer'
+import {
+  getReturnCurrencyCode,
+  upgradeExtendedCurrencyCodes
+} from '../controllers/edgeProvider/EdgeProviderServer'
 
 describe('upgradeExtendedCurrencyCodes', () => {
   describe('string list', () => {
@@ -15,14 +18,25 @@ describe('upgradeExtendedCurrencyCodes', () => {
       // MATIC and BNB are ambiguous since they could be an ETH token or a mainnet coin. Therefore it should not get included
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
-      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, undefined)
+      const result = upgradeExtendedCurrencyCodes(
+        currencyConfig,
+        undefined,
+        undefined
+      )
       expect(result).toEqual(undefined)
     })
     test('mainnets', () => {
       // MATIC and BNB are ambiguous since they could be an ETH token or a mainnet coin. Therefore it should not get included
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
-      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'ETH', 'MATIC', 'BNB', 'DOGE', 'BSC'])
+      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [
+        'BTC',
+        'ETH',
+        'MATIC',
+        'BNB',
+        'DOGE',
+        'BSC'
+      ])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
         { pluginId: 'ethereum', tokenId: null },
@@ -30,7 +44,12 @@ describe('upgradeExtendedCurrencyCodes', () => {
       ])
     })
     test('single code tokens', () => {
-      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'USDC', 'REP', 'USDT'])
+      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [
+        'BTC',
+        'USDC',
+        'REP',
+        'USDT'
+      ])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
         {
@@ -48,7 +67,12 @@ describe('upgradeExtendedCurrencyCodes', () => {
       ])
     })
     test('double code tokens', () => {
-      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'MATIC-USDC', 'ETH-REP', 'ETH-USDT'])
+      const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [
+        'BTC',
+        'MATIC-USDC',
+        'ETH-REP',
+        'ETH-USDT'
+      ])
       expect(result).toEqual([
         { pluginId: 'bitcoin', tokenId: null },
         {
@@ -126,23 +150,43 @@ describe('upgradeExtendedCurrencyCodes', () => {
 describe('getReturnCurrencyCode', () => {
   describe('string list', () => {
     test('mainnets', () => {
-      const result = getReturnCurrencyCode(['BTC', 'ETH', 'MATIC'], 'ETH', 'ETH')
+      const result = getReturnCurrencyCode(
+        ['BTC', 'ETH', 'MATIC'],
+        'ETH',
+        'ETH'
+      )
       expect(result).toBe('ETH')
     })
     test('eth token', () => {
-      const result = getReturnCurrencyCode(['BTC', 'ETH', 'USDC'], 'ETH', 'USDC')
+      const result = getReturnCurrencyCode(
+        ['BTC', 'ETH', 'USDC'],
+        'ETH',
+        'USDC'
+      )
       expect(result).toBe('USDC')
     })
     test('double code mainnet', () => {
-      const result = getReturnCurrencyCode(['BTC-BTC', 'ETH-ETH', 'ETH-USDC'], 'ETH', 'ETH')
+      const result = getReturnCurrencyCode(
+        ['BTC-BTC', 'ETH-ETH', 'ETH-USDC'],
+        'ETH',
+        'ETH'
+      )
       expect(result).toBe('ETH-ETH')
     })
     test('double code ETH token', () => {
-      const result = getReturnCurrencyCode(['BTC-BTC', 'ETH-ETH', 'ETH-USDC'], 'ETH', 'USDC')
+      const result = getReturnCurrencyCode(
+        ['BTC-BTC', 'ETH-ETH', 'ETH-USDC'],
+        'ETH',
+        'USDC'
+      )
       expect(result).toBe('ETH-USDC')
     })
     test('double code token', () => {
-      const result = getReturnCurrencyCode(['BTC-BTC', 'ETH-ETH', 'ETH-USDC', 'MATIC-USDC'], 'MATIC', 'USDC')
+      const result = getReturnCurrencyCode(
+        ['BTC-BTC', 'ETH-ETH', 'ETH-USDC', 'MATIC-USDC'],
+        'MATIC',
+        'USDC'
+      )
       expect(result).toBe('MATIC-USDC')
     })
   })
@@ -214,7 +258,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       walletType: 'wallet:telos',
       defaultSettings: {
         otherSettings: {
-          eosActivationServers: ['https://eospay.edge.app', 'https://account.teloscrew.com'],
+          eosActivationServers: [
+            'https://eospay.edge.app',
+            'https://account.teloscrew.com'
+          ],
           eosHyperionNodes: ['https://telos.caleos.io'],
           eosNodes: ['https://telos.caleos.io'],
           eosFuelServers: [],
@@ -253,7 +300,9 @@ const currencyConfig: { [pluginId: string]: any } = {
           eosFuelServers: [],
           eosDfuseServers: [],
           uriProtocol: 'wax',
-          createAccountViaSingleApiEndpoints: ['https://edge.maltablock.org/api/v1/activateAccount']
+          createAccountViaSingleApiEndpoints: [
+            'https://edge.maltablock.org/api/v1/activateAccount'
+          ]
         }
       },
       memoMaxLength: 256,
@@ -283,7 +332,11 @@ const currencyConfig: { [pluginId: string]: any } = {
       defaultSettings: {
         customFeeSettings: ['gasLimit', 'gasPrice'],
         otherSettings: {
-          rpcServers: ['https://bsc-dataseed.binance.org', 'https://bsc-dataseed1.defibit.io', 'https://bsc-dataseed1.ninicoin.io'],
+          rpcServers: [
+            'https://bsc-dataseed.binance.org',
+            'https://bsc-dataseed1.defibit.io',
+            'https://bsc-dataseed1.ninicoin.io'
+          ],
           evmScanApiServers: ['https://api.bscscan.com'],
           blockcypherApiServers: [],
           blockbookServers: [],
@@ -351,10 +404,19 @@ const currencyConfig: { [pluginId: string]: any } = {
       defaultSettings: {
         customFeeSettings: ['gasLimit', 'gasPrice'],
         otherSettings: {
-          rpcServers: ['https://eth-mainnet.alchemyapi.io', 'https://mainnet.infura.io/v3', 'https://cloudflare-eth.com'],
+          rpcServers: [
+            'https://eth-mainnet.alchemyapi.io',
+            'https://mainnet.infura.io/v3',
+            'https://cloudflare-eth.com'
+          ],
           evmScanApiServers: ['https://api.etherscan.io'],
           blockcypherApiServers: ['https://api.blockcypher.com'],
-          blockbookServers: ['https://blockbook-ethereum.tronwallet.me', 'https://eth1.trezor.io', 'https://eth2.trezor.io', 'https://eth2.bcfn.ca'],
+          blockbookServers: [
+            'https://blockbook-ethereum.tronwallet.me',
+            'https://eth1.trezor.io',
+            'https://eth2.trezor.io',
+            'https://eth2.bcfn.ca'
+          ],
           uriNetworks: ['ethereum', 'ether'],
           ercTokenStandard: 'ERC20',
           chainParams: {
@@ -382,7 +444,8 @@ const currencyConfig: { [pluginId: string]: any } = {
           amberDataBlockchainId: '1c9c969065fcd1cf',
           pluginMnemonicKeyName: 'ethereumMnemonic',
           pluginRegularKeyName: 'ethereumKey',
-          ethGasStationUrl: 'https://www.ethgasstation.info/json/ethgasAPI.json',
+          ethGasStationUrl:
+            'https://www.ethgasstation.info/json/ethgasAPI.json',
           defaultNetworkFees: {
             default: {
               baseFeeMultiplier: {
@@ -4130,7 +4193,10 @@ const currencyConfig: { [pluginId: string]: any } = {
           rpcServers: ['https://www.ethercluster.com/etc'],
           evmScanApiServers: ['https://blockscout.com/etc/mainnet'],
           blockcypherApiServers: [],
-          blockbookServers: ['https://etcbook.guarda.co', 'https://etc1.trezor.io'],
+          blockbookServers: [
+            'https://etcbook.guarda.co',
+            'https://etc1.trezor.io'
+          ],
           uriNetworks: ['ethereumclassic', 'etherclass'],
           ercTokenStandard: 'ERC20',
           chainParams: {
@@ -4220,7 +4286,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       defaultSettings: {
         customFeeSettings: ['gasLimit', 'gasPrice'],
         otherSettings: {
-          rpcServers: ['https://polished-empty-cloud.fantom.quiknode.pro', 'https://rpc.ftm.tools'],
+          rpcServers: [
+            'https://polished-empty-cloud.fantom.quiknode.pro',
+            'https://rpc.ftm.tools'
+          ],
           evmScanApiServers: ['https://api.ftmscan.com'],
           blockcypherApiServers: [],
           blockbookServers: [],
@@ -6249,7 +6318,11 @@ const currencyConfig: { [pluginId: string]: any } = {
           'https://api.fio.services/v1/',
           'https://fio.eosusa.news/v1/'
         ],
-        historyNodeUrls: ['https://fio.greymass.com/v1/', 'https://fio.greymass.com/v1/', 'https://fio.eosphere.io/v1/'],
+        historyNodeUrls: [
+          'https://fio.greymass.com/v1/',
+          'https://fio.greymass.com/v1/',
+          'https://fio.eosphere.io/v1/'
+        ],
         fioRegApiUrl: 'https://reg.fioprotocol.io/public-api/',
         fioDomainRegUrl: 'https://reg.fioprotocol.io/domain/',
         fioAddressRegUrl: 'https://reg.fioprotocol.io/address/',
@@ -6313,7 +6386,8 @@ const currencyConfig: { [pluginId: string]: any } = {
         }
       },
       addressExplorer: 'https://blockchair.com/zcash/address/%s?from=edgeapp',
-      transactionExplorer: 'https://blockchair.com/zcash/transaction/%s?from=edgeapp',
+      transactionExplorer:
+        'https://blockchair.com/zcash/transaction/%s?from=edgeapp',
       denominations: [
         {
           name: 'ZEC',
@@ -6400,7 +6474,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       walletType: 'wallet:tezos',
       defaultSettings: {
         otherSettings: {
-          tezosRpcNodes: ['https://rpc.tzbeta.net', 'https://mainnet.tezrpc.me'],
+          tezosRpcNodes: [
+            'https://rpc.tzbeta.net',
+            'https://mainnet.tezrpc.me'
+          ],
           tezosApiServers: ['https://api.tzkt.io']
         },
         fee: {
@@ -6508,7 +6585,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       walletType: 'wallet:solana',
       defaultSettings: {
         otherSettings: {
-          rpcNodes: ['https://ssc-dao.genesysgo.net', 'https://api.mainnet-beta.solana.com'],
+          rpcNodes: [
+            'https://ssc-dao.genesysgo.net',
+            'https://api.mainnet-beta.solana.com'
+          ],
           commitment: 'confirmed',
           txQueryLimit: 1000,
           derivationPath: "m/44'/501'/0'/0'",
@@ -6516,7 +6596,8 @@ const currencyConfig: { [pluginId: string]: any } = {
         }
       },
       addressExplorer: 'https://blockchair.com/solana/address/%s?from=edgeapp',
-      transactionExplorer: 'https://blockchair.com/solana/transaction/%s?from=edgeapp',
+      transactionExplorer:
+        'https://blockchair.com/solana/transaction/%s?from=edgeapp',
       denominations: [
         {
           name: 'SOL',
@@ -6544,7 +6625,8 @@ const currencyConfig: { [pluginId: string]: any } = {
         }
       },
       addressExplorer: 'https://xmrchain.net/search?value=%s',
-      transactionExplorer: 'https://blockchair.com/monero/transaction/%s?from=edgeapp',
+      transactionExplorer:
+        'https://blockchair.com/monero/transaction/%s?from=edgeapp',
       denominations: [
         {
           name: 'XMR',
@@ -6589,7 +6671,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://btc1.trezor.io', 'wss://btc2.trezor.io', 'wss://btc3.trezor.io', 'wss://btc4.trezor.io', 'wss://btc5.trezor.io'],
+        blockbookServers: [
+          'wss://btc1.trezor.io',
+          'wss://btc2.trezor.io',
+          'wss://btc3.trezor.io',
+          'wss://btc4.trezor.io',
+          'wss://btc5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6637,7 +6725,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://bch1.trezor.io', 'wss://bch2.trezor.io', 'wss://bch3.trezor.io', 'wss://bch4.trezor.io', 'wss://bch5.trezor.io'],
+        blockbookServers: [
+          'wss://bch1.trezor.io',
+          'wss://bch2.trezor.io',
+          'wss://bch3.trezor.io',
+          'wss://bch4.trezor.io',
+          'wss://bch5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6654,7 +6748,8 @@ const currencyConfig: { [pluginId: string]: any } = {
       transactionExplorer: 'https://blockchair.com/bitcoin-cash/transaction/%s',
       xpubExplorer: 'https://bch1.trezor.io/xpub/%s',
       symbolImage: 'https://content.edge.app/bitcoincash-logo-solo-64.png',
-      symbolImageDarkMono: 'https://content.edge.app/bitcoincash-logo-solo-64.png'
+      symbolImageDarkMono:
+        'https://content.edge.app/bitcoincash-logo-solo-64.png'
     },
     allTokens: {},
     builtinTokens: {},
@@ -6686,7 +6781,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://btg1.trezor.io', 'wss://btg2.trezor.io', 'wss://btg3.trezor.io', 'wss://btg4.trezor.io', 'wss://btg5.trezor.io'],
+        blockbookServers: [
+          'wss://btg1.trezor.io',
+          'wss://btg2.trezor.io',
+          'wss://btg3.trezor.io',
+          'wss://btg4.trezor.io',
+          'wss://btg5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6732,7 +6833,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://bsv-bbwrap1.edge.app', 'wss://blockbook.siftbitcoin.com:9146'],
+        blockbookServers: [
+          'wss://bsv-bbwrap1.edge.app',
+          'wss://blockbook.siftbitcoin.com:9146'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6799,7 +6903,8 @@ const currencyConfig: { [pluginId: string]: any } = {
       metaTokens: [],
       blockExplorer: 'https://blockchair.com/bitcoin/testnet/block/%s',
       addressExplorer: 'https://blockchair.com/bitcoin/testnet/address/%s',
-      transactionExplorer: 'https://blockchair.com/bitcoin/testnet/transaction/%s',
+      transactionExplorer:
+        'https://blockchair.com/bitcoin/testnet/transaction/%s',
       symbolImage: 'https://content.edge.app/bitcoin-logo-solo-64.png',
       symbolImageDarkMono: 'https://content.edge.app/bitcoin-logo-solo-64.png'
     },
@@ -6828,7 +6933,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://dash1.trezor.io', 'wss://dash2.trezor.io', 'wss://dash3.trezor.io', 'wss://dash4.trezor.io', 'wss://dash5.trezor.io'],
+        blockbookServers: [
+          'wss://dash1.trezor.io',
+          'wss://dash2.trezor.io',
+          'wss://dash3.trezor.io',
+          'wss://dash4.trezor.io',
+          'wss://dash5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6842,7 +6953,8 @@ const currencyConfig: { [pluginId: string]: any } = {
       metaTokens: [],
       addressExplorer: 'https://blockchair.com/dash/address/%s?from=edgeapp',
       blockExplorer: 'https://blockchair.com/dash/block/%s?from=edgeapp',
-      transactionExplorer: 'https://blockchair.com/dash/transaction/%s?from=edgeapp'
+      transactionExplorer:
+        'https://blockchair.com/dash/transaction/%s?from=edgeapp'
     },
     allTokens: {},
     builtinTokens: {},
@@ -6905,7 +7017,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://doge1.trezor.io', 'wss://doge2.trezor.io', 'wss://doge3.trezor.io', 'wss://doge4.trezor.io', 'wss://doge5.trezor.io'],
+        blockbookServers: [
+          'wss://doge1.trezor.io',
+          'wss://doge2.trezor.io',
+          'wss://doge3.trezor.io',
+          'wss://doge4.trezor.io',
+          'wss://doge5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -6917,9 +7035,11 @@ const currencyConfig: { [pluginId: string]: any } = {
         }
       ],
       metaTokens: [],
-      addressExplorer: 'https://blockchair.com/dogecoin/address/%s?from=edgeapp',
+      addressExplorer:
+        'https://blockchair.com/dogecoin/address/%s?from=edgeapp',
       blockExplorer: 'https://blockchair.com/dogecoin/block/%s?from=edgeapp',
-      transactionExplorer: 'https://blockchair.com/dogecoin/transaction/%s?from=edgeapp'
+      transactionExplorer:
+        'https://blockchair.com/dogecoin/transaction/%s?from=edgeapp'
     },
     allTokens: {},
     builtinTokens: {},
@@ -7003,7 +7123,8 @@ const currencyConfig: { [pluginId: string]: any } = {
       blockExplorer: 'https://fsight.chain.tips/block/%s',
       transactionExplorer: 'https://fsight.chain.tips/tx/%s',
       symbolImage: 'https://content.edge.app/feathercoin-logo-solo-64.png',
-      symbolImageDarkMono: 'https://content.edge.app/feathercoin-logo-solo-64.png'
+      symbolImageDarkMono:
+        'https://content.edge.app/feathercoin-logo-solo-64.png'
     },
     allTokens: {},
     builtinTokens: {},
@@ -7042,9 +7163,11 @@ const currencyConfig: { [pluginId: string]: any } = {
         }
       ],
       metaTokens: [],
-      addressExplorer: 'https://blockchair.com/groestlcoin/address/%s?from=edgeapp?from=edgeapp',
+      addressExplorer:
+        'https://blockchair.com/groestlcoin/address/%s?from=edgeapp?from=edgeapp',
       blockExplorer: 'https://blockchair.com/groestlcoin/block/%s?from=edgeapp',
-      transactionExplorer: 'https://blockchair.com/groestlcoin/transaction/%s?from=edgeapp'
+      transactionExplorer:
+        'https://blockchair.com/groestlcoin/transaction/%s?from=edgeapp'
     },
     allTokens: {},
     builtinTokens: {},
@@ -7071,7 +7194,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://ltc1.trezor.io', 'wss://ltc2.trezor.io', 'wss://ltc3.trezor.io', 'wss://ltc4.trezor.io', 'wss://ltc5.trezor.io'],
+        blockbookServers: [
+          'wss://ltc1.trezor.io',
+          'wss://ltc2.trezor.io',
+          'wss://ltc3.trezor.io',
+          'wss://ltc4.trezor.io',
+          'wss://ltc5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -7145,7 +7274,10 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://blockbook.ravencoin.org', 'wss://blockbook-rvn-sfo3.edge.app'],
+        blockbookServers: [
+          'wss://blockbook.ravencoin.org',
+          'wss://blockbook-rvn-sfo3.edge.app'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [
@@ -7268,7 +7400,13 @@ const currencyConfig: { [pluginId: string]: any } = {
       ],
       defaultSettings: {
         customFeeSettings: ['satPerByte'],
-        blockbookServers: ['wss://vtc1.trezor.io', 'wss://vtc2.trezor.io', 'wss://vtc3.trezor.io', 'wss://vtc4.trezor.io', 'wss://vtc5.trezor.io'],
+        blockbookServers: [
+          'wss://vtc1.trezor.io',
+          'wss://vtc2.trezor.io',
+          'wss://vtc3.trezor.io',
+          'wss://vtc4.trezor.io',
+          'wss://vtc5.trezor.io'
+        ],
         enableCustomServers: false
       },
       customFeeTemplate: [

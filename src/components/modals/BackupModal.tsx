@@ -12,14 +12,24 @@ import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
+import {
+  HeaderText,
+  Paragraph,
+  SmallText,
+  WarningText
+} from '../themed/EdgeText'
 import { ButtonsModal } from './ButtonsModal'
 
 export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
 export type BackupForTransferModalResult = 'upgrade' | 'learnMore'
 
 /** Common backup modal content format */
-const BackupModalContent = (props: { title: string; body: string; bodyCont?: string; subText?: string }) => {
+const BackupModalContent = (props: {
+  title: string
+  body: string
+  bodyCont?: string
+  subText?: string
+}) => {
   const { title, body, bodyCont, subText } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -46,7 +56,9 @@ const BackupModalContent = (props: { title: string; body: string; bodyCont?: str
 /**
  * Informational modal prompting the user to back up their account
  */
-export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForTransferModalResult | undefined> }) => {
+export const BackupForTransferModal = (props: {
+  bridge: AirshipBridge<BackupForTransferModalResult | undefined>
+}) => {
   const { bridge } = props
 
   const handleLearnMorePress = useHandler(async () => {
@@ -80,13 +92,19 @@ export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForT
  * Informational modal prompting the user to back up their account before accessing settings,
  * deleting light accounts, and receiving fio requests
  */
-export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModalResult | undefined>; forgetLoginId?: string }) => {
+export const BackupForAccountModal = (props: {
+  bridge: AirshipBridge<BackupModalResult | undefined>
+  forgetLoginId?: string
+}) => {
   const { bridge, forgetLoginId } = props
   const showForgetAccount = forgetLoginId != null
 
   const context = useSelector(state => state.core.context)
   const fioHandles = useSelector(state => state.ui.fioAddress.fioAddresses)
-  const backupText = fioHandles.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_warning_message
+  const backupText =
+    fioHandles.length > 0
+      ? lstrings.backup_web3_handle_warning_message
+      : lstrings.backup_warning_message
 
   const handleDeletePress = useHandler(async () => {
     // Warn the user that this is permanent:
@@ -100,7 +118,8 @@ export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModal
           delete: {
             label: lstrings.delete_account_title,
             onPress: async () => {
-              if (forgetLoginId != null) await context.forgetAccount(forgetLoginId)
+              if (forgetLoginId != null)
+                await context.forgetAccount(forgetLoginId)
               return true
             }
           }
@@ -123,13 +142,19 @@ export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModal
           }
         },
         dismiss: {
-          label: showForgetAccount ? lstrings.delete_account_title : lstrings.backup_dismiss_button,
+          label: showForgetAccount
+            ? lstrings.delete_account_title
+            : lstrings.backup_dismiss_button,
           onPress: showForgetAccount ? handleDeletePress : undefined,
           spinner: false
         }
       }}
     >
-      <BackupModalContent title={lstrings.backup_title} body={lstrings.backup_info_message} subText={backupText} />
+      <BackupModalContent
+        title={lstrings.backup_title}
+        body={lstrings.backup_info_message}
+        subText={backupText}
+      />
     </ButtonsModal>
   )
 }

@@ -15,7 +15,11 @@ export const getDefaultFiat = (state: RootState) => {
 export const getCoingeckoFiat = (state: RootState) => {
   const defaultIsoFiat: string = state.ui.settings.defaultIsoFiat
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
-  return COINGECKO_SUPPORTED_FIATS[defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS] != null ? defaultFiat : 'USD'
+  return COINGECKO_SUPPORTED_FIATS[
+    defaultFiat as keyof typeof COINGECKO_SUPPORTED_FIATS
+  ] != null
+    ? defaultFiat
+    : 'USD'
 }
 
 /**

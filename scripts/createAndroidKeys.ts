@@ -22,7 +22,8 @@ const main = async (): Promise<void> => {
   const { encryptionKey } = await prompts({
     name: 'encryptionKey',
     type: 'text',
-    message: 'Enter encryptionKey provided by Google Play under the option "Export and upload a key from Java keystore"',
+    message:
+      'Enter encryptionKey provided by Google Play under the option "Export and upload a key from Java keystore"',
     validate: (v: string) => v.trim() !== ''
   })
 
@@ -30,7 +31,9 @@ const main = async (): Promise<void> => {
     `keytool -genkey -keystore ${alias}-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${alias} -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown" -storepass ${password} -keypass ${password}`
   )
   mylog(`Enter the following password at the prompts: ${password}`)
-  call(`java -jar ~/bin/pepk.jar --keystore=${alias}-keystore.jks --alias=${alias} --output=${alias}.zip --include-cert --encryptionkey=${encryptionKey}`)
+  call(
+    `java -jar ~/bin/pepk.jar --keystore=${alias}-keystore.jks --alias=${alias} --output=${alias}.zip --include-cert --encryptionkey=${encryptionKey}`
+  )
 
   // Uncomment out if creating a separate upload key
 
@@ -41,7 +44,9 @@ const main = async (): Promise<void> => {
   //   `keytool -export -rfc -keystore ${alias}-upload-keystore.jks -alias ${alias}-upload -file ${alias}-upload-cert.pem -storepass ${password} -keypass ${password}`
   // )
 
-  mylog('Keystore created in keystores directory. Save the following keystore password. It cannot be recovered if lost.')
+  mylog(
+    'Keystore created in keystores directory. Save the following keystore password. It cannot be recovered if lost.'
+  )
   mylog('********************************')
   mylog(password)
   mylog('********************************')

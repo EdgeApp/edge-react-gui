@@ -12,7 +12,9 @@ import { useWatch } from './useWatch'
  */
 export const useAccountSyncRatio = () => {
   const account = useSelector(state => state.core.account)
-  const userPausedWalletsSet = useSelector(state => state.ui.settings.userPausedWalletsSet)
+  const userPausedWalletsSet = useSelector(
+    state => state.ui.settings.userPausedWalletsSet
+  )
   const currencyWallets = useWatch(account, 'currencyWallets')
   const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
 
@@ -21,7 +23,8 @@ export const useAccountSyncRatio = () => {
       account.activeWalletIds.filter(walletId => {
         const pluginId = findPluginId(account, walletId)
         const isKeysOnly = pluginId == null || isKeysOnlyPlugin(pluginId)
-        const isPaused = userPausedWalletsSet != null && userPausedWalletsSet.has(walletId)
+        const isPaused =
+          userPausedWalletsSet != null && userPausedWalletsSet.has(walletId)
         return !isKeysOnly && !isPaused
       }),
     [account, userPausedWalletsSet]
@@ -61,12 +64,18 @@ export const useAccountSyncRatio = () => {
     [currencyWalletErrors, progressMap, syncableWalletIds]
   )
 
-  const progress = syncableWalletIds.length === 0 ? 1 : syncedWallets / syncableWalletIds.length
+  const progress =
+    syncableWalletIds.length === 0
+      ? 1
+      : syncedWallets / syncableWalletIds.length
 
   return progress
 }
 
-const findPluginId = (account: EdgeAccount, walletId: string): string | undefined => {
+const findPluginId = (
+  account: EdgeAccount,
+  walletId: string
+): string | undefined => {
   // This is easy if we have a wallet:
   const wallet = account.currencyWallets[walletId]
   if (wallet != null) return wallet.currencyInfo.pluginId
@@ -74,6 +83,9 @@ const findPluginId = (account: EdgeAccount, walletId: string): string | undefine
   // Otherwise we have to search:
   const info = account.getWalletInfo(walletId)
   if (info == null) return
-  const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.walletType === info.type)
+  const pluginId = Object.keys(account.currencyConfig).find(
+    pluginId =>
+      account.currencyConfig[pluginId].currencyInfo.walletType === info.type
+  )
   return pluginId
 }

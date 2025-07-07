@@ -2,7 +2,14 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { LayoutChangeEvent, Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, { runOnJS, SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming
+} from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useState } from '../../types/reactHooks'
@@ -31,7 +38,12 @@ interface PaginationDotProps {
 export function Carousel<T>(props: Props<T>) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { items, keyExtractor = defaultKeyExtractor, renderItem, onChangeItem } = props
+  const {
+    items,
+    keyExtractor = defaultKeyExtractor,
+    renderItem,
+    onChangeItem
+  } = props
 
   const handleChangeItem = (index: number) => {
     if (onChangeItem != null) {
@@ -95,7 +107,8 @@ export function Carousel<T>(props: Props<T>) {
     maxWidth: itemWidth,
     transform: [
       {
-        translateX: itemCount < 1 ? 0 : -((offset.value / itemCount) * trackWidth)
+        translateX:
+          itemCount < 1 ? 0 : -((offset.value / itemCount) * trackWidth)
       }
     ]
   }))
@@ -111,7 +124,12 @@ export function Carousel<T>(props: Props<T>) {
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.container, trackStyle]}>
           {items.map((item, index) => (
-            <Item key={keyExtractor(item, index)} currentOffset={offset} itemIndex={index} onLayout={handleLayout}>
+            <Item
+              key={keyExtractor(item, index)}
+              currentOffset={offset}
+              itemIndex={index}
+              onLayout={handleLayout}
+            >
               {renderItem(item, index)}
             </Item>
           ))}
@@ -119,7 +137,12 @@ export function Carousel<T>(props: Props<T>) {
       </GestureDetector>
       <View style={styles.paginationContainer}>
         {items.map((item, index) => (
-          <PaginationDot key={keyExtractor(item, index)} currentOffset={offset} itemIndex={index} onPress={() => handlePressPaginationDot(index)} />
+          <PaginationDot
+            key={keyExtractor(item, index)}
+            currentOffset={offset}
+            itemIndex={index}
+            onPress={() => handlePressPaginationDot(index)}
+          />
         ))}
       </View>
     </>
@@ -145,7 +168,10 @@ const Item = (props: ItemDisplayProps) => {
   })
 
   return (
-    <Animated.View style={[styles.itemContainer, animatedStyles]} onLayout={onLayout}>
+    <Animated.View
+      style={[styles.itemContainer, animatedStyles]}
+      onLayout={onLayout}
+    >
       {children}
     </Animated.View>
   )

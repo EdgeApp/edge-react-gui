@@ -1,11 +1,27 @@
-import { asArray, asBoolean, asJSON, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asJSON,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 //
 // Store Types
 //
 
 export type LoanProgramType = ReturnType<typeof asLoanProgramType>
-export const asLoanProgramType = asValue('loan-create', 'loan-deposit', 'loan-borrow', 'loan-repay', 'loan-withdraw', 'loan-close')
+export const asLoanProgramType = asValue(
+  'loan-create',
+  'loan-deposit',
+  'loan-borrow',
+  'loan-repay',
+  'loan-withdraw',
+  'loan-close'
+)
 export type LoanProgramEdge = ReturnType<typeof asLoanProgramEdge>
 export const asLoanProgramEdge = asObject({
   programId: asString,
@@ -32,4 +48,7 @@ export const LOAN_ACCOUNT_MAP = 'loanAccountMap'
 export interface LoanAccountMapRecord {
   [pluginId: string]: LoanAccountEntry
 }
-export const asLoanAccountMapRecord: Cleaner<LoanAccountMapRecord> = asOptional(asJSON(asObject(asLoanAccountEntry)), () => ({}))
+export const asLoanAccountMapRecord: Cleaner<LoanAccountMapRecord> = asOptional(
+  asJSON(asObject(asLoanAccountEntry)),
+  () => ({})
+)

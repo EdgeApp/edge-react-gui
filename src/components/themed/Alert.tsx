@@ -3,7 +3,12 @@ import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -23,14 +28,28 @@ interface Props {
 }
 
 export function Alert(props: Props) {
-  const { children, marginRem, message, numberOfLines = 2, paddingRem, title, type, onPress } = props
+  const {
+    children,
+    marginRem,
+    message,
+    numberOfLines = 2,
+    paddingRem,
+    title,
+    type,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 1), theme.rem))
 
-  const typeColor = type === 'warning' ? theme.warningText : type === 'error' ? theme.dangerText : theme.primaryText
+  const typeColor =
+    type === 'warning'
+      ? theme.warningText
+      : type === 'error'
+      ? theme.dangerText
+      : theme.primaryText
 
   const handlePress = useHandler(() => {
     if (onPress != null) onPress()?.catch(err => showError(err))
@@ -39,11 +58,23 @@ export function Alert(props: Props) {
   const result = (
     <View style={[styles.alert, margin, padding, { borderColor: typeColor }]}>
       <View style={styles.header}>
-        {type !== 'error' ? null : <IonIcon color={typeColor} name="information-circle-outline" size={theme.rem(1.25)} style={styles.icon} />}
-        <EdgeText style={[styles.title, { color: typeColor }]}>{title}</EdgeText>
+        {type !== 'error' ? null : (
+          <IonIcon
+            color={typeColor}
+            name="information-circle-outline"
+            size={theme.rem(1.25)}
+            style={styles.icon}
+          />
+        )}
+        <EdgeText style={[styles.title, { color: typeColor }]}>
+          {title}
+        </EdgeText>
       </View>
       {message == null ? null : (
-        <EdgeText style={[styles.message, { color: typeColor }]} numberOfLines={numberOfLines}>
+        <EdgeText
+          style={[styles.message, { color: typeColor }]}
+          numberOfLines={numberOfLines}
+        >
           {message}
         </EdgeText>
       )}
@@ -51,7 +82,11 @@ export function Alert(props: Props) {
     </View>
   )
 
-  return onPress ? <EdgeTouchableOpacity onPress={handlePress}>{result}</EdgeTouchableOpacity> : result
+  return onPress ? (
+    <EdgeTouchableOpacity onPress={handlePress}>{result}</EdgeTouchableOpacity>
+  ) : (
+    result
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

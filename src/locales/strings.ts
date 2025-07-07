@@ -25,7 +25,10 @@ const [firstLocale] = getLocales()
 const { languageTag = 'en-US' } = firstLocale ?? {}
 if (languageTag !== 'en-US') selectLocale(languageTag)
 
-function mergeStrings(primary: { [key: string]: string }, secondary: { [key: string]: string }) {
+function mergeStrings(
+  primary: { [key: string]: string },
+  secondary: { [key: string]: string }
+) {
   for (const str of Object.keys(secondary)) {
     if (secondary[str] !== '') {
       primary[str] = secondary[str]
@@ -36,7 +39,10 @@ function mergeStrings(primary: { [key: string]: string }, secondary: { [key: str
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
 export function selectLocale(locale: string): boolean {
   // Break up local into language and region
-  const normalizedLocale = locale.replace('-', '').replace('-', '').replace('_', '')
+  const normalizedLocale = locale
+    .replace('-', '')
+    .replace('-', '')
+    .replace('_', '')
 
   // Find an exact match
   const exactMatch = allLocales[normalizedLocale as keyof typeof allLocales]

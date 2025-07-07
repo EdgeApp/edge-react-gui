@@ -12,14 +12,20 @@ import { getDenomFromIsoCode } from '../util/utils'
  * 3. Localization: commas, decimals, spaces
  * */
 
-export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; currencyConfig: EdgeCurrencyConfig }) => {
+export const useTokenDisplayData = (props: {
+  tokenId: EdgeTokenId
+  currencyConfig: EdgeCurrencyConfig
+}) => {
   const { tokenId, currencyConfig } = props
   const { allTokens } = currencyConfig
-  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const isoFiatCurrencyCode = useSelector(
+    state => state.ui.settings.defaultIsoFiat
+  )
 
   // Get currencyCode and denomination from token
   const token = tokenId != null ? allTokens[tokenId] : null
-  const { currencyCode, denominations } = token != null ? token : currencyConfig.currencyInfo
+  const { currencyCode, denominations } =
+    token != null ? token : currencyConfig.currencyInfo
   const [denomination] = denominations
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
@@ -27,10 +33,19 @@ export const useTokenDisplayData = (props: { tokenId: EdgeTokenId; currencyConfi
   // BASE / QUOTE = PRICE, where:
   // - 'Fiat' is the QUOTE, defined by the wallet's fiatCurrencyCode
   // - 'Yest' is an index for a historical price from 24 hours ago.
-  const usdToWalletFiatRate = useSelector(state => getExchangeRate(state, 'iso:USD', isoFiatCurrencyCode))
-  const assetFiatPrice = useSelector(state => state.exchangeRatesMap.get(currencyCode)?.get(isoFiatCurrencyCode)?.currentRate ?? 0)
+  const usdToWalletFiatRate = useSelector(state =>
+    getExchangeRate(state, 'iso:USD', isoFiatCurrencyCode)
+  )
+  const assetFiatPrice = useSelector(
+    state =>
+      state.exchangeRatesMap.get(currencyCode)?.get(isoFiatCurrencyCode)
+        ?.currentRate ?? 0
+  )
   const assetFiatYestPrice = useSelector(state => {
-    return state.exchangeRatesMap.get(currencyCode)?.get('iso:USD')?.yesterdayRate ?? 0
+    return (
+      state.exchangeRatesMap.get(currencyCode)?.get('iso:USD')?.yesterdayRate ??
+      0
+    )
   })
 
   return {

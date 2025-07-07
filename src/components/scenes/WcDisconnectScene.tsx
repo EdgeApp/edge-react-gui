@@ -44,17 +44,35 @@ export const WcDisconnectScene = (props: Props) => {
       <View style={styles.container}>
         <EdgeCard paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
-            <FastImage style={styles.currencyLogo} source={{ uri: wcConnectionInfo.icon }} />
+            <FastImage
+              style={styles.currencyLogo}
+              source={{ uri: wcConnectionInfo.icon }}
+            />
             <View style={styles.info}>
-              <EdgeText style={styles.infoTitle}>{wcConnectionInfo.dAppName}</EdgeText>
-              <EdgeText style={styles.infoBody}>{wcConnectionInfo.dAppUrl}</EdgeText>
+              <EdgeText style={styles.infoTitle}>
+                {wcConnectionInfo.dAppName}
+              </EdgeText>
+              <EdgeText style={styles.infoBody}>
+                {wcConnectionInfo.dAppUrl}
+              </EdgeText>
             </View>
           </View>
         </EdgeCard>
       </View>
-      <EdgeRow title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
-      <EdgeRow title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />
-      <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0]} onPress={handleDisconnect} />
+      <EdgeRow
+        title={lstrings.string_expiration}
+        body={wcConnectionInfo.expiration}
+      />
+      <EdgeRow
+        title={lstrings.wc_details_connected_wallet}
+        body={wcConnectionInfo.walletName}
+      />
+      <MainButton
+        label={lstrings.wc_details_disconnect_button}
+        type="secondary"
+        marginRem={[3.5, 0]}
+        onPress={handleDisconnect}
+      />
     </SceneWrapper>
   )
 }

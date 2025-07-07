@@ -16,9 +16,20 @@ export const GradientFadeOut = () => {
   const styles = getStyles(theme)
   const color = theme.modal
   const colors: string[] = React.useMemo(() => {
-    return MARKS.map(mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2))
+    return MARKS.map(
+      mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2)
+    )
   }, [color])
-  return <LinearGradient style={styles.container} start={START} end={END} colors={colors} locations={MARKS} pointerEvents="none" />
+  return (
+    <LinearGradient
+      style={styles.container}
+      start={START}
+      end={END}
+      colors={colors}
+      locations={MARKS}
+      pointerEvents="none"
+    />
+  )
 }
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {

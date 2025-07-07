@@ -1,4 +1,9 @@
-import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeNetworkFee,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import { Subscriber } from 'yaob'
 
 import { PendingTxMap } from '../../controllers/action-queue/types'
@@ -61,12 +66,19 @@ export interface ApprovableAction {
   readonly networkFee: EdgeNetworkFee
   readonly unsignedTxs: EdgeTransaction[]
   // Optional pending txs to pass along to the wallet when making transactions
-  readonly dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<BroadcastTx[]>
+  readonly dryrun: (
+    pendingTxMap: Readonly<PendingTxMap>
+  ) => Promise<BroadcastTx[]>
   readonly approve: () => Promise<BroadcastTx[]>
 }
 
 // HACK: Used to identify running ActionQueue programs by borrow action type.
-export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw'
+export type BorrowActionId =
+  | 'loan-create'
+  | 'loan-deposit'
+  | 'loan-borrow'
+  | 'loan-repay'
+  | 'loan-withdraw'
 
 // -----------------------------------------------------------------------------
 // Engine

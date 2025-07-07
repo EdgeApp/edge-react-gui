@@ -4,16 +4,25 @@ import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
+import {
+  walletListMenuAction,
+  WalletListMenuKey
+} from '../../actions/WalletListMenuActions'
 import { Fontello } from '../../assets/vector'
-import { CURRENCY_SETTINGS_KEYS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  CURRENCY_SETTINGS_KEYS,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { WalletsTabSceneProps } from '../../types/routerTypes'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import {
+  getCurrencyCode,
+  isKeysOnlyPlugin
+} from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -140,7 +149,9 @@ export function WalletListMenuModal(props: Props) {
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
+  const pausedWallets = useSelector(
+    state => state.ui.settings.userPausedWalletsSet
+  )
 
   const wallet = useWatch(account, 'currencyWallets')[walletId]
 
@@ -151,7 +162,15 @@ export function WalletListMenuModal(props: Props) {
 
   const optionAction = useHandler((option: WalletListMenuKey) => {
     bridge.resolve()
-    dispatch(walletListMenuAction(navigation, walletId, option, tokenId, splitPluginIds)).catch(error => showError(error))
+    dispatch(
+      walletListMenuAction(
+        navigation,
+        walletId,
+        option,
+        tokenId,
+        splitPluginIds
+      )
+    ).catch(error => showError(error))
   })
 
   useAsyncEffect(
@@ -190,15 +209,26 @@ export function WalletListMenuModal(props: Props) {
 
       // First add the settings option to make it appear at the top, but only if
       // the plugin supports asset settings
-      const settingsOption = WALLET_LIST_MENU.find(option => option.value === 'settings')
+      const settingsOption = WALLET_LIST_MENU.find(
+        option => option.value === 'settings'
+      )
       const { pluginId } = wallet.currencyInfo
-      if (settingsOption != null && CURRENCY_SETTINGS_KEYS.includes(pluginId) && account.currencyConfig[pluginId] != null) {
-        result.push({ label: settingsOption.label, value: settingsOption.value })
+      if (
+        settingsOption != null &&
+        CURRENCY_SETTINGS_KEYS.includes(pluginId) &&
+        account.currencyConfig[pluginId] != null
+      ) {
+        result.push({
+          label: settingsOption.label,
+          value: settingsOption.value
+        })
       }
 
       if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
         result.push({
-          label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
+          label: pausedWallets.has(walletId)
+            ? lstrings.fragment_wallets_unpause_wallet
+            : lstrings.fragment_wallets_pause_wallet,
           value: 'togglePause'
         })
       }
@@ -206,9 +236,14 @@ export function WalletListMenuModal(props: Props) {
       const splitTypes = await account.listSplittableWalletTypes(wallet.id)
       const splitPluginIds: string[] = []
       for (const splitType of splitTypes) {
-        const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.walletType === splitType)
+        const pluginId = Object.keys(account.currencyConfig).find(
+          pluginId =>
+            account.currencyConfig[pluginId].currencyInfo.walletType ===
+            splitType
+        )
         if (pluginId == null) continue
-        if (SPECIAL_CURRENCY_INFO[pluginId]?.isSplittingDisabled === true) continue
+        if (SPECIAL_CURRENCY_INFO[pluginId]?.isSplittingDisabled === true)
+          continue
         splitPluginIds.push(pluginId)
       }
       setSplitPluginIds(splitPluginIds)
@@ -225,11 +260,19 @@ export function WalletListMenuModal(props: Props) {
 
         // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
         if (value === 'manageTokens') {
-          if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+          if (
+            Object.keys(account.currencyConfig[pluginId].builtinTokens)
+              .length === 0
+          )
+            continue
         }
 
         // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
-        if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+        if (
+          account.username == null &&
+          (value === 'getSeed' || value === 'getRawKeys')
+        )
+          continue
 
         result.push({ label, value })
       }
@@ -248,9 +291,16 @@ export function WalletListMenuModal(props: Props) {
       title={
         wallet == null ? null : (
           <View>
-            <ModalTitle paddingRem={[0, 0, 0.5]}>{getWalletName(wallet)}</ModalTitle>
+            <ModalTitle paddingRem={[0, 0, 0.5]}>
+              {getWalletName(wallet)}
+            </ModalTitle>
             <View style={styles.row}>
-              <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} pluginId={wallet.currencyInfo.pluginId} />
+              <CryptoIcon
+                marginRem={[0, 0, 0, 0.5]}
+                sizeRem={1}
+                tokenId={tokenId}
+                pluginId={wallet.currencyInfo.pluginId}
+              />
               <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
             </View>
           </View>
@@ -260,21 +310,41 @@ export function WalletListMenuModal(props: Props) {
       scroll
     >
       {options.map((option: Option) => (
-        <EdgeTouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+        <EdgeTouchableOpacity
+          key={option.value}
+          onPress={() => optionAction(option.value)}
+          style={styles.row}
+        >
           {option.value === 'settings' ? (
             // Special case for settings to keep it consistent with our side
             // menu.
             // We eventually will move to using our own custom icons for all
             // icons instead of picking from different RN vector icon packs
-            <Fontello name={icons[option.value]} style={styles.optionIcon} size={theme.rem(1)} />
+            <Fontello
+              name={icons[option.value]}
+              style={styles.optionIcon}
+              size={theme.rem(1)}
+            />
           ) : (
             <AntDesignIcon
               name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
               size={theme.rem(1)}
-              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+              style={
+                option.value === 'delete'
+                  ? [styles.optionIcon, styles.warningColor]
+                  : styles.optionIcon
+              }
             />
           )}
-          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+          <Text
+            style={
+              option.value === 'delete'
+                ? [styles.optionText, styles.warningColor]
+                : styles.optionText
+            }
+          >
+            {option.label}
+          </Text>
         </EdgeTouchableOpacity>
       ))}
     </EdgeModal>

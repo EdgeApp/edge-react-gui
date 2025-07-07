@@ -27,14 +27,31 @@ export const NotificationCenterRow = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { date, iconUri, title, type, message, pinned = false, onPress, onClose } = props
+  const {
+    date,
+    iconUri,
+    title,
+    type,
+    message,
+    pinned = false,
+    onPress,
+    onClose
+  } = props
 
   return (
     <View style={styles.columnContainer}>
       <EdgeText style={styles.dateText}>{toLocaleDate(date)}</EdgeText>
       <View style={styles.rowContainer}>
         <View style={pinned ? styles.noDot : styles.dot} />
-        <NotificationCenterCard date={date} message={message} title={title} type={type} iconUri={iconUri} onPress={onPress} onClose={onClose} />
+        <NotificationCenterCard
+          date={date}
+          message={message}
+          title={title}
+          type={type}
+          iconUri={iconUri}
+          onPress={onPress}
+          onClose={onClose}
+        />
       </View>
     </View>
   )
@@ -93,7 +110,11 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
       </EdgeTouchableOpacity>
       {onClose == null ? null : (
         <EdgeTouchableOpacity style={styles.closeButton} onPress={handleClose}>
-          <AntDesignIcon color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
+          <AntDesignIcon
+            color={theme.iconTappable}
+            name="close"
+            size={theme.rem(1.25)}
+          />
         </EdgeTouchableOpacity>
       )}
     </View>

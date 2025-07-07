@@ -23,10 +23,16 @@ export function parseMarkedText(str: string): React.ReactNode[] {
     const startIndex = match.index
     const endIndex = regex.lastIndex - 2 // adjust for the asterisks
     if (startIndex > lastIndex) {
-      const fixed = str.substring(lastIndex, startIndex).replace(/(\\)(\*)/g, '*') // Fix escaped markers
+      const fixed = str
+        .substring(lastIndex, startIndex)
+        .replace(/(\\)(\*)/g, '*') // Fix escaped markers
       parsedArr.push(fixed)
     }
-    parsedArr.push(<Em key={`em${lastKey++}`}>{str.substring(startIndex + 1, endIndex + 1)}</Em>)
+    parsedArr.push(
+      <Em key={`em${lastKey++}`}>
+        {str.substring(startIndex + 1, endIndex + 1)}
+      </Em>
+    )
     lastIndex = endIndex + 2
   }
   if (lastIndex < str.length) {

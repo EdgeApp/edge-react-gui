@@ -1,6 +1,11 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
-import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi, FiatPluginUtils } from './fiatPluginTypes'
+import {
+  FiatPaymentType,
+  FiatPluginRegionCode,
+  FiatPluginUi,
+  FiatPluginUtils
+} from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
@@ -27,7 +32,9 @@ export interface FiatProviderQuote {
 
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
 type FiatProviderQuoteErrorTypesRegion = 'regionRestricted'
-type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'paymentUnsupported'
+type FiatProviderQuoteErrorTypesOther =
+  | 'assetUnsupported'
+  | 'paymentUnsupported'
 type FiatProviderQuoteErrorTypesFiat = 'fiatUnsupported'
 
 export type FiatProviderQuoteErrorTypes =
@@ -166,13 +173,21 @@ export interface FiatProvider<OtherMethods = null> {
   providerId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: (params: FiatProviderGetSupportedAssetsParams) => Promise<FiatProviderAssetMap>
+  getSupportedAssets: (
+    params: FiatProviderGetSupportedAssetsParams
+  ) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
   otherMethods: OtherMethods
 }
 
-export type FiatProviderGetTokenId = (pluginId: string, currencyCode: string) => EdgeTokenId | undefined
-export type FiatProviderGetTokenIdFromContract = (params: { pluginId: string; contractAddress: string }) => EdgeTokenId | undefined
+export type FiatProviderGetTokenId = (
+  pluginId: string,
+  currencyCode: string
+) => EdgeTokenId | undefined
+export type FiatProviderGetTokenIdFromContract = (params: {
+  pluginId: string
+  contractAddress: string
+}) => EdgeTokenId | undefined
 export type FiatProviderMakeUuid = () => Promise<string>
 export interface FiatProviderFactoryParams {
   deviceId: string
@@ -187,5 +202,7 @@ export interface FiatProviderFactoryParams {
 export interface FiatProviderFactory<OtherMethods = null> {
   providerId: string
   storeId: string
-  makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider<OtherMethods>>
+  makeProvider: (
+    params: FiatProviderFactoryParams
+  ) => Promise<FiatProvider<OtherMethods>>
 }

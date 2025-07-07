@@ -11,5 +11,8 @@ export const useExecutionContext = (mockMode?: boolean): ExecutionContext => {
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
 
-  return makeExecutionContext({ account, clientId, dispatch, getState }, mockMode)
+  return makeExecutionContext(
+    { account, clientId, dispatch, getState },
+    mockMode
+  )
 }

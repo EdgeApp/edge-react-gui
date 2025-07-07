@@ -1,4 +1,13 @@
-import { asArray, asEither, asMaybe, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import {
+  asArray,
+  asEither,
+  asMaybe,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner
+} from 'cleaners'
 
 import { ThunkAction } from '../types/reduxTypes'
 import { infoServerData } from '../util/network'
@@ -19,7 +28,9 @@ export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
 export interface NestedDisableMap {
   [pluginId: string]: true | NestedDisableMap
 }
-const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(asEither(asTrue, raw => asNestedDisableMap(raw)))
+const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(
+  asEither(asTrue, raw => asNestedDisableMap(raw))
+)
 
 const asFiatDirectionInfo = asObject({
   disablePlugins: asNestedDisableMap

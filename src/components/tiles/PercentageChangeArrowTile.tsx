@@ -17,7 +17,13 @@ interface Props {
 
 const PercentageChangeArrowTileComponent = (props: Props) => {
   const theme = useTheme()
-  const { title, currentValue, currentValueColor = theme.primaryText, futureValue, futureValueColor = theme.primaryText } = props
+  const {
+    title,
+    currentValue,
+    currentValueColor = theme.primaryText,
+    futureValue,
+    futureValueColor = theme.primaryText
+  } = props
   const styles = getStyles(theme)
 
   const currentValueString = `${toFixed(mul(currentValue, '100'), 1, 1)}%`
@@ -37,9 +43,13 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
     <EdgeRow title={title}>
       <EdgeCard marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
         <View style={styles.container}>
-          <EdgeText style={{ color: currentValueColor }}>{currentValueString}</EdgeText>
+          <EdgeText style={{ color: currentValueColor }}>
+            {currentValueString}
+          </EdgeText>
           {renderArrow()}
-          <EdgeText style={{ color: futureValueColor }}>{futureValueString}</EdgeText>
+          <EdgeText style={{ color: futureValueColor }}>
+            {futureValueString}
+          </EdgeText>
         </View>
       </EdgeCard>
     </EdgeRow>
@@ -83,4 +93,6 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const PercentageChangeArrowTile = React.memo(PercentageChangeArrowTileComponent)
+export const PercentageChangeArrowTile = React.memo(
+  PercentageChangeArrowTileComponent
+)

@@ -42,7 +42,14 @@ export interface CoinRanking {
 }
 
 export type CoinRankingData = ReturnType<typeof asCoinRankingData>
-export type CoinRankingDataPercentChange = ReturnType<typeof asCoinRankingDataPercentChange>
+export type CoinRankingDataPercentChange = ReturnType<
+  typeof asCoinRankingDataPercentChange
+>
 
-export type PercentChangeTimeFrame = 'hours1' | 'hours24' | 'days7' | 'days30' | 'year1'
+export type PercentChangeTimeFrame =
+  | 'hours1'
+  | 'hours24'
+  | 'days7'
+  | 'days30'
+  | 'year1'
 export type AssetSubText = 'marketCap' | 'volume24h'

@@ -28,7 +28,10 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
   }
 }
 
-export function linkReferralWithCurrencies(navigation: NavigationBase, uri: string): ThunkAction<Promise<void>> {
+export function linkReferralWithCurrencies(
+  navigation: NavigationBase,
+  uri: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Fill in any addresses:
     const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
@@ -59,7 +62,11 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
   }
 }
 
-const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode?: string; getState: GetState }): Promise<string | undefined> => {
+const getFirstCurrencyAddress = async (params: {
+  pluginId?: string
+  currencyCode?: string
+  getState: GetState
+}): Promise<string | undefined> => {
   const { getState } = params
   const state = getState()
   const { account } = state.core
@@ -71,7 +78,10 @@ const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode
     if (pluginId != null) {
       currencyCode = currencyConfig[pluginId].currencyInfo.currencyCode
     } else if (currencyCode != null) {
-      pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
+      pluginId = Object.keys(currencyConfig).find(
+        pluginId =>
+          currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode
+      )
     }
   } catch (e) {}
 
@@ -80,7 +90,9 @@ const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode
   }
 
   // If we have a wallet, use that:
-  const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+  const walletId = Object.keys(currencyWallets).find(
+    walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId
+  )
   if (walletId != null) {
     const wallet = currencyWallets[walletId]
     const address = await wallet.getReceiveAddress({ tokenId: null })
@@ -92,7 +104,10 @@ const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode
     <ButtonsModal
       bridge={bridge}
       title={lstrings.fragment_create_wallet_create_wallet}
-      message={sprintf(lstrings.wallet_list_referral_link_ask_wallet_creation_1s, currencyCode)}
+      message={sprintf(
+        lstrings.wallet_list_referral_link_ask_wallet_creation_1s,
+        currencyCode
+      )}
       buttons={{
         ok: { label: lstrings.yes },
         cancel: { label: lstrings.no }
@@ -109,8 +124,15 @@ const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode
     fiatCurrencyCode: defaultIsoFiat,
     name: getUniqueWalletName(account, pluginId)
   })
-  const wallet = await showFullScreenSpinner(lstrings.wallet_list_referral_link_currency_loading, walletPromise)
-  logActivity(`Create Wallet (wallet list): ${account.username} -- ${walletType} -- ${defaultIsoFiat ?? ''}`)
+  const wallet = await showFullScreenSpinner(
+    lstrings.wallet_list_referral_link_currency_loading,
+    walletPromise
+  )
+  logActivity(
+    `Create Wallet (wallet list): ${account.username} -- ${walletType} -- ${
+      defaultIsoFiat ?? ''
+    }`
+  )
 
   const address = await wallet.getReceiveAddress({ tokenId: null })
   return address.publicAddress

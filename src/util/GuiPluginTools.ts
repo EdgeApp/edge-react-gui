@@ -21,20 +21,33 @@ export function filterGuiPluginJson(
     if (typeof row === 'string') continue
 
     // Filtering:
-    const { id, forCountries, forPlatform, forStateProvinces, notStateProvinces, sortIndex } = row
+    const {
+      id,
+      forCountries,
+      forPlatform,
+      forStateProvinces,
+      notStateProvinces,
+      sortIndex
+    } = row
     if (disablePlugins[id] === true) continue
     if (forCountries != null && !forCountries.includes(countryCode)) continue
     if (forPlatform != null && forPlatform !== platform) continue
 
     if (stateProvinceCode != null) {
-      const enableStateProvinces = forStateProvinces != null ? forStateProvinces[countryCode] : undefined
-      const disableStateProvinces = notStateProvinces != null ? notStateProvinces[countryCode] : undefined
+      const enableStateProvinces =
+        forStateProvinces != null ? forStateProvinces[countryCode] : undefined
+      const disableStateProvinces =
+        notStateProvinces != null ? notStateProvinces[countryCode] : undefined
       // If this plugin has no stateProvinces, assume it accepts them all
-      if (enableStateProvinces?.some(sp => sp === stateProvinceCode) === false) {
+      if (
+        enableStateProvinces?.some(sp => sp === stateProvinceCode) === false
+      ) {
         continue
       }
 
-      if (disableStateProvinces?.some(sp => sp === stateProvinceCode) === true) {
+      if (
+        disableStateProvinces?.some(sp => sp === stateProvinceCode) === true
+      ) {
         continue
       }
     }
@@ -59,13 +72,16 @@ export function filterGuiPluginJson(
     const merged = mergedRows[id]
     if (row.pluginId != null) merged.pluginId = row.pluginId
     if (row.deepPath != null) merged.deepPath = row.deepPath
-    if (row.deepQuery != null) merged.deepQuery = { ...merged.deepQuery, ...row.deepQuery }
+    if (row.deepQuery != null)
+      merged.deepQuery = { ...merged.deepQuery, ...row.deepQuery }
     if (row.paymentType != null) merged.paymentType = row.paymentType
     if (row.title != null) merged.title = row.title
     if (row.customTitleKey != null) merged.customTitleKey = row.customTitleKey
     if (row.description != null) merged.description = row.description
-    if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath
-    if (row.paymentTypeLogoKey != null) merged.paymentTypeLogoKey = row.paymentTypeLogoKey
+    if (row.partnerIconPath != null)
+      merged.partnerIconPath = row.partnerIconPath
+    if (row.paymentTypeLogoKey != null)
+      merged.paymentTypeLogoKey = row.paymentTypeLogoKey
     if (row.paymentTypes != null) merged.paymentTypes = row.paymentTypes
     if (row.cryptoCodes != null) merged.cryptoCodes = row.cryptoCodes
   }
@@ -88,7 +104,12 @@ export function makePluginUri(
     promoCode?: string
   }
 ): string {
-  const { baseUri, baseQuery = {}, lockUriPath = false, queryPromoCode } = plugin
+  const {
+    baseUri,
+    baseQuery = {},
+    lockUriPath = false,
+    queryPromoCode
+  } = plugin
   const { deepPath = '', deepQuery = {}, promoCode } = opts
   const query = { ...baseQuery, ...deepQuery }
 

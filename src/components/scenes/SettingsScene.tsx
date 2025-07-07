@@ -8,8 +8,15 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
-import { setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
+import {
+  getDeviceSettings,
+  writeDisableAnimations,
+  writeForceLightAccountCreate
+} from '../../actions/DeviceSettingsActions'
+import {
+  setDeveloperModeOn,
+  setSpamFilterOn
+} from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
@@ -55,30 +62,50 @@ export const SettingsScene = (props: Props) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds)
+  const autoLogoutTimeInSeconds = useSelector(
+    state => state.ui.settings.autoLogoutTimeInSeconds
+  )
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const developerModeOn = useSelector(
+    state => state.ui.settings.developerModeOn
+  )
   const isLocked = useSelector(state => state.ui.settings.changesLocked)
-  const pinLoginEnabled = useSelector(state => state.ui.settings.pinLoginEnabled)
+  const pinLoginEnabled = useSelector(
+    state => state.ui.settings.pinLoginEnabled
+  )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
-  const supportsTouchId = useSelector(state => state.ui.settings.isTouchSupported)
+  const supportsTouchId = useSelector(
+    state => state.ui.settings.isTouchSupported
+  )
   const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
 
   const account = useSelector(state => state.core.account)
   const username = useWatch(account, 'username')
   const allKeys = useWatch(account, 'allKeys')
-  const hasRestoreWallets = allKeys != null && allKeys.filter(key => key.archived || key.deleted).length > 0
+  const hasRestoreWallets =
+    allKeys != null &&
+    allKeys.filter(key => key.archived || key.deleted).length > 0
 
   const context = useSelector(state => state.core.context)
   const logSettings = useWatch(context, 'logSettings')
 
-  const [localContactPermissionOn, setLocalContactsPermissionOn] = React.useState(false)
-
-  const [isDarkTheme, setIsDarkTheme] = React.useState(theme === config.darkTheme)
-  const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
-  const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
-  const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
-  const [touchIdText, setTouchIdText] = React.useState<string>(lstrings.settings_button_use_touchID)
+  const [localContactPermissionOn, setLocalContactsPermissionOn] =
+    React.useState(false)
+  const [isDarkTheme, setIsDarkTheme] = React.useState(
+    theme === config.darkTheme
+  )
+  const [defaultLogLevel, setDefaultLogLevel] = React.useState<
+    EdgeLogType | 'silent'
+  >(logSettings.defaultLogLevel)
+  const [disableAnim, setDisableAnim] = useState<boolean>(
+    getDeviceSettings().disableAnimations
+  )
+  const [forceLightAccountCreate, setForceLightAccountCreate] =
+    useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [touchIdText, setTouchIdText] = React.useState<string>(
+    lstrings.settings_button_use_touchID
+  )
+  const [validatedPassword, setValidatedPassword] = React.useState<string>()
 
   const iconSize = theme.rem(1.25)
   const isLightAccount = username == null
@@ -91,31 +118,40 @@ export const SettingsScene = (props: Props) => {
     hours: lstrings.settings_hours,
     days: lstrings.settings_days
   }
-  const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+  const autoLogoutRightText =
+    autoLogout.value === 0
+      ? lstrings.string_disable
+      : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
   const handleUpgrade = useHandler(() => {
     showBackupModal({ navigation: navigation as NavigationBase })
   })
 
-  const handleUnlock = useHandler(() => {
+  const handleLockUnlock = useHandler(async () => {
     if (!isLocked) {
       dispatch({
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: true
       })
+      setValidatedPassword(undefined)
     } else {
-      handleShowUnlockSettingsModal().catch(err => showError(err))
+      const password = await handleShowUnlockSettingsModal().catch(err => {
+        showError(err)
+        return undefined
+      })
+      setValidatedPassword(password)
     }
   })
 
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
     if (isLocked) {
-      const passwordValid = await handleShowUnlockSettingsModal().catch(err => {
+      const password = await handleShowUnlockSettingsModal().catch(err => {
         showError(err)
-        return false
+        return undefined
       })
-      if (!passwordValid) return true
+      if (password == null) return true
+      setValidatedPassword(password)
       dispatch({
         type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
         data: false
@@ -142,15 +178,24 @@ export const SettingsScene = (props: Props) => {
 
   const handleToggleDarkTheme = useHandler(async () => {
     setIsDarkTheme(!isDarkTheme)
-    !isDarkTheme ? changeTheme(config.darkTheme) : changeTheme(config.lightTheme)
+    !isDarkTheme
+      ? changeTheme(config.darkTheme)
+      : changeTheme(config.lightTheme)
   })
 
   const handleSetAutoLogoutTime = useHandler(async () => {
-    const newAutoLogoutTimeInSeconds = await Airship.show<number | undefined>(bridge => (
-      <AutoLogoutModal autoLogoutTimeInSeconds={autoLogoutTimeInSeconds} bridge={bridge} />
-    ))
+    const newAutoLogoutTimeInSeconds = await Airship.show<number | undefined>(
+      bridge => (
+        <AutoLogoutModal
+          autoLogoutTimeInSeconds={autoLogoutTimeInSeconds}
+          bridge={bridge}
+        />
+      )
+    )
     if (typeof newAutoLogoutTimeInSeconds === 'number') {
-      await dispatch(setAutoLogoutTimeInSecondsRequest(newAutoLogoutTimeInSeconds))
+      await dispatch(
+        setAutoLogoutTimeInSecondsRequest(newAutoLogoutTimeInSeconds)
+      )
     }
   })
 
@@ -186,6 +231,14 @@ export const SettingsScene = (props: Props) => {
     navigation.navigate('changePin')
   })
 
+  const handleChangeUsername = useHandler(async (): Promise<void> => {
+    // Check if settings are locked
+    if ((await hasLock()) || validatedPassword == null) return
+
+    // Navigate to change username with the validated password
+    navigation.navigate('changeUsername', { password: validatedPassword })
+  })
+
   const handleChangeOtp = useHandler(async (): Promise<void> => {
     if (await hasLock()) return
     navigation.navigate('otpSetup')
@@ -202,7 +255,11 @@ export const SettingsScene = (props: Props) => {
     const approveDelete = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
-        body={sprintf(lstrings.delete_account_body, config.appName, config.supportSite)}
+        body={sprintf(
+          lstrings.delete_account_body,
+          config.appName,
+          config.supportSite
+        )}
         title={lstrings.delete_account_title}
         isSkippable
         warning
@@ -222,11 +279,17 @@ export const SettingsScene = (props: Props) => {
         autoCorrect={false}
         autoCapitalize="none"
         onSubmit={async text => {
-          if (text !== username) return lstrings.delete_account_verification_error
+          if (text !== username)
+            return lstrings.delete_account_verification_error
           await account.deleteRemoteAccount()
           await dispatch(logoutRequest(navigation as NavigationBase))
           await context.forgetAccount(rootLoginId)
-          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showDevError(err))
+          Airship.show(bridge => (
+            <TextDropdown
+              bridge={bridge}
+              message={sprintf(lstrings.delete_account_feedback, username)}
+            />
+          )).catch(err => showDevError(err))
           return true
         }}
       />
@@ -255,7 +318,9 @@ export const SettingsScene = (props: Props) => {
   })
 
   const handleToggleContactsPermission = useHandler(async () => {
-    setLocalContactsPermissionOn(await requestContactsPermission(!localContactPermissionOn))
+    setLocalContactsPermissionOn(
+      await requestContactsPermission(!localContactPermissionOn)
+    )
   })
 
   const handleNotificationSettings = useHandler(() => {
@@ -345,42 +410,115 @@ export const SettingsScene = (props: Props) => {
       <SectionView extendRight marginRem={0.5}>
         <>
           <SettingsHeaderRow
-            icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
+            icon={
+              <FontAwesomeIcon
+                color={theme.icon}
+                name="user-o"
+                size={iconSize}
+              />
+            }
             label={`${lstrings.settings_account_title_cap}: ${displayUsername}`}
           />
           {isLightAccount ? (
             <EdgeCard>
-              <SettingsTappableRow label={lstrings.backup_account} onPress={handleUpgrade} />
+              <SettingsTappableRow
+                label={lstrings.backup_account}
+                onPress={handleUpgrade}
+              />
             </EdgeCard>
           ) : (
             <EdgeCard sections>
               <SettingsTappableRow
                 action={isLocked ? 'lock' : 'unlock'}
-                label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
-                onPress={handleUnlock}
+                label={
+                  isLocked
+                    ? lstrings.settings_button_unlock_settings
+                    : lstrings.settings_button_lock_settings
+                }
+                onPress={handleLockUnlock}
               />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_change_password} onPress={handleChangePassword} />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_pin} onPress={handleChangePin} />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.spending_limits} onPress={handleSpendingLimits} />
-              <SettingsTappableRow disabled={isLocked} label={lstrings.title_duress_mode} onPress={handleDuressMode} />
-              <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.settings_button_change_password}
+                onPress={handleChangePassword}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.settings_button_pin}
+                onPress={handleChangePin}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.settings_button_change_username}
+                onPress={handleChangeUsername}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.settings_button_setup_two_factor}
+                onPress={handleChangeOtp}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.settings_button_password_recovery}
+                onPress={handleChangeRecovery}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.spending_limits}
+                onPress={handleSpendingLimits}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                label={lstrings.title_duress_mode}
+                onPress={handleDuressMode}
+              />
+              <SettingsTappableRow
+                disabled={isLocked}
+                dangerous
+                label={lstrings.delete_account_title}
+                onPress={handleDeleteAccount}
+              />
             </EdgeCard>
           )}
         </>
         <>
-          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
+          <SettingsHeaderRow
+            icon={<IonIcon color={theme.icon} name="options" size={iconSize} />}
+            label={lstrings.settings_options_title_cap}
+          />
           <EdgeCard sections>
-            {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
-            <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
-            <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
+            {config.disableSwaps !== true ? (
+              <SettingsTappableRow
+                label={lstrings.settings_exchange_settings}
+                onPress={handleExchangeSettings}
+              />
+            ) : null}
+            <SettingsLabelRow
+              right={autoLogoutRightText}
+              label={lstrings.settings_title_auto_logoff}
+              onPress={handleSetAutoLogoutTime}
+            />
+            <SettingsLabelRow
+              right={removeIsoPrefix(defaultFiat)}
+              label={lstrings.settings_title_currency}
+              onPress={handleDefaultFiat}
+            />
 
             {isLightAccount ? null : (
-              <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={pinLoginEnabled} onPress={handleTogglePinLoginEnabled} />
+              <SettingsSwitchRow
+                key="pinRelogin"
+                label={lstrings.settings_title_pin_login}
+                value={pinLoginEnabled}
+                onPress={handleTogglePinLoginEnabled}
+              />
             )}
             {supportsTouchId && !isLightAccount && (
-              <SettingsSwitchRow key="useTouchID" label={touchIdText} value={touchIdEnabled} onPress={handleUpdateTouchId} />
+              <SettingsSwitchRow
+                key="useTouchID"
+                label={touchIdText}
+                value={touchIdEnabled}
+                onPress={handleUpdateTouchId}
+              />
             )}
 
             <SettingsSwitchRow
@@ -388,19 +526,46 @@ export const SettingsScene = (props: Props) => {
               value={localContactPermissionOn ?? false}
               onPress={handleToggleContactsPermission}
             />
-            <SettingsSwitchRow key="spamFilter" label={lstrings.settings_hide_spam_transactions} value={spamFilterOn} onPress={handleToggleSpamFilter} />
-            <SettingsTappableRow label={lstrings.settings_notifications} onPress={handleNotificationSettings} />
-            <SettingsTappableRow label={lstrings.settings_asset_settings} onPress={() => navigation.push('assetSettings')} />
-            <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={handlePromotionSettings} />
+            <SettingsSwitchRow
+              key="spamFilter"
+              label={lstrings.settings_hide_spam_transactions}
+              value={spamFilterOn}
+              onPress={handleToggleSpamFilter}
+            />
+            <SettingsTappableRow
+              label={lstrings.settings_notifications}
+              onPress={handleNotificationSettings}
+            />
+            <SettingsTappableRow
+              label={lstrings.settings_asset_settings}
+              onPress={() => navigation.push('assetSettings')}
+            />
+            <SettingsTappableRow
+              label={lstrings.title_promotion_settings}
+              onPress={handlePromotionSettings}
+            />
 
-            <SettingsSwitchRow key="disableAnim" label={lstrings.button_disable_animations} value={disableAnim} onPress={handleToggleDisableAnimations} />
+            <SettingsSwitchRow
+              key="disableAnim"
+              label={lstrings.button_disable_animations}
+              value={disableAnim}
+              onPress={handleToggleDisableAnimations}
+            />
             <SettingsTappableRow
               label={lstrings.restore_wallets_modal_title}
-              onPress={hasRestoreWallets ? handleShowRestoreWalletsModal : undefined}
+              onPress={
+                hasRestoreWallets ? handleShowRestoreWalletsModal : undefined
+              }
               disabled={!hasRestoreWallets}
             />
-            <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
-            <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={handleTermsOfService} />
+            <SettingsTappableRow
+              label={lstrings.migrate_wallets_title}
+              onPress={() => navigation.push('migrateWalletSelectCrypto', {})}
+            />
+            <SettingsTappableRow
+              label={lstrings.title_terms_of_service}
+              onPress={handleTermsOfService}
+            />
             <SettingsSwitchRow
               key="verboseLogging"
               label={lstrings.settings_verbose_logging}
@@ -411,10 +576,20 @@ export const SettingsScene = (props: Props) => {
         </>
         {ENV.ALLOW_DEVELOPER_MODE && (
           <EdgeCard sections>
-            <SettingsSwitchRow key="developerMode" label={lstrings.settings_developer_mode} value={developerModeOn} onPress={handleToggleDeveloperMode} />
+            <SettingsSwitchRow
+              key="developerMode"
+              label={lstrings.settings_developer_mode}
+              value={developerModeOn}
+              onPress={handleToggleDeveloperMode}
+            />
 
             {developerModeOn && [
-              <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={isDarkTheme} onPress={handleToggleDarkTheme} />,
+              <SettingsSwitchRow
+                key="darkTheme"
+                label={lstrings.settings_dark_theme}
+                value={isDarkTheme}
+                onPress={handleToggleDarkTheme}
+              />,
               <SettingsSwitchRow
                 key="forceLightAccount"
                 label={lstrings.settings_developer_options_force_la}

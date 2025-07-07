@@ -2,7 +2,10 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type { NavigatorScreenParams } from '@react-navigation/core'
 import * as NavigationCore from '@react-navigation/core'
 import { DrawerScreenProps } from '@react-navigation/drawer'
-import type { CompositeScreenProps, StackActionHelpers } from '@react-navigation/native'
+import type {
+  CompositeScreenProps,
+  StackActionHelpers
+} from '@react-navigation/native'
 import type { StackScreenProps } from '@react-navigation/stack'
 
 import type { ChangeMiningFeeParams } from '../components/scenes/ChangeMiningFeeScene'
@@ -112,7 +115,10 @@ export type BuyTabParamList = {} & {
   rewardsCardWelcome: RewardsCardWelcomeParams
 }
 
-export type SellTabParamList = Omit<BuyTabParamList, 'pluginListBuy' | 'pluginViewBuy'> & {
+export type SellTabParamList = Omit<
+  BuyTabParamList,
+  'pluginListBuy' | 'pluginViewBuy'
+> & {
   pluginListSell?: GuiPluginListParams
   pluginViewSell: PluginViewParams
 }
@@ -141,6 +147,7 @@ export type EdgeAppStackParamList = {} & {
   changeMiningFee2: ChangeMiningFeeParams
   changePassword: undefined
   changePin: undefined
+  changeUsername: { password: string }
   coinRanking: undefined
   coinRankingDetails: CoinRankingDetailsParams
   confirmScene: ConfirmSceneParams
@@ -238,38 +245,48 @@ export type RootParamList = {} & {
 }
 
 // Upgraded types to comply with the navigation upgrade requirements
-export type RootSceneProps<Name extends keyof RootParamList> = StackScreenProps<RootParamList, Name>
-
-export type DrawerSceneProps<Name extends keyof DrawerParamList> = CompositeScreenProps<
-  DrawerScreenProps<DrawerParamList, Name>,
-  RootSceneProps<keyof RootParamList>
+export type RootSceneProps<Name extends keyof RootParamList> = StackScreenProps<
+  RootParamList,
+  Name
 >
 
-export type EdgeAppSceneProps<Name extends keyof EdgeAppStackParamList> = CompositeScreenProps<
-  StackScreenProps<EdgeAppStackParamList, Name>,
-  DrawerSceneProps<keyof DrawerParamList>
->
+export type DrawerSceneProps<Name extends keyof DrawerParamList> =
+  CompositeScreenProps<
+    DrawerScreenProps<DrawerParamList, Name>,
+    RootSceneProps<keyof RootParamList>
+  >
 
-export type EdgeTabsSceneProps<Name extends keyof EdgeTabsParamList> = CompositeScreenProps<
-  BottomTabScreenProps<EdgeTabsParamList, Name>,
-  EdgeAppSceneProps<keyof EdgeAppStackParamList>
->
-export type BuyTabSceneProps<Name extends keyof BuyTabParamList> = CompositeScreenProps<
-  StackScreenProps<BuyTabParamList, Name>,
-  EdgeTabsSceneProps<keyof EdgeTabsParamList>
->
-export type SellTabSceneProps<Name extends keyof SellTabParamList> = CompositeScreenProps<
-  StackScreenProps<SellTabParamList, Name>,
-  EdgeTabsSceneProps<keyof EdgeTabsParamList>
->
-export type SwapTabSceneProps<Name extends keyof SwapTabParamList> = CompositeScreenProps<
-  StackScreenProps<SwapTabParamList, Name>,
-  EdgeTabsSceneProps<keyof EdgeTabsParamList>
->
-export type WalletsTabSceneProps<Name extends keyof WalletsTabParamList> = CompositeScreenProps<
-  StackScreenProps<WalletsTabParamList, Name>,
-  EdgeTabsSceneProps<keyof EdgeTabsParamList>
->
+export type EdgeAppSceneProps<Name extends keyof EdgeAppStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<EdgeAppStackParamList, Name>,
+    DrawerSceneProps<keyof DrawerParamList>
+  >
+
+export type EdgeTabsSceneProps<Name extends keyof EdgeTabsParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<EdgeTabsParamList, Name>,
+    EdgeAppSceneProps<keyof EdgeAppStackParamList>
+  >
+export type BuyTabSceneProps<Name extends keyof BuyTabParamList> =
+  CompositeScreenProps<
+    StackScreenProps<BuyTabParamList, Name>,
+    EdgeTabsSceneProps<keyof EdgeTabsParamList>
+  >
+export type SellTabSceneProps<Name extends keyof SellTabParamList> =
+  CompositeScreenProps<
+    StackScreenProps<SellTabParamList, Name>,
+    EdgeTabsSceneProps<keyof EdgeTabsParamList>
+  >
+export type SwapTabSceneProps<Name extends keyof SwapTabParamList> =
+  CompositeScreenProps<
+    StackScreenProps<SwapTabParamList, Name>,
+    EdgeTabsSceneProps<keyof EdgeTabsParamList>
+  >
+export type WalletsTabSceneProps<Name extends keyof WalletsTabParamList> =
+  CompositeScreenProps<
+    StackScreenProps<WalletsTabParamList, Name>,
+    EdgeTabsSceneProps<keyof EdgeTabsParamList>
+  >
 
 // -------------------------------------------------------------------------
 // Legacy types
@@ -297,18 +314,22 @@ export type RouteSceneKey = keyof AppParamList
  * The of the `navigation` prop passed to each scene,
  * but without any scene-specific stuff.
  */
-export type NavigationBase = NavigationCore.NavigationProp<AppParamList> & StackActionHelpers<AppParamList>
+export type NavigationBase = NavigationCore.NavigationProp<AppParamList> &
+  StackActionHelpers<AppParamList>
 
 /**
  * The `navigation` prop passed to each scene.
  */
 
-export type NavigationProp<RouteName extends keyof AppParamList> = NavigationCore.NavigationProp<AppParamList, RouteName> & StackActionHelpers<AppParamList>
+export type NavigationProp<RouteName extends keyof AppParamList> =
+  NavigationCore.NavigationProp<AppParamList, RouteName> &
+    StackActionHelpers<AppParamList>
 
 /**
  * The `route` prop passed to each scene.
  */
-export type RouteProp<Name extends keyof AppParamList> = NavigationCore.RouteProp<AppParamList, Name>
+export type RouteProp<Name extends keyof AppParamList> =
+  NavigationCore.RouteProp<AppParamList, Name>
 
 /**
  * All the props passed to each scene.

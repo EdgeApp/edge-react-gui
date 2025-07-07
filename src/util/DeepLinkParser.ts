@@ -4,7 +4,10 @@ import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
-import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
+import {
+  asFiatDirection,
+  asFiatPaymentType
+} from '../plugins/gui/fiatPluginTypes'
 import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
 import { AppParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
@@ -13,7 +16,10 @@ import { parseQuery, stringifyQuery } from './WebUtils'
  * Parse a link into the app, identifying special
  * features that Edge knows how to handle.
  */
-export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {}): DeepLink {
+export function parseDeepLink(
+  uri: string,
+  opts: { aztecoApiKey?: string } = {}
+): DeepLink {
   const { aztecoApiKey = ENV.AZTECO_API_KEY } = opts
 
   // Normalize some legacy cases:
@@ -81,7 +87,9 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
       const cleanKey = /^c[0-9]$/.test(key) ? key.replace('c', 'CODE_') : key
       cleanQuery[cleanKey] = query[key]
     }
-    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}${stringifyQuery(cleanQuery)}&ADDRESS=`
+    const aztecoLink = `${url.protocol}//${
+      url.hostname
+    }/partners/${aztecoApiKey}${stringifyQuery(cleanQuery)}&ADDRESS=`
     return {
       type: 'azteco',
       uri: aztecoLink
@@ -261,7 +269,9 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
 
         // Currently only handling REWARDS type
         if (type === 'REWARDS') {
-          console.debug(`Rewards link detected with pluginId: ${pluginId}, tokenId: ${tokenId}`)
+          console.debug(
+            `Rewards link detected with pluginId: ${pluginId}, tokenId: ${tokenId}`
+          )
 
           return {
             type: 'rewards',
@@ -274,7 +284,11 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
   }
 
   // No special handling supported. Open in browser.
-  return { type: 'other', protocol: url.protocol.replace(/:$/, ''), uri: url.href }
+  return {
+    type: 'other',
+    protocol: url.protocol.replace(/:$/, ''),
+    uri: url.href
+  }
 }
 
 /**
@@ -288,7 +302,8 @@ function parseRequestAddress(url: URL<string>): DeepLink {
   const post = query.post != null ? decodeURI(query.post) : undefined
   const payer = query.payer ?? undefined
 
-  if (codesString == null) throw new SyntaxError('No currency codes found in request for address')
+  if (codesString == null)
+    throw new SyntaxError('No currency codes found in request for address')
 
   // Split the asset codes by '-'
   const codes = codesString.split('-')
@@ -297,7 +312,8 @@ function parseRequestAddress(url: URL<string>): DeepLink {
   const assets = codes.map(codePair => {
     const splitCodes = codePair.split('_')
     const nativeCode = splitCodes[0].toUpperCase()
-    const tokenCode = splitCodes.length > 1 ? splitCodes[1].toUpperCase() : nativeCode
+    const tokenCode =
+      splitCodes.length > 1 ? splitCodes[1].toUpperCase() : nativeCode
     return { nativeCode, tokenCode }
   })
 

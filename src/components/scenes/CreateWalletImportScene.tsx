@@ -9,7 +9,10 @@ import ImportKeySvg from '../../assets/images/import-key-icon.svg'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
+import {
+  splitCreateWalletItems,
+  WalletCreateItem
+} from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -78,7 +81,10 @@ const CreateWalletImportComponent = (props: Props) => {
       if (successMap[item.pluginId] != null) {
         // Any asset associated to this pluginId is good to go
         successItems.push(item)
-      } else if (item.createWalletIds != null && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID) {
+      } else if (
+        item.createWalletIds != null &&
+        item.createWalletIds[0] === PLACEHOLDER_WALLET_ID
+      ) {
         // Token items to be enabled on existing wallets and aren't dependent on a failed import are are good to go, too
         successItems.push(item)
       } else {
@@ -105,7 +111,9 @@ const CreateWalletImportComponent = (props: Props) => {
     if (failureItems.length > 0) {
       // Show modal with errors
       const displayNames = failureItems.map(item => item.displayName).join(', ')
-      const resolveValue = await Airship.show<'continue' | 'edit' | 'cancel' | undefined>(bridge => (
+      const resolveValue = await Airship.show<
+        'continue' | 'edit' | 'cancel' | undefined
+      >(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.create_wallet_failed_import_header}
@@ -122,7 +130,12 @@ const CreateWalletImportComponent = (props: Props) => {
       }
     }
 
-    if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
+    if (
+      pluginIds.length > 0 &&
+      pluginIds.some(
+        pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null
+      )
+    ) {
       navigation.navigate('createWalletImportOptions', {
         createWalletList: successItems,
         walletNames,
@@ -157,9 +170,16 @@ const CreateWalletImportComponent = (props: Props) => {
         <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
         <KeyboardAwareScrollView>
           <View style={styles.icon}>
-            <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+            <ImportKeySvg
+              accessibilityHint={lstrings.import_key_icon_hint}
+              color={theme.iconTappable}
+              height={svgHeight}
+              width={svgWidth}
+            />
           </View>
-          <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
+          <Paragraph>
+            {lstrings.create_wallet_import_all_instructions}
+          </Paragraph>
           <FilledTextInput
             aroundRem={0.5}
             keyboardType={keyboardType}

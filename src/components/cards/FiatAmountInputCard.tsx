@@ -23,7 +23,14 @@ interface Props {
  * and taking fiat as an input, and returns the result in both fiat and crypto,
  * based on the given wallet.
  */
-const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, title, tokenId, onAmountChanged }: Props) => {
+const FiatAmountInputCardComponent = ({
+  wallet,
+  iconUri,
+  inputModalMessage,
+  title,
+  tokenId,
+  onAmountChanged
+}: Props) => {
   const [sanitizedFiatAmount, setSanitizedFiatAmount] = React.useState('0')
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
@@ -37,25 +44,47 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
   // TODO: Exchange rate conversions not be handled here. Callers should handle
   // currency conversions elsewhere.
   // Convert amount fiat -> amount crypto, notify caller
-  const [nativeCryptoAmount, setNativeCryptoAmount] = React.useState<string>('0')
+  const [nativeCryptoAmount, setNativeCryptoAmount] =
+    React.useState<string>('0')
 
   React.useEffect(() => {
     const token = tokenId != null ? allTokens[tokenId] : null
-    const { denominations: destDenoms } = token != null ? token : wallet.currencyInfo
-    const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
+    const { denominations: destDenoms } =
+      token != null ? token : wallet.currencyInfo
+    const destExchangeMultiplier =
+      destDenoms == null ? '0' : destDenoms[0].multiplier
 
     // Clean localized fiat amount prior to biggystring ops
     const calculatedNativeCryptoAmount = (
-      destToFiatRate == null || destToFiatRate === 0 ? 0 : parseInt(destExchangeMultiplier) * (parseFloat(sanitizedFiatAmount) ?? 0 / destToFiatRate)
+      destToFiatRate == null || destToFiatRate === 0
+        ? 0
+        : parseInt(destExchangeMultiplier) *
+          (parseFloat(sanitizedFiatAmount) ?? 0 / destToFiatRate)
     ).toFixed(0)
 
     setNativeCryptoAmount(calculatedNativeCryptoAmount)
-    if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(sanitizedFiatAmount)) onAmountChanged(sanitizedFiatAmount, calculatedNativeCryptoAmount)
-  }, [allTokens, destToFiatRate, sanitizedFiatAmount, onAmountChanged, tokenId, wallet.currencyInfo])
+    if (
+      !zeroString(calculatedNativeCryptoAmount) &&
+      !zeroString(sanitizedFiatAmount)
+    )
+      onAmountChanged(sanitizedFiatAmount, calculatedNativeCryptoAmount)
+  }, [
+    allTokens,
+    destToFiatRate,
+    sanitizedFiatAmount,
+    onAmountChanged,
+    tokenId,
+    wallet.currencyInfo
+  ])
 
   const handleEditActionfiatAmount = useHandler(async () => {
     await Airship.show<string | undefined>(bridge => (
-      <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />
+      <TextInputModal
+        title={title}
+        message={inputModalMessage}
+        bridge={bridge}
+        keyboardType="decimal-pad"
+      />
     )).then(inputAmount => {
       if (inputAmount != null) {
         const sanitizedInputAmount = sanitizeDecimalAmount(inputAmount, 2)
@@ -79,7 +108,13 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
   )
 
   return (
-    <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
+    <UnderlinedNumInputCard
+      currencyCode="USD"
+      formattedAmount={formattedFiatAmount}
+      iconUri={iconUri}
+      title={title}
+      onPress={handleEditActionfiatAmount}
+    />
   )
 }
 
