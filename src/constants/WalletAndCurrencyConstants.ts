@@ -173,7 +173,13 @@ interface SpecialCurrencyInfo {
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
-  chainIcon?: boolean
+  /**
+   * Whether to show a secondary icon of the chain (network) for native
+   * currency wallets. This is used for L2s where the native currency is
+   * identical to the L1 native currency (e.g. ETH on Optimism).
+   * (Default: false)
+   **/
+  showChainIcon?: boolean
   /**
    * The ticker for the [unstoppable domains](https://support.unstoppabledomains.com/support/solutions/articles/48001185621).
    */
@@ -202,7 +208,7 @@ export const SPECIAL_CURRENCY_INFO: {
 } = {
   abstract: {
     allowZeroTx: true,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_abstract_wallet_name,
     isImportKeySupported: true,
@@ -397,7 +403,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42161'
@@ -408,7 +414,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
@@ -473,7 +479,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
@@ -481,7 +487,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   bobevm: {
     initWalletName: lstrings.string_first_bobevm_wallet_name,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
@@ -491,7 +497,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   zksync: {
     allowZeroTx: true,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_zksync_wallet_name,
     isImportKeySupported: true,

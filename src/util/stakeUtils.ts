@@ -156,7 +156,7 @@ export const getPolicyIconUris = (
       getCurrencyIconUris(
         asset.pluginId,
         asset.tokenId,
-        SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false
+        SPECIAL_CURRENCY_INFO[asset.pluginId]?.showChainIcon ?? false
       ).symbolImage
   )
   const rewardAssetUris = rewardAssets.map(
@@ -164,7 +164,7 @@ export const getPolicyIconUris = (
       getCurrencyIconUris(
         asset.pluginId,
         asset.tokenId,
-        SPECIAL_CURRENCY_INFO[asset.pluginId]?.chainIcon ?? false
+        SPECIAL_CURRENCY_INFO[asset.pluginId]?.showChainIcon ?? false
       ).symbolImage
   )
 

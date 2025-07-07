@@ -47,7 +47,7 @@ export const WalletRestoreCard = (props: Props) => {
     const icon = getCurrencyIconUris(
       pluginId,
       null,
-      SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false
+      SPECIAL_CURRENCY_INFO[pluginId]?.showChainIcon ?? false
     )
     return icon.symbolImageDarkMono
   }, [pluginId])
