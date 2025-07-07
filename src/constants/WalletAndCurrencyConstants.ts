@@ -172,6 +172,10 @@ interface SpecialCurrencyInfo {
   isStakingSupported?: boolean
   stakeMaxApy?: number
   maxSpendTargets?: number
+  /**
+   * WalletConnect V2 chain identification information. Defining this will
+   * enable WalletConnect V2 support for the wallet.
+   */
   walletConnectV2ChainId?: WalletConnectChainId
   /**
    * Whether to show a secondary icon of the chain (network) for native
