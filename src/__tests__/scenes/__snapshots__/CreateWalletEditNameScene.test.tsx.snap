@@ -484,6 +484,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -682,6 +683,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -880,6 +882,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
@@ -914,6 +917,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="cover"
                     source={
                       {
