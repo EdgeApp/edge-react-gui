@@ -4,7 +4,11 @@ def preBuildStages(String stageName, versionFile) {
   stage("${stageName}: preBuildStages") {
     echo "Running on ${env.NODE_NAME}"
     deleteDir()
-    checkout scm
+
+    // Retry checkout up to 3 times
+    retry(3) {
+      checkout scm
+    }
 
     def versionString = "${versionFile.branch} ${versionFile.version} (${versionFile.build})"
     echo "versionString: ${versionString}"
@@ -101,7 +105,11 @@ pipeline {
         script {
           echo "Running on ${env.NODE_NAME}"
           deleteDir()
-          checkout scm
+
+          // Retry checkout up to 3 times
+          retry(3) {
+            checkout scm
+          }
 
           // Import the settings files
           withCredentials([file(credentialsId: 'githubSshKey', variable: 'id_github')]) {
