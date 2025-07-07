@@ -32,6 +32,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   fio: ENV.FIO_INIT,
   hedera: ENV.HEDERA_INIT,
   holesky: ENV.HOLESKY_INIT,
+  hyperevm: ENV.HYPEREVM_INIT,
   liberland: ENV.LIBERLAND_INIT,
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,

@@ -918,6 +918,15 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '170000'
     }
   },
+  hyperevm: {
+    initWalletName: lstrings.string_first_hyperevm_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '999'
+    }
+  },
   sepolia: {
     initWalletName: lstrings.string_first_sepolia_wallet_name,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',

@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Added Botanix.
+- added: Added HyperEVM.
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
 
