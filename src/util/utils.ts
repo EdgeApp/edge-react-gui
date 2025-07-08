@@ -19,8 +19,7 @@ import {
   FEE_COLOR_THRESHOLD,
   FIAT_CODES_SYMBOLS,
   FIAT_PRECISION,
-  getFiatSymbol,
-  SPECIAL_CURRENCY_INFO
+  getFiatSymbol
 } from '../constants/WalletAndCurrencyConstants'
 import {
   toLocaleDate,
@@ -617,20 +616,6 @@ export const toListString = (elements: string[]): string => {
     elements[elements.length - 1]
   )
   return firstPart.join(', ') + `, ${lastPart}`
-}
-
-/**
- * Returns the wallet plugin ID based on a chain/native asset currency code
- * Returns null if Edge does not support the specified chain.
- * Not case sensitive.
- */
-export const getPluginIdFromChainCode = (
-  chainCode: string
-): string | undefined => {
-  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(
-    key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase()
-  )
-  return pluginId
 }
 
 export interface MiniCurrencyConfig {

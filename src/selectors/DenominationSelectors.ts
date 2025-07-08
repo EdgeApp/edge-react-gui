@@ -8,6 +8,7 @@ export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   symbol: ''
 })
 
+/** @deprecated Use `selectDisplayDenom` to look up by tokenId instead. */
 export const selectDisplayDenomByCurrencyCode = (
   state: RootState,
   currencyConfig: EdgeCurrencyConfig,
@@ -48,6 +49,7 @@ export const selectDisplayDenom = (
  * This would match "BTC" but not "sats".
  * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
  * whichever you have.
+ * @deprecated Use `getExchangeDenom` to look up by tokenId instead.
  */
 export const getExchangeDenomByCurrencyCode = (
   currencyConfig: EdgeCurrencyConfig,

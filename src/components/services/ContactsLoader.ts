@@ -1,425 +1,229 @@
 import * as React from 'react'
 import Contacts from 'react-native-contacts'
-import { PermissionStatus } from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
-interface StateProps {
-  contactsPermission: PermissionStatus
-}
-interface DispatchProps {
-  loadContactsSuccess: (contacts: GuiContact[]) => void
-}
-type Props = StateProps & DispatchProps
 
-const merchantPartners = [
+const merchantPartners: GuiContact[] = [
   {
     givenName: '0x Gasless Swap',
-    hasThumbnail: true,
-    thumbnailPath: '0xgasless.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: '0xgasless.png'
   },
   {
     givenName: 'Bitrefill',
-    hasThumbnail: true,
-    thumbnailPath: 'bitrefill.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'bitrefill.png'
   },
   {
     givenName: 'Bits of Gold',
-    hasThumbnail: true,
-    thumbnailPath: 'bits-of-gold-logo.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'bits-of-gold-logo.png'
   },
   {
     givenName: 'Change NOW',
-    hasThumbnail: true,
-    thumbnailPath: 'changenow.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'changenow.png'
   },
   {
     givenName: 'ChangeHero',
-    hasThumbnail: true,
-    thumbnailPath: 'changehero.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'changehero.png'
   },
   {
     givenName: 'Changelly',
-    hasThumbnail: true,
-    thumbnailPath: 'changelly.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'changelly.png'
   },
   {
     givenName: 'IBC Transfer',
-    hasThumbnail: true,
-    thumbnailPath: 'cosmosibc.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'cosmosibc.png'
   },
   {
     givenName: 'Fantom/Sonic Bridge',
-    hasThumbnail: true,
-    thumbnailPath: 'fantomsonicupgrade.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'fantomsonicupgrade.png'
   },
   {
     givenName: 'EOS Network',
-    hasThumbnail: true,
-    thumbnailPath: 'eos-logo-solo-64.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'eos-logo-solo-64.png'
   },
   {
     givenName: 'Exolix',
-    hasThumbnail: true,
-    thumbnailPath: 'exolix-logo.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'exolix-logo.png'
   },
   {
     givenName: 'Fox Exchange',
-    hasThumbnail: true,
-    thumbnailPath: 'foxEchange.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'foxEchange.png'
   },
   {
     givenName: 'Godex',
-    hasThumbnail: true,
-    thumbnailPath: 'godex.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'godex.png'
   },
   {
     givenName: 'LetsExchange',
-    hasThumbnail: true,
-    thumbnailPath: 'letsexchange-logo.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'letsexchange-logo.png'
   },
   {
     givenName: 'LI.FI',
-    hasThumbnail: true,
-    thumbnailPath: 'lifi.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'lifi.png'
   },
   {
     givenName: 'ShapeShift',
-    hasThumbnail: true,
-    thumbnailPath: 'shapeshift.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'shapeshift.png'
   },
   {
     givenName: 'SideShift.ai',
-    hasThumbnail: true,
-    thumbnailPath: 'sideshift-logo.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'sideshift-logo.png'
   },
   {
     givenName: 'Simplex',
-    hasThumbnail: true,
-    thumbnailPath: 'simplex.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'simplex.png'
   },
   {
     givenName: 'Swapuz',
-    hasThumbnail: true,
-    thumbnailPath: 'swapuz.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'swapuz.png'
   },
   {
     givenName: 'Switchain',
-    hasThumbnail: true,
-    thumbnailPath: 'switchain.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'switchain.png'
   },
   {
     givenName: 'Maya Protocol',
-    hasThumbnail: true,
-    thumbnailPath: 'mayaprotocol.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'mayaprotocol.png'
   },
   {
     givenName: 'Thorchain',
-    hasThumbnail: true,
-    thumbnailPath: 'thorchain.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'thorchain.png'
   },
   {
     givenName: 'Thorchain DEX Aggregator',
-    hasThumbnail: true,
-    thumbnailPath: 'thorchain.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'thorchain.png'
   },
   {
     givenName: 'Totle',
-    hasThumbnail: true,
-    thumbnailPath: 'totle-logo.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'totle-logo.png'
   },
   {
     givenName: 'Unizen',
-    hasThumbnail: true,
-    thumbnailPath: 'unizen.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'unizen.png'
   },
   {
     givenName: 'Velodrome',
-    hasThumbnail: true,
-    thumbnailPath: 'velodrome.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'velodrome.png'
   },
   {
     givenName: 'Visa® Prepaid Card',
-    hasThumbnail: true,
-    thumbnailPath: 'visa.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'visa.png'
   },
   {
     givenName: 'Wyre',
-    hasThumbnail: true,
-    thumbnailPath: 'wyre.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'wyre.png'
   },
   {
     givenName: 'XRP DEX',
-    hasThumbnail: true,
-    thumbnailPath: 'xrpdex.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'xrpdex.png'
   },
   {
     givenName: 'Rango Exchange',
-    hasThumbnail: true,
-    thumbnailPath: 'rango.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
     familyName: '',
-    recordID: ''
+    hasThumbnail: true,
+    thumbnailPath: 'rango.png'
   }
-].map(({ thumbnailPath, ...rest }) => ({
-  ...rest,
-  thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/${thumbnailPath}`
-}))
+]
 
-class ContactsLoaderComponent extends React.Component<Props> {
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const { contactsPermission } = nextProps
+export function ContactsLoader(props: {}) {
+  const contactsPermission = useSelector(state => state.permissions.contacts)
+  const dispatch = useDispatch()
 
-    if (
-      this.props.contactsPermission !== 'granted' &&
-      contactsPermission === 'granted'
-    ) {
-      this.loadContacts().catch(err => {
-        console.warn(err)
-        showError(sprintf(lstrings.contacts_load_failed_message_s))
-      })
-    }
-  }
+  React.useEffect(() => {
+    const loadContacts = async () => {
+      const allContacts: GuiContact[] = merchantPartners.map(contact => ({
+        ...contact,
+        thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/${contact.thumbnailPath}`
+      }))
 
-  loadContacts = async () => {
-    return await Contacts.getAll()
-      .then(contacts => {
-        const cleanContacts = contacts
-          .filter(item => item.givenName)
-          // @ts-expect-error
-          .concat(merchantPartners)
-          .sort((a, b) =>
-            a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
-          )
+      // Load phone contacts and add to GUI contacts:
+      if (
+        contactsPermission === 'granted' ||
+        contactsPermission === 'limited'
+      ) {
+        const contacts = await Contacts.getAll()
+        for (const contact of contacts) {
+          const { givenName } = contact
+          if (givenName != null) {
+            allContacts.push({ ...contact, givenName })
+          }
+        }
+      }
 
-        // @ts-expect-error
-        this.props.loadContactsSuccess(cleanContacts)
-      })
-      .catch(error => {
-        showError(error)
-        return []
-      })
-  }
-
-  render() {
-    return null
-  }
-}
-
-export const ContactsLoader = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    contactsPermission: state.permissions.contacts
-  }),
-  dispatch => ({
-    loadContactsSuccess(contacts: GuiContact[]) {
+      // Save to redux:
+      allContacts.sort((a, b) =>
+        a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+      )
       dispatch({
         type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
-        data: { contacts }
+        data: { contacts: allContacts }
       })
     }
-  })
-)(ContactsLoaderComponent)
+
+    loadContacts().catch(error => {
+      showError(sprintf(lstrings.contacts_load_failed_message_s, String(error)))
+    })
+  }, [contactsPermission, dispatch])
+
+  return null
+}

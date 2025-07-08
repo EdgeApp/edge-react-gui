@@ -2,10 +2,22 @@
 
 ## Unreleased (develop)
 
-## 4.31.0 (staging)
+## 4.32.0 (staging)
+
+- added: Support for Paybis ACH buy
+- added: Private View Key wallet menu option for Zano
+- added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
+- changed: `NotificationCard` visibility rules updated to be less invasive
+- fixed: Fixed viewport issues on ChnageMiningFeeScene.
+- fixed: Account for minimum account balances when migrating/sweeping
+- fixed: Button UI styling in `MigrateWalletCompletionScene`
+- fixed: Map from FIO codes to Edge-supported currencies more correctly.
+
+## 4.31.0 (2025-07-07)
 
 - added: "Change Username" setting
 - added: Support for Zano alias name resolution.
+- added: Add `walletAddress` param to Moonpay buy quotes.
 - changed: Don't allow multiple pending EVM transactions.
 - fixed: Specify build target in deploy.ts to fix Apple silicon build environments
 - fixed: Maestro tests to successfully run again

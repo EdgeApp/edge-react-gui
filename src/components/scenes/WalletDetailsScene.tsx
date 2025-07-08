@@ -23,7 +23,7 @@ import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -99,10 +99,7 @@ function WalletDetailsComponent(props: Props) {
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
-  const exchangeDenom = getExchangeDenomByCurrencyCode(
-    wallet.currencyConfig,
-    currencyCode
-  )
+  const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const defaultFiat = defaultIsoFiat.replace('iso:', '')
   const exchangeRate = useSelector(state =>

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
 [
@@ -219,6 +219,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 }
               >
                 <FastImageView
+                  defaultSource={null}
                   resizeMode="cover"
                   source={
                     {
@@ -875,6 +876,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="contain"
           source={
             {
@@ -1137,6 +1139,7 @@ exports[`TransactionListTop should render 1`] = `
                 }
               >
                 <FastImageView
+                  defaultSource={null}
                   resizeMode="cover"
                   source={
                     {

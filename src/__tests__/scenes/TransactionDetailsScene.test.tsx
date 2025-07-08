@@ -1,46 +1,20 @@
 import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
-import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
-const currencyInfo: EdgeCurrencyInfo = {
-  pluginId: 'bitcoin',
-  currencyCode: 'BTC',
-  assetDisplayName: 'Bitcoin',
-  chainDisplayName: 'Bitcoin',
-  displayName: 'Bitcoin',
-  walletType: 'bitcoin',
-
-  addressExplorer: '',
-  transactionExplorer: '',
-
-  defaultSettings: {},
-  metaTokens: [],
-  denominations: [
-    {
-      name: 'BTC',
-      multiplier: '100000000',
-      symbol: '₿'
-    }
-  ]
-}
-
-const fakeCurrencyConfig: any = {
-  currencyInfo,
-  allTokens: {},
-  builtinTokens: {},
-  customTokens: {}
-}
+const fakeCurrencyConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
 
 const fakeCoreWallet: any = {
   balanceMap: new Map([[null, '123123']]),
   blockHeight: 12345,
   currencyConfig: fakeCurrencyConfig,
-  currencyInfo,
+  currencyInfo: fakeCurrencyConfig.currencyInfo,
   enabledTokenIds: [],
   fiatCurrencyCode: 'iso:USD',
   id: '123',

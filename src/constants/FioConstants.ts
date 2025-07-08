@@ -1,50 +1,42 @@
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
 import { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 
-export interface FioAsset {
+interface FioAsset {
   chainCode: string
-  tokenCodes: { [tokenId: string]: string }
+  tokenCodes?: { [tokenId: string]: string }
 }
 
 /**
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
-export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
+const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
   abstract: {
-    chainCode: 'ABSTRACT',
-    tokenCodes: {}
+    chainCode: 'ABSTRACT'
   },
   ethereum: {
-    chainCode: 'ETH', // Make this explicit so L2's don't take it
-    tokenCodes: {}
+    chainCode: 'ETH' // Make this explicit so L2's don't take it
   },
   ethereumpo: {
-    chainCode: 'ETHEREUMPO',
-    tokenCodes: {}
+    chainCode: 'ETHEREUMPO'
   },
   optimism: {
-    chainCode: 'OPT',
-    tokenCodes: {}
+    chainCode: 'OPT'
   },
   bobevm: {
-    chainCode: 'BOBNETWORK',
-    tokenCodes: {}
+    chainCode: 'BOBNETWORK'
   },
   zksync: {
-    chainCode: 'ZKSYNC',
-    tokenCodes: {}
+    chainCode: 'ZKSYNC'
   },
   binancesmartchain: {
-    chainCode: 'BSC',
-    tokenCodes: {}
+    chainCode: 'BSC'
   },
   sonic: {
-    chainCode: 'SONIC',
-    tokenCodes: {}
+    chainCode: 'SONIC'
   },
   ripple: {
     chainCode: 'XRP',
@@ -80,21 +72,47 @@ export const fioCodeToEdgeAsset = (
   // Bail out if we don't know about this chain:
   if (pluginId == null) return
 
+  // If the token code matches the chain code, we want the main asset:
+  if (fioTokenCode === fioChainCode) return { pluginId, tokenId: null }
+
   // Find the token being asked for:
   const fioTokens = fioAssets[pluginId]?.tokenCodes ?? {}
   const tokenId =
-    // If the token code matches the chain code, we want the main asset:
-    fioTokenCode === fioAssets[pluginId]?.chainCode
-      ? null
-      : // Otherwise, check the special token mappings for this chain:
-        Object.keys(fioTokens).find(
-          tokenId => fioTokens[tokenId] === fioTokenCode
-        ) ??
-        // Otherwise, do a normal token lookup:
-        getTokenId(account.currencyConfig[pluginId], fioTokenCode)
+    // Check the special token mappings for this chain:
+    Object.keys(fioTokens).find(
+      tokenId => fioTokens[tokenId] === fioTokenCode
+    ) ??
+    // Otherwise, do a normal token lookup:
+    getTokenId(account.currencyConfig[pluginId], fioTokenCode)
 
-  // Bail out if we couldn't find a matching token or main asset (null):
+  // Bail out if we couldn't find a matching token:
   if (tokenId === undefined) return
 
   return { pluginId, tokenId }
+}
+
+export const tokenIdToFioCode = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): { fioChainCode: string; fioTokenCode: string } => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+
+  const { pluginId } = currencyConfig.currencyInfo
+  const fioChainCode =
+    fioAssets[pluginId]?.chainCode ?? currencyConfig.currencyInfo.currencyCode
+
+  // We want the main asset:
+  if (tokenId == null) return { fioChainCode, fioTokenCode: fioChainCode }
+
+  const fioTokenCode =
+    // Check the special token mappings for this chain:
+    fioAssets[pluginId]?.tokenCodes?.[tokenId] ??
+    // Otherwise, do a normal token lookup:
+    currencyConfig.allTokens[tokenId]?.currencyCode
+
+  if (fioTokenCode == null) {
+    throw new Error(`Cannot find ${tokenId} on ${pluginId}`)
+  }
+
+  return { fioChainCode, fioTokenCode }
 }

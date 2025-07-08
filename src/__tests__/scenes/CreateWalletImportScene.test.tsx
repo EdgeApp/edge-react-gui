@@ -4,6 +4,8 @@ import * as React from 'react'
 
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
@@ -22,9 +24,7 @@ describe('CreateWalletImportScene', () => {
       account: {
         ...defaultAccount,
         currencyConfig: {
-          bitcoin: {
-            importKey: () => {}
-          }
+          bitcoin: makeFakeCurrencyConfig(btcCurrencyInfo)
         }
       }
     }

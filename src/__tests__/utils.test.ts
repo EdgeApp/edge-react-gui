@@ -3,6 +3,8 @@ import { log10 } from 'biggystring'
 
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../util/fake/fakeCurrencyConfig'
+import { ethCurrencyInfo } from '../util/fake/fakeEthInfo'
 import {
   convertNativeToDenomination,
   convertNativeToDisplay,
@@ -367,56 +369,23 @@ describe('getDisplayDenomination', function () {
     core: {
       account: {
         currencyConfig: {
-          bitcoin: {
-            allTokens: {},
-            currencyInfo: btcCurrencyInfo
-          },
-          ethereum: {
-            allTokens: {
-              '1985365e9f78359a9B6AD760e32412f4a445E862': {
-                currencyCode: 'TKN',
-                displayName: 'Token',
-                denominations: [
-                  {
-                    name: 'TKN',
-                    multiplier:
-                      '10000000000000000000000000000000000000000000000000'
-                  }
-                ],
-                contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
-              }
-            },
-            currencyInfo: {
-              currencyCode: 'ETH',
-              pluginId: 'ethereum',
+          bitcoin: makeFakeCurrencyConfig(btcCurrencyInfo),
+          ethereum: makeFakeCurrencyConfig(ethCurrencyInfo, {
+            '1985365e9f78359a9B6AD760e32412f4a445E862': {
+              currencyCode: 'TKN',
+              displayName: 'Token',
               denominations: [
                 {
-                  name: 'ETH',
-                  multiplier: '1000000000000000000',
-                  symbol: 'Ξ'
-                },
-                {
-                  name: 'mETH',
-                  multiplier: '1000000000000000',
-                  symbol: 'mΞ'
+                  name: 'TKN',
+                  multiplier:
+                    '10000000000000000000000000000000000000000000000000'
                 }
               ],
-              metaTokens: [
-                {
-                  currencyCode: 'TKN',
-                  currencyName: 'Token',
-                  denominations: [
-                    {
-                      name: 'TKN',
-                      multiplier:
-                        '10000000000000000000000000000000000000000000000000'
-                    }
-                  ],
-                  contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
-                }
-              ]
+              networkLocation: {
+                contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
+              }
             }
-          }
+          })
         }
       }
     }
