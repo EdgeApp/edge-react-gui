@@ -1110,6 +1110,7 @@
   "migrate_unknown_error_fragment": "Error desconocido",
   "migrate_wallets_modal_message": "Se encontraron las siguientes billeteras que podrían estar afectadas por un incidente de seguridad reciente:\n%1$s\nSe recomienda dejar de usar estas billeteras y migrar los activos a una nueva billetera. ¿Te gustaría usar la función de Migrar Billeteras?",
   "migrate_wallet_tx_notes": "Migrar fondos a %1$s",
+  "migrate_wallet_below_minimum_balance_2s": "Migration would leave new wallet below minimum balance. At least %1$s %2$s is required.",
   "wallet_list_sort_title": "Ordenar billeteras",
   "wallet_list_sort_manual": "Orden manual",
   "wallet_list_sort_name": "Ordenar por nombre",
