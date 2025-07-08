@@ -1110,6 +1110,7 @@
   "migrate_unknown_error_fragment": "不明なエラー",
   "migrate_wallets_modal_message": "最近のセキュリティインシデントの影響を受ける可能性がある次のウォレットが見つかりました：\n%1$s\nこれらのウォレットの使用を中止し、資産をアカウント内の新しいウォレットに移行することを強くお勧めします。 自動移行ウォレット機能を使用しますか？",
   "migrate_wallet_tx_notes": "資金を %1$sに移行",
+  "migrate_wallet_below_minimum_balance_2s": "Migration would leave new wallet below minimum balance. At least %1$s %2$s is required.",
   "wallet_list_sort_title": "ウォレットで並べ替え",
   "wallet_list_sort_manual": "手動で並べ替え",
   "wallet_list_sort_name": "名前で並べ替え",
