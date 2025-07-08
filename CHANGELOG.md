@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.32.0 (staging)
+
 - added: Support for Paybis ACH buy
 - added: Private View Key wallet menu option for Zano
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
@@ -11,7 +13,7 @@
 - fixed: Button UI styling in `MigrateWalletCompletionScene`
 - fixed: Map from FIO codes to Edge-supported currencies more correctly.
 
-## 4.31.0 (staging)
+## 4.31.0 (2025-07-07)
 
 - added: "Change Username" setting
 - added: Support for Zano alias name resolution.
