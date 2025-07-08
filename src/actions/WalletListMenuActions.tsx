@@ -277,7 +277,14 @@ export function walletListMenuAction(
         // Show the scam warning modal if needed
         await showScamWarningModal('firstPrivateKeyView')
 
-        const passwordValid = true
+        const passwordValid =
+          (await dispatch(
+            validatePassword({
+              title: lstrings.fragment_wallets_get_seed_title,
+              submitLabel: lstrings.fragment_wallets_get_seed_wallet,
+              warningMessage: lstrings.fragment_wallets_get_seed_warning_message
+            })
+          )) != null
 
         if (passwordValid) {
           const { name, id, type } = wallet

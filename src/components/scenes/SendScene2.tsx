@@ -1247,10 +1247,7 @@ const SendComponent = (props: Props) => {
         }
         if (maxSpendSetter === 0) {
           spendInfo.spendTargets[0].nativeAmount = '0' // Some currencies error without a nativeAmount
-          const maxSpendable = await coreWallet.getMaxSpendable({
-            ...spendInfo,
-            otherParams: { existentialDeposit: '0' }
-          })
+          const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
           spendInfo.spendTargets[0].nativeAmount = maxSpendable
         }
         if (spendInfo.spendTargets[0].nativeAmount == null) {
