@@ -34,27 +34,28 @@ export const FEE_STRINGS = {
  */
 export const CURRENCY_SETTINGS_KEYS = [
   'bitcoin',
+  'bitcoincash',
+  'bitcoingold',
+  'bitcoinsv',
   'bitcointestnet',
   'bitcointestnet4',
-  'bitcoincash',
-  'ethereum',
-  'ethereumclassic',
   'dash',
-  'litecoin',
-  'bitcoinsv',
-  'monero',
-  'zcoin',
   'digibyte',
   'dogecoin',
-  'qtum',
-  'vertcoin',
-  'feathercoin',
-  'ravencoin',
-  'bitcoingold',
-  'smartcash',
-  'groestlcoin',
   'eboost',
-  'ufo'
+  'ethereum',
+  'ethereumclassic',
+  'feathercoin',
+  'groestlcoin',
+  'litecoin',
+  'monero',
+  'pivx',
+  'qtum',
+  'ravencoin',
+  'smartcash',
+  'ufo',
+  'vertcoin',
+  'zcoin'
 ]
 
 /**
