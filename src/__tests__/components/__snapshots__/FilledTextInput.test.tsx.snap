@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FilledTextInput should render with some props 1`] = `
 <View
@@ -227,7 +227,6 @@ exports[`FilledTextInput should render with some props 1`] = `
             "value": 0,
           }
         }
-        inputAccessoryViewID="string"
         keyboardType="default"
         maxLength={11}
         multiline={true}

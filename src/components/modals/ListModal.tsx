@@ -32,7 +32,6 @@ interface Props<T> {
     | 'email-address'
     | 'phone-pad' // Defaults to 'default'
   blurOnSubmit?: boolean // Defaults to 'true'
-  inputAccessoryViewID?: string
   maxLength?: number
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'

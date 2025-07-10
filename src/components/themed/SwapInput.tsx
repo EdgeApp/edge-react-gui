@@ -46,7 +46,6 @@ export interface Props {
   disabled?: boolean
   heading: string
   forceField?: 'fiat' | 'crypto'
-  inputAccessoryViewID?: string
   keyboardVisible?: boolean
   placeholders?: [string, string]
   returnKeyType?: ReturnKeyType
@@ -73,7 +72,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       disabled,
       forceField = 'crypto',
       heading,
-      inputAccessoryViewID,
       keyboardVisible = true,
       placeholders,
       startNativeAmount,
@@ -329,7 +327,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           disabled={disabled}
           fieldInfos={fieldInfos}
           forceFieldNum={forceFieldMap[overrideForceField]}
-          inputAccessoryViewID={inputAccessoryViewID}
           keyboardVisible={keyboardVisible}
           placeholders={placeholders}
           ref={flipInputRef}
