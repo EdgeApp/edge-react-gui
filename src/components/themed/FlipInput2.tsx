@@ -89,7 +89,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
       forceFieldNum = 0,
       keyboardVisible,
       placeholders = [lstrings.string_tap_to_edit, ''],
-      returnKeyType = 'done',
+      returnKeyType,
       startAmounts,
 
       // Renders:

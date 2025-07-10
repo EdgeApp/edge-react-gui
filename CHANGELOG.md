@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: `ReturnKeyTypeButton` to `FlipInputModal2`
+
 ## 4.32.0 (staging)
 
 - added: Support for Paybis ACH buy
