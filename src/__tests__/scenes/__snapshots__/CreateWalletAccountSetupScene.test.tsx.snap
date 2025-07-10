@@ -757,7 +757,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         style={
           {
             "alignItems": "center",
-            "alignSelf": "center",
             "flexBasis": "auto",
             "flexGrow": 0,
             "flexShrink": 0,

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AddressModalComponent should render with loaded props 1`] = `
 [
@@ -515,7 +515,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       style={
         {
           "alignItems": "center",
-          "alignSelf": "center",
           "flexBasis": "auto",
           "flexGrow": 0,
           "flexShrink": 0,

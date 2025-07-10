@@ -14,6 +14,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { DECIMAL_PRECISION } from '../../util/utils'
+import { ReturnKeyTypeButton } from '../buttons/ReturnKeyTypeButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
@@ -274,6 +275,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
             {renderErrorMessage()}
           </View>
         </EdgeTouchableWithoutFeedback>
+        <ReturnKeyTypeButton returnKeyType="done" onPress={handleCloseModal} />
       </EdgeModal>
     )
   }
