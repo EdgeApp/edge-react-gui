@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioAddressDetails should render with loading props 1`] = `
 <View
@@ -744,7 +744,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           style={
             {
               "alignItems": "center",
-              "alignSelf": "center",
               "flexBasis": "auto",
               "flexGrow": 0,
               "flexShrink": 0,
