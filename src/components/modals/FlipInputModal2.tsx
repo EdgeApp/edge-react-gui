@@ -238,17 +238,17 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       return (
         <EdgeCard marginRem={[0, 0.5, 0.5]}>
           <ExchangedFlipInput2
-            ref={exchangedFlipInputRef}
-            wallet={wallet}
-            tokenId={tokenId}
-            startNativeAmount={startNativeAmount}
             forceField={amounts.fieldChanged}
             headerText={flipInputHeaderText}
-            onAmountChanged={handleAmountsChanged}
-            keyboardVisible
-            onNext={handleCloseModal}
             hideMaxButton={hideMaxButton}
+            keyboardVisible
+            ref={exchangedFlipInputRef}
+            startNativeAmount={startNativeAmount}
+            tokenId={tokenId}
+            wallet={wallet}
+            onAmountChanged={handleAmountsChanged}
             onMaxPress={handleSendMaxAmount}
+            onNext={handleCloseModal}
           />
         </EdgeCard>
       )
