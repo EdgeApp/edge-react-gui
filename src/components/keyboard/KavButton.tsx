@@ -23,6 +23,9 @@ interface KavButtonProps {
  * A keyboard accessory button that spans most of the width of the screen,
  * positioned above the keyboard.
  *
+ * Collapsing the keyboard will animate the button to the bottom of the scene,
+ * taking into account any insets from tabs, notification cards, etc.
+ *
  * IMPORTANT: This component MUST be placed as a direct sibling of SceneWrapper
  * for proper keyboard positioning.
  *
