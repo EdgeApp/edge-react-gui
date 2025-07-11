@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`EdgeLoginScene should render with loading props 1`] = `
 <View
@@ -428,7 +428,6 @@ DO NOT accept this login unless you trust the application and person who provide
       style={
         {
           "alignItems": "center",
-          "alignSelf": "center",
           "flexBasis": "auto",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -544,7 +543,6 @@ DO NOT accept this login unless you trust the application and person who provide
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,

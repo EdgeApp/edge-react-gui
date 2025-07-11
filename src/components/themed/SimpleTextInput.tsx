@@ -57,7 +57,6 @@ export interface SimpleTextInputProps extends MarginRemProps {
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
   autoCorrect?: boolean // Defaults to 'true'
   blurOnSubmit?: boolean // Defaults to 'true'
-  inputAccessoryViewID?: string
   keyboardType?:
     | 'default'
     | 'number-pad'
@@ -130,7 +129,6 @@ export const SimpleTextInput = React.forwardRef<
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
-    inputAccessoryViewID,
     keyboardType,
     maxLength,
     returnKeyType,
@@ -339,7 +337,6 @@ export const SimpleTextInput = React.forwardRef<
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
               blurOnSubmit={blurOnSubmit}
-              inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={secureTextEntry}
             />
           </InnerContainer>

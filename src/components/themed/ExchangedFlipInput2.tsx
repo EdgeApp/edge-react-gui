@@ -51,7 +51,6 @@ export interface Props {
   forceField?: 'fiat' | 'crypto'
   returnKeyType?: ReturnKeyType
   editable?: boolean
-  inputAccessoryViewID?: string
   headerCallback?: () => void | Promise<void>
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
   onBlur?: () => void
@@ -89,7 +88,6 @@ const ExchangedFlipInput2Component = React.forwardRef<
     forceField = 'crypto',
     keyboardVisible = true,
     editable,
-    inputAccessoryViewID,
     hideMaxButton = false,
     onMaxPress
   } = props
@@ -316,7 +314,6 @@ const ExchangedFlipInput2Component = React.forwardRef<
             fieldInfos={fieldInfos}
             returnKeyType={returnKeyType}
             forceFieldNum={forceFieldMap[overrideForceField]}
-            inputAccessoryViewID={inputAccessoryViewID}
             keyboardVisible={keyboardVisible}
             startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
           />

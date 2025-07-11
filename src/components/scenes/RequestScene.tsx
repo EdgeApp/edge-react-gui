@@ -132,8 +132,6 @@ interface AddressInfo {
   label: string
 }
 
-const inputAccessoryViewID: string = 'cancelHeaderId'
-
 export class RequestSceneComponent extends React.Component<
   Props & HookProps,
   State
@@ -542,9 +540,6 @@ export class RequestSceneComponent extends React.Component<
                 forceField="fiat"
                 headerCallback={this.handleOpenWalletListModal}
                 headerText={flipInputHeaderText}
-                inputAccessoryViewID={
-                  this.state.isFioMode ? inputAccessoryViewID : undefined
-                }
                 keyboardVisible={false}
                 onAmountChanged={this.onExchangeAmountChanged}
                 ref={this.flipInputRef}

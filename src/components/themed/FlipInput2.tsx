@@ -52,7 +52,6 @@ export interface Props {
   disabled?: boolean
   fieldInfos: FlipInputFieldInfos
   forceFieldNum?: FieldNum
-  inputAccessoryViewID?: string
   keyboardVisible?: boolean
   placeholders?: [string, string]
   returnKeyType?: ReturnKeyType
@@ -88,10 +87,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
       disabled = false,
       fieldInfos,
       forceFieldNum = 0,
-      inputAccessoryViewID,
       keyboardVisible,
       placeholders = [lstrings.string_tap_to_edit, ''],
-      returnKeyType = 'done',
+      returnKeyType,
       startAmounts,
 
       // Renders:
@@ -210,7 +208,6 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             autoFocus={primaryField === fieldNum && keyboardVisible}
             ref={inputRefs[fieldNum]}
             onSubmitEditing={onNext}
-            inputAccessoryViewID={inputAccessoryViewID}
             onFocus={handleBottomFocus}
             onBlur={handleBottomBlur}
           />

@@ -94,7 +94,6 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   autoCorrect?: boolean
   /** Defaults to 'true' */
   blurOnSubmit?: boolean
-  inputAccessoryViewID?: string
   keyboardType?:
     | 'default'
     | 'number-pad'
@@ -207,7 +206,6 @@ export const FilledTextInput = React.forwardRef<
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
-    inputAccessoryViewID,
     keyboardType,
     maxLength,
     secureTextEntry,
@@ -472,7 +470,6 @@ export const FilledTextInput = React.forwardRef<
               autoCorrect={autoCorrect}
               autoComplete={autoComplete}
               blurOnSubmit={multiline ? false : blurOnSubmit}
-              inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={
                 secureTextEntry === true ? hidePassword : undefined
               }

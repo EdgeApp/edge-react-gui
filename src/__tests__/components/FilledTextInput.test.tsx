@@ -25,7 +25,6 @@ describe('FilledTextInput', () => {
           autoCapitalize="none"
           autoCorrect
           blurOnSubmit
-          inputAccessoryViewID="string"
           keyboardType="default"
           maxLength={11}
           onSubmitEditing={() => undefined}
