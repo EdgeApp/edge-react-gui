@@ -13,7 +13,7 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 yarn patch-package
 
-# Fix Android dependency import statments: 
+# Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
 npx jetify
@@ -32,6 +32,9 @@ fi
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
+
+# Create contract type definitions:
+yarn typechain
 
 # Bundle currency, swap, & rate plugins:
 core_assets="./android/app/src/main/assets/edge-core"
