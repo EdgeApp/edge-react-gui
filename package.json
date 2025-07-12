@@ -176,7 +176,7 @@
     "url-parse": "^1.5.2",
     "use-context-selector": "^1.4.1",
     "yaob": "^0.3.12",
-    "yavent": "^0.1.4"
+    "yavent": "^0.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
