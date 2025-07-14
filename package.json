@@ -122,7 +122,6 @@
     "posthog-react-native": "^2.8.1",
     "prompts": "^2.4.2",
     "qrcode-generator": "^1.4.4",
-    "r3-hack": "./scripts/r3-hack",
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-airship": "^0.2.12",
