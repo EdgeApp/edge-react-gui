@@ -16,8 +16,10 @@ import {
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { ReportsTxInfo } from '../../util/reportsServer'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { DataSheetModal, DataSheetSection } from '../modals/DataSheetModal'
+import { ShimmerText } from '../progress-indicators/ShimmerText'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { EdgeText } from '../themed/EdgeText'
@@ -27,12 +29,27 @@ interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
   sourceWallet?: EdgeCurrencyWallet
+
+  /** The transaction info from the reports server. */
+  reportsTxInfo?: ReportsTxInfo
+
+  /**
+   * Whether the transaction info from the reports server is loading.
+   * If not provided, the card will not show the status.
+   * */
+  isReportsTxInfoLoading?: boolean
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
 
 export function SwapDetailsCard(props: Props) {
-  const { swapData, transaction, sourceWallet } = props
+  const {
+    swapData,
+    transaction,
+    sourceWallet,
+    reportsTxInfo,
+    isReportsTxInfoLoading = false
+  } = props
   const { memos = [], spendTargets = [], tokenId } = transaction
 
   const formattedOrderUri =
@@ -199,7 +216,15 @@ export function SwapDetailsCard(props: Props) {
             body: swapData.isEstimate
               ? lstrings.estimated_quote
               : lstrings.fixed_quote
-          }
+          },
+          ...(reportsTxInfo == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_status,
+                  body: reportsTxInfo.swapInfo.status
+                }
+              ])
         ]
       },
       {
@@ -288,6 +313,19 @@ export function SwapDetailsCard(props: Props) {
             : lstrings.fixed_quote}
         </EdgeText>
       </EdgeRow>
+      {isReportsTxInfoLoading == null ? null : (
+        <EdgeRow title={lstrings.transaction_details_exchange_status}>
+          {isReportsTxInfoLoading ? (
+            <ShimmerText characters={10} />
+          ) : (
+            <EdgeText>
+              {reportsTxInfo == null
+                ? lstrings.string_unknown
+                : reportsTxInfo.swapInfo.status}
+            </EdgeText>
+          )}
+        </EdgeRow>
+      )}
       {swapData.orderUri == null ? null : (
         <EdgeRow
           rightButtonType="touchable"

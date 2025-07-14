@@ -22,6 +22,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
+import { mergeReportsTxInfo } from '../../util/reportsServer'
 import {
   convertCurrencyFromExchangeRates,
   convertNativeToExchange,
@@ -128,6 +129,15 @@ export function AccountCallbackManager(props: Props) {
           dispatch(checkFioObtData(wallet, receivedTxs)).catch(err =>
             console.warn(err)
           )
+
+        const txsNeedingSwapData = transactions.filter(
+          tx => tx.swapData == null && !tx.isSend
+        )
+        if (txsNeedingSwapData.length > 0) {
+          mergeReportsTxInfo(account, wallet, txsNeedingSwapData).catch(err =>
+            console.warn(err)
+          )
+        }
 
         // Review triggers: deposit & transaction count
         for (const tx of transactions) {

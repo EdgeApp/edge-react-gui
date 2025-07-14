@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ShimmerText } from '../progress-indicators/ShimmerText'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -34,6 +35,7 @@ interface Props {
   error?: boolean
   icon?: React.ReactNode
   loading?: boolean
+  shimmer?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
   rightButtonType?: RowActionIcon
   title?: string
@@ -118,7 +120,9 @@ export const EdgeRow = (props: Props) => {
             {title}
           </EdgeText>
         )}
-        {loading ? (
+        {props.shimmer ? (
+          <ShimmerText characters={title?.length} />
+        ) : loading ? (
           <ActivityIndicator
             style={styles.loader}
             color={theme.primaryText}
