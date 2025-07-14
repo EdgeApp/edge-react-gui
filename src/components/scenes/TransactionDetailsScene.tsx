@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { abs } from 'biggystring'
 import type {
   EdgeAccount,
@@ -8,6 +9,7 @@ import type {
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
+import { useMemo } from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -36,6 +38,11 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
+import {
+  queryReportsTxInfo,
+  toEdgeTxActionSwap,
+  toEdgeTxSwap
+} from '../../util/reportsServer'
 import {
   convertNativeToExchange,
   darkenHexColor,
@@ -86,6 +93,55 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   const styles = getStyles(theme)
   const iconColor = useIconColor({ pluginId: currencyInfo.pluginId, tokenId })
 
+  const transactionSwapData = (): EdgeTxSwap | undefined =>
+    convertActionToSwapData(account, transaction) ?? transaction.swapData
+
+  // Query for transaction info from reports server only if the transaction is
+  // a receive (we need to get potential swap data) or the transaction has
+  // swap data (we need to get the status)
+  const shouldShowTradeDetails =
+    !transaction.isSend || transactionSwapData() != null
+  const { data: reportsTxInfo, isLoading: isReportsTxInfoLoading } = useQuery({
+    queryKey: ['txInfo', transaction.txid],
+    queryFn: async () => {
+      return await queryReportsTxInfo(wallet, transaction)
+    },
+    staleTime: query =>
+      // Only cache if the status has resolved, otherwise we'll always consider
+      // the data to be stale:
+      ['processing', 'pending', undefined].includes(
+        query.state.data?.swapInfo.status
+      )
+        ? 0 // No cache
+        : Infinity, // Cache forever
+    enabled: shouldShowTradeDetails,
+    retry: false
+  })
+
+  const swapDataFromReports = useMemo(
+    () =>
+      reportsTxInfo == null
+        ? undefined
+        : toEdgeTxSwap(account, wallet, transaction, reportsTxInfo),
+    [account, reportsTxInfo, transaction, wallet]
+  )
+
+  const edgeTxActionSwapFromReports = useMemo(() => {
+    if (reportsTxInfo == null) return
+    return toEdgeTxActionSwap(account, transaction, reportsTxInfo)
+  }, [account, reportsTxInfo, transaction])
+
+  // Update the transaction object with saveAction data from reports server:
+  if (
+    edgeTxActionSwapFromReports != null &&
+    transaction.savedAction !== edgeTxActionSwapFromReports
+  ) {
+    transaction.savedAction = edgeTxActionSwapFromReports
+    transaction.assetAction = {
+      assetActionType: 'swap'
+    }
+  }
+
   // Choose a default category based on metadata or the txAction
   const {
     action,
@@ -96,8 +152,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     savedData
   } = getTxActionDisplayInfo(transaction, account, wallet)
 
-  const swapData =
-    convertActionToSwapData(account, transaction) ?? transaction.swapData
+  const swapData = transactionSwapData() ?? swapDataFromReports
 
   const thumbnailPath =
     useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
@@ -610,7 +665,11 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
             <SwapDetailsCard
               swapData={swapData}
               transaction={transaction}
-              sourceWallet={wallet}
+              sourceWallet={
+                swapData.payoutWalletId === wallet.id ? undefined : wallet
+              }
+              reportsTxInfo={reportsTxInfo ?? undefined}
+              isReportsTxInfoLoading={isReportsTxInfoLoading}
             />
           )}
         </EdgeAnim>

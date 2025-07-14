@@ -23,6 +23,7 @@ import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
+import { mergeReportsTxInfo } from '../../util/reportsServer'
 import { convertNativeToExchange, datelog, snooze } from '../../util/utils'
 import { Airship, showDevError } from './AirshipInstance'
 
@@ -132,6 +133,17 @@ export const AccountCallbackManager: React.FC<Props> = (props: Props) => {
               console.warn(err)
             }
           )
+
+        const txsNeedingSwapData = transactions.filter(
+          tx => tx.swapData == null && !tx.isSend
+        )
+        if (txsNeedingSwapData.length > 0) {
+          mergeReportsTxInfo(account, wallet, txsNeedingSwapData).catch(
+            (err: unknown) => {
+              console.warn(err)
+            }
+          )
+        }
 
         // Review triggers: deposit & transaction count
         for (const tx of transactions) {

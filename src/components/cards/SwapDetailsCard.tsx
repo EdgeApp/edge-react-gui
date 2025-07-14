@@ -20,8 +20,10 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import type { ReportsTxInfo } from '../../util/reportsServer'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { DataSheetModal, type DataSheetSection } from '../modals/DataSheetModal'
+import { ShimmerText } from '../progress-indicators/ShimmerText'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { EdgeText } from '../themed/EdgeText'
@@ -31,6 +33,15 @@ interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
   sourceWallet?: EdgeCurrencyWallet
+
+  /** The transaction info from the reports server. */
+  reportsTxInfo?: ReportsTxInfo
+
+  /**
+   * Whether the transaction info from the reports server is loading.
+   * If not provided, the card will not show the status.
+   * */
+  isReportsTxInfoLoading?: boolean
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
@@ -58,7 +69,12 @@ const upgradeSwapData = (
 }
 
 export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
-  const { transaction, sourceWallet } = props
+  const {
+    transaction,
+    sourceWallet,
+    reportsTxInfo,
+    isReportsTxInfoLoading = false
+  } = props
   const { memos = [], spendTargets = [], tokenId } = transaction
 
   const swapData = upgradeSwapData(sourceWallet, props.swapData)
@@ -226,7 +242,15 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
             body: swapData.isEstimate
               ? lstrings.estimated_quote
               : lstrings.fixed_quote
-          }
+          },
+          ...(reportsTxInfo == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_status,
+                  body: reportsTxInfo.swapInfo.status
+                }
+              ])
         ]
       },
       {
@@ -315,6 +339,19 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
             : lstrings.fixed_quote}
         </EdgeText>
       </EdgeRow>
+      {isReportsTxInfoLoading == null ? null : (
+        <EdgeRow title={lstrings.transaction_details_exchange_status}>
+          {isReportsTxInfoLoading ? (
+            <ShimmerText characters={10} />
+          ) : (
+            <EdgeText>
+              {reportsTxInfo == null
+                ? lstrings.string_unknown
+                : reportsTxInfo.swapInfo.status}
+            </EdgeText>
+          )}
+        </EdgeRow>
+      )}
       {swapData.orderUri == null ? null : (
         <EdgeRow
           rightButtonType="touchable"

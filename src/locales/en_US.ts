@@ -864,6 +864,7 @@ const strings = {
   transaction_details_empty_note_placeholder: 'Tap to Add Note (Optional)',
   transaction_details_exchange_details: 'Exchange Details',
   transaction_details_exchange_service: 'Exchange Service',
+  transaction_details_exchange_status: 'Exchange Status',
   transaction_details_exchange_order_id: 'Order ID',
   transaction_details_exchange_source_wallet: 'Source Wallet',
   transaction_details_exchange_destination_wallet: 'Destination Wallet',
@@ -1398,6 +1399,7 @@ const strings = {
   string_deny: 'Deny',
   string_wallet_balance: 'Wallet Balance',
   string_max_cap: 'MAX',
+  string_unknown: 'Unknown',
   string_warning: 'Warning', // Generic string. Same with wc_smartcontract_warning_title
   string_report_error: 'Report Error',
   string_report_sent: 'Report sent.',
