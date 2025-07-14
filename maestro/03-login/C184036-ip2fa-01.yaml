@@ -6,7 +6,7 @@
 
 appId: ${MAESTRO_APP_ID}
 tags:
-- android
+- all
 - C184036
 ---
 - runFlow:
