@@ -14,9 +14,9 @@ import {
   makePluginIo as makeAccountbasedIo,
   pluginUri as accountbasedUri
 } from 'edge-currency-accountbased/rn'
-import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
+// import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
 import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
-import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
+// import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import {
   debugUri as currencyPluginsDebugUri,
@@ -78,9 +78,9 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
         }
       }),
       'edge-currency-monero': makeMoneroIo(),
-      piratechain: makePiratechainIo(),
+      // piratechain: makePiratechainIo(),
       zano: makeZanoIo(),
-      zcash: makeZcashIo()
+      // zcash: makeZcashIo()
     }
   : {}
 

@@ -37,7 +37,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,
   osmosis: ENV.OSMOSIS_INIT,
-  piratechain: true,
+  // piratechain: true,
   polkadot: ENV.POLKADOT_INIT,
   polygon: ENV.POLYGON_INIT,
   pulsechain: ENV.PULSECHAIN_INIT,
@@ -56,7 +56,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   tron: true,
   wax: true,
   zano: true,
-  zcash: true,
+  // zcash: true,
   zksync: ENV.ZKSYNC_INIT,
   // edge-currency-bitcoin:
   bitcoin: ENV.BITCOIN_INIT,
