@@ -8,7 +8,5 @@ module.exports = {
   },
   preset: 'react-native',
   setupFiles: ['./jestSetup.js'],
-  transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@react-native|react-native))'
-  ]
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@react-native|react-native))']
 }

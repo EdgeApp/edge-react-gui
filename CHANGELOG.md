@@ -3,6 +3,9 @@
 ## Unreleased (develop)
 
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- changed: `WalletListMenuModal` now supports displaying loading states for async options
+- changed: Migrated from ESLint and Prettier to Biome for linting and formatting
+- removed: ESLint and Prettier configuration files and dependencies
 
 ## 4.32.0 (staging)
 
@@ -11,7 +14,7 @@
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
-- fixed: Account for minimum account balances when migrating/sweeping
+- fixed: Account for m  inimum account balances when migrating/sweeping
 - fixed: Button UI styling in `MigrateWalletCompletionScene`
 - fixed: Map from FIO codes to Edge-supported currencies more correctly.
 
