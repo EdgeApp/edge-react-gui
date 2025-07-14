@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SendScene2 1 spendTarget 1`] = `
 [
@@ -188,7 +188,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -197,44 +196,20 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -1625,7 +1600,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -1634,44 +1608,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -3290,7 +3240,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -3299,44 +3248,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -4913,7 +4838,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -4922,44 +4846,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -6174,7 +6074,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -6183,44 +6082,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -7411,7 +7286,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -7420,44 +7294,20 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -8466,7 +8316,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -8475,44 +8324,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -9843,7 +9668,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -9852,44 +9676,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -11178,7 +10978,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -11187,44 +10986,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View
@@ -12447,7 +12222,6 @@ exports[`SendScene2 Render SendScene 1`] = `
       </RNSVGSvgView>
     </BVLinearGradient>
     <RCTScrollView
-      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
           "paddingBottom": 112,
@@ -12456,44 +12230,20 @@ exports[`SendScene2 Render SendScene 1`] = `
           "paddingTop": 0,
         }
       }
-      contentInset={
-        {
-          "bottom": 0,
-        }
-      }
-      enableAutomaticScroll={true}
       enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={75}
       extraScrollHeight={62}
-      getScrollResponder={[Function]}
-      handleOnScroll={[Function]}
       innerRef={[Function]}
-      keyboardDismissMode="interactive"
-      keyboardOpeningTime={250}
-      keyboardSpace={0}
-      onScroll={[Function]}
-      resetKeyboardSpace={[Function]}
-      scrollEventThrottle={1}
-      scrollForExtraHeightOnAndroid={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
         }
       }
-      scrollIntoView={[Function]}
-      scrollToEnd={[Function]}
-      scrollToFocusedInput={[Function]}
-      scrollToPosition={[Function]}
-      showsVerticalScrollIndicator={true}
       style={
         {
           "margin": 11,
           "marginBottom": 0,
         }
       }
-      update={[Function]}
-      viewIsInsideTabBar={false}
     >
       <View>
         <View

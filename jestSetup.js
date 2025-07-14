@@ -54,21 +54,6 @@ jest.mock('react-native-webview', () => ({
   }
 }))
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  OS: 'ios',
-  isPad: false,
-  isTVOS: false,
-  isTV: false,
-  constants: {
-    osVersion: '17',
-    reactNativeVersion: {
-      major: 0,
-      minor: 67
-    }
-  },
-  select: obj => obj.ios ?? obj.default
-}))
-
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('@react-navigation/elements', () => ({
@@ -270,6 +255,11 @@ jest.mock('react-native-device-info', () => {
     getBuildNumber: jest.fn(),
     getVersion: jest.fn()
   }
+})
+
+jest.mock('react-native-keyboard-aware-scroll-view', () => {
+  const { ScrollView } = require('react-native')
+  return { KeyboardAwareScrollView: ScrollView }
 })
 
 jest.mock('react-native-reorderable-list', () => ({
