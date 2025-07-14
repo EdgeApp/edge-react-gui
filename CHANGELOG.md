@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- added: Integrated reports server order status to transaction details.
 
 ## 4.32.0 (staging)
 
