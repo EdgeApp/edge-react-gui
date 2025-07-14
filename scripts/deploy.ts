@@ -565,7 +565,8 @@ function buildCommonPost(buildObj: BuildObj) {
     )
     mylog('\n*** Upload to rsyncLocation Complete ***')
 
-    if (testRepoUrl != null) {
+    // Only update the test repo for maestro builds
+    if (testRepoUrl != null && maestroBuild) {
       mylog(`\n\nUpdating test repo ${buildObj.testRepoUrl}`)
       mylog('***********************************************************\n')
 
