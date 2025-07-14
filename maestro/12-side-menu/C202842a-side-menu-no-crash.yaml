@@ -24,6 +24,11 @@ tags:
     text: "Cancel"
     optional: true
 
+# If the survey modal shows, dismiss it
+- tapOn:
+    text: "Dismiss"
+    optional: true
+
 - extendedWaitUntil:
     visible: "Assets"
     timeout: 15000
