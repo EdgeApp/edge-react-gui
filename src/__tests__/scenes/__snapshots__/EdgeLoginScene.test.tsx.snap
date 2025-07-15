@@ -239,19 +239,23 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     }
   >
     <View
-      style={
-        [
-          {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          {
+      collapsable={false}
+      jestAnimatedStyle={
+        {
+          "value": {
             "opacity": 1,
           },
-        ]
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
     >
       <View
@@ -272,6 +276,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     </View>
   </View>
   <View
+    collapsable={false}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+        },
+      }
+    }
     pointerEvents="none"
     style={
       {
@@ -390,6 +402,14 @@ DO NOT accept this login unless you trust the application and person who provide
     </View>
   </View>
   <View
+    collapsable={false}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+        },
+      }
+    }
     pointerEvents="none"
     style={
       {

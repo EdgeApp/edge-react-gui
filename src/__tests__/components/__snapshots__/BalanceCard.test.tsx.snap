@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`BalanceCard should render with loading props 1`] = `
 <View
@@ -239,11 +239,23 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
         >
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              }
+            }
             style={
               {
                 "transform": [
                   {
-                    "translateY": -0,
+                    "translateY": 0,
                   },
                 ],
               }
@@ -613,11 +625,23 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
         >
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              }
+            }
             style={
               {
                 "transform": [
                   {
-                    "translateY": -0,
+                    "translateY": 0,
                   },
                 ],
               }
@@ -964,11 +988,23 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
         >
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              }
+            }
             style={
               {
                 "transform": [
                   {
-                    "translateY": -0,
+                    "translateY": 0,
                   },
                 ],
               }

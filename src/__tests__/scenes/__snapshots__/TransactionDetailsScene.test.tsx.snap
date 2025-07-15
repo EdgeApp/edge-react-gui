@@ -173,8 +173,20 @@ exports[`TransactionDetailsScene should render 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -191,8 +203,60 @@ exports[`TransactionDetailsScene should render 1`] = `
   >
     <View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInUp {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": -80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -411,8 +475,60 @@ exports[`TransactionDetailsScene should render 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInUp {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": -40,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -1141,8 +1257,60 @@ exports[`TransactionDetailsScene should render 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 40,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -1526,16 +1694,172 @@ exports[`TransactionDetailsScene should render 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 100,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -1739,8 +2063,60 @@ exports[`TransactionDetailsScene should render 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 120,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -2306,8 +2682,60 @@ exports[`TransactionDetailsScene should render 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 140,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           absolute={false}
@@ -2445,32 +2873,35 @@ exports[`TransactionDetailsScene should render 1`] = `
     </View>
   </RCTScrollView>,
   <View
+    collapsable={false}
     footerHeight={0}
-    footerOpenRatio={
-      {
-        "value": 1,
-      }
-    }
     hasTabs={true}
     insetBottom={0}
-    onLayout={[Function]}
-    style={
-      [
-        {
-          "alignSelf": "center",
-          "bottom": 11,
-          "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
-          "position": "absolute",
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": -74.85492957746479,
             },
           ],
         },
-      ]
+      }
+    }
+    onLayout={[Function]}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 11,
+        "justifyContent": "flex-end",
+        "paddingHorizontal": 11,
+        "position": "absolute",
+        "transform": [
+          {
+            "translateY": -74.85492957746479,
+          },
+        ],
+      }
     }
   />,
 ]
@@ -2649,8 +3080,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -2667,8 +3110,60 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   >
     <View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInUp {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": -80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -2887,8 +3382,60 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInUp {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": -40,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -3617,8 +4164,60 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 40,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -4002,16 +4601,172 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 80,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 100,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -4215,8 +4970,60 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 120,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -4782,8 +5589,60 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 140,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           absolute={false}
@@ -4921,32 +5780,35 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     </View>
   </RCTScrollView>,
   <View
+    collapsable={false}
     footerHeight={0}
-    footerOpenRatio={
-      {
-        "value": 1,
-      }
-    }
     hasTabs={true}
     insetBottom={0}
-    onLayout={[Function]}
-    style={
-      [
-        {
-          "alignSelf": "center",
-          "bottom": 11,
-          "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
-          "position": "absolute",
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": -74.85492957746479,
             },
           ],
         },
-      ]
+      }
+    }
+    onLayout={[Function]}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 11,
+        "justifyContent": "flex-end",
+        "paddingHorizontal": 11,
+        "position": "absolute",
+        "transform": [
+          {
+            "translateY": -74.85492957746479,
+          },
+        ],
+      }
     }
   />,
 ]

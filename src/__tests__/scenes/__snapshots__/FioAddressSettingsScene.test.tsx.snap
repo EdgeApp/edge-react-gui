@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioAddressSettingsComponent should render with loading props 1`] = `
 [
@@ -218,8 +218,20 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,

@@ -2,11 +2,39 @@ import './node_modules/react-native-gesture-handler/jestSetup.js'
 
 import { jest } from '@jest/globals'
 import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js'
+import mockPermissions from 'react-native-permissions/mock'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
+// --------------------------------------------------------------------
+// Officially-supported mocks
+// --------------------------------------------------------------------
+
+jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
+jest.mock('react-native-permissions', () => mockPermissions)
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 require('react-native-reanimated').setUpTests()
 
-const mockReanimated = jest.requireMock('react-native-reanimated')
+// --------------------------------------------------------------------
+// Environment hacks
+// --------------------------------------------------------------------
+
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+
+for (const log in global.console) {
+  global.console[log] = jest.fn()
+}
+
+// Force timezone to UTC:
+jest.mock(
+  'dateformat',
+  () => (number, format) => require('dateformat')(number, format, true)
+)
+
+jest.useFakeTimers()
+
+// --------------------------------------------------------------------
+// Manually-created mocks
+// --------------------------------------------------------------------
 
 jest.mock('@sentry/react-native', () => {
   return {
@@ -15,8 +43,6 @@ jest.mock('@sentry/react-native', () => {
     wrap: x => x
   }
 })
-
-jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 
 jest.mock('disklet', () => {
   const originalModule = jest.requireActual('disklet')
@@ -34,27 +60,19 @@ jest.mock('react-native-image-colors', () => ({
   getColors: jest.fn().mockResolvedValue('')
 }))
 
-jest.mock('react-native-keyboard-controller', () => {
-  const height = mockReanimated.useSharedValue(0)
-  const progress = mockReanimated.useSharedValue(0)
-  return {
-    useReanimatedKeyboardAnimation: () => ({
-      height,
-      progress
-    }),
-    useKeyboardHandler: handlers => {}
-  }
-})
-
-jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
+jest.mock('react-native-keyboard-controller', () => ({
+  useReanimatedKeyboardAnimation: () => ({
+    height: { value: 0 },
+    progress: { value: 0 }
+  }),
+  useKeyboardHandler: handlers => {}
+}))
 
 jest.mock('react-native-webview', () => ({
   WebView: () => {
     return null
   }
 }))
-
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: () => 64
@@ -65,12 +83,6 @@ jest.mock('rn-qr-generator', () => ({
     return Promise.resolve()
   }
 }))
-
-// force timezone to UTC
-jest.mock(
-  'dateformat',
-  () => (number, format) => require('dateformat')(number, format, true)
-)
 
 jest.mock('react-native-device-info', () => ({
   getBrand() {
@@ -208,18 +220,6 @@ jest.mock('react-native-localize', () => ({
     }
   }
 }))
-
-jest.mock('react-native-permissions', () =>
-  require('react-native-permissions/mock')
-)
-
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
-
-for (const log in global.console) {
-  global.console[log] = jest.fn()
-}
 
 jest.mock('use-context-selector', () => {
   const contextValues = new Map()

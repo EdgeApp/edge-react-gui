@@ -109,13 +109,14 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                 "type": 0,
               }
             }
-            opacity={0}
+            opacity={1}
             propList={
               [
                 "fill",
                 "stroke",
                 "strokeWidth",
                 "strokeDasharray",
+                "strokeDashoffset",
                 "strokeLinecap",
               ]
             }
@@ -132,6 +133,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                 150.79644737231007,
               ]
             }
+            strokeDashoffset={147.78051842486386}
             strokeLinecap={1}
             strokeWidth={4}
           />

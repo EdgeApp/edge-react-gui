@@ -218,8 +218,20 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -244,8 +256,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         }
       >
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInUp {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": -90,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
           style={
             {
               "marginBottom": 22,
@@ -339,8 +403,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           />
         </View>
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInUp {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": -30,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             style={
@@ -450,13 +566,14 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "type": 0,
                         }
                       }
-                      opacity={0}
+                      opacity={1}
                       propList={
                         [
                           "fill",
                           "stroke",
                           "strokeWidth",
                           "strokeDasharray",
+                          "strokeDashoffset",
                           "strokeLinecap",
                         ]
                       }
@@ -473,6 +590,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           150.79644737231007,
                         ]
                       }
+                      strokeDashoffset={147.78051842486386}
                       strokeLinecap={1}
                       strokeWidth={4}
                     />
@@ -860,7 +978,33 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           </View>
         </View>
         <View
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             style={
@@ -924,8 +1068,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           </View>
         </View>
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInDown {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 30,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             style={
@@ -1035,13 +1231,14 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "type": 0,
                         }
                       }
-                      opacity={0}
+                      opacity={1}
                       propList={
                         [
                           "fill",
                           "stroke",
                           "strokeWidth",
                           "strokeDasharray",
+                          "strokeDashoffset",
                           "strokeLinecap",
                         ]
                       }
@@ -1058,6 +1255,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           150.79644737231007,
                         ]
                       }
+                      strokeDashoffset={147.78051842486386}
                       strokeLinecap={1}
                       strokeWidth={4}
                     />
@@ -1281,8 +1479,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           </View>
         </View>
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInDown {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 60,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             style={
@@ -1510,8 +1760,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           </View>
         </View>
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInDown {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 90,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             accessibilityState={
@@ -1693,8 +1995,60 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           </View>
         </View>
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
+          collapsable={false}
+          entering={
+            FadeInDown {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 120,
+                  },
+                ],
+              },
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "callbackV": undefined,
+              "dampingRatioV": undefined,
+              "dampingV": undefined,
+              "delayV": undefined,
+              "durationV": 300,
+              "easingV": undefined,
+              "initialValues": undefined,
+              "massV": undefined,
+              "overshootClampingV": undefined,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+              "restDisplacementThresholdV": undefined,
+              "restSpeedThresholdV": undefined,
+              "rotateV": undefined,
+              "stiffnessV": undefined,
+              "type": undefined,
+            }
+          }
         >
           <View
             style={
@@ -1727,49 +2081,59 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               }
             >
               <View
-                style={
-                  [
-                    {
-                      "backgroundColor": "#494949",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    {
+                collapsable={false}
+                jestAnimatedStyle={
+                  {
+                    "value": {
                       "width": 295,
                     },
-                  ]
+                  }
+                }
+                style={
+                  {
+                    "backgroundColor": "#494949",
+                    "borderRadius": 27.5,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                    "width": 295,
+                  }
                 }
               />
               <View
                 collapsable={false}
+                forwardedRef={[Function]}
                 handlerTag={1}
                 handlerType="PanGestureHandler"
-                onGestureHandlerEvent={[Function]}
-                onGestureHandlerStateChange={[Function]}
-                style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    null,
-                    {
+                jestAnimatedStyle={
+                  {
+                    "value": {
                       "transform": [
                         {
                           "translateX": 240,
                         },
                       ],
                     },
-                  ]
+                  }
+                }
+                onGestureHandlerEvent={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#00f1a2",
+                    "borderRadius": 27.5,
+                    "height": 55,
+                    "justifyContent": "center",
+                    "transform": [
+                      {
+                        "translateX": 240,
+                      },
+                    ],
+                    "width": 55,
+                    "zIndex": 5,
+                  }
                 }
               >
                 <Text
@@ -1830,32 +2194,35 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
     </View>
   </RCTScrollView>,
   <View
+    collapsable={false}
     footerHeight={0}
-    footerOpenRatio={
-      {
-        "value": 1,
-      }
-    }
     hasTabs={true}
     insetBottom={0}
-    onLayout={[Function]}
-    style={
-      [
-        {
-          "alignSelf": "center",
-          "bottom": 11,
-          "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
-          "position": "absolute",
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": -74.85492957746479,
             },
           ],
         },
-      ]
+      }
+    }
+    onLayout={[Function]}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 11,
+        "justifyContent": "flex-end",
+        "paddingHorizontal": 11,
+        "position": "absolute",
+        "transform": [
+          {
+            "translateY": -74.85492957746479,
+          },
+        ],
+      }
     }
   />,
 ]

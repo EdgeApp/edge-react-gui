@@ -144,13 +144,14 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                     "type": 0,
                   }
                 }
-                opacity={0}
+                opacity={1}
                 propList={
                   [
                     "fill",
                     "stroke",
                     "strokeWidth",
                     "strokeDasharray",
+                    "strokeDashoffset",
                     "strokeLinecap",
                   ]
                 }
@@ -167,6 +168,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                     81.68140899333463,
                   ]
                 }
+                strokeDashoffset={null}
                 strokeLinecap={1}
                 strokeWidth={4}
               />
@@ -1064,13 +1066,14 @@ exports[`TransactionListTop should render 1`] = `
                     "type": 0,
                   }
                 }
-                opacity={0}
+                opacity={1}
                 propList={
                   [
                     "fill",
                     "stroke",
                     "strokeWidth",
                     "strokeDasharray",
+                    "strokeDashoffset",
                     "strokeLinecap",
                   ]
                 }
@@ -1087,6 +1090,7 @@ exports[`TransactionListTop should render 1`] = `
                     81.68140899333463,
                   ]
                 }
+                strokeDashoffset={null}
                 strokeLinecap={1}
                 strokeWidth={4}
               />

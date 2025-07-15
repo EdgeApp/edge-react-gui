@@ -433,19 +433,23 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         </Text>
         <View>
           <View
-            pending={false}
-            style={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-                {
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
                   "opacity": 0,
                 },
-              ]
+              }
+            }
+            pending={false}
+            style={
+              {
+                "aspectRatio": 1,
+                "opacity": 0,
+                "position": "absolute",
+                "width": "100%",
+                "zIndex": 1,
+              }
             }
           >
             <ActivityIndicator
@@ -459,6 +463,14 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             />
           </View>
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 1,
+                },
+              }
+            }
             pending={false}
             style={
               {

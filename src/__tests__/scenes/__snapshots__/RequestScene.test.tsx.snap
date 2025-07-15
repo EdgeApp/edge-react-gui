@@ -678,8 +678,60 @@ exports[`Request should render with loaded props 1`] = `
     }
   >
     <View
-      entering={BaseAnimationMock {}}
-      layout={BaseAnimationMock {}}
+      collapsable={false}
+      entering={
+        FadeInUp {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": 0,
+          "durationV": 300,
+          "easingV": [Function],
+          "initialValues": {
+            "transform": [
+              {
+                "translateY": -80,
+              },
+            ],
+          },
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": undefined,
+          "durationV": 300,
+          "easingV": undefined,
+          "initialValues": undefined,
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -734,8 +786,60 @@ exports[`Request should render with loaded props 1`] = `
       </Text>
     </View>
     <View
-      entering={BaseAnimationMock {}}
-      layout={BaseAnimationMock {}}
+      collapsable={false}
+      entering={
+        FadeInUp {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": 0,
+          "durationV": 300,
+          "easingV": [Function],
+          "initialValues": {
+            "transform": [
+              {
+                "translateY": -50,
+              },
+            ],
+          },
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": undefined,
+          "durationV": 300,
+          "easingV": undefined,
+          "initialValues": undefined,
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -826,8 +930,60 @@ exports[`Request should render with loaded props 1`] = `
       </Text>
     </View>
     <View
-      entering={BaseAnimationMock {}}
-      layout={BaseAnimationMock {}}
+      collapsable={false}
+      entering={
+        FadeInUp {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": 0,
+          "durationV": 300,
+          "easingV": [Function],
+          "initialValues": {
+            "transform": [
+              {
+                "translateY": -25,
+              },
+            ],
+          },
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": undefined,
+          "durationV": 300,
+          "easingV": undefined,
+          "initialValues": undefined,
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
     >
       <View
         style={
@@ -1073,31 +1229,26 @@ exports[`Request should render with loaded props 1`] = `
             }
           >
             <View
-              disableAnimation={
+              collapsable={false}
+              jestAnimatedStyle={
                 {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
+                  "value": {
+                    "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                    "borderColor": "rgba(0, 241, 162, 0)",
+                  },
                 }
               }
               style={
-                [
-                  {
-                    "alignItems": "stretch",
-                    "borderRadius": 11,
-                    "borderWidth": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                    "overflow": "hidden",
-                  },
-                  {
-                    "backgroundColor": undefined,
-                    "borderColor": undefined,
-                  },
-                ]
+                {
+                  "alignItems": "stretch",
+                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                  "borderColor": "rgba(0, 241, 162, 0)",
+                  "borderRadius": 11,
+                  "borderWidth": 1,
+                  "flexDirection": "column",
+                  "margin": 11,
+                  "overflow": "hidden",
+                }
               }
             >
               <View
@@ -1187,17 +1338,13 @@ exports[`Request should render with loaded props 1`] = `
                     }
                   }
                   accessible={false}
-                  disableAnimation={
-                    {
-                      "value": 0,
-                    }
-                  }
-                  focusAnimation={
-                    {
-                      "value": 0,
-                    }
-                  }
+                  collapsable={false}
                   focusable={true}
+                  jestAnimatedStyle={
+                    {
+                      "value": {},
+                    }
+                  }
                   onClick={[Function]}
                   onResponderGrant={[Function]}
                   onResponderMove={[Function]}
@@ -1215,27 +1362,30 @@ exports[`Request should render with loaded props 1`] = `
                   }
                 >
                   <View
-                    animatedValue={
+                    collapsable={false}
+                    jestAnimatedStyle={
                       {
-                        "value": 0,
+                        "value": {
+                          "transform": [
+                            {
+                              "rotateX": "0deg",
+                            },
+                          ],
+                        },
                       }
                     }
                     pointerEvents="auto"
                     style={
-                      [
-                        {
-                          "backfaceVisibility": "hidden",
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
-                        },
-                        {
-                          "transform": [
-                            {
-                              "rotateX": "undefineddeg",
-                            },
-                          ],
-                        },
-                      ]
+                      {
+                        "backfaceVisibility": "hidden",
+                        "paddingRight": 22,
+                        "paddingVertical": 11,
+                        "transform": [
+                          {
+                            "rotateX": "0deg",
+                          },
+                        ],
+                      }
                     }
                   >
                     <Text
@@ -1285,31 +1435,40 @@ exports[`Request should render with loaded props 1`] = `
                       <TextInput
                         autoCorrect={false}
                         autoFocus={false}
+                        collapsable={false}
                         editable={true}
+                        forwardedRef={[Function]}
+                        jestAnimatedStyle={
+                          {
+                            "value": {
+                              "color": "rgba(255, 255, 255, 1)",
+                            },
+                          }
+                        }
                         keyboardType="decimal-pad"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
                         returnKeyType="done"
                         style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "padding": 0,
-                            },
-                            {
-                              "marginRight": 0,
-                            },
-                            {
-                              "color": undefined,
-                            },
-                          ]
+                          {
+                            "color": "rgba(255, 255, 255, 1)",
+                            "fontFamily": "Quicksand-Medium",
+                            "fontSize": 34,
+                            "includeFontPadding": false,
+                            "marginRight": 0,
+                            "padding": 0,
+                          }
                         }
                         value=""
                       />
                       <Text
+                        collapsable={false}
+                        jestAnimatedStyle={
+                          {
+                            "value": {},
+                          }
+                        }
                         style={
                           {
                             "color": "rgba(255, 255, 255, .5)",
@@ -1327,32 +1486,35 @@ exports[`Request should render with loaded props 1`] = `
                     </View>
                   </View>
                   <View
-                    animatedValue={
+                    collapsable={false}
+                    jestAnimatedStyle={
                       {
-                        "value": 0,
+                        "value": {
+                          "transform": [
+                            {
+                              "rotateX": "90deg",
+                            },
+                          ],
+                        },
                       }
                     }
                     pointerEvents="none"
                     style={
-                      [
-                        {
-                          "backfaceVisibility": "hidden",
-                          "bottom": 0,
-                          "left": 0,
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                        {
-                          "transform": [
-                            {
-                              "rotateX": "undefineddeg",
-                            },
-                          ],
-                        },
-                      ]
+                      {
+                        "backfaceVisibility": "hidden",
+                        "bottom": 0,
+                        "left": 0,
+                        "paddingRight": 22,
+                        "paddingVertical": 11,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                        "transform": [
+                          {
+                            "rotateX": "90deg",
+                          },
+                        ],
+                      }
                     }
                   >
                     <Text
@@ -1402,31 +1564,40 @@ exports[`Request should render with loaded props 1`] = `
                       <TextInput
                         autoCorrect={false}
                         autoFocus={false}
+                        collapsable={false}
                         editable={true}
+                        forwardedRef={[Function]}
+                        jestAnimatedStyle={
+                          {
+                            "value": {
+                              "color": "rgba(255, 255, 255, 1)",
+                            },
+                          }
+                        }
                         keyboardType="decimal-pad"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
                         returnKeyType="done"
                         style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "padding": 0,
-                            },
-                            {
-                              "marginRight": 0,
-                            },
-                            {
-                              "color": undefined,
-                            },
-                          ]
+                          {
+                            "color": "rgba(255, 255, 255, 1)",
+                            "fontFamily": "Quicksand-Medium",
+                            "fontSize": 34,
+                            "includeFontPadding": false,
+                            "marginRight": 0,
+                            "padding": 0,
+                          }
                         }
                         value=""
                       />
                       <Text
+                        collapsable={false}
+                        jestAnimatedStyle={
+                          {
+                            "value": {},
+                          }
+                        }
                         style={
                           {
                             "color": "rgba(255, 255, 255, .5)",
@@ -1445,26 +1616,29 @@ exports[`Request should render with loaded props 1`] = `
                   </View>
                 </View>
                 <View
-                  scale={
+                  collapsable={false}
+                  jestAnimatedStyle={
                     {
-                      "value": 0,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "justifyContent": "center",
-                        "paddingHorizontal": 22,
-                      },
-                      {
+                      "value": {
                         "transform": [
                           {
                             "scale": 0,
                           },
                         ],
                       },
-                    ]
+                    }
+                  }
+                  style={
+                    {
+                      "alignSelf": "stretch",
+                      "justifyContent": "center",
+                      "paddingHorizontal": 22,
+                      "transform": [
+                        {
+                          "scale": 0,
+                        },
+                      ],
+                    }
                   }
                 >
                   <View
@@ -1502,9 +1676,21 @@ exports[`Request should render with loaded props 1`] = `
                     }
                   >
                     <Text
+                      collapsable={false}
+                      jestAnimatedStyle={
+                        {
+                          "value": {
+                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "fontFamily": "anticon",
+                            "fontSize": 22,
+                            "fontStyle": "normal",
+                            "fontWeight": "normal",
+                          },
+                        }
+                      }
                       style={
                         {
-                          "color": "#FFFFFF",
+                          "color": "rgba(255, 255, 255, 0.5019607843137255)",
                           "fontFamily": "anticon",
                           "fontSize": 22,
                           "fontStyle": "normal",
@@ -1524,15 +1710,9 @@ exports[`Request should render with loaded props 1`] = `
     </View>
     <View
       collapsable={false}
-      style={
-        [
-          {
-            "alignSelf": "center",
-            "flex": 1,
-            "flexDirection": "row",
-            "paddingTop": 22,
-          },
-          {
+      jestAnimatedStyle={
+        {
+          "value": {
             "maxWidth": 1,
             "transform": [
               {
@@ -1540,7 +1720,21 @@ exports[`Request should render with loaded props 1`] = `
               },
             ],
           },
-        ]
+        }
+      }
+      style={
+        {
+          "alignSelf": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "maxWidth": 1,
+          "paddingTop": 22,
+          "transform": [
+            {
+              "translateX": 0,
+            },
+          ],
+        }
       }
     />
     <View
@@ -1554,8 +1748,60 @@ exports[`Request should render with loaded props 1`] = `
       }
     />
     <View
-      entering={BaseAnimationMock {}}
-      layout={BaseAnimationMock {}}
+      collapsable={false}
+      entering={
+        FadeInDown {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": 0,
+          "durationV": 300,
+          "easingV": [Function],
+          "initialValues": {
+            "transform": [
+              {
+                "translateY": 50,
+              },
+            ],
+          },
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "callbackV": undefined,
+          "dampingRatioV": undefined,
+          "dampingV": undefined,
+          "delayV": undefined,
+          "durationV": 300,
+          "easingV": undefined,
+          "initialValues": undefined,
+          "massV": undefined,
+          "overshootClampingV": undefined,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+          "restDisplacementThresholdV": undefined,
+          "restSpeedThresholdV": undefined,
+          "rotateV": undefined,
+          "stiffnessV": undefined,
+          "type": undefined,
+        }
+      }
     >
       <View
         accessibilityState={
@@ -1665,8 +1911,60 @@ exports[`Request should render with loaded props 1`] = `
     </View>
   </View>
   <View
-    entering={BaseAnimationMock {}}
-    layout={BaseAnimationMock {}}
+    collapsable={false}
+    entering={
+      FadeInDown {
+        "build": [Function],
+        "callbackV": undefined,
+        "dampingRatioV": undefined,
+        "dampingV": undefined,
+        "delayV": 0,
+        "durationV": 300,
+        "easingV": [Function],
+        "initialValues": {
+          "transform": [
+            {
+              "translateY": 75,
+            },
+          ],
+        },
+        "massV": undefined,
+        "overshootClampingV": undefined,
+        "randomizeDelay": false,
+        "reduceMotionV": "system",
+        "restDisplacementThresholdV": undefined,
+        "restSpeedThresholdV": undefined,
+        "rotateV": undefined,
+        "stiffnessV": undefined,
+        "type": undefined,
+      }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    layout={
+      LinearTransition {
+        "build": [Function],
+        "callbackV": undefined,
+        "dampingRatioV": undefined,
+        "dampingV": undefined,
+        "delayV": undefined,
+        "durationV": 300,
+        "easingV": undefined,
+        "initialValues": undefined,
+        "massV": undefined,
+        "overshootClampingV": undefined,
+        "randomizeDelay": false,
+        "reduceMotionV": "system",
+        "restDisplacementThresholdV": undefined,
+        "restSpeedThresholdV": undefined,
+        "rotateV": undefined,
+        "stiffnessV": undefined,
+        "type": undefined,
+      }
+    }
   >
     <View
       style={

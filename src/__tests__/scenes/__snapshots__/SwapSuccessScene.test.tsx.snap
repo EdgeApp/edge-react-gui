@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
 [
@@ -325,32 +325,35 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
     </View>
   </View>,
   <View
+    collapsable={false}
     footerHeight={0}
-    footerOpenRatio={
-      {
-        "value": 1,
-      }
-    }
     hasTabs={false}
     insetBottom={0}
-    onLayout={[Function]}
-    style={
-      [
-        {
-          "alignSelf": "center",
-          "bottom": 11,
-          "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
-          "position": "absolute",
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
               "translateY": -0,
             },
           ],
         },
-      ]
+      }
+    }
+    onLayout={[Function]}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 11,
+        "justifyContent": "flex-end",
+        "paddingHorizontal": 11,
+        "position": "absolute",
+        "transform": [
+          {
+            "translateY": -0,
+          },
+        ],
+      }
     }
   />,
 ]
