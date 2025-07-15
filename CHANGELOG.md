@@ -9,6 +9,7 @@
 - added: Support for Paybis ACH buy
 - added: Private View Key wallet menu option for Zano
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
+- changed: Reinstate "Sell" in `MenuTabs` for UK
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - fixed: Allow custom asset settings for PIVX.
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
