@@ -85,10 +85,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (config.disableSwaps === true && route.name === 'swapTab') {
           return false
         }
-        if (
-          hideNonUkCompliantFeat &&
-          (route.name === 'buyTab' || route.name === 'sellTab')
-        ) {
+        if (hideNonUkCompliantFeat && route.name === 'buyTab') {
           return false
         }
         return true
