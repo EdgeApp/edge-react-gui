@@ -5,7 +5,7 @@ import type {
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, View } from 'react-native'
+import { Linking, Platform } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -25,7 +25,6 @@ import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -60,11 +59,8 @@ const upgradeSwapData = (
 
 export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
   const { swapData, transaction, wallet } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
 
   const { memos = [], spendTargets = [], tokenId } = transaction
-  const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
     transaction.tokenId === null
@@ -186,12 +182,6 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           getExchangeDenom(destinationWallet.currencyConfig, null).name
         })`
 
-  const symbolString =
-    currencyInfo.currencyCode === transaction.currencyCode &&
-    walletDefaultDenom.symbol != null
-      ? walletDefaultDenom.symbol
-      : transaction.currencyCode
-
   const createExchangeDataString = (newline: string = '\n'): string => {
     const uniqueIdentifier = memos
       .map(
@@ -243,23 +233,16 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
         title={lstrings.transaction_details_exchange_details}
         onPress={handleExchangeDetails}
       >
-        <View style={styles.tileColumn}>
-          <EdgeText>
-            {lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}
-          </EdgeText>
-          <EdgeText>
-            {lstrings.string_to_capitalize +
-              ' ' +
-              destinationAmount +
-              ' ' +
-              destinationAssetName}
-          </EdgeText>
-          <EdgeText>
-            {swapData.isEstimate
-              ? lstrings.estimated_quote
-              : lstrings.fixed_quote}
-          </EdgeText>
-        </View>
+        <EdgeText>
+          {`${sourceAmount} ${sourceAssetName}` +
+            ' → ' +
+            `${destinationAmount} ${destinationAssetName}`}
+        </EdgeText>
+        <EdgeText>
+          {swapData.isEstimate
+            ? lstrings.estimated_quote
+            : lstrings.fixed_quote}
+        </EdgeText>
       </EdgeRow>
       {orderUri == null ? null : (
         <EdgeRow
@@ -280,10 +263,3 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
     </EdgeCard>
   )
 }
-
-const getStyles = cacheStyles((_: Theme) => ({
-  tileColumn: {
-    flexDirection: 'column',
-    justifyContent: 'center'
-  }
-}))
