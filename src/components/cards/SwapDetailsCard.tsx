@@ -7,7 +7,6 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import {
@@ -27,22 +26,15 @@ import { EdgeCard } from './EdgeCard'
 interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
-  wallet: EdgeCurrencyWallet
+  sourceWallet?: EdgeCurrencyWallet
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
 
 export function SwapDetailsCard(props: Props) {
-  const { swapData, transaction, wallet } = props
+  const { swapData, transaction, sourceWallet } = props
 
   const { memos = [], spendTargets = [], tokenId } = transaction
-  const { currencyInfo } = wallet
-  const walletName = useWalletName(wallet)
-  const walletDefaultDenom = useSelector(state =>
-    currencyInfo.currencyCode === transaction.currencyCode
-      ? getExchangeDenom(wallet.currencyConfig, tokenId)
-      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-  )
 
   const {
     isEstimate,
@@ -139,25 +131,37 @@ export function SwapDetailsCard(props: Props) {
           payoutCurrencyCode
         )
   )
-  if (destinationDenomination == null) return null
 
   const sourceNativeAmount = sub(
     abs(transaction.nativeAmount),
     transaction.networkFee
   )
-  const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
-    sourceNativeAmount
+  const sourceWalletDenom = useSelector(state =>
+    sourceWallet?.currencyInfo.currencyCode === transaction.currencyCode
+      ? getExchangeDenom(sourceWallet.currencyConfig, tokenId)
+      : sourceWallet != null
+      ? selectDisplayDenom(state, sourceWallet.currencyConfig, tokenId)
+      : undefined
   )
+  const sourceAmount =
+    sourceWalletDenom == null
+      ? undefined
+      : convertNativeToDisplay(sourceWalletDenom.multiplier)(sourceNativeAmount)
   const sourceAssetName =
-    tokenId == null
-      ? walletDefaultDenom.name
-      : `${walletDefaultDenom.name} (${
-          getExchangeDenom(wallet.currencyConfig, null).name
+    sourceWalletDenom == null || sourceWallet == null
+      ? undefined
+      : tokenId == null
+      ? sourceWalletDenom.name
+      : `${sourceWalletDenom.name} (${
+          getExchangeDenom(sourceWallet.currencyConfig, null).name
         })`
 
-  const destinationAmount = convertNativeToDisplay(
-    destinationDenomination.multiplier
-  )(swapData.payoutNativeAmount)
+  const destinationAmount =
+    destinationDenomination == null
+      ? undefined
+      : convertNativeToDisplay(destinationDenomination.multiplier)(
+          swapData.payoutNativeAmount
+        )
   const destinationAssetName =
     payoutCurrencyCode ===
     getExchangeDenom(destinationWallet.currencyConfig, null).name
@@ -206,14 +210,22 @@ export function SwapDetailsCard(props: Props) {
       },
       {
         rows: [
-          {
-            title: lstrings.transaction_details_exchange_source_wallet,
-            body: walletName
-          },
-          {
-            title: lstrings.string_send_amount,
-            body: `${sourceAmount} ${sourceAssetName}`
-          }
+          ...(sourceWallet?.name == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_source_wallet,
+                  body: sourceWallet.name
+                }
+              ]),
+          ...(sourceAmount == null || sourceAssetName == null
+            ? []
+            : [
+                {
+                  title: lstrings.string_send_amount,
+                  body: `${sourceAmount} ${sourceAssetName}`
+                }
+              ])
         ]
       },
       {
@@ -260,6 +272,10 @@ export function SwapDetailsCard(props: Props) {
     ]
   }
 
+  if (destinationAmount == null) {
+    return null
+  }
+
   return (
     <EdgeCard sections>
       <EdgeRow
@@ -268,7 +284,7 @@ export function SwapDetailsCard(props: Props) {
         onPress={handleExchangeDetails}
       >
         <EdgeText>
-          {`${sourceAmount} ${sourceAssetName}` +
+          {(sourceAmount == null ? '' : `${sourceAmount} ${sourceAssetName}`) +
             ' → ' +
             `${destinationAmount} ${destinationAssetName}`}
         </EdgeText>

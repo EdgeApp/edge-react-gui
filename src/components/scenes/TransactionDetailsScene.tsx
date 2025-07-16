@@ -546,7 +546,7 @@ const TransactionDetailsComponent = (props: Props) => {
           <SwapDetailsCard
             swapData={swapData}
             transaction={transaction}
-            wallet={wallet}
+            sourceWallet={wallet}
           />
         )}
       </EdgeAnim>
