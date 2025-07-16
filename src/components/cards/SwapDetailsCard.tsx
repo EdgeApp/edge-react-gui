@@ -33,22 +33,12 @@ const TXID_PLACEHOLDER = '{{TXID}}'
 
 export function SwapDetailsCard(props: Props) {
   const { swapData, transaction, sourceWallet } = props
-
   const { memos = [], spendTargets = [], tokenId } = transaction
 
-  const {
-    isEstimate,
-    orderId,
-    orderUri,
-    payoutAddress,
-    payoutWalletId,
-    plugin,
-    refundAddress
-  } = swapData
   const formattedOrderUri =
-    orderUri == null
+    swapData.orderUri == null
       ? undefined
-      : orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
+      : swapData.orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
   const payoutCurrencyCode = swapData.payoutCurrencyCode
 
   const handleExchangeDetails = useHandler(async () => {
@@ -78,10 +68,12 @@ export function SwapDetailsCard(props: Props) {
       {
         subject: sprintf(
           lstrings.transaction_details_exchange_support_request,
-          plugin.displayName
+          swapData.plugin.displayName
         ),
         recipients:
-          plugin.supportEmail != null ? [plugin.supportEmail] : undefined,
+          swapData.plugin.supportEmail != null
+            ? [swapData.plugin.supportEmail]
+            : undefined,
         body,
         isHTML: true
       },
@@ -119,7 +111,7 @@ export function SwapDetailsCard(props: Props) {
   // The wallet may have been deleted:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet = currencyWallets[payoutWalletId]
+  const destinationWallet = currencyWallets[swapData.payoutWalletId]
   const destinationWalletName =
     destinationWallet == null ? '' : getWalletName(destinationWallet)
   const destinationDenomination = useSelector(state =>
@@ -196,15 +188,17 @@ export function SwapDetailsCard(props: Props) {
           },
           {
             title: lstrings.transaction_details_exchange_service,
-            body: plugin.displayName
+            body: swapData.plugin.displayName
           },
           {
             title: lstrings.transaction_details_exchange_order_id,
-            body: orderId || ''
+            body: swapData.orderId || ''
           },
           {
             title: lstrings.quote_type,
-            body: isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote
+            body: swapData.isEstimate
+              ? lstrings.estimated_quote
+              : lstrings.fixed_quote
           }
         ]
       },
@@ -261,11 +255,11 @@ export function SwapDetailsCard(props: Props) {
             : []),
           {
             title: lstrings.transaction_details_exchange_payout_address,
-            body: payoutAddress
+            body: swapData.payoutAddress
           },
           {
             title: lstrings.transaction_details_exchange_refund_address,
-            body: refundAddress || ''
+            body: swapData.refundAddress || ''
           }
         ]
       }
@@ -294,7 +288,7 @@ export function SwapDetailsCard(props: Props) {
             : lstrings.fixed_quote}
         </EdgeText>
       </EdgeRow>
-      {orderUri == null ? null : (
+      {swapData.orderUri == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_status_page}
@@ -302,7 +296,7 @@ export function SwapDetailsCard(props: Props) {
           body={formattedOrderUri}
         />
       )}
-      {plugin.supportEmail == null ? null : (
+      {swapData.plugin.supportEmail == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_support}
