@@ -610,7 +610,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
             <SwapDetailsCard
               swapData={swapData}
               transaction={transaction}
-              wallet={wallet}
+              sourceWallet={wallet}
             />
           )}
         </EdgeAnim>

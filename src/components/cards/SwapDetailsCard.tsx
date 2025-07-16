@@ -11,7 +11,6 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import {
@@ -31,7 +30,7 @@ import { EdgeCard } from './EdgeCard'
 interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
-  wallet: EdgeCurrencyWallet
+  sourceWallet?: EdgeCurrencyWallet
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
@@ -39,9 +38,10 @@ const TXID_PLACEHOLDER = '{{TXID}}'
 // Metadata may have been created and saved before tokenId was required.
 // If tokenId is missing it defaults to null so we can try upgrading it.
 const upgradeSwapData = (
-  destinationWallet: EdgeCurrencyWallet,
+  destinationWallet: EdgeCurrencyWallet | undefined,
   swapData: EdgeTxSwap
 ): EdgeTxSwap => {
+  if (destinationWallet == null) return swapData
   if (
     swapData.payoutTokenId === undefined &&
     destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
@@ -58,15 +58,9 @@ const upgradeSwapData = (
 }
 
 export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
-  const { swapData, transaction, wallet } = props
+  const { swapData, transaction, sourceWallet } = props
 
   const { memos = [], spendTargets = [], tokenId } = transaction
-  const walletName = useWalletName(wallet)
-  const walletDefaultDenom = useSelector(state =>
-    transaction.tokenId === null
-      ? getExchangeDenom(wallet.currencyConfig, tokenId)
-      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-  )
 
   // The wallet may have been deleted:
   const account = useSelector(state => state.core.account)
@@ -84,7 +78,7 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
     payoutTokenId,
     plugin,
     refundAddress
-  } = upgradeSwapData(wallet, swapData)
+  } = upgradeSwapData(sourceWallet, swapData)
   const formattedOrderUri =
     orderUri == null
       ? undefined
@@ -166,25 +160,37 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           payoutTokenId
         )
   )
-  if (destinationDenomination == null) return null
 
   const sourceNativeAmount = sub(
     abs(transaction.nativeAmount),
     transaction.networkFee
   )
-  const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
-    sourceNativeAmount
+  const sourceWalletDenom = useSelector(state =>
+    sourceWallet?.currencyInfo.currencyCode === transaction.currencyCode
+      ? getExchangeDenom(sourceWallet.currencyConfig, tokenId)
+      : sourceWallet != null
+      ? selectDisplayDenom(state, sourceWallet.currencyConfig, tokenId)
+      : undefined
   )
+  const sourceAmount =
+    sourceWalletDenom == null
+      ? undefined
+      : convertNativeToDisplay(sourceWalletDenom.multiplier)(sourceNativeAmount)
   const sourceAssetName =
-    tokenId == null
-      ? walletDefaultDenom.name
-      : `${walletDefaultDenom.name} (${
-          getExchangeDenom(wallet.currencyConfig, null).name
+    sourceWalletDenom == null || sourceWallet == null
+      ? undefined
+      : tokenId == null
+      ? sourceWalletDenom.name
+      : `${sourceWalletDenom.name} (${
+          getExchangeDenom(sourceWallet.currencyConfig, null).name
         })`
 
-  const destinationAmount = convertNativeToDisplay(
-    destinationDenomination.multiplier
-  )(swapData.payoutNativeAmount)
+  const destinationAmount =
+    destinationDenomination == null
+      ? undefined
+      : convertNativeToDisplay(destinationDenomination.multiplier)(
+          swapData.payoutNativeAmount
+        )
   const destinationAssetName =
     payoutTokenId == null
       ? payoutCurrencyCode
@@ -232,14 +238,22 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
       },
       {
         rows: [
-          {
-            title: lstrings.transaction_details_exchange_source_wallet,
-            body: walletName
-          },
-          {
-            title: lstrings.string_send_amount,
-            body: `${sourceAmount} ${sourceAssetName}`
-          }
+          ...(sourceWallet?.name == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_source_wallet,
+                  body: sourceWallet.name
+                }
+              ]),
+          ...(sourceAmount == null || sourceAssetName == null
+            ? []
+            : [
+                {
+                  title: lstrings.string_send_amount,
+                  body: `${sourceAmount} ${sourceAssetName}`
+                }
+              ])
         ]
       },
       {
@@ -286,6 +300,10 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
     ]
   }
 
+  if (destinationAmount == null) {
+    return null
+  }
+
   return (
     <EdgeCard sections>
       <EdgeRow
@@ -294,7 +312,7 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
         onPress={handleExchangeDetails}
       >
         <EdgeText>
-          {`${sourceAmount} ${sourceAssetName}` +
+          {(sourceAmount == null ? '' : `${sourceAmount} ${sourceAssetName}`) +
             ' → ' +
             `${destinationAmount} ${destinationAssetName}`}
         </EdgeText>
