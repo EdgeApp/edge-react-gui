@@ -731,6 +731,8 @@ const strings = {
   string_save: 'Save',
   string_share: 'Share',
   string_to_capitalize: 'To',
+  string_send_amount: 'Send Amount',
+  string_receive_amount: 'Receive Amount',
   string_show_balance: 'Show Balance',
   string_amount: 'Amount',
   string_tap_next_for_quote: 'Tap "Next" for Quote',
@@ -1114,6 +1116,7 @@ const strings = {
     'This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nFunds that fail to swap will remain in your source wallet or be returned.',
   fixed_quote: 'Fixed Quote',
   estimated_quote: 'Estimated Quote',
+  quote_type: 'Quote Type',
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
