@@ -1,4 +1,5 @@
 import { NavigationContext } from '@react-navigation/native'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import * as React from 'react'
 import { Metrics, SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -8,6 +9,8 @@ import thunk from 'redux-thunk'
 import { rootReducer, RootState } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
 import { fakeNavigation } from './fakeSceneProps'
+
+const queryClient = new QueryClient()
 
 type DeepPartial<T> = T extends object
   ? {
@@ -30,13 +33,15 @@ export function FakeProviders(props: Props) {
     [initialState]
   )
   return (
-    <SafeAreaProvider initialMetrics={initialMetrics}>
-      {renderStateProviders(
-        <NavigationContext.Provider value={fakeNavigation}>
-          <Provider store={store}>{children}</Provider>
-        </NavigationContext.Provider>
-      )}
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider initialMetrics={initialMetrics}>
+        {renderStateProviders(
+          <NavigationContext.Provider value={fakeNavigation}>
+            <Provider store={store}>{children}</Provider>
+          </NavigationContext.Provider>
+        )}
+      </SafeAreaProvider>
+    </QueryClientProvider>
   )
 }
 
