@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: `ReturnKeyTypeButton` to `FlipInputModal2`
+
 ## 4.32.0 (staging)
 
 - added: Support for Paybis ACH buy
@@ -10,6 +12,7 @@
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - changed: Reinstate "Sell" in `MenuTabs` for UK
 - changed: `NotificationCard` visibility rules updated to be less invasive
+- changed: `WalletListMenuModal` now supports displaying loading states for async options
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
 - fixed: Account for minimum account balances when migrating/sweeping
 - fixed: Button UI styling in `MigrateWalletCompletionScene`
