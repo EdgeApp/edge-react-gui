@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- changed: `WalletListMenuModal` now supports displaying loading states for async options
 
 ## 4.32.0 (staging)
 
