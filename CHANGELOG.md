@@ -16,7 +16,8 @@
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
 - fixed: Account for minimum account balances when migrating/sweeping
 - fixed: Button UI styling in `MigrateWalletCompletionScene`
-- fixed: Map from FIO codes to Edge-supported currencies more correctly.
+- fixed: Map from FIO codes to Edge-supported currencies more correctly
+- remove: Wire transfer fiat buy
 
 ## 4.31.0 (2025-07-07)
 
