@@ -53,6 +53,11 @@ tags:
     text: "SKIP"
     optional: true
 
+# If the survey modal shows, dismiss it
+- tapOn:
+    text: "Dismiss"
+    optional: true
+
 - assertVisible: "Assets"
 - tapOn: "Assets"
 - assertVisible: "Wallets"
