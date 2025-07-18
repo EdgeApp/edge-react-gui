@@ -13,7 +13,15 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       }
     }
     accessible={true}
+    collapsable={false}
     focusable={true}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+        },
+      }
+    }
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -22,51 +30,52 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      [
-        {
-          "backgroundColor": "#000000",
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "opacity": 0,
-        },
-      ]
+      {
+        "backgroundColor": "#000000",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   />,
   <View
     collapsable={false}
-    style={
-      [
-        {
-          "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
-          "flexShrink": 1,
-          "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
               "translateY": 1334,
             },
           ],
         },
-        {
-          "borderColor": "rgba(255, 255, 255, 0)",
-          "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
-          "paddingTop": 0,
-        },
-      ]
+      }
+    }
+    style={
+      {
+        "alignSelf": "flex-end",
+        "backgroundColor": "rgba(255, 255, 255, .37)",
+        "borderColor": "rgba(255, 255, 255, 0)",
+        "borderTopLeftRadius": 22,
+        "borderTopRightRadius": 22,
+        "borderWidth": 0,
+        "flexShrink": 1,
+        "marginBottom": -86,
+        "overflow": "hidden",
+        "paddingBottom": 97,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 0,
+        "transform": [
+          {
+            "translateY": 1334,
+          },
+        ],
+        "width": 674,
+      }
     }
   >
     <BlurView
@@ -179,17 +188,21 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
           }
         }
         accessible={false}
-        disableAnimation={
-          {
-            "value": 0,
-          }
-        }
-        focusAnimation={
-          {
-            "value": 0,
-          }
-        }
+        collapsable={false}
+        disableAnimation={0}
+        focusAnimation={0}
         focusable={true}
+        jestAnimatedStyle={
+          {
+            "value": {
+              "backgroundColor": "rgba(255, 255, 255, 0.2)",
+              "borderColor": "rgba(0, 241, 162, 0)",
+              "marginHorizontal": 0,
+              "opacity": 1,
+              "paddingVertical": 22,
+            },
+          }
+        }
         multiline={false}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -198,138 +211,127 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        scale={
-          {
-            "value": 1,
-          }
-        }
+        scale={1}
         style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 11,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "flexGrow": undefined,
-              "flexShrink": undefined,
-              "paddingHorizontal": 17,
-            },
-            {
-              "backgroundColor": undefined,
-              "borderColor": undefined,
-              "marginHorizontal": undefined,
-              "opacity": undefined,
-              "paddingVertical": 22,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0.2)",
+            "borderColor": "rgba(0, 241, 162, 0)",
+            "borderRadius": 11,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "flexGrow": undefined,
+            "flexShrink": undefined,
+            "marginHorizontal": 0,
+            "opacity": 1,
+            "paddingHorizontal": 17,
+            "paddingVertical": 22,
+          }
         }
       >
         <View
-          scale={
+          collapsable={false}
+          jestAnimatedStyle={
             {
-              "value": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-              },
-              {
+              "value": {
                 "opacity": 0,
                 "width": 0,
               },
-            ]
+            }
+          }
+          scale={0}
+          style={
+            {
+              "alignItems": "stretch",
+              "aspectRatio": 1,
+              "opacity": 0,
+              "width": 0,
+            }
           }
         />
         <View
-          focusValue={
+          collapsable={false}
+          focusValue={0}
+          hasPlaceholder={true}
+          jestAnimatedStyle={
             {
-              "value": 0,
+              "value": {
+                "marginBottom": -0,
+                "marginTop": 0,
+              },
             }
           }
-          hasPlaceholder={true}
           style={
-            [
-              {
-                "alignItems": "flex-start",
-                "alignSelf": "flex-start",
-                "flex": 1,
-                "flexDirection": "row",
-                "left": 0,
-              },
-              {
-                "marginBottom": NaN,
-                "marginTop": undefined,
-              },
-            ]
+            {
+              "alignItems": "flex-start",
+              "alignSelf": "flex-start",
+              "flex": 1,
+              "flexDirection": "row",
+              "left": 0,
+              "marginBottom": -0,
+              "marginTop": 0,
+            }
           }
         >
           <View
-            shift={
+            collapsable={false}
+            jestAnimatedStyle={
               {
-                "value": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "left": 8.8,
-                  "margin": 0,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                  "position": "absolute",
-                  "top": 0,
-                },
-                {
+                "value": {
                   "transform": [
                     {
-                      "translateY": undefined,
+                      "translateY": 0,
                     },
                     {
-                      "translateX": undefined,
+                      "translateX": 0,
                     },
                   ],
                 },
-              ]
+              }
+            }
+            shift={0}
+            style={
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "left": 8.8,
+                "margin": 0,
+                "paddingHorizontal": 0,
+                "paddingVertical": 0,
+                "position": "absolute",
+                "top": 0,
+                "transform": [
+                  {
+                    "translateY": 0,
+                  },
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
             }
           >
             <Text
-              disableAnimation={
+              collapsable={false}
+              disableAnimation={0}
+              focusAnimation={0}
+              jestAnimatedStyle={
                 {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              scale={
-                {
-                  "value": 1,
-                }
-              }
-              shift={
-                {
-                  "value": 0,
-                }
-              }
-              style={
-                [
-                  {
-                    "fontFamily": "Quicksand-Regular",
+                  "value": {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 22,
-                    "includeFontPadding": false,
                   },
-                  {
-                    "color": undefined,
-                    "fontSize": undefined,
-                  },
-                ]
+                }
+              }
+              scale={1}
+              shift={0}
+              style={
+                {
+                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                }
               }
             >
               Address
@@ -345,16 +347,18 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}
+            collapsable={false}
             defaultValue=""
-            disableAnimation={
-              {
-                "value": 0,
-              }
-            }
+            disableAnimation={0}
             editable={true}
-            focusAnimation={
+            focusAnimation={0}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
               {
-                "value": 0,
+                "value": {
+                  "color": "rgba(255, 255, 255, 1)",
+                  "fontSize": 22,
+                },
               }
             }
             multiline={false}
@@ -363,33 +367,24 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             onFocus={[Function]}
             onSubmitEditing={[Function]}
             returnKeyType="search"
-            scale={
-              {
-                "value": 1,
-              }
-            }
+            scale={1}
             selectionColor="rgba(255, 255, 255, .25)"
             style={
-              [
-                {
-                  "color": "hsla(0, 0%, 100%, 0.20)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "margin": 0,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                  "transform": [
-                    {
-                      "translateY": -0,
-                    },
-                  ],
-                },
-                {
-                  "color": undefined,
-                  "fontSize": 22,
-                },
-              ]
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "margin": 0,
+                "paddingHorizontal": 0,
+                "paddingVertical": 0,
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              }
             }
             testID="undefined.textInput"
             textAlignVertical="top"
@@ -435,28 +430,41 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
           testID="undefined.clearIcon"
         >
           <View
-            scale={
+            collapsable={false}
+            jestAnimatedStyle={
               {
-                "value": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
+                "value": {
                   "opacity": 0,
                   "width": 0,
                 },
-              ]
+              }
+            }
+            scale={0}
+            style={
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+                "opacity": 0,
+                "width": 0,
+              }
             }
           >
             <Text
+              collapsable={false}
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                }
+              }
               style={
                 {
-                  "color": "#FFFFFF",
+                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
                   "fontFamily": "anticon",
                   "fontSize": 0,
                   "fontStyle": "normal",

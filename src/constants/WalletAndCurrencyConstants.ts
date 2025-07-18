@@ -782,13 +782,7 @@ export const SPECIAL_CURRENCY_INFO: {
       'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode:
-      Platform.OS === 'ios'
-        ? // Get the major version number:
-          Number(Platform.constants.osVersion.split('.')[0]) < 15
-        : Platform.OS === 'android'
-        ? Platform.constants.Version < 28
-        : false,
+    keysOnlyMode: isZecBroken(),
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
@@ -924,6 +918,22 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '146'
     }
   }
+}
+
+/**
+ * Returns true if the native code will crash on this device.
+ * Older versions of iOS have the wrong SQL version,
+ * and older Androids don't meet the minimum upstream requirement.
+ */
+function isZecBroken(): boolean {
+  if (Platform.OS === 'ios') {
+    const { osVersion = '17' } = Platform.constants
+    return Number(osVersion.split('.')[0]) < 15
+  }
+  if (Platform.OS === 'android') {
+    return Platform.constants.Version < 28
+  }
+  return false
 }
 
 export const USD_FIAT = 'iso:USD'

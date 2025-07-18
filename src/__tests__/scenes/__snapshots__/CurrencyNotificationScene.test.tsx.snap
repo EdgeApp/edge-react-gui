@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CurrencyNotificationComponent should render with loading props 1`] = `
 [
@@ -218,8 +218,20 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -286,19 +298,23 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         </Text>
         <View>
           <View
-            pending={false}
-            style={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-                {
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
                   "opacity": 0,
                 },
-              ]
+              }
+            }
+            pending={false}
+            style={
+              {
+                "aspectRatio": 1,
+                "opacity": 0,
+                "position": "absolute",
+                "width": "100%",
+                "zIndex": 1,
+              }
             }
           >
             <ActivityIndicator
@@ -312,6 +328,14 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             />
           </View>
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 1,
+                },
+              }
+            }
             pending={false}
             style={
               {
@@ -404,19 +428,23 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         </Text>
         <View>
           <View
-            pending={false}
-            style={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-                {
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
                   "opacity": 0,
                 },
-              ]
+              }
+            }
+            pending={false}
+            style={
+              {
+                "aspectRatio": 1,
+                "opacity": 0,
+                "position": "absolute",
+                "width": "100%",
+                "zIndex": 1,
+              }
             }
           >
             <ActivityIndicator
@@ -430,6 +458,14 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             />
           </View>
           <View
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 1,
+                },
+              }
+            }
             pending={false}
             style={
               {
