@@ -102,6 +102,7 @@ class FakeCurrencyEngine {
   }
 
   private _getCurrencyCode(tokenId: EdgeTokenId): string {
+    if (tokenId == null) return this.currencyInfo.currencyCode
     for (const token of this.currencyInfo.metaTokens ?? []) {
       const { currencyCode, contractAddress } = token
       const tId = contractAddress?.toLowerCase().replace('0x', '')
@@ -109,7 +110,7 @@ class FakeCurrencyEngine {
         return currencyCode
       }
     }
-    throw new Error('No matching tokenId')
+    throw new Error(`No matching tokenId ${tokenId}`)
   }
 
   private _updateState(settings: Partial<State>): void {
