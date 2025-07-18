@@ -329,6 +329,11 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
     footerHeight={0}
     hasTabs={false}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -340,20 +345,35 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -0,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]

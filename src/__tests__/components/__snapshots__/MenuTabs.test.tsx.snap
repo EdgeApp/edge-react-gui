@@ -3,6 +3,11 @@
 exports[`MenuTabs should render with loading props 1`] = `
 <View
   collapsable={false}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {
@@ -14,27 +19,48 @@ exports[`MenuTabs should render with loading props 1`] = `
       },
     }
   }
+  jestInlineStyle={
+    [
+      {
+        "bottom": 0,
+        "justifyContent": "flex-end",
+        "left": 0,
+        "overflow": "visible",
+        "position": "absolute",
+        "right": 0,
+      },
+    ]
+  }
   pointerEvents="box-none"
   shiftY={0}
   style={
-    {
-      "bottom": 0,
-      "justifyContent": "flex-end",
-      "left": 0,
-      "overflow": "visible",
-      "position": "absolute",
-      "right": 0,
-      "transform": [
-        {
-          "translateY": 0,
-        },
-      ],
-    }
+    [
+      {
+        "bottom": 0,
+        "justifyContent": "flex-end",
+        "left": 0,
+        "overflow": "visible",
+        "position": "absolute",
+        "right": 0,
+      },
+      {
+        "transform": [
+          {
+            "translateY": 0,
+          },
+        ],
+      },
+    ]
   }
 >
   <View
     collapsable={false}
     footerHeight={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -46,26 +72,40 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
+    }
     openRatio={1}
     pointerEvents="none"
     style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-        "transform": [
-          {
-            "translateY": 0,
-          },
-        ],
-      }
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 0,
+            },
+          ],
+        },
+      ]
     }
     tabLabelHeight={25}
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -108,6 +148,11 @@ exports[`MenuTabs should render with loading props 1`] = `
   </View>
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -119,18 +164,31 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+        },
+      ]
+    }
     openRatio={1}
     style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "justifyContent": "center",
-        "transform": [
-          {
-            "translateY": 0,
-          },
-        ],
-      }
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+        },
+        {
+          "transform": [
+            {
+              "translateY": 0,
+            },
+          ],
+        },
+      ]
     }
     tabLabelHeight={25}
   />

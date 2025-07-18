@@ -240,6 +240,11 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
   >
     <View
       collapsable={false}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {
@@ -247,15 +252,30 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           },
         }
       }
+      jestInlineStyle={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
+      }
       style={
-        {
-          "bottom": 0,
-          "left": 0,
-          "opacity": 1,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
       }
     >
       <View
@@ -277,6 +297,11 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
   </View>
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -284,11 +309,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={{}}
     pointerEvents="none"
     style={
-      {
-        "opacity": 0,
-      }
+      [
+        {
+          "opacity": 0,
+        },
+      ]
     }
   >
     <View
@@ -403,6 +431,11 @@ DO NOT accept this login unless you trust the application and person who provide
   </View>
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -410,11 +443,14 @@ DO NOT accept this login unless you trust the application and person who provide
         },
       }
     }
+    jestInlineStyle={{}}
     pointerEvents="none"
     style={
-      {
-        "opacity": 0,
-      }
+      [
+        {
+          "opacity": 0,
+        },
+      ]
     }
   >
     <View

@@ -434,6 +434,11 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -441,15 +446,29 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -464,6 +483,11 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -471,11 +495,14 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text
@@ -745,7 +772,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           }
           accessible={true}
           collapsable={false}
-          focusable={true}
+          focusable={false}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}

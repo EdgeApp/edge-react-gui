@@ -15,12 +15,29 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "opacity": 0,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -30,19 +47,28 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "#000000",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
     }
   />,
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -54,32 +80,59 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
     style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "rgba(255, 255, 255, .37)",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexShrink": 1,
-        "marginBottom": -86,
-        "overflow": "hidden",
-        "paddingBottom": 97,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 0,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 674,
-      }
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -388,6 +441,11 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -395,17 +453,34 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "backgroundColor": "#494949",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
+            }
             style={
-              {
-                "backgroundColor": "#494949",
-                "borderRadius": 27.5,
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "width": 295,
-              }
+              [
+                {
+                  "backgroundColor": "#494949",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                {
+                  "width": 295,
+                },
+              ]
             }
           />
           <View
@@ -413,6 +488,11 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
             forwardedRef={[Function]}
             handlerTag={-1}
             handlerType="PanGestureHandler"
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -424,22 +504,41 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                null,
+              ]
+            }
             onGestureHandlerEvent={[Function]}
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "#00f1a2",
-                "borderRadius": 27.5,
-                "height": 55,
-                "justifyContent": "center",
-                "transform": [
-                  {
-                    "translateX": 240,
-                  },
-                ],
-                "width": 55,
-                "zIndex": 5,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                null,
+                {
+                  "transform": [
+                    {
+                      "translateX": 240,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <Text

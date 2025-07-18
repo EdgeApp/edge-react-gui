@@ -15,12 +15,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "opacity": 0,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -30,19 +47,28 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "#000000",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
     }
   />,
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -54,32 +80,59 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
     style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "rgba(255, 255, 255, .37)",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexShrink": 1,
-        "marginBottom": -86,
-        "overflow": "hidden",
-        "paddingBottom": 97,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 0,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 674,
-      }
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -211,7 +264,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -278,6 +331,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -285,15 +343,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -308,6 +380,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -315,11 +392,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -410,6 +490,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -417,15 +502,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -440,6 +539,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -447,11 +551,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -542,6 +649,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -549,15 +661,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -572,6 +698,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -579,11 +710,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -674,6 +808,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -681,15 +820,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -704,6 +857,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -711,11 +869,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -806,6 +967,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -813,15 +979,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -836,6 +1016,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -843,11 +1028,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -938,6 +1126,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             <View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -945,15 +1138,29 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                  ]
+                }
                 pending={false}
                 style={
-                  {
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  }
+                  [
+                    {
+                      "aspectRatio": 1,
+                      "position": "absolute",
+                      "width": "100%",
+                      "zIndex": 1,
+                    },
+                    {
+                      "opacity": 0,
+                    },
+                  ]
                 }
               >
                 <ActivityIndicator
@@ -968,6 +1175,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               </View>
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -975,11 +1187,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 pending={false}
                 style={
-                  {
-                    "opacity": 1,
-                  }
+                  [
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
