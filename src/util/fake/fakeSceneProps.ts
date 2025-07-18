@@ -74,16 +74,6 @@ export function fakeSceneProps<Name extends keyof AppParamList>(
   }
 }
 
-export const fakeCompositeNavigation = {
-  navigate: jest.fn(),
-  goBack: jest.fn(),
-  pop: jest.fn(),
-  push: jest.fn(),
-  replace: jest.fn(),
-  addListener: jest.fn()
-  // Include other methods as needed
-} as any // HACK: Type assertion due to incomplete implementation
-
 export function fakeRootSceneProps<Name extends keyof RootParamList>(
   name: Name,
   params: RootParamList[Name]
