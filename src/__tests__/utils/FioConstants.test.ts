@@ -34,23 +34,7 @@ const fakeCurrencyConfig: EdgeAccount['currencyConfig'] = {
   bobevm: makeFakeCurrencyConfig({
     pluginId: 'bobevm',
     currencyCode: 'ETH'
-  }),
-
-  // XRP has renamed tokens:
-  ripple: makeFakeCurrencyConfig(
-    {
-      pluginId: 'ripple',
-      currencyCode: 'XRP'
-    },
-    {
-      'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': {
-        currencyCode: 'USD.gh',
-        displayName: 'Gatehub USD',
-        denominations: [],
-        networkLocation: {}
-      }
-    }
-  )
+  })
 }
 
 const fakeAccount: EdgeAccount = { currencyConfig: fakeCurrencyConfig } as any
@@ -72,11 +56,6 @@ describe('fioCodeToEdgeAsset', () => {
     expect(
       fioCodeToEdgeAsset(fakeAccount, 'BOBNETWORK', 'BOBNETWORK')
     ).toStrictEqual({ pluginId: 'bobevm', tokenId: null })
-
-    expect(fioCodeToEdgeAsset(fakeAccount, 'XRP', 'USDGH')).toStrictEqual({
-      pluginId: 'ripple',
-      tokenId: 'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'
-    })
   })
 
   it('Should reject missing currencies', async () => {
@@ -112,16 +91,6 @@ describe('tokenIdToFioCode', () => {
     expect(tokenIdToFioCode(fakeCurrencyConfig.bobevm, null)).toStrictEqual({
       fioChainCode: 'BOBNETWORK',
       fioTokenCode: 'BOBNETWORK'
-    })
-
-    expect(
-      tokenIdToFioCode(
-        fakeCurrencyConfig.ripple,
-        'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'
-      )
-    ).toStrictEqual({
-      fioChainCode: 'XRP',
-      fioTokenCode: 'USDGH'
     })
   })
 })

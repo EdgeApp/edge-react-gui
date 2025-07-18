@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
 import {
+  EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeEncodeUri,
@@ -92,6 +93,7 @@ interface OwnProps extends EdgeAppSceneProps<'request'> {
 }
 
 interface StateProps {
+  account?: EdgeAccount
   currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeSecondaryToPrimaryRatio: number
@@ -608,6 +610,9 @@ export class RequestSceneComponent extends React.Component<
             openShareModal={this.openShareModal}
             copyToClipboard={this.copyToClipboard}
             openFioAddressModal={this.openFioAddressModal}
+            account={this.props.account}
+            pluginId={this.props.wallet.currencyInfo.pluginId}
+            tokenId={this.props.route.params.tokenId}
           />
         </EdgeAnim>
       </SceneWrapper>
@@ -844,6 +849,7 @@ export const RequestScene = withWallet((props: OwnProps) => {
 
   return (
     <RequestSceneComponent
+      account={account}
       currencyCode={currencyCode}
       displayDenomination={primaryDisplayDenomination}
       exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}

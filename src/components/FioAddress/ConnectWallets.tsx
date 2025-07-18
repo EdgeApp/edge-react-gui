@@ -13,7 +13,10 @@ import {
 import { EdgeText } from '../../components/themed/EdgeText'
 import { MainButton } from '../../components/themed/MainButton'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { tokenIdToFioCode } from '../../constants/FioConstants'
+import {
+  tokenIdToFioCode,
+  validateFioAsset
+} from '../../constants/FioConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -61,8 +64,8 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
     state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {}
   )
   const walletItems = React.useMemo(
-    () => makeConnectWallets(account, edgeWallets, ccWalletMap),
-    [account, edgeWallets, ccWalletMap]
+    () => makeConnectWallets(edgeWallets, ccWalletMap),
+    [edgeWallets, ccWalletMap]
   )
 
   const [connectWalletsMap, setConnectWalletsMap] =
@@ -245,13 +248,19 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
 }
 
 const makeConnectWallets = (
-  account: EdgeAccount,
   wallets: EdgeAccount['currencyWallets'],
   ccWalletMap: CcWalletMap
 ): WalletItemMap => {
   const walletItems: WalletItemMap = {}
 
   function addItem(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): void {
+    // Validate if this asset is supported by FIO Protocol
+    const validation = validateFioAsset(wallet.currencyConfig, tokenId)
+    if (!validation.isValid) {
+      // Skip unsupported assets
+      return
+    }
+
     const { fioChainCode, fioTokenCode } = tokenIdToFioCode(
       wallet.currencyConfig,
       tokenId
