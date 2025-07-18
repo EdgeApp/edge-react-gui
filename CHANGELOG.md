@@ -12,6 +12,7 @@
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - changed: Reinstate "Sell" in `MenuTabs` for UK
 - changed: `NotificationCard` visibility rules updated to be less invasive
+- changed: Unsupported FIO assets removed from `ConnectWallets` and `ShareButtons`
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
 - fixed: Account for minimum account balances when migrating/sweeping
