@@ -9,44 +9,107 @@ interface FioAsset {
   tokenCodes?: { [tokenId: string]: string }
 }
 
+export interface FioValidationResult {
+  isValid: boolean
+  error?: string
+  fioChainCode?: string
+  fioTokenCode?: string
+}
+
 /**
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
 const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
-  abstract: {
-    chainCode: 'ABSTRACT'
+  algorand: {
+    chainCode: 'ALGO'
   },
-  ethereum: {
-    chainCode: 'ETH' // Make this explicit so L2's don't take it
+  arbitrum: {
+    chainCode: 'ARB'
   },
-  ethereumpo: {
-    chainCode: 'ETHEREUMPO'
+  avalanche: {
+    chainCode: 'AVAX'
   },
-  optimism: {
-    chainCode: 'OPT'
+  base: {
+    chainCode: 'BASE'
   },
-  bobevm: {
-    chainCode: 'BOBNETWORK'
-  },
-  zksync: {
-    chainCode: 'ZKSYNC'
+  binance: {
+    chainCode: 'BNB'
   },
   binancesmartchain: {
     chainCode: 'BSC'
   },
-  sonic: {
-    chainCode: 'SONIC'
+  bitcoin: {
+    chainCode: 'BTC'
+  },
+  bitcoincash: {
+    chainCode: 'BCH'
+  },
+  bobevm: {
+    chainCode: 'BOBNETWORK'
+  },
+  cardano: {
+    chainCode: 'ADA'
+  },
+  celo: {
+    chainCode: 'CELO'
+  },
+  dash: {
+    chainCode: 'DASH'
+  },
+  dogecoin: {
+    chainCode: 'DOGE'
+  },
+  eos: {
+    chainCode: 'EOS'
+  },
+  ethereum: {
+    chainCode: 'ETH'
+  },
+  fantom: {
+    chainCode: 'FTM'
+  },
+  filecoin: {
+    chainCode: 'FIL'
+  },
+  fio: {
+    chainCode: 'FIO'
+  },
+  hedera: {
+    chainCode: 'HBAR'
+  },
+  liberland: {
+    chainCode: 'LLD'
+  },
+  litecoin: {
+    chainCode: 'LTC'
+  },
+  optimism: {
+    chainCode: 'OPT'
+  },
+  polkadot: {
+    chainCode: 'DOT'
+  },
+  polygon: {
+    chainCode: 'POL'
   },
   ripple: {
-    chainCode: 'XRP',
-    tokenCodes: {
-      'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'USDGH',
-      'EUR-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'EURGH',
-      'USD-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'USDBS',
-      'EUR-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'EURBS',
-      'USD-rEn9eRkX25wfGPLysUMAvZ84jAzFNpT5fL': 'USDST'
-    }
+    chainCode: 'XRP'
+  },
+  solana: {
+    chainCode: 'SOL'
+  },
+  stellar: {
+    chainCode: 'XLM'
+  },
+  tezos: {
+    chainCode: 'XTZ'
+  },
+  tron: {
+    chainCode: 'TRX'
+  },
+  zcash: {
+    chainCode: 'ZEC'
   }
 }
 
@@ -115,4 +178,54 @@ export const tokenIdToFioCode = (
   }
 
   return { fioChainCode, fioTokenCode }
+}
+
+/**
+ * Validate if an Edge asset can be converted to FIO codes using the whitelist
+ * TODO: Integrate into the rest of FIO utils
+ */
+export const validateFioAsset = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): FioValidationResult => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+  const { pluginId } = currencyConfig.currencyInfo
+
+  // Check if this plugin is supported
+  const fioAsset = fioAssets[pluginId]
+  if (fioAsset == null) {
+    return {
+      isValid: false,
+      error: `${currencyConfig.currencyInfo.displayName} is not supported by FIO Protocol`
+    }
+  }
+
+  const fioChainCode = fioAsset.chainCode
+
+  // For native assets (tokenId is null)
+  if (tokenId == null) {
+    return {
+      isValid: true,
+      fioChainCode,
+      fioTokenCode: fioChainCode
+    }
+  }
+
+  // For tokens, check if the token is in the whitelist
+  const fioTokenCode = fioAsset.tokenCodes?.[tokenId]
+  if (fioTokenCode == null) {
+    const tokenInfo = currencyConfig.allTokens[tokenId]
+    const tokenName =
+      tokenInfo?.displayName ?? tokenInfo?.currencyCode ?? tokenId
+    return {
+      isValid: false,
+      error: `${tokenName} is not supported by FIO Protocol`
+    }
+  }
+
+  return {
+    isValid: true,
+    fioChainCode,
+    fioTokenCode
+  }
 }

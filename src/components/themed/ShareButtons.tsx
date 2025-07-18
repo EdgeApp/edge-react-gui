@@ -1,7 +1,9 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
+import { validateFioAsset } from '../../constants/FioConstants'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -11,20 +13,53 @@ export interface Props {
   copyToClipboard: () => Promise<void>
   openFioAddressModal: () => Promise<void>
   openShareModal: () => Promise<void>
+
+  // Optional props for FIO validation
+  account?: EdgeAccount
+  pluginId?: string
+  tokenId?: string | null
 }
 
 export function ShareButtons(props: Props) {
-  const { copyToClipboard, openShareModal, openFioAddressModal } = props
+  const {
+    copyToClipboard,
+    openShareModal,
+    openFioAddressModal,
+    account,
+    pluginId,
+    tokenId
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // Determine if FIO should be shown
+  const shouldShowFio = React.useMemo(() => {
+    // If no account info provided, show FIO by default (backwards compatibility)
+    if (account == null || pluginId == null) return true
+
+    // Check if FIO plugin exists
+    const fioPlugin = account.currencyConfig.fio
+    if (fioPlugin == null) return false
+
+    // If we have wallet/token info, validate the specific asset
+    const currencyConfig = account.currencyConfig[pluginId]
+    if (currencyConfig != null) {
+      const validation = validateFioAsset(currencyConfig, tokenId ?? null)
+      return validation.isValid
+    }
+
+    return true
+  }, [account, pluginId, tokenId])
+
   return (
     <View style={styles.container}>
-      <ShareButton
-        icon="FIO-geometric"
-        text={lstrings.fio_reject_request_title}
-        onPress={openFioAddressModal}
-      />
+      {shouldShowFio && (
+        <ShareButton
+          icon="FIO-geometric"
+          text={lstrings.fio_reject_request_title}
+          onPress={openFioAddressModal}
+        />
+      )}
       <ShareButton
         icon="Copy-icon"
         text={lstrings.fragment_request_copy_title}
