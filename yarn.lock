@@ -9636,9 +9636,9 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-"ecpair@git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
+"ecpair@https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
   version "2.1.0"
-  resolved "git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
+  resolved "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
   dependencies:
     "@types/bs58check" "^2.1.0"
     base-x "^4.0.0"
@@ -9791,10 +9791,10 @@ edge-currency-plugins@^3.8.3:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.27.0:
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.27.0.tgz#8ef6b1756a14a1de8faa3505d598bb11a03eb040"
-  integrity sha512-DJ0LXFJnFTfcr1e/4cKTQqNlWn4nuV1jwVhFQrjWsGEPUoSZFiGzQ0yQ6PYho3Hf82tv/X0qyBzr9A3bQuDUtw==
+edge-exchange-plugins@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.28.0.tgz#de46796149d242ac54be80bf687414c175e4e7b2"
+  integrity sha512-DQCAclyybk038w4Dvvwo2/UzSo3YnIMDfjAfP7j4r3jEtjCRcrD7JGEbLhLeEruRL1xwiDicuAW6yR/S+knrbw==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@unizen-io/unizen-contract-addresses" "^0.0.15"
