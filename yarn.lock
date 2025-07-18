@@ -6968,6 +6968,11 @@ asn1js@^3.0.5:
     pvutils "^1.1.3"
     tslib "^2.4.0"
 
+assert-log@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/assert-log/-/assert-log-0.2.2.tgz#cc5875b268679c0a15ea8fd4955712708d7e6ba3"
+  integrity sha512-NE7lb8Nw70NIIkLAdCcCF3tEkLILQh5Px/q6+SDp9+/yaoWytMaeuPRTgui7DxqdU7pxSQGKbTt04GLO+4nAwg==
+
 assert-plus@1.0.0, assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
@@ -9696,10 +9701,10 @@ edge-core-js@^2.32.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.53.0:
-  version "4.53.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.53.0.tgz#e3feb9ca953c1f2e994876326fabcb190a5bfa16"
-  integrity sha512-zqWZ6O+7g8nRT39ZnySr/XWZY0+An30aZ6yxoa64aBksOTcMKpuTouo+mz6w/SwnFwC6h1mDg+yEFZb1SdmXBQ==
+edge-currency-accountbased@^4.54.0:
+  version "4.54.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.54.0.tgz#af0e4c0046b224840dd77ee1c31d5ccfe231c9f2"
+  integrity sha512-y1Y7bvhFnRhg5eKR8ZoJt4T3IuVUxpvN+kd7nAl6Nwqns1ZsodA5JZ3RQKeEsElGorgxmDz8Os+w7Gd/F4wdxg==
   dependencies:
     "@chain-registry/client" "^1.53.59"
     "@cosmjs/stargate" "^0.32.3"
@@ -9722,6 +9727,7 @@ edge-currency-accountbased@^4.53.0:
     "@ton/ton" "^15.1.0"
     "@zondax/izari-filecoin" "^1.2.6"
     algosdk "^2.1.0"
+    assert-log "^0.2.2"
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
