@@ -395,6 +395,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             disableAnimation={0}
             focusAnimation={0}
             focusable={true}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -406,6 +411,19 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "stretch",
+                  "borderRadius": 11,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "paddingHorizontal": 17,
+                },
+              ]
+            }
             multiline={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -416,24 +434,33 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             scale={1}
             style={
-              {
-                "alignItems": "stretch",
-                "backgroundColor": "rgba(255, 255, 255, 0.2)",
-                "borderColor": "rgba(0, 241, 162, 0)",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "flexDirection": "row",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "marginHorizontal": 0,
-                "opacity": 1,
-                "paddingHorizontal": 17,
-                "paddingVertical": 22,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "borderRadius": 11,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "paddingHorizontal": 17,
+                },
+                {
+                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                  "borderColor": "rgba(0, 241, 162, 0)",
+                  "marginHorizontal": 0,
+                  "opacity": 1,
+                  "paddingVertical": 22,
+                },
+              ]
             }
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -442,20 +469,37 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
               scale={0}
               style={
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                  "opacity": 0,
-                  "width": 0,
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
               }
             />
             <View
               collapsable={false}
               focusValue={0}
               hasPlaceholder={true}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -464,20 +508,40 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "flex-start",
+                    "alignSelf": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "left": 0,
+                  },
+                ]
+              }
               style={
-                {
-                  "alignItems": "flex-start",
-                  "alignSelf": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "row",
-                  "left": 0,
-                  "marginBottom": -0,
-                  "marginTop": 0,
-                }
+                [
+                  {
+                    "alignItems": "flex-start",
+                    "alignSelf": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "left": 0,
+                  },
+                  {
+                    "marginBottom": -0,
+                    "marginTop": 0,
+                  },
+                ]
               }
             >
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -492,32 +556,55 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "left": 8.8,
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "position": "absolute",
+                      "top": 0,
+                    },
+                  ]
+                }
                 shift={0}
                 style={
-                  {
-                    "alignItems": "center",
-                    "justifyContent": "center",
-                    "left": 8.8,
-                    "margin": 0,
-                    "paddingHorizontal": 0,
-                    "paddingVertical": 0,
-                    "position": "absolute",
-                    "top": 0,
-                    "transform": [
-                      {
-                        "translateY": 0,
-                      },
-                      {
-                        "translateX": 0,
-                      },
-                    ],
-                  }
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "left": 8.8,
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "position": "absolute",
+                      "top": 0,
+                    },
+                    {
+                      "transform": [
+                        {
+                          "translateY": 0,
+                        },
+                        {
+                          "translateX": 0,
+                        },
+                      ],
+                    },
+                  ]
                 }
               >
                 <Text
                   collapsable={false}
                   disableAnimation={0}
                   focusAnimation={0}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -526,15 +613,29 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                    ]
+                  }
                   scale={1}
                   shift={0}
                   style={
-                    {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    }
+                    [
+                      {
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontSize": 22,
+                      },
+                    ]
                   }
                 >
                   Private Key or Private Seed
@@ -558,6 +659,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 editable={true}
                 focusAnimation={0}
                 forwardedRef={[Function]}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -565,6 +671,24 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       "fontSize": 22,
                     },
                   }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "color": "hsla(0, 0%, 100%, 0.20)",
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                  ]
                 }
                 keyboardType="email-address"
                 multiline={true}
@@ -576,21 +700,26 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 scale={1}
                 selectionColor="rgba(255, 255, 255, .25)"
                 style={
-                  {
-                    "color": "rgba(255, 255, 255, 1)",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "margin": 0,
-                    "paddingHorizontal": 0,
-                    "paddingVertical": 0,
-                    "transform": [
-                      {
-                        "translateY": -0,
-                      },
-                    ],
-                  }
+                  [
+                    {
+                      "color": "hsla(0, 0%, 100%, 0.20)",
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "color": "rgba(255, 255, 255, 1)",
+                      "fontSize": 22,
+                    },
+                  ]
                 }
                 testID="undefined.textInput"
                 textAlignVertical="top"
@@ -637,6 +766,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             >
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -645,18 +779,35 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                  ]
+                }
                 scale={0}
                 style={
-                  {
-                    "alignItems": "stretch",
-                    "aspectRatio": 1,
-                    "opacity": 0,
-                    "width": 0,
-                  }
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                    {
+                      "opacity": 0,
+                      "width": 0,
+                    },
+                  ]
                 }
               >
                 <Text
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -668,14 +819,17 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
                   style={
-                    {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                      "fontFamily": "anticon",
-                      "fontSize": 0,
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    }
+                    [
+                      {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontFamily": "anticon",
+                        "fontSize": 0,
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                    ]
                   }
                 >
                   

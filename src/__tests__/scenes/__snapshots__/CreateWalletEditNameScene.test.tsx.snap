@@ -372,7 +372,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -805,7 +805,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             }
             accessible={true}
             collapsable={false}
-            focusable={true}
+            focusable={false}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
