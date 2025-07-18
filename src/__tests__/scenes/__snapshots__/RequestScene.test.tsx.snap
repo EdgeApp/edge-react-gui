@@ -1285,17 +1285,7 @@ exports[`Request should render with loaded props 1`] = `
                       <TextInput
                         autoCorrect={false}
                         autoFocus={false}
-                        disableAnimation={
-                          {
-                            "value": 0,
-                          }
-                        }
                         editable={true}
-                        focusAnimation={
-                          {
-                            "value": 0,
-                          }
-                        }
                         keyboardType="decimal-pad"
                         onBlur={[Function]}
                         onChangeText={[Function]}
@@ -1307,8 +1297,10 @@ exports[`Request should render with loaded props 1`] = `
                               "fontFamily": "Quicksand-Medium",
                               "fontSize": 34,
                               "includeFontPadding": false,
-                              "marginRight": 0,
                               "padding": 0,
+                            },
+                            {
+                              "marginRight": 0,
                             },
                             {
                               "color": undefined,
@@ -1410,17 +1402,7 @@ exports[`Request should render with loaded props 1`] = `
                       <TextInput
                         autoCorrect={false}
                         autoFocus={false}
-                        disableAnimation={
-                          {
-                            "value": 0,
-                          }
-                        }
                         editable={true}
-                        focusAnimation={
-                          {
-                            "value": 0,
-                          }
-                        }
                         keyboardType="decimal-pad"
                         onBlur={[Function]}
                         onChangeText={[Function]}
@@ -1432,8 +1414,10 @@ exports[`Request should render with loaded props 1`] = `
                               "fontFamily": "Quicksand-Medium",
                               "fontSize": 34,
                               "includeFontPadding": false,
-                              "marginRight": 0,
                               "padding": 0,
+                            },
+                            {
+                              "marginRight": 0,
                             },
                             {
                               "color": undefined,
