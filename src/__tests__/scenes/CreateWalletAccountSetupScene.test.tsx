@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import { CreateWalletAccountSetupScene } from '../../components/scenes/CreateWalletAccountSetupScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
@@ -13,7 +14,7 @@ describe('CreateWalletAccountSelect', () => {
       core: {
         account: {
           currencyConfig: {
-            bitcoin: { currencyInfo: btcCurrencyInfo }
+            bitcoin: makeFakeCurrencyConfig(btcCurrencyInfo)
           },
           currencyWallets: {
             '332s0ds39f': { currencyInfo: btcCurrencyInfo }

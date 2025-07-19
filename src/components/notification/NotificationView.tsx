@@ -218,7 +218,6 @@ const NotificationViewComponent = (props: Props) => {
           message={sprintf(lstrings.backup_notification_body, config.appName)}
           persistent
           onPress={handleBackupPress}
-          onClose={handleBackupClose}
           testID="notifBackup"
         />
       </EdgeAnim>
@@ -258,7 +257,11 @@ const NotificationViewComponent = (props: Props) => {
         />
       </EdgeAnim>
       <EdgeAnim
-        visible={!ip2FaReminder.isBannerHidden && !account.isDuressAccount}
+        visible={
+          pwReminder.isBannerHidden &&
+          !ip2FaReminder.isBannerHidden &&
+          !account.isDuressAccount
+        }
         enter={fadeIn}
         exit={fadeOut}
       >

@@ -40,11 +40,7 @@ import {
   makeCurrencyCodeTable,
   upgradeCurrencyCodes
 } from '../util/tokenIdTools'
-import {
-  getPluginIdFromChainCode,
-  toListString,
-  zeroString
-} from '../util/utils'
+import { toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 
@@ -117,7 +113,13 @@ export const doRequestAddress = async (
       const { nativeCode, tokenCode } = asset
       const test =
         upgradeCurrencyCodes(lookup, [`${nativeCode}-${tokenCode}`]) ?? []
-      if (getPluginIdFromChainCode(nativeCode) == null || test.length === 0)
+      const pluginId = Object.keys(account.currencyConfig).find(
+        pluginId =>
+          account.currencyConfig[pluginId].currencyInfo.currencyCode ===
+          nativeCode.toUpperCase()
+      )
+
+      if (pluginId == null || test.length === 0)
         unsupportedNativeCodes.push(tokenCode)
       else supportedAssets.push({ ...asset })
     })

@@ -1,6 +1,6 @@
 import { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -123,7 +123,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'viewXPub'
   },
   {
-    pluginIds: ['monero', 'piratechain', 'zcash'],
+    pluginIds: ['monero', 'piratechain', 'zcash', 'zano'],
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
@@ -146,6 +146,8 @@ export function WalletListMenuModal(props: Props) {
 
   const [options, setOptions] = React.useState<Option[]>([])
   const [splitPluginIds, setSplitPluginIds] = React.useState<string[]>([])
+  const [loadingOption, setLoadingOption] =
+    React.useState<WalletListMenuKey | null>(null)
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
@@ -158,19 +160,29 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => props.bridge.resolve()
+  const handleCancel = () => {
+    props.bridge.resolve()
+  }
 
-  const optionAction = useHandler((option: WalletListMenuKey) => {
-    bridge.resolve()
-    dispatch(
-      walletListMenuAction(
-        navigation,
-        walletId,
-        option,
-        tokenId,
-        splitPluginIds
+  const optionAction = useHandler(async (option: WalletListMenuKey) => {
+    if (loadingOption != null) return // Prevent multiple actions
+
+    setLoadingOption(option)
+    try {
+      await dispatch(
+        walletListMenuAction(
+          navigation,
+          walletId,
+          option,
+          tokenId,
+          splitPluginIds
+        )
       )
-    ).catch(error => showError(error))
+      bridge.resolve()
+    } catch (error) {
+      setLoadingOption(null)
+      showError(error)
+    }
   })
 
   useAsyncEffect(
@@ -309,44 +321,57 @@ export function WalletListMenuModal(props: Props) {
       onCancel={handleCancel}
       scroll
     >
-      {options.map((option: Option) => (
-        <EdgeTouchableOpacity
-          key={option.value}
-          onPress={() => optionAction(option.value)}
-          style={styles.row}
-        >
-          {option.value === 'settings' ? (
-            // Special case for settings to keep it consistent with our side
-            // menu.
-            // We eventually will move to using our own custom icons for all
-            // icons instead of picking from different RN vector icon packs
-            <Fontello
-              name={icons[option.value]}
-              style={styles.optionIcon}
-              size={theme.rem(1)}
-            />
-          ) : (
-            <AntDesignIcon
-              name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
-              size={theme.rem(1)}
-              style={
-                option.value === 'delete'
-                  ? [styles.optionIcon, styles.warningColor]
-                  : styles.optionIcon
-              }
-            />
-          )}
-          <Text
-            style={
-              option.value === 'delete'
-                ? [styles.optionText, styles.warningColor]
-                : styles.optionText
-            }
+      {options.map((option: Option) => {
+        const isLoading = loadingOption === option.value
+        const isDisabled = loadingOption != null && !isLoading
+
+        return (
+          <EdgeTouchableOpacity
+            key={option.value}
+            onPress={async () => await optionAction(option.value)}
+            style={isDisabled ? [styles.row, styles.disabled] : styles.row}
+            disabled={isDisabled}
           >
-            {option.label}
-          </Text>
-        </EdgeTouchableOpacity>
-      ))}
+            {isLoading ? (
+              <ActivityIndicator
+                size="small"
+                color={theme.primaryText}
+                style={styles.optionIcon}
+              />
+            ) : option.value === 'settings' ? (
+              // Special case for settings to keep it consistent with our side
+              // menu.
+              // We eventually will move to using our own custom icons for all
+              // icons instead of picking from different RN vector icon packs
+              <Fontello
+                name={icons[option.value]}
+                style={styles.optionIcon}
+                size={theme.rem(1)}
+              />
+            ) : (
+              <AntDesignIcon
+                name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
+                size={theme.rem(1)}
+                style={
+                  option.value === 'delete'
+                    ? [styles.optionIcon, styles.warningColor]
+                    : styles.optionIcon
+                }
+              />
+            )}
+            <Text
+              style={[
+                option.value === 'delete'
+                  ? [styles.optionText, styles.warningColor]
+                  : styles.optionText,
+                isDisabled && styles.disabled
+              ]}
+            >
+              {option.label}
+            </Text>
+          </EdgeTouchableOpacity>
+        )
+      })}
     </EdgeModal>
   )
 }
@@ -355,6 +380,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   row: {
     alignItems: 'center',
     flexDirection: 'row'
+  },
+  disabled: {
+    opacity: 0.5
   },
   optionIcon: {
     color: theme.primaryText,

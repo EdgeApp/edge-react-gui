@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CryptoIcon should render with loading props 1`] = `
 <View
@@ -48,6 +48,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
       }
     >
       <FastImageView
+        defaultSource={null}
         resizeMode="cover"
         source={
           {
@@ -82,6 +83,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
       }
     >
       <FastImageView
+        defaultSource={null}
         resizeMode="cover"
         source={
           {

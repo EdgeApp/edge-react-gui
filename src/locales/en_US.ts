@@ -800,6 +800,10 @@ const strings = {
     'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
   amount_below_limit:
     'Amount is below the min limit of %1$s %2$s. This min limit is subject to change based on market conditions',
+  no_amount_below_limit:
+    'Amount is below the min limit. Try again with a higher amount or enable more providers in Settings → Exchange Settings',
+  no_amount_above_limit:
+    'Amount is above the max limit. Try again with a lower amount or enable more providers in Settings → Exchange Settings',
   trade_currency: 'Trade',
   trade_s: 'Trade %1$s',
   swap_s_to_from_crypto: 'Swap %1$s to/from another crypto',
@@ -1414,6 +1418,8 @@ const strings = {
   migrate_unknown_error_fragment: 'Unknown error',
   migrate_wallets_modal_message: `The following wallets were found to be potentially impacted by a recent security incident:\n%1$s\nIt is highly recommended that you discontinue using these wallets and migrate the assets to a new wallet in your account. Would you like to use the automated Migrate Wallets feature to do so?`,
   migrate_wallet_tx_notes: 'Migrate funds to %1$s',
+  migrate_wallet_below_minimum_balance_2s:
+    'Migration would leave new wallet below minimum balance. At least %1$s %2$s is required.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',

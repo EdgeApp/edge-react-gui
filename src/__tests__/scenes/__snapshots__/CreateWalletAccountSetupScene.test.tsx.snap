@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CreateWalletAccountSelect renders 1`] = `
 [
@@ -289,6 +289,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
             >
               <FastImageView
+                defaultSource={null}
                 resizeMode="cover"
                 source={
                   {
@@ -756,7 +757,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         style={
           {
             "alignItems": "center",
-            "alignSelf": "center",
             "flexBasis": "auto",
             "flexGrow": 0,
             "flexShrink": 0,

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SwapConfirmationScene should render with loading props 1`] = `
 [
@@ -525,6 +525,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                     >
                       <FastImageView
+                        defaultSource={null}
                         resizeMode="cover"
                         source={
                           {
@@ -1109,6 +1110,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                     >
                       <FastImageView
+                        defaultSource={null}
                         resizeMode="cover"
                         source={
                           {
@@ -1373,6 +1375,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 >
                   <FastImageView
+                    defaultSource={null}
                     resizeMode="contain"
                     source={
                       {

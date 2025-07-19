@@ -42,8 +42,8 @@ import {
   WalletStakingState
 } from '../../reducers/StakingReducer'
 import {
-  getExchangeDenomByCurrencyCode,
-  selectDisplayDenomByCurrencyCode
+  getExchangeDenom,
+  selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
@@ -942,12 +942,9 @@ export function TransactionListTop(props: OwnProps) {
   )
 
   const displayDenomination = useSelector(state =>
-    selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
+    selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
-  const exchangeDenomination = getExchangeDenomByCurrencyCode(
-    wallet.currencyConfig,
-    currencyCode
-  )
+  const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const exchangeRate = useSelector(state =>
     getExchangeRate(state, currencyCode, defaultIsoFiat)
   )

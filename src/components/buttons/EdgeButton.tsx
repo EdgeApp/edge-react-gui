@@ -237,7 +237,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexShrink: 0
     },
     touchContainerSolo: {
-      alignSelf: 'center',
       flexBasis: 'auto',
       flexGrow: 0,
       flexShrink: 0

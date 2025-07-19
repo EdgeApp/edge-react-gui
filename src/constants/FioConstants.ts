@@ -1,60 +1,115 @@
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
 import { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 
-export interface FioAsset {
+interface FioAsset {
   chainCode: string
-  tokenCodes: { [tokenId: string]: string }
+  tokenCodes?: { [tokenId: string]: string }
+}
+
+export interface FioValidationResult {
+  isValid: boolean
+  error?: string
+  fioChainCode?: string
+  fioTokenCode?: string
 }
 
 /**
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
-export const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
-  abstract: {
-    chainCode: 'ABSTRACT',
-    tokenCodes: {}
+const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
+  algorand: {
+    chainCode: 'ALGO'
   },
-  ethereum: {
-    chainCode: 'ETH', // Make this explicit so L2's don't take it
-    tokenCodes: {}
+  arbitrum: {
+    chainCode: 'ARB'
   },
-  ethereumpo: {
-    chainCode: 'ETHEREUMPO',
-    tokenCodes: {}
+  avalanche: {
+    chainCode: 'AVAX'
   },
-  optimism: {
-    chainCode: 'OPT',
-    tokenCodes: {}
+  base: {
+    chainCode: 'BASE'
   },
-  bobevm: {
-    chainCode: 'BOBNETWORK',
-    tokenCodes: {}
-  },
-  zksync: {
-    chainCode: 'ZKSYNC',
-    tokenCodes: {}
+  binance: {
+    chainCode: 'BNB'
   },
   binancesmartchain: {
-    chainCode: 'BSC',
-    tokenCodes: {}
+    chainCode: 'BSC'
   },
-  sonic: {
-    chainCode: 'SONIC',
-    tokenCodes: {}
+  bitcoin: {
+    chainCode: 'BTC'
+  },
+  bitcoincash: {
+    chainCode: 'BCH'
+  },
+  bobevm: {
+    chainCode: 'BOBNETWORK'
+  },
+  cardano: {
+    chainCode: 'ADA'
+  },
+  celo: {
+    chainCode: 'CELO'
+  },
+  dash: {
+    chainCode: 'DASH'
+  },
+  dogecoin: {
+    chainCode: 'DOGE'
+  },
+  eos: {
+    chainCode: 'EOS'
+  },
+  ethereum: {
+    chainCode: 'ETH'
+  },
+  fantom: {
+    chainCode: 'FTM'
+  },
+  filecoin: {
+    chainCode: 'FIL'
+  },
+  fio: {
+    chainCode: 'FIO'
+  },
+  hedera: {
+    chainCode: 'HBAR'
+  },
+  liberland: {
+    chainCode: 'LLD'
+  },
+  litecoin: {
+    chainCode: 'LTC'
+  },
+  optimism: {
+    chainCode: 'OPT'
+  },
+  polkadot: {
+    chainCode: 'DOT'
+  },
+  polygon: {
+    chainCode: 'POL'
   },
   ripple: {
-    chainCode: 'XRP',
-    tokenCodes: {
-      'USD-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'USDGH',
-      'EUR-rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq': 'EURGH',
-      'USD-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'USDBS',
-      'EUR-rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B': 'EURBS',
-      'USD-rEn9eRkX25wfGPLysUMAvZ84jAzFNpT5fL': 'USDST'
-    }
+    chainCode: 'XRP'
+  },
+  solana: {
+    chainCode: 'SOL'
+  },
+  stellar: {
+    chainCode: 'XLM'
+  },
+  tezos: {
+    chainCode: 'XTZ'
+  },
+  tron: {
+    chainCode: 'TRX'
+  },
+  zcash: {
+    chainCode: 'ZEC'
   }
 }
 
@@ -80,21 +135,97 @@ export const fioCodeToEdgeAsset = (
   // Bail out if we don't know about this chain:
   if (pluginId == null) return
 
+  // If the token code matches the chain code, we want the main asset:
+  if (fioTokenCode === fioChainCode) return { pluginId, tokenId: null }
+
   // Find the token being asked for:
   const fioTokens = fioAssets[pluginId]?.tokenCodes ?? {}
   const tokenId =
-    // If the token code matches the chain code, we want the main asset:
-    fioTokenCode === fioAssets[pluginId]?.chainCode
-      ? null
-      : // Otherwise, check the special token mappings for this chain:
-        Object.keys(fioTokens).find(
-          tokenId => fioTokens[tokenId] === fioTokenCode
-        ) ??
-        // Otherwise, do a normal token lookup:
-        getTokenId(account.currencyConfig[pluginId], fioTokenCode)
+    // Check the special token mappings for this chain:
+    Object.keys(fioTokens).find(
+      tokenId => fioTokens[tokenId] === fioTokenCode
+    ) ??
+    // Otherwise, do a normal token lookup:
+    getTokenId(account.currencyConfig[pluginId], fioTokenCode)
 
-  // Bail out if we couldn't find a matching token or main asset (null):
+  // Bail out if we couldn't find a matching token:
   if (tokenId === undefined) return
 
   return { pluginId, tokenId }
+}
+
+export const tokenIdToFioCode = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): { fioChainCode: string; fioTokenCode: string } => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+
+  const { pluginId } = currencyConfig.currencyInfo
+  const fioChainCode =
+    fioAssets[pluginId]?.chainCode ?? currencyConfig.currencyInfo.currencyCode
+
+  // We want the main asset:
+  if (tokenId == null) return { fioChainCode, fioTokenCode: fioChainCode }
+
+  const fioTokenCode =
+    // Check the special token mappings for this chain:
+    fioAssets[pluginId]?.tokenCodes?.[tokenId] ??
+    // Otherwise, do a normal token lookup:
+    currencyConfig.allTokens[tokenId]?.currencyCode
+
+  if (fioTokenCode == null) {
+    throw new Error(`Cannot find ${tokenId} on ${pluginId}`)
+  }
+
+  return { fioChainCode, fioTokenCode }
+}
+
+/**
+ * Validate if an Edge asset can be converted to FIO codes using the whitelist
+ * TODO: Integrate into the rest of FIO utils
+ */
+export const validateFioAsset = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): FioValidationResult => {
+  const fioAssets = infoServerData.rollup?.fioAssets ?? FIO_ASSET_MAP
+  const { pluginId } = currencyConfig.currencyInfo
+
+  // Check if this plugin is supported
+  const fioAsset = fioAssets[pluginId]
+  if (fioAsset == null) {
+    return {
+      isValid: false,
+      error: `${currencyConfig.currencyInfo.displayName} is not supported by FIO Protocol`
+    }
+  }
+
+  const fioChainCode = fioAsset.chainCode
+
+  // For native assets (tokenId is null)
+  if (tokenId == null) {
+    return {
+      isValid: true,
+      fioChainCode,
+      fioTokenCode: fioChainCode
+    }
+  }
+
+  // For tokens, check if the token is in the whitelist
+  const fioTokenCode = fioAsset.tokenCodes?.[tokenId]
+  if (fioTokenCode == null) {
+    const tokenInfo = currencyConfig.allTokens[tokenId]
+    const tokenName =
+      tokenInfo?.displayName ?? tokenInfo?.currencyCode ?? tokenId
+    return {
+      isValid: false,
+      error: `${tokenName} is not supported by FIO Protocol`
+    }
+  }
+
+  return {
+    isValid: true,
+    fioChainCode,
+    fioTokenCode
+  }
 }

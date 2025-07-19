@@ -18,7 +18,7 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { convertNativeToDisplay } from '../../util/utils'
+import { convertNativeToDisplay, zeroString } from '../../util/utils'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { SwapErrorDisplayInfo } from './SwapCreateScene'
@@ -157,11 +157,13 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(
-        lstrings.amount_above_limit,
-        displayMax,
-        currentCurrencyDenomination.name
-      ),
+      message: !zeroString(displayMax)
+        ? sprintf(
+            lstrings.amount_above_limit,
+            displayMax,
+            currentCurrencyDenomination.name
+          )
+        : lstrings.no_amount_above_limit,
       error
     }
   }
@@ -177,11 +179,13 @@ function processSwapQuoteError({
 
     return {
       title: lstrings.exchange_generic_error_title,
-      message: sprintf(
-        lstrings.amount_below_limit,
-        displayMin,
-        currentCurrencyDenomination.name
-      ),
+      message: !zeroString(displayMin)
+        ? sprintf(
+            lstrings.amount_below_limit,
+            displayMin,
+            currentCurrencyDenomination.name
+          )
+        : lstrings.no_amount_below_limit,
       error
     }
   }

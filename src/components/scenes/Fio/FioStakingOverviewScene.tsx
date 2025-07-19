@@ -12,8 +12,8 @@ import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import {
-  getExchangeDenomByCurrencyCode,
-  selectDisplayDenomByCurrencyCode
+  getExchangeDenom,
+  selectDisplayDenom
 } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
@@ -233,10 +233,10 @@ export const FioStakingOverviewScene = connect<
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
     const stakedNativeAmount = staked
 
-    const currencyDenomination = selectDisplayDenomByCurrencyCode(
+    const currencyDenomination = selectDisplayDenom(
       state,
       currencyWallet.currencyConfig,
-      currencyCode
+      tokenId
     )
     const stakingCryptoAmountFormat = formatNumber(
       add(
@@ -247,9 +247,9 @@ export const FioStakingOverviewScene = connect<
       )
     )
 
-    const defaultDenomination = getExchangeDenomByCurrencyCode(
+    const defaultDenomination = getExchangeDenom(
       currencyWallet.currencyConfig,
-      currencyCode
+      tokenId
     )
     const stakingDefaultCryptoAmount = convertNativeToDenomination(
       defaultDenomination.multiplier

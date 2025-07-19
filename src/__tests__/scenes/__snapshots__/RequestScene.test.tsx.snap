@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Request should render a blank scene with loaded props 1`] = `
 <View
@@ -396,7 +396,6 @@ Never share your username and password, and store your credentials securely!
         style={
           {
             "alignItems": "center",
-            "alignSelf": "center",
             "flexBasis": "auto",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -933,6 +932,7 @@ exports[`Request should render with loaded props 1`] = `
                 }
               >
                 <FastImageView
+                  defaultSource={null}
                   resizeMode="cover"
                   source={
                     {

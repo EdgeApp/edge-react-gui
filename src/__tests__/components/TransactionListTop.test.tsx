@@ -5,6 +5,7 @@ import * as React from 'react'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
 import { ENV } from '../../env'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeCompositeNavigation } from '../../util/fake/fakeSceneProps'
 
@@ -31,12 +32,7 @@ describe('TransactionListTop', () => {
     ]
   }
 
-  const fakeCurrencyConfig: any = {
-    currencyInfo,
-    allTokens: {},
-    builtinTokens: {},
-    customTokens: {}
-  }
+  const fakeCurrencyConfig = makeFakeCurrencyConfig(currencyInfo)
 
   const fakeWallet: any = {
     balanceMap: new Map([[null, '123123']]),

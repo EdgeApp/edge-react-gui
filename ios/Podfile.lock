@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.32.0):
+  - edge-core-js (2.32.1):
     - React-Core
-  - edge-currency-accountbased (4.52.2):
+  - edge-currency-accountbased (4.54.0):
     - React-Core
-  - edge-currency-plugins (3.8.2):
+  - edge-currency-plugins (3.8.3):
     - React-Core
-  - edge-exchange-plugins (2.26.0):
+  - edge-exchange-plugins (2.28.0):
     - React-Core
-  - edge-login-ui-rn (3.28.0):
+  - edge-login-ui-rn (3.28.1):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -49,25 +49,25 @@ PODS:
     - React-Core (= 0.71.15)
     - React-jsi (= 0.71.15)
     - ReactCommon/turbomodule/core (= 0.71.15)
-  - Firebase/CoreOnly (10.27.0):
-    - FirebaseCore (= 10.27.0)
-  - Firebase/Messaging (10.27.0):
+  - Firebase/CoreOnly (10.29.0):
+    - FirebaseCore (= 10.29.0)
+  - Firebase/Messaging (10.29.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.27.0)
-  - FirebaseCore (10.27.0):
+    - FirebaseMessaging (~> 10.29.0)
+  - FirebaseCore (10.29.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
   - FirebaseCoreExtension (10.27.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.27.0):
+  - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.27.0):
+  - FirebaseInstallations (10.29.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.27.0):
+  - FirebaseMessaging (10.29.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.3)
@@ -119,7 +119,7 @@ PODS:
   - hermes-engine (0.71.15):
     - hermes-engine/Pre-built (= 0.71.15)
   - hermes-engine/Pre-built (0.71.15)
-  - ImageColors (2.3.0):
+  - ImageColors (2.4.0):
     - ExpoModulesCore
   - libevent (2.1.12)
   - libwebp (1.3.2):
@@ -407,14 +407,14 @@ PODS:
   - react-native-compat (2.11.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-contacts (7.0.4):
+  - react-native-contacts (8.0.5):
     - React-Core
-  - react-native-get-random-values (1.9.0):
+  - react-native-get-random-values (1.11.0):
     - React-Core
   - react-native-image-picker (7.1.2):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-in-app-review (4.3.3):
+  - react-native-in-app-review (4.3.5):
     - React-Core
   - react-native-keyboard-controller (1.10.2):
     - React-Core
@@ -539,7 +539,7 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.19.4):
     - React-Core
-  - RNCClipboard (1.14.1):
+  - RNCClipboard (1.16.3):
     - React-Core
   - RNCPicker (2.4.0):
     - React-Core
@@ -547,15 +547,15 @@ PODS:
     - React-Core
   - RNDeviceInfo (13.2.0):
     - React-Core
-  - RNFastImage (8.5.11):
+  - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (20.1.0):
-    - Firebase/CoreOnly (= 10.27.0)
+  - RNFBApp (20.5.0):
+    - Firebase/CoreOnly (= 10.29.0)
     - React-Core
-  - RNFBMessaging (20.1.0):
-    - Firebase/Messaging (= 10.27.0)
+  - RNFBMessaging (20.5.0):
+    - Firebase/Messaging (= 10.29.0)
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
@@ -564,11 +564,11 @@ PODS:
   - RNGestureHandler (2.16.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - RNLocalize (3.1.0):
+  - RNLocalize (3.4.2):
     - React-Core
   - RNPermissions (4.1.5):
     - React-Core
-  - RNQrGenerator (1.3.1):
+  - RNQrGenerator (1.4.4):
     - React
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
@@ -597,7 +597,7 @@ PODS:
     - RNSound/Core (= 0.11.0)
   - RNSound/Core (0.11.0):
     - React
-  - RNStoreReview (0.4.1):
+  - RNStoreReview (0.4.3):
     - React-Core
   - RNSVG (15.3.0):
     - React-Core
@@ -1101,12 +1101,12 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 232e3af1fcb056851ebd1e18851aded94e1639d0
-  edge-currency-accountbased: 8a358852c482c1475e527311210b7ba371344dd3
-  edge-currency-plugins: 895640df32689491d4f23db2a15237a99cd0a4f8
-  edge-exchange-plugins: 68c5e673d327f9231b5efbc9e7af98833da6579e
-  edge-login-ui-rn: c1f0abd361d4692797ec5d6b104496c23d22b940
+  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  edge-core-js: ffcf601be0aeac872ae25194dbe344762bc0d97a
+  edge-currency-accountbased: ba66940b4522764d49a7cd484021cdb147ee8c48
+  edge-currency-plugins: 119e0c65e8db146b02e1df82f2e0915c3fa12f05
+  edge-exchange-plugins: 4bfb156ecba6d0821fcd341a5236ead1dae78566
+  edge-login-ui-rn: bc0ac2a372b9878fc34e467ff0f43af65b2ba4a1
   EXApplication: 9e02dde69a11d17d394bc89a9ea90c619217bada
   EXConstants: 0a70495c8b5dff454903ed9e798dbb39da9c3fd7
   EXFileSystem: 6c8c6df1f092c49cbbb97df4273eee3b619369b9
@@ -1116,19 +1116,19 @@ SPEC CHECKSUMS:
   ExpoModulesCore: 57b9b1b34195cd7c70e20b649934c37509988926
   FBLazyVector: d06bbe89e3a89ee90c4deab1c84bf306ffa5ed37
   FBReactNativeSpec: d5d9871fe5c4b61787a3aed4f9e5529908e22069
-  Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
-  FirebaseCore: a2b95ae4ce7c83ceecfbbbe3b6f1cddc7415a808
+  Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
+  FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
   FirebaseCoreExtension: 4ec89dd0c6de93d6becde32122d68b7c35f6bf5d
-  FirebaseCoreInternal: 4b297a2d56063dbea2c1d0d04222d44a8d058862
-  FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
-  FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
+  FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
+  FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
+  FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
   hermes-engine: 04437e4291ede4af0c76c25e7efd0eacb8fd25e5
-  ImageColors: 4eff2e3e9c3192904109a860de3b46a99ec3ab80
+  ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
@@ -1136,7 +1136,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: d776ce24dab24323e6995dfb17c64d598885d05c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
+  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
   RCTTypeSafety: decfec2884f0c523f799600d2b6105cdc15e13db
   React: ca22a0b3f199b6acac95416ef7eb96cc84a55103
@@ -1153,10 +1153,10 @@ SPEC CHECKSUMS:
   react-native-adservices: 18087a4a5106c5133b0cde73701bf875e3163cfc
   react-native-camera: 806a323ba17579a335ee43a70622f6b8aae98de8
   react-native-compat: c5c101132cacb720def1c72b40cdf0398e34d31e
-  react-native-contacts: f4efe82376487f1b87411e22b867e85cc4fb1d3c
-  react-native-get-random-values: 419569b6ed3d15bfb9b6781b2f2e058f8e8d2698
+  react-native-contacts: 092c5fe3150a5f0cfee0e494c2c144053c2aa137
+  react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-image-picker: f02b573847436881b851f74b7afbf26a0b0107aa
-  react-native-in-app-review: b3d1eed3d1596ebf6539804778272c4c65e4a400
+  react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: d7eb26730f87cc9b27e8998dd0491a8a4da98c45
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
   react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
@@ -1185,18 +1185,18 @@ SPEC CHECKSUMS:
   rn-id-blurview: 35bf4f960b8b108d12ed8a8ff14cbc22ed908081
   RNBootSplash: efd6dbf15b2579fb86bc575b8b676d1c5ac5709f
   RNCAsyncStorage: c483708b137c90f4063675058a78b7d6d63fbf55
-  RNCClipboard: 4598dae0fe33e2aa130d9d213e2007be78310266
+  RNCClipboard: f6679d470d0da2bce2a37b0af7b9e0bf369ecda5
   RNCPicker: 68cada0778c2ec65d200a3ae4b44739a0396d333
   RNDateTimePicker: a3d13ed62d7d781dfe0ebc79d04340a4e6350e2b
   RNDeviceInfo: ae26ae45db3f9937f038a284bcd0a1db8d70db96
-  RNFastImage: dc2b8ac381af7da9c0690f4ae80335019635718e
-  RNFBApp: 2218806532c0cc83b41cbe5bd1ff42714dff9b3f
-  RNFBMessaging: ea63b6bdd0f56647329616776b8b54cf891a3aea
+  RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
+  RNFBApp: 4e6da65e29a144d20bcb5bf264fc8e2055831bab
+  RNFBMessaging: fb5a9b0a3043d5d3e6e9fe7b27b78fcc3a0f753f
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: be422bc1b0a1deb4be02c41f0b8aea1438216d55
-  RNLocalize: 080849cb8a824d9f759b8a5ae00c8321d46dbed0
+  RNLocalize: 6a87f0490f1793d7a70042e4c55eb9a1ba6dd5b4
   RNPermissions: c53f3a6231338accf1a641ab6261f87ac59cfb2f
-  RNQrGenerator: 79441166c804207b55a7737b9031590efe0d59d9
+  RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
   RNReanimated: b83a48d27a23ff20d88d2a55558a84b82ef10591
   RNScreens: 448026fcd1beb88770b0a67a871a3d1bf9cdde0a
@@ -1204,7 +1204,7 @@ SPEC CHECKSUMS:
   RNSentry: 30748d76efd178fc033671cb65689992805045d5
   RNShare: ec3bd4a4432757294f6a802edbc359b9fc68cc54
   RNSound: 436aa4de81ae87b90e1781b5dd9247df3aa4622a
-  RNStoreReview: 30ae7a0ce3e2dd1d753df104bb20d4bea1f8a96e
+  RNStoreReview: 613c43e9132998ed41a65946e20c223c91b36464
   RNSVG: e77adf5edb2302f0f10dd03a09e92bb9420d914e
   RNVectorIcons: 2d86acb67d3b496b55ec50893f751ce5ce74783e
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

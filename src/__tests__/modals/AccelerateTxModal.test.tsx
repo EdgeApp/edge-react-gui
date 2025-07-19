@@ -6,6 +6,7 @@ import { AccelerateTxModalComponent } from '../../components/modals/AccelerateTx
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('AccelerateTxModalComponent', () => {
@@ -14,10 +15,7 @@ describe('AccelerateTxModalComponent', () => {
       addCustomToken: 'shib',
       fiatCurrencyCode: 'iso:USD',
       currencyInfo: btcCurrencyInfo,
-      currencyConfig: {
-        allTokens: {},
-        currencyInfo: btcCurrencyInfo
-      }
+      currencyConfig: makeFakeCurrencyConfig(btcCurrencyInfo)
     }
 
     const rendered = render(

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 View 1`] = `
 <View
@@ -2864,7 +2864,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -2977,7 +2976,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3090,7 +3088,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3206,7 +3203,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3320,7 +3316,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3434,7 +3429,6 @@ exports[`Buttons should render simple loose buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3556,7 +3550,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3694,7 +3687,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3832,7 +3824,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -3973,7 +3964,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4112,7 +4102,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4251,7 +4240,6 @@ exports[`Buttons should render spinning buttons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4398,7 +4386,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4463,6 +4450,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -4541,7 +4529,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4606,6 +4593,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -4684,7 +4672,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4752,6 +4739,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -4830,7 +4818,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -4896,6 +4883,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -4974,7 +4962,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5040,6 +5027,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -5118,7 +5106,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5187,6 +5174,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
       >
         <FastImageView
+          defaultSource={null}
           resizeMode="cover"
           source={
             {
@@ -5265,7 +5253,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5343,6 +5330,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {
@@ -5433,7 +5421,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5511,6 +5498,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {
@@ -5601,7 +5589,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5682,6 +5669,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {
@@ -5772,7 +5760,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -5851,6 +5838,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {
@@ -5941,7 +5929,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -6020,6 +6007,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {
@@ -6110,7 +6098,6 @@ exports[`Buttons should render with child icons 1`] = `
     style={
       {
         "alignItems": "center",
-        "alignSelf": "center",
         "flexBasis": "auto",
         "flexGrow": 0,
         "flexShrink": 0,
@@ -6192,6 +6179,7 @@ exports[`Buttons should render with child icons 1`] = `
           }
         >
           <FastImageView
+            defaultSource={null}
             resizeMode="cover"
             source={
               {

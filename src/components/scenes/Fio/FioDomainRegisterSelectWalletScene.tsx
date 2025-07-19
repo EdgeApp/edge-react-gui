@@ -17,7 +17,7 @@ import {
   FIO_STR
 } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
-import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
@@ -358,10 +358,10 @@ const FioDomainRegisterSelectWalletConnected = connect<
     account: state.core.account,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
-    fioDisplayDenomination: selectDisplayDenomByCurrencyCode(
+    fioDisplayDenomination: selectDisplayDenom(
       state,
       ownProps.wallet.currencyConfig,
-      FIO_STR
+      null
     ),
     isConnected: state.network.isConnected
   }),

@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
 import {
+  EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeEncodeUri,
@@ -92,6 +93,7 @@ interface OwnProps extends EdgeAppSceneProps<'request'> {
 }
 
 interface StateProps {
+  account?: EdgeAccount
   currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeSecondaryToPrimaryRatio: number
@@ -131,8 +133,6 @@ interface AddressInfo {
   addressString: string
   label: string
 }
-
-const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestSceneComponent extends React.Component<
   Props & HookProps,
@@ -542,9 +542,6 @@ export class RequestSceneComponent extends React.Component<
                 forceField="fiat"
                 headerCallback={this.handleOpenWalletListModal}
                 headerText={flipInputHeaderText}
-                inputAccessoryViewID={
-                  this.state.isFioMode ? inputAccessoryViewID : undefined
-                }
                 keyboardVisible={false}
                 onAmountChanged={this.onExchangeAmountChanged}
                 ref={this.flipInputRef}
@@ -613,6 +610,9 @@ export class RequestSceneComponent extends React.Component<
             openShareModal={this.openShareModal}
             copyToClipboard={this.copyToClipboard}
             openFioAddressModal={this.openFioAddressModal}
+            account={this.props.account}
+            pluginId={this.props.wallet.currencyInfo.pluginId}
+            tokenId={this.props.route.params.tokenId}
           />
         </EdgeAnim>
       </SceneWrapper>
@@ -849,6 +849,7 @@ export const RequestScene = withWallet((props: OwnProps) => {
 
   return (
     <RequestSceneComponent
+      account={account}
       currencyCode={currencyCode}
       displayDenomination={primaryDisplayDenomination}
       exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}

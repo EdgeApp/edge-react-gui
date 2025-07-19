@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TransactionDetailsScene should render 1`] = `
 [
@@ -250,30 +250,40 @@ exports[`TransactionDetailsScene should render 1`] = `
               ]
             }
           >
-            <Text
-              allowFontScaling={false}
-              selectable={false}
+            <View
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 45,
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "#FFFFFF",
+                    "borderRadius": 22,
+                    "height": 45,
                     "marginRight": 11,
+                    "width": 45,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
               }
             >
-              
-            </Text>
+              <FastImageView
+                defaultSource={null}
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
             <View
               style={
                 [
@@ -1837,6 +1847,188 @@ exports[`TransactionDetailsScene should render 1`] = `
                     ]
                   }
                 >
+                  View Advanced Transaction Data
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Show in Explorer
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {
+                        "fontWeight": "900",
+                      },
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
                   My Receive Addresses
                 </Text>
                 <Text
@@ -2534,30 +2726,40 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               ]
             }
           >
-            <Text
-              allowFontScaling={false}
-              selectable={false}
+            <View
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 45,
+                    "overflow": "hidden",
                   },
                   {
-                    "color": "#FFFFFF",
+                    "borderRadius": 22,
+                    "height": 45,
                     "marginRight": 11,
+                    "width": 45,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
               }
             >
-              
-            </Text>
+              <FastImageView
+                defaultSource={null}
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
             <View
               style={
                 [
@@ -4067,6 +4269,188 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               ]
             }
           >
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  View Advanced Transaction Data
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Show in Explorer
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {
+                        "fontWeight": "900",
+                      },
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
             <View
               style={
                 [

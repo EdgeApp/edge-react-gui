@@ -5,20 +5,19 @@ import { StyleSheet, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
+import { fioCodeToEdgeAsset } from '../../constants/FioConstants'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import {
-  getExchangeDenomByCurrencyCode,
-  selectDisplayDenomByCurrencyCode
+  getExchangeDenom,
+  selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
-import {
-  convertEdgeToFIOCodes,
-  convertFIOToEdgeCodes
-} from '../../util/FioAddressUtils'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -261,52 +260,29 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
     const { defaultIsoFiat } = state.ui.settings
+    const { account } = state.core
+
+    const fioChainCode = fioRequest.content.chain_code.toUpperCase()
+    const fioTokenCode = fioRequest.content.token_code.toUpperCase()
+    const edgeAsset = fioCodeToEdgeAsset(account, fioChainCode, fioTokenCode)
+
     let displayDenomination = emptyDenomination
     let exchangeDenomination = emptyDenomination
-    let tokenCode = fioRequest.content.token_code.toUpperCase()
-    try {
-      const { account } = state.core
-      const { currencyConfig } = account
-      const pluginId = Object.keys(currencyConfig).find(pluginId => {
-        const { currencyCode: pluginCurrencyCode } =
-          currencyConfig[pluginId].currencyInfo
-        if (pluginCurrencyCode == null) return false
-        const { fioChainCode } = convertEdgeToFIOCodes(
-          pluginId,
-          pluginCurrencyCode,
-          tokenCode
-        )
-        return fioChainCode === fioRequest.content.chain_code.toUpperCase()
-      })
+    let currencyCode = ''
+    if (edgeAsset != null) {
+      const { pluginId, tokenId } = edgeAsset
+      const config = account.currencyConfig[pluginId]
 
-      if (pluginId == null)
-        throw new Error(
-          `No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`
-        )
-      const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(
-        account,
-        pluginId,
-        fioRequest.content.chain_code.toUpperCase(),
-        tokenCode
-      )
-      tokenCode = edgeTokenCode
-      displayDenomination = selectDisplayDenomByCurrencyCode(
-        state,
-        currencyConfig[pluginId],
-        tokenCode
-      )
-      exchangeDenomination = getExchangeDenomByCurrencyCode(
-        currencyConfig[pluginId],
-        tokenCode
-      )
-    } catch (e: any) {
-      console.log('No denomination for this Token Code -', tokenCode)
+      displayDenomination = selectDisplayDenom(state, config, tokenId)
+      exchangeDenomination = getExchangeDenom(config, tokenId)
+      currencyCode =
+        getCurrencyCodeWithAccount(account, pluginId, tokenId) ?? ''
+    } else {
+      console.log(`Cannot find asset ${fioTokenCode} on chain ${fioChainCode}`)
     }
-    const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
-    const exchangeRates = state.exchangeRates
 
-    const rateKey = `${tokenCode}_${defaultIsoFiat}`
-    const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
+    const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
+    const fiatPerCrypto = getExchangeRate(state, currencyCode, defaultIsoFiat)
     const fiatAmount =
       formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), {
         toFixed: 2
