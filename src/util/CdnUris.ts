@@ -54,10 +54,12 @@ export interface CurrencyIcons {
 export function getCurrencyIconUris(
   pluginId: string,
   tokenId: EdgeTokenId,
-  useChainIcon: boolean = false
+  showChainIcon: boolean = false
 ): CurrencyIcons {
   const iconFile =
-    useChainIcon && tokenId === null ? `chain_${pluginId}` : tokenId ?? pluginId
+    showChainIcon && tokenId === null
+      ? `chain_${pluginId}`
+      : tokenId ?? pluginId
   const currencyPath = `${pluginId}/${removeHexPrefix(iconFile)}`.toLowerCase()
   return {
     symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,

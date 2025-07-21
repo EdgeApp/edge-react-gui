@@ -169,6 +169,7 @@ export const asEnvConfig = asObject({
       nowNodesApiKey: asOptional(asString, '')
     })
   ),
+  BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
   CARDANO_INIT: asCorePluginInit(
     asObject({
       blockfrostProjectId: asOptional(asString),
@@ -252,6 +253,7 @@ export const asEnvConfig = asObject({
   ),
   HOLESKY_INIT: asCorePluginInit(asEvmApiKeys),
   HEDERA_INIT: asOptional(asBoolean, true),
+  HYPEREVM_INIT: asCorePluginInit(asEvmApiKeys),
   LIBERLAND_INIT: asOptional(asBoolean, true),
   LIFI_INIT: asCorePluginInit(
     asObject({
