@@ -34,27 +34,28 @@ export const FEE_STRINGS = {
  */
 export const CURRENCY_SETTINGS_KEYS = [
   'bitcoin',
+  'bitcoincash',
+  'bitcoingold',
+  'bitcoinsv',
   'bitcointestnet',
   'bitcointestnet4',
-  'bitcoincash',
-  'ethereum',
-  'ethereumclassic',
   'dash',
-  'litecoin',
-  'bitcoinsv',
-  'monero',
-  'zcoin',
   'digibyte',
   'dogecoin',
-  'qtum',
-  'vertcoin',
-  'feathercoin',
-  'ravencoin',
-  'bitcoingold',
-  'smartcash',
-  'groestlcoin',
   'eboost',
-  'ufo'
+  'ethereum',
+  'ethereumclassic',
+  'feathercoin',
+  'groestlcoin',
+  'litecoin',
+  'monero',
+  'pivx',
+  'qtum',
+  'ravencoin',
+  'smartcash',
+  'ufo',
+  'vertcoin',
+  'zcoin'
 ]
 
 /**
@@ -166,13 +167,27 @@ interface SpecialCurrencyInfo {
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
+  /**
+   * This disables the transaction list for the wallet.
+   * (Default: false)
+   */
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
   stakeMaxApy?: number
   maxSpendTargets?: number
+  /**
+   * WalletConnect V2 chain identification information. Defining this will
+   * enable WalletConnect V2 support for the wallet.
+   */
   walletConnectV2ChainId?: WalletConnectChainId
-  chainIcon?: boolean
+  /**
+   * Whether to show a secondary icon of the chain (network) for native
+   * currency wallets. This is used for L2s where the native currency is
+   * identical to the L1 native currency (e.g. ETH on Optimism).
+   * (Default: false)
+   **/
+  showChainIcon?: boolean
   /**
    * The ticker for the [unstoppable domains](https://support.unstoppabledomains.com/support/solutions/articles/48001185621).
    */
@@ -201,7 +216,7 @@ export const SPECIAL_CURRENCY_INFO: {
 } = {
   abstract: {
     allowZeroTx: true,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_abstract_wallet_name,
     isImportKeySupported: true,
@@ -396,7 +411,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42161'
@@ -407,7 +422,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
@@ -472,7 +487,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    chainIcon: true,
+    showChainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
@@ -480,7 +495,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   bobevm: {
     initWalletName: lstrings.string_first_bobevm_wallet_name,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
@@ -488,9 +503,18 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '60808'
     }
   },
+  botanix: {
+    initWalletName: lstrings.string_first_botanix_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '3637'
+    }
+  },
   zksync: {
     allowZeroTx: true,
-    chainIcon: true,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     initWalletName: lstrings.string_first_zksync_wallet_name,
     isImportKeySupported: true,
@@ -781,13 +805,7 @@ export const SPECIAL_CURRENCY_INFO: {
       'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode:
-      Platform.OS === 'ios'
-        ? // Get the major version number:
-          Number(Platform.constants.osVersion.split('.')[0]) < 15
-        : Platform.OS === 'android'
-        ? Platform.constants.Version < 28
-        : false,
+    keysOnlyMode: isZecBroken(),
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
@@ -900,6 +918,15 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '170000'
     }
   },
+  hyperevm: {
+    initWalletName: lstrings.string_first_hyperevm_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '999'
+    }
+  },
   sepolia: {
     initWalletName: lstrings.string_first_sepolia_wallet_name,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -923,6 +950,22 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '146'
     }
   }
+}
+
+/**
+ * Returns true if the native code will crash on this device.
+ * Older versions of iOS have the wrong SQL version,
+ * and older Androids don't meet the minimum upstream requirement.
+ */
+function isZecBroken(): boolean {
+  if (Platform.OS === 'ios') {
+    const { osVersion = '17' } = Platform.constants
+    return Number(osVersion.split('.')[0]) < 15
+  }
+  if (Platform.OS === 'android') {
+    return Platform.constants.Version < 28
+  }
+  return false
 }
 
 export const USD_FIAT = 'iso:USD'

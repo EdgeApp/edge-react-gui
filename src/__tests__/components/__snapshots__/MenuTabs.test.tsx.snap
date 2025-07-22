@@ -1,62 +1,66 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
-  pointerEvents="box-none"
-  shiftY={
+  collapsable={false}
+  jestAnimatedStyle={
     {
-      "value": 0,
-    }
-  }
-  style={
-    [
-      {
-        "bottom": 0,
-        "justifyContent": "flex-end",
-        "left": 0,
-        "overflow": "visible",
-        "position": "absolute",
-        "right": 0,
-      },
-      {
+      "value": {
         "transform": [
           {
             "translateY": 0,
           },
         ],
       },
-    ]
+    }
+  }
+  pointerEvents="box-none"
+  shiftY={0}
+  style={
+    {
+      "bottom": 0,
+      "justifyContent": "flex-end",
+      "left": 0,
+      "overflow": "visible",
+      "position": "absolute",
+      "right": 0,
+      "transform": [
+        {
+          "translateY": 0,
+        },
+      ],
+    }
   }
 >
   <View
-    footerHeight={
+    collapsable={false}
+    footerHeight={0}
+    jestAnimatedStyle={
       {
-        "value": 0,
-      }
-    }
-    openRatio={
-      {
-        "value": 1,
-      }
-    }
-    pointerEvents="none"
-    style={
-      [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": 0,
             },
           ],
         },
-      ]
+      }
+    }
+    openRatio={1}
+    pointerEvents="none"
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "transform": [
+          {
+            "translateY": 0,
+          },
+        ],
+      }
     }
     tabLabelHeight={25}
   >
@@ -103,26 +107,30 @@ exports[`MenuTabs should render with loading props 1`] = `
     />
   </View>
   <View
-    openRatio={
+    collapsable={false}
+    jestAnimatedStyle={
       {
-        "value": 1,
-      }
-    }
-    style={
-      [
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "center",
-        },
-        {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": 0,
             },
           ],
         },
-      ]
+      }
+    }
+    openRatio={1}
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "transform": [
+          {
+            "translateY": 0,
+          },
+        ],
+      }
     }
     tabLabelHeight={25}
   />

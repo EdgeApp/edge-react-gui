@@ -17,13 +17,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.32.1):
     - React-Core
-  - edge-currency-accountbased (4.54.0):
+  - edge-currency-accountbased (4.55.2):
     - React-Core
   - edge-currency-plugins (3.8.3):
     - React-Core
-  - edge-exchange-plugins (2.28.0):
+  - edge-exchange-plugins (2.29.0):
     - React-Core
-  - edge-login-ui-rn (3.28.1):
+  - edge-login-ui-rn (3.28.2):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -426,7 +426,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.2):
     - React-Core
-  - react-native-piratechain (0.5.10):
+  - react-native-piratechain (0.5.11):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -438,10 +438,10 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zano (0.2.0):
+  - react-native-zano (0.2.1):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.9.7):
+  - react-native-zcash (0.9.8):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1101,12 +1101,12 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
-  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: ffcf601be0aeac872ae25194dbe344762bc0d97a
-  edge-currency-accountbased: ba66940b4522764d49a7cd484021cdb147ee8c48
+  edge-currency-accountbased: bbff7b16bbf8f8415caf8c9b8b0597f04b7c57ca
   edge-currency-plugins: 119e0c65e8db146b02e1df82f2e0915c3fa12f05
-  edge-exchange-plugins: 4bfb156ecba6d0821fcd341a5236ead1dae78566
-  edge-login-ui-rn: bc0ac2a372b9878fc34e467ff0f43af65b2ba4a1
+  edge-exchange-plugins: 2494be110fdab06f0eeabf0e3ff0ee32ff49bf6e
+  edge-login-ui-rn: 5d4f4c46d5fc661c2cd7d4d4633e694d19db0006
   EXApplication: 9e02dde69a11d17d394bc89a9ea90c619217bada
   EXConstants: 0a70495c8b5dff454903ed9e798dbb39da9c3fd7
   EXFileSystem: 6c8c6df1f092c49cbbb97df4273eee3b619369b9
@@ -1123,7 +1123,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
@@ -1136,7 +1136,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: d776ce24dab24323e6995dfb17c64d598885d05c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
+  RCT-Folly: 8dc08ca5a393b48b1c523ab6220dfdcc0fe000ad
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
   RCTTypeSafety: decfec2884f0c523f799600d2b6105cdc15e13db
   React: ca22a0b3f199b6acac95416ef7eb96cc84a55103
@@ -1162,12 +1162,12 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
   react-native-netinfo: 8fa5cbcb4a8e69e265ff685b9e54c175ef2bbd40
   react-native-performance: 125a96c145e29918b55b45ce25cbba54f1e24dcd
-  react-native-piratechain: 45b65cf0f3ecbc994d66962514d80f6b5248f04f
+  react-native-piratechain: 2694210da552c551debd753d17f7ad324e789867
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 8c70551c8688cd584a53487aa1b9361e991a3b4a
   react-native-webview: eb98d9d9c956ebeae58bff20cbe09fb92cd75ffb
-  react-native-zano: 731461ef5fbcf8bb9f46de940a63c095846bcf6c
-  react-native-zcash: 2ad9869faa35580ece8ee62ae5d584b7459b9af7
+  react-native-zano: a577065df0f09ceb54f7febc9ecdff7a8f73b7f1
+  react-native-zcash: 75dabc2576e6070a72dfdc98f918ce4827395280
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

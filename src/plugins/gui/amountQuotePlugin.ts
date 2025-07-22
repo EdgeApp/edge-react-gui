@@ -42,6 +42,7 @@ import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
+import { revolutProvider } from './providers/revolutProvider'
 import { simplexProvider } from './providers/simplexProvider'
 import {
   EnterAmountState,
@@ -85,6 +86,7 @@ const providerFactories = [
   moonpayProvider,
   mtpelerinProvider,
   paybisProvider,
+  revolutProvider,
   simplexProvider
 ]
 

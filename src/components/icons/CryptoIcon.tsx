@@ -39,7 +39,7 @@ export const CryptoIcon = (props: CryptoIconProps) => {
   const size = theme.rem(sizeRem)
 
   const { pluginId } = props
-  const useChainIcon = SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false
+  const useChainIcon = SPECIAL_CURRENCY_INFO[pluginId]?.showChainIcon ?? false
 
   // Primary Currency icon
   const icon = getCurrencyIconUris(pluginId, tokenId, useChainIcon)

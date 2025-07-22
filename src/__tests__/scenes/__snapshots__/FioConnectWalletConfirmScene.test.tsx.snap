@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 [
@@ -218,8 +218,20 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -592,51 +604,59 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             }
           >
             <View
-              style={
-                [
-                  {
-                    "backgroundColor": "#494949",
-                    "borderRadius": 27.5,
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                  {
+              collapsable={false}
+              jestAnimatedStyle={
+                {
+                  "value": {
                     "width": 295,
                   },
-                ]
+                }
+              }
+              style={
+                {
+                  "backgroundColor": "#494949",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "width": 295,
+                }
               }
             />
             <View
               collapsable={false}
+              forwardedRef={[Function]}
               handlerTag={1}
               handlerType="PanGestureHandler"
-              onGestureHandlerEvent={[Function]}
-              onGestureHandlerStateChange={[Function]}
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#00f1a2",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 55,
-                    "zIndex": 5,
-                  },
-                  {
-                    "backgroundColor": "#888888",
-                  },
-                  {
+              jestAnimatedStyle={
+                {
+                  "value": {
                     "transform": [
                       {
                         "translateX": 240,
                       },
                     ],
                   },
-                ]
+                }
+              }
+              onGestureHandlerEvent={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#888888",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "transform": [
+                    {
+                      "translateX": 240,
+                    },
+                  ],
+                  "width": 55,
+                  "zIndex": 5,
+                }
               }
             >
               <Text
