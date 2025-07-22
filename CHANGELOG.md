@@ -2,13 +2,15 @@
 
 ## Unreleased (develop)
 
+## 4.33.0 (staging)
+
 - added: Added Botanix.
 - added: Added HyperEVM.
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - added: Revolut fiat buy provider.
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
 
-## 4.32.0 (staging)
+## 4.32.0 (2025-07-18)
 
 - added: Support for Paybis ACH buy
 - added: Private View Key wallet menu option for Zano
