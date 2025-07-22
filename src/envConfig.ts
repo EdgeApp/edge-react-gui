@@ -105,6 +105,11 @@ export const asEnvConfig = asObject({
           privateKeyB64: asString
         })
       ),
+      revolut: asOptional(
+        asObject({
+          apiKey: asString
+        })
+      ),
       simplex: asOptional(
         asObject({
           partner: asString,
@@ -130,6 +135,7 @@ export const asEnvConfig = asObject({
       moonpay: undefined,
       mtpelerin: undefined,
       paybis: undefined,
+      revolut: undefined,
       simplex: undefined,
       ionia: undefined
     })
