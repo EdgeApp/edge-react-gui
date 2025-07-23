@@ -174,6 +174,12 @@ export const WcSmartContractModal = (props: Props) => {
             await wallet.otherMethods.txRpcParamsToSpendInfo(
               cleanPayload.params[0]
             )
+          
+          // If WalletConnect provided a nonce, allow chained pending transactions
+          if (cleanPayload.params[0].nonce != null) {
+            spendInfo.allowChainedPending = true
+          }
+          
           const tx = await wallet.makeSpend(spendInfo)
           const signTx = await wallet.signTx(tx)
           await walletConnect.approveRequest(topic, requestId, signTx.signedTx)
@@ -186,6 +192,12 @@ export const WcSmartContractModal = (props: Props) => {
             await wallet.otherMethods.txRpcParamsToSpendInfo(
               cleanPayload.params[0]
             )
+          
+          // If WalletConnect provided a nonce, allow chained pending transactions
+          if (cleanPayload.params[0].nonce != null) {
+            spendInfo.allowChainedPending = true
+          }
+          
           const tx = await wallet.makeSpend(spendInfo)
           const signedTx = await wallet.signTx(tx)
           const sentTx = await wallet.broadcastTx(signedTx)

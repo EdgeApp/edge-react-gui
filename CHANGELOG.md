@@ -5,6 +5,7 @@
 - added: Added Botanix.
 - added: Added HyperEVM.
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- added: WalletConnect transactions with provided nonce now bypass pending transaction restrictions
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
 
 ## 4.32.0 (staging)
