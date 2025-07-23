@@ -39,7 +39,7 @@ tags:
 # If the IP validation notification shows, dismiss it
 - tapOn:
     id: "undefined.close"
-
+    optional: true
 
 - extendedWaitUntil:
     visible: "Assets"

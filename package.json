@@ -41,7 +41,7 @@
     "lint": "eslint .",
     "localize": "node -r sucrase/register ./scripts/localizeLanguage.ts; git add ./src/locales/strings",
     "logging-server": "node -r sucrase/register scripts/loggingServer.ts",
-    "maestro": "node -r sucrase/register ./scripts/runMaestro.ts test",
+    "maestro": "node -r sucrase/register ./scripts/runMaestro.ts",
     "maestro:ios": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,ios maestro",
     "maestro:android": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,android maestro",
     "precommit": "npm run localize && lint-staged && tsc && npm test",
