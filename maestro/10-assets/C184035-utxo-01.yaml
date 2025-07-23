@@ -1,0 +1,197 @@
+# Priority: Critical
+# Test ID: C184035i
+# Title: UTXO Assets balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for FIRO only
+# Notes: iOS cannot properly scroll so we only validate the first asset (FIRO)
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C184035
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+# If the request notifications modal show with "Security is Our Priority"
+# Cancel it
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 20000
+    optional: true
+- tapOn:
+    text: "Cancel"
+    optional: true
+
+# If the survey modal shows, dismiss it
+- tapOn:
+    text: "Dismiss"
+    optional: true
+
+# If the enable 2FA notification shows, dismiss it
+- tapOn:
+    id: "notifOtp.close"
+    optional: true
+
+# If the IP validation notification shows, dismiss it
+- tapOn:
+    id: "undefined.close"
+    optional: true
+
+- tapOn: "Assets"
+
+- extendedWaitUntil:
+    visible: FIRO
+    timeout: 15000
+- tapOn: FIRO
+- extendedWaitUntil:
+    visible: 0.369074 FIRO
+    timeout: 50000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: DGB
+    direction: DOWN
+- tapOn: DGB
+- extendedWaitUntil:
+    visible: 18.79649375 DGB
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: DOGE
+    direction: DOWN
+- tapOn: DOGE
+- extendedWaitUntil:
+    visible: 25.81052584 DOGE
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: RVN
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: RVN
+- extendedWaitUntil:
+    visible: 22.85548 RVN
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: BCH
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: BCH
+- extendedWaitUntil:
+    visible: 0.00588867 BCH
+    timeout: 15000
+- tapOn: Assets
+
+
+- scrollUntilVisible:
+    element: DASH
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: DASH
+- extendedWaitUntil:
+    visible: 0.03081175 DASH
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: QTUM
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: QTUM
+- extendedWaitUntil:
+    visible: 0.17765112 QTUM
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: BTG
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: BTG
+- extendedWaitUntil:
+    visible: 0 BTG
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: LTC
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: LTC
+- extendedWaitUntil:
+    visible: 0.00921812 LTC
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: BTC
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: BTC
+- extendedWaitUntil:
+    visible: 0.00013643 BTC
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: VTC
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: VTC
+- extendedWaitUntil:
+    visible: 0.1430639 VTC
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: GRS
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: GRS
+- extendedWaitUntil:
+    visible: 1.43161025 GRS
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: UFO
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: UFO
+- extendedWaitUntil:
+    visible: "1,337 UFO"
+    timeout: 15000
+- tapOn: Assets
+
+- scrollUntilVisible:
+    element: PIVX
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: PIVX
+- extendedWaitUntil:
+    visible: 0 PIVX
+    timeout: 15000
+- tapOn: Assets
+
+- stopApp
