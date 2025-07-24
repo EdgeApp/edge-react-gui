@@ -69,8 +69,8 @@ beforeAll(async () => {
     plugins: { bitcoin: true, ethereum: true }
   })
   account = await context.loginWithKey('bob', loginKey)
-  const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
-  const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
+  const btcInfo = account.getFirstWalletInfo('wallet:bitcoin')
+  const ethInfo = account.getFirstWalletInfo('wallet:ethereum')
   if (btcInfo == null || ethInfo == null) {
     console.error('Unable to get wallet infos')
     process.exit(-1)

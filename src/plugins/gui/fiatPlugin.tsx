@@ -173,12 +173,12 @@ export const executePlugin = async (params: {
       ))
     },
     confirmation: async params => {
-      await new Promise(resolve => {
+      await new Promise<void>(resolve => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginConfirmation', {
           title: params.title,
           message: params.message,
-          onClose: async () => {
+          onClose: () => {
             resolve()
           }
         })
@@ -328,7 +328,7 @@ export const executePlugin = async (params: {
       })
     },
     sepaTransferInfo: async params => {
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         const {
           headerTitle,
           headerIconUri,

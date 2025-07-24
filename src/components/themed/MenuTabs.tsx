@@ -266,23 +266,19 @@ const Tab = ({
             console.error('Failed to write defaultScreen setting: home')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
-        {
-          navigation.navigate('home')
-          return
-        }
+        navigation.navigate('home')
+        return
       case 'walletsTab':
         setTimeout(() => {
           writeDefaultScreen('assets').catch(e => {
             console.error('Failed to write defaultScreen setting: assets')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
-        {
-          navigation.navigate(
-            'walletsTab',
-            currentName === 'walletsTab' ? { screen: 'walletList' } : {}
-          )
-          return
-        }
+        navigation.navigate(
+          'walletsTab',
+          currentName === 'walletsTab' ? { screen: 'walletList' } : {}
+        )
+        return
       case 'buyTab': {
         navigation.navigate(
           'buyTab',

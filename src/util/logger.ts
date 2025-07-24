@@ -126,16 +126,16 @@ async function writeLog(type: LogType, content: string): Promise<void> {
     }
   } catch (e: any) {
     // @ts-expect-error
-    global.clog((e && e.message) || e)
+    global.clog(e?.message || e)
   }
 }
 
 export async function clearLogs(type: LogType): Promise<void> {
   const paths = logMap[type]
 
-  for (let i = 0; i < paths.length; i++) {
-    if (await RNFS.exists(paths[i])) {
-      await RNFS.unlink(paths[i])
+  for (const path of paths) {
+    if (await RNFS.exists(path)) {
+      await RNFS.unlink(path)
     }
   }
 }
@@ -154,7 +154,7 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
     return log
   } catch (err: any) {
     // @ts-expect-error
-    global.clog((err && err.message) || err)
+    global.clog(err?.message || err)
   }
 }
 

@@ -2,7 +2,6 @@ import { add, lt, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   type EdgeCurrencyWallet,
-  type EdgeDenomination,
   type EdgeMemoryWallet,
   type EdgeSpendInfo,
   type EdgeTransaction,
@@ -37,7 +36,7 @@ export interface SweepPrivateKeyCalculateFeeParams {
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
-interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'> {}
+type Props = EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'>
 
 const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const { navigation, route } = props

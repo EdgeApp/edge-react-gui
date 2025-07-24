@@ -232,6 +232,7 @@ if (ENABLE_PERF_LOGGING) {
 
 const realFetch = fetch
 // @ts-expect-error
+// eslint-disable-next-line no-global-assign
 fetch = async (...args: any) => {
   // @ts-expect-error
   return await realFetch(...args).catch(e => {

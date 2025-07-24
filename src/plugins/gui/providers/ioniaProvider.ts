@@ -106,7 +106,7 @@ export const asIoniaPurchaseCard = asObject({
   userId: asNumber
 })
 
-const asIoniaResponse = <Data extends any>(asData: Cleaner<Data>) =>
+const asIoniaResponse = <Data>(asData: Cleaner<Data>) =>
   asObject({
     Data: asData,
     Successful: asBoolean,
@@ -557,7 +557,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
               `Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`
             )
 
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
               showUi
                 .sendPaymentProto({
                   uri: paymentProtocolUrl,

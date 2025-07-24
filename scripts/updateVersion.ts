@@ -34,10 +34,8 @@ async function main() {
   console.log(versionFile)
 
   // Update the native project files:
-  await Promise.all([
-    updateAndroid(disklet, versionFile),
-    updateIos(cwd, versionFile)
-  ])
+  await updateAndroid(disklet, versionFile)
+  updateIos(cwd, versionFile)
 }
 
 /**

@@ -199,7 +199,7 @@ const TransactionDetailsComponent = (props: Props) => {
         // Check for NaN, Infinity, and 0:
         if (JSON.stringify(amountFiat) === 'null') return
 
-        await onSaveTxDetails({
+        onSaveTxDetails({
           exchangeAmount: { [defaultIsoFiat]: amountFiat }
         })
       })

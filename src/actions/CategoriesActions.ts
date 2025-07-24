@@ -658,7 +658,7 @@ export const getTxActionDisplayInfo = (
 
     if (unsupported)
       console.error(
-        `Unsupported EdgeTxAction assetAction:assetActionType '${assetAction}:${assetActionType}'`
+        `Unsupported EdgeTxAction assetAction:assetActionType '${assetActionType}'`
       )
   }
   const savedData: EdgeMetadata = {

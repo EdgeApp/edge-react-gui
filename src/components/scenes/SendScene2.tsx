@@ -106,7 +106,7 @@ import { ErrorTile } from '../tiles/ErrorTile'
 
 const SCROLL_TO_END_DELAY_MS = 150
 
-interface Props extends EdgeAppSceneProps<'send2'> {}
+type Props = EdgeAppSceneProps<'send2'>
 
 export interface SendScene2Params {
   walletId: string
@@ -782,7 +782,7 @@ const SendComponent = (props: Props) => {
 
   const renderMemoOptions = () => {
     const spendTarget: EdgeSpendTarget | undefined = spendInfo.spendTargets[0]
-    if (spendTarget == null || spendTarget.publicAddress == null) return null
+    if (spendTarget?.publicAddress == null) return null
 
     const renderOption = (memoOption: EdgeMemoOption, value: string = '') => {
       const memoLabel = getMemoLabel(memoOption.memoName)
@@ -859,17 +859,16 @@ const SendComponent = (props: Props) => {
     let legacyUniqueIdentifier = getLegacyUniqueIdentifier(spendTarget)
 
     const rows: Array<React.ReactElement | null> = []
-    for (let i = 0; i < memoOptions.length; i++) {
-      if (memoOptions[i].hidden) continue
+    for (const option of memoOptions) {
+      if (option.hidden) continue
 
       if (legacyUniqueIdentifier != null) {
-        rows.push(renderOption(memoOptions[i], legacyUniqueIdentifier))
+        rows.push(renderOption(option, legacyUniqueIdentifier))
         legacyUniqueIdentifier = undefined
       } else {
         const memoValue =
-          spendInfo?.memos?.find(memo => memo.type === memoOptions[i].type)
-            ?.value ?? ''
-        rows.push(renderOption(memoOptions[i], memoValue))
+          spendInfo?.memos?.find(memo => memo.type === option.type)?.value ?? ''
+        rows.push(renderOption(option, memoValue))
       }
     }
     return rows
@@ -881,17 +880,13 @@ const SendComponent = (props: Props) => {
 
   const handleChangePin = useHandler((pin: string) => {
     setPinValue(pin)
-    if (
-      pin.length >= PIN_MAX_LENGTH &&
-      pinInputRef.current != null &&
-      pinInputRef.current.blur != null
-    ) {
+    if (pin.length >= PIN_MAX_LENGTH && pinInputRef.current?.blur != null) {
       pinInputRef.current.blur()
     }
   })
 
   const renderInfoTiles = () => {
-    if (!infoTiles || !infoTiles.length) return null
+    if (!infoTiles?.length) return null
     return infoTiles.map(({ label, value }) => (
       <EdgeRow key={label} title={label} body={value} />
     ))

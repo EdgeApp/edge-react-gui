@@ -60,7 +60,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 
-interface Props extends EdgeTabsSceneProps<'devTab'> {}
+type Props = EdgeTabsSceneProps<'devTab'>
 
 export function DevTestScene(props: Props) {
   const { navigation } = props

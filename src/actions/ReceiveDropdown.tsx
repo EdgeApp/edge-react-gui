@@ -98,8 +98,10 @@ export function showReceiveDropdown(
           })
         }}
       />
-    )).finally(() => {
-      receiveDropdownShowing = false
-    })
+    ))
+      .catch(() => {})
+      .finally(() => {
+        receiveDropdownShowing = false
+      })
   }
 }

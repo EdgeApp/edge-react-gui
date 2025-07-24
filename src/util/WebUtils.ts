@@ -45,5 +45,5 @@ export const parseQuery = (query?: string): UriQueryMap => {
  * This is for adressing a limitation of the url-parse library.
  */
 export const cleanQueryFlags = (uri: string): string => {
-  return uri.toString().replace(/=(?=&|$)/gm, '')
+  return uri.replace(/=(?=&|$)/gm, '')
 }

@@ -996,7 +996,7 @@ const buyAddressRequest = async (
         paymentInfo[pluginId] = {}
       }
       paymentInfo[pluginId][tokenId ?? ''] = {
-        amount: paymentDisplaySubTotals[currencyKey].toString(),
+        amount: paymentDisplaySubTotals[currencyKey],
         nativeAmount: paymentSubtotals[currencyKey].toString()
       }
     }

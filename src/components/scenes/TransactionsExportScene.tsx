@@ -50,7 +50,7 @@ interface File {
   fileName: string // wallet-btc-2020.csv
 }
 
-interface OwnProps extends EdgeAppSceneProps<'transactionsExport'> {}
+type OwnProps = EdgeAppSceneProps<'transactionsExport'>
 
 interface StateProps {
   account: EdgeAccount
@@ -441,11 +441,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     }
 
     if (isExportQbo) {
-      const qboFile = await exportTransactionsToQBO(
-        txs,
-        defaultIsoFiat,
-        multiplier
-      )
+      const qboFile = exportTransactionsToQBO(txs, defaultIsoFiat, multiplier)
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',

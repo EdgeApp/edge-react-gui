@@ -198,9 +198,7 @@ export class CryptoAmount {
     isoFiatCode: string,
     precision?: number
   ) {
-    return this.fiatValue(exchangeRates, isoFiatCode)
-      .toFixed(precision ?? 2)
-      .toString()
+    return this.fiatValue(exchangeRates, isoFiatCode).toFixed(precision ?? 2)
   }
 
   /**

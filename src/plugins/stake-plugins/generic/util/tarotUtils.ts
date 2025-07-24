@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { BigNumber, type BigNumberish, type ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 

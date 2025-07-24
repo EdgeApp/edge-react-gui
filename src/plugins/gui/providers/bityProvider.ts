@@ -462,7 +462,7 @@ export const bityProvider: FiatProviderFactory = {
           const response = await fetch(
             `https://exchange.api.bity.com/v2/currencies`
           ).catch(e => undefined)
-          if (response == null || !response.ok) {
+          if (!response?.ok) {
             console.error(
               `Bity getSupportedAssets response error: ${await response?.text()}`
             )
@@ -511,7 +511,7 @@ export const bityProvider: FiatProviderFactory = {
 
               // If token is not in the no-KYC list do not add it
               const list = noKycCurrencyCodes[direction].crypto[pluginId]
-              if (list == null || !list.some(t => t.tokenId === tokenId)) {
+              if (!list?.some(t => t.tokenId === tokenId)) {
                 continue
               }
 

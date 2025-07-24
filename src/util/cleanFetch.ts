@@ -42,7 +42,9 @@ export function cleanFetch<RequestPayload, ResponsePayload>(
     if (!fetchResponse.ok) {
       const message = await fetchResponse.text()
       throw new Error(
-        `${String(uri)} ${fetchResponse.status}${message ? `: ${message}` : ''}`
+        `${typeof uri === 'string' ? uri : uri.url} ${fetchResponse.status}${
+          message ? `: ${message}` : ''
+        }`
       )
     }
 

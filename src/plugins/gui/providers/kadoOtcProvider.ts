@@ -300,11 +300,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (
-              asset.rampProducts == null ||
-              !asset.rampProducts.includes(direction)
-            )
-              continue
+            if (!asset.rampProducts?.includes(direction)) continue
             if (isNative) {
               allowedCurrencyCodes.crypto[pluginId].push({
                 tokenId: null,
@@ -317,7 +313,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
               address != null &&
               address !== '0x0000000000000000000000000000000000000000'
             ) {
-              const tokenId = await params.getTokenIdFromContract({
+              const tokenId = params.getTokenIdFromContract({
                 pluginId,
                 contractAddress: address
               })

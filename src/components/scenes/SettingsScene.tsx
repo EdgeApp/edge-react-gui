@@ -55,7 +55,7 @@ import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface Props extends EdgeAppSceneProps<'settingsOverview'> {}
+type Props = EdgeAppSceneProps<'settingsOverview'>
 
 export const SettingsScene = (props: Props) => {
   const { navigation } = props

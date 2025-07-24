@@ -430,7 +430,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       // Attempt to find the stateProvince name if stateProvinceCode is provided
       let stateProvinceName = stateProvinceCode
-      if (country && country.stateProvinces && stateProvinceCode) {
+      if (country?.stateProvinces && stateProvinceCode) {
         const stateProvince = country.stateProvinces.find(
           sp => sp['alpha-2'] === stateProvinceCode
         )
@@ -543,7 +543,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const uri = `${FLAG_LOGO_URL}/${
       countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')
     }.png`
-    const imageSrc = React.useMemo(() => ({ uri }), [uri])
     const hasCountryData = countryData != null
 
     const countryName = hasCountryData
@@ -554,7 +553,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         ? styles.selectedCountryFlag
         : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : (
-      <FastImage source={imageSrc} style={iconStyle} />
+      <FastImage source={{ uri }} style={iconStyle} />
     )
     const forcedWallet =
       forcedWalletResult?.type === 'wallet'

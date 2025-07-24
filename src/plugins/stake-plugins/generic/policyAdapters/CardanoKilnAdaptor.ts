@@ -69,6 +69,7 @@ export const makeCardanoKilnAdapter = (
         )
       } while (
         edgeTx.otherParams?.isSpendable === false &&
+        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         (await snooze(2000)) == null
       )
 
@@ -163,6 +164,7 @@ export const makeCardanoKilnAdapter = (
         )
       } while (
         edgeTx.otherParams?.isSpendable === false &&
+        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         (await snooze(2000)) == null
       )
 
@@ -213,6 +215,7 @@ export const makeCardanoKilnAdapter = (
         )
       } while (
         edgeTx.otherParams?.isSpendable === false &&
+        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         (await snooze(2000)) == null
       )
 

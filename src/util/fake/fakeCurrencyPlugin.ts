@@ -198,7 +198,7 @@ class FakeCurrencyEngine {
   }
 
   async changeUserSettings(settings: JsonObject): Promise<void> {
-    await this._updateState(asState(settings))
+    this._updateState(asState(settings))
   }
 
   // Keys:

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { add, div, eq, gt, lt, mul, round } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'

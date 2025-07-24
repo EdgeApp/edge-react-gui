@@ -32,7 +32,7 @@ export interface FioCreateHandleParams {
   freeRegRefCode: string
 }
 
-interface Props extends EdgeAppSceneProps<'fioCreateHandle'> {}
+type Props = EdgeAppSceneProps<'fioCreateHandle'>
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,
@@ -140,7 +140,7 @@ export const FioCreateHandleScene = (props: Props) => {
         await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
 
-        await dispatch(
+        dispatch(
           logEvent('Fio_Handle_Register', {
             conversionValues: {
               conversionType: 'dollar',

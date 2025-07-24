@@ -79,7 +79,7 @@ export const WalletListCreateRowComponent = (
 
     const handleRes = (wallet?: EdgeCurrencyWallet): void => {
       if (onPress != null && wallet != null) {
-        onPress(wallet.id, tokenId).catch(error => {
+        onPress(wallet.id, tokenId).catch((error: unknown) => {
           showError(error)
         })
       }
