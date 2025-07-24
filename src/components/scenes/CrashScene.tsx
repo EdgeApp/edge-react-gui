@@ -34,7 +34,9 @@ export function CrashScene(props: Props): React.ReactElement {
         <ButtonsView
           secondary={{
             label: lstrings.error_boundary_help_button,
-            onPress: () => openBrowserUri(config.forceCloseUrl)
+            onPress: async () => {
+              await openBrowserUri(config.forceCloseUrl)
+            }
           }}
         />
         <Text style={styles.messageText}>
@@ -43,7 +45,9 @@ export function CrashScene(props: Props): React.ReactElement {
         <ButtonsView
           secondary={{
             label: lstrings.button_support,
-            onPress: () => openBrowserUri(config.supportContactSite)
+            onPress: async () => {
+              await openBrowserUri(config.supportContactSite)
+            }
           }}
         />
       </ScrollView>

@@ -21,8 +21,8 @@ export function SupportCard(props: Props) {
 
   const { title, body, buttonText, url } = props
 
-  const handlePress = useHandler(() => {
-    openBrowserUri(url)
+  const handlePress = useHandler(async () => {
+    await openBrowserUri(url)
   })
 
   return (

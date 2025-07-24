@@ -62,7 +62,7 @@ export const BackupForTransferModal = (props: {
   const { bridge } = props
 
   const handleLearnMorePress = useHandler(async () => {
-    openBrowserUri(config.backupAccountSite)
+    await openBrowserUri(config.backupAccountSite)
     return false
   })
 
@@ -137,7 +137,7 @@ export const BackupForAccountModal = (props: {
         learnMore: {
           label: lstrings.learn_more,
           onPress: async () => {
-            openBrowserUri(config.backupAccountSite)
+            await openBrowserUri(config.backupAccountSite)
             return await Promise.resolve(true)
           }
         },
