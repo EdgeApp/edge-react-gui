@@ -1,11 +1,11 @@
 import { add } from 'biggystring'
-import { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 
-import {
+import type {
   BroadcastTx,
   PendingTxMap
 } from '../../../../controllers/action-queue/types'
-import { ApprovableAction } from '../../types'
+import type { ApprovableAction } from '../../types'
 import { SIDE_EFFECT_CURRENCY_CODE } from '../constants'
 
 export const composeApprovableActions = (

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 export function PairIcons({ icons }: { icons: string[] }) {
   const styles = getStyles(useTheme())

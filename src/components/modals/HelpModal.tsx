@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Image, Keyboard, Linking, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
 
@@ -10,10 +10,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -23,7 +23,7 @@ const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
 
 export async function showHelpModal(navigation: NavigationBase): Promise<void> {
-  return await Airship.show(bridge => (
+  await Airship.show(bridge => (
     <HelpModal bridge={bridge} navigation={navigation} />
   ))
 }
@@ -39,7 +39,9 @@ export const HelpModal = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const loggedIn = useWatch(account, 'loggedIn')
 
-  const handleClose = useHandler(() => bridge.resolve())
+  const handleClose = useHandler(() => {
+    bridge.resolve()
+  })
 
   const handleSitePress = useHandler(async (title: string, uri: string) => {
     if (loggedIn) {

@@ -1,38 +1,38 @@
 import { asValue } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
-import {
+import type { EdgeAccount } from 'edge-core-js'
+import type {
   EdgeAssetAction,
   EdgeMetadata,
   EdgeTokenId,
   EdgeTransaction,
   EdgeTxAction
 } from 'edge-core-js/types'
-import { PluginPromotion } from 'edge-info-server'
+import type { PluginPromotion } from 'edge-info-server'
 
-import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
-import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
-import {
+import type { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import type { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import type {
   ButtonInfo,
   ButtonModalProps
 } from '../../components/modals/ButtonsModal'
-import { SendScene2Params } from '../../components/scenes/SendScene2'
-import { Permission } from '../../reducers/PermissionsReducer'
-import { FiatProviderLink } from '../../types/DeepLinkTypes'
-import { HomeAddress, SepaInfo } from '../../types/FormTypes'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { AppParamList } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
-import {
+import type { SendScene2Params } from '../../components/scenes/SendScene2'
+import type { Permission } from '../../reducers/PermissionsReducer'
+import type { FiatProviderLink } from '../../types/DeepLinkTypes'
+import type { HomeAddress, SepaInfo } from '../../types/FormTypes'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { AppParamList } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
+import type {
   BuyConversionValues,
   SellConversionValues,
   TrackingEventName
 } from '../../util/tracking'
-import { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
-import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
-import { FiatPluginSepaTransferParams } from './scenes/InfoDisplayScene'
-import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
-import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
-import { FiatPluginSepaFormParams } from './scenes/SepaFormScene'
+import type { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
+import type { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
+import type { FiatPluginSepaTransferParams } from './scenes/InfoDisplayScene'
+import type { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
+import type { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
+import type { FiatPluginSepaFormParams } from './scenes/SepaFormScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -144,7 +144,7 @@ export type FiatPluginPermissions = Permission[]
 
 export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
-  buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(
+  buttonModal: <Buttons extends Record<string, ButtonInfo>>(
     params: Omit<ButtonModalProps<Buttons>, 'bridge'>
   ) => Promise<keyof Buttons | undefined>
   confirmation: (params: { title: string; message: string }) => Promise<void>

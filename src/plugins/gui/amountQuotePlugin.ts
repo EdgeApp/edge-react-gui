@@ -1,11 +1,11 @@
 import { div, eq, gt, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
-import { PluginPromotion } from 'edge-info-server'
+import type { PluginPromotion } from 'edge-info-server'
 import { sprintf } from 'sprintf-js'
 
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import {
   getCurrencyCode,
@@ -19,22 +19,22 @@ import {
   fuzzyTimeout,
   removeIsoPrefix
 } from '../../util/utils'
-import {
+import type {
   FiatPlugin,
   FiatPluginFactory,
   FiatPluginFactoryArgs,
   FiatPluginStartParams
 } from './fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderQuoteError
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote,
+  type FiatProviderQuoteError
 } from './fiatProviderTypes'
-import { StateManager } from './hooks/useStateManager'
-import { BestError, getBestError, getRateFromQuote } from './pluginUtils'
+import type { StateManager } from './hooks/useStateManager'
+import { type BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
 import { kadoOtcProvider } from './providers/kadoOtcProvider'
@@ -44,7 +44,7 @@ import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { revolutProvider } from './providers/revolutProvider'
 import { simplexProvider } from './providers/simplexProvider'
-import {
+import type {
   EnterAmountState,
   FiatPluginEnterAmountParams
 } from './scenes/FiatPluginEnterAmountScene'
@@ -63,7 +63,7 @@ type PaymentTypeProviderPriorityMap = ReturnType<
   typeof asPaymentTypeProviderPriorityMap
 >
 
-type PriorityArray = Array<{ [pluginId: string]: boolean }>
+type PriorityArray = Array<Record<string, boolean>>
 
 interface ConvertValueInternalResult {
   stateManagerUpdate?: Partial<EnterAmountState>
@@ -242,12 +242,12 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
         ps
       )
 
-      const requireAmountFiat: { [providerId: string]: boolean } = {}
-      const requireAmountCrypto: { [providerId: string]: boolean } = {}
+      const requireAmountFiat: Record<string, boolean> = {}
+      const requireAmountCrypto: Record<string, boolean> = {}
 
       const allowedAssets: EdgeAsset[] = []
-      const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
-      const allowedProviders: { [providerId: string]: boolean } = {}
+      const allowedFiats: Record<string, boolean> = {}
+      const allowedProviders: Record<string, boolean> = {}
       for (const assetMap of assetArray) {
         if (assetMap == null) continue
         allowedProviders[assetMap.providerId] = true
@@ -333,10 +333,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
       const coreWallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet)
-        return await showUi.showError(
-          new Error(`Missing wallet with ID ${walletId}`)
-        )
+      if (!coreWallet) {
+        await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+        return
+      }
 
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
@@ -798,7 +798,7 @@ export const createPriorityArray = (
     const priorityMapCopy = { ...providerPriorityMap }
 
     // Create a separate object for preferred providers
-    const preferredProviders: { [pluginId: string]: boolean } = {}
+    const preferredProviders: Record<string, boolean> = {}
 
     // Identify all preferred providers from pluginPromotions
     for (const pluginPromotion of pluginPromotions) {
@@ -871,7 +871,7 @@ const evm = '0x0d73358506663d484945BA85D0cd435ad610B0A0'
  * Dummy addresses from Edge internal account used for creating a dummy
  * EdgeSpendInfo only for calculating the max spendable amount
  */
-const dummyAddressMap: { [pluginId: string]: string } = {
+const dummyAddressMap: Record<string, string> = {
   arbitrum: evm,
   avalanche: evm,
   binancesmartchain: evm,

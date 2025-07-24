@@ -1,6 +1,6 @@
 import { div, gt, mul } from 'biggystring'
 import { asObject, asString } from 'cleaners'
-import {
+import type {
   EdgeAssetAction,
   EdgeCurrencyWallet,
   EdgeTransaction,
@@ -9,17 +9,17 @@ import {
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../../locales/strings'
-import { StringMap } from '../../../../types/types'
+import type { StringMap } from '../../../../types/types'
 import { fetchWaterfall, infoServerData } from '../../../../util/network'
-import {
+import type {
   ChangeQuote,
   QuoteAllocation,
   StakeAssetInfo,
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
-import { StakePolicyConfig } from '../types'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyConfig } from '../types'
+import type { StakePolicyAdapter } from './types'
 
 const asTcyStaker = asObject({
   address: asString,

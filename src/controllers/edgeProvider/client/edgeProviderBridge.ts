@@ -4,7 +4,7 @@ import { asNumber, uncleaner } from 'cleaners'
 
 import { methodCleaners } from '../types/edgeProviderCleaners'
 import type { EdgeProvider } from '../types/edgeProviderTypes'
-import { asRpcReturn, RpcCall } from '../types/jsonRpcCleaners'
+import { asRpcReturn, type RpcCall } from '../types/jsonRpcCleaners'
 import { makePendingList } from './pendingList'
 
 // ---------------------------------------------------------------------
@@ -110,5 +110,7 @@ if (window.edgeProviderBridge == null) {
       document.dispatchEvent(new Event('edgeProviderReady'))
     })
     // Use console logging because this exists in a web-view without access to RN
-    .catch(err => console.error(err))
+    .catch(err => {
+      console.error(err)
+    })
 }

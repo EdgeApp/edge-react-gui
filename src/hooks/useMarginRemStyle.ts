@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ViewStyle } from 'react-native'
+import type { ViewStyle } from 'react-native'
 
 import { useTheme } from '../components/services/ThemeContext'
 

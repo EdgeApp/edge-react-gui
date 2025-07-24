@@ -1,5 +1,5 @@
-import { asMaybe, Cleaner, uncleaner } from 'cleaners'
-import { EdgeCurrencyConfig } from 'edge-core-js'
+import { asMaybe, type Cleaner, uncleaner } from 'cleaners'
+import type { EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -52,13 +52,12 @@ export function maybeCurrencySetting<T, X>(
       [userSettings]
     )
 
-    const handleUpdate = useHandler(
-      async settings =>
-        await currencyConfig.changeUserSettings({
-          ...currencyConfig.userSettings,
-          ...wasSetting(settings)
-        })
-    )
+    const handleUpdate = useHandler(async settings => {
+      await currencyConfig.changeUserSettings({
+        ...currencyConfig.userSettings,
+        ...wasSetting(settings)
+      })
+    })
 
     return defaultSetting == null ? null : (
       <Component

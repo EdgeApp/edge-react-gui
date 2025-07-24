@@ -1,5 +1,5 @@
 import { makeReactNativeDisklet } from 'disklet'
-import { EdgeContext } from 'edge-core-js/types'
+import type { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -14,7 +14,7 @@ import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
-import { Dispatch, RootState, Store } from '../../types/reduxTypes'
+import type { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
 import { Main } from '../Main'
@@ -60,8 +60,12 @@ export function Providers(props: Props) {
 
   // Actions to perform at startup:
   React.useEffect(() => {
-    store.dispatch(loadDeviceReferral()).catch(err => console.warn(err))
-    store.dispatch(fetchCountryCode()).catch(err => console.warn(err))
+    store.dispatch(loadDeviceReferral()).catch(err => {
+      console.warn(err)
+    })
+    store.dispatch(fetchCountryCode()).catch(err => {
+      console.warn(err)
+    })
   }, [store])
 
   return (

@@ -1,6 +1,6 @@
 import { ENV } from '../../../../env'
-import { ThorchainYieldAdapterConfig } from '../policyAdapters/ThorchainYieldAdaptor'
-import { StakePluginInfo, StakePolicyConfig } from '../types'
+import type { ThorchainYieldAdapterConfig } from '../policyAdapters/ThorchainYieldAdaptor'
+import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const thorchainYieldPolicyConfig: Array<
   StakePolicyConfig<ThorchainYieldAdapterConfig>

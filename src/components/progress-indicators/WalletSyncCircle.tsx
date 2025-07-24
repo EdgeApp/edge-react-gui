@@ -1,6 +1,6 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import type { ViewStyle } from 'react-native'
 import Animated, {
   useAnimatedProps,
   useSharedValue,

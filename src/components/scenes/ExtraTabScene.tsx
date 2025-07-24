@@ -3,8 +3,8 @@ import WebView from 'react-native-webview'
 
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
 

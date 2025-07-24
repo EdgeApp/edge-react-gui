@@ -1,6 +1,6 @@
 import { ENV } from '../../../../env'
-import { CardanoPooledKilnAdapterConfig } from '../policyAdapters/CardanoKilnAdaptor'
-import { StakePluginInfo, StakePolicyConfig } from '../types'
+import type { CardanoPooledKilnAdapterConfig } from '../policyAdapters/CardanoKilnAdaptor'
+import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const kilnPolicyConfig: Array<
   StakePolicyConfig<CardanoPooledKilnAdapterConfig>

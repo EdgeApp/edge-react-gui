@@ -1,8 +1,12 @@
-import { EdgeCurrencyWallet, EdgeMemoryWallet, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeMemoryWallet,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { showError } from '../services/AirshipInstance'
@@ -57,14 +61,16 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
 
   const onCancel = () => {
     memoryWalletPromise
-      .then(async memoryWallet => await memoryWallet.close())
+      .then(async memoryWallet => {
+        await memoryWallet.close()
+      })
       .catch(() => {})
     navigation.goBack()
   }
 
   const onDone = (memoryWallet: EdgeMemoryWallet) => {
     const sweepPrivateKeyList: SweepPrivateKeyItem[] = [
-      { key: 'null', displayName: displayName, pluginId, tokenId: null }
+      { key: 'null', displayName, pluginId, tokenId: null }
     ]
     for (const [tokenId, bal] of memoryWallet.balanceMap.entries()) {
       if (zeroString(bal) || tokenId == null) continue

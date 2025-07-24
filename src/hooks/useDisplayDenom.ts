@@ -1,4 +1,8 @@
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
 import { selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { useSelector } from '../types/reactRedux'

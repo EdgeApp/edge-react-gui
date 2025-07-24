@@ -1,6 +1,6 @@
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
-import { Action } from '../types/reduxTypes'
+import type { Action } from '../types/reduxTypes'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2

@@ -6,7 +6,7 @@ import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { Paragraph } from '../../../components/themed/EdgeText'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginConfirmationParams {
   message: string

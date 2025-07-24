@@ -15,7 +15,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
@@ -65,7 +65,11 @@ export const SafeSlider = (props: Props) => {
   })
   const complete = () => {
     triggerHaptic('impactMedium')
-    onSlidingComplete(() => resetSlider())?.catch(err => showError(err))
+    onSlidingComplete(() => {
+      resetSlider()
+    })?.catch(err => {
+      showError(err)
+    })
     setCompleted(true)
   }
 

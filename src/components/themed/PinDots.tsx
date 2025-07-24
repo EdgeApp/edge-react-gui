@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 export function PinDots(props: { pinLength: number; maxLength: number }) {
   const theme = useTheme()

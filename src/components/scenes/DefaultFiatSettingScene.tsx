@@ -10,14 +10,14 @@ import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { Theme } from '../../types/Theme'
-import { FlatListItem, GuiFiatType } from '../../types/types'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { Theme } from '../../types/Theme'
+import type { FlatListItem, GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { showDevError, showToast } from '../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
@@ -79,7 +79,9 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
         }
         subTitle={subTitle}
         title={data.item.value}
-        onPress={() => this.onSelectFiat(data.item)}
+        onPress={() => {
+          this.onSelectFiat(data.item)
+        }}
       />
     )
   }
@@ -144,7 +146,9 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat).catch(err => showDevError(err))
+      this.props.onSelectFiat(selectedFiat).catch(err => {
+        showDevError(err)
+      })
       navigation.goBack()
     }
   }

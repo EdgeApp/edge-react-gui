@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { LoanAccount } from '../../controllers/loan-manager/types'
+import type { LoanAccount } from '../../controllers/loan-manager/types'
 import { useSelector } from '../../types/reactRedux'
-import { AppParamList, NavigationProp } from '../../types/routerTypes'
+import type { AppParamList, NavigationProp } from '../../types/routerTypes'
 import { LoadingScene } from '../scenes/LoadingScene'
 
 interface NavigationProps {

@@ -1,5 +1,5 @@
 import { infoServerData } from '../../../util/network'
-import {
+import type {
   ChangeQuote,
   ChangeQuoteRequest,
   StakePlugin,
@@ -10,7 +10,7 @@ import {
 } from '../types'
 import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
-import { StakePolicyInfo, toStakePolicy } from './stakePolicy'
+import { type StakePolicyInfo, toStakePolicy } from './stakePolicy'
 
 export const makeUniV2StakePlugin = async (
   pluginId: string

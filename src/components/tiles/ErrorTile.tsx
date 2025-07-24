@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

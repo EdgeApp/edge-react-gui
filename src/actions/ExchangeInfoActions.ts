@@ -6,10 +6,10 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { infoServerData } from '../util/network'
 
 const asDisableAsset = asObject({

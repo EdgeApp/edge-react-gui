@@ -3,7 +3,7 @@
  * used by the unit tests.
  */
 
-import { EdgeFakeUser } from 'edge-core-js/types'
+import type { EdgeFakeUser } from 'edge-core-js/types'
 
 // Credentials:
 const info = {

@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
 import { createPriorityArray } from '../plugins/gui/amountQuotePlugin'
-import { FiatProviderQuoteError } from '../plugins/gui/fiatProviderTypes'
+import type { FiatProviderQuoteError } from '../plugins/gui/fiatProviderTypes'
 import { getBestError } from '../plugins/gui/pluginUtils'
 
 const FAKE_CODE = 'FAKE'

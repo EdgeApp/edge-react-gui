@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
 

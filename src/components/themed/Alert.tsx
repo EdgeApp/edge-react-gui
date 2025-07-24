@@ -11,7 +11,7 @@ import {
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 type AlertType = 'info' | 'warning' | 'error' | 'success'
@@ -52,7 +52,10 @@ export function Alert(props: Props) {
       : theme.primaryText
 
   const handlePress = useHandler(() => {
-    if (onPress != null) onPress()?.catch(err => showError(err))
+    if (onPress != null)
+      onPress()?.catch(err => {
+        showError(err)
+      })
   })
 
   const result = (

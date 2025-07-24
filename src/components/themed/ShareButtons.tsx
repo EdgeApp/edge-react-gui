@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -6,7 +6,7 @@ import { Fontello } from '../../assets/vector/index'
 import { validateFioAsset } from '../../constants/FioConstants'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface Props {

@@ -1,4 +1,4 @@
-import { HeaderTitleProps } from '@react-navigation/elements'
+import type { HeaderTitleProps } from '@react-navigation/elements'
 import * as React from 'react'
 
 import { EdgeLogoHeader } from './EdgeLogoHeader'

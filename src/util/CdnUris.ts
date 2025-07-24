@@ -1,10 +1,10 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
-import { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
+import type { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
 import { edgeDark } from '../theme/variables/edgeDark'
 import { edgeLight } from '../theme/variables/edgeLight'
-import { Theme } from '../types/Theme'
+import type { Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
 
 /**

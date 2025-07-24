@@ -11,7 +11,7 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import {
+import type {
   EdgeAssetAction,
   EdgeMemo,
   EdgeSpendInfo,
@@ -21,28 +21,28 @@ import {
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
-import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
-import { StringMap } from '../../../types/types'
+import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   SaveTxActionParams
 } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderExactRegions,
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
 import {
@@ -60,7 +60,7 @@ const supportEmail = 'support@moonpay.com'
 
 const allowedCurrencyCodes: Record<
   FiatDirection,
-  { [F in FiatPaymentType]?: FiatProviderAssetMap }
+  Partial<Record<FiatPaymentType, FiatProviderAssetMap>>
 > = {
   buy: {
     credit: { providerId, fiat: {}, crypto: {} },

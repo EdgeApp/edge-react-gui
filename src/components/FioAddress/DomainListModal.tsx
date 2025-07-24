@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -10,16 +10,16 @@ import {
 } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { FioDomain, FlatListItem } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { FioDomain, FlatListItem } from '../../types/types'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { EdgeModal } from '../modals/EdgeModal'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -135,7 +135,10 @@ class DomainListModalComponent extends React.Component<Props, State> {
     navigation.navigate('fioDomainRegister')
   }
 
-  selectItem = (value: any) => this.props.bridge.resolve(value)
+  selectItem = (value: any) => {
+    this.props.bridge.resolve(value)
+  }
+
   renderItem = ({ item }: FlatListItem<Item>) => {
     const { theme } = this.props
     const { value, label, createNew } = item
@@ -154,7 +157,11 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
     if (value) {
       return (
-        <EdgeTouchableOpacity onPress={() => this.selectItem(value)}>
+        <EdgeTouchableOpacity
+          onPress={() => {
+            this.selectItem(value)
+          }}
+        >
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>
@@ -168,7 +175,10 @@ class DomainListModalComponent extends React.Component<Props, State> {
   }
 
   keyExtractor = (item: Item) => item.value.name
-  onSearchFilterChange = (input: string) => this.setState({ input })
+  onSearchFilterChange = (input: string) => {
+    this.setState({ input })
+  }
+
   render() {
     const { bridge, theme } = this.props
     const { input } = this.state
@@ -178,7 +188,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return (
       <EdgeModal
         bridge={bridge}
-        onCancel={() => bridge.resolve(undefined)}
+        onCancel={() => {
+          bridge.resolve(undefined)
+        }}
         title={lstrings.fio_address_choose_domain_label}
       >
         <SimpleTextInput

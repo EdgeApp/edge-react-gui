@@ -4,7 +4,7 @@ import { makeGenericStakePlugin } from './generic/GenericStakePlugin'
 import { genericPlugins } from './generic/pluginInfo'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
 import { makeTcSaversPluginSegwit } from './thorchainSavers/tcSaversPluginSegwit'
-import { StakePlugin } from './types'
+import type { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'
 
 // Return the memoized plugins and update them in the background for the next time this function is called

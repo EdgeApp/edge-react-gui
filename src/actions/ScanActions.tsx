@@ -1,11 +1,11 @@
 import { abs, div, eq, gt, mul } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
-  EdgeAccount,
-  EdgeCurrencyWallet,
-  EdgeParsedUri,
-  EdgeSpendInfo,
-  EdgeTokenId
+  type EdgeAccount,
+  type EdgeCurrencyWallet,
+  type EdgeParsedUri,
+  type EdgeSpendInfo,
+  type EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../components/modals/WalletListModal'
 import {
   Airship,
@@ -27,9 +27,9 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
-import { RequestAddressLink } from '../types/DeepLinkTypes'
-import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { RequestAddressLink } from '../types/DeepLinkTypes'
+import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import {
   getCurrencyCode,
   getCurrencyCodeMultiplier
@@ -139,7 +139,7 @@ export const doRequestAddress = async (
   }
 
   // Show wallet picker(s) for supported assets
-  const jsonPayloadMap: { [currencyAndTokenCode: string]: string | null } = {}
+  const jsonPayloadMap: Record<string, string | null> = {}
   for (const supportedAsset of supportedAssets) {
     const edgeAssets = upgradeCurrencyCodes(lookup, [
       `${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`
@@ -263,7 +263,7 @@ export function handleWalletUris(
       if (parsedUri.token) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations } = parsedUri.token
-        return navigation.push('editToken', {
+        navigation.push('editToken', {
           currencyCode: parsedUri.token.currencyCode.toUpperCase(),
           tokenId,
           multiplier: denominations[0]?.multiplier,
@@ -271,17 +271,19 @@ export function handleWalletUris(
           networkLocation: { contractAddress },
           walletId: wallet.id
         })
+        return
       }
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
-        return await privateKeyModalActivated(
+        await privateKeyModalActivated(
           state,
           account,
           navigation,
           wallet,
           parsedUri.privateKeys
         )
+        return
       }
 
       // PUBLIC ADDRESS URI

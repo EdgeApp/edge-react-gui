@@ -1,6 +1,6 @@
 import { sprintf } from 'sprintf-js'
 
-import { LStringsValues } from '../locales/strings'
+import type { LStringsValues } from '../locales/strings'
 
 /**
  * Error class that is meant to be used for errors that are meant to be shown

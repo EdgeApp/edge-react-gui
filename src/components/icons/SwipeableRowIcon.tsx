@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import Animated, {
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
   withTiming
 } from 'react-native-reanimated'

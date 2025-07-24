@@ -1,9 +1,7 @@
-import { CountryData, StateProvinceData } from '../types/types'
+import type { CountryData, StateProvinceData } from '../types/types'
 import { FLAG_LOGO_URL } from './CdnConstants'
 
-export const STATE_PROVINCE_CODES: {
-  [countryCode: string]: StateProvinceData[]
-} = {
+export const STATE_PROVINCE_CODES: Record<string, StateProvinceData[]> = {
   US: [
     { name: 'Alabama', 'alpha-2': 'AL' },
     { name: 'Alaska', 'alpha-2': 'AK' },
@@ -535,9 +533,10 @@ export const COUNTRY_CODES: CountryData[] = [
   { name: 'Zimbabwe', 'alpha-2': 'ZW', 'alpha-3': 'ZWE' }
 ]
 
-export const FIAT_COUNTRY: {
-  [key: string]: { countryName: string; logoUrl: string }
-} = {
+export const FIAT_COUNTRY: Record<
+  string,
+  { countryName: string; logoUrl: string }
+> = {
   AFN: {
     countryName: 'AFGHANISTAN',
     logoUrl: `${FLAG_LOGO_URL}/afghanistan.png`

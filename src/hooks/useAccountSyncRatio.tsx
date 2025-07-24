@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 
 import { DONE_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
@@ -40,13 +40,13 @@ export const useAccountSyncRatio = () => {
   })
 
   useWalletsSubscriber(account, wallet => {
-    return wallet.watch('syncRatio', syncRatio =>
+    return wallet.watch('syncRatio', syncRatio => {
       setProgressMap(map => {
         const out = new Map(map)
         out.set(wallet.id, syncRatio)
         return out
       })
-    )
+    })
   })
 
   const syncedWallets = React.useMemo(

@@ -1,7 +1,7 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers, type Reducer } from 'redux'
 
-import { Action } from '../types/reduxTypes'
-import {
+import type { Action } from '../types/reduxTypes'
+import type {
   AccountReferral,
   Promotion,
   ReferralCache
@@ -134,7 +134,7 @@ export const account: Reducer<AccountState, Action> = (
  * Merges lists of promotions, preferring items from b if there's a conflict.
  */
 function mergePromotions(a: Promotion[], b: Promotion[]): Promotion[] {
-  const toRemove: { [id: string]: true } = {}
+  const toRemove: Record<string, true> = {}
   for (const promo of b) toRemove[promo.installerId] = true
   return [...a.filter(promo => !toRemove[promo.installerId]), ...b]
 }

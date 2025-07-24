@@ -12,12 +12,12 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 import { asEdgeTokenId } from '../../types/types'
 import { asBase64 } from '../../util/cleaners/asBase64'
-import {
+import type {
   ActionEffect,
   ActionOp,
   ActionProgram,

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CurrencySettings', () => {

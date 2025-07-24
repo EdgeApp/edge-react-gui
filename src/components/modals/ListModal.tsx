@@ -1,6 +1,11 @@
 import * as React from 'react'
-import { Keyboard, ListRenderItem, ViewStyle, ViewToken } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import {
+  Keyboard,
+  type ListRenderItem,
+  type ViewStyle,
+  type ViewToken
+} from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -69,14 +74,17 @@ export function ListModal<T>({
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) =>
     rowComponent ? rowComponent(item) : null
-  const handleCancel = () => bridge.resolve(undefined)
+  const handleCancel = () => {
+    bridge.resolve(undefined)
+  }
   const handleChangeText = (text: string) => {
     setText(text)
     setFilteredRows(text)
   }
 
-  const handleSubmitEditing = () =>
+  const handleSubmitEditing = () => {
     onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text)
+  }
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return {
@@ -114,7 +122,9 @@ export function ListModal<T>({
         keyboardShouldPersistTaps="handled"
         keyExtractor={(_, i) => `${i}`}
         renderItem={renderItem}
-        onScroll={() => Keyboard.dismiss()}
+        onScroll={() => {
+          Keyboard.dismiss()
+        }}
         onViewableItemsChanged={onViewableItemsChanged}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />

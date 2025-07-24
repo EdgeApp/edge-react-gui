@@ -3,7 +3,7 @@ import { View } from 'react-native'
 
 import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { DEFAULT_MARGIN_REM } from '../common/Margins'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {

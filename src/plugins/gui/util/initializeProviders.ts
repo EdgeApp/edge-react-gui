@@ -4,8 +4,8 @@ import {
   getTokenId
 } from '../../../util/CurrencyInfoHelpers'
 import { makeUuid } from '../../../util/rnUtils'
-import { FiatPluginFactoryArgs } from '../fiatPluginTypes'
-import { FiatProvider, FiatProviderFactory } from '../fiatProviderTypes'
+import type { FiatPluginFactoryArgs } from '../fiatPluginTypes'
+import type { FiatProvider, FiatProviderFactory } from '../fiatProviderTypes'
 import { createStore } from '../pluginUtils'
 
 // Filter providers for which API keys are set and are not explicitly

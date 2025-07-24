@@ -5,7 +5,7 @@ import {
   asObject,
   asOptional,
   asString,
-  Cleaner,
+  type Cleaner,
   uncleaner
 } from 'cleaners'
 import * as React from 'react'
@@ -17,12 +17,12 @@ import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import {
-  CurrencySettingProps,
+  type CurrencySettingProps,
   maybeCurrencySetting
 } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
@@ -94,7 +94,9 @@ function CustomServersSettingComponent(props: Props) {
           return true
         }}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   })
 
   return (
@@ -111,10 +113,14 @@ function CustomServersSettingComponent(props: Props) {
             <SettingsTappableRow
               key={server}
               action="delete"
-              onPress={async () => await handleDeleteNode(server)}
+              onPress={async () => {
+                await handleDeleteNode(server)
+              }}
             >
               <EdgeTouchableOpacity
-                onPress={() => handleEditNode(server)}
+                onPress={() => {
+                  handleEditNode(server)
+                }}
                 style={styles.labelContainer}
               >
                 <Text style={styles.labelText}>{server}</Text>

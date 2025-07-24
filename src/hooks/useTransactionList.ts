@@ -1,4 +1,8 @@
-import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -147,7 +151,10 @@ export function useTransactionList(
       cleanupStream()
       cleanupStream = () => {
         closed = true
-        if (stream.return != null) stream.return().catch(err => showError(err))
+        if (stream.return != null)
+          stream.return().catch(err => {
+            showError(err)
+          })
       }
 
       requestMore.current = () => {
@@ -194,6 +201,8 @@ export function useTransactionList(
 
   return {
     ...output,
-    requestMore: useHandler(() => requestMore.current())
+    requestMore: useHandler(() => {
+      requestMore.current()
+    })
   }
 }

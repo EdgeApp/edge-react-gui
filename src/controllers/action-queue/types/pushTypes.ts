@@ -2,7 +2,7 @@
 // Triggers that may cause an event to fire.
 //
 
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
 export interface AddressBalanceTrigger {
   readonly type: 'address-balance'
@@ -87,7 +87,7 @@ export interface BroadcastTx {
 export interface PushMessage {
   readonly title?: string
   readonly body?: string
-  readonly data?: { [key: string]: string } // JSON to push to device
+  readonly data?: Record<string, string> // JSON to push to device
 }
 
 export type PushEventState =

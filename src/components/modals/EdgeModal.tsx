@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { BackHandler, Dimensions, Platform, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import DeviceInfo from 'react-native-device-info'
 import {
   Gesture,
@@ -26,7 +26,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 const BACKGROUND_ALPHA = 0.7
@@ -119,7 +119,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
       offset.value = withTiming(
         Dimensions.get('window').height,
         { duration },
-        () => runOnJS(bridge.remove)()
+        () => {
+          runOnJS(bridge.remove)()
+        }
       )
     })
   }, [bridge, opacity, offset])
@@ -132,7 +134,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
         return true
       }
     )
-    return () => backHandler.remove()
+    return () => {
+      backHandler.remove()
+    }
   }, [handleCancel])
 
   const gesture = Gesture.Pan()

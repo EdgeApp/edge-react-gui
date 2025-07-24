@@ -92,4 +92,6 @@ function call(cmdstring: string) {
   })
 }
 
-main().catch(e => console.log(e.message))
+main().catch(e => {
+  console.log(e.message)
+})

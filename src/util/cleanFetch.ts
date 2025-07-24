@@ -1,4 +1,4 @@
-import { Cleaner, uncleaner } from 'cleaners'
+import { type Cleaner, uncleaner } from 'cleaners'
 import deepmerge from 'deepmerge'
 
 // Alias of fetch's first parameter

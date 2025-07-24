@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { AccountSyncBar } from '../../components/progress-indicators/AccountSyncBar'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 
 describe('ProgressBar', () => {
   const mockState: FakeState = {

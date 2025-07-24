@@ -1,18 +1,18 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { makeEvent } from 'yavent'
 
 import { showError } from '../components/services/AirshipInstance'
 import { useSelector } from '../types/reactRedux'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import {
   asLocalAccountSettings,
   asNotifInfo,
-  LocalAccountSettings,
-  NotifInfo,
-  NotifState,
-  PasswordReminder,
-  SpendingLimits
+  type LocalAccountSettings,
+  type NotifInfo,
+  type NotifState,
+  type PasswordReminder,
+  type SpendingLimits
 } from '../types/types'
 import { logActivity } from '../util/logger'
 
@@ -95,7 +95,9 @@ export function toggleAccountBalanceVisibility(): ThunkAction<void> {
           data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 
@@ -105,9 +107,9 @@ export function setPasswordReminder(
   return (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
-    writePasswordReminderSetting(account, passwordReminder).catch(error =>
+    writePasswordReminderSetting(account, passwordReminder).catch(error => {
       showError(error)
-    )
+    })
   }
 }
 
@@ -138,7 +140,9 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
         }
         dispatch({ type: 'SPAM_FILTER_OFF' })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 

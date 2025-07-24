@@ -5,23 +5,23 @@ import { sprintf } from 'sprintf-js'
 import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAsset } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { removeIsoPrefix, runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
-import {
+import type {
   FiatPlugin,
   FiatPluginFactory,
   FiatPluginStartParams,
   FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
-import {
+import type {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
-import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { type IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardsCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
@@ -81,14 +81,15 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         if (activeCards.length === userRewardsCards.activeCards.length) {
           logActivity(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
-          return await refreshRewardsCards(retries + 1)
+          await refreshRewardsCards(retries + 1)
+          return
         }
         userRewardsCards = { activeCards, archivedCards }
         await showDashboard({ showLoading: false })
       })
       .catch(async error => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
-        return await refreshRewardsCards(retries + 1)
+        await refreshRewardsCards(retries + 1)
       })
   }
 
@@ -118,10 +119,14 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .then(async () => {
             await showUi.showToast(lstrings.fragment_copied)
           })
-          .catch(e => showError(e))
+          .catch(e => {
+            showError(e)
+          })
       },
       onCardPress({ url }) {
-        showUi.openExternalWebView({ url }).catch(err => showError(err))
+        showUi.openExternalWebView({ url }).catch(err => {
+          showError(err)
+        })
       },
       onHelpPress() {
         openBrowserUri(SUPPORT_URL).catch((error: unknown) => {
@@ -171,10 +176,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const { walletId, tokenId } = walletListResult
 
     const wallet = account.currencyWallets[walletId]
-    if (wallet == null)
-      return await showUi.showError(
-        new Error(`Missing wallet with ID ${walletId}`)
-      )
+    if (wallet == null) {
+      await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+      return
+    }
     const currencyCode = getCurrencyCode(wallet, tokenId)
 
     let providerQuote: FiatProviderQuote | undefined
@@ -263,7 +268,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
             await showDashboard({ showLoading: true })
-            await refreshRewardsCards(0).catch(error => showError(error))
+            await refreshRewardsCards(0).catch(error => {
+              showError(error)
+            })
             await showDashboard({ showLoading: false })
           })
           .catch(error => {

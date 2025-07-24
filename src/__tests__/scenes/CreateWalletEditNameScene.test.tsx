@@ -6,7 +6,7 @@ import { CreateWalletEditNameScene } from '../../components/scenes/CreateWalletE
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletEditNameComponent', () => {

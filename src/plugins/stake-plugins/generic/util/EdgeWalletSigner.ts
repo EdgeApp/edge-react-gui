@@ -1,5 +1,5 @@
 import { defineReadOnly } from '@ethersproject/properties'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeMemo,
   EdgeSpendTarget,

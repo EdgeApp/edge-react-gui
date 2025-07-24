@@ -5,29 +5,29 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
-  ImportKeyOption,
+  type ImportKeyOption,
   SPECIAL_CURRENCY_INFO
 } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { WalletCreateItem } from '../../selectors/getCreateWalletList'
+import type { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { FlatListItem } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
-  walletNames: { [key: string]: string }
+  walletNames: Record<string, string>
   importText: string
 }
 
@@ -119,7 +119,9 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
       if (knowledgeBaseUri != null) {
         const onPress = () => {
-          Linking.openURL(knowledgeBaseUri).catch(err => showError(err))
+          Linking.openURL(knowledgeBaseUri).catch(err => {
+            showError(err)
+          })
         }
         description = (
           <Paragraph>
@@ -181,9 +183,9 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                   rightButtonType="editable"
                   title={opt.displayName}
                   maximumHeight="large"
-                  onPress={async () =>
+                  onPress={async () => {
                     await handleEditValue(value, pluginId, opt)
-                  }
+                  }}
                   error={error || value === ''}
                 >
                   <View
@@ -214,12 +216,9 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
   )
 
   const handleNext = useHandler(async () => {
-    const allKeyOptions = new Map<
-      string,
-      { [opt: string]: string | undefined }
-    >()
+    const allKeyOptions = new Map<string, Record<string, string | undefined>>()
     importOpts.forEach((opts, pluginId) => {
-      const keyOptions: { [name: string]: string | undefined } = {}
+      const keyOptions: Record<string, string | undefined> = {}
 
       for (const opt of opts) {
         const value = values.get(getOptionKey(pluginId, opt))

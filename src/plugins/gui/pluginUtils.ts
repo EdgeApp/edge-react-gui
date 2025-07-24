@@ -1,11 +1,11 @@
 import { div, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDataStore } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDataStore } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { FiatDirection } from './fiatPluginTypes'
-import {
+import type { FiatDirection } from './fiatPluginTypes'
+import type {
   FiatProviderQuote,
   FiatProviderQuoteError,
   FiatProviderQuoteErrorTypes,
@@ -17,24 +17,25 @@ export const createStore = (
   store: EdgeDataStore
 ): FiatProviderStore => {
   return {
-    deleteItem: async (itemId: string) =>
-      await store.deleteItem(storeId, itemId),
+    deleteItem: async (itemId: string) => {
+      await store.deleteItem(storeId, itemId)
+    },
     listItemIds: async () => await store.listItemIds(storeId),
     getItem: async (itemId: string) => await store.getItem(storeId, itemId),
-    setItem: async (itemId: string, value: string) =>
+    setItem: async (itemId: string, value: string) => {
       await store.setItem(storeId, itemId, value)
+    }
   }
 }
 
-const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } =
-  {
-    underLimit: 1,
-    overLimit: 2,
-    paymentUnsupported: 3,
-    regionRestricted: 4,
-    assetUnsupported: 5,
-    fiatUnsupported: 6
-  }
+const ERROR_PRIORITIES: Record<FiatProviderQuoteErrorTypes, number> = {
+  underLimit: 1,
+  overLimit: 2,
+  paymentUnsupported: 3,
+  regionRestricted: 4,
+  assetUnsupported: 5,
+  fiatUnsupported: 6
+}
 
 export const getRateFromQuote = (
   quote: FiatProviderQuote,

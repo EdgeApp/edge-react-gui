@@ -1,4 +1,4 @@
-import { AppConfig } from '../types/types'
+import type { AppConfig } from '../types/types'
 import { edgeDark } from './variables/edgeDark'
 import { edgeLight } from './variables/edgeLight'
 

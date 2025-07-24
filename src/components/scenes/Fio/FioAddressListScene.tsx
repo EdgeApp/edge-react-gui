@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -9,8 +9,8 @@ import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { FioAddress, FioDomain } from '../../../types/types'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { FioAddress, FioDomain } from '../../../types/types'
 import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -19,8 +19,8 @@ import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
 import { showError } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -88,7 +88,9 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
       () => {
-        this.fetchData().catch(err => showError(err))
+        this.fetchData().catch(err => {
+          showError(err)
+        })
       }
     )
   }
@@ -146,13 +148,15 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               )}
               {fioAddresses.map((address: FioAddress) => (
                 <FioNameRow
-                  key={`${address.name}`}
+                  key={address.name}
                   name={address.name}
                   bundledTxs={String(address.bundledTxs)}
                   icon={
                     <Image source={fioAddressLogo} style={styles.iconImg} />
                   }
-                  onPress={() => this.onAddressPress(address)}
+                  onPress={() => {
+                    this.onAddressPress(address)
+                  }}
                 />
               ))}
             </View>
@@ -167,7 +171,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               )}
               {fioDomains.map((domain: FioDomain) => (
                 <FioNameRow
-                  key={`${domain.name}`}
+                  key={domain.name}
                   name={domain.name}
                   expiration={domain.expiration}
                   icon={
@@ -178,7 +182,9 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                       size={theme.rem(1.5)}
                     />
                   }
-                  onPress={() => this.onDomainPress(domain)}
+                  onPress={() => {
+                    this.onDomainPress(domain)
+                  }}
                 />
               ))}
             </View>
@@ -198,11 +204,15 @@ export class FioAddressList extends React.Component<Props, LocalState> {
             <ButtonsView
               primary={{
                 label: lstrings.fio_address_list_screen_button_register,
-                onPress: () => navigation.navigate('fioAddressRegister')
+                onPress: () => {
+                  navigation.navigate('fioAddressRegister')
+                }
               }}
               secondary={{
                 label: lstrings.fio_address_list_domain_register,
-                onPress: () => navigation.navigate('fioDomainRegister')
+                onPress: () => {
+                  navigation.navigate('fioDomainRegister')
+                }
               }}
             />
           </View>

@@ -1,7 +1,7 @@
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { executePlugin } from '../plugins/gui/fiatPlugin'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 
@@ -25,7 +25,9 @@ export function executePluginAction(
       guiPlugin: guiPlugins[pluginId],
       navigation,
       regionCode: { countryCode: 'US' },
-      onLogEvent: (event, values) => dispatch(logEvent(event, values)),
+      onLogEvent: (event, values) => {
+        dispatch(logEvent(event, values))
+      },
       dispatch
     })
   }

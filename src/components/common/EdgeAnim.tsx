@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { ViewProps } from 'react-native'
+import type { ViewProps } from 'react-native'
 import Animated, {
-  ComplexAnimationBuilder,
+  type ComplexAnimationBuilder,
   Easing,
   FadeIn,
   FadeInDown,

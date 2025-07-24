@@ -1,9 +1,9 @@
 import '@walletconnect/react-native-compat'
 
 import { Core } from '@walletconnect/core'
-import Web3Wallet, { Web3WalletTypes } from '@walletconnect/web3wallet'
+import Web3Wallet, { type Web3WalletTypes } from '@walletconnect/web3wallet'
 import { asNumber, asObject, asString, asUnknown } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { ENV } from '../../env'
@@ -117,7 +117,9 @@ export const WalletConnectService = (props: Props) => {
       const handleSessionRequestSync = (
         event: Web3WalletTypes.SessionRequest
       ) => {
-        handleSessionRequest(event).catch(err => showError(err))
+        handleSessionRequest(event).catch(err => {
+          showError(err)
+        })
       }
 
       if (
@@ -130,7 +132,9 @@ export const WalletConnectService = (props: Props) => {
         )
       }
       console.log('WalletConnect initialized')
-      waitingClients.forEach(f => f(walletConnectClient.client as Web3Wallet))
+      waitingClients.forEach(f => {
+        f(walletConnectClient.client!)
+      })
 
       return () => {
         walletConnectClient.client?.events.removeListener(

@@ -6,11 +6,11 @@ import TSHARE_REWARD_POOL_ABI from '../../../abi/TSHARE_REWARD_POOL_ABI.json'
 import UNISWAP_V2_PAIR from '../../../abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from '../../../abi/UNISWAP_V2_ROUTER_02.json'
 import WRAPPED_FTM_ABI from '../../../abi/WRAPPED_FTM_ABI.json'
-import { StakeProviderInfo } from '../../types'
+import type { StakeProviderInfo } from '../../types'
 import { makeEcosystem } from '../Ecosystem'
 import { makeCemeteryPolicy } from '../policies/cemeteryPolicy'
 import { makeMasonryPolicy } from '../policies/masonryPolicy'
-import { StakePolicyInfo } from '../stakePolicy'
+import type { StakePolicyInfo } from '../stakePolicy'
 
 // -----------------------------------------------------------------------------
 // Contract Info Map

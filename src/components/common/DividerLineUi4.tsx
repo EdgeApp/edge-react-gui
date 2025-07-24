@@ -2,7 +2,7 @@ import * as React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DEFAULT_MARGIN_REM } from './Margins'
 
 interface Props {

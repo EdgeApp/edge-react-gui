@@ -1,12 +1,12 @@
 import { add } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeMemoryWallet,
   EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -14,11 +14,11 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -180,12 +180,12 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
           marginRem={[0, 0, 1]}
-          onPress={() =>
+          onPress={() => {
             navigation.navigate('edgeTabs', {
               screen: 'walletsTab',
               params: { screen: 'walletList' }
             })
-          }
+          }}
         />
       </View>
     )

@@ -1,4 +1,4 @@
-import { EdgeSwapRequestOptions } from 'edge-core-js'
+import type { EdgeSwapRequestOptions } from 'edge-core-js'
 import { useMemo } from 'react'
 
 import { useSelector } from '../../types/reactRedux'

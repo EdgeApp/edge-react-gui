@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
 import { initialState } from '../../reducers/scenes/SettingsReducer'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('BuyCrypto', () => {

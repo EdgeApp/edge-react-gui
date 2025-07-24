@@ -1,5 +1,5 @@
 import { filterNull } from '../../../../util/safeFilters'
-import {
+import type {
   ActionEffect,
   EffectCheckResult,
   ExecutionContext,

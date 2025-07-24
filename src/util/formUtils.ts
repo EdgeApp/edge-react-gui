@@ -1,4 +1,4 @@
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 
 export const getDiskletFormData = async <T extends object>(
   disklet: Disklet,

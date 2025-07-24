@@ -1,8 +1,8 @@
 import { useIsFocused } from '@react-navigation/native'
 import { add, div, gt, gte, toFixed } from 'biggystring'
-import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
+import type { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import React, { useState } from 'react'
-import { SectionList, View, ViewStyle } from 'react-native'
+import { SectionList, View, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { updateSwapCount } from '../../actions/RequestReviewActions'
@@ -19,9 +19,9 @@ import {
 } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { ThunkAction } from '../../types/reduxTypes'
-import { SwapTabSceneProps } from '../../types/routerTypes'
-import { GuiSwapInfo } from '../../types/types'
+import type { ThunkAction } from '../../types/reduxTypes'
+import type { SwapTabSceneProps } from '../../types/routerTypes'
+import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import {
@@ -55,7 +55,7 @@ import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { SwapProviderRow } from '../rows/SwapProviderRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
@@ -173,12 +173,17 @@ export const SwapConfirmationScene = (props: Props) => {
       .then(async result => {
         if (!result) handleExchangeTimerExpired()
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   })
 
   // Close the quote if the component unmounts
   useUnmount(() => {
-    if (!calledApprove) selectedQuote.close().catch(err => showError(err))
+    if (!calledApprove)
+      selectedQuote.close().catch(err => {
+        showError(err)
+      })
   })
 
   const handleSlideComplete = async () => {
@@ -313,7 +318,12 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const handlePoweredByTap = useHandler(async () => {
     await Airship.show(bridge => (
-      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve()}>
+      <EdgeModal
+        bridge={bridge}
+        onCancel={() => {
+          bridge.resolve()
+        }}
+      >
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}

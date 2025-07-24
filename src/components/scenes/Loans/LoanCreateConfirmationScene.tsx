@@ -1,10 +1,13 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
-import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
+import type { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
-import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
+import type {
+  ActionOp,
+  SwapActionOp
+} from '../../../controllers/action-queue/types'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import {
@@ -17,15 +20,15 @@ import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { lstrings } from '../../../locales/strings'
-import {
+import type {
   BorrowEngine,
   BorrowPlugin
 } from '../../../plugins/borrow-plugins/types'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import {
-  LoanAsset,
+  type LoanAsset,
   makeAaveCreateActionProgram
 } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
@@ -57,7 +60,7 @@ export interface LoanCreateConfirmationParams {
   srcWallet: EdgeCurrencyWallet
 }
 
-const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
+const FEE_VOLATILITY_MULTIPLIER: Record<string, string> = {
   ethereum: '2',
   polygon: '1.5'
 }

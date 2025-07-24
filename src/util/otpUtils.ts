@@ -1,5 +1,5 @@
 import { asBoolean, asDate, asObject, asOptional } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { makeEvent } from 'yavent'
 

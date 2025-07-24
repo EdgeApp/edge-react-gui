@@ -1,10 +1,10 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'
 
 interface Props {
@@ -37,7 +37,9 @@ export const AddressQr = (props: Props) => {
         data={encodedUri}
         tokenId={tokenId}
         pluginId={wallet.currencyInfo.pluginId}
-        onPress={() => onPress(encodedUri)}
+        onPress={() => {
+          onPress(encodedUri)
+        }}
         marginRem={0}
       />
     </View>

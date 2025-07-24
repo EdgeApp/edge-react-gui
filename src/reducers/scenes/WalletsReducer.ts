@@ -1,7 +1,7 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
-import { combineReducers, Reducer } from 'redux'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { combineReducers, type Reducer } from 'redux'
 
-import { Action } from '../../types/reduxTypes'
+import type { Action } from '../../types/reduxTypes'
 
 export interface WalletsState {
   selectedWalletId: string

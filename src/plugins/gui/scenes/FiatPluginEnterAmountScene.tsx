@@ -1,7 +1,7 @@
 import pDebounce from 'p-debounce'
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, TextStyle, View } from 'react-native'
+import { Image, type TextStyle, View } from 'react-native'
 
 import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
@@ -18,7 +18,7 @@ import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { showError } from '../../../components/services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -27,10 +27,10 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
-import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
-import { StateManager, useStateManager } from '../hooks/useStateManager'
+import type { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
+import { type StateManager, useStateManager } from '../hooks/useStateManager'
 
 export interface FiatPluginEnterAmountParams {
   initState?: Partial<EnterAmountState>
@@ -136,7 +136,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             stateManager.update({ value2: otherValue, spinner2: false })
           }
         })
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     }
   }, [initState?.value1, convertValueDebounced, stateManager])
 
@@ -161,9 +163,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err =>
+    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => {
       showError(err)
-    )
+    })
     stateManager.update({ value1: value, spinner2: true })
     convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
@@ -171,16 +173,18 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value2: otherValue })
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
       .finally(() => {
         stateManager.update({ spinner2: false })
       })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err =>
+    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => {
       showError(err)
-    )
+    })
     stateManager.update({ value2: value, spinner1: true })
     convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
@@ -188,27 +192,31 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value1: otherValue, spinner1: false })
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
       .finally(() => {
         stateManager.update({ spinner1: false })
       })
   })
-  const handlePoweredByPress = useHandler(
-    async () => await onPoweredByClick(stateManager)
-  )
+  const handlePoweredByPress = useHandler(async () => {
+    await onPoweredByClick(stateManager)
+  })
   const handleSubmit = useHandler(async () => {
     await onSubmit(
       { response: { lastUsed: lastUsed.current, value1, value2 } },
       stateManager
-    ).catch(error => showError(error))
+    ).catch(error => {
+      showError(error)
+    })
   })
 
   const handleMax = useHandler(async () => {
     if (onMax != null) {
       stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(error =>
+      await onMax(lastUsed.current, stateManager).catch(error => {
         showError(error)
-      )
+      })
       stateManager.update({ spinner1: false, spinner2: false })
     }
   })

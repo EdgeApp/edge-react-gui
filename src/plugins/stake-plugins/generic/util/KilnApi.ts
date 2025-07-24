@@ -5,7 +5,7 @@ import {
   asObject,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 export class KilnError extends Error {
@@ -104,7 +104,7 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
       if (walletAddresses != null) {
         query.set('wallets', walletAddresses.join(','))
       }
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+
       const raw = await fetchKiln(`/v1/ada/stakes?${query.toString()}`)
       const response = asKilnResponse(asArray(asAdaStake))(raw)
       return response.data

@@ -1,6 +1,6 @@
 import { describe, it } from '@jest/globals'
 
-import { FiatProviderGetTokenIdFromContract } from '../../plugins/gui/fiatProviderTypes'
+import type { FiatProviderGetTokenIdFromContract } from '../../plugins/gui/fiatProviderTypes'
 import { ProviderSupportStore } from '../../plugins/gui/providers/ProviderSupportStore'
 import { processRevolutConfig } from '../../plugins/gui/providers/revolutProvider'
 

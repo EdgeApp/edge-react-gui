@@ -1,40 +1,43 @@
 import {
-  ChangeQuote,
-  ChangeQuoteRequest,
+  type ChangeQuote,
+  type ChangeQuoteRequest,
   filterStakePolicies,
-  StakePlugin,
-  StakePluginFactory,
-  StakePolicy,
-  StakePolicyFilter,
-  StakePosition,
-  StakePositionRequest
+  type StakePlugin,
+  type StakePluginFactory,
+  type StakePolicy,
+  type StakePolicyFilter,
+  type StakePosition,
+  type StakePositionRequest
 } from '../types'
 import {
-  CardanoPooledKilnAdapterConfig,
+  type CardanoPooledKilnAdapterConfig,
   makeCardanoKilnAdapter
 } from './policyAdapters/CardanoKilnAdaptor'
 import {
-  CoreumNativeStakeKitAdapterConfig,
+  type CoreumNativeStakeKitAdapterConfig,
   makeStakeKitAdapter
 } from './policyAdapters/CoreumStakeKitAdaptor'
 import {
-  EthereumPooledKilnAdapterConfig,
+  type EthereumPooledKilnAdapterConfig,
   makeEthereumKilnAdapter
 } from './policyAdapters/EthereumKilnAdaptor'
 import {
-  GlifInfinityPoolAdapterConfig,
+  type GlifInfinityPoolAdapterConfig,
   makeGlifInfinityPoolAdapter
 } from './policyAdapters/GlifInfinityPoolAdapter'
 import {
   makeTarotPoolAdapter,
-  TarotPoolAdapterConfig
+  type TarotPoolAdapterConfig
 } from './policyAdapters/TarotPoolAdaptor'
 import {
   makeThorchainYieldAdapter,
-  ThorchainYieldAdapterConfig
+  type ThorchainYieldAdapterConfig
 } from './policyAdapters/ThorchainYieldAdaptor'
-import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
-import { StakePluginInfo, StakePolicyConfig } from './types'
+import type {
+  StakeAdapterConfig,
+  StakePolicyAdapter
+} from './policyAdapters/types'
+import type { StakePluginInfo, StakePolicyConfig } from './types'
 
 export const makeGenericStakePlugin =
   (pluginInfo: StakePluginInfo): StakePluginFactory =>

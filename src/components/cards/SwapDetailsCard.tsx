@@ -1,5 +1,9 @@
 import { abs, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeTransaction,
+  EdgeTxSwap
+} from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, View } from 'react-native'
 import Mailer from 'react-native-mail'
@@ -21,7 +25,7 @@ import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -110,7 +114,9 @@ export function SwapDetailsCard(props: Props) {
         })
         .catch(error => {
           showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => showError(err))
+          Linking.openURL(formattedOrderUri).catch(err => {
+            showError(err)
+          })
         })
     } else {
       await Linking.openURL(formattedOrderUri)

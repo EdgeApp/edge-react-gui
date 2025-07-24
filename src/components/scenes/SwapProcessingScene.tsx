@@ -5,10 +5,10 @@ import {
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeDenomination,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeSwapRequestOptions
+  type EdgeDenomination,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeSwapRequestOptions
 } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -16,12 +16,12 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay, zeroString } from '../../util/utils'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
-import { SwapErrorDisplayInfo } from './SwapCreateScene'
+import type { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {
   swapRequest: EdgeSwapRequest

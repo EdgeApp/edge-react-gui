@@ -1,12 +1,12 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
-import { EdgeAsset } from '../types/types'
+import type { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 
 interface FioAsset {
   chainCode: string
-  tokenCodes?: { [tokenId: string]: string }
+  tokenCodes?: Record<string, string>
 }
 
 export interface FioValidationResult {
@@ -20,7 +20,7 @@ export interface FioValidationResult {
  * Special mapping that defines `chain_codes` and `token_codes` for FIO tx's
  * that do not fit the typical pattern of using currency codes
  */
-const FIO_ASSET_MAP: { [pluginId: string]: FioAsset } = {
+const FIO_ASSET_MAP: Record<string, FioAsset> = {
   algorand: {
     chainCode: 'ALGO'
   },

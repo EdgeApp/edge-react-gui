@@ -3,11 +3,11 @@ import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
-  EdgeAccount,
-  EdgeContext,
-  EdgeCurrencyWallet,
-  EdgeSwapInfo,
-  EdgeSwapQuote,
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet,
+  type EdgeSwapInfo,
+  type EdgeSwapQuote,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld
 } from 'edge-core-js'
@@ -21,7 +21,7 @@ import {
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeSwapTabSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'

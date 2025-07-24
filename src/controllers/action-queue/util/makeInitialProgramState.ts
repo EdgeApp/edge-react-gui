@@ -1,4 +1,4 @@
-import { ActionProgramState } from '../types'
+import type { ActionProgramState } from '../types'
 
 export const makeInitialProgramState = (
   clientId: string,

@@ -1,10 +1,10 @@
 import { div, round, toFixed } from 'biggystring'
-import { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates } from '../../types/types'
+import type { GuiExchangeRates } from '../../types/types'
 import {
   convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,
@@ -13,7 +13,7 @@ import {
 } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

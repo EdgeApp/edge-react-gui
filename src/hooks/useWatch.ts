@@ -17,7 +17,9 @@ export function useWatch<
   const [, rerender] = React.useState([])
 
   React.useEffect(() => {
-    return object.watch(name, () => rerender([]))
+    return object.watch(name, () => {
+      rerender([])
+    })
   }, [object, name])
 
   return object[name]

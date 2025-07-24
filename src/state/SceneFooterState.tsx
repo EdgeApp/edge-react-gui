@@ -8,7 +8,7 @@ import {
   withTiming
 } from 'react-native-reanimated'
 
-import { SceneWrapperInfo } from '../components/common/SceneWrapper'
+import type { SceneWrapperInfo } from '../components/common/SceneWrapper'
 import { useSharedEvent } from '../hooks/useSharedEvent'
 import { useState } from '../types/reactHooks'
 import { createStateProvider } from './createStateProvider'

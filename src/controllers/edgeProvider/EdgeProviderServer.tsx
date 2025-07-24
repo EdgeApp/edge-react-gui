@@ -1,6 +1,6 @@
 import { abs, div, mul } from 'biggystring'
 import { asArray, asOptional } from 'cleaners'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeParsedUri,
@@ -22,7 +22,7 @@ import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../../components/modals/WalletListModal'
 import {
   Airship,
@@ -30,10 +30,10 @@ import {
   showToast
 } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { Dispatch } from '../../types/reduxTypes'
-import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset, MapObject } from '../../types/types'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { Dispatch } from '../../types/reduxTypes'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import {
@@ -43,9 +43,9 @@ import {
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
-import { CurrencyConfigMap, removeIsoPrefix } from '../../util/utils'
+import { type CurrencyConfigMap, removeIsoPrefix } from '../../util/utils'
 import { asExtendedCurrencyCode } from './types/edgeProviderCleaners'
-import {
+import type {
   EdgeGetReceiveAddressOptions,
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
@@ -266,7 +266,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
-  async writeData(data: { [key: string]: string | undefined }): Promise<void> {
+  async writeData(data: Record<string, string | undefined>): Promise<void> {
     const account = this._account
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
@@ -274,9 +274,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       Object.keys(data).map(async key => {
         const val = data[key]
         if (val != null) {
-          return await store.setItem(this._plugin.storeId, key, val)
+          await store.setItem(this._plugin.storeId, key, val)
         } else {
-          return await store.deleteItem(this._plugin.storeId, key)
+          await store.deleteItem(this._plugin.storeId, key)
         }
       })
     )
@@ -432,7 +432,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           wallet: this._selectedWallet,
           metadata
         }
-      ).catch(error => showError(error))
+      ).catch(error => {
+        showError(error)
+      })
       return
     }
 
@@ -486,7 +488,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
         tokenId,
         spendInfo,
         lockTilesMap,
-        onBack: () => resolve(undefined),
+        onBack: () => {
+          resolve(undefined)
+        },
         onDone: (error, transaction) => {
           if (error != null) {
             reject(error)
@@ -579,7 +583,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
-  fixCurrencyCodes: { [badString: string]: EdgeAsset } = {},
+  fixCurrencyCodes: Record<string, EdgeAsset> = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeAsset[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return
@@ -655,7 +659,7 @@ export function upgradeExtendedCurrencyCodes(
 }
 
 function unfixCurrencyCode(
-  fixCurrencyCodes: { [badString: string]: EdgeAsset } = {},
+  fixCurrencyCodes: Record<string, EdgeAsset> = {},
   pluginId: string,
   tokenId: EdgeTokenId
 ): string | undefined {

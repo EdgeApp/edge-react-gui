@@ -3,8 +3,8 @@ import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
-import { ReturnKeyType, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { type ReturnKeyType, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
@@ -12,10 +12,13 @@ import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { lstrings } from '../../locales/strings'
-import { HomeAddress } from '../../types/FormTypes'
+import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
-import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
+import type {
+  EdgeTabsSceneProps,
+  NavigationBase
+} from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -29,7 +32,7 @@ import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
 import {
   BackupForTransferModal,
-  BackupForTransferModalResult
+  type BackupForTransferModalResult
 } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
@@ -37,7 +40,7 @@ import { CountryListModal } from '../modals/CountryListModal'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import {
   FlipInputModal2,
-  FlipInputModalResult
+  type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -49,8 +52,8 @@ import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import {
   ExchangedFlipInput2,
-  ExchangedFlipInputAmounts,
-  ExchangedFlipInputRef
+  type ExchangedFlipInputAmounts,
+  type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -119,7 +122,9 @@ export function DevTestScene(props: Props) {
           onAmountsChanged={onAmountsChanged}
         />
       )
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   const handleMultilineTextInputModal = () => {
@@ -131,7 +136,9 @@ export function DevTestScene(props: Props) {
         multiline
         bridge={bridge}
       />
-    )).catch(error => console.log(error))
+    )).catch(error => {
+      console.log(error)
+    })
   }
 
   const handleTextInputModal = () => {
@@ -142,7 +149,9 @@ export function DevTestScene(props: Props) {
         message="This is a single line TextInputModal"
         bridge={bridge}
       />
-    )).catch(error => console.log(error))
+    )).catch(error => {
+      console.log(error)
+    })
   }
 
   const navigation2 = useNavigation<NavigationBase>()
@@ -170,7 +179,9 @@ export function DevTestScene(props: Props) {
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
-  const headerCallback = () => console.log('Header pressed')
+  const headerCallback = () => {
+    console.log('Header pressed')
+  }
 
   // Hack. If wallet name first char is lowercase, start with crypto focused, otherwise default to fiat
   const defaultField =
@@ -618,7 +629,9 @@ export function DevTestScene(props: Props) {
               console.debug('parsed deeplink: ', parsed)
               dispatch(
                 launchDeepLink(navigation as NavigationBase, parsed)
-              ).catch(e => showError(e))
+              ).catch(e => {
+                showError(e)
+              })
             }}
             label="Activate DeepLink"
             type="primary"

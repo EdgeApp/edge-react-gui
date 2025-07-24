@@ -2,16 +2,16 @@ import { abs, add, div, gte, lt, lte, mul, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
-  EdgeAccount,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMemo,
-  EdgeMemoOption,
-  EdgeSpendInfo,
-  EdgeSpendTarget,
-  EdgeTokenId,
-  EdgeTransaction,
-  InsufficientFundsError
+  type EdgeAccount,
+  type EdgeCurrencyWallet,
+  type EdgeDenomination,
+  type EdgeMemo,
+  type EdgeMemoOption,
+  type EdgeSpendInfo,
+  type EdgeSpendTarget,
+  type EdgeTokenId,
+  type EdgeTransaction,
+  type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TextInput, View } from 'react-native'
@@ -39,8 +39,8 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { FioRequest, GuiExchangeRates } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -66,24 +66,27 @@ import {
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
   FlipInputModal2,
-  FlipInputModalRef,
-  FlipInputModalResult
+  type FlipInputModalRef,
+  type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import {
+import type {
   ExchangedFlipInputAmounts,
   ExchangeFlipInputFields
 } from '../themed/ExchangedFlipInput2'
@@ -91,9 +94,9 @@ import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SendFromFioRows } from '../themed/SendFromFioRows'
 import {
-  AddressEntryMethod,
+  type AddressEntryMethod,
   AddressTile2,
-  ChangeAddressResult
+  type ChangeAddressResult
 } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
@@ -280,7 +283,9 @@ const SendComponent = (props: Props) => {
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
-      showSendScamWarningModal(account.disklet).catch(err => showError(err))
+      showSendScamWarningModal(account.disklet).catch(err => {
+        showError(err)
+      })
     }
     initialMount.current = false
   }
@@ -477,21 +482,25 @@ const SendComponent = (props: Props) => {
           feeTokenId={null}
           forceField={fieldChanged}
           onAmountsChanged={handleAmountsChanged(spendTarget)}
-          onMaxSet={() => setMaxSpendSetter(index)}
+          onMaxSet={() => {
+            setMaxSpendSetter(index)
+          }}
           onFeesChange={noChangeMiningFee ? undefined : handleFeesChange}
           wallet={coreWallet}
           tokenId={tokenId}
           feeNativeAmount={feeNativeAmount}
         />
       ))
-        .catch(error => showError(error))
+        .catch(error => {
+          showError(error)
+        })
         .finally(() => {
           const insufficientFunds = pendingInsufficientFees.current
           if (insufficientFunds != null) {
             pendingInsufficientFees.current = undefined
-            showInsufficientFees(insufficientFunds).catch(error =>
+            showInsufficientFees(insufficientFunds).catch(error => {
               showError(error)
-            )
+            })
           }
         })
     }
@@ -1008,7 +1017,7 @@ const SendComponent = (props: Props) => {
             )
           : '0',
       chainCode: coreWallet.currencyInfo.currencyCode,
-      currencyCode: currencyCode,
+      currencyCode,
       memo,
       payeeFioAddress,
       payeePublicAddress,
@@ -1138,7 +1147,9 @@ const SendComponent = (props: Props) => {
       for (const target of spendInfo.spendTargets) {
         // Write FIO OBT per spendTarget
         await recordFioObtData(target, currencyCode, broadcastedTx.txid).catch(
-          error => showError(error)
+          error => {
+            showError(error)
+          }
         )
       }
 
@@ -1234,7 +1245,9 @@ const SendComponent = (props: Props) => {
           coreWallet,
           tokenId
         )
-      ).catch(err => showError(err))
+      ).catch(err => {
+        showError(err)
+      })
     }
   })
   useUnmount(() => {
@@ -1362,9 +1375,9 @@ const SendComponent = (props: Props) => {
             if (flipInputModalRef.current != null) {
               pendingInsufficientFees.current = insufficientFunds
             } else {
-              await showInsufficientFees(insufficientFunds).catch(error =>
+              await showInsufficientFees(insufficientFunds).catch(error => {
                 showError(error)
-              )
+              })
             }
           }
         }
@@ -1435,7 +1448,9 @@ const SendComponent = (props: Props) => {
         needsScrollToEnd.current = false
       }
     }, SCROLL_TO_END_DELAY_MS)
-    return () => clearTimeout(timeout)
+    return () => {
+      clearTimeout(timeout)
+    }
   })
 
   return (

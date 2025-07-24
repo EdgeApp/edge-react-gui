@@ -1,7 +1,11 @@
 import { div, mul } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
-import { GuiExchangeRates } from '../types/types'
+import type { GuiExchangeRates } from '../types/types'
 import { asBiggystring } from './cleaners'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'

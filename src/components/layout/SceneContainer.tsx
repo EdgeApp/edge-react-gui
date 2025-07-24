@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { UndoInsetStyle } from '../common/SceneWrapper'
+import type { UndoInsetStyle } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 

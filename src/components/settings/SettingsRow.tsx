@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TextStyle, View } from 'react-native'
+import { ActivityIndicator, Text, type TextStyle, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   withDelay,
@@ -9,7 +9,7 @@ import Animated, {
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { styled } from '../hoc/styled'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children?: React.ReactNode

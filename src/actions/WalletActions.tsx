@@ -7,7 +7,7 @@ import {
   asString,
   asUnknown
 } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -29,9 +29,9 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { MapObject } from '../types/types'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
+import type { MapObject } from '../types/types'
 import {
   getCurrencyCode,
   getCurrencyCodeMultiplier,
@@ -69,7 +69,9 @@ export function selectWalletToken({
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId))
-      wallet.changePaused(false).catch(error => showError(error))
+      wallet.changePaused(false).catch(error => {
+        showError(error)
+      })
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -168,7 +170,9 @@ function selectActivationRequiredWallet(
           )}
           buttons={{ ok: { label: lstrings.string_ok } }}
         />
-      )).catch(err => showError(err))
+      )).catch(err => {
+        showError(err)
+      })
       return false
     }
   }
@@ -199,7 +203,9 @@ export function updateMostRecentWalletsSelected(
           data: { mostRecentWallets: currentMostRecentWallets }
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 
@@ -307,7 +313,9 @@ export function activateWalletTokens(
                 message={sprintf(msg, feeString)}
                 buttons={{ ok: { label: lstrings.string_ok } }}
               />
-            )).catch(err => showError(err))
+            )).catch(err => {
+              showError(err)
+            })
             navigation.pop()
             return
           }

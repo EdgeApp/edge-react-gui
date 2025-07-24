@@ -1,7 +1,7 @@
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
-import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
+import type { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
-export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
+export const guiPlugins: Record<string, GuiPlugin> = {
   ach: {
     pluginId: 'amountquote',
     storeId: '',

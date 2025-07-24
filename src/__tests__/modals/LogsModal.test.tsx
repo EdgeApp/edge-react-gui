@@ -2,10 +2,10 @@ import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
-import { MultiLogOutput } from '../../actions/LogActions'
+import type { MultiLogOutput } from '../../actions/LogActions'
 import { LogsModal } from '../../components/modals/LogsModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 
 describe('LogsModal', () => {
   const fakeAccount: any = { disklet: { getText: async () => '' } }

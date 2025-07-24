@@ -1,5 +1,5 @@
-import { EdgeAsset } from '../types/types'
-import { CurrencyConfigMap } from './utils'
+import type { EdgeAsset } from '../types/types'
+import type { CurrencyConfigMap } from './utils'
 
 /**
  * Precisely identify the assets named by a currency-code array.

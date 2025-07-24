@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

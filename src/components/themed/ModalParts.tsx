@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { GradientFadeOut } from '../modals/GradientFadeout'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 
 interface ModalTitleProps {
   children: React.ReactNode

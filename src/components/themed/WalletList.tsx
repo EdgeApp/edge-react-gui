@@ -1,6 +1,6 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import type { ViewStyle } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
@@ -8,11 +8,11 @@ import { lstrings } from '../../locales/strings'
 import {
   filterWalletCreateItemListBySearchText,
   getCreateWalletList,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'

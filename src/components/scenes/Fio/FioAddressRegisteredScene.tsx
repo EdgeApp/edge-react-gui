@@ -3,12 +3,12 @@ import { Image, Text, View } from 'react-native'
 
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
@@ -60,7 +60,9 @@ export class FioAddressRegistered extends React.Component<Props> {
           </View>
           <MainButton
             marginRem={[4, 0, 2]}
-            onPress={() => navigation.navigate('fioAddressList')}
+            onPress={() => {
+              navigation.navigate('fioAddressList')
+            }}
             label={lstrings.title_fio_names}
           />
         </View>

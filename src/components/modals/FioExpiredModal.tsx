@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { Paragraph } from '../themed/EdgeText'
@@ -17,7 +17,9 @@ export function FioExpiredModal(props: {
     <EdgeModal
       bridge={bridge}
       title={title}
-      onCancel={() => bridge.resolve(false)}
+      onCancel={() => {
+        bridge.resolve(false)
+      }}
     >
       <Paragraph>{lstrings.fio_domain_details_expired_soon}</Paragraph>
       <Paragraph>{fioName}</Paragraph>
@@ -25,7 +27,9 @@ export function FioExpiredModal(props: {
         label={lstrings.title_fio_renew}
         marginRem={1}
         type="secondary"
-        onPress={() => bridge.resolve(true)}
+        onPress={() => {
+          bridge.resolve(true)
+        }}
       />
     </EdgeModal>
   )

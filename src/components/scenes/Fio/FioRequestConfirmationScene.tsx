@@ -1,5 +1,5 @@
 import { div, mul } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
@@ -12,14 +12,14 @@ import { View } from 'react-native'
 import { tokenIdToFioCode } from '../../../constants/FioConstants'
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { CcWalletMap } from '../../../reducers/FioReducer'
+import type { CcWalletMap } from '../../../reducers/FioReducer'
 import {
   getExchangeDenom,
   selectDisplayDenom
 } from '../../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../../selectors/WalletSelectors'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
@@ -44,11 +44,11 @@ import {
 } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../../services/ThemeContext'
-import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
+import type { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 
@@ -69,9 +69,7 @@ interface StateProps {
   isConnected: boolean
   fioPlugin?: EdgeCurrencyConfig
   currencyCode: string
-  connectedWalletsByFioAddress: {
-    [fioAddress: string]: CcWalletMap
-  }
+  connectedWalletsByFioAddress: Record<string, CcWalletMap>
   defaultIsoFiat: string
 }
 
@@ -109,7 +107,9 @@ export class FioRequestConfirmationConnected extends React.Component<
   }
 
   componentDidMount() {
-    this.setAddressesState().catch(err => showDevError(err))
+    this.setAddressesState().catch(err => {
+      showDevError(err)
+    })
   }
 
   setAddressesState = async () => {
@@ -151,9 +151,9 @@ export class FioRequestConfirmationConnected extends React.Component<
   }
 
   resetSlider = (): void => {
-    this.setState({ showSlider: false }, () =>
+    this.setState({ showSlider: false }, () => {
       this.setState({ showSlider: true })
-    )
+    })
   }
 
   onConfirm = async () => {
@@ -229,7 +229,8 @@ export class FioRequestConfirmationConnected extends React.Component<
         } catch (e: any) {
           this.setState({ loading: false })
           this.resetSlider()
-          return showError(lstrings.fio_get_fee_err_msg)
+          showError(lstrings.fio_get_fee_err_msg)
+          return
         }
 
         let payerPublicKey
@@ -309,18 +310,24 @@ export class FioRequestConfirmationConnected extends React.Component<
     if (
       fioPlugin &&
       !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom))
-    )
-      return showError(
+    ) {
+      showError(
         `${lstrings.send_fio_request_error_addr_not_exist}${
           fioAddressFrom ? '\n' + fioAddressFrom : ''
         }`
       )
+      return
+    }
     if (
       !walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
-    )
-      return showError(lstrings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
-    if (fioAddressFrom === this.state.fioAddressTo)
-      return showError(lstrings.fio_confirm_request_error_from_same)
+    ) {
+      showError(lstrings.fio_wallet_missing_for_fio_address)
+      return
+    } // Check if valid owned fio address
+    if (fioAddressFrom === this.state.fioAddressTo) {
+      showError(lstrings.fio_confirm_request_error_from_same)
+      return
+    }
     this.setState({ fioAddressFrom })
   }
 
@@ -376,10 +383,14 @@ export class FioRequestConfirmationConnected extends React.Component<
       />
     ))
     if (memo == null) return
-    if (memo.length > 64)
-      return showError(lstrings.send_fio_request_error_memo_inline)
-    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo))
-      return showError(lstrings.send_fio_request_error_memo_invalid_character)
+    if (memo.length > 64) {
+      showError(lstrings.send_fio_request_error_memo_inline)
+      return
+    }
+    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) {
+      showError(lstrings.send_fio_request_error_memo_invalid_character)
+      return
+    }
     this.setState({ memo })
   }
 

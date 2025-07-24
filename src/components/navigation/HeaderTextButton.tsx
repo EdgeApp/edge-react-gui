@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
 import { showError } from '../services/AirshipInstance'
@@ -28,7 +28,9 @@ export const HeaderTextButton = (props: Props) => {
     if (type === 'exit') {
       navigation.goBack()
     } else if (type === 'help') {
-      showHelpModal(navigation).catch(err => showError(err))
+      showHelpModal(navigation).catch(err => {
+        showError(err)
+      })
     }
   })
 

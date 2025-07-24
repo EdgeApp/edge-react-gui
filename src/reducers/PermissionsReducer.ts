@@ -1,8 +1,8 @@
 import { Platform } from 'react-native'
-import { PERMISSIONS, PermissionStatus } from 'react-native-permissions'
-import { Reducer } from 'redux'
+import { PERMISSIONS, type PermissionStatus } from 'react-native-permissions'
+import type { Reducer } from 'redux'
 
-import { Action } from '../types/reduxTypes'
+import type { Action } from '../types/reduxTypes'
 
 export interface PermissionsState {
   camera: PermissionStatus

@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
-import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -12,7 +12,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
-import {
+import type {
   ChangeQuoteRequest,
   PositionAllocation,
   StakePlugin,
@@ -21,7 +21,7 @@ import {
 } from '../../../plugins/stake-plugins/types'
 import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
+import type { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
@@ -43,7 +43,7 @@ import { SceneContainer } from '../../layout/SceneContainer'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
 interface Props extends EdgeSceneProps<'stakeOverview'> {
@@ -56,9 +56,7 @@ export interface StakeOverviewParams {
   walletId: string
 }
 
-interface DenomMap {
-  [cc: string]: EdgeDenomination
-}
+type DenomMap = Record<string, EdgeDenomination>
 
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
@@ -132,7 +130,9 @@ const StakeOverviewSceneComponent = (props: Props) => {
     if (isFocused) {
       dispatch(
         updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
-      ).catch(err => showError(err))
+      ).catch(err => {
+        showError(err)
+      })
     }
   }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
 
@@ -141,10 +141,14 @@ const StakeOverviewSceneComponent = (props: Props) => {
     const task = makePeriodicTask(() => {
       dispatch(
         updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
-      ).catch(err => showError(err))
+      ).catch(err => {
+        showError(err)
+      })
     }, 60 * 1000)
     task.start()
-    return () => task.stop()
+    return () => {
+      task.stop()
+    }
   }, [account, dispatch, stakePlugin, stakePolicyId, wallet])
 
   useAsyncEffect(

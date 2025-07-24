@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeToken,
   EdgeTokenId,
@@ -13,7 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -22,7 +22,7 @@ import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -120,11 +120,13 @@ function EditTokenSceneComponent(props: Props) {
   const handleSave = useHandler(async () => {
     // Validate input:
     if (currencyCode === '' || displayName === '') {
-      return await showMessage(lstrings.addtoken_invalid_information)
+      await showMessage(lstrings.addtoken_invalid_information)
+      return
     }
     const decimals = parseInt(decimalPlaces)
     if (isNaN(decimals)) {
-      return await showMessage(lstrings.edittoken_invalid_decimal_places)
+      await showMessage(lstrings.edittoken_invalid_decimal_places)
+      return
     }
 
     // Assemble the network location:
@@ -134,22 +136,24 @@ function EditTokenSceneComponent(props: Props) {
       if (item.type === 'number') {
         const number = parseInt(value)
         if (isNaN(number)) {
-          return await showMessage(
+          await showMessage(
             sprintf(
               lstrings.addtoken_invalid_1s,
               translateDescription(item.displayName)
             )
           )
+          return
         }
         networkLocation[item.key] = number
       } else if (item.type === 'string') {
         if (value === '') {
-          return await showMessage(
+          await showMessage(
             sprintf(
               lstrings.addtoken_invalid_1s,
               translateDescription(item.displayName)
             )
           )
+          return
         }
         networkLocation[item.key] = value
       }

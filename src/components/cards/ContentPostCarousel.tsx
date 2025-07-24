@@ -1,6 +1,6 @@
-import { ContentPost } from 'edge-info-server'
+import type { ContentPost } from 'edge-info-server'
 import React from 'react'
-import { ListRenderItem } from 'react-native'
+import type { ListRenderItem } from 'react-native'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'

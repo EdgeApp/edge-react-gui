@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import InAppReview from 'react-native-in-app-review'
@@ -9,11 +9,11 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import {
   asReviewTriggerData,
-  LocalAccountSettings,
-  ReviewTriggerData
+  type LocalAccountSettings,
+  type ReviewTriggerData
 } from '../types/types'
 import {
   readLocalAccountSettings,

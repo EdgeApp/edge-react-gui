@@ -1,11 +1,11 @@
-import {
+import type {
   EdgeMetadata,
   EdgeNetworkFee,
   EdgeReceiveAddress,
   EdgeTransaction
 } from 'edge-core-js'
 
-import { asExtendedCurrencyCode } from './edgeProviderCleaners'
+import type { asExtendedCurrencyCode } from './edgeProviderCleaners'
 
 export type ExtendedCurrencyCode = ReturnType<typeof asExtendedCurrencyCode>
 
@@ -64,7 +64,7 @@ export interface EdgeProviderSpendTarget {
 
 export interface EdgeProviderDeepLink {
   deepPath?: string
-  deepQuery?: { [key: string]: string | null }
+  deepQuery?: Record<string, string | null>
   promoCode?: string
 }
 
@@ -101,7 +101,7 @@ export interface EdgeProviderMethods {
    * Try to use as few keys as possible, but prefer storing JSON.
    * Writing `undefined` will delete the file.
    */
-  writeData: (data: { [key: string]: string | undefined }) => Promise<void>
+  writeData: (data: Record<string, string | undefined>) => Promise<void>
 
   /**
    * Read data back from the user's account.
@@ -111,7 +111,7 @@ export interface EdgeProviderMethods {
    * Returns the contents of the files that exist,
    * and `undefined` for files that don't exist.
    */
-  readData: (keys: string[]) => Promise<{ [key: string]: string | undefined }>
+  readData: (keys: string[]) => Promise<Record<string, string | undefined>>
 
   // ---- Display methods ----------------
 

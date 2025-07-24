@@ -1,15 +1,15 @@
 import { add, lt, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMemoryWallet,
-  EdgeSpendInfo,
-  EdgeTransaction,
+  type EdgeCurrencyWallet,
+  type EdgeDenomination,
+  type EdgeMemoryWallet,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -17,19 +17,19 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import {
   convertTransactionFeeToDisplayFee,
   truncateDecimals
 } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
+import type { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeyCalculateFeeParams {
   memoryWallet: EdgeMemoryWallet
@@ -114,7 +114,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       } else {
         const exchangeDenom = denominations.find(
           denom => denom.name === currencyCode
-        ) as EdgeDenomination
+        )!
         const displayDenom =
           displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
@@ -272,7 +272,9 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
       }
 
       await Promise.all(
-        tokenItems.map(async (item, index) => await getMax(item, index))
+        tokenItems.map(async (item, index) => {
+          await getMax(item, index)
+        })
       )
       await getMax(mainnetItem, tokenItems.length)
 

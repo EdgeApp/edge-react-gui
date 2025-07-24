@@ -2,9 +2,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { ActionDisplayInfo } from '../../controllers/action-queue/types'
+import type { ActionDisplayInfo } from '../../controllers/action-queue/types'
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 // -----------------------------------------------------------------------------

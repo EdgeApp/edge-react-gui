@@ -33,10 +33,13 @@
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
 import { asValue } from 'cleaners'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
-import { FiatDirection, FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
-import { AppParamList } from './routerTypes'
+import type {
+  FiatDirection,
+  FiatPaymentType
+} from '../plugins/gui/fiatPluginTypes'
+import type { AppParamList } from './routerTypes'
 
 export interface AztecoLink {
   type: 'azteco'
@@ -62,7 +65,7 @@ export interface PluginLink {
   type: 'plugin'
   pluginId: string
   path: string
-  query: { [key: string]: string | null }
+  query: Record<string, string | null>
 }
 
 export interface FiatPluginLink {
@@ -78,7 +81,7 @@ export interface FiatProviderLink {
   direction: FiatDirection
   providerId: string
   path: string
-  query: { [key: string]: string | null }
+  query: Record<string, string | null>
   uri: string
 }
 

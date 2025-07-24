@@ -1,6 +1,6 @@
-import { ProposalTypes } from '@walletconnect/types'
-import { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { EdgeAccount } from 'edge-core-js'
+import type { ProposalTypes } from '@walletconnect/types'
+import type { Web3WalletTypes } from '@walletconnect/web3wallet'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -20,14 +20,17 @@ import {
 } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset, WcConnectionInfo } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -54,7 +57,10 @@ export const WcConnectionsScene = (props: Props) => {
   const walletConnect = useWalletConnect()
 
   useMount(() => {
-    if (uri != null) onScanSuccess(uri).catch(err => showError(err))
+    if (uri != null)
+      onScanSuccess(uri).catch(err => {
+        showError(err)
+      })
   })
 
   useAsyncEffect(
@@ -123,7 +129,7 @@ export const WcConnectionsScene = (props: Props) => {
     await showScamWarningModal('firstWalletConnect')
 
     if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
-      return await Promise.resolve()
+      await Promise.resolve()
     } else {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
@@ -157,7 +163,9 @@ export const WcConnectionsScene = (props: Props) => {
           }
           type="primary"
           marginRem={[2, 0]}
-          onPress={async () => await handleNewConnectionPress()}
+          onPress={async () => {
+            await handleNewConnectionPress()
+          }}
           spinner={connecting}
         />
         <EdgeText style={styles.listTitle}>
@@ -176,7 +184,9 @@ export const WcConnectionsScene = (props: Props) => {
             <EdgeTouchableOpacity
               key={index}
               style={styles.listRow}
-              onPress={() => handleActiveConnectionPress(dAppConnection)}
+              onPress={() => {
+                handleActiveConnectionPress(dAppConnection)
+              }}
             >
               <FastImage
                 resizeMode="contain"
@@ -270,9 +280,9 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
   // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
   const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
 
-  const getChainIdsFromNamespaces = (namespaces: {
-    [key: string]: ProposalTypes.BaseRequiredNamespace
-  }): Set<string> => {
+  const getChainIdsFromNamespaces = (
+    namespaces: Record<string, ProposalTypes.BaseRequiredNamespace>
+  ): Set<string> => {
     const chainIds = new Set<string>()
     for (const key of Object.keys(namespaces)) {
       if (key.split(':').length === 2) {

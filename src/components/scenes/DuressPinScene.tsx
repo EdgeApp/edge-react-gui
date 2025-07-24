@@ -6,14 +6,14 @@ import { useHandler } from '../../hooks/useHandler'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { showError, showToast } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { DigitInput, MAX_PIN_LENGTH } from './inputs/DigitInput'
 
@@ -47,7 +47,9 @@ export const DuressPinScene = (props: Props) => {
         showToast(lstrings.duress_mode_set_pin_success)
         navigation.navigate('duressModeSetting')
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   }
 
   const handleChangePin = useHandler((newPin: string) => {

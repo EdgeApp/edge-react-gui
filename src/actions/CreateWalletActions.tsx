@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCreateCurrencyWallet,
   EdgeCurrencyConfig,
@@ -12,7 +12,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import {
+import type {
   AccountActivationPaymentInfo,
   HandleActivationInfo
 } from '../components/scenes/CreateWalletAccountSelectScene'
@@ -20,11 +20,11 @@ import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
-import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
+import type { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { EdgeAsset } from '../types/types'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
+import type { EdgeAsset } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
@@ -236,7 +236,9 @@ export function createAccountTransaction(
                 tokenId,
                 metadata: edgeMetadata
               })
-              .catch(err => console.warn(err))
+              .catch(err => {
+                console.warn(err)
+              })
             navigation.navigate('walletsTab', { screen: 'walletList' })
             setTimeout(() => {
               Airship.show<'ok' | undefined>(bridge => (
@@ -303,7 +305,7 @@ export function enableTokensAcrossWallets(
     const { currencyWallets } = account
 
     const walletIdTokenMap = newTokenItems.reduce(
-      (map: { [walletId: string]: string[] }, item) => {
+      (map: Record<string, string[]>, item) => {
         const { createWalletIds, tokenId } = item
 
         const walletId = createWalletIds[0]
@@ -321,7 +323,7 @@ export function enableTokensAcrossWallets(
         const wallet = currencyWallets[walletId]
         if (wallet == null) return
 
-        return await wallet.changeEnabledTokenIds([
+        await wallet.changeEnabledTokenIds([
           ...wallet.enabledTokenIds,
           ...walletIdTokenMap[walletId]
         ])

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import FastImage from 'react-native-fast-image'
 
@@ -9,12 +9,15 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import type {
+  NavigationBase,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -40,7 +43,9 @@ export const VisaCardCard = (props: Props) => {
     dispatch(logEvent('Visa_Card_Launch'))
     dispatch(
       executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')
-    ).catch(err => showError(err))
+    ).catch(err => {
+      showError(err)
+    })
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))

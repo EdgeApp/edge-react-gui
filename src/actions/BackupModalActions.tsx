@@ -1,15 +1,15 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import {
   BackupForAccountModal,
   BackupForTransferModal,
-  BackupForTransferModalResult,
-  BackupModalResult
+  type BackupForTransferModalResult,
+  type BackupModalResult
 } from '../components/modals/BackupModal'
 import { Airship, showDevError } from '../components/services/AirshipInstance'
-import { NavigationBase } from '../types/routerTypes'
+import type { NavigationBase } from '../types/routerTypes'
 
 let isBackupModalShowing = false
 
@@ -64,7 +64,9 @@ export const checkAndShowLightBackupModal = (
       .finally(() => {
         isBackupModalShowing = false
       })
-      .catch(error => showDevError(error))
+      .catch(error => {
+        showDevError(error)
+      })
     return true
   }
   return false

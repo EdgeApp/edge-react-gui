@@ -1,6 +1,6 @@
 import { asDate } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
-import { InfoCard } from 'edge-info-server'
+import type { EdgeAccount } from 'edge-core-js'
+import type { InfoCard } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
@@ -10,7 +10,7 @@ import {
   writeAccountNotifInfo
 } from '../actions/LocalSettingsActions'
 import { getLocaleOrDefaultString } from '../locales/intl'
-import { DisplayInfoCard, filterInfoCards } from './infoUtils'
+import { type DisplayInfoCard, filterInfoCards } from './infoUtils'
 import { getOsVersion } from './utils'
 
 /**

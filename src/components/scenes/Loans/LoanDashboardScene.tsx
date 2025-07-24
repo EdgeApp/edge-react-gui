@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItemInfo, View } from 'react-native'
+import { type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -9,7 +9,7 @@ import { isShowLoanWelcomeModal } from '../../../actions/LoanWelcomeActions'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
-import { LoanAccount } from '../../../controllers/loan-manager/types'
+import type { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
@@ -17,8 +17,11 @@ import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { Theme } from '../../../types/Theme'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
+import type { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
@@ -26,7 +29,10 @@ import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
 import { LoanWelcomeModal } from '../../modals/LoanWelcomeModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
@@ -181,7 +187,9 @@ export const LoanDashboardScene = (props: Props) => {
         .catch(err => {
           redText(err.message)
         })
-        .finally(() => setIsNewLoanLoading(false))
+        .finally(() => {
+          setIsNewLoanLoading(false)
+        })
     }
   })
   const handleInfoIconPress = useUrlHandler(

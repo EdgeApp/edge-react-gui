@@ -1,11 +1,11 @@
 import { abs, div, eq, gt, log10 } from 'biggystring'
-import {
+import type {
   EdgeCurrencyInfo,
   EdgeCurrencyWallet,
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import Share from 'react-native-share'
@@ -29,7 +29,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -44,7 +44,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionView } from '../layout/SectionView'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 export interface TransactionListRowProps {
@@ -227,7 +227,8 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
 
   const handlePress = useHandler(() => {
     if (transaction == null) {
-      return showError(lstrings.transaction_details_error_invalid)
+      showError(lstrings.transaction_details_error_invalid)
+      return
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
@@ -241,7 +242,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       failOnCancel: false,
       url
     }
-    Share.open(shareOptions).catch(e => showError(e))
+    Share.open(shareOptions).catch(e => {
+      showError(e)
+    })
   })
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene

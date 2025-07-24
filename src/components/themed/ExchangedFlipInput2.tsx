@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
-import { Platform, ReturnKeyType, View } from 'react-native'
+import { Platform, type ReturnKeyType, View } from 'react-native'
 
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -20,13 +20,13 @@ import {
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import {
-  FieldNum,
+  type FieldNum,
   FlipInput2,
-  FlipInputFieldInfos,
-  FlipInputRef
+  type FlipInputFieldInfos,
+  type FlipInputRef
 } from './FlipInput2'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
