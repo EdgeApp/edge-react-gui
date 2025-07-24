@@ -558,7 +558,7 @@ Payment Method: ${paymentType}
             if (!response.ok) {
               const text = await response.text()
               // Exit the form scene
-              showUi.exitScene()
+              await showUi.exitScene()
               throw new Error(`Error creating Zendesk ticket: ${text}`)
             }
 
@@ -572,11 +572,11 @@ Payment Method: ${paymentType}
             })
 
             // Exit the confirmation scene
-            showUi.exitScene()
+            await showUi.exitScene()
             // Exit the form scene
-            showUi.exitScene()
+            await showUi.exitScene()
             // Exit the amount quote scene
-            showUi.exitScene()
+            await showUi.exitScene()
           },
           closeQuote: async (): Promise<void> => {}
         }

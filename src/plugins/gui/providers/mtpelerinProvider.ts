@@ -842,8 +842,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
                   case 'submitted-quote': {
                     // If the user has submitted a quote, then navigating back
                     // will skip all the way back to the plugin list scene.
-                    showUi.exitScene()
-                    showUi.exitScene()
+                    showUi.exitScene().catch(() => {})
+                    showUi.exitScene().catch(() => {})
                     userFlowStatus = 'navigating-back'
                     // Prevent default navigation
                     return false

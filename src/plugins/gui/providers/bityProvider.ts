@@ -811,7 +811,7 @@ export const bityProvider: FiatProviderFactory = {
                   }
                 }
 
-                showUi.exitScene()
+                await showUi.exitScene()
               },
               onClose: () => {}
             })
@@ -933,7 +933,7 @@ const completeBuyOrder = async (
       }
     },
     onDone: async () => {
-      showUi.exitScene()
+      await showUi.exitScene()
     }
   })
 }
