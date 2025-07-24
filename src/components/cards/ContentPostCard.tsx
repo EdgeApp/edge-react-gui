@@ -36,8 +36,8 @@ export const ContentPostCard = (props: Props) => {
   const url = getLocaleOrDefaultString(localeBlogUrl)
   const image = theme.isDark ? darkImageUrl : lightImageUrl
 
-  const handlePress = useHandler(() => {
-    if (url != null) openBrowserUri(url)
+  const handlePress = useHandler(async () => {
+    if (url != null) await openBrowserUri(url)
   })
   const imageSrc = React.useMemo(() => ({ uri: image }), [image])
 

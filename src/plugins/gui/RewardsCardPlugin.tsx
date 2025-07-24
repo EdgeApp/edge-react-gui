@@ -124,7 +124,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         showUi.openExternalWebView({ url }).catch(err => showError(err))
       },
       onHelpPress() {
-        openBrowserUri(SUPPORT_URL)
+        openBrowserUri(SUPPORT_URL).catch((error: unknown) => {
+          showError(error)
+        })
       },
       onNewPress() {
         showNewCardWalletListModal().catch(showUi.showError)
@@ -287,7 +289,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const showWelcome = async () => {
     await showUi.rewardsCardWelcome({
       onMoreInfo() {
-        openBrowserUri(SUPPORT_URL)
+        openBrowserUri(SUPPORT_URL).catch((error: unknown) => {
+          showError(error)
+        })
       },
       onNewCard() {
         provider.otherMethods

@@ -41,14 +41,14 @@ export const HelpModal = (props: Props) => {
 
   const handleClose = useHandler(() => bridge.resolve())
 
-  const handleSitePress = useHandler((title: string, uri: string) => {
+  const handleSitePress = useHandler(async (title: string, uri: string) => {
     if (loggedIn) {
       navigation.navigate('webView', { title, uri })
       Airship.clear()
     } else {
       // Just open in a browser since we don't all the features of a full
       // logged-in scene:
-      openBrowserUri(uri)
+      await openBrowserUri(uri)
     }
   })
 
@@ -94,9 +94,12 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
-        onPress={() =>
-          handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)
-        }
+        onPress={async () => {
+          await handleSitePress(
+            lstrings.help_knowledge_base,
+            config.knowledgeBase
+          )
+        }}
       />
 
       <SelectableRow
@@ -109,9 +112,9 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
-        onPress={() =>
-          handleSitePress(lstrings.help_support, config.supportSite)
-        }
+        onPress={async () => {
+          await handleSitePress(lstrings.help_support, config.supportSite)
+        }}
       />
 
       <SelectableRow
@@ -137,7 +140,9 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
-        onPress={() => handleSitePress(helpSiteMoreInfoText, config.website)}
+        onPress={async () => {
+          await handleSitePress(helpSiteMoreInfoText, config.website)
+        }}
       />
       <SelectableRow
         icon={
@@ -149,12 +154,12 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
-        onPress={() =>
-          handleSitePress(
+        onPress={async () => {
+          await handleSitePress(
             lstrings.title_terms_of_service,
             config.termsOfServiceSite
           )
-        }
+        }}
       />
       <View style={styles.footer}>
         <EdgeText style={styles.version}>{versionText}</EdgeText>
