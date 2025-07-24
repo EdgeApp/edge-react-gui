@@ -1220,28 +1220,29 @@
     "@types/tough-cookie" "^4.0.5"
     tough-cookie "^4.1.4"
 
-"@chain-registry/client@^1.53.59":
-  version "1.53.59"
-  resolved "https://registry.yarnpkg.com/@chain-registry/client/-/client-1.53.59.tgz#3d2898408be0ce5a810a4da62a0698ad52bb9297"
-  integrity sha512-l0fZWT1R5ZTc9lLRF/oB+1Y+CLrRu+lu/wgLsh5Wjz825C9grE6Eknc0H8O9sn1x98FLt0xImIiLrws0FDNJfw==
+"@chain-registry/client@^2.0.28":
+  version "2.0.30"
+  resolved "https://registry.yarnpkg.com/@chain-registry/client/-/client-2.0.30.tgz#ac7a5d761a469ae1f1edc680e5f9c52b8fbd1024"
+  integrity sha512-GcfM90oR1s18E7LrclttKb7At3mIJt1FeJyThjPTT+3HkSeTfkkReQDxSwiYOJbghS/5MwAIGyPz3yIj0K3GuQ==
   dependencies:
-    "@chain-registry/types" "^0.50.59"
-    "@chain-registry/utils" "^1.51.59"
+    "@chain-registry/types" "^2.0.30"
+    "@chain-registry/utils" "^2.0.30"
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^0.50.154", "@chain-registry/types@^0.50.59":
-  version "0.50.154"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.50.154.tgz#f88016627aeda2fbf3ea924e8c4cce230d058cd6"
-  integrity sha512-jq48g9FC/JRlr6jB3ln4WVpgI2gXk50kbqLxGVqgfSnd523MEgGMoRjWYjUu/Yycu1G2+U1uaUcziVC3LXEiDA==
+"@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30":
+  version "2.0.30"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.30.tgz#08c7d5d02b04e0049ae42e3c701862c1cfd7d87a"
+  integrity sha512-5bcDLnsNhJ5lB7f9StIOebo+0Rf6C5sA1CtCQ4OtmNJVhqouIWLDvnQngJBbyiknYd3JPskI/HyP6AZ6P3GF3g==
 
-"@chain-registry/utils@^1.51.59":
-  version "1.51.59"
-  resolved "https://registry.yarnpkg.com/@chain-registry/utils/-/utils-1.51.59.tgz#1880770c1ae402e422a25d0a0bbc585188a61e85"
-  integrity sha512-13KyabWP4+KuVuWlCukT7dxYRaB5nedozE1elNpqj+BzbjE9UfxNCZAme0g02ESGI2ueqczICRn2HedWlaf7DA==
+"@chain-registry/utils@^2.0.30":
+  version "2.0.30"
+  resolved "https://registry.yarnpkg.com/@chain-registry/utils/-/utils-2.0.30.tgz#0b79b0aae565fa5c4540e6f1f507c45122356d14"
+  integrity sha512-ld5PW6dyXdb435onjRpINzlWVE3BKSl7jbgJkWEo6pYnb1TQj6c/n0AUlj4cN9/KhOu1Y0rojPrqgpRR6B5bhQ==
   dependencies:
-    "@chain-registry/types" "^0.50.59"
+    "@chain-registry/types" "^2.0.30"
     bignumber.js "9.1.2"
+    chain-registry "^2.0.30"
     sha.js "^2.4.11"
 
 "@confio/ics23@^0.6.8":
@@ -8124,12 +8125,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^1.69.241:
-  version "1.69.247"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.69.247.tgz#9124961a6d8fa850818274da77e6cd6010b2cb1f"
-  integrity sha512-ZCIMtAE5i8PDp6ybJhE7BCpbcakcHSP912Qw19eK267mRCYoba6xzbKs8aYZOMCGVMhGKKy5B+rvw5RAs09OAQ==
+chain-registry@^2.0.28, chain-registry@^2.0.30:
+  version "2.0.30"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.30.tgz#d99c5e71e48480f7e2d225228c75ea1adb7e3b40"
+  integrity sha512-EGwgdjXYVU9oBCKOpXImAEvJIC4zP6C3Efl/Jw5llNUchCuy1zilgzhuj802Sf+Y/f2DITfF1CjNfSty4eeYNg==
   dependencies:
-    "@chain-registry/types" "^0.50.154"
+    "@chain-registry/types" "^2.0.30"
 
 chalk@^2.0.1, chalk@^2.4.2:
   version "2.4.2"
@@ -9701,12 +9702,13 @@ edge-core-js@^2.33.1:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.55.1:
-  version "4.55.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.55.1.tgz#d66694081e146f4922190885b60f631161ae3aa8"
-  integrity sha512-hyhWBDTkstO9lAzeTgy5oiBgZIamNTM9c1gz8TDGZe9IS1VsUgHh+cqD0/mMb52cavOMfzJvywzMtRDk7OAPlA==
+edge-currency-accountbased@^4.55.2:
+  version "4.55.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.55.2.tgz#eeb013152e2f273d5f0796a5fa73ad5c1a997cd1"
+  integrity sha512-PqtqSSflx3W0F4As+DBoxhohtVfEL8qUbBVxIiYo4tF+0wd4mPkBbZh0h6xmnHMVkT//EhRVkH5Qo2ergnVFig==
   dependencies:
-    "@chain-registry/client" "^1.53.59"
+    "@chain-registry/client" "^2.0.28"
+    "@chain-registry/types" "^2.0.28"
     "@cosmjs/stargate" "^0.32.3"
     "@emurgo/cardano-serialization-lib-nodejs" "^14.1.1"
     "@ethereumjs/common" "^4.0.0"
@@ -9731,7 +9733,7 @@ edge-currency-accountbased@^4.55.1:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^1.69.241"
+    chain-registry "^2.0.28"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
