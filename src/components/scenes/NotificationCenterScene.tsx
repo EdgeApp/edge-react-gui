@@ -26,7 +26,7 @@ import { updateNotificationInfo } from '../services/NotificationService.ts'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText.tsx'
 
-interface Props extends EdgeAppSceneProps<'notificationCenter'> {}
+type Props = EdgeAppSceneProps<'notificationCenter'>
 
 export const NotificationCenterScene = (props: Props) => {
   const { navigation } = props
@@ -207,7 +207,7 @@ export const NotificationCenterScene = (props: Props) => {
             const handleCloseNewToken = async () => {
               // Since this isn't a priority notification, we can just fully
               // complete it here
-              await completeNotif(key)
+              await completeNotif(key)()
               dispatch({
                 type: 'CORE/DISMISS_NEW_TOKENS',
                 data: { walletId }
