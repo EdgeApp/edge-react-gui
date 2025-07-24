@@ -1,7 +1,0 @@
-**/scratch.*
-/android/
-/ios/
-/src/controllers/edgeProvider/injectThisInWebView.js
-/src/controllers/edgeProvider/client/rolledUp.js
-node_modules
-artifacts
