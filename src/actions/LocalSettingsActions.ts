@@ -113,19 +113,16 @@ export function setPasswordReminder(
 
 export function setDeveloperModeOn(
   developerModeOn: boolean
-): ThunkAction<void> {
-  return (dispatch, getState) => {
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    writeDeveloperModeSetting(account, developerModeOn)
-      .then(() => {
-        if (developerModeOn) {
-          dispatch({ type: 'DEVELOPER_MODE_ON' })
-          return
-        }
-        dispatch({ type: 'DEVELOPER_MODE_OFF' })
-      })
-      .catch(error => showError(error))
+    await writeDeveloperModeSetting(account, developerModeOn)
+    if (developerModeOn) {
+      dispatch({ type: 'DEVELOPER_MODE_ON' })
+      return
+    }
+    dispatch({ type: 'DEVELOPER_MODE_OFF' })
   }
 }
 
