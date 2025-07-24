@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
-import { showError } from '../services/AirshipInstance'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -40,7 +39,7 @@ interface Props {
   parentWalletId?: string
 
   // Callbacks:
-  onPress?: (walletId: string, tokenId: EdgeTokenId) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId) => Promise<void>
 }
 
 /**
@@ -81,10 +80,8 @@ export function WalletList(props: Props) {
   const handlePress = React.useMemo(
     () =>
       onPress ??
-      ((walletId: string, tokenId: EdgeTokenId) => {
-        dispatch(selectWalletToken({ navigation, walletId, tokenId })).catch(
-          err => showError(err)
-        )
+      (async (walletId: string, tokenId: EdgeTokenId): Promise<void> => {
+        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       }),
     [dispatch, navigation, onPress]
   )
