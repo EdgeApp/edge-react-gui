@@ -123,8 +123,8 @@ export const SettingsScene = (props: Props) => {
       ? lstrings.string_disable
       : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-  const handleUpgrade = useHandler(() => {
-    showBackupModal({ navigation: navigation as NavigationBase })
+  const handleUpgrade = useHandler(async () => {
+    await showBackupModal({ navigation: navigation as NavigationBase })
   })
 
   const handleLockUnlock = useHandler(async () => {

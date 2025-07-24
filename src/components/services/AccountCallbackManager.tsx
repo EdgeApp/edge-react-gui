@@ -28,7 +28,7 @@ import {
   datelog,
   snooze
 } from '../../util/utils'
-import { Airship } from './AirshipInstance'
+import { Airship, showDevError } from './AirshipInstance'
 
 const REFRESH_RATES_MS = 30000
 
@@ -176,7 +176,9 @@ export function AccountCallbackManager(props: Props) {
             if (wallet.currencyInfo.pluginId === 'fio') {
               dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
             } else {
-              showBackupModal({ navigation })
+              showBackupModal({ navigation }).catch(error => {
+                showDevError(error)
+              })
             }
           }
         }

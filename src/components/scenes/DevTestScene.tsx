@@ -344,7 +344,7 @@ export function DevTestScene(props: Props) {
             label="BackupModal (Long, Original with image)"
             marginRem={0.25}
             onPress={async () => {
-              showBackupModal({
+              await showBackupModal({
                 navigation: navigation as NavigationBase,
                 forgetLoginId: 'test'
               })

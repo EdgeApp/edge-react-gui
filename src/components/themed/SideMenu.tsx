@@ -112,15 +112,15 @@ export function SideMenuComponent(props: Props) {
 
   /// ---- Callbacks ----
 
-  const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
+  const handleDeleteAccount = (userInfo: EdgeUserInfo) => async () => {
     const { loginId, username } = userInfo
     if (username == null) {
-      showBackupModal({
+      await showBackupModal({
         navigation: navigationBase,
         forgetLoginId: loginId
       })
     } else {
-      Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+      await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.forget_account_title}
@@ -137,7 +137,7 @@ export function SideMenuComponent(props: Props) {
             cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
           }}
         />
-      )).catch(err => showError(err))
+      ))
     }
   }
 
