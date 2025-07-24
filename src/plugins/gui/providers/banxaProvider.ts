@@ -1082,10 +1082,9 @@ const findLimit = (
   fiatCode: string,
   banxaLimits: BanxaTxLimit[]
 ): BanxaTxLimit | undefined => {
-  for (let i = 0; i < banxaLimits.length; i++) {
-    const l = banxaLimits[i]
-    if (l.fiat_code === fiatCode) {
-      return l
+  for (const limit of banxaLimits) {
+    if (limit.fiat_code === fiatCode) {
+      return limit
     }
   }
 }

@@ -58,6 +58,7 @@ const asProviderPriorityMap = asObject(asNumber)
 type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
 // A map keyed by supported payment types and values of ProviderPriorityMap
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
 type PaymentTypeProviderPriorityMap = ReturnType<
   typeof asPaymentTypeProviderPriorityMap

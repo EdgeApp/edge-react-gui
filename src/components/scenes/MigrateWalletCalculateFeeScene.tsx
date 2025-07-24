@@ -37,7 +37,7 @@ export interface MigrateWalletCalculateFeeParams {
   migrateWalletList: MigrateWalletItem[]
 }
 
-interface Props extends EdgeAppSceneProps<'migrateWalletCalculateFee'> {}
+type Props = EdgeAppSceneProps<'migrateWalletCalculateFee'>
 
 type AssetRowState = string | Error
 

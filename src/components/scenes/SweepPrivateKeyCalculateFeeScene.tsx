@@ -37,7 +37,7 @@ export interface SweepPrivateKeyCalculateFeeParams {
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
-interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'> {}
+type Props = EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'>
 
 const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const { navigation, route } = props

@@ -133,9 +133,9 @@ async function writeLog(type: LogType, content: string): Promise<void> {
 export async function clearLogs(type: LogType): Promise<void> {
   const paths = logMap[type]
 
-  for (let i = 0; i < paths.length; i++) {
-    if (await RNFS.exists(paths[i])) {
-      await RNFS.unlink(paths[i])
+  for (const path of paths) {
+    if (await RNFS.exists(path)) {
+      await RNFS.unlink(path)
     }
   }
 }
@@ -160,7 +160,7 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
 
 export async function logWithType(
   type: LogType,
-  ...info: Array<number | string | null | {}>
+  ...info: Array<number | string | null | object>
 ): Promise<void> {
   const logs = normalize(...info)
 
@@ -179,13 +179,15 @@ export async function logWithType(
   global.clog(logs)
 }
 
-export function log(...info: Array<number | string | null | {}>): void {
+export function log(...info: Array<number | string | null | object>): void {
   logWithType('info', ...info).catch(err => {
     console.warn(err)
   })
 }
 
-export function logActivity(...info: Array<number | string | null | {}>): void {
+export function logActivity(
+  ...info: Array<number | string | null | object>
+): void {
   logWithType('activity', ...info).catch(err => {
     console.warn(err)
   })

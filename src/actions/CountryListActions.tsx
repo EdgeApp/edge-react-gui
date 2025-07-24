@@ -109,7 +109,7 @@ export const showCountrySelectionModal =
           countryCode: selectedCountryCode,
           stateProvinceCode: selectedStateProvince
         }
-        await dispatch(
+        dispatch(
           updateOneSetting({
             countryCode: selectedCountryCode,
             stateProvinceCode: selectedStateProvince

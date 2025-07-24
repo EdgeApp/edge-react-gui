@@ -34,7 +34,11 @@ class PasswordReminderComponent extends React.PureComponent<Props> {
   }
 }
 
-export const PasswordReminderService = connect<StateProps, DispatchProps, {}>(
+export const PasswordReminderService = connect<
+  StateProps,
+  DispatchProps,
+  unknown
+>(
   state => ({
     settingsLoaded: state.ui.settings.settingsLoaded,
     passwordReminder: state.ui.passwordReminder

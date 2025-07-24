@@ -77,7 +77,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioRequestList'> {}
+type OwnProps = EdgeAppSceneProps<'fioRequestList'>
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
@@ -599,7 +599,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return headers
   }
 
-  listKeyExtractor(item: FioRequest) {
+  listKeyExtractor = (item: FioRequest) => {
     return `${item.fio_request_id.toString()}${item.fioWalletId}`
   }
 

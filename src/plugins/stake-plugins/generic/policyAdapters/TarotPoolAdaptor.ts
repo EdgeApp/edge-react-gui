@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import '@ethersproject/shims'
 
 import { add, ceil, div, eq, mul } from 'biggystring'
@@ -163,8 +164,8 @@ export const makeTarotPoolAdapter = (
     }
 
     let rawTxCost = 0
-    for (let i = 0; i < unsignedRawTxBytesArray.length; i++) {
-      if (unsignedRawTxBytesArray[i] === '00') {
+    for (const byte of unsignedRawTxBytesArray) {
+      if (byte === '00') {
         rawTxCost += 4 // cost for zero byte
       } else {
         rawTxCost += 16 // cost for non-zero byte
@@ -425,7 +426,7 @@ export const makeTarotPoolAdapter = (
               log.address.toLowerCase() ===
               lpTokenContract.address.toLowerCase()
           )
-          const log = eventLogs.filter(
+          const log = eventLogs.find(
             log =>
               log.topics[0] ===
               lpTokenContract.interface.getEventTopic(
@@ -433,7 +434,7 @@ export const makeTarotPoolAdapter = (
                   'Transfer(address,address,uint256)'
                 ]
               )
-          )[0]
+          )
 
           if (log == null) throw new Error('Cannot find log with amount')
 

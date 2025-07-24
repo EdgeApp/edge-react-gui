@@ -687,7 +687,7 @@ const stakeRequest = async (
     THOR_LIMIT_UNITS,
     DIVIDE_PRECISION
   )
-  const slippageNativeAmount = await mul(slippageDisplayAmount, multiplier)
+  const slippageNativeAmount = mul(slippageDisplayAmount, multiplier)
   const utxoSourceAddress = primaryAddress
   const forceChangeAddress = primaryAddress
   let needsFundingPrimary = false

@@ -234,7 +234,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const OtpSettingsScene = connect<StateProps, {}, OwnProps>(
+export const OtpSettingsScene = connect<StateProps, unknown, OwnProps>(
   state => ({
     account: state.core.account
   }),

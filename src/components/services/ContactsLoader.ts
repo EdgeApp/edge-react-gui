@@ -185,7 +185,9 @@ const merchantPartners: GuiContact[] = [
   }
 ]
 
-export function ContactsLoader(props: {}) {
+interface Props {}
+
+export function ContactsLoader(props: Props) {
   const contactsPermission = useSelector(state => state.permissions.contacts)
   const dispatch = useDispatch()
 

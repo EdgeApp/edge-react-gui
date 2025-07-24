@@ -459,6 +459,7 @@ export async function asyncWaterfall(
       }
     } catch (e: any) {
       const i = e.index
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.splice(i, 1)
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.pop()
@@ -682,6 +683,7 @@ export async function fuzzyTimeout<T>(
       if (allDone || timer == null) {
         done = true
         if (results.length > 0) resolve(results)
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         else reject(failures)
       }
     }

@@ -328,7 +328,7 @@ export const toggleUserPausedWallet =
       isPaused ? lstrings.unpause_wallet_toast : lstrings.pause_wallet_toast
     )
 
-    await dispatch({
+    dispatch({
       type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS',
       data: { userPausedWallets: newPausedWallets }
     })

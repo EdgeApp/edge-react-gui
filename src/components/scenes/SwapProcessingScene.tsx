@@ -30,7 +30,7 @@ export interface SwapProcessingParams {
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
-interface Props extends SwapTabSceneProps<'swapProcessing'> {}
+type Props = SwapTabSceneProps<'swapProcessing'>
 
 export function SwapProcessingScene(props: Props) {
   const { route, navigation } = props
@@ -120,7 +120,8 @@ function processSwapQuoteError({
   if (error == null) return
 
   // Some plugins get the insufficient funds error wrong:
-  const errorMessage = error instanceof Error ? error.message : String(error)
+  const errorMessage =
+    error instanceof Error ? error.message : JSON.stringify(error)
 
   // Track swap errors to sentry:
   trackSwapError(error, swapRequest)

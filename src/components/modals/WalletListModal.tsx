@@ -175,8 +175,9 @@ export function WalletListModal(props: Props) {
         }}
       />
     ))
-    if (result === 'continue')
-      await bridge.resolve({ type: 'bankSignupRequest' })
+    if (result === 'continue') {
+      bridge.resolve({ type: 'bankSignupRequest' })
+    }
   })
 
   // #endregion Handlers

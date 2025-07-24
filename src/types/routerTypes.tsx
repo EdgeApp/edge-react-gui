@@ -1,5 +1,4 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import type { NavigatorScreenParams } from '@react-navigation/core'
 import type * as NavigationCore from '@react-navigation/core'
 import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type {
@@ -131,17 +130,19 @@ export type SwapTabParamList = {} & {
 
 export type EdgeTabsParamList = {} & {
   home: undefined
-  walletsTab: NavigatorScreenParams<WalletsTabParamList> | undefined
-  buyTab: NavigatorScreenParams<BuyTabParamList> | undefined
-  sellTab: NavigatorScreenParams<SellTabParamList> | undefined
-  swapTab: NavigatorScreenParams<SwapTabParamList> | undefined
+  walletsTab:
+    | NavigationCore.NavigatorScreenParams<WalletsTabParamList>
+    | undefined
+  buyTab: NavigationCore.NavigatorScreenParams<BuyTabParamList> | undefined
+  sellTab: NavigationCore.NavigatorScreenParams<SellTabParamList> | undefined
+  swapTab: NavigationCore.NavigatorScreenParams<SwapTabParamList> | undefined
   extraTab: undefined
   devTab: undefined
 }
 
 export type EdgeAppStackParamList = {} & {
   // We nest the tabs inside this master stack:
-  edgeTabs: NavigatorScreenParams<EdgeTabsParamList>
+  edgeTabs: NavigationCore.NavigatorScreenParams<EdgeTabsParamList>
 
   assetSettings: undefined
   changeMiningFee2: ChangeMiningFeeParams
@@ -235,11 +236,13 @@ export type EdgeAppStackParamList = {} & {
 
 // A drawer router that contains the main `edgeAppStack`
 export type DrawerParamList = {} & {
-  edgeAppStack: NavigatorScreenParams<EdgeAppStackParamList> | undefined
+  edgeAppStack:
+    | NavigationCore.NavigatorScreenParams<EdgeAppStackParamList>
+    | undefined
 }
 
 export type RootParamList = {} & {
-  edgeApp: NavigatorScreenParams<DrawerParamList> | undefined
+  edgeApp: NavigationCore.NavigatorScreenParams<DrawerParamList> | undefined
   gettingStarted: GettingStartedParams
   login: LoginParams
 }

@@ -39,7 +39,7 @@ interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioAddressDetails'> {}
+type OwnProps = EdgeAppSceneProps<'fioAddressDetails'>
 
 interface LocalState {
   fioWalletLoading: boolean
@@ -194,7 +194,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioAddressDetailsScene = connect<StateProps, {}, OwnProps>(
+export const FioAddressDetailsScene = connect<StateProps, unknown, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets
   }),

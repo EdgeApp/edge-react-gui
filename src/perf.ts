@@ -28,9 +28,9 @@ new PerformanceObserver(list => {
 
   // Clear measure entries:
   const names = measureEntries.map(entries => entries.name)
-  names.map(name => {
+  for (const name of names) {
     performance.clearMeasures(name)
-  })
+  }
 }).observe({ entryTypes: ['measure'] })
 
 //

@@ -206,7 +206,7 @@ function bootWallet(
   return out
 }
 
-export const WalletLifecycle = connect<StateProps, {}, {}>(
+export const WalletLifecycle = connect<StateProps, unknown, unknown>(
   state => ({
     account: state.core.account,
     context: state.core.context,

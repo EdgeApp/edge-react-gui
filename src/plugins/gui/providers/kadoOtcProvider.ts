@@ -313,7 +313,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
               address != null &&
               address !== '0x0000000000000000000000000000000000000000'
             ) {
-              const tokenId = await params.getTokenIdFromContract({
+              const tokenId = params.getTokenIdFromContract({
                 pluginId,
                 contractAddress: address
               })

@@ -50,8 +50,8 @@ const CurrencyRowComponent = (props: Props) => {
     name = (
       <>
         <Text style={{ color: theme.warningText }}>
-          {lstrings.compromised_key_label}
-        </Text>{' '}
+          {lstrings.compromised_key_label + ' '}
+        </Text>
         {name}
       </>
     )

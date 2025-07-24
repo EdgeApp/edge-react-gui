@@ -10,7 +10,7 @@ const main = async (): Promise<void> => {
   mylog(_currentPath)
   const newpath = join(_currentPath, '..', 'keystores')
   chdir(newpath)
-  const password = (await randomBytes(16)).toString('hex')
+  const password = randomBytes(16).toString('hex')
 
   const { alias } = await prompts({
     name: 'alias',

@@ -22,6 +22,8 @@ async function fetchRevolut(endpoint: string, init?: RequestInit) {
     method: 'GET',
     ...init,
     headers: {
+      // This will blow up if we pass `headers` as an array:
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...init?.headers,
       Accept: 'application/json',
       'X-API-KEY': apiKey

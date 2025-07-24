@@ -45,13 +45,13 @@ export const asObjectIn = <K extends string | number | symbol, T>(
 
     const out: any = {}
     const keys = Object.keys(raw)
-    for (let i = 0; i < keys.length; ++i) {
+    for (const key of keys) {
       try {
-        const key = asKey(keys[i])
-        if (key === '__proto__') continue
-        out[key] = asT(raw[key])
+        const cleanKey = asKey(key)
+        if (cleanKey === '__proto__') continue
+        out[cleanKey] = asT(raw[cleanKey])
       } catch (error) {
-        throw locateError(error, '[' + JSON.stringify(keys[i]) + ']', 0)
+        throw locateError(error, '[' + JSON.stringify(key) + ']', 0)
       }
     }
     return out

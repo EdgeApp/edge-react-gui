@@ -260,7 +260,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const emptyDenomination = { name: '', multiplier: '0' }
 
-export const FioRequestRow = connect<StateProps, {}, OwnProps>(
+export const FioRequestRow = connect<StateProps, unknown, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
     const { defaultIsoFiat } = state.ui.settings

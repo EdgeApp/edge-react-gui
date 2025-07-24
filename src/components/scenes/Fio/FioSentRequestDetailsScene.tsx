@@ -28,7 +28,7 @@ export interface FioSentRequestDetailsParams {
   selectedFioSentRequest: FioRequest
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioSentRequestDetails'> {}
+type OwnProps = EdgeAppSceneProps<'fioSentRequestDetails'>
 
 interface StateProps {
   fiatSymbol: string
@@ -143,7 +143,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
+export const FioSentRequestDetailsScene = connect<
+  StateProps,
+  unknown,
+  OwnProps
+>(
   state => {
     const { defaultFiat, defaultIsoFiat } = state.ui.settings
     return {

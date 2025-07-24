@@ -5,7 +5,9 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch } from '../../types/reactRedux'
 import { showError } from './AirshipInstance'
 
-export function NetworkActivity(props: {}): null {
+interface Props {}
+
+export function NetworkActivity(props: Props): null {
   const dispatch = useDispatch()
 
   React.useEffect(() => {

@@ -148,8 +148,8 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
                 // @ts-expect-error
                 label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
-                // @ts-expect-error
                 onPress={() => {
+                  // @ts-expect-error
                   this.setState({ networkFeeOption: feeSetting })
                 }}
               >

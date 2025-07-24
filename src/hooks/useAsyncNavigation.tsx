@@ -37,6 +37,7 @@ export const useAsyncNavigation = <Nav extends NavigationProp<any>>(
   }
 
   const out: Nav = {
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
     ...navigation,
     navigate: createDebouncedMethod(navigation.navigate),
     // Wrap other methods if they exist

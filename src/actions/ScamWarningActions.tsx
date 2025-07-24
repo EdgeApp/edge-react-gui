@@ -46,6 +46,7 @@ export const showSendScamWarningModal = async (disklet: Disklet) => {
 }
 
 // const scamWarningDisklet = makeReactNativeDisklet()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const asScamWarningInfo = asObject({
   firstPrivateKeyView: asOptional(asBoolean, true),
   firstWalletConnect: asOptional(asBoolean, true),

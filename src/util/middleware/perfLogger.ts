@@ -16,7 +16,7 @@ if (ENV.ENABLE_REDUX_PERF_LOGGING) {
     })
 }
 
-export const perfLogger: Middleware<{}, RootState, Dispatch> =
+export const perfLogger: Middleware<unknown, RootState, Dispatch> =
   store => next => action => {
     const start = Date.now()
     const result = next(action)

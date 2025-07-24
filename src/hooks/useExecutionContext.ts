@@ -6,6 +6,7 @@ import { useSelector, useStore } from '../types/reactRedux'
 
 export const useExecutionContext = (mockMode?: boolean): ExecutionContext => {
   const store = useStore()
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { dispatch, getState } = store
 
   const account: EdgeAccount = useSelector(state => state.core.account)
