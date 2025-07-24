@@ -107,7 +107,7 @@ interface StateProps {
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onSelectWallet: (walletId: string, tokenId: EdgeTokenId) => Promise<void>
-  toggleAccountBalanceVisibility: () => void
+  toggleAccountBalanceVisibility: () => Promise<void>
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
@@ -422,9 +422,9 @@ export class RequestSceneComponent extends React.Component<
     )).catch(err => showError(err))
   }
 
-  toggleBalanceVisibility = () => {
+  toggleBalanceVisibility = async () => {
     triggerHaptic('impactLight')
-    this.props.toggleAccountBalanceVisibility()
+    await this.props.toggleAccountBalanceVisibility()
   }
 
   render() {
@@ -874,8 +874,8 @@ export const RequestScene = withWallet((props: OwnProps) => {
           })
         )
       }}
-      toggleAccountBalanceVisibility={() =>
-        dispatch(toggleAccountBalanceVisibility())
+      toggleAccountBalanceVisibility={async () =>
+        await dispatch(toggleAccountBalanceVisibility())
       }
     />
   )

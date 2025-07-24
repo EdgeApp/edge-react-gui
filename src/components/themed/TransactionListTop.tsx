@@ -136,7 +136,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  toggleBalanceVisibility: () => void
+  toggleBalanceVisibility: () => Promise<void>
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -957,8 +957,8 @@ export function TransactionListTop(props: OwnProps) {
 
   const navigationDebounced = useAsyncNavigation(navigation)
 
-  const handleBalanceVisibility = useHandler(() => {
-    dispatch(toggleAccountBalanceVisibility())
+  const handleBalanceVisibility = useHandler(async () => {
+    await dispatch(toggleAccountBalanceVisibility())
   })
 
   return (

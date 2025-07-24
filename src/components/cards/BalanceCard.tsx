@@ -92,8 +92,8 @@ export const BalanceCard = (props: Props) => {
   const formattedFiat = isBalanceVisible
     ? formatNumber(fiatAmount, { toFixed: 2 })
     : lstrings.redacted_placeholder
-  const handleToggleAccountBalanceVisibility = useHandler(() => {
-    dispatch(toggleAccountBalanceVisibility())
+  const handleToggleAccountBalanceVisibility = useHandler(async () => {
+    await dispatch(toggleAccountBalanceVisibility())
   })
 
   const handleSend = useHandler(async () => {

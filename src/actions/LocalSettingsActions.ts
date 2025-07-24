@@ -2,7 +2,6 @@ import { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { makeEvent } from 'yavent'
 
-import { showError } from '../components/services/AirshipInstance'
 import { useSelector } from '../types/reactRedux'
 import { ThunkAction } from '../types/reduxTypes'
 import {
@@ -82,66 +81,60 @@ export function useNotifCount(): number | undefined {
   }, [notifState, isDuressAccount])
 }
 
-export function toggleAccountBalanceVisibility(): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     const currentAccountBalanceVisibility =
       state.ui.settings.isAccountBalanceVisible
-    writeAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
-      .then(() => {
-        dispatch({
-          type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
-          data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
-        })
-      })
-      .catch(error => showError(error))
+    await writeAccountBalanceVisibility(
+      account,
+      !currentAccountBalanceVisibility
+    )
+    dispatch({
+      type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+      data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+    })
   }
 }
 
 export function setPasswordReminder(
   passwordReminder: PasswordReminder
-): ThunkAction<void> {
-  return (dispatch, getState) => {
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
-    writePasswordReminderSetting(account, passwordReminder).catch(error =>
-      showError(error)
-    )
+    await writePasswordReminderSetting(account, passwordReminder)
   }
 }
 
 export function setDeveloperModeOn(
   developerModeOn: boolean
-): ThunkAction<void> {
-  return (dispatch, getState) => {
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    writeDeveloperModeSetting(account, developerModeOn)
-      .then(() => {
-        if (developerModeOn) {
-          dispatch({ type: 'DEVELOPER_MODE_ON' })
-          return
-        }
-        dispatch({ type: 'DEVELOPER_MODE_OFF' })
-      })
-      .catch(error => showError(error))
+    await writeDeveloperModeSetting(account, developerModeOn)
+    if (developerModeOn) {
+      dispatch({ type: 'DEVELOPER_MODE_ON' })
+    } else {
+      dispatch({ type: 'DEVELOPER_MODE_OFF' })
+    }
   }
 }
 
-export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function setSpamFilterOn(
+  spamFilterOn: boolean
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    writeSpamFilterSetting(account, spamFilterOn)
-      .then(() => {
-        if (spamFilterOn) {
-          dispatch({ type: 'SPAM_FILTER_ON' })
-          return
-        }
-        dispatch({ type: 'SPAM_FILTER_OFF' })
-      })
-      .catch(error => showError(error))
+    await writeSpamFilterSetting(account, spamFilterOn)
+    if (spamFilterOn) {
+      dispatch({ type: 'SPAM_FILTER_ON' })
+    } else {
+      dispatch({ type: 'SPAM_FILTER_OFF' })
+    }
   }
 }
 

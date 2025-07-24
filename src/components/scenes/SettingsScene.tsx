@@ -217,8 +217,8 @@ export const SettingsScene = (props: Props) => {
     await writeDisableAnimations(newDisableAnim)
   })
 
-  const handleToggleSpamFilter = useHandler(() => {
-    dispatch(setSpamFilterOn(!spamFilterOn))
+  const handleToggleSpamFilter = useHandler(async () => {
+    await dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
   const handleChangePassword = useHandler(async (): Promise<void> => {
