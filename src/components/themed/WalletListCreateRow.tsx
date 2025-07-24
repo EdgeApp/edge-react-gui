@@ -30,7 +30,7 @@ export interface WalletListCreateRowProps {
 
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
-  onPress?: (walletId: string, tokenId: EdgeTokenId) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId) => Promise<void>
 }
 
 export const WalletListCreateRowComponent = (
@@ -77,8 +77,12 @@ export const WalletListCreateRowComponent = (
     }
     pressMutexRef.current = true
 
-    const handleRes = (wallet?: EdgeCurrencyWallet) =>
-      onPress != null && wallet != null ? onPress(wallet.id, tokenId) : null
+    const handleRes = (wallet?: EdgeCurrencyWallet): void => {
+      if (onPress != null && wallet != null) {
+        onPress(wallet.id, tokenId).catch(error => showError(error))
+      }
+    }
+
     if (walletType != null) {
       await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
