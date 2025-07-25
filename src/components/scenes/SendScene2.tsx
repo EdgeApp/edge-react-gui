@@ -313,6 +313,13 @@ const SendComponent = (props: Props) => {
         spendTarget.publicAddress = parsedUri?.publicAddress
         spendTarget.nativeAmount = parsedUri?.nativeAmount
 
+        const memos: EdgeMemo[] = []
+        // Preserve existing memo data or use memo/uniqueIdentifier from parsed URI
+        if (parsedUri.uniqueIdentifier != null) {
+          spendTarget.memo = parsedUri.uniqueIdentifier
+          memos.push(createEdgeMemo(memoOptions, parsedUri.uniqueIdentifier))
+        }
+
         if (
           spendInfo.spendTargets.length > 2 &&
           spendTarget.nativeAmount == null
@@ -342,7 +349,7 @@ const SendComponent = (props: Props) => {
         setLastAddressEntryMethod(addressEntryMethod)
         setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
-        setSpendInfo({ ...spendInfo })
+        setSpendInfo({ ...spendInfo, memos })
         needsScrollToEnd.current = true
       }
     }

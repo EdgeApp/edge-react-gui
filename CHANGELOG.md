@@ -9,6 +9,7 @@
 - added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - added: Revolut fiat buy provider.
 - changed: `WalletListMenuModal` now supports displaying loading states for async options
+- fixed: Failure to propagate XRP destination tags from pasted URIs on the send scene.
 
 ## 4.32.0 (2025-07-18)
 
