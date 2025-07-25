@@ -71,7 +71,9 @@ export function showReceiveDropdown(
 
     // Display the dropdown:
     receiveDropdownShowing = true
-    playReceiveSound().catch(() => {})
+    playReceiveSound().catch((error: unknown) => {
+      console.log(error) // Fail quietly
+    })
     Airship.show(bridge => (
       <FlashNotification
         bridge={bridge}

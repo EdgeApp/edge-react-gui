@@ -7,12 +7,12 @@ Sound.setCategory('Ambient', true)
 export async function playReceiveSound(): Promise<void> {
   if (!receiveSoundPromise)
     receiveSoundPromise = loadSound('audio_received.mp3')
-  return await receiveSoundPromise.then(playSound)
+  await receiveSoundPromise.then(playSound)
 }
 
 export async function playSendSound(): Promise<void> {
   if (!sendSoundPromise) sendSoundPromise = loadSound('audio_sent.mp3')
-  return await sendSoundPromise.then(playSound)
+  await sendSoundPromise.then(playSound)
 }
 
 /**
@@ -20,9 +20,10 @@ export async function playSendSound(): Promise<void> {
  */
 async function loadSound(name: string): Promise<Sound> {
   return await new Promise((resolve, reject) => {
-    const sound: Sound = new Sound(name, Sound.MAIN_BUNDLE, error =>
-      error ? reject(error) : resolve(sound)
-    )
+    const sound = new Sound(name, Sound.MAIN_BUNDLE, error => {
+      if (error != null) reject(error)
+      else resolve(sound)
+    })
   })
 }
 
@@ -30,9 +31,10 @@ async function loadSound(name: string): Promise<Sound> {
  * Turn the node-style Sound.play method into a promise.
  */
 async function playSound(sound: Sound): Promise<void> {
-  return await new Promise((resolve, reject) => {
-    sound.play(success =>
-      success ? resolve() : new Error('Could not play sound')
-    )
+  await new Promise<void>((resolve, reject) => {
+    sound.play(success => {
+      if (success) resolve()
+      else reject(new Error('Could not play sound'))
+    })
   })
 }

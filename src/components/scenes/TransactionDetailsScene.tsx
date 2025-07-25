@@ -282,7 +282,9 @@ const TransactionDetailsComponent = (props: Props) => {
       ))
 
       if (signedTx != null) {
-        playSendSound().catch(error => console.log(error))
+        playSendSound().catch((error: unknown) => {
+          console.log(error) // Fail quietly
+        })
         showToast(lstrings.transaction_details_accelerate_transaction_sent)
 
         navigation.pop()
