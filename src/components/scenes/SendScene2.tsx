@@ -1142,7 +1142,9 @@ const SendComponent = (props: Props) => {
         )
       }
 
-      playSendSound().catch(error => console.log(error)) // Fail quietly
+      playSendSound().catch((error: unknown) => {
+        console.log(error) // Fail quietly
+      })
 
       if (onDone) {
         navigation.pop()
