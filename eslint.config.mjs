@@ -78,6 +78,7 @@ export default [
       'android/*',
       'artifacts/*',
       'ios/*',
+      'src/plugins/contracts/*',
       'src/controllers/edgeProvider/client/rolledUp.js',
       'src/controllers/edgeProvider/injectThisInWebView.js'
     ]
