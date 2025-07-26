@@ -1,4 +1,4 @@
-import { SharedValue, useAnimatedReaction } from 'react-native-reanimated'
+import { type SharedValue, useAnimatedReaction } from 'react-native-reanimated'
 
 /**
  * Allows you to subscribe to a SharedValue event with a given handler function.
@@ -10,7 +10,7 @@ import { SharedValue, useAnimatedReaction } from 'react-native-reanimated'
 export const useSharedEvent = <T>(
   sharedEvent: SharedValue<T> | undefined,
   handler: (event: T) => void
-) =>
+) => {
   useAnimatedReaction(
     () => {
       'worklet'
@@ -24,3 +24,4 @@ export const useSharedEvent = <T>(
       }
     }
   )
+}

@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { WalletListSortableRow } from '../../components/themed/WalletListSortableRow'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListSortableRow', () => {
   it('should render with loading wallet', () => {

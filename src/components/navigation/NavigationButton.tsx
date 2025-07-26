@@ -1,6 +1,6 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import type { ViewStyle } from 'react-native'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'

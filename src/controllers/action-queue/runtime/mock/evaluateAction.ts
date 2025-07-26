@@ -1,10 +1,10 @@
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeNetworkFee,
   EdgeTransaction
 } from 'edge-core-js'
 
-import {
+import type {
   ActionEffect,
   ActionProgram,
   ActionProgramState,
@@ -162,7 +162,7 @@ export async function evaluateAction(
           effect: {
             type: 'tx-confs',
             txId: mockDelayTimestamp(2000, 5000),
-            walletId: walletId,
+            walletId,
             confirmations: 1
           },
           broadcastTxs: mockBroadcastTxs(wallet)
@@ -178,7 +178,7 @@ export async function evaluateAction(
           effect: {
             type: 'tx-confs',
             txId: mockDelayTimestamp(3000, 5000),
-            walletId: walletId,
+            walletId,
             confirmations: 1
           },
           broadcastTxs: mockBroadcastTxs(wallet)
@@ -194,7 +194,7 @@ export async function evaluateAction(
           effect: {
             type: 'tx-confs',
             txId: mockDelayTimestamp(2000, 5000),
-            walletId: walletId,
+            walletId,
             confirmations: 1
           },
           broadcastTxs: mockBroadcastTxs(wallet)
@@ -210,7 +210,7 @@ export async function evaluateAction(
           effect: {
             type: 'tx-confs',
             txId: mockDelayTimestamp(3000, 5000),
-            walletId: walletId,
+            walletId,
             confirmations: 1
           },
           broadcastTxs: mockBroadcastTxs(wallet)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Image, Keyboard, Linking, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
 
@@ -10,10 +10,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -23,7 +23,7 @@ const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
 
 export async function showHelpModal(navigation: NavigationBase): Promise<void> {
-  return await Airship.show(bridge => (
+  await Airship.show(bridge => (
     <HelpModal bridge={bridge} navigation={navigation} />
   ))
 }
@@ -39,16 +39,18 @@ export const HelpModal = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const loggedIn = useWatch(account, 'loggedIn')
 
-  const handleClose = useHandler(() => bridge.resolve())
+  const handleClose = useHandler(() => {
+    bridge.resolve()
+  })
 
-  const handleSitePress = useHandler((title: string, uri: string) => {
+  const handleSitePress = useHandler(async (title: string, uri: string) => {
     if (loggedIn) {
       navigation.navigate('webView', { title, uri })
       Airship.clear()
     } else {
       // Just open in a browser since we don't all the features of a full
       // logged-in scene:
-      openBrowserUri(uri)
+      await openBrowserUri(uri)
     }
   })
 
@@ -94,9 +96,12 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
-        onPress={() =>
-          handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)
-        }
+        onPress={async () => {
+          await handleSitePress(
+            lstrings.help_knowledge_base,
+            config.knowledgeBase
+          )
+        }}
       />
 
       <SelectableRow
@@ -109,9 +114,9 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
-        onPress={() =>
-          handleSitePress(lstrings.help_support, config.supportSite)
-        }
+        onPress={async () => {
+          await handleSitePress(lstrings.help_support, config.supportSite)
+        }}
       />
 
       <SelectableRow
@@ -137,7 +142,9 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
-        onPress={() => handleSitePress(helpSiteMoreInfoText, config.website)}
+        onPress={async () => {
+          await handleSitePress(helpSiteMoreInfoText, config.website)
+        }}
       />
       <SelectableRow
         icon={
@@ -149,12 +156,12 @@ export const HelpModal = (props: Props) => {
         }
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
-        onPress={() =>
-          handleSitePress(
+        onPress={async () => {
+          await handleSitePress(
             lstrings.title_terms_of_service,
             config.termsOfServiceSite
           )
-        }
+        }}
       />
       <View style={styles.footer}>
         <EdgeText style={styles.version}>{versionText}</EdgeText>

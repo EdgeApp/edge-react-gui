@@ -1,4 +1,4 @@
-import { ContentPost } from 'edge-info-server'
+import type { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -36,8 +36,8 @@ export const ContentPostCard = (props: Props) => {
   const url = getLocaleOrDefaultString(localeBlogUrl)
   const image = theme.isDark ? darkImageUrl : lightImageUrl
 
-  const handlePress = useHandler(() => {
-    if (url != null) openBrowserUri(url)
+  const handlePress = useHandler(async () => {
+    if (url != null) await openBrowserUri(url)
   })
   const imageSrc = React.useMemo(() => ({ uri: image }), [image])
 

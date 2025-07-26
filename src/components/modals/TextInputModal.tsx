@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { ModalButtons } from '../buttons/ModalButtons'
@@ -14,7 +14,7 @@ import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
 import {
-  FilledTextInputReturnKeyType,
+  type FilledTextInputReturnKeyType,
   ModalFilledTextInput
 } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
@@ -88,7 +88,10 @@ export function TextInputModal(props: Props) {
   }
 
   const handleSubmit = () => {
-    if (onSubmit == null) return bridge.resolve(text)
+    if (onSubmit == null) {
+      bridge.resolve(text)
+      return
+    }
     onSubmit(text).then(
       result => {
         if (typeof result === 'string') {
@@ -108,7 +111,9 @@ export function TextInputModal(props: Props) {
       warning={warning}
       bridge={bridge}
       title={title}
-      onCancel={() => bridge.resolve(undefined)}
+      onCancel={() => {
+        bridge.resolve(undefined)
+      }}
     >
       <StyledInnerView fullHeight={multiline}>
         {typeof message === 'string' ? (

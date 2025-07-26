@@ -5,7 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import {
-  CurrencySettingProps,
+  type CurrencySettingProps,
   maybeCurrencySetting
 } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'

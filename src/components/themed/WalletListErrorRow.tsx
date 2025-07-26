@@ -2,7 +2,7 @@ import * as React from 'react'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {

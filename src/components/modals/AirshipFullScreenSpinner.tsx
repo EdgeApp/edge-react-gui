@@ -6,7 +6,7 @@ import {
   Text,
   View
 } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
@@ -69,13 +69,19 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
         toValue: 0,
         duration: fadeOutTime,
         useNativeDriver: true
-      }).start(() => bridge.remove())
+      }).start(() => {
+        bridge.remove()
+      })
     }
 
     if (activity != null) {
       activity
-        .then(result => bridge.resolve(result))
-        .catch(error => bridge.reject(error))
+        .then(result => {
+          bridge.resolve(result)
+        })
+        .catch(error => {
+          bridge.reject(error)
+        })
         .finally(() => {
           hide()
         })

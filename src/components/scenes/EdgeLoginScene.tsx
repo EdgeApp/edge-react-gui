@@ -1,4 +1,4 @@
-import { EdgeLobby } from 'edge-core-js'
+import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -8,13 +8,13 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
@@ -85,7 +85,9 @@ export const EdgeLoginScene = (props: Props) => {
     }
   })
 
-  const handleDecline = useHandler(() => navigation.goBack())
+  const handleDecline = useHandler(() => {
+    navigation.goBack()
+  })
   const logoUri = theme.isDark
     ? lobby?.loginRequest?.displayImageDarkUrl
     : lobby?.loginRequest?.displayImageLightUrl

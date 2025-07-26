@@ -1,18 +1,14 @@
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
-import { Action } from '../types/reduxActions'
+import type { Action } from '../types/reduxActions'
 
 /**
  * { [fullCurrencyCode]: walletId }
  */
-export interface CcWalletMap {
-  [fullCurrencyCode: string]: string
-}
+export type CcWalletMap = Record<string, string>
 
 export interface FioState {
-  connectedWalletsByFioAddress: {
-    [fioAddress: string]: CcWalletMap
-  }
+  connectedWalletsByFioAddress: Record<string, CcWalletMap>
 }
 
 const initialState: FioState = {

@@ -1,12 +1,12 @@
 import { abs, lt, sub } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import {
@@ -14,14 +14,14 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates } from '../../types/types'
+import type { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'

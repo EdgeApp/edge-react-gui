@@ -1,7 +1,7 @@
 import { useIsFocused } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
@@ -12,15 +12,18 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
-import {
+import type {
   StakePlugin,
   StakePolicy,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { FooterRender } from '../../../state/SceneFooterState'
+import type { FooterRender } from '../../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { EdgeSwitch } from '../../buttons/EdgeSwitch'
@@ -28,9 +31,12 @@ import { EarnOptionCard } from '../../cards/EarnOptionCard'
 import { EdgeAnim, fadeInUp20 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { SectionHeader } from '../../common/SectionHeader'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { Airship, showDevError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { SearchFooter } from '../../themed/SearchFooter'
 
 interface Props extends EdgeAppSceneProps<'earnScene'> {}
@@ -50,13 +56,9 @@ interface PortfolioStakeInfo extends DiscoverStakeInfo {
   walletStakeInfos: WalletStakeInfo[]
 }
 
-interface DiscoverStakeMap {
-  [stakePolicyId: string]: DiscoverStakeInfo
-}
+type DiscoverStakeMap = Record<string, DiscoverStakeInfo>
 
-interface PortfolioStakeMap {
-  [stakePolicyId: string]: PortfolioStakeInfo
-}
+type PortfolioStakeMap = Record<string, PortfolioStakeInfo>
 
 interface WalletStakeInfo {
   wallet: EdgeCurrencyWallet
@@ -111,8 +113,12 @@ export const EarnScene = (props: Props) => {
   const [isSearching, setIsSearching] = React.useState<boolean>(false)
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
-  const handleSelectEarn = useHandler(() => setIsPortfolioSelected(false))
-  const handleSelectPortfolio = useHandler(() => setIsPortfolioSelected(true))
+  const handleSelectEarn = useHandler(() => {
+    setIsPortfolioSelected(false)
+  })
+  const handleSelectPortfolio = useHandler(() => {
+    setIsPortfolioSelected(true)
+  })
 
   const handleStartSearching = useHandler(() => {
     setIsSearching(true)

@@ -1,11 +1,11 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import {
+import type {
   GuiExchangeRates,
   WalletListAssetItem,
   WalletListItem
@@ -18,9 +18,7 @@ interface Props {
   account: EdgeAccount
 }
 
-interface EnabledTokenIds {
-  [walletId: string]: string[]
-}
+type EnabledTokenIds = Record<string, string[]>
 
 /**
  * Manages the master wallet list, which includes all

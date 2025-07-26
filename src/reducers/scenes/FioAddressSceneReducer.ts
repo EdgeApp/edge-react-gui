@@ -1,7 +1,7 @@
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
-import { Action } from '../../types/reduxTypes'
-import { FioAddress, FioDomain } from '../../types/types'
+import type { Action } from '../../types/reduxTypes'
+import type { FioAddress, FioDomain } from '../../types/types'
 
 export interface FioAddressSceneState {
   fioAddresses: FioAddress[]

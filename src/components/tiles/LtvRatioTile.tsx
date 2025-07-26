@@ -1,8 +1,8 @@
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
-import { BorrowEngine } from '../../plugins/borrow-plugins/types'
-import { Theme, useTheme } from '../services/ThemeContext'
+import type { BorrowEngine } from '../../plugins/borrow-plugins/types'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
 export const LtvRatioTile = (props: {

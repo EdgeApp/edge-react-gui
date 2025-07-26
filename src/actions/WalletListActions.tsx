@@ -5,11 +5,11 @@ import { sprintf } from 'sprintf-js'
 import { writeWalletsSort } from '../actions/SettingsActions'
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { SortOption } from '../components/modals/WalletListSortModal'
+import type { SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { GetState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { GetState, ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { getUniqueWalletName } from './CreateWalletActions'
@@ -24,7 +24,9 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
       type: 'UI/SETTINGS/SET_WALLETS_SORT',
       data: { walletsSort }
     })
-    writeWalletsSort(account, walletsSort).catch(error => showError(error))
+    writeWalletsSort(account, walletsSort).catch(error => {
+      showError(error)
+    })
   }
 }
 

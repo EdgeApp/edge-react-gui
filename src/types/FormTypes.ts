@@ -1,6 +1,6 @@
 import { asMaybe, asObject, asString } from 'cleaners'
 
-import { FilledTextInputBaseProps } from '../components/themed/FilledTextInput'
+import type { FilledTextInputBaseProps } from '../components/themed/FilledTextInput'
 
 // Define all form field types here.
 export type FormFieldType =
@@ -16,12 +16,15 @@ export type FormFieldType =
 
 // For each form field type, define the relevant display properties that will be
 // used to pass along to the FilledTextInput.
-export const FORM_FIELD_DISPLAY_PROPS: {
-  readonly [fieldType in FormFieldType]: {
-    widthRem?: number
-    textInputProps?: Partial<FilledTextInputBaseProps>
-  }
-} = {
+export const FORM_FIELD_DISPLAY_PROPS: Readonly<
+  Record<
+    FormFieldType,
+    {
+      widthRem?: number
+      textInputProps?: Partial<FilledTextInputBaseProps>
+    }
+  >
+> = {
   address: {
     widthRem: undefined,
     textInputProps: undefined

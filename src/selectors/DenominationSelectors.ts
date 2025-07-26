@@ -1,6 +1,10 @@
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
-import { RootState } from '../types/reduxTypes'
+import type { RootState } from '../types/reduxTypes'
 
 export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   name: '',

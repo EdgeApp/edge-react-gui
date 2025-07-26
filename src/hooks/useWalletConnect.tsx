@@ -1,14 +1,14 @@
 import '@walletconnect/react-native-compat'
 
-import { SessionTypes } from '@walletconnect/types'
+import type { SessionTypes } from '@walletconnect/types'
 import {
   buildApprovedNamespaces,
   getSdkError,
   parseUri
 } from '@walletconnect/utils'
-import { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
-import { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
+import type { Web3WalletTypes } from '@walletconnect/web3wallet'
+import type { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
+import type { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -17,7 +17,7 @@ import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
-import { WalletConnectChainId, WcConnectionInfo } from '../types/types'
+import type { WalletConnectChainId, WcConnectionInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
 import { useHandler } from './useHandler'
@@ -76,7 +76,7 @@ export function useWalletConnect(): WalletConnect {
       dAppUrl: session.peer.metadata.url,
       expiration,
       walletName: getWalletName(currencyWallets[walletId]),
-      walletId: walletId,
+      walletId,
       uri: session.topic,
       icon: iconUri
     }
@@ -213,7 +213,9 @@ export function useWalletConnect(): WalletConnect {
         message={sprintf(lstrings.wc_dapp_disconnected, dAppName)}
         onPress={() => {}}
       />
-    )).catch(e => console.log(e))
+    )).catch(e => {
+      console.log(e)
+    })
   })
 
   const approveRequest = useHandler(
@@ -306,9 +308,9 @@ const getSupportedNamespaces = (
   }
 }
 
-export const getAccounts = async (currencyWallets: {
-  [walletId: string]: EdgeCurrencyWallet
-}) => {
+export const getAccounts = async (
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+) => {
   const map = new Map<string, string>()
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]

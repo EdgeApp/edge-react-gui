@@ -1,13 +1,13 @@
-import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItem, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { type ListRenderItem, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import {
+import type {
   PaymentMethod,
   PaymentMethodsMap
 } from '../../controllers/action-queue/PaymentMethod'
@@ -16,15 +16,15 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { CustomAsset } from '../rows/CustomAssetRow'
+import type { CustomAsset } from '../rows/CustomAssetRow'
 import { PaymentMethodRow } from '../rows/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
@@ -175,8 +175,9 @@ export function WalletListModal(props: Props) {
         }}
       />
     ))
-    if (result === 'continue')
-      await bridge.resolve({ type: 'bankSignupRequest' })
+    if (result === 'continue') {
+      bridge.resolve({ type: 'bankSignupRequest' })
+    }
   })
 
   // #endregion Handlers

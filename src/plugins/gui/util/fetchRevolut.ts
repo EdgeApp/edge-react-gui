@@ -22,6 +22,8 @@ async function fetchRevolut(endpoint: string, init?: RequestInit) {
     method: 'GET',
     ...init,
     headers: {
+      // This will blow up if we pass `headers` as an array:
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...init?.headers,
       Accept: 'application/json',
       'X-API-KEY': apiKey
@@ -133,7 +135,6 @@ export async function fetchRevolutQuote(
     urlParams.set('walletAddress', params.walletAddress)
   }
   const data = await fetchRevolut(
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     `/partners/api/2.0/quote?${urlParams.toString()}`
   )
   return asPartnerQuote(data)
@@ -251,7 +252,6 @@ export async function fetchRevolutRedirectUrl(
   }
 
   const data = await fetchRevolut(
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     `/partners/api/2.0/buy?${urlParams.toString()}`
   )
   return asRevolutRedirectUrl(data)

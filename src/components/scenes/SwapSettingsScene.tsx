@@ -1,4 +1,4 @@
-import {
+import type {
   EdgePluginMap,
   EdgeSwapConfig,
   EdgeSwapPluginType
@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { CallbackRemover } from 'yaob'
+import type { CallbackRemover } from 'yaob'
 
 import {
   ignoreAccountSwap,
@@ -22,9 +22,9 @@ import {
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { AccountReferral } from '../../types/ReferralTypes'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { PluginTweak } from '../../types/TweakTypes'
+import type { AccountReferral } from '../../types/ReferralTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { PluginTweak } from '../../types/TweakTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -32,8 +32,8 @@ import { RadioListModal } from '../modals/RadioListModal'
 import { Airship } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
@@ -63,7 +63,7 @@ interface StateProps {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
-  enabled: { [pluginId: string]: boolean }
+  enabled: Record<string, boolean>
 }
 
 export class SwapSettings extends React.Component<Props, State> {
@@ -101,7 +101,9 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   async componentWillUnmount() {
-    this.swapConfigUnsubscribeFns.forEach(unsubscribe => unsubscribe())
+    this.swapConfigUnsubscribeFns.forEach(unsubscribe => {
+      unsubscribe()
+    })
     this.swapConfigUnsubscribeFns = []
   }
 
@@ -378,9 +380,9 @@ export class SwapSettings extends React.Component<Props, State> {
           <SettingsTappableRow
             action="delete"
             label={label}
-            onPress={async () =>
+            onPress={async () => {
               await this.props.removePromotion(swapSource.installerId)
-            }
+            }}
           >
             {icon}
           </SettingsTappableRow>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Linking, View } from 'react-native'
-import { AirshipBridge, AirshipModal } from 'react-native-airship'
+import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 import { launchImageLibrary } from 'react-native-image-picker'
 import RNPermissions from 'react-native-permissions'
@@ -27,7 +27,7 @@ import {
   showToast
 } from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -75,8 +75,12 @@ export const ScanModal = (props: Props) => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    checkAndRequestPermission('camera').catch(err => showError(err))
-    return () => setScanEnabled(false)
+    checkAndRequestPermission('camera').catch(err => {
+      showError(err)
+    })
+    return () => {
+      setScanEnabled(false)
+    }
   }, [])
 
   const handleBarCodeRead = (result: { data: string }) => {
@@ -144,7 +148,9 @@ export const ScanModal = (props: Props) => {
             showDevError(error)
           })
       }
-    ).catch(err => showError(err))
+    ).catch(err => {
+      showError(err)
+    })
   }
 
   const handleClose = () => {

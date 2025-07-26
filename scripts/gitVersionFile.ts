@@ -25,7 +25,7 @@ import childProcess from 'child_process'
 import fs from 'fs'
 import { join } from 'path'
 
-const specialBranches: { [branch: string]: string } = {
+const specialBranches: Record<string, string> = {
   develop: '-d',
   master: '',
   beta: '',

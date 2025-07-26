@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import { Action } from '../types/reduxTypes'
-import { SpendingLimits } from '../types/types'
+import type { Action } from '../types/reduxTypes'
+import type { SpendingLimits } from '../types/types'
 
 export const initialState: SpendingLimits = {
   transaction: {

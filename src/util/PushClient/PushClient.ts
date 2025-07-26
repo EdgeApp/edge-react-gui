@@ -1,12 +1,12 @@
 import { asMaybe } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import {
   asErrorResponse,
   asLoginPayload,
-  LoginPayload,
-  LoginUpdatePayload,
-  PushRequestBody,
+  type LoginPayload,
+  type LoginUpdatePayload,
+  type PushRequestBody,
   wasLoginUpdatePayload,
   wasPushRequestBody
 } from '../../controllers/action-queue/types/pushApiTypes'

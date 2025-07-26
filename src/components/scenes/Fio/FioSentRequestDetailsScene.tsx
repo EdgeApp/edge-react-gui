@@ -6,8 +6,8 @@ import { FIAT_CODES_SYMBOLS } from '../../../constants/WalletAndCurrencyConstant
 import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import {
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type {
   FioRequest,
   FioRequestStatus,
   GuiExchangeRates
@@ -17,8 +17,8 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { EdgeRow } from '../../rows/EdgeRow'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'

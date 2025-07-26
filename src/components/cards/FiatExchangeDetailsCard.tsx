@@ -1,5 +1,5 @@
 import { div } from 'biggystring'
-import {
+import type {
   EdgeAssetAction,
   EdgeCurrencyWallet,
   EdgeTransaction,
@@ -19,7 +19,7 @@ import { unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -118,7 +118,9 @@ export function FiatExchangeDetailsCard(props: Props) {
         })
         .catch(error => {
           showError(error)
-          Linking.openURL(orderUri).catch(err => showError(err))
+          Linking.openURL(orderUri).catch(err => {
+            showError(err)
+          })
         })
     } else {
       await Linking.openURL(orderUri)

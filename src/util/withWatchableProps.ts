@@ -1,5 +1,5 @@
-import { Subscriber } from 'yaob'
-import { Events, makeEvents } from 'yavent'
+import type { Subscriber } from 'yaob'
+import { type Events, makeEvents } from 'yavent'
 
 type Watchable<T extends object> = {
   watch: Subscriber<T>

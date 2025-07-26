@@ -1,5 +1,5 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -11,10 +11,10 @@ import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
-import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
+import type { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
-import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
-import { LoanAccount } from '../../../controllers/loan-manager/types'
+import type { LoanProgramEdge } from '../../../controllers/loan-manager/store'
+import type { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
@@ -22,8 +22,8 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { GuiExchangeRates } from '../../../types/types'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import {
   DECIMAL_PRECISION,
@@ -39,7 +39,7 @@ import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
 import { Alert } from '../../themed/Alert'
@@ -154,7 +154,9 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
         <EdgeTouchableOpacity
-          onPress={() => handleProgramStatusCardPress(runningProgramEdge)}
+          onPress={() => {
+            handleProgramStatusCardPress(runningProgramEdge)
+          }}
         >
           <EdgeCard marginRem={[0, 0, 1]}>
             <Space row>

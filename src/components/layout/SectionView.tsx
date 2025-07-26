@@ -3,7 +3,7 @@ import { View } from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children: React.ReactNode | React.ReactNode[]

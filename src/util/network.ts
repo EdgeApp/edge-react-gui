@@ -1,10 +1,10 @@
-import { asObject, asString, Cleaner } from 'cleaners'
-import {
+import { asObject, asString, type Cleaner } from 'cleaners'
+import type {
   EdgeFetchFunction,
   EdgeFetchOptions,
   EdgeFetchResponse
 } from 'edge-core-js'
-import { asInfoRollup, InfoRollup } from 'edge-info-server'
+import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 

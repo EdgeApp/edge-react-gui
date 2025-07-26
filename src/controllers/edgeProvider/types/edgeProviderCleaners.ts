@@ -9,9 +9,9 @@ import {
   asTuple,
   asUnknown,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
-import {
+import type {
   EdgeMemo,
   EdgeMetadata,
   EdgeNetworkFee,
@@ -25,7 +25,7 @@ import {
   asEdgeCurrencyCode,
   asEdgeTokenId
 } from '../../../types/types'
-import {
+import type {
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
   EdgeProviderMethods,

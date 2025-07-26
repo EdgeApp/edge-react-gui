@@ -1,7 +1,7 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 
-import { BorrowPlugin } from '../../plugins/borrow-plugins/types'
-import { LoanAccount } from './types'
+import type { BorrowPlugin } from '../../plugins/borrow-plugins/types'
+import type { LoanAccount } from './types'
 
 export const makeLoanAccount = async (
   borrowPlugin: BorrowPlugin,

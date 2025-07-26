@@ -13,10 +13,10 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner,
+  type Cleaner,
   uncleaner
 } from 'cleaners'
-import { EdgeParsedUri } from 'edge-core-js'
+import type { EdgeParsedUri } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -25,14 +25,14 @@ import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
-import {
+import type {
   FiatProvider,
   FiatProviderAssetMap,
   FiatProviderFactory,
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
+import type { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
 const providerId = 'ionia'
 
@@ -106,7 +106,7 @@ export const asIoniaPurchaseCard = asObject({
   userId: asNumber
 })
 
-const asIoniaResponse = <Data extends any>(asData: Cleaner<Data>) =>
+const asIoniaResponse = <Data>(asData: Cleaner<Data>) =>
   asObject({
     Data: asData,
     Successful: asBoolean,
@@ -298,12 +298,13 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined)
     )
     let purchaseCardTimeoutId: NodeJS.Timeout
-    const ratesCache: {
-      [currencyCode: string]: {
+    const ratesCache: Record<
+      string,
+      {
         expiry: number
         rateQueryPromise: Promise<number>
       }
-    } = {}
+    > = {}
 
     //
     // Private methods:
@@ -556,12 +557,12 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
               `Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`
             )
 
-            return await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
               showUi
                 .sendPaymentProto({
                   uri: paymentProtocolUrl,
                   params: {
-                    wallet: wallet,
+                    wallet,
                     tokenId: quoteParams.tokenId,
                     onBack: () => {
                       reject(
@@ -570,7 +571,9 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
                         )
                       )
                     },
-                    onDone: () => resolve()
+                    onDone: () => {
+                      resolve()
+                    }
                   }
                 })
                 .catch(err => {

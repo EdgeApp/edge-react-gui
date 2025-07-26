@@ -5,11 +5,11 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface Props extends EdgeAppSceneProps<'assetSettings'> {}
@@ -68,10 +68,11 @@ export function AssetSettingsScene(props: Props) {
         if (account.currencyConfig[pluginId] == null) return null
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { displayName } = currencyInfo
-        const onPress = () =>
+        const onPress = () => {
           navigation.navigate('currencySettings', {
             currencyInfo
           })
+        }
 
         return (
           <SettingsTappableRow

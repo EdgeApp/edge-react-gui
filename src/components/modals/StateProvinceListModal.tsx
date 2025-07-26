@@ -1,14 +1,14 @@
 import * as React from 'react'
-import { ViewToken } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { ViewToken } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { StateProvinceData } from '../../types/types'
-import { Theme, useTheme } from '../services/ThemeContext'
+import type { StateProvinceData } from '../../types/types'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
@@ -52,7 +52,9 @@ export const StateProvinceListModal = ({
           icon={<FastImage source={source} style={styles.image} />}
           subTitle={alpha}
           title={name}
-          onPress={() => bridge.resolve(alpha)}
+          onPress={() => {
+            bridge.resolve(alpha)
+          }}
         />
       )
     },

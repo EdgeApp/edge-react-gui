@@ -1,10 +1,10 @@
 import type { ActionRequestDto, TransactionDto } from '@stakekit/api-hooks'
 import { add, div, eq, floor, gt, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { infoServerData } from '../../../../util/network'
 import { DECIMAL_PRECISION, snooze } from '../../../../util/utils'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
@@ -12,7 +12,7 @@ import {
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import {
   actionEnter,
   actionExit,
@@ -21,7 +21,7 @@ import {
   transactionSubmitHash,
   yieldGetSingleYieldBalances
 } from '../util/stakeKitUtils'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 export interface CoreumNativeStakeKitAdapterConfig {
   type: 'coreum-native-stake-kit'
@@ -53,7 +53,7 @@ export const makeStakeKitAdapter = (
   // Metadata constants:
   const metadataName = 'Coreum Native Staking'
   const stakeAsset = policyConfig.stakeAssets[0]
-  const metadataPoolAssetName = `${stakeAsset.currencyCode}`
+  const metadataPoolAssetName = stakeAsset.currencyCode
 
   const { adapterConfig, stakePolicyId, stakeProviderInfo } = policyConfig
 

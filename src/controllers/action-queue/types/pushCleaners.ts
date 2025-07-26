@@ -8,13 +8,13 @@ import {
   asString,
   asTuple,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 import { asLegacyTokenId } from '../../../types/types'
 import { asBase64 } from '../../../util/cleaners/asBase64'
-import { NewPushEvent } from './pushApiTypes'
-import {
+import type { NewPushEvent } from './pushApiTypes'
+import type {
   AddressBalanceTrigger,
   AllTrigger,
   AnyTrigger,

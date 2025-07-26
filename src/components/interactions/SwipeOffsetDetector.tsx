@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import {
-  SharedValue,
+  type SharedValue,
   useSharedValue,
   withDecay,
-  WithDecayConfig,
+  type WithDecayConfig,
   withSpring
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'

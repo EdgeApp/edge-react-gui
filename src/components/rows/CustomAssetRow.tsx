@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -61,7 +61,7 @@ const CustomAssetRowComponent = (props: Props) => {
   let displayCurrencyCode = currencyCode
   const tokenFromId = wallet.currencyConfig.allTokens[referenceTokenId]
   if (showTokenNames && tokenFromId != null) {
-    displayCurrencyCode = `${tokenFromId.displayName}`
+    displayCurrencyCode = tokenFromId.displayName
   }
 
   return (

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 
 import {
-  BorrowPluginBlueprint,
+  type BorrowPluginBlueprint,
   makeBorrowPluginFactory
 } from '../../common/BorrowPluginFactory'
 import { makeAaveBorrowEngineFactory } from './AaveBorrowEngineFactory'

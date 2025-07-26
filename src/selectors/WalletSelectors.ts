@@ -1,12 +1,12 @@
 import { mul } from 'biggystring'
-import {
+import type {
   EdgeCurrencyInfo,
   EdgeCurrencyWallet,
   EdgeDenomination
 } from 'edge-core-js'
 
-import { RootState, ThunkAction } from '../types/reduxTypes'
-import { GuiExchangeRates } from '../types/types'
+import type { RootState, ThunkAction } from '../types/reduxTypes'
+import type { GuiExchangeRates } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import {
   convertCurrencyFromExchangeRates,
@@ -20,10 +20,10 @@ export function getSelectedCurrencyWallet(
   return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
 }
 
-export const getActiveWalletCurrencyInfos = (currencyWallets: {
-  [walletId: string]: EdgeCurrencyWallet
-}): EdgeCurrencyInfo[] => {
-  const activeCurrencyInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
+export const getActiveWalletCurrencyInfos = (
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+): EdgeCurrencyInfo[] => {
+  const activeCurrencyInfos: Record<string, EdgeCurrencyInfo> = {}
 
   for (const walletId of Object.keys(currencyWallets)) {
     if (

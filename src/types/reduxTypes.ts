@@ -1,7 +1,7 @@
-import * as Redux from 'redux'
+import type * as Redux from 'redux'
 
-import { RootState } from '../reducers/RootReducer'
-import { Action } from './reduxActions'
+import type { RootState } from '../reducers/RootReducer'
+import type { Action } from './reduxActions'
 
 export type { Action, RootState }
 

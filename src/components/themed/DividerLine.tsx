@@ -2,7 +2,7 @@ import * as React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // The gap around the line. Takes 0-4 numbers (top, right, bottom, left),

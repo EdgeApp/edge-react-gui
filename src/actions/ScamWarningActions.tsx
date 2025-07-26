@@ -1,5 +1,5 @@
 import { asBoolean, asObject, asOptional } from 'cleaners'
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -46,6 +46,7 @@ export const showSendScamWarningModal = async (disklet: Disklet) => {
 }
 
 // const scamWarningDisklet = makeReactNativeDisklet()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const asScamWarningInfo = asObject({
   firstPrivateKeyView: asOptional(asBoolean, true),
   firstWalletConnect: asOptional(asBoolean, true),

@@ -1,5 +1,5 @@
 import { abs, sub } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeTransaction

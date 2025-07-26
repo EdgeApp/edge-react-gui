@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
@@ -50,8 +50,8 @@ const CurrencyRowComponent = (props: Props) => {
     name = (
       <>
         <Text style={{ color: theme.warningText }}>
-          {lstrings.compromised_key_label}
-        </Text>{' '}
+          {lstrings.compromised_key_label + ' '}
+        </Text>
         {name}
       </>
     )
@@ -85,7 +85,7 @@ const CurrencyRowComponent = (props: Props) => {
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {
-    displayCurrencyCode = `${tokenFromId.displayName}`
+    displayCurrencyCode = tokenFromId.displayName
   }
 
   return (

@@ -18,7 +18,9 @@ export function useRefresher<T>(
           setValue(value)
           timerId = setTimeout(handleTimeout, delay)
         })
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     }
     let timerId = setTimeout(handleTimeout, delay)
 

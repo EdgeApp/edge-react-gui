@@ -1,22 +1,22 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
-import { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
-import { ThunkAction } from '../../../types/reduxTypes'
+import type { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
+import type { ThunkAction } from '../../../types/reduxTypes'
 import { makeCleanStore } from '../../../util/CleanStore'
 import { logActivity } from '../../../util/logger'
 import { scheduleActionProgram } from '../../action-queue/redux/actions'
-import { ActionProgram } from '../../action-queue/types'
+import type { ActionProgram } from '../../action-queue/types'
 import { borrowPluginMap } from '../borrowPluginConfig'
 import { makeLoanAccount } from '../LoanAccount'
 import {
   asLoanAccountMapRecord,
   LOAN_ACCOUNT_MAP,
   LOAN_MANAGER_STORE_ID,
-  LoanAccountEntry,
-  LoanProgramEdge,
-  LoanProgramType
+  type LoanAccountEntry,
+  type LoanProgramEdge,
+  type LoanProgramType
 } from '../store'
-import { LoanAccount } from '../types'
+import type { LoanAccount } from '../types'
 import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
 import { waitForBorrowEngineSync } from '../util/waitForLoanAccountSync'
 import { selectLoanAccount } from './selectors'
@@ -102,7 +102,7 @@ export function saveLoanAccount(
 
     dispatch({
       type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
-      loanAccount: loanAccount
+      loanAccount
     })
   }
 }

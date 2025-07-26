@@ -5,7 +5,7 @@ import * as React from 'react'
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletSelectCrypto', () => {

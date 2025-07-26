@@ -1,5 +1,5 @@
 import { add, gt, mul, round } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeBalanceMap,
   EdgeCurrencyWallet,
@@ -8,7 +8,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
@@ -31,15 +31,15 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import {
+import type {
   PositionAllocation,
   StakePlugin,
   StakePolicy
 } from '../../plugins/stake-plugins/types'
 import {
   defaultWalletStakingState,
-  StakePositionMap,
-  WalletStakingState
+  type StakePositionMap,
+  type WalletStakingState
 } from '../../reducers/StakingReducer'
 import {
   getExchangeDenom,
@@ -48,9 +48,12 @@ import {
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
-import { GuiExchangeRates } from '../../types/types'
+import type { Dispatch } from '../../types/reduxTypes'
+import type {
+  NavigationBase,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
+import type { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -76,12 +79,15 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -149,7 +155,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         .dispatch(
           updateStakingState(this.props.currencyCode, this.props.wallet)
         )
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     } else if (prevProps.tokenId !== this.props.tokenId) {
       // Update staked amount if the tokenId changes but the wallet remains the same
       let total = '0'
@@ -173,7 +181,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
   componentDidMount() {
     this.props
       .dispatch(updateStakingState(this.props.currencyCode, this.props.wallet))
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   }
 
   getTotalPosition = (
@@ -207,7 +217,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           navigation.setParams({ tokenId, walletId })
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   }
 
   handleMenu = () => {
@@ -220,7 +232,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         navigation={navigation}
         walletId={wallet.id}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   }
 
   handleTrade = async () => {
@@ -247,7 +261,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         <SelectableRow
           marginRem={0.5}
           title={sprintf(lstrings.buy_1s, sceneCurrencyCode)}
-          onPress={() => this.handleTradeBuy(bridge)}
+          onPress={() => {
+            this.handleTradeBuy(bridge)
+          }}
           icon={
             <View style={styles.dualIconContainer}>
               <FontAwesomeIcon name="bank" {...buySellIconProps} />
@@ -258,7 +274,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         <SelectableRow
           marginRem={0.5}
           title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
-          onPress={() => this.handleTradeSell(bridge)}
+          onPress={() => {
+            this.handleTradeSell(bridge)
+          }}
           icon={
             <View style={styles.dualIconContainer}>
               <AntDesignIcon name="arrowright" {...buySellIconProps} />
@@ -270,7 +288,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           <SelectableRow
             marginRem={0.5}
             title={sprintf(lstrings.swap_s_to_from_crypto, sceneCurrencyCode)}
-            onPress={() => this.handleTradeSwap(bridge)}
+            onPress={() => {
+              this.handleTradeSwap(bridge)
+            }}
             icon={
               <View style={styles.singleIconContainer}>
                 <Ionicons
@@ -677,7 +697,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
             label={lstrings.trade_currency}
             onPress={
               countryCode === 'GB'
-                ? () => this.handleTradeSwap()
+                ? () => {
+                    this.handleTradeSwap()
+                  }
                 : this.handleTrade
             }
           >

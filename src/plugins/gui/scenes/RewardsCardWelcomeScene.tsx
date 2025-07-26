@@ -8,7 +8,7 @@ import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
 import { MainButton } from '../../../components/themed/MainButton'
 import { lstrings } from '../../../locales/strings'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 
 export interface RewardsCardWelcomeParams {
   onMoreInfo: () => void

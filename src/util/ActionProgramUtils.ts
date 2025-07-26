@@ -1,23 +1,23 @@
 import { add, div, gt, gte, log10, max, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js/types'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js/types'
 import { sprintf } from 'sprintf-js'
 
 import { MAX_AMOUNT } from '../constants/valueConstants'
 import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
-import {
+import type {
   ActionOp,
   ActionProgram,
   ParActionOp,
   SeqActionOp
 } from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
-import {
+import type {
   BorrowCollateral,
   BorrowDebt,
   BorrowEngine
 } from '../plugins/borrow-plugins/types'
 import { config } from '../theme/appConfig'
-import { GuiExchangeRates } from '../types/types'
+import type { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableTokenCurrencyCode } from './CurrencyWalletHelpers'
 import {
@@ -100,7 +100,7 @@ export const makeAaveCreateActionProgram = async (
       fromTokenId: source.tokenId,
       fromWalletId: source.wallet.id,
       nativeAmount: source.nativeAmount,
-      toTokenId: toTokenId,
+      toTokenId,
       toWalletId: borrowEngineWallet.id,
       amountFor: 'to',
       displayKey: 'swap-deposit'

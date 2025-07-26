@@ -1,7 +1,7 @@
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 
-import { ThunkAction } from '../types/reduxTypes'
-import { DeviceReferral } from '../types/ReferralTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { DeviceReferral } from '../types/ReferralTypes'
 import {
   asCurrencyCode,
   asMessageTweak,

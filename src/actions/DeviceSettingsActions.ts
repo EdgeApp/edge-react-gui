@@ -1,6 +1,10 @@
 import { makeReactNativeDisklet } from 'disklet'
 
-import { asDeviceSettings, DefaultScreen, DeviceSettings } from '../types/types'
+import {
+  asDeviceSettings,
+  type DefaultScreen,
+  type DeviceSettings
+} from '../types/types'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'

@@ -2,7 +2,7 @@ import React from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import { BlurView } from 'rn-id-blurview'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 const isAndroid = Platform.OS === 'android'
 

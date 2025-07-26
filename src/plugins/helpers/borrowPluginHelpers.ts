@@ -3,7 +3,7 @@ import {
   makeAaveKovBorrowPlugin,
   makeAaveMaticBorrowPlugin
 } from '../borrow-plugins/plugins/aave'
-import { BorrowPlugin } from '../borrow-plugins/types'
+import type { BorrowPlugin } from '../borrow-plugins/types'
 
 export const borrowPlugins: BorrowPlugin[] = [
   makeAaveEthBorrowPlugin(),

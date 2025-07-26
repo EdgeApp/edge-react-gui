@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type ViewStyle
+} from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
 

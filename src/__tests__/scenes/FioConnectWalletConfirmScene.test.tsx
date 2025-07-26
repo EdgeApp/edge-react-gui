@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { FioConnectWalletConfirmScene } from '../../components/scenes/Fio/FioConnectWalletConfirmScene'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioConnectWalletConfirm', () => {

@@ -6,7 +6,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { Theme, useTheme } from '../../../services/ThemeContext'
+import { type Theme, useTheme } from '../../../services/ThemeContext'
 
 interface Props {
   pinLength: number

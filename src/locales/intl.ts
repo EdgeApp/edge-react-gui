@@ -367,9 +367,9 @@ export const pickLanguage = (
  * Picks either a localized string or uses whatever is defined under 'en_US' (or
  * similar tag) as the fallback default string
  */
-export const getLocaleOrDefaultString = (localizedStrings: {
-  [localeId: string]: string
-}): string | undefined => {
+export const getLocaleOrDefaultString = (
+  localizedStrings: Record<string, string>
+): string | undefined => {
   const [firstLocale = { languageTag: DEFAULT_LOCALE_ID }] = getLocales()
   const { languageTag } = firstLocale
   const localizedStringKeys = Object.keys(localizedStrings)

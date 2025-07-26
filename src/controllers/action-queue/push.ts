@@ -2,19 +2,19 @@ import { lstrings } from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { makePushClient } from '../../util/PushClient/PushClient'
 import { filterNull } from '../../util/safeFilters'
-import {
+import type {
   ActionEffect,
   ActionProgram,
   ExecutionContext,
   ExecutionOutput,
   PushEventEffect
 } from './types'
-import {
+import type {
   LoginUpdatePayload,
   NewPushEvent,
   PushEventStatus
 } from './types/pushApiTypes'
-import {
+import type {
   BroadcastTx,
   PushEventState,
   PushMessage,
@@ -98,7 +98,7 @@ export async function prepareNewPushEvents(
 
       const pushEventEffect: PushEventEffect = {
         type: 'push-event',
-        eventId: eventId,
+        eventId,
         effect: triggeringEffect
       }
 
@@ -119,7 +119,7 @@ export async function checkPushEvent(
   const { account, clientId } = context
   const pushClient = makePushClient(account, clientId)
   const loginPayload = await pushClient.getPushEvents()
-  const eventStatusMap: { [eventId: string]: PushEventStatus } =
+  const eventStatusMap: Record<string, PushEventStatus> =
     loginPayload.events.reduce(
       (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
       {}
@@ -156,7 +156,7 @@ export async function uploadPushEvents(
 ): Promise<void> {
   const { account, clientId } = context
   const pushClient = makePushClient(account, clientId)
-  return await pushClient.uploadPushEvents(payload)
+  await pushClient.uploadPushEvents(payload)
 }
 
 async function actionEffectToPushTrigger(

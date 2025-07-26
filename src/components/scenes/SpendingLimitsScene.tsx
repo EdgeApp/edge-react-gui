@@ -8,11 +8,11 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -43,9 +43,9 @@ export const SpendingLimitsScene = (props: Props) => {
     transactionSpendingLimit.isEnabled
   )
 
-  const handleTransactionIsEnabledChanged = useHandler(() =>
+  const handleTransactionIsEnabledChanged = useHandler(() => {
     setTransactionIsEnabled(!transactionIsEnabled)
-  )
+  })
 
   const handleSubmitAsync = async () => {
     const spendingLimits = {
@@ -66,7 +66,9 @@ export const SpendingLimitsScene = (props: Props) => {
 
   // Satsify "misused promise"
   const handleSubmit = useHandler(() => {
-    handleSubmitAsync().catch(err => showError(err))
+    handleSubmitAsync().catch(err => {
+      showError(err)
+    })
   })
 
   return (

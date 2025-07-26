@@ -7,9 +7,9 @@ export function useFilter<T>(
   filterData: (filter: string, item: T, index: number) => boolean = () => true
 ): [T[], (filter: string) => void] {
   const [filteredData, setFilteredData] = React.useState(allData)
-  const [filteredDataCache, setFilteredDataCache] = React.useState<{
-    [search: string]: T[]
-  }>({ '': allData })
+  const [filteredDataCache, setFilteredDataCache] = React.useState<
+    Record<string, T[]>
+  >({ '': allData })
   const [fifoCache, setFifoCache] = React.useState([''])
 
   const setFilter = (filter: string) => {

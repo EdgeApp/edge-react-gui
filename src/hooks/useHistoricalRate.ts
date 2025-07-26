@@ -1,4 +1,4 @@
-import { EdgeFetchFunction } from 'edge-core-js'
+import type { EdgeFetchFunction } from 'edge-core-js'
 
 import { getHistoricalRate } from '../util/exchangeRates'
 import { useAsyncValue } from './useAsyncValue'

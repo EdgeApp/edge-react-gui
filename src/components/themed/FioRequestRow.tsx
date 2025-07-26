@@ -1,8 +1,8 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { SharedValue } from 'react-native-reanimated'
+import type { SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { fioCodeToEdgeAsset } from '../../constants/FioConstants'
@@ -15,7 +15,7 @@ import {
 } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { FioRequest, FioRequestStatus } from '../../types/types'
+import type { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../util/utils'
@@ -25,12 +25,12 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
+import { type SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
 interface OwnProps {
   // The request:
@@ -59,14 +59,18 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
 
   onPress = () => {
     const { onPress, fioRequest } = this.props
-    onPress(fioRequest)?.catch(err => showError(err))
+    onPress(fioRequest)?.catch(err => {
+      showError(err)
+    })
     this.closeRow()
   }
 
   onSwipe = () => {
     const { onSwipe, fioRequest } = this.props
     onSwipe(fioRequest)
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
       .finally(this.closeRow)
   }
 
@@ -118,11 +122,11 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
       exchangeDenomination.multiplier
     )
     nativeAmount = toFixed(nativeAmount, 0, 0)
-    const cryptoText = `${getCryptoText({
+    const cryptoText = getCryptoText({
       displayDenomination,
       exchangeDenomination,
       nativeAmount
-    })}`
+    })
 
     // time_stamp is returned as UTC but doesn't always include the zulu
     const safeDate = fioRequest.time_stamp.includes('Z')

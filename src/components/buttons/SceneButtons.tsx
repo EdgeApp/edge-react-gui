@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 
-import { ButtonsView, ButtonsViewProps } from './ButtonsView'
+import { ButtonsView, type ButtonsViewProps } from './ButtonsView'
 
 interface Props extends Omit<Omit<ButtonsViewProps, 'parentType'>, 'layout'> {}
 

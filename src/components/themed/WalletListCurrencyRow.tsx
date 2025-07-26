@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -10,8 +10,8 @@ import { triggerHaptic } from '../../util/haptic'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CurrencyView } from '../layout/CurrencyView'
-import { CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { type CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {

@@ -1,13 +1,13 @@
-import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
+import type { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import { roundedFee } from '../../util/utils'
@@ -130,7 +130,9 @@ function InsufficientFeesModal(props: InsufficientFeesModalProps) {
   )
   const amountString = roundedFee(networkFee, 2, multiplier)
 
-  const handleCancel = useHandler(() => bridge.resolve())
+  const handleCancel = useHandler(() => {
+    bridge.resolve()
+  })
   const handleBuy = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     bridge.resolve()

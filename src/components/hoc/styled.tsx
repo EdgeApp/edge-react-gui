@@ -1,16 +1,16 @@
 import * as React from 'react'
 import {
-  ImageStyle,
-  StyleProp,
+  type ImageStyle,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
-  ViewStyle
+  type TextStyle,
+  type ViewStyle
 } from 'react-native'
 
 import {
   cacheStyles,
   getTheme,
-  Theme,
+  type Theme,
   useTheme
 } from '../services/ThemeContext'
 
@@ -70,7 +70,7 @@ export function styled<BaseProps extends StyleProps>(
 
           const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = {
             ...props,
-            style: style
+            style
           }
           return <Component {...allProps} />
         })

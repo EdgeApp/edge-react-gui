@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StatusBar } from 'react-native'
 
-import { ThemeProps, withTheme } from './ThemeContext'
+import { type ThemeProps, withTheme } from './ThemeContext'
 
 function StatusBarManagerComponent(props: ThemeProps) {
   const { theme } = props

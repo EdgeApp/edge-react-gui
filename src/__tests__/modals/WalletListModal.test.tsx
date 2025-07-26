@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { WalletListModal } from '../../components/modals/WalletListModal'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAsset } from '../../types/types'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
@@ -26,7 +26,7 @@ describe('WalletListModal', () => {
   })
 
   it("Should upgrade currency codes to token ID's", () => {
-    const data: { [code: string]: EdgeAsset[] } = {
+    const data: Record<string, EdgeAsset[]> = {
       ETH: [{ pluginId: 'ethereum', tokenId: null }],
       BNB: [
         { pluginId: 'binance', tokenId: null },

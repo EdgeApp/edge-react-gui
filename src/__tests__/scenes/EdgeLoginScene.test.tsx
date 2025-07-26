@@ -1,10 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 

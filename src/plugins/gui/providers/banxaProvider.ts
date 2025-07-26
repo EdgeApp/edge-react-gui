@@ -9,29 +9,29 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
-import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
-import { StringMap } from '../../../types/types'
+import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
 import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import type { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderGetTokenId,
-  FiatProviderQuote
+  type FiatProviderExactRegions,
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderGetTokenId,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
 import {
@@ -53,7 +53,7 @@ let testnet = false
 
 type AllowedPaymentTypes = Record<
   FiatDirection,
-  { [Payment in FiatPaymentType]?: boolean }
+  Partial<Record<FiatPaymentType, boolean>>
 >
 
 const allowedCountryCodes: FiatProviderExactRegions = {}
@@ -285,11 +285,10 @@ interface BanxaPaymentIdLimit {
   min: string
   max: string
 }
-interface BanxaPaymentMap {
-  [fiatCode: string]: {
-    [cryptoCode: string]: { [id: number]: BanxaPaymentIdLimit }
-  }
-}
+type BanxaPaymentMap = Record<
+  string,
+  Record<string, Record<number, BanxaPaymentIdLimit>>
+>
 
 type BanxaTxLimit = ReturnType<typeof asBanxaTxLimit>
 type BanxaCryptoCoin = ReturnType<typeof asBanxaCryptoCoin>
@@ -943,7 +942,9 @@ export const banxaProvider: FiatProviderFactory = {
                               path: `api/orders/${id}/confirm`,
                               apiKey,
                               bodyParams
-                            }).catch(e => console.error(String(e)))
+                            }).catch(e => {
+                              console.error(String(e))
+                            })
                           }
                           insideInterval = false
                         } catch (e: unknown) {
@@ -1030,7 +1031,7 @@ const banxaFetch = async (params: {
 
   const hmac = await generateHmac(apiKey, hmacUser, hmacData, nonce)
   const options = {
-    method: method,
+    method,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${hmac}`
@@ -1057,7 +1058,7 @@ const addToAllowedCurrencies = (
   addTokenToArray({ tokenId, otherInfo: coin }, tokens)
 }
 
-const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
+const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -1081,10 +1082,9 @@ const findLimit = (
   fiatCode: string,
   banxaLimits: BanxaTxLimit[]
 ): BanxaTxLimit | undefined => {
-  for (let i = 0; i < banxaLimits.length; i++) {
-    const l = banxaLimits[i]
-    if (l.fiat_code === fiatCode) {
-      return l
+  for (const limit of banxaLimits) {
+    if (limit.fiat_code === fiatCode) {
+      return limit
     }
   }
 }

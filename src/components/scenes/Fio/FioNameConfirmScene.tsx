@@ -1,11 +1,14 @@
-import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
   fioMakeSpend,
@@ -13,8 +16,8 @@ import {
 } from '../../../util/FioAddressUtils'
 import {
   logEvent,
-  TrackingEventName,
-  TrackingValues
+  type TrackingEventName,
+  type TrackingValues
 } from '../../../util/tracking'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -25,8 +28,8 @@ import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -112,7 +115,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               ))
-              return navigation.navigate('fioAddressRegisterSelectWallet', {
+              navigation.navigate('fioAddressRegisterSelectWallet', {
                 fioAddress: fioName,
                 walletId: paymentWallet.id,
                 selectedDomain: {
@@ -124,6 +127,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                 },
                 isFallback: true
               })
+              return
             }
           }
           throw new Error(response.error)
@@ -163,11 +167,11 @@ class FioNameConfirm extends React.PureComponent<Props> {
           })
 
           // @ts-expect-error
-          window.requestAnimationFrame(() =>
+          window.requestAnimationFrame(() => {
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName
             })
-          )
+          })
         } else {
           let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioDomain', {
             fioDomain: fioName
@@ -188,12 +192,12 @@ class FioNameConfirm extends React.PureComponent<Props> {
           })
 
           // @ts-expect-error
-          window.requestAnimationFrame(() =>
+          window.requestAnimationFrame(() => {
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName,
               expiration
             })
-          )
+          })
         }
       } catch (e: any) {
         showError(lstrings.fio_register_address_err_msg)
@@ -237,7 +241,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
             getOperationFee={this.getFee}
             fioWallet={paymentWallet}
             navigation={this.props.navigation as NavigationBase}
-            onCancel={() => navigation.goBack()}
+            onCancel={() => {
+              navigation.goBack()
+            }}
           />
         </View>
       </SceneWrapper>

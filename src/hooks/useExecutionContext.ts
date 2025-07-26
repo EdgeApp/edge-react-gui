@@ -1,11 +1,12 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
-import { ExecutionContext } from '../controllers/action-queue/types'
+import type { ExecutionContext } from '../controllers/action-queue/types'
 import { makeExecutionContext } from '../controllers/action-queue/util/makeExecutionContext'
 import { useSelector, useStore } from '../types/reactRedux'
 
 export const useExecutionContext = (mockMode?: boolean): ExecutionContext => {
   const store = useStore()
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { dispatch, getState } = store
 
   const account: EdgeAccount = useSelector(state => state.core.account)

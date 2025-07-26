@@ -5,9 +5,7 @@ export interface PaymentMethod {
   status: string
   supportsDeposit: boolean
   supportsPayment: boolean
-  blockchains: { [key: string]: string }
+  blockchains: Record<string, string>
 }
 
-export interface PaymentMethodsMap {
-  [key: string]: PaymentMethod
-}
+export type PaymentMethodsMap = Record<string, PaymentMethod>

@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals'
 
-import { DeepLink } from '../types/DeepLinkTypes'
+import type { DeepLink } from '../types/DeepLinkTypes'
 import { parseDeepLink } from '../util/DeepLinkParser'
 
 /**
  * Generates deep link unit tests using a simple table format.
  */
-function makeLinkTests(tests: { [uri: string]: DeepLink }): void {
+function makeLinkTests(tests: Record<string, DeepLink>): void {
   for (const link of Object.keys(tests)) {
     const expected = tests[link]
     it(link, function () {

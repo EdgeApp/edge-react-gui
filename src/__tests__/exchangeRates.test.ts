@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 
 import {
   closestRateForTimestamp,
-  ExchangeRateCache
+  type ExchangeRateCache
 } from '../actions/ExchangeRateActions'
 import { getHistoricalRate } from '../util/exchangeRates'
 import { mswServer } from '../util/mswServer'

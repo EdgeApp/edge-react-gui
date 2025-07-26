@@ -5,16 +5,16 @@ import {
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeCurrencyWallet,
-  EdgeSwapRequest,
-  EdgeTokenId
+  type EdgeCurrencyWallet,
+  type EdgeSwapRequest,
+  type EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { DisableAsset } from '../../actions/ExchangeInfoActions'
+import type { DisableAsset } from '../../actions/ExchangeInfoActions'
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -22,7 +22,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
@@ -40,14 +40,17 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import {
   SwapInput,
-  SwapInputCardAmounts,
-  SwapInputCardInputRef
+  type SwapInputCardAmounts,
+  type SwapInputCardInputRef
 } from '../themed/SwapInput'
 import { ButtonBox } from '../themed/ThemedButtons'
 
@@ -371,7 +374,7 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`, {
+      showWarning(lstrings.exchange_select_receiving_wallet, {
         trackError: false
       })
       return
@@ -380,19 +383,19 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`, {
+      showWarning(lstrings.exchange_select_sending_wallet, {
         trackError: false
       })
       return
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: fromTokenId,
-      fromWallet: fromWallet,
+      fromTokenId,
+      fromWallet,
       nativeAmount: '0',
       quoteFor: 'max',
-      toTokenId: toTokenId,
-      toWallet: toWallet
+      toTokenId,
+      toWallet
     }
 
     getQuote(request)
@@ -410,12 +413,12 @@ export const SwapCreateScene = (props: Props) => {
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: fromTokenId,
-      fromWallet: fromWallet,
+      fromTokenId,
+      fromWallet,
       nativeAmount: inputNativeAmount,
       quoteFor: inputNativeAmountFor,
-      toTokenId: toTokenId,
-      toWallet: toWallet
+      toTokenId,
+      toWallet
     }
 
     if (checkAmountExceedsBalance()) return

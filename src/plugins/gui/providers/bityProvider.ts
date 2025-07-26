@@ -9,30 +9,34 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeSpendInfo,
+  EdgeTokenId
+} from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
-import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
-import { StringMap } from '../../../types/types'
+import type { HomeAddress, SepaInfo } from '../../../types/FormTypes'
+import type { StringMap } from '../../../types/types'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { utf8 } from '../../../util/encoding'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   FiatPluginUi
 } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { makeCheckDue } from './common'
 import { ProviderSupportStore } from './ProviderSupportStore'
@@ -458,7 +462,7 @@ export const bityProvider: FiatProviderFactory = {
           const response = await fetch(
             `https://exchange.api.bity.com/v2/currencies`
           ).catch(e => undefined)
-          if (response == null || !response.ok) {
+          if (!response?.ok) {
             console.error(
               `Bity getSupportedAssets response error: ${await response?.text()}`
             )
@@ -507,7 +511,7 @@ export const bityProvider: FiatProviderFactory = {
 
               // If token is not in the no-KYC list do not add it
               const list = noKycCurrencyCodes[direction].crypto[pluginId]
-              if (list == null || !list.some(t => t.tokenId === tokenId)) {
+              if (!list?.some(t => t.tokenId === tokenId)) {
                 continue
               }
 
@@ -811,7 +815,7 @@ export const bityProvider: FiatProviderFactory = {
                   }
                 }
 
-                showUi.exitScene()
+                await showUi.exitScene()
               },
               onClose: () => {}
             })
@@ -925,15 +929,15 @@ const completeBuyOrder = async (
         walletAddress: output.crypto_address
       },
       paymentDetails: {
-        id: id,
-        iban: iban,
-        swiftBic: swiftBic,
-        recipient: recipient,
-        reference: reference
+        id,
+        iban,
+        swiftBic,
+        recipient,
+        reference
       }
     },
     onDone: async () => {
-      showUi.exitScene()
+      await showUi.exitScene()
     }
   })
 }

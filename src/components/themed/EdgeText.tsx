@@ -1,8 +1,14 @@
 import * as React from 'react'
-import { Platform, StyleProp, Text, TextProps, TextStyle } from 'react-native'
+import {
+  Platform,
+  type StyleProp,
+  Text,
+  type TextProps,
+  type TextStyle
+} from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 export const androidAdjustTextStyle = (theme: Theme) => {
   const styles = getStyles(theme)

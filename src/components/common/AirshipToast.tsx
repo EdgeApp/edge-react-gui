@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { AirshipBridge, AirshipToast as RawToast } from 'react-native-airship'
+import {
+  type AirshipBridge,
+  AirshipToast as RawToast
+} from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'

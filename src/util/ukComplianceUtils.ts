@@ -1,4 +1,4 @@
-import { LocaleStringKey } from '../locales/en_US'
+import type { LocaleStringKey } from '../locales/en_US'
 import { lstrings } from '../locales/strings'
 
 /** A common string key that parses into default vs UK compliant equivalents. */
@@ -10,12 +10,13 @@ type CompliantStringKeys =
   | 'insufficient_fees_3s' // buy_parent_crypto_modal_message_3s / swap_parent_crypto_modal_message_3s
   | 'token_agreement_modal_message' // token_agreement_modal_message / uk_token_agreement_modal_message
 
-const UK_COMPLIANT_STRING_MAP: {
-  [key in CompliantStringKeys]: {
+const UK_COMPLIANT_STRING_MAP: Record<
+  CompliantStringKeys,
+  {
     default: LocaleStringKey
     gb: LocaleStringKey
   }
-} = {
+> = {
   stake_earn_1s: { default: 'stake_earn_1s', gb: 'stake_stake_1s' },
   stake_earn_button_label: {
     default: 'stake_earn_button_label',

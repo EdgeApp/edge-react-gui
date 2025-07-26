@@ -2,8 +2,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { FilledTextInputReturnKeyType } from '../themed/FilledTextInput'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import type { FilledTextInputReturnKeyType } from '../themed/FilledTextInput'
 import { EdgeButton } from './EdgeButton'
 
 interface ReturnKeyTypeButtonProps {

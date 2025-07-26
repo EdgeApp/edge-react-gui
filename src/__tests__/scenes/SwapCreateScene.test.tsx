@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { SwapCreateScene } from '../../components/scenes/SwapCreateScene'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeSwapTabSceneProps } from '../../util/fake/fakeSceneProps'
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Dimensions, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 
 const safeAreaGap = 256 // Overkill to avoid top of screen
 const duration = 300
@@ -60,7 +60,9 @@ export function AirshipDropdown(props: Props): React.ReactElement {
 
   const offset = useSharedValue(-Dimensions.get('window').height / 4)
   const timeout = React.useRef<Timeout | undefined>(undefined)
-  const handleClose = useHandler(() => props.bridge.resolve())
+  const handleClose = useHandler(() => {
+    props.bridge.resolve()
+  })
 
   //
   // Effects
@@ -118,7 +120,9 @@ export function AirshipDropdown(props: Props): React.ReactElement {
         runOnJS(stopTimer)()
         offset.value = withTiming(0, { duration })
       }),
-    Gesture.Tap().onEnd(() => runOnJS(onPress ?? handleClose)())
+    Gesture.Tap().onEnd(() => {
+      runOnJS(onPress ?? handleClose)()
+    })
   )
 
   //

@@ -1,4 +1,4 @@
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 
 import { AAVE_WELCOME } from '../constants/constantSettings'
 

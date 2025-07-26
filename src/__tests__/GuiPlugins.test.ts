@@ -5,8 +5,8 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../constants/plugins/sellPluginList.json'
 import {
   asGuiPluginJson,
-  GuiPlugin,
-  GuiPluginRow
+  type GuiPlugin,
+  type GuiPluginRow
 } from '../types/GuiPluginTypes'
 import { filterGuiPluginJson, makePluginUri } from '../util/GuiPluginTools'
 

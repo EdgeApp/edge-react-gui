@@ -1,11 +1,9 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 type Cleanup = (() => void) | undefined
 
-interface WalletMap {
-  [walletId: string]: EdgeCurrencyWallet
-}
+type WalletMap = Record<string, EdgeCurrencyWallet>
 interface State {
   cleanups: Map<string, Cleanup>
   lastWallets: WalletMap

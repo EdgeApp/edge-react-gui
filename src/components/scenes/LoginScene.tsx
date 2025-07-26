@@ -1,5 +1,5 @@
-import { EdgeAccount } from 'edge-core-js'
-import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
+import type { EdgeAccount } from 'edge-core-js'
+import { type InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { BlurView } from 'rn-id-blurview'
@@ -9,18 +9,18 @@ import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount } from '../../actions/LoginActions'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
-import { ExperimentConfig } from '../../experimentConfig'
+import type { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { performanceMarkersFromLoginUiPerfEvents } from '../../perf'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, RootSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, RootSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
@@ -82,7 +82,9 @@ export function LoginScene(props: Props) {
               initializeAccount(navigation as NavigationBase, account)
             )
           })
-          .catch(error => showError(error))
+          .catch(error => {
+            showError(error)
+          })
       }
       if (YOLO_PASSWORD != null) {
         context
@@ -92,7 +94,9 @@ export function LoginScene(props: Props) {
               initializeAccount(navigation as NavigationBase, account)
             )
           })
-          .catch(error => showError(error))
+          .catch(error => {
+            showError(error)
+          })
       }
     } else if (
       YOLO_USERNAME == null &&
@@ -111,7 +115,9 @@ export function LoginScene(props: Props) {
             initializeAccount(navigation as NavigationBase, account)
           )
         })
-        .catch(error => showError(error))
+        .catch(error => {
+          showError(error)
+        })
     }
   }, [account, context, dispatch, navigation])
 
@@ -123,9 +129,9 @@ export function LoginScene(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation as NavigationBase).catch(err =>
+        showHelpModal(navigation as NavigationBase).catch(err => {
           showDevError(err)
-        )
+        })
       },
       text: lstrings.string_help
     }),
@@ -143,7 +149,9 @@ export function LoginScene(props: Props) {
   })
 
   const handleSendLogs = useHandler(() => {
-    dispatch(showSendLogsModal()).catch(err => showError(err))
+    dispatch(showSendLogsModal()).catch(err => {
+      showError(err)
+    })
   })
 
   const handleLogEvent = useHandler((event, values) => {

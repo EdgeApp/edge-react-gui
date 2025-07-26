@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris.ts'
 import { showOtpReminderModal } from '../../util/otpReminder.tsx'
 import { openBrowserUri } from '../../util/WebUtils.ts'
@@ -23,10 +23,10 @@ import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { NotificationCenterRow } from '../notification/NotificationCenterCard'
 import { Airship } from '../services/AirshipInstance'
 import { updateNotificationInfo } from '../services/NotificationService.ts'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText.tsx'
 
-interface Props extends EdgeAppSceneProps<'notificationCenter'> {}
+type Props = EdgeAppSceneProps<'notificationCenter'>
 
 export const NotificationCenterScene = (props: Props) => {
   const { navigation } = props
@@ -207,7 +207,7 @@ export const NotificationCenterScene = (props: Props) => {
             const handleCloseNewToken = async () => {
               // Since this isn't a priority notification, we can just fully
               // complete it here
-              await completeNotif(key)
+              await completeNotif(key)()
               dispatch({
                 type: 'CORE/DISMISS_NEW_TOKENS',
                 data: { walletId }

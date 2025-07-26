@@ -1,5 +1,5 @@
 import { ENV } from '../env'
-import { AppConfig } from '../types/types'
+import type { AppConfig } from '../types/types'
 import { edgeConfig } from './edgeConfig'
 import { testConfig } from './testConfig'
 

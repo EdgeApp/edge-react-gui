@@ -4,7 +4,7 @@ import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -15,14 +15,14 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  MarginRemProps,
+  type MarginRemProps,
   useMarginRemStyle
 } from '../../hooks/useMarginRemStyle'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
-  AnimatedIconComponent,
+  type AnimatedIconComponent,
   ChevronBackAnimated,
   CloseIconAnimated
 } from '../icons/ThemedIcons'
@@ -99,7 +99,7 @@ export interface SimpleTextInputRef {
   blur: () => void
   isFocused: () => boolean
   clear: () => void
-  setNativeProps: (nativeProps: Object) => void
+  setNativeProps: (nativeProps: object) => void
 }
 
 export const SimpleTextInput = React.forwardRef<
@@ -169,7 +169,7 @@ export const SimpleTextInput = React.forwardRef<
   function checkIsFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
-  function setNativeProps(nativeProps: Object): void {
+  function setNativeProps(nativeProps: object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
@@ -288,7 +288,9 @@ export const SimpleTextInput = React.forwardRef<
       <EdgeTouchableWithoutFeedback
         accessible={false}
         testID={testID}
-        onPress={() => focus()}
+        onPress={() => {
+          focus()
+        }}
       >
         <InputContainerView
           disableAnimation={disableAnimation}

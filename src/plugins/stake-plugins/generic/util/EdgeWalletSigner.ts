@@ -1,5 +1,5 @@
 import { defineReadOnly } from '@ethersproject/properties'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeMemo,
   EdgeSpendTarget,
@@ -80,6 +80,8 @@ export class EdgeWalletSigner extends ethers.Signer {
   ): Promise<EdgeTransaction> {
     const spendTargets: EdgeSpendTarget[] = [
       {
+        // This will blow up if `value` is a byte array :
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         nativeAmount: (await transaction.value)?.toString(),
         publicAddress: await transaction.to
       }

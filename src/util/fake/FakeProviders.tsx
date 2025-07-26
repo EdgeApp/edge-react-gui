@@ -1,11 +1,11 @@
 import { NavigationContext } from '@react-navigation/native'
 import * as React from 'react'
-import { Metrics, SafeAreaProvider } from 'react-native-safe-area-context'
+import { type Metrics, SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
-import { rootReducer, RootState } from '../../reducers/RootReducer'
+import { rootReducer, type RootState } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
 import { fakeNavigation } from './fakeSceneProps'
 

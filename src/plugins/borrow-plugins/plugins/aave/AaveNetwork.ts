@@ -19,7 +19,7 @@ export interface AaveNetworkBlueprint {
     paraSwapRepayAdapter: string
     IPriceOracle: string
   }
-  enabledTokens: { [currencyCode: string]: boolean }
+  enabledTokens: Record<string, boolean>
 }
 
 export interface AaveNetwork {
@@ -59,19 +59,21 @@ export interface AaveNetwork {
 
 interface FunctionCache {
   getAllReservesTokens?: Array<{ symbol: string; address: string }>
-  getReserveTokenContracts: {
-    [address: string]: {
+  getReserveTokenContracts: Record<
+    string,
+    {
       aToken: ethers.Contract
       sToken: ethers.Contract
       vToken: ethers.Contract
     }
-  }
-  getReserveTokenAprRates: {
-    [tokenAddress: string]: {
+  >
+  getReserveTokenAprRates: Record<
+    string,
+    {
       variableApr: number
       stableApr: number
     }
-  }
+  >
 }
 
 const RAY = BigNumber.from('10').pow('27')
@@ -120,7 +122,6 @@ export const makeAaveNetworkFactory = (
     //
 
     async getAssetPrice(address): Promise<BigNumber> {
-      // eslint-disable-next-line @typescript-eslint/return-await
       return await IPriceOracle.getAssetPrice(address)
     },
 

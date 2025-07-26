@@ -6,7 +6,7 @@ import { logoutRequest } from '../../actions/LoginActions'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 
 export const AutoLogout = () => {
   const dispatch = useDispatch()

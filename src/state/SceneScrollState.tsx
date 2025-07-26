@@ -1,8 +1,8 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useMemo } from 'react'
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
+import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import {
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedScrollHandler,
   useSharedValue,

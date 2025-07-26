@@ -4,9 +4,12 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { BorrowDebt, BorrowEngine } from '../../plugins/borrow-plugins/types'
+import type {
+  BorrowDebt,
+  BorrowEngine
+} from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates } from '../../types/types'
+import type { GuiExchangeRates } from '../../types/types'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 

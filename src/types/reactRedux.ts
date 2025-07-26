@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 import * as ReactRedux from 'react-redux'
 
-import { Dispatch, RootState, Store } from '../types/reduxTypes'
+import type { Dispatch, RootState, Store } from '../types/reduxTypes'
 
 /**
  * The react-redux connect function, locked to our own Redux types

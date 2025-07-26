@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { getCountry } from 'react-native-localize'
 
@@ -7,8 +7,8 @@ import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { CountryData } from '../../types/types'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import type { CountryData } from '../../types/types'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
@@ -36,7 +36,9 @@ export const CountryListModal = ({
         icon={<FastImage source={source} style={styles.image} />}
         subTitle={alpha}
         title={name}
-        onPress={() => bridge.resolve(alpha)}
+        onPress={() => {
+          bridge.resolve(alpha)
+        }}
       />
     )
   }

@@ -1,5 +1,5 @@
 import { asOptional } from 'cleaners'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
@@ -8,8 +8,12 @@ import {
   asFiatDirection,
   asFiatPaymentType
 } from '../plugins/gui/fiatPluginTypes'
-import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
-import { AppParamList } from '../types/routerTypes'
+import {
+  asModalNames,
+  type DeepLink,
+  type PromotionLink
+} from '../types/DeepLinkTypes'
+import type { AppParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -25,7 +29,7 @@ export function parseDeepLink(
   // Normalize some legacy cases:
   for (const prefix of prefixes) {
     const [from, to] = prefix
-    if (uri.indexOf(from) === 0) uri = uri.replace(from, to)
+    if (uri.startsWith(from)) uri = uri.replace(from, to)
   }
 
   const url = new URL(uri)
@@ -262,7 +266,7 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
 
     if (data != null) {
       // Parse data in format{{REWARDS:ethereum:a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48}}
-      const dataMatch = data.match(/{{([^:]+):([^:]+)(?::([^}]+))?}}/)
+      const dataMatch = /{{([^:]+):([^:]+)(?::([^}]+))?}}/.exec(data)
 
       if (dataMatch) {
         const [, type, pluginId, tokenId = null] = dataMatch

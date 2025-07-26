@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -60,7 +60,7 @@ export const NetworkFeeTile = (props: Props) => {
     },
     fiatDenomination,
     exchangeRate,
-    nativeAmount: nativeAmount
+    nativeAmount
   })
 
   const feeFiatAmount = useFiatText({

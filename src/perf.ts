@@ -1,6 +1,6 @@
-import { PerfEvent } from 'edge-login-ui-rn'
+import type { PerfEvent } from 'edge-login-ui-rn'
 import performance, {
-  PerformanceEntry,
+  type PerformanceEntry,
   PerformanceObserver
 } from 'react-native-performance'
 
@@ -28,7 +28,9 @@ new PerformanceObserver(list => {
 
   // Clear measure entries:
   const names = measureEntries.map(entries => entries.name)
-  names.map(name => performance.clearMeasures(name))
+  for (const name of names) {
+    performance.clearMeasures(name)
+  }
 }).observe({ entryTypes: ['measure'] })
 
 //
@@ -74,7 +76,9 @@ const measurements = [
 // Observe for all markers and measure them:
 new PerformanceObserver(list => {
   const entries = list.getEntries()
-  measurements.forEach(fn => fn(entries))
+  measurements.forEach(fn => {
+    fn(entries)
+  })
 }).observe({ type: 'mark', buffered: true })
 
 //

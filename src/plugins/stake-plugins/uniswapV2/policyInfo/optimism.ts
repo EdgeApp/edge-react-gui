@@ -3,10 +3,10 @@ import UNISWAP_V2_PAIR from '../../../abi/UNISWAP_V2_PAIR.json'
 import VELODROME_V2_GAUGE from '../../../abi/VELODROME_V2_GAUGE.json'
 import VELODROME_V2_ROUTER from '../../../abi/VELODROME_V2_ROUTER.json'
 import WRAPPED_ETH_ABI from '../../../abi/WRAPPED_ETH_ABI.json'
-import { StakeProviderInfo } from '../../types'
+import type { StakeProviderInfo } from '../../types'
 import { makeEcosystem } from '../Ecosystem'
 import { makeVelodromeV2StakePolicy } from '../policies/VelodromeV2StakePolicy'
-import { StakePolicyInfo } from '../stakePolicy'
+import type { StakePolicyInfo } from '../stakePolicy'
 
 // -----------------------------------------------------------------------------
 // Contract Info Map
@@ -201,7 +201,7 @@ function generateVelodromeV2StakePolicyInfo(
 ): StakePolicyInfo | null {
   const [keyType, poolType, tokenA, tokenB] = poolContractKey.split('_')
   if (keyType !== 'POOL') return null
-  const isStablePool = poolType[0] === 's'
+  const isStablePool = poolType.startsWith('s')
   const lpTokenContract = eco.makeContract(poolContractKey)
 
   return {

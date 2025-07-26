@@ -1,10 +1,11 @@
+/* eslint-disable camelcase */
 import { add, div, eq, gt, lt, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
 import { KilnLiquid20A__factory } from '../../../contracts'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
@@ -12,10 +13,10 @@ import {
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { makeKilnApi } from '../util/KilnApi'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 export interface EthereumPooledKilnAdapterConfig {
   type: 'ethereum-pooled-kiln'

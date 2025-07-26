@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
@@ -20,7 +20,9 @@ interface Props {
 export function RawTextModal(props: Props) {
   const { bridge, body, title, disableCopy = false } = props
 
-  const handleCancel = () => bridge.resolve(undefined)
+  const handleCancel = () => {
+    bridge.resolve(undefined)
+  }
   const handleCopy = () => {
     Clipboard.setString(body)
     showToast(lstrings.fragment_copied)

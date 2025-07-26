@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { LayoutChangeEvent, StyleSheet } from 'react-native'
+import { type LayoutChangeEvent, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
-import { OverrideDots, ThemeDot } from '../../types/Theme'
+import type { OverrideDots, ThemeDot } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 
 export interface AccentColors {

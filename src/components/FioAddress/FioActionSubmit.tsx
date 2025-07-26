@@ -1,25 +1,28 @@
 import { div } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
 import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import {
   getAvailableBalance,
   getWalletName
 } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -61,7 +64,7 @@ interface State {
 
 interface StateProps {
   denominationMultiplier: string
-  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
+  currencyWallets: Record<string, EdgeCurrencyWallet>
   fioWallets: EdgeCurrencyWallet[]
 }
 
@@ -84,13 +87,15 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
   componentDidMount(): void {
     this.setBalance()
-    this.setFee().catch(err => showError(err))
+    this.setFee().catch(err => {
+      showError(err)
+    })
   }
 
   resetSlider = () => {
-    this.setState({ showSlider: false }, () =>
+    this.setState({ showSlider: false }, () => {
       this.setState({ showSlider: true })
-    )
+    })
   }
 
   onConfirm = async () => {
@@ -144,12 +149,16 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
               { paymentWallet: this.props.currencyWallets[walletId] },
               () => {
                 this.setBalance()
-                this.setFee().catch(err => showError(err))
+                this.setFee().catch(err => {
+                  showError(err)
+                })
               }
             )
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   setFee = async (): Promise<void> => {
@@ -165,7 +174,8 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         if (fee) {
           if (goTo) {
             this.setState({ feeLoading: false })
-            return goTo({ fee })
+            goTo({ fee })
+            return
           }
           displayFee = this.formatFio(`${fee}`)
           showSlider = true

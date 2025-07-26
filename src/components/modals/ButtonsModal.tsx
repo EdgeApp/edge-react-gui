@@ -4,13 +4,13 @@
  */
 
 import * as React from 'react'
-import { View, ViewStyle } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { View, type ViewStyle } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { EdgeModal } from './EdgeModal'
 
@@ -54,7 +54,7 @@ export interface ButtonModalProps<Buttons> {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
+export function ButtonsModal<Buttons extends Record<string, ButtonInfo>>(
   props: ButtonModalProps<Buttons>
 ) {
   const {
@@ -70,7 +70,9 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = useHandler(() => bridge.resolve(undefined))
+  const handleCancel = useHandler(() => {
+    bridge.resolve(undefined)
+  })
 
   const containerStyle: ViewStyle = {
     flexGrow: fullScreen ? 1 : 0,
@@ -89,7 +91,9 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
         result => {
           if (result) bridge.resolve(key)
         },
-        error => showError(error)
+        error => {
+          showError(error)
+        }
       )
     }
 

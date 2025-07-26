@@ -2238,5 +2238,4 @@ const strings = {
   duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`
 } as const
 
-// eslint-disable-next-line import/no-default-export
 export default strings

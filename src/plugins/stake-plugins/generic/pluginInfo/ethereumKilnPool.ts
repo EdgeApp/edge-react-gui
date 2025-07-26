@@ -1,6 +1,6 @@
 import { ENV } from '../../../../env'
-import { EthereumPooledKilnAdapterConfig } from '../policyAdapters/EthereumKilnAdaptor'
-import { StakePluginInfo, StakePolicyConfig } from '../types'
+import type { EthereumPooledKilnAdapterConfig } from '../policyAdapters/EthereumKilnAdaptor'
+import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const kilnPolicyConfig: Array<
   StakePolicyConfig<EthereumPooledKilnAdapterConfig>

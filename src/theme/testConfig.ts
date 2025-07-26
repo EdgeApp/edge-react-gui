@@ -1,4 +1,4 @@
-import { AppConfig } from '../types/types'
+import type { AppConfig } from '../types/types'
 import { testDark } from './variables/testDark'
 import { testLight } from './variables/testLight'
 

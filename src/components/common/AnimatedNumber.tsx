@@ -1,14 +1,20 @@
 import React, { useMemo } from 'react'
-import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  type StyleProp,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
+} from 'react-native'
 import Animated, {
   Easing,
-  EasingFunction,
+  type EasingFunction,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 const ANIMATION_DURATION_DEFAULT = 1000
 const NUMBERS = Array(10)

@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyInfo,
@@ -12,7 +12,7 @@ import {
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
-import { EdgeAsset } from '../types/types'
+import type { EdgeAsset } from '../types/types'
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -243,7 +243,7 @@ export const currencyCodesToEdgeAssets = (
   currencyCodes: string[]
 ): EdgeAsset[] => {
   const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
-    (map: { [chainCode: string]: string }, pluginId) => {
+    (map: Record<string, string>, pluginId) => {
       const chainCode =
         account.currencyConfig[pluginId].currencyInfo.currencyCode
       if (map[chainCode] == null) map[chainCode] = pluginId

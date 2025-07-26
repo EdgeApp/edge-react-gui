@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { TextInputModal } from '../../components/modals/TextInputModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 
 describe('TextInputModal', () => {
   const fakeAccount: any = { disklet: { getText: async () => '' } }

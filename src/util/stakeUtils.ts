@@ -1,5 +1,5 @@
 import { add, gt, round } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeStakingStatus,
@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { formatTimeDate } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import {
+import type {
   PositionAllocation,
   StakeAssetInfo,
   StakePlugin,
@@ -18,8 +18,8 @@ import {
   StakePolicyFilter,
   StakePosition
 } from '../plugins/stake-plugins/types'
-import { StakePositionMap } from '../reducers/StakingReducer'
-import { EdgeAsset } from '../types/types'
+import type { StakePositionMap } from '../reducers/StakingReducer'
+import type { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { enableTokens } from './CurrencyWalletHelpers'
@@ -78,11 +78,11 @@ export const getPolicyTitleName = (
 
   const stakeName =
     stakeCurrencyCodes.length > 1
-      ? `${stakeCurrencyCodes.join(' + ')}`
+      ? stakeCurrencyCodes.join(' + ')
       : stakeCurrencyCodes[0]
   const rewardName =
     rewardCurrencyCodes.length > 1
-      ? `${rewardCurrencyCodes.join(' + ')}`
+      ? rewardCurrencyCodes.join(' + ')
       : rewardCurrencyCodes[0]
 
   const { yieldType } = stakePolicy

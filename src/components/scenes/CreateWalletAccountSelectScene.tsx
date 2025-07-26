@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -10,7 +10,7 @@ import {
 } from '../../actions/CreateWalletActions'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../../components/modals/WalletListModal'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -18,8 +18,8 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import {
   getCurrencyCode,
   getWalletTokenId
@@ -33,7 +33,7 @@ import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { IconDataRow } from '../rows/IconDataRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface CreateWalletAccountSelectParams {
@@ -170,7 +170,9 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           setActivationPaymentInfo(activationInfo)
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   })
 
   const handleSubmit = useHandler(async () => {
@@ -183,10 +185,14 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
         walletId,
         activationPaymentInfo
       )
-    ).catch(err => showError(err))
+    ).catch(err => {
+      showError(err)
+    })
   })
 
-  const handleCancel = useHandler(() => setWalletId(''))
+  const handleCancel = useHandler(() => {
+    setWalletId('')
+  })
 
   useAsyncEffect(
     async () => {

@@ -1,7 +1,7 @@
 import { asNumber, asObject, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { TextInput, View } from 'react-native'
+import { type TextInput, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
@@ -17,12 +17,12 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
 import { logEvent } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError, showToast } from '../../services/AirshipInstance'
-import { Theme, useTheme } from '../../services/ThemeContext'
+import { type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
 import { MainButton } from '../../themed/MainButton'
@@ -32,7 +32,7 @@ export interface FioCreateHandleParams {
   freeRegRefCode: string
 }
 
-interface Props extends EdgeAppSceneProps<'fioCreateHandle'> {}
+type Props = EdgeAppSceneProps<'fioCreateHandle'>
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,
@@ -78,7 +78,7 @@ export const FioCreateHandleScene = (props: Props) => {
   const handleChangeFioHandle = useHandler((userInput: string) => {
     // Dash '-' allowed,
     // but cannot be the first...
-    if (userInput.indexOf('-') === 0) {
+    if (userInput.startsWith('-')) {
       userInput = userInput.slice(1) // remove first character
     }
 
@@ -140,7 +140,7 @@ export const FioCreateHandleScene = (props: Props) => {
         await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
 
-        await dispatch(
+        dispatch(
           logEvent('Fio_Handle_Register', {
             conversionValues: {
               conversionType: 'dollar',
@@ -187,7 +187,6 @@ export const FioCreateHandleScene = (props: Props) => {
 
       if (!mounted.current) return
       setWallet(wallet)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [],
     'FioCreateHandleScene'
@@ -202,7 +201,6 @@ export const FioCreateHandleScene = (props: Props) => {
     return () => {
       mounted.current = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

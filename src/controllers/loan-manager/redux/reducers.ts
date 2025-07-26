@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import { Action } from '../../../types/reduxTypes'
-import { LoanAccountMap } from '../types'
+import type { Action } from '../../../types/reduxTypes'
+import type { LoanAccountMap } from '../types'
 
 export interface LoanManagerState {
   readonly loanAccounts: LoanAccountMap

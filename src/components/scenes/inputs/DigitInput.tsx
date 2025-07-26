@@ -8,7 +8,7 @@ import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../../common/EdgeTouchableWithoutFeedback'
-import { Theme, useTheme } from '../../services/ThemeContext'
+import { type Theme, useTheme } from '../../services/ThemeContext'
 import { PinDots } from './DigitInput/PinDots'
 
 export const MAX_PIN_LENGTH = 4

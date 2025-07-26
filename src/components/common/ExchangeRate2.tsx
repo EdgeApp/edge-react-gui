@@ -1,9 +1,9 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo } from 'react'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
-import { cacheStyles, getTheme, Theme } from '../services/ThemeContext'
+import { cacheStyles, getTheme, type Theme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 

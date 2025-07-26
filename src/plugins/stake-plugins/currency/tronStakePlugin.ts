@@ -1,22 +1,22 @@
 import { add, gt, lt } from 'biggystring'
 import { asDate, asMaybe, asObject, asString } from 'cleaners'
-import { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
 import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
-  ChangeQuote,
-  ChangeQuoteRequest,
+  type ChangeQuote,
+  type ChangeQuoteRequest,
   filterStakePolicies,
-  PositionAllocation,
-  QuoteAllocation,
+  type PositionAllocation,
+  type QuoteAllocation,
   StakeBelowLimitError,
-  StakePlugin,
-  StakePolicy,
-  StakePolicyFilter,
-  StakePosition,
-  StakePositionRequest,
-  StakeProviderInfo
+  type StakePlugin,
+  type StakePolicy,
+  type StakePolicyFilter,
+  type StakePosition,
+  type StakePositionRequest,
+  type StakeProviderInfo
 } from '../types'
 
 const MIN_TRX_STAKE = '1000000' // 1 TRX

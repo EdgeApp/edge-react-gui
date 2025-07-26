@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   interpolateColor,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -23,12 +23,12 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ExperimentConfig } from '../../experimentConfig'
+import type { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { RootSceneProps } from '../../types/routerTypes'
-import { ImageProp } from '../../types/Theme'
+import type { RootSceneProps } from '../../types/routerTypes'
+import type { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -98,20 +98,25 @@ export const GettingStartedScene = (props: Props) => {
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
-  const visitPasswordScene = (): void =>
+  const visitPasswordScene = (): void => {
     navigation.replace('login', {
       loginUiInitialRoute: 'login-password',
       experimentConfig
     })
+  }
 
   const visitNewAccountScene = (): void =>
     // Android needs replace instead of navigate or the loginUiInitialRoute
     // doesn't work...
-    navigation.replace('login', {
-      // Only create light accounts if no other accounts exist
-      loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account',
-      experimentConfig
-    })
+    {
+      navigation.replace('login', {
+        // Only create light accounts if no other accounts exist
+        loginUiInitialRoute: hasLocalUsers
+          ? 'new-account'
+          : 'new-light-account',
+        experimentConfig
+      })
+    }
 
   const handleCompleteUsps = useHandler(() => {
     // This delay is necessary to properly reset the scene since it remains on
@@ -298,7 +303,9 @@ export const GettingStartedScene = (props: Props) => {
             {Array.from({ length: paginationCount }).map((_, index) => (
               <Pressable
                 key={index}
-                onPress={() => handlePressIndicator(index)}
+                onPress={() => {
+                  handlePressIndicator(index)
+                }}
               >
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>

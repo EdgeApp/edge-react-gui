@@ -3,10 +3,10 @@ import { render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
-  EdgeAccount,
-  EdgeContext,
-  EdgeCurrencyWallet,
-  EdgeSwapInfo,
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet,
+  type EdgeSwapInfo,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld
 } from 'edge-core-js'
@@ -17,7 +17,7 @@ import { ExchangeQuote } from '../../components/themed/ExchangeQuoteComponent'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
@@ -69,8 +69,8 @@ beforeAll(async () => {
     plugins: { bitcoin: true, ethereum: true }
   })
   account = await context.loginWithKey('bob', loginKey)
-  const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
-  const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
+  const btcInfo = account.getFirstWalletInfo('wallet:bitcoin')
+  const ethInfo = account.getFirstWalletInfo('wallet:ethereum')
   if (btcInfo == null || ethInfo == null) {
     console.error('Unable to get wallet infos')
     process.exit(-1)

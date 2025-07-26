@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { useFiatText } from '../../hooks/useFiatText'

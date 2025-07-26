@@ -1,12 +1,15 @@
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { check, openSettings } from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
-import { Permission, permissionNames } from '../../reducers/PermissionsReducer'
+import {
+  type Permission,
+  permissionNames
+} from '../../reducers/PermissionsReducer'
 import { showError } from '../services/AirshipInstance'
 import { checkIfDenied } from '../services/PermissionsManager'
 import { Paragraph } from '../themed/EdgeText'
@@ -46,11 +49,15 @@ export function PermissionsSettingModal(props: {
   )
 
   const handlePress = () => {
-    openSettings().catch(error => showError(error))
+    openSettings().catch(error => {
+      showError(error)
+    })
     if (!mandatory) handleClose()
   }
 
-  const handleClose = () => bridge.resolve(mandatory)
+  const handleClose = () => {
+    bridge.resolve(mandatory)
+  }
 
   return (
     <EdgeModal bridge={bridge} onCancel={handleClose}>

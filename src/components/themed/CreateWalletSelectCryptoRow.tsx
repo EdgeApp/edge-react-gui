@@ -1,4 +1,4 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -8,7 +8,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -49,7 +49,10 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
     : ''
 
   const handlePress = useHandler(() => {
-    if (onPress != null) onPress()?.catch(err => showError(err))
+    if (onPress != null)
+      onPress()?.catch(err => {
+        showError(err)
+      })
   })
 
   return (

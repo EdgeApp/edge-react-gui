@@ -1,7 +1,7 @@
 import { cacheStyles, makeThemeContext } from 'react-native-patina'
 
 import { config } from '../../theme/appConfig'
-import { Theme } from '../../types/Theme'
+import type { Theme } from '../../types/Theme'
 
 export type { Theme }
 export { cacheStyles }

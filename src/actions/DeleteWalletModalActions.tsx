@@ -6,7 +6,7 @@ import { Airship } from '../components/services/AirshipInstance'
 import { Paragraph } from '../components/themed/EdgeText'
 import { lstrings } from '../locales/strings'
 import { B } from '../styles/common/textStyles'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 
 export function showDeleteWalletModal(

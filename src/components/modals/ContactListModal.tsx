@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { Image } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { GuiContact } from '../../types/types'
+import type { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { requestContactsPermission } from '../services/PermissionsManager'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { maybeShowContactsPermissionModal } from './ContactsPermissionModal'
 import { ListModal } from './ListModal'
@@ -53,7 +53,9 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
           )
         }
         title={fullName}
-        onPress={() => bridge.resolve({ contactName: fullName, thumbnailPath })}
+        onPress={() => {
+          bridge.resolve({ contactName: fullName, thumbnailPath })
+        }}
       />
     )
   }
@@ -67,8 +69,9 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
     return fullName.includes(formattedSearchText)
   }
 
-  const handleSubmitEditing = (contactName: string) =>
+  const handleSubmitEditing = (contactName: string) => {
     bridge.resolve({ contactName, thumbnailPath: null })
+  }
 
   useAsyncEffect(
     async () => {

@@ -8,15 +8,15 @@ import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOp
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
-import { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
 
 export interface FiatPluginSepaTransferParams {
   headerTitle: string
@@ -111,7 +111,11 @@ export const InfoDisplayScene = React.memo((props: Props) => {
 
   const renderCopyButton = (value: string) => {
     return (
-      <EdgeTouchableOpacity onPress={() => handleCopyPress(value)}>
+      <EdgeTouchableOpacity
+        onPress={() => {
+          handleCopyPress(value)
+        }}
+      >
         <Fontello
           name="Copy-icon"
           size={theme.rem(1)}

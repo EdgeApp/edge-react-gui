@@ -1,20 +1,20 @@
 import { asMaybe } from 'cleaners'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderGetSupportedAssetsParams,
-  FiatProviderGetTokenIdFromContract,
-  FiatProviderQuote
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderGetSupportedAssetsParams,
+  type FiatProviderGetTokenIdFromContract,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import {
   asRevolutCrypto,
@@ -22,9 +22,9 @@ import {
   fetchRevolutConfig,
   fetchRevolutQuote,
   fetchRevolutRedirectUrl,
-  RevolutConfig,
-  RevolutCrypto,
-  RevolutFiat
+  type RevolutConfig,
+  type RevolutCrypto,
+  type RevolutFiat
 } from '../util/fetchRevolut'
 import { makeCheckDue } from './common'
 import { ProviderSupportStore } from './ProviderSupportStore'

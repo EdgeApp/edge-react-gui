@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeCard } from '../cards/EdgeCard'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

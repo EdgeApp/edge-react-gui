@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import {
   DEFAULT_EXPERIMENT_CONFIG,
-  ExperimentConfig,
+  type ExperimentConfig,
   getExperimentConfig
 } from '../experimentConfig'
 import { isMaestro } from '../util/maestro'

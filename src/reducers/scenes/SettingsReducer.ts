@@ -1,12 +1,15 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import {
   asSyncedAccountSettings,
-  SyncedAccountSettings
+  type SyncedAccountSettings
 } from '../../actions/SettingsActions'
-import { SortOption } from '../../components/modals/WalletListSortModal'
-import { Action } from '../../types/reduxTypes'
-import { asLocalAccountSettings, LocalAccountSettings } from '../../types/types'
+import type { SortOption } from '../../components/modals/WalletListSortModal'
+import type { Action } from '../../types/reduxTypes'
+import {
+  asLocalAccountSettings,
+  type LocalAccountSettings
+} from '../../types/types'
 import { spendingLimits } from '../SpendingLimitsReducer'
 
 export const initialState: SettingsState = {

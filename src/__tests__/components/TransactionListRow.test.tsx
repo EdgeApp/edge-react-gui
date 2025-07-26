@@ -5,7 +5,7 @@ import * as React from 'react'
 import { TransactionCard } from '../../components/themed/TransactionListRow'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListRow', () => {

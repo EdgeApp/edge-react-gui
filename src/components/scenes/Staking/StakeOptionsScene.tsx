@@ -1,5 +1,5 @@
 import { gt } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
@@ -9,9 +9,9 @@ import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
-import { StakePolicy } from '../../../plugins/stake-plugins/types'
+import type { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   getPluginFromPolicyId,
@@ -22,7 +22,7 @@ import {
 } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
-import { AccentColors } from '../../common/DotsBackground'
+import type { AccentColors } from '../../common/DotsBackground'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -106,7 +106,9 @@ const StakeOptionsSceneComponent = (props: Props) => {
     return (
       <EdgeTouchableOpacity
         key={key}
-        onPress={() => handleStakeOptionPress(stakePolicy)}
+        onPress={() => {
+          handleStakeOptionPress(stakePolicy)
+        }}
       >
         <StakingOptionCard
           apy={stakePolicy.apy}

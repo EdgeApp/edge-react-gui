@@ -8,7 +8,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { defaultAccount } from '../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { NavigationBase } from '../types/routerTypes'
+import type { NavigationBase } from '../types/routerTypes'
 
 /**
  * Shows a logout toast when the back button is pressed.
@@ -35,7 +35,9 @@ export function useBackButtonToast() {
       () => {
         // Allow back if logged out or this is the second back press:
         if (account === defaultAccount || backPressedOnce.current) {
-          dispatch(logoutRequest(navigation)).catch(err => showError(err))
+          dispatch(logoutRequest(navigation)).catch(err => {
+            showError(err)
+          })
           return
         }
         backPressedOnce.current = true
@@ -51,13 +53,17 @@ export function useBackButtonToast() {
           .then(() => {
             backPressedOnce.current = false
           })
-          .catch(err => showError(err))
+          .catch(err => {
+            showError(err)
+          })
 
         // Prevent the default behavior:
         return true
       }
     )
 
-    return () => subscription.remove()
+    return () => {
+      subscription.remove()
+    }
   })
 }

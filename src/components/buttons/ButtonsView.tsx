@@ -4,13 +4,13 @@
  */
 
 import * as React from 'react'
-import { Platform, View, ViewStyle } from 'react-native'
+import { Platform, View, type ViewStyle } from 'react-native'
 
 import { EdgeAnim } from '../common/EdgeAnim'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
-import { EdgeButton, EdgeButtonType } from './EdgeButton'
+import { EdgeButton, type EdgeButtonType } from './EdgeButton'
 
 const INTER_BUTTON_SPACING_REM = 1
 const ANIM_DURATION = 1000

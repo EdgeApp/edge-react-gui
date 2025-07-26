@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Platform, Text, TextStyle } from 'react-native'
+import { Platform, Text, type TextStyle } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children?: React.ReactNode

@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { useRef } from 'react'
 
@@ -6,7 +6,7 @@ import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueue
 import { asCleanError } from '../../controllers/action-queue/cleaners'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
-import {
+import type {
   ActionProgramState,
   ActionQueueMap,
   ExecutionResults
@@ -21,11 +21,12 @@ import { makePushClient } from '../../util/PushClient/PushClient'
 
 const EXECUTION_INTERVAL = 1000
 
-interface ServiceProgramStates {
-  [programId: string]: {
+type ServiceProgramStates = Record<
+  string,
+  {
     executing: boolean
   }
-}
+>
 
 export const ActionQueueService = () => {
   const dispatch = useDispatch()
@@ -55,7 +56,7 @@ export const ActionQueueService = () => {
       await dispatch(
         updateActionProgramState({
           ...state,
-          executing: executing
+          executing
         })
       )
     }
@@ -133,7 +134,9 @@ export const ActionQueueService = () => {
             })
           )
             // Use console.warn to not spam user
-            .catch(err => console.warn(err))
+            .catch(err => {
+              console.warn(err)
+            })
           return false
         }
         // Don't execute programs which have not reached their scheduled time
@@ -194,7 +197,9 @@ export const ActionQueueService = () => {
     periodicTask.start()
 
     // Cleanup loop
-    return () => periodicTask.stop()
+    return () => {
+      periodicTask.stop()
+    }
   }, [
     account,
     clientId,

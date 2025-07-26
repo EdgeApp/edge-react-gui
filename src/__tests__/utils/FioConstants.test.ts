@@ -1,5 +1,5 @@
 import { describe, it } from '@jest/globals'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import {
   fioCodeToEdgeAsset,

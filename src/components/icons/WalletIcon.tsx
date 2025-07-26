@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -6,7 +6,7 @@ import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useSelector } from '../../types/reactRedux'
 import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { useTheme } from '../services/ThemeContext'
-import { CryptoIcon, CryptoIconProps } from './CryptoIcon'
+import { CryptoIcon, type CryptoIconProps } from './CryptoIcon'
 
 interface WalletIconProps extends Omit<CryptoIconProps, 'pluginId'> {
   wallet: EdgeCurrencyWallet

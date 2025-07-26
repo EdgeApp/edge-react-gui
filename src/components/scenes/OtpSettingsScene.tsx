@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -10,13 +10,17 @@ import { lstrings } from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  withTheme
+} from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
 interface OwnProps extends EdgeAppSceneProps<'otpSetup'> {}
@@ -46,7 +50,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
   componentDidMount() {
     const { account } = this.props
     this.cleanups = [
-      account.watch('otpKey', otpKey => this.setState({ otpKey }))
+      account.watch('otpKey', otpKey => {
+        this.setState({ otpKey })
+      })
     ]
   }
 
@@ -75,7 +81,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           cancel: { label: lstrings.string_cancel_cap }
         }}
       />
-    )).catch(error => showError(error))
+    )).catch(error => {
+      showError(error)
+    })
   }
 
   handleEnable = async (): Promise<void> => {

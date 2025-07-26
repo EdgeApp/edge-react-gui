@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 /**
@@ -15,9 +15,9 @@ export function useWalletBalance(
 
   React.useEffect(() => {
     setOut(wallet.balanceMap.get(tokenId) ?? '0')
-    return wallet.watch('balanceMap', balances =>
+    return wallet.watch('balanceMap', balances => {
       setOut(wallet.balanceMap.get(tokenId) ?? '0')
-    )
+    })
   }, [wallet, tokenId])
 
   return out

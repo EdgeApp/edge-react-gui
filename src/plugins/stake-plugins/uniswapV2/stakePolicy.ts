@@ -1,6 +1,6 @@
-import { StakeAssetInfo, StakePolicy, StakeProviderInfo } from '../types'
-import { InfoServerResponse } from '../util/internalTypes'
-import { StakePluginPolicy } from './types'
+import type { StakeAssetInfo, StakePolicy, StakeProviderInfo } from '../types'
+import type { InfoServerResponse } from '../util/internalTypes'
+import type { StakePluginPolicy } from './types'
 
 export interface StakePolicyInfo {
   stakePolicyId: string
