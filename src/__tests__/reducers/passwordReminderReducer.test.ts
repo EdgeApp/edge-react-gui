@@ -12,7 +12,7 @@ import { daysBetween, MILLISECONDS_PER_DAY } from '../../util/utils'
 describe('PasswordReminder', () => {
   test('initialState', () => {
     const expected = initialState
-    const actual = uut(undefined, { type: 'default', data: {} })
+    const actual = uut(undefined, { type: 'default' })
 
     expect(actual).toEqual(expected)
   })
@@ -202,8 +202,7 @@ describe('PasswordReminder', () => {
     describe('PASSWORD_REMINDER_POSTPONED', () => {
       test('Increase nonPasswordDaysLimit, 2 days into future', () => {
         const action: PasswordReminderReducerAction = {
-          type: 'PASSWORD_REMINDER_POSTPONED',
-          data: {}
+          type: 'PASSWORD_REMINDER_POSTPONED'
         }
 
         const previousState = {
@@ -222,10 +221,7 @@ describe('PasswordReminder', () => {
 
       test('Set nonPasswordLoginsLimit, 2 more than current count', () => {
         const action: PasswordReminderReducerAction = {
-          type: 'PASSWORD_REMINDER_POSTPONED',
-          data: {
-            lastLoginDate: Date.now()
-          }
+          type: 'PASSWORD_REMINDER_POSTPONED'
         }
 
         const expected = 2
@@ -236,10 +232,7 @@ describe('PasswordReminder', () => {
 
       test('Set false needsPasswordCheck', () => {
         const action: PasswordReminderReducerAction = {
-          type: 'PASSWORD_REMINDER_POSTPONED',
-          data: {
-            lastLoginDate: Date.now()
-          }
+          type: 'PASSWORD_REMINDER_POSTPONED'
         }
         const state = {
           ...initialState,
@@ -257,10 +250,7 @@ describe('PasswordReminder', () => {
     describe('REQUEST_CHANGE_PASSWORD', () => {
       test('Set false needsPasswordCheck', () => {
         const action: PasswordReminderReducerAction = {
-          type: 'REQUEST_CHANGE_PASSWORD',
-          data: {
-            lastLoginDate: Date.now()
-          }
+          type: 'REQUEST_CHANGE_PASSWORD'
         }
         const state = {
           ...initialState,
