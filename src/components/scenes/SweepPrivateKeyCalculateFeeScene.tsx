@@ -2,7 +2,6 @@ import { add, lt, sub } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   EdgeCurrencyWallet,
-  EdgeDenomination,
   EdgeMemoryWallet,
   EdgeSpendInfo,
   EdgeTransaction,
@@ -16,6 +15,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import {
@@ -76,7 +76,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
 
       if (receivingWallet == null) return null
       const {
-        currencyInfo: { currencyCode, denominations }
+        currencyInfo: { currencyCode }
       } = receivingWallet
       const walletName = ''
       const tx = transactionState.get(key)
@@ -112,9 +112,10 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           )
         }
       } else {
-        const exchangeDenom = denominations.find(
-          denom => denom.name === currencyCode
-        ) as EdgeDenomination
+        const exchangeDenom = getExchangeDenom(
+          receivingWallet.currencyConfig,
+          null
+        )
         const displayDenom =
           displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
