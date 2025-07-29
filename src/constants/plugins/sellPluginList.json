@@ -9,10 +9,11 @@
     "title": "ACH Bank Transfer",
     "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
     "forCountries": [
-      "US"
+      "US", "CA"
     ],
     "notStateProvinces": {
-      "US": ["AK", "AR", "CT", "LA", "NC", "NY", "TX", "FL"]
+      "US": ["AK", "AR", "CT", "LA", "NC", "NY", "TX", "FL"],
+      "CA": ["QC"]
     },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -114,12 +115,15 @@
     "title": "Bank Transfer via Debit Card",
     "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
     "forCountries": [
-      "AT", "AU", "BG", "CH", "CZ", "DE", "DK", "EE", "ES",
+      "AT", "AU", "BG", "CA", "CH", "CZ", "DE", "DK", "EE", "ES",
       "FI", "FR", "GB", "GR", "HR", "HU", "IE", "IT", "LI", "LT",
       "LU", "LV", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK",
       "SM", "US"
     ],
-    "notStateProvinces": { "US": ["HI", "NY"] },
+    "notStateProvinces": { 
+      "US": ["HI", "NY"],
+      "CA": ["QC"]
+    },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -149,6 +153,18 @@
     "title": "Faster Payments",
     "forCountries": [
     ],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "iach",
+    "pluginId": "iach",
+    "paymentType": "iach",
+    "paymentTypes": ["iach"],
+    "title": "Instant ACH Bank Transfer",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes",
+    "forCountries": ["CA"],
+    "notStateProvinces": { "CA": ["QC"] },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -297,6 +313,10 @@
   },
   {
     "id": "fasterpayments",
+    "sortIndex": 10
+  },
+  {
+    "id": "iach",
     "sortIndex": 10
   },
   {
