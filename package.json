@@ -28,7 +28,7 @@
     "android:release-clean-install": "npm run android:clean && npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "android:release-install": "npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
-    "android": "react-native run-android",
+    "android": "react-native run-android --list-devices",
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
