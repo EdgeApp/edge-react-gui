@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
+
 ## 4.33.0 (staging)
 
 - added: Added Botanix.

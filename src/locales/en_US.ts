@@ -1383,6 +1383,8 @@ const strings = {
   string_wallet_balance: 'Wallet Balance',
   string_max_cap: 'MAX',
   string_warning: 'Warning', // Generic string. Same with wc_smartcontract_warning_title
+  string_report_error: 'Report Error',
+  string_report_sent: 'Report sent.',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
