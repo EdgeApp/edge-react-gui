@@ -50,8 +50,10 @@ export function styled<BaseProps extends StyleProps>(
     function addName<P extends Omit<BaseProps, 'style'> & Props>(
       StyledComponent: React.ComponentType<P>
     ) {
+      // Use optional chaining to handle circular dependencies where Component
+      // may be undefined during module loading.
       StyledComponent.displayName =
-        Component.displayName != null
+        Component?.displayName != null
           ? `StyledComponent(${Component.displayName})`
           : `StyledComponent`
 
@@ -122,8 +124,10 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
         React.PropsWithoutRef<P>
       >
     ): React.ForwardRefExoticComponent<React.PropsWithoutRef<P>> {
+      // Use optional chaining to handle circular dependencies where Component
+      // may be undefined during module loading.
       StyledComponentWithRef.displayName =
-        Component.displayName != null
+        Component?.displayName != null
           ? `StyledComponentWithRef(${Component.displayName})`
           : `StyledComponentWithRef`
       return StyledComponentWithRef
