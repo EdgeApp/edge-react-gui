@@ -12,7 +12,9 @@ const stateProviders = [
   SceneFooterRenderProvider
 ]
 
-export const renderStateProviders = (children: React.ReactNode) =>
+export const renderStateProviders = (
+  children: React.ReactNode
+): React.ReactNode =>
   stateProviders.reduce(
     (element, Provider) => <Provider>{element}</Provider>,
     children

@@ -9,12 +9,6 @@ import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
-jest.mock('react-native-keyboard-aware-scroll-view', () => {
-  const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) =>
-    blob.children
-  return { KeyboardAwareScrollView }
-})
-
 // Jest doesn't like direct SVG imports
 jest.mock('../../assets/images/import-key-icon.svg', () => 'ImportKeySvg')
 

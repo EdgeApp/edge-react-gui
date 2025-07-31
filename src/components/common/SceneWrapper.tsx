@@ -254,11 +254,11 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   })
 
   // If function children, the caller handles the insets and overscroll
-  const memoizedChildren = useMemo(
-    () =>
-      typeof children === 'function' ? children(sceneWrapperInfo) : children,
-    [children, sceneWrapperInfo]
-  )
+
+  const memoizedChildren = useMemo((): React.ReactNode => {
+    if (typeof children === 'function') return children(sceneWrapperInfo)
+    return children
+  }, [children, sceneWrapperInfo])
 
   if (scroll) {
     return (
