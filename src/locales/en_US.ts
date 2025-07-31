@@ -1960,6 +1960,12 @@ const strings = {
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
   unexpected_pending_transactions_error:
     'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
+  pending_transaction_modal_title: 'Pending Transaction',
+  pending_transaction_modal_message:
+    'You have a pending transaction which is preventing another send. You may wait for confirmations or accelerate the pending transaction.',
+  pending_transaction_modal_go_to_transaction: 'Go to Transaction',
+  pending_transactions_confirmed:
+    'Pending transactions confirmed, you may proceed with your transaction.',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
