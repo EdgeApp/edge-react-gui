@@ -5,17 +5,17 @@ import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
-import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
+import { asFiatPaymentType, type FiatPaymentType } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderExactRegions,
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
 import {
@@ -30,9 +30,7 @@ const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
 // https://integrations.simplex.com/docs/supported_currencies
-const SIMPLEX_ID_MAP: {
-  [pluginId: string]: { [currencyCode: string]: string }
-} = {
+const SIMPLEX_ID_MAP: Record<string, Record<string, string>> = {
   algorand: { ALGO: 'ALGO' },
   avalanche: { AVAX: 'AVAX-C' },
   binance: { AVA: 'AVA', BNB: 'BNB' },
@@ -142,7 +140,7 @@ const allowedCurrencyCodes: FiatProviderAssetMap = {
   fiat: {}
 }
 const allowedCountryCodes: FiatProviderExactRegions = {}
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = {
+const allowedPaymentTypes: Partial<Record<FiatPaymentType, boolean>> = {
   applepay: true,
   credit: true,
   googlepay: true
@@ -250,7 +248,7 @@ export const simplexProvider: FiatProviderFactory = {
           const response = await fetch(
             `https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`
           ).catch(e => undefined)
-          if (response == null || !response.ok) return allowedCurrencyCodes
+          if (!response?.ok) return allowedCurrencyCodes
           const result = await response.json()
 
           const fiatCurrencies = asSimplexFiatCurrencies(result)
@@ -355,8 +353,7 @@ export const simplexProvider: FiatProviderFactory = {
           console.log(e)
           return undefined
         })
-        if (response == null || !response.ok)
-          throw new Error('Simplex failed to fetch jwttoken')
+        if (!response?.ok) throw new Error('Simplex failed to fetch jwttoken')
         const result = await response.json()
         const { token } = asInfoJwtSignResponse(result)
 
@@ -374,9 +371,8 @@ export const simplexProvider: FiatProviderFactory = {
             quote.type === 'invalidAmountLimit' ||
             quote.type === 'amount_Limit_exceeded'
           ) {
-            const result3 = quote.error.match(
-              /The (.*) amount must be between (.*) and (.*)/
-            )
+            const result3 =
+              /The (.*) amount must be between (.*) and (.*)/.exec(quote.error)
             if (result3 == null || result3.length < 4)
               throw new Error('Simplex unknown error')
             const [fiatCode, minLimit, maxLimit] = result3.slice(1, 4)
@@ -447,7 +443,7 @@ export const simplexProvider: FiatProviderFactory = {
               console.log(e)
               return undefined
             })
-            if (response == null || !response.ok) return
+            if (!response?.ok) return
             const result = await response.json()
             const { token } = asInfoJwtSignResponse(result)
 

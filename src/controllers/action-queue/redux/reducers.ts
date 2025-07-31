@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import { Action } from '../../../types/reduxTypes'
-import { ActionQueueMap } from '../types'
+import type { Action } from '../../../types/reduxTypes'
+import type { ActionQueueMap } from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
 
 export interface ActionQueueState {

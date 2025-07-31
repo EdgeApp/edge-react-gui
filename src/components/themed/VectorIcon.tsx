@@ -15,7 +15,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Zocial from 'react-native-vector-icons/Zocial'
 
-import { MapObject } from '../../types/types'
+import type { MapObject } from '../../types/types'
 
 // Vector icons font family name reference
 

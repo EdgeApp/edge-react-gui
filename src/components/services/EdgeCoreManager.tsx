@@ -1,11 +1,11 @@
 import { addBreadcrumb, captureException } from '@sentry/react-native'
 import detectBundler from 'detect-bundler'
 import {
-  EdgeContext,
-  EdgeContextOptions,
-  EdgeCrashReporter,
-  EdgeFakeWorld,
-  EdgeNativeIo,
+  type EdgeContext,
+  type EdgeContextOptions,
+  type EdgeCrashReporter,
+  type EdgeFakeWorld,
+  type EdgeNativeIo,
   MakeEdgeContext,
   MakeFakeEdgeWorld
 } from 'edge-core-js'
@@ -148,7 +148,9 @@ export function EdgeCoreManager(props: Props) {
   function hideSplash() {
     if (!splashHidden.current) {
       setTimeout(() => {
-        BootSplash.hide({ fade: true }).catch(err => showError(err))
+        BootSplash.hide({ fade: true }).catch(err => {
+          showError(err)
+        })
       }, 200)
       splashHidden.current = true
     }

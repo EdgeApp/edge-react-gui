@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
-import {
+import type {
   ChangeQuote,
   ChangeQuoteRequest,
   PositionAllocation,
@@ -22,8 +22,8 @@ import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
 import { pluginInfo } from '../pluginInfo'
 import { fantomEcosystem as eco } from '../policyInfo/fantom'
-import { StakePolicyInfo } from '../stakePolicy'
-import { StakePluginPolicy } from '../types'
+import type { StakePolicyInfo } from '../stakePolicy'
+import type { StakePluginPolicy } from '../types'
 
 export interface CemeteryPolicyOptions {
   disableStake?: boolean
@@ -66,13 +66,16 @@ export const makeCemeteryPolicy = (
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
     lpTokenAmount: string
-  ): Promise<{
-    [assetId: string]: {
-      pluginId: string
-      currencyCode: string
-      nativeAmount: string
-    }
-  }> {
+  ): Promise<
+    Record<
+      string,
+      {
+        pluginId: string
+        currencyCode: string
+        nativeAmount: string
+      }
+    >
+  > {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
     const lpTokenSupply = (
       await eco.multipass(p => lpTokenContract.connect(p).totalSupply())
@@ -112,9 +115,7 @@ export const makeCemeteryPolicy = (
     return liquidity
   }
 
-  async function getTokenReservesMap(): Promise<{
-    [contractAddress: string]: string
-  }> {
+  async function getTokenReservesMap(): Promise<Record<string, string>> {
     const reservesResponse = await eco.multipass(p =>
       lpTokenContract.connect(p).getReserves()
     )

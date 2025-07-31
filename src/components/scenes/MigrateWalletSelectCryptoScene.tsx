@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItemInfo, Switch, View } from 'react-native'
+import { type ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -7,9 +7,9 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { WalletCreateItem } from '../../selectors/getCreateWalletList'
+import type { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import {
   getCurrencyCode,
   isKeysOnlyPlugin
@@ -18,7 +18,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
@@ -69,7 +69,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
           currencyCode,
           displayName: getWalletName(wallet),
           key: `${walletId}:${tokenId ?? 'PARENT_TOKEN'}`,
-          pluginId: pluginId,
+          pluginId,
           tokenId,
           walletType
         })
@@ -80,7 +80,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
   }, [currencyWallets])
 
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
-    const out: Set<string> = new Set()
+    const out = new Set<string>()
     for (const migrateWalletItem of migrateWalletList) {
       if (preSelectedWalletIds.includes(migrateWalletItem.createWalletIds[0]))
         out.add(migrateWalletItem.key)
@@ -123,7 +123,9 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
             true: theme.toggleButton
           }}
           value={selectedItems.has(key)}
-          onValueChange={() => handleCreateWalletToggle(key)}
+          onValueChange={() => {
+            handleCreateWalletToggle(key)
+          }}
         />
       )
 
@@ -132,7 +134,9 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
           pluginId={pluginId}
           tokenId={tokenId}
           walletName={displayName}
-          onPress={() => handleCreateWalletToggle(key)}
+          onPress={() => {
+            handleCreateWalletToggle(key)
+          }}
           rightSide={toggle}
         />
       )

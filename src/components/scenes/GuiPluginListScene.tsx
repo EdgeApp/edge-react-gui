@@ -1,9 +1,9 @@
 import { useIsFocused } from '@react-navigation/native'
 import { asArray, asMaybe, asObject, asValue } from 'cleaners'
-import { Disklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js/types'
+import type { Disklet } from 'disklet'
+import type { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
+import { Image, type ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
@@ -18,7 +18,7 @@ import {
   getDeviceSettings,
   writeDeveloperPluginUri
 } from '../../actions/DeviceSettingsActions'
-import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import type { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
@@ -33,31 +33,31 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import {
-  SceneScrollHandler,
+  type SceneScrollHandler,
   useSceneScrollHandler
 } from '../../state/SceneScrollState'
 import {
   asBuySellPlugins,
   asGuiPluginJson,
-  BuySellPlugins,
-  GuiPluginRow
+  type BuySellPlugins,
+  type GuiPluginRow
 } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
-import { AccountReferral } from '../../types/ReferralTypes'
-import {
+import type { Dispatch } from '../../types/reduxTypes'
+import type { AccountReferral } from '../../types/ReferralTypes'
+import type {
   BuyTabSceneProps,
   NavigationBase,
   SellTabSceneProps
 } from '../../types/routerTypes'
-import { PluginTweak } from '../../types/TweakTypes'
+import type { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
-import { logEvent, OnLogEvent } from '../../util/tracking'
+import { logEvent, type OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
@@ -67,17 +67,17 @@ import {
   fadeInUp60,
   fadeInUp90
 } from '../common/EdgeAnim'
-import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
+import { type InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { WalletListResult } from '../modals/WalletListModal'
+import type { WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
@@ -129,7 +129,7 @@ const paymentTypeLogosById = {
   venmo: 'paymentTypeLogoVenmo',
   visa: 'paymentTypeVisa'
 }
-const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
+const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
@@ -252,10 +252,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (currentPluginsJson !== buySellPluginsJson) {
       this.setPluginState(currentPlugins)
     }
-    this.timeoutId = setTimeout(
-      () => this.updatePlugins(),
-      BUY_SELL_PLUGIN_REFRESH_INTERVAL
-    )
+    this.timeoutId = setTimeout(() => {
+      this.updatePlugins()
+    }, BUY_SELL_PLUGIN_REFRESH_INTERVAL)
   }
 
   /**
@@ -319,7 +318,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        writeDeveloperPluginUri(deepPath).catch(error => showError(error))
+        writeDeveloperPluginUri(deepPath).catch(error => {
+          showError(error)
+        })
       }
     }
     if (plugin.nativePlugin != null) {
@@ -429,7 +430,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       // Attempt to find the stateProvince name if stateProvinceCode is provided
       let stateProvinceName = stateProvinceCode
-      if (country && country.stateProvinces && stateProvinceCode) {
+      if (country?.stateProvinces && stateProvinceCode) {
         const stateProvince = country.stateProvinces.find(
           sp => sp['alpha-2'] === stateProvinceCode
         )
@@ -480,14 +481,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () =>
-            await this.openPlugin(item).catch(error => this.handleError(error))
-          }
-          onLongPress={async () =>
-            await this.openPlugin(item, true).catch(error =>
+          onPress={async () => {
+            await this.openPlugin(item).catch(error => {
               this.handleError(error)
-            )
-          }
+            })
+          }}
+          onLongPress={async () => {
+            await this.openPlugin(item, true).catch(error => {
+              this.handleError(error)
+            })
+          }}
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>
@@ -540,7 +543,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const uri = `${FLAG_LOGO_URL}/${
       countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')
     }.png`
-    const imageSrc = React.useMemo(() => ({ uri }), [uri])
     const hasCountryData = countryData != null
 
     const countryName = hasCountryData
@@ -551,7 +553,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         ? styles.selectedCountryFlag
         : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : (
-      <FastImage source={imageSrc} style={iconStyle} />
+      <FastImage source={{ uri }} style={iconStyle} />
     )
     const forcedWallet =
       forcedWalletResult?.type === 'wallet'

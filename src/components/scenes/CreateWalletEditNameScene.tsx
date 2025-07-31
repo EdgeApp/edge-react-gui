@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItemInfo, View } from 'react-native'
+import { type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -16,10 +16,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import {
   splitCreateWalletItems,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -27,7 +27,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -58,7 +58,7 @@ const CreateWalletEditNameComponent = (props: Props) => {
   )
 
   const [walletNames, setWalletNames] = React.useState(() =>
-    createWalletList.reduce<{ [key: string]: string }>((map, item) => {
+    createWalletList.reduce<Record<string, string>>((map, item) => {
       const maybeSplitFrom = isSplit
         ? ` (${sprintf(
             lstrings.split_from_1s,
@@ -236,7 +236,9 @@ const CreateWalletEditNameComponent = (props: Props) => {
             pluginId={pluginId}
             tokenId={tokenId}
             walletName={walletName}
-            onPress={async () => await handleEditWalletName(key, walletName)}
+            onPress={async () => {
+              await handleEditWalletName(key, walletName)
+            }}
             rightSide={chevron}
           />
         )

@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 
 export function showResyncWalletModal(

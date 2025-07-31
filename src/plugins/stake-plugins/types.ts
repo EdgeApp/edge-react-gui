@@ -2,7 +2,7 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-import {
+import type {
   EdgeAccount,
   EdgeCorePluginOptions,
   EdgeCurrencyWallet

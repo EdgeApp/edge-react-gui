@@ -10,14 +10,14 @@ import {
   Platform,
   Text,
   TextInput,
-  TextInputProps,
+  type TextInputProps,
   TouchableOpacity,
   View
 } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -28,8 +28,8 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  MarginRemProps,
-  MarginRemStyle,
+  type MarginRemProps,
+  type MarginRemStyle,
   useMarginRemStyle
 } from '../../hooks/useMarginRemStyle'
 import {
@@ -40,7 +40,7 @@ import {
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
-  AnimatedIconComponent,
+  type AnimatedIconComponent,
   CloseIconAnimated,
   EyeIconAnimated
 } from '../icons/ThemedIcons'
@@ -158,7 +158,7 @@ export interface FilledTextInputRef {
   blur: () => void
   isFocused: () => boolean
   clear: () => void
-  setNativeProps: (nativeProps: Object) => void
+  setNativeProps: (nativeProps: object) => void
 }
 
 /**
@@ -237,7 +237,9 @@ export const FilledTextInput = React.forwardRef<
   const [hidePassword, setHidePassword] = React.useState(
     secureTextEntry ?? false
   )
-  const handleHidePassword = () => setHidePassword(!hidePassword)
+  const handleHidePassword = () => {
+    setHidePassword(!hidePassword)
+  }
 
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
@@ -405,7 +407,9 @@ export const FilledTextInput = React.forwardRef<
       <EdgeTouchableWithoutFeedback
         accessible={false}
         testID={testID}
-        onPress={() => focus()}
+        onPress={() => {
+          focus()
+        }}
       >
         <Container
           disableAnimation={disableAnimation}

@@ -9,7 +9,7 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import {
+import type {
   EdgeAssetAction,
   EdgeFetchOptions,
   EdgeSpendInfo,
@@ -19,31 +19,31 @@ import {
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
-import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeAsset, StringMap } from '../../../types/types'
+import type { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   FiatPluginUi,
   SaveTxActionParams
 } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderSupportedRegions
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote,
+  type FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 import { assert, isWalletTestnet } from '../pluginUtils'
 import { addTokenToArray } from '../util/providerUtils'
@@ -63,7 +63,7 @@ const supportEmail = 'support@paybis.com'
 
 type AllowedPaymentTypes = Record<
   FiatDirection,
-  { [Payment in FiatPaymentType]?: boolean }
+  Partial<Record<FiatPaymentType, boolean>>
 >
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
@@ -373,7 +373,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(
   }
 }, {})
 
-const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
+const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
   // iach
   'method-id-trustly': 'iach',
   'method-id-swift-bank-transfer-out': 'iach',
@@ -399,9 +399,9 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id_bridgerpay_directa24_pix_payout': 'pix'
 }
 
-const REVERSE_PAYMENT_METHOD_MAP: Partial<{
-  [Payment in FiatPaymentType]: PaymentMethodId
-}> = {
+const REVERSE_PAYMENT_METHOD_MAP: Partial<
+  Record<FiatPaymentType, PaymentMethodId>
+> = {
   iach: 'method-id-trustly',
   applepay: 'method-id-credit-card',
   credit: 'method-id-credit-card',
@@ -412,9 +412,9 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<{
   spei: 'method-id_bridgerpay_directa24_spei'
 }
 
-const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{
-  [Payment in FiatPaymentType]: PaymentMethodId
-}> = {
+const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<
+  Record<FiatPaymentType, PaymentMethodId>
+> = {
   credit: 'method-id-credit-card-out',
   iach: 'method-id-swift-bank-transfer-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
@@ -433,7 +433,7 @@ const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
 
 const allowedCurrencyCodes: Record<
   FiatDirection,
-  { [F in FiatPaymentType]?: FiatProviderAssetMap }
+  Partial<Record<FiatPaymentType, FiatProviderAssetMap>>
 > = {
   buy: { credit: { providerId, fiat: {}, crypto: {} } },
   sell: {
@@ -666,11 +666,12 @@ export const paybisProvider: FiatProviderFactory = {
           let lastError
           for (const e of pmErrors) {
             lastError = e
-            const maxMatch = e.error.message.match(
-              /^Amount must be less than (\d+(?:\.\d+)?) ([A-Z]+)/
-            )
-            const minMatch = e.error.message.match(
-              /^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/
+            const maxMatch =
+              /^Amount must be less than (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
+                e.error.message
+              )
+            const minMatch = /^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
+              e.error.message
             )
             if (maxMatch != null) {
               throw new FiatProviderError({

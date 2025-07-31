@@ -1,6 +1,6 @@
 import { asValue } from 'cleaners'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -38,14 +38,18 @@ export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
       <SettingsTappableRow
         key={key}
         label={title}
-        onPress={() => bridge.resolve(key)}
+        onPress={() => {
+          bridge.resolve(key)
+        }}
       />
     ) : (
       <SettingsRadioRow
         key={key}
         label={title}
         value={sortOption === key}
-        onPress={() => bridge.resolve(key)}
+        onPress={() => {
+          bridge.resolve(key)
+        }}
       />
     )
   })

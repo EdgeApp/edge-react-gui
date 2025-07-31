@@ -1,6 +1,6 @@
-import { StakeProviderInfo } from '../../types'
-import { CoreumNativeStakeKitAdapterConfig } from '../policyAdapters/CoreumStakeKitAdaptor'
-import { StakePluginInfo, StakePolicyConfig } from '../types'
+import type { StakeProviderInfo } from '../../types'
+import type { CoreumNativeStakeKitAdapterConfig } from '../policyAdapters/CoreumStakeKitAdaptor'
+import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: 'Coreum Native Staking',

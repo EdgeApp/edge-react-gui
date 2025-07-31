@@ -9,7 +9,7 @@ import {
   asOptional,
   asString,
   asUnknown,
-  Cleaner,
+  type Cleaner,
   uncleaner
 } from 'cleaners'
 
@@ -21,7 +21,12 @@ import {
   asPushTrigger,
   asPushTriggerState
 } from './pushCleaners'
-import { BroadcastTx, PushEvent, PushMessage, PushTrigger } from './pushTypes'
+import type {
+  BroadcastTx,
+  PushEvent,
+  PushMessage,
+  PushTrigger
+} from './pushTypes'
 
 // ---------------------------------------------------------------------------
 // Request types

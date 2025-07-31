@@ -1,4 +1,4 @@
-import { EdgeUserInfo } from 'edge-core-js'
+import type { EdgeUserInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'

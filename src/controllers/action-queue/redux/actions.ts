@@ -1,8 +1,11 @@
-import { ThunkAction } from '../../../types/reduxTypes'
+import type { ThunkAction } from '../../../types/reduxTypes'
 import { logActivity } from '../../../util/logger'
-import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
-import { uploadPushEvents } from '../push'
 import {
+  type ActionQueueStore,
+  makeActionQueueStore
+} from '../ActionQueueStore'
+import { uploadPushEvents } from '../push'
+import type {
   ActionProgram,
   ActionProgramState,
   ActionQueueItem,

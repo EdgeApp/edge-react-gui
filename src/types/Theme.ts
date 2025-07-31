@@ -1,6 +1,6 @@
 import { asNumber, asObject } from 'cleaners'
 
-import { AccentColors } from '../components/common/DotsBackground'
+import type { AccentColors } from '../components/common/DotsBackground'
 
 export type ImageProp = { uri: string } | number
 
@@ -43,6 +43,7 @@ interface TextShadowParams {
   textShadowRadius: number
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const asGradientCoords = asObject({
   x: asNumber,
   y: asNumber

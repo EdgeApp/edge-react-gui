@@ -1,4 +1,4 @@
-import { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -21,10 +21,10 @@ import {
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
-import { DeepLink } from '../types/DeepLinkTypes'
-import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { EdgeAsset } from '../types/types'
+import type { DeepLink } from '../types/DeepLinkTypes'
+import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
+import type { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -147,7 +147,9 @@ async function handleLink(
         paymentType,
         providerId,
         navigation,
-        onLogEvent: (event, values) => dispatch(logEvent(event, values)),
+        onLogEvent: (event, values) => {
+          dispatch(logEvent(event, values))
+        },
         dispatch
       })
       break

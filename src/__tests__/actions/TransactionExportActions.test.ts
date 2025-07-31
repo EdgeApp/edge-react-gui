@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import fs from 'fs'
 
 import {

@@ -2,7 +2,7 @@ import React from 'react'
 import { Animated, Easing, View } from 'react-native'
 
 import { useAccountSyncRatio } from '../../hooks/useAccountSyncRatio'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 /**
  * Shows a bar indicating the the number of wallets that are fully synced across

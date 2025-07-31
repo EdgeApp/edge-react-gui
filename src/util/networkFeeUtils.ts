@@ -1,12 +1,10 @@
 import { add } from 'biggystring'
-import { EdgeNetworkFee } from 'edge-core-js'
+import type { EdgeNetworkFee } from 'edge-core-js'
 
-import { ExecutionOutput } from '../controllers/action-queue/types'
+import type { ExecutionOutput } from '../controllers/action-queue/types'
 
 // Map: currencyCode -> nativeAmount
-export interface NetworkFeeMap {
-  [currencyCode: string]: EdgeNetworkFee | undefined
-}
+export type NetworkFeeMap = Record<string, EdgeNetworkFee | undefined>
 export const getExecutionNetworkFees = (
   executionOutputs: ExecutionOutput[]
 ): NetworkFeeMap => {

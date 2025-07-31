@@ -1,6 +1,10 @@
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
-import { RootState } from '../types/reduxTypes'
+import type { RootState } from '../types/reduxTypes'
 
 export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   name: '',
@@ -16,7 +20,7 @@ export const selectDisplayDenomByCurrencyCode = (
 ): EdgeDenomination => {
   const { pluginId } = currencyConfig.currencyInfo
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
-  if (pluginSettings != null && pluginSettings[currencyCode] != null) {
+  if (pluginSettings?.[currencyCode] != null) {
     return pluginSettings[currencyCode] ?? emptyEdgeDenomination
   }
   return getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
@@ -38,7 +42,7 @@ export const selectDisplayDenom = (
 
   const { pluginId } = currencyConfig.currencyInfo
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
-  if (pluginSettings != null && pluginSettings[currencyCode] != null) {
+  if (pluginSettings?.[currencyCode] != null) {
     return pluginSettings[currencyCode] ?? emptyEdgeDenomination
   }
   return exchangeDenomination

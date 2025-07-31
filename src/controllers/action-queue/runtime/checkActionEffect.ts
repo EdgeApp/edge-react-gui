@@ -2,7 +2,7 @@ import { gte, lte } from 'biggystring'
 
 import { filterNull } from '../../../util/safeFilters'
 import { checkPushEvent } from '../push'
-import {
+import type {
   ActionEffect,
   EffectCheckResult,
   ExecutionContext,

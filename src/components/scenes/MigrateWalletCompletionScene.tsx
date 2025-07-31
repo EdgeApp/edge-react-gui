@@ -1,11 +1,11 @@
 import { add, lt, sub } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeSpendInfo,
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -21,7 +21,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -30,7 +30,7 @@ import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { SceneHeader } from '../themed/SceneHeader'
-import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
+import type { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
 export interface MigrateWalletCompletionParams {
   migrateWalletList: MigrateWalletItem[]
@@ -85,7 +85,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   // State to manage row status icons
   const [itemStatus, setItemStatus] = React.useState(() => {
     return sortedMigrateWalletList.reduce(
-      (map: { [key: string]: 'pending' | 'complete' | 'error' }, item) => {
+      (map: Record<string, 'pending' | 'complete' | 'error'>, item) => {
         map[item.key] = 'pending'
         return map
       },
@@ -388,11 +388,12 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             primary={{
               label: lstrings.string_done_cap,
               disabled: !done,
-              onPress: () =>
+              onPress: () => {
                 navigation.navigate('edgeTabs', {
                   screen: 'walletsTab',
                   params: { screen: 'walletList' }
                 })
+              }
             }}
           />
         </View>

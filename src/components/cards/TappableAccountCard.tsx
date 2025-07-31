@@ -1,13 +1,13 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { PaymentMethod } from '../../controllers/action-queue/PaymentMethod'
+import type { PaymentMethod } from '../../controllers/action-queue/PaymentMethod'
 import { CurrencyRow } from '../rows/CurrencyRow'
-import { CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
+import { type CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
 import { PaymentMethodRow } from '../rows/PaymentMethodRow'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { TappableCard } from './TappableCard'
 
@@ -31,7 +31,9 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = React.useCallback(() => onPress(), [onPress])
+  const handlePress = React.useCallback(() => {
+    onPress()
+  }, [onPress])
 
   const renderInitial = () =>
     paymentMethod == null && wallet == null ? (

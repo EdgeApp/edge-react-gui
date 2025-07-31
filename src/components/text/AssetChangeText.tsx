@@ -1,11 +1,11 @@
 import { gt, lt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TextStyle } from 'react-native'
+import type { TextStyle } from 'react-native'
 
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { toPercentString } from '../../locales/intl'
-import { Theme } from '../../types/Theme'
+import type { Theme } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -86,7 +86,7 @@ const getPercentDeltaString = (
     }
   } else if (lt(yesterdayDeltaPct, '0')) {
     return {
-      percentString: `${percentString}`,
+      percentString,
       deltaColorStyle: theme.negativeDeltaText
     }
   } else {

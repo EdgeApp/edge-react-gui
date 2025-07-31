@@ -1,5 +1,5 @@
 import { captureException, withScope } from '@sentry/react-native'
-import {
+import type {
   TrackingEventName as LoginTrackingEventName,
   TrackingValues as LoginTrackingValues
 } from 'edge-login-ui-rn'
@@ -9,10 +9,10 @@ import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
-import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
-import { ThunkAction } from '../types/reduxTypes'
+import { type ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import type { ThunkAction } from '../types/reduxTypes'
 import { addMetadataToContext } from './addMetadataToContext'
-import { CryptoAmount } from './CryptoAmount'
+import type { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { AggregateErrorFix, normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'
@@ -169,7 +169,9 @@ if (ENV.POSTHOG_INIT) {
       // @ts-expect-error
       global.posthog = client
     })
-    .catch(e => console.error(e))
+    .catch(e => {
+      console.error(e)
+    })
 }
 
 /**
@@ -183,9 +185,7 @@ if (ENV.POSTHOG_INIT) {
 export function trackError(
   error: unknown,
   nameTag?: string,
-  metadata?: {
-    [key: string]: any
-  }
+  metadata?: Record<string, any>
 ): void {
   const err = normalizeError(error)
 
@@ -194,7 +194,9 @@ export function trackError(
     const aggregateId = Date.now().toString(16)
     withScope(scope => {
       scope.setTag('aggregate.id', aggregateId)
-      err.errors.forEach(e => trackError(e, nameTag, metadata))
+      err.errors.forEach(e => {
+        trackError(e, nameTag, metadata)
+      })
     })
     return
   }
@@ -381,7 +383,9 @@ export function logEvent(
         Promise.all([
           logToPosthog(event, params),
           logToUtilServer(event, params)
-        ]).catch(error => console.warn(error))
+        ]).catch(error => {
+          console.warn(error)
+        })
       })
       .catch(console.error)
   }

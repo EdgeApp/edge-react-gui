@@ -1,12 +1,12 @@
 import Resolver from '@unstoppabledomains/resolution'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet
 } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
@@ -20,12 +20,12 @@ import {
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
+import type { Dispatch } from '../../types/reduxTypes'
 import { ResolutionError } from '../../types/ResolutionError'
-import { FioAddress, FlatListItem } from '../../types/types'
+import type { FioAddress, FlatListItem } from '../../types/types'
 import {
   checkPubAddress,
-  FioAddresses,
+  type FioAddresses,
   getFioAddressCache
 } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
@@ -34,8 +34,8 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
 import { showDevError, showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
@@ -94,7 +94,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.getFioAddresses().catch(err => showError(err))
+    this.getFioAddresses().catch(err => {
+      showError(err)
+    })
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -316,7 +318,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
     if (await this.isFioAddressValid(uri)) {
       if (useUserFioAddressesOnly) return
       if (checkAddressConnected) {
-        return this.checkFioPubAddressQueue(uri)
+        this.checkFioPubAddressQueue(uri)
+        return
       }
       this.checkFioAddressExistQueue(uri)
     }
@@ -324,7 +327,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   isFioAddressValid = (fioAddress: string) => {
     const { fioPlugin } = this.props
-    return fioPlugin && fioPlugin.otherMethods.isFioAddressValid(fioAddress)
+    return fioPlugin?.otherMethods.isFioAddressValid(fioAddress)
   }
 
   updateUri = (uri: string) => {
@@ -353,7 +356,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
     return (
       <EdgeTouchableWithoutFeedback
-        onPress={() => this.onPressFioAddress(item)}
+        onPress={() => {
+          this.onPressFioAddress(item)
+        }}
       >
         <View style={styles.rowContainer}>
           <Image
@@ -374,7 +379,10 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.props.bridge.resolve(submitData)
   }
 
-  handleClose = () => this.props.bridge.resolve(undefined)
+  handleClose = () => {
+    this.props.bridge.resolve(undefined)
+  }
+
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {

@@ -1,4 +1,4 @@
-import { EdgeLogType } from 'edge-core-js'
+import type { EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -36,7 +36,7 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -55,7 +55,7 @@ import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface Props extends EdgeAppSceneProps<'settingsOverview'> {}
+type Props = EdgeAppSceneProps<'settingsOverview'>
 
 export const SettingsScene = (props: Props) => {
   const { navigation } = props
@@ -123,8 +123,8 @@ export const SettingsScene = (props: Props) => {
       ? lstrings.string_disable
       : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-  const handleUpgrade = useHandler(() => {
-    showBackupModal({ navigation: navigation as NavigationBase })
+  const handleUpgrade = useHandler(async () => {
+    await showBackupModal({ navigation: navigation as NavigationBase })
   })
 
   const handleLockUnlock = useHandler(async () => {
@@ -217,8 +217,8 @@ export const SettingsScene = (props: Props) => {
     await writeDisableAnimations(newDisableAnim)
   })
 
-  const handleToggleSpamFilter = useHandler(() => {
-    dispatch(setSpamFilterOn(!spamFilterOn))
+  const handleToggleSpamFilter = useHandler(async () => {
+    await dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
   const handleChangePassword = useHandler(async (): Promise<void> => {
@@ -289,7 +289,9 @@ export const SettingsScene = (props: Props) => {
               bridge={bridge}
               message={sprintf(lstrings.delete_account_feedback, username)}
             />
-          )).catch(err => showDevError(err))
+          )).catch(err => {
+            showDevError(err)
+          })
           return true
         }}
       />
@@ -339,7 +341,9 @@ export const SettingsScene = (props: Props) => {
         defaultLogLevel: newDefaultLogLevel,
         sources: {}
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   })
 
   // Developer settings:
@@ -383,7 +387,9 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     if (!supportsTouchId) return
 
-    loadBiometryType().catch(error => showError(error))
+    loadBiometryType().catch(error => {
+      showError(error)
+    })
 
     // Watch for logSettings changes
     const cleanup = context.watch('logSettings', logSettings => {
@@ -400,7 +406,9 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     return navigation.addListener('focus', () => {
       if (account.otpResetDate != null) {
-        showReEnableOtpModal(account).catch(error => showError(error))
+        showReEnableOtpModal(account).catch(error => {
+          showError(error)
+        })
       }
     })
   }, [account, navigation])
@@ -538,7 +546,9 @@ export const SettingsScene = (props: Props) => {
             />
             <SettingsTappableRow
               label={lstrings.settings_asset_settings}
-              onPress={() => navigation.push('assetSettings')}
+              onPress={() => {
+                navigation.push('assetSettings')
+              }}
             />
             <SettingsTappableRow
               label={lstrings.title_promotion_settings}
@@ -560,7 +570,9 @@ export const SettingsScene = (props: Props) => {
             />
             <SettingsTappableRow
               label={lstrings.migrate_wallets_title}
-              onPress={() => navigation.push('migrateWalletSelectCrypto', {})}
+              onPress={() => {
+                navigation.push('migrateWalletSelectCrypto', {})
+              }}
             />
             <SettingsTappableRow
               label={lstrings.title_terms_of_service}

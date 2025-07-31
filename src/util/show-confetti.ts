@@ -1,4 +1,4 @@
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 
 const CONFETTI_SHOWN = 'confetti_shown.json'
 
@@ -10,7 +10,7 @@ export interface ConfettiShownTimes {
 
 const getConfettiShownTimes = async (
   disklet: Disklet
-): Promise<{ [key: string]: ConfettiShownTimes }> => {
+): Promise<Record<string, ConfettiShownTimes>> => {
   try {
     const shownTimes = JSON.parse(await disklet.getText(CONFETTI_SHOWN))
     return shownTimes
@@ -20,7 +20,7 @@ const getConfettiShownTimes = async (
   }
 }
 const setConfettiShownTimes = async (
-  data: { [key: string]: ConfettiShownTimes },
+  data: Record<string, ConfettiShownTimes>,
   disklet: Disklet
 ): Promise<void> => {
   try {
@@ -61,8 +61,9 @@ export const needToShowConfetti = async (
   userId: string,
   disklet: Disklet
 ): Promise<boolean> => {
-  const data: { [key: string]: ConfettiShownTimes } =
-    await getConfettiShownTimes(disklet)
+  const data: Record<string, ConfettiShownTimes> = await getConfettiShownTimes(
+    disklet
+  )
   const userData: ConfettiShownTimes = data[userId] || {
     doneAmount: 0,
     showNext: true,

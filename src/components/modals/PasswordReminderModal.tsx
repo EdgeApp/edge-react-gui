@@ -1,14 +1,14 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
-import { NavigationBase } from '../../types/routerTypes'
+import type { Dispatch } from '../../types/reduxTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { showError, showToast } from '../services/AirshipInstance'
-import { ThemeProps, useTheme } from '../services/ThemeContext'
+import { type ThemeProps, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
@@ -58,7 +58,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<
       this.props.dispatch({
         type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
       })
-      setTimeout(() => this.props.navigation.navigate('changePassword'), 10)
+      setTimeout(() => {
+        this.props.navigation.navigate('changePassword')
+      }, 10)
     }
   }
 
@@ -66,16 +68,18 @@ export class PasswordReminderModalComponent extends React.PureComponent<
     const { bridge, account } = this.props
     const { password } = this.state
 
-    const isValidPassword = await account
-      .checkPassword(password)
-      .catch(err => showError(err))
+    const isValidPassword = await account.checkPassword(password).catch(err => {
+      showError(err)
+    })
     if (isValidPassword) {
       this.props.dispatch({
         type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
       })
       this.setState({ checkingPassword: false })
       showToast(lstrings.password_reminder_great_job)
-      setTimeout(() => bridge.resolve(), 10)
+      setTimeout(() => {
+        bridge.resolve()
+      }, 10)
     } else {
       this.setState({
         errorMessage: lstrings.password_reminder_invalid,
@@ -84,7 +88,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<
     }
   }
 
-  handleChangeText = (password: string) => this.setState({ password })
+  handleChangeText = (password: string) => {
+    this.setState({ password })
+  }
 
   render() {
     const { bridge } = this.props

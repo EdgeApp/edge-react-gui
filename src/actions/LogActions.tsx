@@ -1,5 +1,5 @@
 import { uncleaner } from 'cleaners'
-import { EdgeDataDump, EdgeTokenMap } from 'edge-core-js'
+import type { EdgeDataDump, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import {
@@ -22,12 +22,12 @@ import {
   asActionProgram,
   asActionProgramState
 } from '../controllers/action-queue/cleaners'
-import {
+import type {
   ActionProgram,
   ActionProgramState
 } from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 import { getOsVersion } from '../util/utils'
@@ -84,7 +84,10 @@ export function showSendLogsModal(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { isConnected } = state.network
-    if (!isConnected) return showError(lstrings.network_alert_title)
+    if (!isConnected) {
+      showError(lstrings.network_alert_title)
+      return
+    }
     const logs = await dispatch(getLogOutput())
     await Airship.show(bridge => <LogsModal bridge={bridge} logs={logs} />)
   }
@@ -113,7 +116,9 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
           }
         }}
       />
-    )).catch(error => showError(error))
+    )).catch(error => {
+      showError(error)
+    })
   }
 }
 

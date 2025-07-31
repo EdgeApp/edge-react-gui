@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
@@ -8,7 +8,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { WalletIcon } from '../icons/WalletIcon'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
@@ -49,8 +49,8 @@ export const CurrencyView = (props: Props) => {
     name = (
       <>
         <Text style={{ color: theme.warningText }}>
-          {lstrings.compromised_key_label}
-        </Text>{' '}
+          {lstrings.compromised_key_label + ' '}
+        </Text>
         {name}
       </>
     )

@@ -4,15 +4,15 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { BalanceCard } from '../cards/BalanceCard'
 import { EdgeAnim, fadeInUp40, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionHeader } from '../common/SectionHeader'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
 
@@ -35,7 +35,9 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
         <EdgeTouchableOpacity
           accessible={false}
           style={styles.addButton}
-          onPress={() => navigation.push('createWalletSelectCrypto', {})}
+          onPress={() => {
+            navigation.push('createWalletSelectCrypto', {})
+          }}
         >
           <Ionicon
             testID="addButton"

@@ -10,14 +10,14 @@ import {
   asUnknown,
   asValue
 } from 'cleaners'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeSpendInfo,
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
@@ -34,7 +34,7 @@ import { zeroString } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
@@ -110,13 +110,17 @@ export const WcSmartContractModal = (props: Props) => {
           />
         )).catch(() => {})
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
       .finally(props.bridge.resolve)
   }
 
   const handleClose = () => {
     wcRequestResponse(false)
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
       .finally(props.bridge.resolve)
   }
 

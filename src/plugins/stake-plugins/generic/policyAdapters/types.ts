@@ -1,17 +1,17 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 
-import {
+import type {
   ChangeQuote,
   StakeAssetInfo,
   StakePolicy,
   StakePosition
 } from '../../types'
-import { CardanoPooledKilnAdapterConfig } from './CardanoKilnAdaptor'
-import { CoreumNativeStakeKitAdapterConfig } from './CoreumStakeKitAdaptor'
-import { EthereumPooledKilnAdapterConfig } from './EthereumKilnAdaptor'
-import { GlifInfinityPoolAdapterConfig } from './GlifInfinityPoolAdapter'
-import { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
-import { ThorchainYieldAdapterConfig } from './ThorchainYieldAdaptor'
+import type { CardanoPooledKilnAdapterConfig } from './CardanoKilnAdaptor'
+import type { CoreumNativeStakeKitAdapterConfig } from './CoreumStakeKitAdaptor'
+import type { EthereumPooledKilnAdapterConfig } from './EthereumKilnAdaptor'
+import type { GlifInfinityPoolAdapterConfig } from './GlifInfinityPoolAdapter'
+import type { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
+import type { ThorchainYieldAdapterConfig } from './ThorchainYieldAdaptor'
 
 // Union of all adapter configs
 export type StakeAdapterConfig =

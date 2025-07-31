@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Platform, ScrollView, View, ViewStyle } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { Platform, ScrollView, View, type ViewStyle } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
@@ -15,7 +15,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Airship } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   isExpanded: boolean

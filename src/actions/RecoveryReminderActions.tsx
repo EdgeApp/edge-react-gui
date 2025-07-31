@@ -5,8 +5,8 @@ import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils'
 
@@ -38,10 +38,12 @@ export function checkPasswordRecovery(
         type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
         data: level
       })
-      writePasswordRecoveryReminders(account, level).catch(error =>
+      writePasswordRecoveryReminders(account, level).catch(error => {
         showError(error)
-      )
-      showReminderModal(navigation).catch(error => showError(error))
+      })
+      showReminderModal(navigation).catch(error => {
+        showError(error)
+      })
       return
     }
   }

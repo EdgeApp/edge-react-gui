@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
@@ -9,7 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { textStyle } from '../../styles/common/textStylesThemed'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   bridge: AirshipBridge<void>

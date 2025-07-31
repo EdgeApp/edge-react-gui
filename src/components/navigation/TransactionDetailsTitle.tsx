@@ -2,9 +2,9 @@ import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { RouteProp } from '../../types/routerTypes'
+import type { RouteProp } from '../../types/routerTypes'
 import { unixToLocaleDateTime } from '../../util/utils'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export function TransactionDetailsTitle() {

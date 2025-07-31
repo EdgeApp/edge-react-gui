@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -7,7 +7,10 @@ import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConst
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
   getDomainSetVisibilityFee,
@@ -18,8 +21,8 @@ import {
 } from '../../../util/FioAddressUtils'
 import {
   logEvent,
-  TrackingEventName,
-  TrackingValues
+  type TrackingEventName,
+  type TrackingValues
 } from '../../../util/tracking'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -30,14 +33,14 @@ import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { SendScene2Params } from '../SendScene2'
+import type { SendScene2Params } from '../SendScene2'
 
 export interface FioDomainSettingsParams {
   expiration: string
@@ -105,7 +108,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList')
+    navigation.navigate('fioAddressList')
   }
 
   onVisibilityPress = () => {
@@ -170,7 +173,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   goToTransfer = (params: { fee: number }) => {
     const { navigation, wallet: fioWallet } = this.props
     const { fee: transferFee } = params
-    if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
+    if (!transferFee) {
+      showError(lstrings.fio_get_fee_err_msg)
+      return
+    }
     this.cancelOperation()
     const { route } = this.props
     const { fioDomainName } = route.params
@@ -189,7 +195,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       },
       onDone: err => {
         if (!err) {
-          this.afterTransferSuccess().catch(err => showError(err))
+          this.afterTransferSuccess().catch(err => {
+            showError(err)
+          })
         }
       },
       walletId: fioWallet.id,

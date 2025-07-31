@@ -1,5 +1,5 @@
-import { AccountReferral } from '../types/ReferralTypes'
-import { MessageTweak, PluginTweak } from '../types/TweakTypes'
+import type { AccountReferral } from '../types/ReferralTypes'
+import type { MessageTweak, PluginTweak } from '../types/TweakTypes'
 
 /**
  * Where did the preferred swap plugin setting come from?
@@ -27,9 +27,9 @@ export interface MessageSummary {
 export interface PluginSummary {
   preferredFiatPluginId: string | undefined
   preferredSwapPluginId: string | undefined
-  disabled: { [pluginId: string]: true }
-  promoCodes: { [pluginId: string]: string }
-  promoMessages: { [pluginId: string]: string }
+  disabled: Record<string, true>
+  promoCodes: Record<string, string>
+  promoMessages: Record<string, string>
 }
 
 /**
@@ -107,7 +107,7 @@ export function bestOfPlugins(
     }
   }
 
-  return { ...out, swapSource: swapSource }
+  return { ...out, swapSource }
 }
 
 /**
@@ -146,7 +146,7 @@ function mergePluginSummaries(
 function getTopMessage(
   messages: MessageTweak[],
   source: TweakSource,
-  hidden: { [messageId: string]: boolean },
+  hidden: Record<string, boolean>,
   now: Date
 ): MessageSummary | undefined {
   let i = messages.length

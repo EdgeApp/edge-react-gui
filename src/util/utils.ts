@@ -1,5 +1,5 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import {
+import type {
   EdgeCurrencyConfig,
   EdgeCurrencyInfo,
   EdgeDenomination,
@@ -28,8 +28,8 @@ import {
   truncateDecimalsPeriod
 } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { RootState } from '../types/reduxTypes'
-import { GuiExchangeRates, GuiFiatType } from '../types/types'
+import type { RootState } from '../types/reduxTypes'
+import type { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -261,7 +261,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
   // and therefore might sneak into contexts where we expect fiat codes:
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
 
-  return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
+  return currencyCode.startsWith('iso:') ? currencyCode : 'iso:' + currencyCode
 }
 
 // multiplier / exchange rate / ( 1 / unit )
@@ -336,16 +336,20 @@ export async function runWithTimeout<T>(
   ms: number,
   error: Error = new Error(`Timeout of ${ms}ms exceeded`)
 ): Promise<T> {
-  const timeout: Promise<T> = new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(error), ms)
-    const onDone = () => clearTimeout(timer)
+  const timeout = new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(error)
+    }, ms)
+    const onDone = () => {
+      clearTimeout(timer)
+    }
     promise.then(onDone, onDone)
   })
   return await Promise.race([promise, timeout])
 }
 
 export async function snooze(ms: number): Promise<void> {
-  return await new Promise(resolve => setTimeout(resolve, ms))
+  await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 let prevTotal = '0'
@@ -455,6 +459,7 @@ export async function asyncWaterfall(
       }
     } catch (e: any) {
       const i = e.index
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.splice(i, 1)
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.pop()
@@ -521,10 +526,9 @@ export const convertTransactionFeeToDisplayFee = (
     feeNativeAmount = transaction?.networkFee
 
   if (feeNativeAmount != null && gt(feeNativeAmount, '0')) {
-    const cryptoFeeSymbol =
-      feeDisplayDenomination && feeDisplayDenomination.symbol
-        ? feeDisplayDenomination.symbol
-        : ''
+    const cryptoFeeSymbol = feeDisplayDenomination?.symbol
+      ? feeDisplayDenomination.symbol
+      : ''
     const displayMultiplier = feeDisplayDenomination
       ? feeDisplayDenomination.multiplier
       : ''
@@ -572,7 +576,7 @@ export const convertTransactionFeeToDisplayFee = (
       fiatAmount: fiatAmount.amount,
       fiatStyle: fiatAmount.style,
       cryptoSymbol: cryptoFeeSymbol,
-      cryptoAmount: cryptoAmount,
+      cryptoAmount,
       nativeCryptoAmount: feeNativeAmount
     }
   }
@@ -679,6 +683,7 @@ export async function fuzzyTimeout<T>(
       if (allDone || timer == null) {
         done = true
         if (results.length > 0) resolve(results)
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         else reject(failures)
       }
     }
@@ -713,9 +718,12 @@ export const formatLargeNumberString = (num: number): string => {
   }
 }
 
-export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
-export const datelog = (...args: any) =>
+export const consify = (arg: any) => {
+  console.log(JSON.stringify(arg, null, 2))
+}
+export const datelog = (...args: any) => {
   console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
+}
 
 export const base58ToUuid = (base58String: string): string => {
   const bytes = base58.parse(base58String)

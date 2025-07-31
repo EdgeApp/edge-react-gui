@@ -1,12 +1,12 @@
-import { asNumber, asObject, Cleaner } from 'cleaners'
-import { JsonObject } from 'edge-core-js'
+import { asNumber, asObject, type Cleaner } from 'cleaners'
+import type { JsonObject } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Info Server Response
 // -----------------------------------------------------------------------------
 
 export interface InfoServerResponse {
-  policies: { [key: string]: number }
+  policies: Record<string, number>
 }
 
 // -----------------------------------------------------------------------------

@@ -1,10 +1,10 @@
-import { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 
 import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeRow } from '../rows/EdgeRow'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeCard } from './EdgeCard'
 
 const localizedFeeText = {
@@ -33,18 +33,18 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
       ? this.props.transaction.spendTargets[0].publicAddress
       : ''
 
-  openUrl = () => {
+  openUrl = async (): Promise<void> => {
     const { url } = this.props
     if (url == null || url === '') return
-    openBrowserUri(url)
+    await openBrowserUri(url)
   }
 
-  openProveUrl = () => {
+  openProveUrl = async (): Promise<void> => {
     const { txid, txSecret } = this.props.transaction
     const recipientAddress = this.getRecipientAddress()
     if (recipientAddress === '' || txid === '' || txSecret == null) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
-    openBrowserUri(url)
+    await openBrowserUri(url)
   }
 
   renderFeeOptions(): string {

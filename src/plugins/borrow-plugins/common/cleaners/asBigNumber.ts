@@ -1,4 +1,4 @@
-import { Cleaner } from 'cleaners'
+import type { Cleaner } from 'cleaners'
 import { BigNumber } from 'ethers'
 
 // @ts-expect-error

@@ -1,7 +1,7 @@
-import { InstallSurvey2 } from 'edge-info-server'
+import type { InstallSurvey2 } from 'edge-info-server'
 import React from 'react'
 import { Platform, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, {
   Easing,
@@ -22,7 +22,7 @@ import { shuffleArray } from '../../util/utils'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, HeaderText, Paragraph, SmallText } from '../themed/EdgeText'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { Radio } from '../themed/ThemedButtons'
@@ -43,9 +43,7 @@ const SURVEY_CATS: SurveyCategory[] = [
   { catKey: 'social', label: lstrings.survey_opt_social }
 ]
 
-interface LocaleSubcategory {
-  [langKey: string]: string
-}
+type LocaleSubcategory = Record<string, string>
 
 type SurveyOption2Keys = keyof InstallSurvey2['surveyOptions2']
 
@@ -178,7 +176,9 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
               <Radio
                 key={option.catKey}
                 value={selectedCatKey === option.catKey}
-                onPress={() => handleOptionPress(option.catKey)}
+                onPress={() => {
+                  handleOptionPress(option.catKey)
+                }}
               >
                 <EdgeText style={styles.radioLabel}>{option.label}</EdgeText>
               </Radio>
@@ -328,7 +328,9 @@ const SurveyModal2 = (props: {
               <Radio
                 key={index}
                 value={selectedSubCatEnVal === option.enValue}
-                onPress={() => handleOptionPress(option.enValue)}
+                onPress={() => {
+                  handleOptionPress(option.enValue)
+                }}
               >
                 <EdgeText style={styles.radioLabel}>
                   {option.displayedValue}

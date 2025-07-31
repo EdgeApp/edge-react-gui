@@ -6,7 +6,7 @@ import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImp
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {

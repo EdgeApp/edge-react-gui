@@ -10,11 +10,11 @@ import { ExpandableList } from '../../../components/common/ExpandableList'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
+import type { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -23,10 +23,10 @@ import { lstrings } from '../../../locales/strings'
 import {
   ADDRESS_FORM_DISKLET_NAME,
   asHomeAddress,
-  HomeAddress
+  type HomeAddress
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { GuiFormField } from '../components/GuiFormField'
@@ -247,7 +247,9 @@ export const AddressFormScene = React.memo((props: Props) => {
     const task = makePeriodicTask(handlePeriodicSearch, FUZZY_SEARCH_INTERVAL)
     task.start({ wait: false })
 
-    return () => task.stop()
+    return () => {
+      task.stop()
+    }
   }, [handlePeriodicSearch])
 
   // Unmount cleanup

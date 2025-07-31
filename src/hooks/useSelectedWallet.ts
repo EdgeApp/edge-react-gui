@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { useWatch } from '../hooks/useWatch'
 import { useSelector } from '../types/reactRedux'

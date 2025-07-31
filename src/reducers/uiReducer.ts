@@ -1,19 +1,19 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers, type Reducer } from 'redux'
 
-import { ExchangeInfo } from '../actions/ExchangeInfoActions'
-import { Action } from '../types/reduxTypes'
+import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import type { Action } from '../types/reduxTypes'
 import { exchangeInfo } from './ExchangeInfoReducer'
-import { fio, FioState } from './FioReducer'
+import { fio, type FioState } from './FioReducer'
 import {
   passwordReminder,
-  PasswordReminderState
+  type PasswordReminderState
 } from './PasswordReminderReducer'
 import {
   fioAddress,
-  FioAddressSceneState
+  type FioAddressSceneState
 } from './scenes/FioAddressSceneReducer'
-import { settings, SettingsState } from './scenes/SettingsReducer'
-import { wallets, WalletsState } from './scenes/WalletsReducer'
+import { settings, type SettingsState } from './scenes/SettingsReducer'
+import { wallets, type WalletsState } from './scenes/WalletsReducer'
 
 export interface UiState {
   readonly exchangeInfo: ExchangeInfo

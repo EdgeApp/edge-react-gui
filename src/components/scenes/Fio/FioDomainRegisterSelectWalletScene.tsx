@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
@@ -20,29 +20,38 @@ import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { EdgeAsset } from '../../../types/types'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
+import type { EdgeAsset } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getDomainRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
+import {
+  getDomainRegInfo,
+  type PaymentInfo
+} from '../../../util/FioAddressUtils'
 import {
   logEvent,
-  TrackingEventName,
-  TrackingValues
+  type TrackingEventName,
+  type TrackingValues
 } from '../../../util/tracking'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -100,7 +109,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => showError(err))
+    this.getRegInfo().catch(err => {
+      showError(err)
+    })
   }
 
   getRegInfo = async () => {
@@ -179,7 +190,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
       paymentWallet
     } = this.state
 
-    if (!paymentWallet || !paymentWallet.id) return
+    if (!paymentWallet?.id) return
 
     const { id: walletId, tokenId } = paymentWallet
     const wallet = account.currencyWallets[walletId]
@@ -216,7 +227,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
           this.props.account,
           bitpayUrl,
           {
-            wallet: wallet,
+            wallet,
             metadata: {
               name: lstrings.fio_address_register_metadata_name,
               notes: `${lstrings.title_register_fio_domain}\n${fioDomain}`
@@ -233,7 +244,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
                     )}
                     buttons={{ ok: { label: lstrings.string_ok_cap } }}
                   />
-                )).catch(err => showError(err))
+                )).catch(err => {
+                  showError(err)
+                })
                 onLogEvent('Fio_Domain_Register', {
                   conversionValues: {
                     conversionType: 'crypto',
@@ -301,7 +314,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
               disabled={!activationCost || activationCost === 0}
             />
           </EdgeCard>
-          {!loading && paymentWallet && paymentWallet.id && (
+          {!loading && paymentWallet?.id && (
             <MainButton
               label={lstrings.string_next_capitalized}
               marginRem={[2, 0, 2]}

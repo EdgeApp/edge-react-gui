@@ -1,5 +1,5 @@
 import { add, div } from 'biggystring'
-import { EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeSwapQuote } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -14,7 +14,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from './EdgeText'
 

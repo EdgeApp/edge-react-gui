@@ -1,19 +1,19 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
-import { PluginPromotion } from 'edge-info-server'
+import type { Disklet } from 'disklet'
+import type { EdgeAccount, EdgeTransaction } from 'edge-core-js'
+import type { PluginPromotion } from 'edge-info-server'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
-import {
+import type {
   DisablePluginMap,
   NestedDisableMap
 } from '../../actions/ExchangeInfoActions'
 import {
   launchPaymentProto,
-  LaunchPaymentProtoParams
+  type LaunchPaymentProtoParams
 } from '../../actions/PaymentProtoActions'
 import { updateFiatPurchaseCount } from '../../actions/RequestReviewActions'
 import { addressWarnings } from '../../actions/ScanActions'
@@ -21,9 +21,9 @@ import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../../components/modals/WalletListModal'
-import { SendScene2Params } from '../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../components/scenes/SendScene2'
 import {
   Airship,
   showError,
@@ -31,26 +31,26 @@ import {
   showToastSpinner
 } from '../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
-import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPluginEnterAmountScene'
-import { FiatProviderLink } from '../../types/DeepLinkTypes'
-import { HomeAddress, SepaInfo } from '../../types/FormTypes'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { Dispatch } from '../../types/reduxTypes'
-import {
+import type { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPluginEnterAmountScene'
+import type { FiatProviderLink } from '../../types/DeepLinkTypes'
+import type { HomeAddress, SepaInfo } from '../../types/FormTypes'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { Dispatch } from '../../types/reduxTypes'
+import type {
   BuyTabSceneProps,
   NavigationBase,
   SellTabSceneProps
 } from '../../types/routerTypes'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import {
+import type {
   BuyConversionValues,
   OnLogEvent,
   SellConversionValues,
   TrackingEventName
 } from '../../util/tracking'
 import { datelog } from '../../util/utils'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   FiatPluginListModalParams,
@@ -173,12 +173,12 @@ export const executePlugin = async (params: {
       ))
     },
     confirmation: async params => {
-      return await new Promise(resolve => {
+      await new Promise<void>(resolve => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginConfirmation', {
           title: params.title,
           message: params.message,
-          onClose: async () => {
+          onClose: () => {
             resolve()
           }
         })
@@ -227,7 +227,9 @@ export const executePlugin = async (params: {
 
       if (result?.type === 'wallet') return result
     },
-    showError: async (e: unknown): Promise<void> => showError(e),
+    showError: async (e: unknown): Promise<void> => {
+      showError(e)
+    },
     listModal: async (
       params: FiatPluginListModalParams
     ): Promise<string | undefined> => {
@@ -326,7 +328,7 @@ export const executePlugin = async (params: {
       })
     },
     sepaTransferInfo: async params => {
-      return await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         const {
           headerTitle,
           headerIconUri,

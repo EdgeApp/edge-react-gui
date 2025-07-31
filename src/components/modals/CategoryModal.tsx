@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { ListRenderItem, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { type ListRenderItem, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import {
-  Category,
+  type Category,
   displayCategories,
   formatCategory,
   getSubcategories,
@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
@@ -128,7 +128,9 @@ export function CategoryModal(props: Props) {
     <EdgeTouchableHighlight
       delayPressIn={60}
       style={styles.rowContainer}
-      onPress={async () => await handleCategoryUpdate(item.raw)}
+      onPress={async () => {
+        await handleCategoryUpdate(item.raw)
+      }}
     >
       <>
         <View style={styles.rowContent}>
@@ -158,7 +160,9 @@ export function CategoryModal(props: Props) {
             key={item}
             highlighted={category === item}
             label={displayCategories[item]}
-            onPress={() => setCategory(item)}
+            onPress={() => {
+              setCategory(item)
+            }}
           />
         ))}
       </View>

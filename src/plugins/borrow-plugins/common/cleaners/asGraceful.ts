@@ -1,4 +1,4 @@
-import { Cleaner } from 'cleaners'
+import type { Cleaner } from 'cleaners'
 
 export function asGraceful<T>(asT: Cleaner<T>, msg: string): Cleaner<T> {
   return (raw: unknown) => {

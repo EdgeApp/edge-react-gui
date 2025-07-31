@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -14,7 +14,7 @@ import { updateStakingState } from '../../actions/scene/StakingActions'
 import { Fontello } from '../../assets/vector/index'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../../components/modals/WalletListModal'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
@@ -26,7 +26,7 @@ import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import {
   filterStakePolicies,
-  StakePolicy
+  type StakePolicy
 } from '../../plugins/stake-plugins/types'
 import { defaultWalletStakingState } from '../../reducers/StakingReducer'
 import {
@@ -35,12 +35,12 @@ import {
 } from '../../selectors/SettingsSelectors'
 import {
   asCoinRankingData,
-  CoinRankingData,
-  CoinRankingDataPercentChange
+  type CoinRankingData,
+  type CoinRankingDataPercentChange
 } from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { fetchRates } from '../../util/network'
 import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
@@ -52,7 +52,7 @@ import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInDown, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 type CoinRankingDataValueType =
@@ -68,7 +68,7 @@ export interface CoinRankingDetailsParams {
 
 interface Props extends EdgeAppSceneProps<'coinRankingDetails'> {}
 
-const COINRANKINGDATA_TITLE_MAP: { [key: string]: string } = {
+const COINRANKINGDATA_TITLE_MAP: Record<string, string> = {
   currencyCode: '',
   currencyName: '',
   imageUrl: '',
@@ -248,9 +248,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0
         )
           continue
-        dispatch(updateStakingState(currencyCode, wallet)).catch(err =>
+        dispatch(updateStakingState(currencyCode, wallet)).catch(err => {
           showError(err)
-        )
+        })
       }
     }
     // We don't want other dependencies to cause a flood of update requests that

@@ -1,7 +1,7 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import { AirshipBridge, AirshipModal } from 'react-native-airship'
+import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { BlurView } from 'rn-id-blurview'
 
@@ -21,7 +21,9 @@ export function QrModal(props: Props) {
   const windowSize = useSafeAreaFrame()
   const maxSize = Math.min(windowSize.width, windowSize.height)
 
-  const handleCancel = () => bridge.resolve(undefined)
+  const handleCancel = () => {
+    bridge.resolve(undefined)
+  }
 
   return (
     <AirshipModal

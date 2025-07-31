@@ -7,16 +7,20 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
-import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
+import type {
+  EdgeAccount,
+  EdgeDenomination,
+  EdgeSwapPluginType
+} from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import {
   asSortOption,
-  SortOption
+  type SortOption
 } from '../components/modals/WalletListSortModal'
 import {
   Airship,
@@ -24,10 +28,10 @@ import {
   showToast
 } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { SettingsState } from '../reducers/scenes/SettingsReducer'
+import type { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
-import { ThunkAction } from '../types/reduxTypes'
-import { asMostRecentWallet, MostRecentWallet } from '../types/types'
+import type { ThunkAction } from '../types/reduxTypes'
+import { asMostRecentWallet, type MostRecentWallet } from '../types/types'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -160,7 +164,9 @@ export function setPreferredSwapPluginId(
           data: undefined
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 
@@ -181,7 +187,9 @@ export function setPreferredSwapPluginType(
           data: undefined
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 
@@ -207,7 +215,9 @@ export function setDenominationKeyRequest(
           data: { pluginId, currencyCode, denomination }
         })
       )
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 
@@ -318,12 +328,12 @@ export const toggleUserPausedWallet =
       isPaused ? lstrings.unpause_wallet_toast : lstrings.pause_wallet_toast
     )
 
-    await dispatch({
+    dispatch({
       type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS',
       data: { userPausedWallets: newPausedWallets }
     })
 
-    return await writeSyncedSettings(account, {
+    await writeSyncedSettings(account, {
       ...settings,
       userPausedWallets: [...newPausedWallets]
     })
@@ -400,36 +410,38 @@ const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const writeAutoLogoutTimeInSeconds = async (
   account: EdgeAccount,
   autoLogoutTimeInSeconds: number
-) =>
+) => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, autoLogoutTimeInSeconds }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
+}
 
 const writeDefaultFiatSetting = async (
   account: EdgeAccount,
   defaultFiat: string
-) =>
+) => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
       defaultFiat,
       defaultIsoFiat: `iso:${defaultFiat}`
     }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
+}
 
 const writePreferredSwapPluginId = async (
   account: EdgeAccount,
   pluginId: string | undefined
 ) => {
-  return await readSyncedSettings(account).then(async settings => {
+  await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
       preferredSwapPluginId: pluginId == null ? '' : pluginId,
       preferredSwapPluginType: undefined
     }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
 }
 
@@ -437,33 +449,35 @@ const writePreferredSwapPluginType = async (
   account: EdgeAccount,
   swapPluginType: EdgeSwapPluginType | undefined
 ) => {
-  return await readSyncedSettings(account).then(async settings => {
+  await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
       preferredSwapPluginType: swapPluginType,
       preferredSwapPluginId: ''
     }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
 }
 
 export const writeMostRecentWalletsSelected = async (
   account: EdgeAccount,
   mostRecentWallets: MostRecentWallet[]
-) =>
+) => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, mostRecentWallets }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
+}
 
 export const writeWalletsSort = async (
   account: EdgeAccount,
   walletsSort: SortOption
-) =>
+) => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, walletsSort }
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
+}
 
 export async function writePasswordRecoveryReminders(
   account: EdgeAccount,
@@ -475,7 +489,7 @@ export async function writePasswordRecoveryReminders(
   }
   passwordRecoveryRemindersShown[level] = true
   const updatedSettings = { ...settings, passwordRecoveryRemindersShown }
-  return await writeSyncedSettings(account, updatedSettings)
+  await writeSyncedSettings(account, updatedSettings)
 }
 
 // Currency Settings
@@ -484,7 +498,7 @@ const writeDenominationKeySetting = async (
   pluginId: string,
   currencyCode: string,
   denomination: EdgeDenomination
-) =>
+) => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = updateCurrencySettings(
       settings,
@@ -492,8 +506,9 @@ const writeDenominationKeySetting = async (
       currencyCode,
       denomination
     )
-    return await writeSyncedSettings(account, updatedSettings)
+    await writeSyncedSettings(account, updatedSettings)
   })
+}
 
 // Helper Functions
 export async function readSyncedSettings(

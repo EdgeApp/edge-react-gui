@@ -22,8 +22,8 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
-import { RewardsCardItem } from '../RewardsCardPlugin'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
   items: RewardsCardItem[]
@@ -65,7 +65,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
         message={lstrings.rewards_card_purchase_disclaimer}
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
-    )).catch(error => showError(error))
+    )).catch(error => {
+      showError(error)
+    })
   })
 
   return (
@@ -92,9 +94,15 @@ export const RewardsCardDashboardScene = (props: Props) => {
               <RewardsCard
                 key={item.id}
                 item={item}
-                onLongPress={() => onCardLongPress(item)}
-                onPress={() => onCardPress(item)}
-                onRemovePress={() => handleRemovePress(item)}
+                onLongPress={() => {
+                  onCardLongPress(item)
+                }}
+                onPress={() => {
+                  onCardPress(item)
+                }}
+                onRemovePress={() => {
+                  handleRemovePress(item)
+                }}
                 shouldStack
               />
             )
@@ -108,9 +116,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </CardList>
       </SceneWrapper>
       <BottomFloat
-        onLayout={event =>
+        onLayout={event => {
           setBottomFloatHeight(event.nativeEvent.layout.height)
-        }
+        }}
       >
         <Space aroundRem={1}>
           <MainButton

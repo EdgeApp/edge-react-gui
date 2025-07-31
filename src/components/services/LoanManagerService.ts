@@ -1,12 +1,12 @@
 import { add, div, mul } from 'biggystring'
-import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
-import {
+import type {
   LoginUpdatePayload,
   NewPushEvent
 } from '../../controllers/action-queue/types/pushApiTypes'
-import {
+import type {
   PushMessage,
   PushTrigger
 } from '../../controllers/action-queue/types/pushTypes'
@@ -14,13 +14,13 @@ import {
   deleteLoanAccount,
   loadLoanAccounts
 } from '../../controllers/loan-manager/redux/actions'
-import { LoanAccountMap } from '../../controllers/loan-manager/types'
+import type { LoanAccountMap } from '../../controllers/loan-manager/types'
 import { checkLoanHasFunds } from '../../controllers/loan-manager/util/checkLoanHasFunds'
 import { waitForBorrowEngineSync } from '../../controllers/loan-manager/util/waitForLoanAccountSync'
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import { BorrowEngine } from '../../plugins/borrow-plugins/types'
+import type { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -58,9 +58,9 @@ export const LoanManagerService = (props: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const allTokens = useAllTokens(account)
 
-  const [cachedLoanAssetsMap, setCachedLoanAssetsMap] = useState<{
-    [loanAccountId: string]: string
-  }>({})
+  const [cachedLoanAssetsMap, setCachedLoanAssetsMap] = useState<
+    Record<string, string>
+  >({})
 
   //
   // Initialization
@@ -84,9 +84,9 @@ export const LoanManagerService = (props: Props) => {
     const routine = () => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
-          dispatch(deleteLoanAccount(loanAccount)).catch(err =>
+          dispatch(deleteLoanAccount(loanAccount)).catch(err => {
             console.warn(err)
-          )
+          })
 
           cachedLoanAssetsMap[loanAccount.id] = ''
           setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
@@ -224,7 +224,9 @@ export const LoanManagerService = (props: Props) => {
 
       // TODO: Implement a true way to clear the push event
       if (cachedLoanAssetsMap[loanAccountId] === '') {
-        uploadLiquidationEvent('WBTC', 0).catch(err => console.warn(err))
+        uploadLiquidationEvent('WBTC', 0).catch(err => {
+          console.warn(err)
+        })
         return
       }
 

@@ -1,4 +1,4 @@
-import { EdgeCreateCurrencyWallet, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCreateCurrencyWallet, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -16,25 +16,25 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import {
   splitCreateWalletItems,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../rows/IconDataRow'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
-import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
+import type { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
 export interface CreateWalletCompletionParams {
   createWalletList: WalletCreateItem[]
-  walletNames: { [key: string]: string }
+  walletNames: Record<string, string>
   importText?: string
-  keyOptions?: Map<string, { [opt: string]: string | undefined }>
+  keyOptions?: Map<string, Record<string, string | undefined>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletCompletion'> {}
@@ -78,7 +78,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   // State to manage row status icons
   const [itemStatus, setItemStatus] = React.useState(() =>
     filteredCreateItemsForDisplay.reduce(
-      (map: { [key: string]: 'pending' | 'complete' | 'error' }, item) => {
+      (map: Record<string, 'pending' | 'complete' | 'error'>, item) => {
         map[item.key] = 'pending'
         return map
       },
@@ -139,11 +139,12 @@ const CreateWalletCompletionComponent = (props: Props) => {
       // Create tokens on existing wallets:
       if (tokenKey != null) {
         await dispatch(enableTokensAcrossWallets(newTokenItems)).then(
-          () =>
+          () => {
             setItemStatus(currentState => ({
               ...currentState,
               [tokenKey]: 'complete'
-            })),
+            }))
+          },
           error => {
             showError(error)
             setItemStatus(currentState => ({
@@ -243,12 +244,12 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return null
   })
 
-  const handleNext = useHandler(() =>
+  const handleNext = useHandler(() => {
     navigation.navigate('edgeTabs', {
       screen: 'walletsTab',
       params: { screen: 'walletList' }
     })
-  )
+  })
 
   const handleMigrate = useHandler(() => {
     // Transform filtered items into the structure expected by the migration component

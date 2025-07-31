@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber, type BigNumberish } from 'ethers'
 
 export type BigAccumulator = (n?: BigNumberish) => BigNumber
 

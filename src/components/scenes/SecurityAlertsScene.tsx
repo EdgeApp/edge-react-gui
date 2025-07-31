@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
@@ -15,7 +15,9 @@ export const SecurityAlertsScene = (props: Props) => {
   const context = useSelector(state => state.core.context)
   const dispatch = useDispatch()
 
-  const handleComplete = useHandler(() => navigation.pop())
+  const handleComplete = useHandler(() => {
+    navigation.pop()
+  })
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))

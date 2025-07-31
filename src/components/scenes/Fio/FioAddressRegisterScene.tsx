@@ -1,6 +1,6 @@
-import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Image, LayoutChangeEvent, View } from 'react-native'
+import { Image, type LayoutChangeEvent, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
@@ -10,8 +10,11 @@ import {
 } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { FioDomain, FioPublicDomain } from '../../../types/types'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
+import type { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
@@ -22,7 +25,10 @@ import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import {
   Airship,
@@ -32,8 +38,8 @@ import {
 } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -90,14 +96,20 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   componentDidMount() {
     const { fioWallets } = this.props
-    this.getPublicDomains().catch(err => showError(err))
-    this.checkFreeAddress().catch(err => showError(err))
+    this.getPublicDomains().catch(err => {
+      showError(err)
+    })
+    this.checkFreeAddress().catch(err => {
+      showError(err)
+    })
     if (fioWallets.length > 0) {
       this.setState({
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet().catch(err => showError(err))
+      this.createFioWallet().catch(err => {
+        showError(err)
+      })
     }
     this.setState({ inputWidth: this.props.theme.rem(12.5) })
   }
@@ -193,8 +205,10 @@ export class FioAddressRegister extends React.Component<Props, State> {
     } = this.state
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
-        if (!selectedWallet)
-          return showError(lstrings.create_wallet_failed_message)
+        if (!selectedWallet) {
+          showError(lstrings.create_wallet_failed_message)
+          return
+        }
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
           navigation.navigate('fioNameConfirm', {
@@ -237,10 +251,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
         const result = await checkIsDomainPublic(fioPlugin, domain)
         if (result !== true) {
           showWarning(result, { trackError: false })
-          return this.setState({
+          this.setState({
             isAvailable: false,
             loading: false
           })
+          return
         }
       }
 
@@ -283,10 +298,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   handleFioAddressChange = (fioAddressChanged: string) => {
     if (!this.props.isConnected) {
-      return this.setState({
+      this.setState({
         fioAddress: fioAddressChanged.toLowerCase(),
         loading: false
       })
+      return
     }
     this.checkFioAddress(
       fioAddressChanged,
@@ -416,15 +432,14 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { selectedWallet } = this.state
 
     if (fioWallets && fioWallets.length > 1) {
-      const title = `${
+      const title =
         selectedWallet == null
           ? lstrings.fio_address_register_no_wallet_name
           : getWalletName(selectedWallet)
-      }`
       return (
         <EdgeRow
           rightButtonType="touchable"
-          title={`${lstrings.title_fio_connect_to_wallet}`}
+          title={lstrings.title_fio_connect_to_wallet}
           onPress={this.selectFioWallet}
           body={title}
         />

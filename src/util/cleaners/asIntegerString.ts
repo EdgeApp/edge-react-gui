@@ -1,4 +1,4 @@
-import { asString, Cleaner } from 'cleaners'
+import { asString, type Cleaner } from 'cleaners'
 
 export const asIntegerString: Cleaner<string> = raw => {
   const clean = asString(raw)

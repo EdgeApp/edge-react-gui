@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   onLongPress?: () => void

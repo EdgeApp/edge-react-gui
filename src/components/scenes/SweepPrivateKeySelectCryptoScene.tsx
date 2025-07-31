@@ -1,20 +1,20 @@
-import { EdgeCurrencyWallet, EdgeMemoryWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMemoryWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItemInfo, Switch, View } from 'react-native'
+import { type ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
+import type { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeySelectCryptoParams {
   memoryWallet: EdgeMemoryWallet
@@ -37,7 +37,7 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
   } = receivingWallet
 
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
-    const out: Set<string> = new Set()
+    const out = new Set<string>()
     for (const sweepPrivateKeyItem of sweepPrivateKeyList) {
       out.add(sweepPrivateKeyItem.key)
     }
@@ -90,7 +90,9 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
             true: theme.toggleButton
           }}
           value={selectedItems.has(key)}
-          onValueChange={() => handleCreateWalletToggle(key)}
+          onValueChange={() => {
+            handleCreateWalletToggle(key)
+          }}
         />
       )
 
@@ -99,7 +101,9 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
           pluginId={pluginId}
           tokenId={tokenId}
           walletName={displayName}
-          onPress={() => handleCreateWalletToggle(key)}
+          onPress={() => {
+            handleCreateWalletToggle(key)
+          }}
           rightSide={toggle}
         />
       )

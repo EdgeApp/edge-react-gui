@@ -4,12 +4,12 @@ import { View } from 'react-native'
 import { useTheme } from '../../../components/services/ThemeContext'
 import {
   FilledTextInput,
-  FilledTextInputRef,
-  FilledTextInputReturnKeyType
+  type FilledTextInputRef,
+  type FilledTextInputReturnKeyType
 } from '../../../components/themed/FilledTextInput'
 import {
   FORM_FIELD_DISPLAY_PROPS,
-  FormFieldType
+  type FormFieldType
 } from '../../../types/FormTypes'
 
 // TODO: Consolidate with FormField

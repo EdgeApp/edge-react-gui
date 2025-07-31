@@ -1,15 +1,15 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 import {
   BackupForAccountModal,
   BackupForTransferModal,
-  BackupForTransferModalResult,
-  BackupModalResult
+  type BackupForTransferModalResult,
+  type BackupModalResult
 } from '../components/modals/BackupModal'
 import { Airship, showDevError } from '../components/services/AirshipInstance'
-import { NavigationBase } from '../types/routerTypes'
+import type { NavigationBase } from '../types/routerTypes'
 
 let isBackupModalShowing = false
 
@@ -17,29 +17,29 @@ let isBackupModalShowing = false
  * Shows a modal prompting the user to back up their account, only if the modal
  * isn't already showing.
  */
-export const showBackupModal = (props: {
+export const showBackupModal = async (props: {
   navigation: NavigationBase
   forgetLoginId?: string
-}) => {
-  if (isBackupModalShowing) return
-
-  isBackupModalShowing = true
+}): Promise<void> => {
   const { navigation, forgetLoginId } = props
 
-  Airship.show((bridge: AirshipBridge<BackupModalResult | undefined>) => {
-    return (
-      <BackupForAccountModal bridge={bridge} forgetLoginId={forgetLoginId} />
+  if (isBackupModalShowing) return
+  isBackupModalShowing = true
+
+  try {
+    const userSel = await Airship.show<BackupModalResult | undefined>(
+      bridge => (
+        <BackupForAccountModal bridge={bridge} forgetLoginId={forgetLoginId} />
+      )
     )
-  })
-    .then((userSel?: BackupModalResult) => {
-      if (userSel === 'upgrade') {
-        navigation.navigate('upgradeUsername')
-      }
-    })
-    .finally(() => {
-      isBackupModalShowing = false
-    })
-    .catch(error => showDevError(error))
+    if (userSel === 'upgrade') {
+      navigation.navigate('upgradeUsername')
+    }
+  } catch (error: unknown) {
+    showDevError(error)
+  } finally {
+    isBackupModalShowing = false
+  }
 }
 
 /**
@@ -64,7 +64,9 @@ export const checkAndShowLightBackupModal = (
       .finally(() => {
         isBackupModalShowing = false
       })
-      .catch(error => showDevError(error))
+      .catch(error => {
+        showDevError(error)
+      })
     return true
   }
   return false

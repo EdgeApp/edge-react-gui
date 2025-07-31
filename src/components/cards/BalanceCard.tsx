@@ -1,6 +1,6 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { LayoutChangeEvent, Text, View } from 'react-native'
+import { type LayoutChangeEvent, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -11,7 +11,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import {
   getTotalFiatAmountFromExchangeRates,
   removeIsoPrefix,
@@ -21,9 +21,12 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -92,8 +95,8 @@ export const BalanceCard = (props: Props) => {
   const formattedFiat = isBalanceVisible
     ? formatNumber(fiatAmount, { toFixed: 2 })
     : lstrings.redacted_placeholder
-  const handleToggleAccountBalanceVisibility = useHandler(() => {
-    dispatch(toggleAccountBalanceVisibility())
+  const handleToggleAccountBalanceVisibility = useHandler(async () => {
+    await dispatch(toggleAccountBalanceVisibility())
   })
 
   const handleSend = useHandler(async () => {

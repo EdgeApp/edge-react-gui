@@ -1,7 +1,7 @@
 import { add, div, gt, gte, lt, min, mul } from 'biggystring'
-import { asMaybe, Cleaner } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
-import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
+import { asMaybe, type Cleaner } from 'cleaners'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import { BigNumber, type BigNumberish, ethers, type Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { showError } from '../../../../components/services/AirshipInstance'
@@ -10,15 +10,15 @@ import { DECIMAL_PRECISION, snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
 import {
   asTxInfo,
-  CallInfo,
+  type CallInfo,
   makeApprovableCall,
   makeSideEffectApprovableAction,
   makeTxCalls,
-  TxInfo
+  type TxInfo
 } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
-import {
+import type {
   ApprovableAction,
   BorrowCollateral,
   BorrowDebt,
@@ -29,7 +29,7 @@ import {
   RepayRequest,
   WithdrawRequest
 } from '../../types'
-import { AaveNetwork } from './AaveNetwork'
+import type { AaveNetwork } from './AaveNetwork'
 export { ContractMethod, SwapSide } from 'paraswap-core'
 
 const BALANCE_RESYNC_INTERVAL = 10 * 60 * 1000
@@ -254,7 +254,9 @@ export const makeAaveBorrowEngineFactory = (
       async startEngine() {
         if (instance.isRunning) return
         instance.isRunning = true
-        startNetworkSyncLoop().catch(err => showError(err)) // Shouldn't ever happen
+        startNetworkSyncLoop().catch(err => {
+          showError(err)
+        }) // Shouldn't ever happen
       },
       async stopEngine() {
         instance.isRunning = false

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
@@ -11,7 +11,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import {
   HeaderText,
   Paragraph,
@@ -62,7 +62,7 @@ export const BackupForTransferModal = (props: {
   const { bridge } = props
 
   const handleLearnMorePress = useHandler(async () => {
-    openBrowserUri(config.backupAccountSite)
+    await openBrowserUri(config.backupAccountSite)
     return false
   })
 
@@ -137,7 +137,7 @@ export const BackupForAccountModal = (props: {
         learnMore: {
           label: lstrings.learn_more,
           onPress: async () => {
-            openBrowserUri(config.backupAccountSite)
+            await openBrowserUri(config.backupAccountSite)
             return await Promise.resolve(true)
           }
         },

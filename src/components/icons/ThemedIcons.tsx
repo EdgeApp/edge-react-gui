@@ -1,10 +1,10 @@
 import React from 'react'
 import Animated, {
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { type Icon } from 'react-native-vector-icons/Icon'
+import type { Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
@@ -78,7 +78,7 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
   } = props
 
   const style = {
-    color: color,
+    color,
     fontSize: size
   }
   return (
