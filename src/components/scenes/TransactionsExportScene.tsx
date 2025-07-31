@@ -1,5 +1,5 @@
 import { asBoolean, asObject, asString } from 'cleaners'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeTokenId,
@@ -25,14 +25,14 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsRow } from '../settings/SettingsRow'
@@ -499,7 +499,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<
         urls,
         failOnCancel: false,
         subject: title
-      }).catch(error => console.log('Share error', error))
+      }).catch(error => {
+        console.log('Share error', error)
+      })
     } catch (error: any) {
       console.log('Error writing file to disk', error)
       showError(error)
@@ -524,7 +526,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       title,
       urls,
       subject: title
-    }).catch(error => showError(error))
+    }).catch(error => {
+      showError(error)
+    })
   }
 }
 
@@ -550,7 +554,8 @@ export const TransactionsExportScene = connect<
       .multiplier
   }),
   dispatch => ({
-    updateTxsFiatDispatch: async (wallet, tokenId, currencyCode, txs) =>
+    updateTxsFiatDispatch: async (wallet, tokenId, currencyCode, txs) => {
       await dispatch(updateTxsFiat(wallet, tokenId, currencyCode, txs))
+    }
   })
 )(withTheme(TransactionsExportSceneComponent))

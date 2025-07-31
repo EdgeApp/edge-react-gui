@@ -38,7 +38,9 @@ export function makePeriodicTask(
     timeout = undefined
     if (!out.started) return
     running = true
-    new Promise(resolve => resolve(task()))
+    new Promise(resolve => {
+      resolve(task())
+    })
       .catch(onError)
       .then(startWaiting, startWaiting)
   }

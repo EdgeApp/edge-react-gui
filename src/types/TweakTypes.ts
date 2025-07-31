@@ -7,7 +7,7 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 /**
@@ -24,13 +24,13 @@ export const asCurrencyCode: Cleaner<string> = raw =>
  */
 export interface MessageTweak {
   message: string
-  localeMessages?: { [locale: string]: string }
+  localeMessages?: Record<string, string>
   uri?: string
   iconUri?: string
 
   countryCodes?: string[]
   excludeCountryCodes?: string[]
-  hasLinkedBankMap?: { [pluginId: string]: boolean }
+  hasLinkedBankMap?: Record<string, boolean>
   exactBuildNum?: string
   minBuildNum?: string
   maxBuildNum?: string

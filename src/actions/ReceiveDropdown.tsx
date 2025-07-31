@@ -1,5 +1,5 @@
 import { lt } from 'biggystring'
-import { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -11,8 +11,8 @@ import {
   selectDisplayDenom
 } from '../selectors/DenominationSelectors'
 import { getExchangeRate } from '../selectors/WalletSelectors'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import { calculateSpamThreshold, convertNativeToDisplay } from '../util/utils'
 import { playReceiveSound } from './SoundActions'
 import { selectWalletToken } from './WalletActions'
@@ -88,7 +88,9 @@ export function showReceiveDropdown(
               walletId,
               tokenId
             })
-          ).catch(error => showError(error))
+          ).catch(error => {
+            showError(error)
+          })
 
           navigation.navigate('transactionDetails', {
             edgeTransaction: transaction,

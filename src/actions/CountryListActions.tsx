@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -11,10 +11,10 @@ import {
 } from '../components/services/AirshipInstance'
 import { COUNTRY_CODES } from '../constants/CountryConstants'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import {
   readSyncedSettings,
-  SyncedAccountSettings,
+  type SyncedAccountSettings,
   updateOneSetting,
   writeSyncedSettings
 } from './SettingsActions'

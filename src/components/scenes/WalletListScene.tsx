@@ -6,18 +6,30 @@ import { useBackButtonToast } from '../../hooks/useBackButtonToast'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
+import {
+  type FooterRender,
+  useSceneFooterState
+} from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import type {
+  NavigationBase,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
+import {
+  type SortOption,
+  WalletListSortModal
+} from '../modals/WalletListSortModal'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 import { SearchFooter } from '../themed/SearchFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
@@ -65,7 +77,9 @@ export function WalletListScene(props: Props) {
           setSorting(true)
         }
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   })
 
   const handleStartSearching = useHandler(() => {

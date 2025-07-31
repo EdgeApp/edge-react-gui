@@ -1,10 +1,10 @@
-import { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 
 import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeRow } from '../rows/EdgeRow'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeCard } from './EdgeCard'
 
 const localizedFeeText = {

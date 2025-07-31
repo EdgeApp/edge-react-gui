@@ -1,5 +1,5 @@
 import { max } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { useTotalFiatAmount } from '../../util/borrowUtils'

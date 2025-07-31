@@ -1,13 +1,13 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItem, Switch, View } from 'react-native'
+import { type ListRenderItem, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { showError } from '../../components/services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
@@ -20,9 +20,9 @@ import {
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { CcWalletMap } from '../../reducers/FioReducer'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -40,9 +40,7 @@ export interface FioConnectionWalletItem {
   isConnected: boolean
 }
 
-interface WalletItemMap {
-  [key: string]: FioConnectionWalletItem
-}
+type WalletItemMap = Record<string, FioConnectionWalletItem>
 
 interface FioConnectWalletsProps {
   disabled: boolean
@@ -72,9 +70,9 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
     React.useState<WalletItemMap>({})
   const [disconnectWalletsMap, setDisconnectWalletsMap] =
     React.useState<WalletItemMap>({})
-  const [prevItemsConnected, setPrevItemsConnected] = React.useState<{
-    [key: string]: boolean
-  }>({})
+  const [prevItemsConnected, setPrevItemsConnected] = React.useState<
+    Record<string, boolean>
+  >({})
 
   const continueDisabled =
     Object.keys(connectWalletsMap).length === 0 &&
@@ -109,9 +107,9 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
     }
 
     if (fioWallet != null) {
-      const prevItemsConnected = Object.keys(walletItems).reduce<{
-        [key: string]: boolean
-      }>((acc, walletKey: string) => {
+      const prevItemsConnected = Object.keys(walletItems).reduce<
+        Record<string, boolean>
+      >((acc, walletKey: string) => {
         acc[walletKey] = walletItems[walletKey].isConnected
         return acc
       }, {})
@@ -205,7 +203,9 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
               <View style={styles.switchContainer}>
                 <Switch
                   disabled={disabled}
-                  onChange={() => handleSelectWallet(!value, item)}
+                  onChange={() => {
+                    handleSelectWallet(!value, item)
+                  }}
                   value={value}
                 />
               </View>

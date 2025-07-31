@@ -1,7 +1,7 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import {
+import type {
   ActionDisplayInfo,
   ActionDisplayStatus,
   ActionEffect,
@@ -12,13 +12,13 @@ import {
   ParActionOp,
   SwapActionOp
 } from '../../controllers/action-queue/types'
-import { LocaleStringKey } from '../../locales/en_US'
+import type { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { filterNull } from '../../util/safeFilters'
-import { LoanBorrowActionOp } from './types'
+import type { LoanBorrowActionOp } from './types'
 import { checkEffectIsDone } from './util/checkEffectIsDone'
 import { getEffectErrors } from './util/getEffectErrors'
 

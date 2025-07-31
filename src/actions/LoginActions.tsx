@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
+import type { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
 import {
   getSupportedBiometryType,
   hasSecurityAlerts,
@@ -21,13 +21,13 @@ import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
 import {
-  AccountInitPayload,
+  type AccountInitPayload,
   initialState
 } from '../reducers/scenes/SettingsReducer'
-import { WalletCreateItem } from '../selectors/getCreateWalletList'
+import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
-import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
+import type { Dispatch, ThunkAction } from '../types/reduxTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
@@ -125,7 +125,9 @@ export function initializeAccount(
           fiatCurrencyCode,
           items,
           dispatch
-        ).catch(error => showError(error))
+        ).catch(error => {
+          showError(error)
+        })
 
         // New user FIO handle registration flow (if env is properly configured)
         const { freeRegApiToken = '', freeRegRefCode = '' } =
@@ -179,9 +181,9 @@ export function initializeAccount(
               : { screen: 'walletsTab', params: { screen: 'walletList' } }
         }
       })
-      referralPromise.catch(() =>
+      referralPromise.catch(() => {
         console.log(`Failed to load account referral info`)
-      )
+      })
 
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     }
@@ -221,7 +223,9 @@ export function initializeAccount(
             await currencyConfig.changeUserSettings(userSettings)
           }
         })
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     }
 
     // Show the scam warning modal if needed
@@ -237,7 +241,9 @@ export function initializeAccount(
     const { context } = state.core
 
     // Sign up for push notifications:
-    dispatch(registerNotificationsV2()).catch(e => console.error(e))
+    dispatch(registerNotificationsV2()).catch(e => {
+      console.error(e)
+    })
 
     const walletInfos = account.allKeys
     const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)

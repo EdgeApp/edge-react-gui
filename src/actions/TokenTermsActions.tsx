@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 

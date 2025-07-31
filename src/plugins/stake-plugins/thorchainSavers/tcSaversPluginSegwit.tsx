@@ -10,12 +10,12 @@ import {
 } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
-  EdgeAccount,
-  EdgeCurrencyConfig,
-  EdgeCurrencyWallet,
-  EdgeMemo,
-  EdgeSpendInfo,
-  EdgeTransaction,
+  type EdgeAccount,
+  type EdgeCurrencyConfig,
+  type EdgeCurrencyWallet,
+  type EdgeMemo,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
@@ -24,7 +24,7 @@ import { Linking } from 'react-native'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
-import { StringMap } from '../../../types/types'
+import type { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
 import {
   getCurrencyCodeMultiplier,
@@ -40,25 +40,25 @@ import {
 } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
 import {
-  ChangeQuote,
-  ChangeQuoteRequest,
+  type ChangeQuote,
+  type ChangeQuoteRequest,
   filterStakePolicies,
-  PositionAllocation,
-  QuoteAllocation,
-  QuoteInfo,
+  type PositionAllocation,
+  type QuoteAllocation,
+  type QuoteInfo,
   StakeBelowLimitError,
-  StakePlugin,
-  StakePolicy,
-  StakePolicyFilter,
+  type StakePlugin,
+  type StakePolicy,
+  type StakePolicyFilter,
   StakePoolFullError,
-  StakePosition,
-  StakePositionRequest,
-  StakeProviderInfo
+  type StakePosition,
+  type StakePositionRequest,
+  type StakeProviderInfo
 } from '../types'
 import {
   asInfoServerResponse,
-  EdgeGuiPluginOptions,
-  InfoServerResponse
+  type EdgeGuiPluginOptions,
+  type InfoServerResponse
 } from '../util/internalTypes'
 import { getEvmApprovalData, getEvmDepositWithExpiryData } from './defiUtils'
 
@@ -223,7 +223,7 @@ const evmInfo: PolicyCurrencyInfo = {
   minAmount: '0'
 }
 
-const policyCurrencyInfos: { [pluginId: string]: PolicyCurrencyInfo } = {
+const policyCurrencyInfos: Record<string, PolicyCurrencyInfo> = {
   avalanche: evmInfo,
   binancesmartchain: evmInfo,
   bitcoin: utxoInfo,
@@ -254,7 +254,7 @@ const policies: StakePolicy[] = []
 let policiesInitialized = false
 let initializingPolicies = false
 
-const MAINNET_CODE_TRANSCRIPTION: { [cc: string]: string } = {
+const MAINNET_CODE_TRANSCRIPTION: Record<string, string> = {
   bitcoin: 'BTC',
   bitcoincash: 'BCH',
   binancechain: 'BNB',
@@ -841,7 +841,7 @@ const stakeRequest = async (
       spendTargets: [
         {
           publicAddress: primaryAddress,
-          nativeAmount: nativeAmount
+          nativeAmount
         }
       ],
       assetAction: { assetActionType: 'stakeNetworkFee' },
@@ -1466,7 +1466,7 @@ const claimRequest = async (
     spendTargets: [
       {
         publicAddress: router ?? poolAddress,
-        nativeAmount: nativeAmount
+        nativeAmount
       }
     ],
     memos: [
@@ -1548,7 +1548,7 @@ const claimRequest = async (
       spendTargets: [
         {
           publicAddress: primaryAddress,
-          nativeAmount: nativeAmount
+          nativeAmount
         }
       ],
       assetAction: { assetActionType: 'unstakeNetworkFee' },
@@ -1893,7 +1893,7 @@ const edgeToTcAsset = (
   return asset
 }
 
-const EVM_PLUGINIDS: { [id: string]: boolean } = {
+const EVM_PLUGINIDS: Record<string, boolean> = {
   avalanche: true,
   binancesmartchain: true,
   ethereum: true

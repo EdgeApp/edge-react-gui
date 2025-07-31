@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -72,7 +72,9 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
           setErrorMessage(lstrings.create_wallet_account_unknown_error)
         }
       })
-      .finally(() => setSpinning(false))
+      .finally(() => {
+        setSpinning(false)
+      })
   }
 
   const trackWalletActivate = useHandler(() => {

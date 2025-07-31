@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
@@ -46,12 +46,19 @@ export function ConfirmContinueModal(props: Props) {
   const styles = getStyles(theme)
 
   const [isAgreed, setAgreed] = React.useState(false)
-  const handleTogggle = () => setAgreed(!isAgreed)
+  const handleTogggle = () => {
+    setAgreed(!isAgreed)
+  }
 
-  const handleClose = () => bridge.resolve(false)
+  const handleClose = () => {
+    bridge.resolve(false)
+  }
   const handleAgreed = async () => {
     if (!isAgreed) return
-    if (onPress == null) return bridge.resolve(true)
+    if (onPress == null) {
+      bridge.resolve(true)
+      return
+    }
     const result = await onPress()
     if (result) bridge.resolve(true)
   }

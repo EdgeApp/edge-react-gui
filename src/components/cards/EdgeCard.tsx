@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LinearGradient, {
-  LinearGradientProps
+  type LinearGradientProps
 } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -16,7 +16,7 @@ import {
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SectionView } from '../layout/SectionView'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // Top layer:

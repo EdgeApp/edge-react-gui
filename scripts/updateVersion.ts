@@ -19,10 +19,10 @@
 // the native project files, leaving the project ready for a release build.
 
 import childProcess from 'child_process'
-import { Disklet, makeNodeDisklet } from 'disklet'
+import { type Disklet, makeNodeDisklet } from 'disklet'
 import path from 'path'
 
-import { asVersionFile, VersionFile } from './cleaners'
+import { asVersionFile, type VersionFile } from './cleaners'
 
 async function main() {
   const cwd = path.join(__dirname, '..')
@@ -78,4 +78,6 @@ function updateIos(cwd: string, versionFile: VersionFile): void {
   })
 }
 
-main().catch(error => console.log(error))
+main().catch(error => {
+  console.log(error)
+})

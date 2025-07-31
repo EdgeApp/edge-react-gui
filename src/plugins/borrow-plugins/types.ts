@@ -1,12 +1,12 @@
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeNetworkFee,
   EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
-import { Subscriber } from 'yaob'
+import type { Subscriber } from 'yaob'
 
-import { PendingTxMap } from '../../controllers/action-queue/types'
+import type { PendingTxMap } from '../../controllers/action-queue/types'
 
 // -----------------------------------------------------------------------------
 // Request Method Types

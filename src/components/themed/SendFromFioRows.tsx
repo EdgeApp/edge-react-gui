@@ -1,12 +1,12 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { FioAddress, FioRequest } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { FioAddress, FioRequest } from '../../types/types'
 import {
   checkRecordSendFee,
   findWalletByFioAddress,
@@ -18,7 +18,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface OwnProps {
@@ -98,11 +98,13 @@ export class SendFromFioRowsComponent extends React.PureComponent<
       this.props
     if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
-      this.setFioAddress(fioRequest.payer_fio_address).catch(err =>
+      this.setFioAddress(fioRequest.payer_fio_address).catch(err => {
         showError(err)
-      )
+      })
     } else if (isSendUsingFioAddress) {
-      this.setDefaultFioAddress().catch(err => showError(err))
+      this.setDefaultFioAddress().catch(err => {
+        showError(err)
+      })
     }
   }
 
@@ -110,16 +112,19 @@ export class SendFromFioRowsComponent extends React.PureComponent<
     const { fioRequest, isSendUsingFioAddress } = this.props
     const { bundledTxsUpdated } = this.state
     if (bundledTxsUpdated) {
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ bundledTxsUpdated: false })
-      this.setFioAddress(this.props.selected).catch(err => showError(err))
+      this.setFioAddress(this.props.selected).catch(err => {
+        showError(err)
+      })
     }
     if (
       isSendUsingFioAddress !== prevProps.isSendUsingFioAddress &&
       !fioRequest &&
       isSendUsingFioAddress
     ) {
-      this.setDefaultFioAddress().catch(err => showError(err))
+      this.setDefaultFioAddress().catch(err => {
+        showError(err)
+      })
     }
   }
 
@@ -130,9 +135,9 @@ export class SendFromFioRowsComponent extends React.PureComponent<
       const fioNames = await fioWallet.otherMethods.getFioAddressNames()
       if (fioNames.length) {
         this.setState({ loading: false }, () => {
-          this.setFioAddress(fioNames[0], fioWallet).catch(err =>
+          this.setFioAddress(fioNames[0], fioWallet).catch(err => {
             showError(err)
-          )
+          })
         })
         break
       }
@@ -221,11 +226,12 @@ export class SendFromFioRowsComponent extends React.PureComponent<
           )
         )
         if (answer === 'ok') {
-          return navigation.push('fioAddressSettings', {
+          navigation.push('fioAddressSettings', {
             showAddBundledTxs: true,
             walletId: fioWallet.id,
             fioAddressName: fioAddress
           })
+          return
         }
         error = e.message
       } else {

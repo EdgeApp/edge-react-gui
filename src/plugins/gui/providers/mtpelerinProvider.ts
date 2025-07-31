@@ -7,32 +7,36 @@ import {
   asUnknown,
   asValue
 } from 'cleaners'
-import { EdgeAssetAction, EdgeSpendInfo, EdgeTxActionFiat } from 'edge-core-js'
+import type {
+  EdgeAssetAction,
+  EdgeSpendInfo,
+  EdgeTxActionFiat
+} from 'edge-core-js'
 import { toUtf8Bytes } from 'ethers/lib/utils'
 
-import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   SaveTxActionParams
 } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
-import { FiatPluginOpenWebViewParams } from '../scenes/FiatPluginWebView'
+import type { FiatPluginOpenWebViewParams } from '../scenes/FiatPluginWebView'
 
 const GWEI = '1000000000'
 
@@ -56,7 +60,7 @@ const urls = {
 
 const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
-const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
+const PLUGIN_TO_CHAIN_ID_MAP: Record<string, string> = {
   arbitrum: 'arbitrum_mainnet',
   avalanche: 'avalanche_mainnet',
   binancesmartchain: 'bsc_mainnet',
@@ -71,9 +75,9 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   zksync: 'zksync_mainnet'
 }
 
-const BUY_ONLY_PLUGIN_IDS: { [pluginId: string]: boolean } = {}
+const BUY_ONLY_PLUGIN_IDS: Record<string, boolean> = {}
 
-const PLUGIN_EVM_MAP: { [pluginId: string]: boolean } = {
+const PLUGIN_EVM_MAP: Record<string, boolean> = {
   arbitrum: true,
   avalanche: true,
   binancesmartchain: true,
@@ -90,16 +94,16 @@ if (MODE === 'test') {
   PLUGIN_EVM_MAP.goerli = true
 }
 
-const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(
+const CHAIN_ID_TO_PLUGIN_MAP: Record<string, string> = Object.entries(
   PLUGIN_TO_CHAIN_ID_MAP
-).reduce((out: { [chainId: string]: string }, [pluginId, chainId]) => {
+).reduce((out: Record<string, string>, [pluginId, chainId]) => {
   out[chainId] = pluginId
   return out
 }, {})
 
 type AllowedPaymentTypes = Record<
   FiatDirection,
-  { [Payment in FiatPaymentType]?: boolean }
+  Partial<Record<FiatPaymentType, boolean>>
 >
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
@@ -151,7 +155,7 @@ const allAllowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
     }
   }
 }
-const allowedCountryCodes: { [code: string]: boolean } = {
+const allowedCountryCodes: Record<string, boolean> = {
   AL: true, // Albania
   AD: true, // Andorra
   AM: true, // Armenia
@@ -710,7 +714,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
                             currencyCode: displayCurrencyCode,
-                            exchangeAmount: exchangeAmount
+                            exchangeAmount
                           }),
                           fiatProviderId: providerId,
                           orderId
@@ -784,7 +788,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
               code,
               hash,
               net: network,
-              type: 'webview' as 'webview',
+              type: 'webview' as const,
               rfr: referralCode
             }
 

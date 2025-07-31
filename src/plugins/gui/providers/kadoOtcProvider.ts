@@ -12,17 +12,17 @@ import URL from 'url-parse'
 
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import type { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderExactRegions,
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { validateExactRegion } from './common'
 
@@ -53,7 +53,7 @@ const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 // https://api.kado.money/v1/ramp/blockchains
 
 // Maps Edge pluginIds to Kado blockchain.origin values
-const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
+const PLUGIN_TO_CHAIN_ID_MAP: Record<string, string> = {
   // stellar: 'stellar', // Needs destination tag support
   solana: 'solana',
   // ripple: 'ripple', // Needs destination tag support
@@ -68,7 +68,7 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   bitcoin: 'bitcoin'
 }
 
-const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = {}
+const CHAIN_ID_TO_PLUGIN_MAP: Record<string, string> = {}
 for (const [pluginId, chainId] of Object.entries(PLUGIN_TO_CHAIN_ID_MAP)) {
   CHAIN_ID_TO_PLUGIN_MAP[chainId] = pluginId
 }
@@ -81,7 +81,7 @@ const SUPPORTED_REGIONS: FiatProviderExactRegions = {
 
 type AllowedPaymentTypes = Record<
   FiatDirection,
-  { [Payment in FiatPaymentType]?: boolean }
+  Partial<Record<FiatPaymentType, boolean>>
 >
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
@@ -143,7 +143,7 @@ const allowedSellCurrencyCodes: FiatProviderAssetMap = {
   crypto: {},
   fiat: {}
 }
-const allowedCountryCodes: { [code: string]: boolean } = { US: true }
+const allowedCountryCodes: Record<string, boolean> = { US: true }
 
 /**
  * Cleaner for /v1/ramp/blockchains
@@ -300,11 +300,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (
-              asset.rampProducts == null ||
-              !asset.rampProducts.includes(direction)
-            )
-              continue
+            if (!asset.rampProducts?.includes(direction)) continue
             if (isNative) {
               allowedCurrencyCodes.crypto[pluginId].push({
                 tokenId: null,

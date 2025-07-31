@@ -2,7 +2,7 @@ import * as React from 'react'
 import { getColors } from 'react-native-image-colors'
 
 import { useState } from '../types/reactHooks'
-import { EdgeAsset } from '../types/types'
+import type { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from '../util/CdnUris'
 
 export const useIconColor = (edgeAsset: EdgeAsset): string | undefined => {

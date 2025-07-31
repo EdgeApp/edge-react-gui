@@ -1,17 +1,17 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { makeEvent } from 'yavent'
 
 import { useSelector } from '../types/reactRedux'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import {
   asLocalAccountSettings,
   asNotifInfo,
-  LocalAccountSettings,
-  NotifInfo,
-  NotifState,
-  PasswordReminder,
-  SpendingLimits
+  type LocalAccountSettings,
+  type NotifInfo,
+  type NotifState,
+  type PasswordReminder,
+  type SpendingLimits
 } from '../types/types'
 import { logActivity } from '../util/logger'
 

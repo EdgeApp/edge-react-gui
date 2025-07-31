@@ -1,12 +1,12 @@
 import { div, eq, gt, lt, sub } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 import { getCurrencyCodeMultiplier } from '../../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../../util/network'
 import { snooze } from '../../../../util/utils'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
@@ -14,9 +14,9 @@ import {
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import { KilnError, makeKilnApi } from '../util/KilnApi'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 const MIN_STAKE_LOVELACE_AMOUNT = '5000000'
 
@@ -77,7 +77,7 @@ export const makeCardanoKilnAdapter = (
           allocationType: 'claim',
           pluginId: requestAssetId.pluginId,
           currencyCode: requestAssetId.currencyCode,
-          nativeAmount: nativeAmount
+          nativeAmount
         },
         {
           allocationType: 'networkFee',

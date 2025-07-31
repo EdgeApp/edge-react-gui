@@ -1,10 +1,10 @@
-import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 
 import {
   SPECIAL_CURRENCY_INFO,
   WALLET_TYPE_ORDER
 } from '../constants/WalletAndCurrencyConstants'
-import { EdgeAsset, WalletListItem } from '../types/types'
+import type { EdgeAsset, WalletListItem } from '../types/types'
 import { isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { infoServerData } from '../util/network'
 import { normalizeForSearch } from '../util/utils'
@@ -264,7 +264,7 @@ function requiresActivation(pluginId: string) {
   return isAccountActivationRequired
 }
 
-const walletOrderTable: { [walletType: string]: number } = {}
+const walletOrderTable: Record<string, number> = {}
 for (let i = 0; i < WALLET_TYPE_ORDER.length; ++i) {
   walletOrderTable[WALLET_TYPE_ORDER[i]] = i
 }

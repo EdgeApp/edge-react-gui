@@ -1,12 +1,12 @@
-import {
+import type {
   EdgeAccount,
   EdgeNetworkFee,
   EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 
-import { Dispatch, GetState } from '../../types/reduxTypes'
-import { CleanError } from './cleaners'
+import type { Dispatch, GetState } from '../../types/reduxTypes'
+import type { CleanError } from './cleaners'
 
 //
 // Action Operations
@@ -213,9 +213,7 @@ export interface ActionQueueItem {
   program: ActionProgram
   state: ActionProgramState
 }
-export interface ActionQueueMap {
-  [id: string]: ActionQueueItem
-}
+export type ActionQueueMap = Record<string, ActionQueueItem>
 
 // Runtime:
 export interface BroadcastTx {
@@ -256,9 +254,7 @@ export interface ExecutionOutput {
 export interface ExecutionResults {
   nextState: ActionProgramState
 }
-export interface PendingTxMap {
-  [walletId: string]: EdgeTransaction[] | undefined
-}
+export type PendingTxMap = Record<string, EdgeTransaction[] | undefined>
 
 //
 // Action Display API

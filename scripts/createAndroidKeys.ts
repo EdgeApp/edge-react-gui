@@ -70,4 +70,6 @@ function chdir(path: string) {
   _currentPath = path
 }
 
-main().catch(e => console.log(e.message))
+main().catch(e => {
+  console.log(e.message)
+})

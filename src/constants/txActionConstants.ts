@@ -1,4 +1,4 @@
-import { EdgeAssetActionType } from 'edge-core-js'
+import type { EdgeAssetActionType } from 'edge-core-js'
 
 import { lstrings } from '../locales/strings'
 

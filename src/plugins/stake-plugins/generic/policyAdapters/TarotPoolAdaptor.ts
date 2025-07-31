@@ -1,7 +1,7 @@
 import '@ethersproject/shims'
 
 import { add, ceil, div, eq, mul } from 'biggystring'
-import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import {
@@ -13,17 +13,17 @@ import {
   VelodromeLPToken__factory,
   VelodromeRouterV2__factory
 } from '../../../contracts'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
   StakeAssetInfo,
   StakePosition
 } from '../../types'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 export interface TarotPoolAdapterConfig {
   type: 'tarot-velodrome-pool'

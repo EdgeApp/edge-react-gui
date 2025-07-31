@@ -1,4 +1,4 @@
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 
 export const fakeAirshipBridge: AirshipBridge<any> = {
   resolve: value => undefined,

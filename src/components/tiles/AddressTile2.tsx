@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -14,7 +14,7 @@ import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
@@ -25,10 +25,13 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export type AddressEntryMethod = 'scan' | 'other'
@@ -121,7 +124,8 @@ export const AddressTile2 = React.forwardRef(
                   .INVALID_FIO_ADDRESS
             ) {
               setLoading(false)
-              return showError(e)
+              showError(e)
+              return
             }
           }
         }
@@ -185,13 +189,16 @@ export const AddressTile2 = React.forwardRef(
                 navigateReplace: true,
                 wallet: coreWallet
               }
-            ).catch(error => showError(error))
+            ).catch(error => {
+              showError(error)
+            })
 
             return
           }
 
           if (!parsedUri.publicAddress) {
-            return showError(lstrings.scan_invalid_address_error_title)
+            showError(lstrings.scan_invalid_address_error_title)
+            return
           }
 
           // set address
@@ -213,7 +220,9 @@ export const AddressTile2 = React.forwardRef(
                 tokenId,
                 navigateReplace: true,
                 wallet: coreWallet
-              }).catch(error => showError(error))
+              }).catch(error => {
+                showError(error)
+              })
             }
           } else {
             showToast(
@@ -321,7 +330,9 @@ export const AddressTile2 = React.forwardRef(
           const address = segwitAddress != null ? segwitAddress : publicAddress
           await changeAddress(address, 'other')
         })
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     })
 
     const handleTilePress = useHandler(async () => {

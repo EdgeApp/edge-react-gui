@@ -1,4 +1,4 @@
-import { FakeState } from './FakeProviders'
+import type { FakeState } from './FakeProviders'
 
 export const fakeRootState: FakeState = {
   contacts: [

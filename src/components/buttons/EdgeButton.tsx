@@ -4,14 +4,14 @@
  */
 
 import * as React from 'react'
-import { ActivityIndicator, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, View, type ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'

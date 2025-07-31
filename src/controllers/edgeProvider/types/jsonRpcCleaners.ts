@@ -7,7 +7,7 @@ import {
   asString,
   asUnknown,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 /**

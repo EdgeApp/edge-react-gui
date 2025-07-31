@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'

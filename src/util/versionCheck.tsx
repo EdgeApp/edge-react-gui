@@ -26,7 +26,7 @@ export const checkAppVersion = async (): Promise<void> => {
 
   // Get latest version from info server
   const updateInfo = infoServerData.rollup?.updateInfo
-  if (updateInfo == null || updateInfo[platform] == null) return
+  if (updateInfo?.[platform] == null) return
   const { updateVersion, localeMessage } = updateInfo[platform]
 
   const message = getLocaleOrDefaultString(localeMessage)

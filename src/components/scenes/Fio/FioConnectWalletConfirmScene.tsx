@@ -1,26 +1,26 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { CcWalletMap } from '../../../reducers/FioReducer'
+import type { CcWalletMap } from '../../../reducers/FioReducer'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import {
   FIO_NO_BUNDLED_ERR_CODE,
-  FioConnectAddress,
+  type FioConnectAddress,
   updatePubAddressesForFioAddress
 } from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
+import type { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'

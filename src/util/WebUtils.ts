@@ -1,7 +1,7 @@
 import { Linking } from 'react-native'
 import URL from 'url-parse'
 
-import { UriQueryMap } from '../types/WebTypes'
+import type { UriQueryMap } from '../types/WebTypes'
 
 /**
  * Uses the device's browser to open a URI.

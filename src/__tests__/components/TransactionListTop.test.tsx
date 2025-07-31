@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
 import { ENV } from '../../env'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListTop', () => {

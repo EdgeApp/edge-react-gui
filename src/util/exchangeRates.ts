@@ -1,5 +1,5 @@
 import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
-import { EdgeFetchFunction } from 'edge-core-js'
+import type { EdgeFetchFunction } from 'edge-core-js'
 
 import { fetchRates } from './network'
 
@@ -18,9 +18,7 @@ const asRatesResponse = asObject({
   )
 })
 
-interface RateMap {
-  [pair_date: string]: number | null
-}
+type RateMap = Record<string, number | null>
 
 interface RateQueueEntry {
   currency_pair: string
@@ -28,12 +26,13 @@ interface RateQueueEntry {
 }
 
 const rateMap: RateMap = {}
-const resolverMap: {
-  [pair_date: string]: {
+const resolverMap: Record<
+  string,
+  {
     resolvers: Function[]
     rateQueueEntry: RateQueueEntry
   }
-} = {}
+> = {}
 let inQuery = false
 
 const makePairDate = (currencyPair: string, date: string) =>
@@ -149,7 +148,9 @@ const addToQueue = (
   }
   if (!inQuery) {
     inQuery = true
-    setTimeout(async () => await doQuery(doFetch), FETCH_FREQUENCY)
+    setTimeout(async () => {
+      await doQuery(doFetch)
+    }, FETCH_FREQUENCY)
   }
 }
 

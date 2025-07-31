@@ -1,6 +1,6 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
-import { ExecutionContext } from '../controllers/action-queue/types'
+import type { ExecutionContext } from '../controllers/action-queue/types'
 import { makeExecutionContext } from '../controllers/action-queue/util/makeExecutionContext'
 import { useSelector, useStore } from '../types/reactRedux'
 

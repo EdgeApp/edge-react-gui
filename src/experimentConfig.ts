@@ -1,4 +1,4 @@
-import { asMaybe, asObject, asValue, Cleaner } from 'cleaners'
+import { asMaybe, asObject, asValue, type Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'

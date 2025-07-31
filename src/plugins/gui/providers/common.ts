@@ -1,10 +1,10 @@
 import { asObject, asString } from 'cleaners'
 
-import { FiatPluginRegionCode } from '../fiatPluginTypes'
+import type { FiatPluginRegionCode } from '../fiatPluginTypes'
 import {
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderSupportedRegions
+  type FiatProviderExactRegions,
+  type FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 
 export const RETURN_URL_SUCCESS = 'https://edge.app/redirect/success/'

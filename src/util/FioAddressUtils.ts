@@ -1,7 +1,7 @@
 import { div } from 'biggystring'
 import { asMaybe, asNumber, asObject, asString } from 'cleaners'
-import { Disklet } from 'disklet'
-import {
+import type { Disklet } from 'disklet'
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
@@ -15,8 +15,8 @@ import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
-import { CcWalletMap } from '../reducers/FioReducer'
-import {
+import type { CcWalletMap } from '../reducers/FioReducer'
+import type {
   EdgeAsset,
   FioAddress,
   FioDomain,
@@ -128,17 +128,16 @@ export interface FioConnectAddress {
   publicAddress: string
 }
 
-interface DiskletConnectedWallets {
-  [fullCurrencyCode: string]: {
+type DiskletConnectedWallets = Record<
+  string,
+  {
     walletId: string
     publicAddress: string
   }
-}
+>
 
 export interface FioAddresses {
-  addresses: {
-    [address: string]: boolean
-  }
+  addresses: Record<string, boolean>
 }
 
 export const FIO_NO_BUNDLED_ERR_CODE = 'FIO_NO_BUNDLED_ERR_CODE'
@@ -173,7 +172,7 @@ export class FioError extends Error {
  */
 const getConnectedWalletsFromFile = async (
   fioWallet: EdgeCurrencyWallet
-): Promise<{ [fioAddress: string]: DiskletConnectedWallets }> => {
+): Promise<Record<string, DiskletConnectedWallets>> => {
   try {
     const savedConnectedWalletsText = await fioWallet.disklet.getText(
       CONNECTED_WALLETS
@@ -226,7 +225,7 @@ const setConnectedWalletsFromFile = async (
 
 export const getFioExpiredCheckFromDisklet = async (
   disklet: Disklet
-): Promise<{ [fioName: string]: Date }> => {
+): Promise<Record<string, Date>> => {
   try {
     const lastChecks = JSON.parse(await disklet.getText(FIO_EXPIRED_CHECK))
     return Object.keys(lastChecks).reduce(
@@ -241,7 +240,7 @@ export const getFioExpiredCheckFromDisklet = async (
   }
 }
 export const setFioExpiredCheckToDisklet = async (
-  lastChecks: { [fioName: string]: Date },
+  lastChecks: Record<string, Date>,
   disklet: Disklet
 ): Promise<void> => {
   try {
@@ -941,11 +940,10 @@ export const getDomainRegInfo = async (
   }
 }
 
-export interface PaymentInfo {
-  [pluginId: string]: {
-    [tokenIdString: string]: { amount: string; nativeAmount: string }
-  }
-}
+export type PaymentInfo = Record<
+  string,
+  Record<string, { amount: string; nativeAmount: string }>
+>
 
 const buyAddressRequest = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -1231,7 +1229,7 @@ export const expiredSoon = (expDate: string): boolean => {
 }
 
 export const needToCheckExpired = (
-  lastChecks: { [fioName: string]: Date },
+  lastChecks: Record<string, Date>,
   fioName: string
 ): boolean => {
   try {
@@ -1270,9 +1268,9 @@ export const refreshFioNames = async (
 ): Promise<{
   fioAddresses: FioAddress[]
   fioDomains: FioDomain[]
-  fioWalletsById: { [key: string]: EdgeCurrencyWallet }
+  fioWalletsById: Record<string, EdgeCurrencyWallet>
 }> => {
-  const fioWalletsById: { [key: string]: EdgeCurrencyWallet } = {}
+  const fioWalletsById: Record<string, EdgeCurrencyWallet> = {}
   let fioAddresses: FioAddress[] = []
   let fioDomains: FioDomain[] = []
 

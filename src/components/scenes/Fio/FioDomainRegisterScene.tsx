@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -6,20 +6,26 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { createFioWallet } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -70,7 +76,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet().catch(err => showError(err))
+      this.createFioWallet().catch(err => {
+        showError(err)
+      })
     }
   }
 
@@ -102,8 +110,10 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     } = this.state
     if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
-        if (!selectedWallet)
-          return showError(lstrings.create_wallet_failed_message)
+        if (!selectedWallet) {
+          showError(lstrings.create_wallet_failed_message)
+          return
+        }
         navigation.navigate('fioDomainRegisterSelectWallet', {
           fioDomain,
           walletId: selectedWallet.id
@@ -164,11 +174,12 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   handleFioDomainChange = (fioDomainChanged: string) => {
     if (!this.props.isConnected) {
-      return this.setState({
+      this.setState({
         fioDomain: fioDomainChanged,
         isAvailable: null,
         loading: false
       })
+      return
     }
     this.checkFioDomain(fioDomainChanged)
 

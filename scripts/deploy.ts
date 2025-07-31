@@ -26,7 +26,7 @@ cutoffDate.setMonth(now.getMonth() - BUILD_ARCHIVE_MONTHS)
  */
 interface BuildConfigFile {
   // Common build options:
-  envJson: { [repoBranch: string]: object }
+  envJson: Record<string, object>
 
   // Android build options:
   androidKeyStore: string

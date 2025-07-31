@@ -1,28 +1,28 @@
 import { combineReducers } from 'redux'
 
-import { NotificationSettings } from '../actions/NotificationActions'
+import type { NotificationSettings } from '../actions/NotificationActions'
 import {
   actionQueue,
-  ActionQueueState
+  type ActionQueueState
 } from '../controllers/action-queue/redux/reducers'
 import {
   loanManager,
-  LoanManagerState
+  type LoanManagerState
 } from '../controllers/loan-manager/redux/reducers'
-import { Action } from '../types/reduxTypes'
-import { DeviceReferral } from '../types/ReferralTypes'
-import {
+import type { Action } from '../types/reduxTypes'
+import type { DeviceReferral } from '../types/ReferralTypes'
+import type {
   GuiContact,
   GuiExchangeRates,
   GuiExchangeRatesMap,
   WalletListItem
 } from '../types/types'
-import { account, AccountState } from './AccountReducer'
-import { core, CoreState } from './CoreReducer'
-import { network, NetworkState } from './NetworkReducer'
-import { permissions, PermissionsState } from './PermissionsReducer'
-import { staking, StakingState } from './StakingReducer'
-import { ui, UiState } from './uiReducer'
+import { account, type AccountState } from './AccountReducer'
+import { core, type CoreState } from './CoreReducer'
+import { network, type NetworkState } from './NetworkReducer'
+import { permissions, type PermissionsState } from './PermissionsReducer'
+import { staking, type StakingState } from './StakingReducer'
+import { ui, type UiState } from './uiReducer'
 
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 

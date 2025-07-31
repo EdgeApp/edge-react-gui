@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { setPasswordReminder } from '../../actions/LocalSettingsActions'
 import { connect } from '../../types/reactRedux'
-import { PasswordReminder } from '../../types/types'
+import type { PasswordReminder } from '../../types/types'
 import { matchJson } from '../../util/matchJson'
 import { showError } from './AirshipInstance'
 

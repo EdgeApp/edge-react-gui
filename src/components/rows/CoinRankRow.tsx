@@ -7,18 +7,18 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { toPercentString } from '../../locales/intl'
-import {
+import type {
   AssetSubText,
   CoinRanking,
   CoinRankingData,
   PercentChangeTimeFrame
 } from '../../types/coinrankTypes'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../util/logger'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -77,11 +77,15 @@ const CoinRankRowComponent = (props: Props) => {
     const loop = () => {
       if (!mounted.current) return
       const newCoinRow = coinRankingDatas[index]
-      if (newCoinRow == null) return newTimer()
+      if (newCoinRow == null) {
+        newTimer()
+        return
+      }
       if (coinRow == null) {
         debugLog(LOG_COINRANK, `New Row ${index} ${newCoinRow.currencyCode}`)
         setCoinRow(newCoinRow)
-        return newTimer()
+        newTimer()
+        return
       }
 
       const {

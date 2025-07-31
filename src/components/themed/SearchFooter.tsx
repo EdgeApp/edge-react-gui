@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useSceneFooterState } from '../../state/SceneFooterState'
-import { SceneWrapperInfo } from '../common/SceneWrapper'
+import type { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
 import { SceneFooterWrapper } from './SceneFooterWrapper'
-import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
+import { SimpleTextInput, type SimpleTextInputRef } from './SimpleTextInput'
 
 interface SearchFooterProps {
   // This component requires a key for the onLayoutHeight prop

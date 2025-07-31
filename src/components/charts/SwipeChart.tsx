@@ -1,10 +1,10 @@
 import {
-  CursorProps,
-  GradientProps,
+  type CursorProps,
+  type GradientProps,
   SlideAreaChart,
-  ToolTipProps,
-  ToolTipTextRenderersInput,
-  YAxisProps
+  type ToolTipProps,
+  type ToolTipTextRenderersInput,
+  type YAxisProps
 } from '@connectedcars/react-native-slide-charts'
 import {
   asArray,
@@ -15,11 +15,16 @@ import {
   asTuple
 } from 'cleaners'
 import * as React from 'react'
-import { Dimensions, LayoutChangeEvent, Platform, View } from 'react-native'
+import {
+  Dimensions,
+  type LayoutChangeEvent,
+  Platform,
+  View
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   Easing,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -29,7 +34,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import Svg, {
   Circle,
-  CircleProps,
+  type CircleProps,
   LinearGradient,
   Stop
 } from 'react-native-svg'
@@ -47,7 +52,7 @@ import { useSelector } from '../../types/reactRedux'
 import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -344,7 +349,6 @@ const SwipeChartComponent = (params: Props) => {
           } while (true)
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [selectedTimespan, isConnected, fetchAssetId],
     'swipeChart'
@@ -560,8 +564,7 @@ const SwipeChartComponent = (params: Props) => {
     (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) =>
     (layoutChangeEvent: LayoutChangeEvent) => {
       if (
-        layoutChangeEvent != null &&
-        layoutChangeEvent.nativeEvent != null &&
+        layoutChangeEvent?.nativeEvent != null &&
         minPriceDataPoint != null &&
         chartData != null &&
         priceDatapoint != null
@@ -902,7 +905,7 @@ const nativeCenterAlignLayout =
     offset?: number
   ) =>
   (layoutChangeEvent: LayoutChangeEvent) => {
-    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
+    if (layoutChangeEvent?.nativeEvent != null) {
       // Store measurements and avoid over-updating if the size of the component
       // doesn't change significantly
       const newWidth = layoutChangeEvent.nativeEvent.layout.width

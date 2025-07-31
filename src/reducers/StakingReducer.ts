@@ -1,7 +1,7 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers, type Reducer } from 'redux'
 
-import { StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { Action } from '../types/reduxTypes'
+import type { StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import type { Action } from '../types/reduxTypes'
 
 export type StakingAction =
   | {
@@ -56,9 +56,7 @@ export interface StakingState {
   walletStakingMap: WalletStakingStateMap
 }
 
-export interface WalletStakingStateMap {
-  [walletId: string]: WalletStakingState
-}
+export type WalletStakingStateMap = Record<string, WalletStakingState>
 
 export interface WalletStakingState {
   isLoading: boolean
@@ -76,13 +74,9 @@ export interface WalletStakingState {
   stakePositionMap: StakePositionMap
 }
 
-export interface StakePolicyMap {
-  [policyId: string]: StakePolicy
-}
+export type StakePolicyMap = Record<string, StakePolicy>
 
-export interface StakePositionMap {
-  [policyId: string]: StakePosition
-}
+export type StakePositionMap = Record<string, StakePosition>
 
 export const staking: Reducer<StakingState, Action> = combineReducers({
   walletStakingMap: (state = {}, action: Action) => {

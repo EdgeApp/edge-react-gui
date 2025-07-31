@@ -7,17 +7,17 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toPercentString } from '../../locales/intl'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
-import { asCoinranking, CoinRankingData } from '../../types/coinrankTypes'
+import { asCoinranking, type CoinRankingData } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { debugLog, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -117,12 +117,12 @@ const CoinRow = (props: CoinRowProps) => {
     <EdgeRow
       key={key}
       icon={<FastImage style={styles.icon} source={imageSrc} />}
-      onPress={() =>
+      onPress={() => {
         navigation.navigate('coinRankingDetails', {
           assetId,
           coinRankingData: coinRow
         })
-      }
+      }}
       rightButtonType="none"
     >
       <View style={styles.rowBody}>
@@ -164,7 +164,7 @@ export const MarketsCard = (props: Props) => {
     const task = makePeriodicTask(
       async () => {
         const fetchedData = []
-        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=${1}&length=${
+        const url = `v2/coinrank?fiatCode=iso:${coingeckoFiat}&start=1&length=${
           numRows - 1
         }`
         const response = await fetchRates(url)
@@ -197,7 +197,9 @@ export const MarketsCard = (props: Props) => {
     task.start()
 
     // Cleanup logic:
-    return () => task.stop()
+    return () => {
+      task.stop()
+    }
   }, [coingeckoFiat, numRows, lastFetchedFiat])
 
   return (

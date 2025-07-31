@@ -4,7 +4,7 @@ import {
   initialState,
   MAX_NON_PASSWORD_DAYS_LIMIT,
   MAX_NON_PASSWORD_LOGINS_LIMIT,
-  PasswordReminderReducerAction,
+  type PasswordReminderReducerAction,
   untranslatedReducer as uut
 } from '../../reducers/PasswordReminderReducer'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../../util/utils'

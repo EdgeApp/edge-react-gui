@@ -1,9 +1,9 @@
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { connect } from '../../types/reactRedux'
-import { WalletListItem } from '../../types/types'
+import type { WalletListItem } from '../../types/types'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { showError } from './AirshipInstance'
 
@@ -89,10 +89,12 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     if (paused && !this.paused) {
       this.cancelBoot()
       Promise.all(
-        Object.keys(currencyWallets).map(
-          async walletId => await currencyWallets[walletId].changePaused(true)
-        )
-      ).catch(error => showError(error))
+        Object.keys(currencyWallets).map(async walletId => {
+          await currencyWallets[walletId].changePaused(true)
+        })
+      ).catch(error => {
+        showError(error)
+      })
     }
     this.paused = paused
 
@@ -197,7 +199,9 @@ function bootWallet(
         out.close()
       }, 5000)
     })
-    .catch(error => showError(error))
+    .catch(error => {
+      showError(error)
+    })
 
   return out
 }

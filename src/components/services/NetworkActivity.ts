@@ -1,4 +1,4 @@
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo'
+import NetInfo, { type NetInfoState } from '@react-native-community/netinfo'
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
@@ -16,16 +16,20 @@ export function NetworkActivity(props: {}): null {
         data: { isConnected: info.isConnected ?? false }
       })
       if (!info.isConnected) {
-        showError(`${lstrings.network_alert_title}`, { trackError: false })
+        showError(lstrings.network_alert_title, { trackError: false })
       }
     }
 
     const netInfoUnsubscribe = NetInfo.addEventListener(handleNetworkState)
     NetInfo.fetch()
       .then(handleNetworkState)
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
 
-    return () => netInfoUnsubscribe()
+    return () => {
+      netInfoUnsubscribe()
+    }
   }, [dispatch])
 
   return null

@@ -1,8 +1,8 @@
 import { div, eq, gt, toFixed } from 'biggystring'
 import {
   DustSpendError,
-  EdgeCurrencyWallet,
-  EdgeTokenId,
+  type EdgeCurrencyWallet,
+  type EdgeTokenId,
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
@@ -14,18 +14,18 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
 import {
-  ChangeQuote,
-  ChangeQuoteRequest,
-  QuoteAllocation,
+  type ChangeQuote,
+  type ChangeQuoteRequest,
+  type QuoteAllocation,
   StakeBelowLimitError,
-  StakePlugin,
-  StakePolicy,
+  type StakePlugin,
+  type StakePolicy,
   StakePoolFullError
 } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import {
   getCurrencyCodeMultiplier,
@@ -46,13 +46,13 @@ import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import {
   FlipInputModal2,
-  FlipInputModalResult
+  type FlipInputModalResult
 } from '../../modals/FlipInputModal2'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -291,7 +291,9 @@ const StakeModifySceneComponent = (props: Props) => {
               message={message[modification]}
               onPress={() => {}}
             />
-          )).catch(err => showError(err))
+          )).catch(err => {
+            showError(err)
+          })
           navigation.pop()
 
           // Update staking position:
@@ -307,7 +309,9 @@ const StakeModifySceneComponent = (props: Props) => {
                 account
               )
             )
-              .catch(err => showError(err))
+              .catch(err => {
+                showError(err)
+              })
               .finally(() => {
                 dispatch({
                   type: 'STAKING/FINISH_LOADING',
@@ -371,7 +375,9 @@ const StakeModifySceneComponent = (props: Props) => {
               nativeAmount
             })
         })
-        .catch(error => showError(error))
+        .catch(error => {
+          showError(error)
+        })
     }
 
   const handlePressStakingFee =
@@ -721,8 +727,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const isSliderDisabled =
     sliderLocked ||
-    changeQuote == null ||
-    !changeQuote.allocations.some(quoteAllocation =>
+    !changeQuote?.allocations.some(quoteAllocation =>
       gt(quoteAllocation.nativeAmount, '0')
     )
 

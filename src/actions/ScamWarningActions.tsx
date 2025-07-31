@@ -1,5 +1,5 @@
 import { asBoolean, asObject, asOptional } from 'cleaners'
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 

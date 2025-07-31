@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
-import {
+import type {
   ChangeQuote,
   ChangeQuoteRequest,
   PositionAllocation,
@@ -18,7 +18,7 @@ import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
 import { pluginInfo } from '../pluginInfo'
 import { fantomEcosystem as eco } from '../policyInfo/fantom'
-import { StakePluginPolicy } from '../types'
+import type { StakePluginPolicy } from '../types'
 
 const HOUR = 1000 * 60 * 60
 

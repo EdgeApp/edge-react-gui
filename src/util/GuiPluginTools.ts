@@ -1,6 +1,10 @@
-import { NestedDisableMap } from '../actions/ExchangeInfoActions'
-import { GuiPlugin, GuiPluginJson, GuiPluginRow } from '../types/GuiPluginTypes'
-import { UriQueryMap } from '../types/WebTypes'
+import type { NestedDisableMap } from '../actions/ExchangeInfoActions'
+import type {
+  GuiPlugin,
+  GuiPluginJson,
+  GuiPluginRow
+} from '../types/GuiPluginTypes'
+import type { UriQueryMap } from '../types/WebTypes'
 import { stringifyQuery } from './WebUtils'
 
 /**
@@ -15,8 +19,8 @@ export function filterGuiPluginJson(
   stateProvinceCode?: string
 ): GuiPluginRow[] {
   // Filter and merge related rows:
-  const mergedRows: { [id: string]: GuiPluginRow } = {}
-  const sortIndexes: { [id: string]: number } = {}
+  const mergedRows: Record<string, GuiPluginRow> = {}
+  const sortIndexes: Record<string, number> = {}
   for (const row of cleanJson) {
     if (typeof row === 'string') continue
 
@@ -122,6 +126,6 @@ export function makePluginUri(
   let uri = baseUri
   if (!lockUriPath) uri += deepPath
   const queryString = stringifyQuery(query)
-  if (queryString.length > 0) uri += `${queryString}`
+  if (queryString.length > 0) uri += queryString
   return uri
 }

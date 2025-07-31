@@ -133,7 +133,6 @@ export async function fetchRevolutQuote(
     urlParams.set('walletAddress', params.walletAddress)
   }
   const data = await fetchRevolut(
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     `/partners/api/2.0/quote?${urlParams.toString()}`
   )
   return asPartnerQuote(data)
@@ -251,7 +250,6 @@ export async function fetchRevolutRedirectUrl(
   }
 
   const data = await fetchRevolut(
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     `/partners/api/2.0/buy?${urlParams.toString()}`
   )
   return asRevolutRedirectUrl(data)

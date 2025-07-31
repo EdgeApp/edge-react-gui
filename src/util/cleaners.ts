@@ -4,7 +4,7 @@ import {
   asObject,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 /**
@@ -37,7 +37,7 @@ export const asMaybeContractLocation = asMaybe(
 export const asObjectIn = <K extends string | number | symbol, T>(
   asKey: Cleaner<K>,
   asT: Cleaner<T>
-): Cleaner<{ [k in K]: T }> => {
+): Cleaner<Record<K, T>> => {
   return function asObject(raw) {
     if (typeof raw !== 'object' || raw == null) {
       throw new TypeError('Expected an object, got ' + showValue(raw))

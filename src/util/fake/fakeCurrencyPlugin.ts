@@ -1,36 +1,36 @@
 import { add, lt, mul } from 'biggystring'
 import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import {
-  EdgeCurrencyEngine,
-  EdgeCurrencyEngineCallbacks,
-  EdgeCurrencyEngineOptions,
-  EdgeCurrencyInfo,
-  EdgeCurrencyPlugin,
-  EdgeCurrencyTools,
-  EdgeDataDump,
-  EdgeFreshAddress,
-  EdgeGetTransactionsOptions,
-  EdgeParsedUri,
-  EdgeSpendInfo,
-  EdgeStakingStatus,
-  EdgeToken,
-  EdgeTokenId,
-  EdgeTokenIdOptions,
-  EdgeTransaction,
-  EdgeWalletInfo,
+  type EdgeCurrencyEngine,
+  type EdgeCurrencyEngineCallbacks,
+  type EdgeCurrencyEngineOptions,
+  type EdgeCurrencyInfo,
+  type EdgeCurrencyPlugin,
+  type EdgeCurrencyTools,
+  type EdgeDataDump,
+  type EdgeFreshAddress,
+  type EdgeGetTransactionsOptions,
+  type EdgeParsedUri,
+  type EdgeSpendInfo,
+  type EdgeStakingStatus,
+  type EdgeToken,
+  type EdgeTokenId,
+  type EdgeTokenIdOptions,
+  type EdgeTransaction,
+  type EdgeWalletInfo,
   InsufficientFundsError,
-  JsonObject
+  type JsonObject
 } from 'edge-core-js'
 
 import { matchJson } from '../matchJson'
 
 interface State {
   customFeeSettings?: string[]
-  balances: { [currencyCode: string]: string }
+  balances: Record<string, string>
   stakedBalance: number
   blockHeight: number
   progress: number
-  txs: { [txid: string]: EdgeTransaction }
+  txs: Record<string, EdgeTransaction>
 }
 
 const asFakeSettings = asObject({
@@ -68,7 +68,7 @@ class FakeCurrencyEngine {
   state: State
   currencyInfo: EdgeCurrencyInfo
   enabledTokens: string[]
-  enabledTokensMap: { [currencyCode: string]: boolean }
+  enabledTokensMap: Record<string, boolean>
   defaultSettings: FakeSettings
 
   constructor(

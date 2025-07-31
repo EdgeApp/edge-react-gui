@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 
@@ -20,7 +20,7 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import {
   convertCurrencyFromExchangeRates,
@@ -94,7 +94,11 @@ export function AccountCallbackManager(props: Props) {
       })
     ]
 
-    return () => cleanups.forEach(cleanup => cleanup())
+    return () => {
+      cleanups.forEach(cleanup => {
+        cleanup()
+      })
+    }
   }, [account, navigation])
 
   // Subscribe to each wallet that comes online:
@@ -109,7 +113,9 @@ export function AccountCallbackManager(props: Props) {
             cacheEntries.forEach(cacheEntry => {
               const { currencyCode, metadata } = cacheEntry
               if (tx.currencyCode !== currencyCode) return
-              wallet.saveTx({ ...tx, metadata }).catch(err => console.warn(err))
+              wallet.saveTx({ ...tx, metadata }).catch(err => {
+                console.warn(err)
+              })
             })
 
             delete stakeMetadataCache[txid]
@@ -125,9 +131,9 @@ export function AccountCallbackManager(props: Props) {
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
         if (receivedTxs.length > 0)
-          dispatch(checkFioObtData(wallet, receivedTxs)).catch(err =>
+          dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => {
             console.warn(err)
-          )
+          })
 
         // Review triggers: deposit & transaction count
         for (const tx of transactions) {
@@ -135,7 +141,9 @@ export function AccountCallbackManager(props: Props) {
             tx.savedAction?.actionType ?? tx.chainAction?.actionType
 
           if (!tx.isSend) {
-            dispatch(updateTransactionCount()).catch(err => console.warn(err))
+            dispatch(updateTransactionCount()).catch(err => {
+              console.warn(err)
+            })
             const exchangeDenom = getExchangeDenom(
               wallet.currencyConfig,
               tx.tokenId
@@ -156,12 +164,14 @@ export function AccountCallbackManager(props: Props) {
               )
             )
             if (usdAmount > 0) {
-              dispatch(updateDepositAmount(usdAmount)).catch(err =>
+              dispatch(updateDepositAmount(usdAmount)).catch(err => {
                 console.warn(err)
-              )
+              })
             }
           } else if (actionType !== 'swap' && actionType !== 'fiat') {
-            dispatch(updateTransactionCount()).catch(err => console.warn(err))
+            dispatch(updateTransactionCount()).catch(err => {
+              console.warn(err)
+            })
           }
         }
 
@@ -174,7 +184,9 @@ export function AccountCallbackManager(props: Props) {
           if (account.username == null) {
             // Avoid showing modal for FIO wallets since the first transaction may be the handle creation
             if (wallet.currencyInfo.pluginId === 'fio') {
-              dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
+              dispatch(refreshAllFioAddresses()).catch(err => {
+                console.warn(err)
+              })
             } else {
               showBackupModal({ navigation }).catch(error => {
                 showDevError(error)
@@ -211,10 +223,16 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       // This one defers their work until later:
-      wallet.watch('enabledTokenIds', () => setRatesDirty())
+      wallet.watch('enabledTokenIds', () => {
+        setRatesDirty()
+      })
     ]
 
-    return () => cleanups.forEach(cleanup => cleanup())
+    return () => {
+      cleanups.forEach(cleanup => {
+        cleanup()
+      })
+    }
   })
 
   // Do the expensive work with rate limiting:
@@ -229,7 +247,9 @@ export function AccountCallbackManager(props: Props) {
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
         datelog('Updating wallet list')
-        await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
+        await dispatch(refreshConnectedWallets).catch(err => {
+          console.warn(err)
+        })
         await snooze(1000)
       }
     },
@@ -262,7 +282,9 @@ export function AccountCallbackManager(props: Props) {
       }))
     }, REFRESH_RATES_MS)
     task.start()
-    return () => task.stop()
+    return () => {
+      task.stop()
+    }
   }, [])
 
   return null

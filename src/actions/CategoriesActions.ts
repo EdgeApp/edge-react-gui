@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeAssetAction,
   EdgeAssetAmount,
@@ -14,7 +14,7 @@ import { showError } from '../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCodeWithAccount } from '../util/CurrencyInfoHelpers'
 import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
 
@@ -56,7 +56,7 @@ export function setNewSubcategory(
     const { account } = state.core
     const oldSubcats = state.ui.subcategories
     const newSubcategories = [...oldSubcats, newSubcategory]
-    return await writeSyncedSubcategories(account, {
+    await writeSyncedSubcategories(account, {
       categories: newSubcategories.sort()
     })
       .then(() => {
@@ -65,7 +65,9 @@ export function setNewSubcategory(
           data: { subcategories: newSubcategories.sort() }
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 }
 

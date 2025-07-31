@@ -1,6 +1,6 @@
 import '@ethersproject/shims'
 
-import { ErrorBoundary, Scope, wrap } from '@sentry/react-native'
+import { ErrorBoundary, type Scope, wrap } from '@sentry/react-native'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'

@@ -1,5 +1,5 @@
 import { asArray, asMaybe, asObject, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { ethers } from 'ethers'
 
 const asNetworkAdapterConfigs = asArray(

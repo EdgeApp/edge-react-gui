@@ -1,9 +1,9 @@
-import { asMaybeOtpError, EdgeContext, OtpError } from 'edge-core-js'
+import { asMaybeOtpError, type EdgeContext, type OtpError } from 'edge-core-js'
 import * as React from 'react'
 
 import { handleOtpError } from '../../actions/AccountActions'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { showDevError, showDevErrorAsync } from './AirshipInstance'
 
 interface OwnProps {
@@ -32,7 +32,8 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
-          return this.props.onOtpError(this.props.navigation, otpError)
+          this.props.onOtpError(this.props.navigation, otpError)
+          return
         }
 
         if (!errorShown) {
@@ -41,7 +42,9 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
             .then(() => {
               errorShown = false
             })
-            .catch(err => showDevError(err))
+            .catch(err => {
+              showDevError(err)
+            })
         }
       })
     )

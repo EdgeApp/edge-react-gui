@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging'
 import { asMaybe } from 'cleaners'
-import { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
+import type { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
@@ -8,16 +8,16 @@ import { sprintf } from 'sprintf-js'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import {
   asDevicePayload,
-  DevicePayload,
-  DeviceUpdatePayload,
-  NewPushEvent
+  type DevicePayload,
+  type DeviceUpdatePayload,
+  type NewPushEvent
 } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
-import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
+import type { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
 import { fetchPush } from '../util/network'
 import { getDenomFromIsoCode, removeIsoPrefix } from '../util/utils'
@@ -25,14 +25,15 @@ import { getDenomFromIsoCode, removeIsoPrefix } from '../util/utils'
 export interface NotificationSettings {
   ignoreMarketing: boolean
   ignorePriceChanges: boolean
-  plugins: {
-    [pluginId: string]: {
+  plugins: Record<
+    string,
+    {
       eventId: string
       currencyPair: string
       dailyChange?: number
       hourlyChange?: number
     }
-  }
+  >
 }
 
 export function registerNotificationsV2(
@@ -294,38 +295,38 @@ export const newPriceChangeEvent = (
 
     directions: [
       // [hourUp, hourDown, dayUp, dayDown]
-      `${sprintf(
+      sprintf(
         lstrings.notification_hourly_price_change_up,
         String.fromCodePoint(0x1f4c8),
         displayName,
         currencyCode,
         changeUpString,
         fiatSymbolString
-      )}`,
-      `${sprintf(
+      ),
+      sprintf(
         lstrings.notification_hourly_price_change_down,
         String.fromCodePoint(0x1f4c9),
         displayName,
         currencyCode,
         changeDownString,
         fiatSymbolString
-      )}`,
-      `${sprintf(
+      ),
+      sprintf(
         lstrings.notification_daily_price_change_up,
         String.fromCodePoint(0x1f4c8),
         displayName,
         currencyCode,
         changeUpString,
         fiatSymbolString
-      )}`,
-      `${sprintf(
+      ),
+      sprintf(
         lstrings.notification_daily_price_change_down,
         String.fromCodePoint(0x1f4c9),
         displayName,
         currencyCode,
         changeDownString,
         fiatSymbolString
-      )}`
+      )
     ],
     pluginId: currencyInfo.pluginId,
     dailyChange: dailyChangeEnabled ? 10 : undefined,

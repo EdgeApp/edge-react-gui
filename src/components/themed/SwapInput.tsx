@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { ReturnKeyType, TouchableOpacity, View } from 'react-native'
+import { type ReturnKeyType, TouchableOpacity, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
@@ -22,10 +22,10 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
 import { EdgeText } from './EdgeText'
 import {
-  FieldNum,
+  type FieldNum,
   FlipInput2,
-  FlipInputFieldInfos,
-  FlipInputRef
+  type FlipInputFieldInfos,
+  type FlipInputRef
 } from './FlipInput2'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'

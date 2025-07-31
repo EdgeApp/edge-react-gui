@@ -1,4 +1,4 @@
-import { EdgeMetadata } from 'edge-core-js/types'
+import type { EdgeMetadata } from 'edge-core-js/types'
 
 // TODO: HACK: Will remove asap in Tomb Finance V3.
 
@@ -7,9 +7,7 @@ export interface MetadataCacheEntry {
   metadata: EdgeMetadata
 }
 
-export interface MetadataCache {
-  [txid: string]: MetadataCacheEntry[]
-}
+export type MetadataCache = Record<string, MetadataCacheEntry[]>
 
 export const stakeMetadataCache: MetadataCache = {}
 

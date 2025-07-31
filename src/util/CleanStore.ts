@@ -1,6 +1,6 @@
-import { Cleaner, uncleaner } from 'cleaners'
+import { type Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import { ENV } from '../env'
 

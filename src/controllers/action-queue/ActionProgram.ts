@@ -1,6 +1,10 @@
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
-import { ActionOp, ActionProgram, ActionProgramCompleteMessage } from './types'
+import type {
+  ActionOp,
+  ActionProgram,
+  ActionProgramCompleteMessage
+} from './types'
 
 // TODO: Move handling from ActionProgramUtil methods here, use this instead of
 // creating individual ActionOps via ActionProgramUtil methods on the manage scenes

@@ -1,11 +1,14 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import {
   BUNDLED_TXS_AMOUNT_ALERT,
   findWalletByFioAddress
@@ -18,8 +21,8 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
@@ -66,7 +69,9 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         />
       )).catch(() => {})
     }
-    this.findFioWallet().catch(err => showError(err))
+    this.findFioWallet().catch(err => {
+      showError(err)
+    })
   }
 
   findFioWallet = async () => {

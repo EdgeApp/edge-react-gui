@@ -1,10 +1,14 @@
 import { abs, add, div, gt, lt, mul } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
-import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeTokenId,
+  EdgeTransaction
+} from 'edge-core-js'
 import shajs from 'sha.js'
 
 import { getExchangeDenom } from '../selectors/DenominationSelectors'
-import { ThunkAction } from '../types/reduxTypes'
+import type { ThunkAction } from '../types/reduxTypes'
 import { getHistoricalRate } from '../util/exchangeRates'
 import { DECIMAL_PRECISION } from '../util/utils'
 
@@ -70,7 +74,9 @@ export function updateTxsFiat(
                 }
               }
             })
-            .catch(e => console.warn(e.message))
+            .catch(e => {
+              console.warn(e.message)
+            })
         )
         if (promises.length >= UPDATE_TXS_MAX_PROMISES) {
           await Promise.all(promises)
@@ -296,7 +302,7 @@ export function exportTransactionsToQBO(
       NAME,
       MEMO: memo,
       CURRENCY: {
-        CURRATE: CURRATE,
+        CURRATE,
         CURSYM: fiatCurrencyCode
       }
     }
@@ -307,7 +313,7 @@ export function exportTransactionsToQBO(
       FITID: edgeTx.txid,
       MEMO: memo,
       CURRENCY: {
-        CURRATE: CURRATE,
+        CURRATE,
         CURSYM: fiatCurrencyCode
       }
     }

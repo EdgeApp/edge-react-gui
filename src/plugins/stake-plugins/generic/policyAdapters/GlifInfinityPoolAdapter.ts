@@ -1,7 +1,7 @@
 import '@ethersproject/shims'
 
 import { gt } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
@@ -10,16 +10,16 @@ import {
   GlifPoolToken__factory,
   GlifSimpleRamp__factory
 } from '../../../contracts'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 export interface GlifInfinityPoolAdapterConfig {
   type: 'glif-infinity-pool'
@@ -51,7 +51,7 @@ export const makeGlifInfinityPoolAdapter = (
   // Metadata constants:
   const metadataName = 'GLIF Infinity Pool'
   const stakeAsset = policyConfig.stakeAssets[0]
-  const metadataPoolAssetName = `${stakeAsset.currencyCode}`
+  const metadataPoolAssetName = stakeAsset.currencyCode
 
   const { adapterConfig, stakePolicyId } = policyConfig
   const { rpcProviderUrls } = adapterConfig

@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { GuiContact } from '../../types/types'
+import type { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
 
 const merchantPartners: GuiContact[] = [

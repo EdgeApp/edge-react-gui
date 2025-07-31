@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -12,15 +12,15 @@ import { Airship, showError } from '../../components/services/AirshipInstance'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { WalletCreateItem } from '../../selectors/getCreateWalletList'
+import type { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { ThunkAction } from '../../types/reduxTypes'
+import type { ThunkAction } from '../../types/reduxTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
-import { logEvent, TrackingEventName } from '../../util/tracking'
+import { logEvent, type TrackingEventName } from '../../util/tracking'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
@@ -79,14 +79,18 @@ export const WalletListCreateRowComponent = (
 
     const handleRes = (wallet?: EdgeCurrencyWallet): void => {
       if (onPress != null && wallet != null) {
-        onPress(wallet.id, tokenId).catch(error => showError(error))
+        onPress(wallet.id, tokenId).catch(error => {
+          showError(error)
+        })
       }
     }
 
     if (walletType != null) {
       await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
         .finally(() => (pressMutexRef.current = false))
     } else if (pluginId != null && tokenId != null) {
       if (createWalletIds.length < 2) {
@@ -95,12 +99,14 @@ export const WalletListCreateRowComponent = (
             tokenId,
             pluginId,
             createWalletId: createWalletIds[0],
-            trackingEventFailed: trackingEventFailed,
-            trackingEventSuccess: trackingEventSuccess
+            trackingEventFailed,
+            trackingEventSuccess
           })
         )
           .then(handleRes)
-          .catch(err => showError(err))
+          .catch(err => {
+            showError(err)
+          })
           .finally(() => (pressMutexRef.current = false))
       } else {
         await Airship.show(bridge => {
@@ -114,8 +120,8 @@ export const WalletListCreateRowComponent = (
                     tokenId,
                     pluginId: currencyWallets[walletId].currencyInfo.pluginId,
                     createWalletId: walletId,
-                    trackingEventFailed: trackingEventFailed,
-                    trackingEventSuccess: trackingEventSuccess
+                    trackingEventFailed,
+                    trackingEventSuccess
                   })
                 )
                   .then(handleRes)
@@ -140,7 +146,9 @@ export const WalletListCreateRowComponent = (
             />
           )
         })
-          .catch(err => showError(err))
+          .catch(err => {
+            showError(err)
+          })
           .finally(() => (pressMutexRef.current = false))
       }
     }

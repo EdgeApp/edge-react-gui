@@ -1,10 +1,13 @@
 import { add, div, mul } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
+import type { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { showError } from '../components/services/AirshipInstance'
-import { BorrowCollateral, BorrowDebt } from '../plugins/borrow-plugins/types'
+import type {
+  BorrowCollateral,
+  BorrowDebt
+} from '../plugins/borrow-plugins/types'
 import { useSelector } from '../types/reactRedux'
 import { mulToPrecision } from './utils'
 
@@ -40,7 +43,7 @@ export const useTotalFiatAmount = (
 }
 
 export const getWalletPickerExcludeWalletIds = (
-  wallets: { [wallet: string]: EdgeCurrencyWallet },
+  wallets: Record<string, EdgeCurrencyWallet>,
   loanManageType: LoanManageType,
   borrowEngineWallet: EdgeCurrencyWallet
 ): string[] => {

@@ -27,7 +27,7 @@ import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
-import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'
+import { textNoShadow, type Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
 
 const palette = {
@@ -420,10 +420,10 @@ export const testLight: Theme = {
   paymentTypeVisa,
 
   primaryLogo: edgeLogo,
-  fioAddressLogo: fioAddressLogo,
+  fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+  guiPluginLogoMoonpay,
 
   // UI 4.0:
 

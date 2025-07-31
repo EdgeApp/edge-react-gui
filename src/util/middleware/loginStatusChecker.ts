@@ -1,6 +1,6 @@
-import { Middleware } from 'redux'
+import type { Middleware } from 'redux'
 
-import { Dispatch, RootState } from '../../types/reduxTypes'
+import type { Dispatch, RootState } from '../../types/reduxTypes'
 
 export const loginStatusChecker: Middleware<{}, RootState, Dispatch> =
   store => next => action => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface EdgeSwitchProps {

@@ -6,12 +6,12 @@ import {
   asOptional,
   asString
 } from 'cleaners'
-import { EdgeDataStore } from 'edge-core-js'
-import { EdgeAccount } from 'edge-core-js/types'
+import type { EdgeDataStore } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js/types'
 
 import { ENV } from '../env'
-import { RootState, ThunkAction } from '../types/reduxTypes'
-import {
+import type { RootState, ThunkAction } from '../types/reduxTypes'
+import type {
   AccountReferral,
   Promotion,
   ReferralCache
@@ -24,7 +24,7 @@ import {
 } from '../types/TweakTypes'
 import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
-import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
+import { lockStartDates, type TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'

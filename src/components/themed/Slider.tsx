@@ -17,8 +17,8 @@ import { triggerHaptic } from '../../util/haptic'
 import { showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -77,7 +77,11 @@ export const SliderComponent = (props: Props) => {
   })
   const complete = () => {
     triggerHaptic('impactMedium')
-    onSlidingComplete(() => resetSlider())?.catch(err => showError(err))
+    onSlidingComplete(() => {
+      resetSlider()
+    })?.catch(err => {
+      showError(err)
+    })
     setCompleted(true)
   }
 

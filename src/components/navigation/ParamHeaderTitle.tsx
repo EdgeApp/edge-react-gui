@@ -1,7 +1,7 @@
 import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
 
-import { AppParamList, RouteProp } from '../../types/routerTypes'
+import type { AppParamList, RouteProp } from '../../types/routerTypes'
 import { HeaderTitle } from './HeaderTitle'
 
 interface Props<

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   label: string

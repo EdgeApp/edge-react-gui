@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import type { ethers } from 'ethers'
 
 export type Multipass<T> = (
   fn: (provider: ethers.providers.BaseProvider) => Promise<T>

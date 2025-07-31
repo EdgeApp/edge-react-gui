@@ -1,4 +1,4 @@
-import { JsonObject } from 'edge-core-js'
+import type { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -11,22 +11,25 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import {
   splitCreateWalletItems,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
+import {
+  FilledTextInput,
+  type FilledTextInputRef
+} from '../themed/FilledTextInput'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
-  walletNames: { [key: string]: string }
+  walletNames: Record<string, string>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
@@ -64,7 +67,7 @@ const CreateWalletImportComponent = (props: Props) => {
 
     const results = await Promise.all(promises)
 
-    const successMap: { [pluginId: string]: JsonObject } = {}
+    const successMap: Record<string, JsonObject> = {}
 
     for (const [i, keys] of results.entries()) {
       if (typeof keys === 'object') {
