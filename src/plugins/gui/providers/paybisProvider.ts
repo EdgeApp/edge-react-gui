@@ -102,6 +102,7 @@ const asPaymentMethodId = asValue(
 
   // iach
   'method-id-trustly',
+  'method-id-swift-bank-transfer-out',
 
   // XXX Hack. Fake payment methods for googlepay/applepay
   'fake-id-googlepay',
@@ -375,6 +376,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   // iach
   'method-id-trustly': 'iach',
+  'method-id-swift-bank-transfer-out': 'iach',
 
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
@@ -414,6 +416,7 @@ const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{
   [Payment in FiatPaymentType]: PaymentMethodId
 }> = {
   credit: 'method-id-credit-card-out',
+  iach: 'method-id-swift-bank-transfer-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
   pix: 'method-id_bridgerpay_directa24_pix_payout'
@@ -422,6 +425,9 @@ const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{
 const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
   US: {
     notStateProvinces: ['HI', 'NY']
+  },
+  CA: {
+    notStateProvinces: ['QC']
   }
 }
 
@@ -430,7 +436,10 @@ const allowedCurrencyCodes: Record<
   { [F in FiatPaymentType]?: FiatProviderAssetMap }
 > = {
   buy: { credit: { providerId, fiat: {}, crypto: {} } },
-  sell: { credit: { providerId, fiat: {}, crypto: {} } }
+  sell: {
+    credit: { providerId, fiat: {}, crypto: {} },
+    iach: { providerId, fiat: {}, crypto: {} }
+  }
 }
 export const paybisProvider: FiatProviderFactory = {
   providerId,
