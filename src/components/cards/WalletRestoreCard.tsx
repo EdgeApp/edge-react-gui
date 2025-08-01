@@ -10,6 +10,7 @@ import { toLocaleTime } from '../../locales/intl'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { findCurrencyInfo } from '../../util/CurrencyInfoHelpers'
+import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -81,8 +82,7 @@ export const WalletRestoreCard = (props: Props) => {
   // Show the network label if it's a token or an ETH mainnet currency code on
   // non-ethereum networks (i.e. Optimism)
   const firstRow =
-    currencyInfo?.currencyCode !== 'ETH' ||
-    currencyInfo?.pluginId === 'ethereum' ? (
+    currencyInfo == null || isAssetNativeToChain(currencyInfo) ? (
       <EdgeText style={styles.titleLeftText}>
         {currencyInfo?.currencyCode}
       </EdgeText>

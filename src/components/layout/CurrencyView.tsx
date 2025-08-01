@@ -7,6 +7,7 @@ import { useWalletBalance } from '../../hooks/useWalletBalance'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
+import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
 import { WalletIcon } from '../icons/WalletIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { AssetChangeTextUi4 } from '../text/AssetChangeText'
@@ -105,26 +106,24 @@ export const CurrencyView = (props: Props) => {
 
   // Show the network label if it's a token or an ETH mainnet currency code on
   // non-ethereum networks (i.e. Optimism)
-  const firstRow =
-    tokenFromId == null &&
-    (currencyCode !== 'ETH' || currencyInfo.pluginId === 'ethereum') ? (
+  const firstRow = isAssetNativeToChain(currencyInfo, tokenId) ? (
+    <View style={styles.rowContainer}>
+      <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
+      <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
+    </View>
+  ) : (
+    <View style={styles.rowContainer}>
+      <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
       <View style={styles.rowContainer}>
-        <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
+        <View style={styles.networkContainer}>
+          <EdgeText style={styles.networkLabelText}>
+            {wallet.currencyInfo.displayName}
+          </EdgeText>
+        </View>
         <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
       </View>
-    ) : (
-      <View style={styles.rowContainer}>
-        <EdgeText style={styles.titleLeftText}>{displayCurrencyCode}</EdgeText>
-        <View style={styles.rowContainer}>
-          <View style={styles.networkContainer}>
-            <EdgeText style={styles.networkLabelText}>
-              {wallet.currencyInfo.displayName}
-            </EdgeText>
-          </View>
-          <EdgeText style={styles.titleRightText}>{cryptoText}</EdgeText>
-        </View>
-      </View>
-    )
+    </View>
+  )
 
   return (
     <View style={styles.outerContainer}>
