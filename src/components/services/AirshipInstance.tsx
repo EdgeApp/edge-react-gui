@@ -35,7 +35,7 @@ export function showError(
   if (translatedMessage.includes('edge-core: The WebView has been unmounted.'))
     return
   Airship.show(bridge => (
-    <AlertDropdown bridge={bridge} message={translatedMessage} />
+    <AlertDropdown bridge={bridge} message={translatedMessage} error={error} />
   )).catch(err => {
     console.error(err)
   })
