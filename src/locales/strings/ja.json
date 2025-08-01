@@ -1088,6 +1088,8 @@
   "string_wallet_balance": "ウォレット残高",
   "string_max_cap": "全額",
   "string_warning": "警告",
+  "string_report_error": "Report Error",
+  "string_report_sent": "Report sent.",
   "step": "ステップ",
   "scan_as_in_scan_barcode": "スキャン",
   "enter_as_in_enter_address_with_keyboard": "入力",
