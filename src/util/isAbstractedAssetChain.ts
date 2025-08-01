@@ -13,9 +13,24 @@ export const isAssetNativeToChain = (
   currencyInfo: EdgeCurrencyInfo,
   tokenId?: EdgeTokenId
 ): boolean => {
-  return (
-    tokenId == null &&
-    (currencyInfo.currencyCode !== 'ETH' ||
-      currencyInfo.pluginId === 'ethereum')
-  )
+  if (tokenId != null) {
+    // It's a token
+    return false
+  }
+  if (
+    currencyInfo.currencyCode === 'ETH' &&
+    currencyInfo.pluginId !== 'ethereum'
+  ) {
+    // It's an ETH L2
+    return false
+  }
+  if (
+    currencyInfo.currencyCode === 'BTC' &&
+    currencyInfo.pluginId !== 'bitcoin'
+  ) {
+    // It's a BTC L2
+    return false
+  }
+  // It's native to the chain
+  return true
 }
