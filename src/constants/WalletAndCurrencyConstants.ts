@@ -503,6 +503,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
   },
   botanix: {
     initWalletName: lstrings.string_first_botanix_wallet_name,
+    showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
     walletConnectV2ChainId: {
