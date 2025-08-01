@@ -208,7 +208,8 @@ const TouchableContents = styled(EdgeTouchableOpacity)((theme: Theme) => ({
 }))
 
 const TouchableCloseButton = styled(EdgeTouchableOpacity)((theme: Theme) => ({
-  margin: theme.rem(0.25)
+  margin: -theme.rem(2),
+  padding: theme.rem(2.25)
 }))
 
 export const NotificationCard = React.memo(NotificationCardComponent)

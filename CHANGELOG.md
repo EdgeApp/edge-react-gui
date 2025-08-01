@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
+- changed: Increased tappable area for the close button of `NotificationCard`
 
 ## 4.33.0 (2025-08-01)
 
