@@ -1088,6 +1088,8 @@
   "string_wallet_balance": "Saldo del monedero",
   "string_max_cap": "MÁX",
   "string_warning": "Warning",
+  "string_report_error": "Report Error",
+  "string_report_sent": "Report sent.",
   "step": "Paso",
   "scan_as_in_scan_barcode": "Escanear",
   "enter_as_in_enter_address_with_keyboard": "Introducir",
