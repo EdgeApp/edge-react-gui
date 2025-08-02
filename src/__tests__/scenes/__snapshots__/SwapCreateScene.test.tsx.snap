@@ -218,9 +218,21 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "maxHeight": 1334,
+        },
+      }
+    }
     keyboardShouldPersistTaps="handled"
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
-    scrollEventThrottle={0.0001}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
         "right": 1,
@@ -237,8 +249,60 @@ exports[`SwapCreateScene should render with loading props 1`] = `
   >
     <View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInUp {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": -60,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           accessibilityState={
@@ -356,7 +420,33 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         </View>
       </View>
       <View
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           style={
@@ -459,8 +549,60 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 30,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       >
         <View
           accessibilityState={
@@ -578,42 +720,150 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         </View>
       </View>
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 60,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
       <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
+        collapsable={false}
+        entering={
+          FadeInDown {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": 0,
+            "durationV": 300,
+            "easingV": [Function],
+            "initialValues": {
+              "transform": [
+                {
+                  "translateY": 90,
+                },
+              ],
+            },
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        layout={
+          LinearTransition {
+            "build": [Function],
+            "callbackV": undefined,
+            "dampingRatioV": undefined,
+            "dampingV": undefined,
+            "delayV": undefined,
+            "durationV": 300,
+            "easingV": undefined,
+            "initialValues": undefined,
+            "massV": undefined,
+            "overshootClampingV": undefined,
+            "randomizeDelay": false,
+            "reduceMotionV": "system",
+            "restDisplacementThresholdV": undefined,
+            "restSpeedThresholdV": undefined,
+            "rotateV": undefined,
+            "stiffnessV": undefined,
+            "type": undefined,
+          }
+        }
       />
     </View>
   </RCTScrollView>,
   <View
+    collapsable={false}
     footerHeight={0}
-    footerOpenRatio={
-      {
-        "value": 1,
-      }
-    }
+    footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
-    onLayout={[Function]}
-    style={
-      [
-        {
-          "alignSelf": "center",
-          "bottom": 11,
-          "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
-          "position": "absolute",
-        },
-        {
+    jestAnimatedStyle={
+      {
+        "value": {
           "transform": [
             {
-              "translateY": NaN,
+              "translateY": -74.85492957746479,
             },
           ],
         },
-      ]
+      }
+    }
+    onLayout={[Function]}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 11,
+        "justifyContent": "flex-end",
+        "paddingHorizontal": 11,
+        "position": "absolute",
+        "transform": [
+          {
+            "translateY": -74.85492957746479,
+          },
+        ],
+      }
     }
   />,
 ]

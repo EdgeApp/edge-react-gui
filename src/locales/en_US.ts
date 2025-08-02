@@ -666,6 +666,7 @@ const strings = {
   string_first_ecash_wallet_name: 'My eCash',
   string_first_eos_wallet_name: 'My EOS',
   string_first_holesky_wallet_name: 'My Holesky',
+  string_first_hyperevm_wallet_name: 'My HyperEVM',
   string_first_telos_wallet_name: 'My Telos',
   string_first_wax_wallet_name: 'My Wax',
   string_first_feather_coin_wallet_name: 'My Feather Coin',
@@ -713,6 +714,7 @@ const strings = {
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
   string_first_bobevm_wallet_name: 'My BOB',
+  string_first_botanix_wallet_name: 'My Botanix',
   string_first_algorand_wallet_name: 'My Algorand',
   string_first_zksync_wallet_name: 'My zkSync',
   string_first_abstract_wallet_name: 'My Abstract',
@@ -918,7 +920,7 @@ const strings = {
   otp_description_two:
     'If you download %1$s on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
   otp_enabled_message:
-    'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
+    'If you lose your phone or uninstall the app, it will take at least 7 days (up to 18 months) to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
   otp_show_code: 'Show backup code',
@@ -931,7 +933,7 @@ const strings = {
   // OTP Modals
   otp_authentication_header: '2FA has been enabled',
   otp_authentication_message:
-    '2FA has been enabled. A unique authentication code has been generated. If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the following authentication code.\n\n%s',
+    '2FA has been enabled. A unique authentication code has been generated. If you lose your phone or uninstall the app, it will take at least 7 days (up to 18 months) to disable 2FA and access your account from another device without the following authentication code.\n\n%s',
   otp_reset_modal_dont_ask: "Don't ask again",
   otp_reset_modal_header: 'Secure Your Account',
   otp_reset_modal_message:
@@ -1070,7 +1072,7 @@ const strings = {
   account: 'Account',
   forget_account_title: 'Forget Account',
   forget_account_message_common:
-    'Are you sure you want to forget the account %1$s from this device? PIN login will no longer work and you will need to login with your username and password.\n\nIf 2FA is enabled for this account, you will need to either enter your 2FA code or be locked out for 7 days before being able to regain access.',
+    'Are you sure you want to forget the account %1$s from this device? PIN login will no longer work and you will need to login with your username and password.\n\nIf 2FA is enabled for this account, you will need to either enter your 2FA code or be locked out for at least 7 days (up to 18 months) before being able to regain access.',
   no: 'No',
   yes: 'Yes',
   swap_terms_accept_button: 'Accept',

@@ -2,30 +2,28 @@
 
 exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
 <View
-  style={
-    [
-      {
-        "alignItems": "stretch",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-      },
-      {
-        "height": 1334,
-        "width": 750,
-      },
-      {
-        "paddingBottom": 0,
-        "paddingLeft": 0,
-        "paddingRight": 0,
-        "paddingTop": 64,
-      },
-      {
+  collapsable={false}
+  jestAnimatedStyle={
+    {
+      "value": {
         "maxHeight": 1334,
       },
-      {
-        "padding": 0,
-      },
-    ]
+    }
+  }
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "height": 1334,
+      "justifyContent": "flex-start",
+      "maxHeight": 1334,
+      "padding": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "paddingRight": 0,
+      "paddingTop": 64,
+      "width": 750,
+    }
   }
 >
   <BVLinearGradient
@@ -327,17 +325,24 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
         }
         accessible={false}
-        disableAnimation={
-          {
-            "value": 0,
-          }
-        }
-        focusAnimation={
-          {
-            "value": 0,
-          }
-        }
+        collapsable={false}
+        disableAnimation={0}
+        focusAnimation={0}
         focusable={true}
+        jestAnimatedStyle={
+          {
+            "value": {
+              "backgroundColor": "rgba(255, 255, 255, 0.2)",
+              "borderColor": "rgba(0, 241, 162, 0)",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          }
+        }
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -345,59 +350,64 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        scale={
-          {
-            "value": 1,
-          }
-        }
+        scale={1}
         style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 2247,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 17,
-            },
-            {
-              "backgroundColor": undefined,
-              "borderColor": undefined,
-              "opacity": undefined,
-              "transform": [
-                {
-                  "scale": undefined,
-                },
-              ],
-            },
-          ]
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0.2)",
+            "borderColor": "rgba(0, 241, 162, 0)",
+            "borderRadius": 2247,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "flexGrow": 1,
+            "flexShrink": 1,
+            "opacity": 1,
+            "paddingHorizontal": 22,
+            "paddingVertical": 17,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
         }
       >
         <View
-          size={
+          collapsable={false}
+          jestAnimatedStyle={
             {
-              "value": undefined,
+              "value": {
+                "opacity": 22,
+                "width": 22,
+              },
             }
           }
+          size={22}
           style={
-            [
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-              },
-              {
-                "opacity": undefined,
-                "width": undefined,
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "aspectRatio": 1,
+              "opacity": 22,
+              "width": 22,
+            }
           }
         >
           <Text
+            collapsable={false}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                  "fontFamily": "anticon",
+                  "fontSize": 22,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+              }
+            }
             style={
               {
-                "color": "#FFFFFF",
+                "color": "rgba(255, 255, 255, 0.5019607843137255)",
                 "fontFamily": "anticon",
                 "fontSize": 22,
                 "fontStyle": "normal",
@@ -445,28 +455,41 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           testID="undefined.doneButton"
         >
           <View
-            size={
+            collapsable={false}
+            jestAnimatedStyle={
               {
-                "value": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
+                "value": {
                   "opacity": 0,
                   "width": 0,
                 },
-              ]
+              }
+            }
+            size={0}
+            style={
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+                "opacity": 0,
+                "width": 0,
+              }
             }
           >
             <Text
+              collapsable={false}
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "Material Icons",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                }
+              }
               style={
                 {
-                  "color": "#FFFFFF",
+                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
                   "fontFamily": "Material Icons",
                   "fontSize": 0,
                   "fontStyle": "normal",
@@ -495,15 +518,16 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={false}
+            collapsable={false}
             defaultValue=""
-            disableAnimation={
+            disableAnimation={0}
+            focusAnimation={0}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
               {
-                "value": 0,
-              }
-            }
-            focusAnimation={
-              {
-                "value": 0,
+                "value": {
+                  "color": "rgba(255, 255, 255, 1)",
+                },
               }
             }
             onBlur={[Function]}
@@ -514,20 +538,16 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             placeholderTextColor="rgba(255, 255, 255, .5)"
             selectionColor="rgba(255, 255, 255, .25)"
             style={
-              [
-                {
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": undefined,
-                },
-              ]
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+              }
             }
             testID="undefined.textInput"
             textAlignVertical="top"
@@ -572,28 +592,41 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           testID="undefined.clearIcon"
         >
           <View
-            size={
+            collapsable={false}
+            jestAnimatedStyle={
               {
-                "value": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
+                "value": {
                   "opacity": 0,
                   "width": 0,
                 },
-              ]
+              }
+            }
+            size={0}
+            style={
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+                "opacity": 0,
+                "width": 0,
+              }
             }
           >
             <Text
+              collapsable={false}
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                }
+              }
               style={
                 {
-                  "color": "#FFFFFF",
+                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
                   "fontFamily": "anticon",
                   "fontSize": 0,
                   "fontStyle": "normal",
@@ -1901,9 +1934,75 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           style={null}
         >
           <View
-            entering={BaseAnimationMock {}}
-            exiting={BaseAnimationMock {}}
-            layout={BaseAnimationMock {}}
+            collapsable={false}
+            entering={
+              FadeIn {
+                "build": [Function],
+                "callbackV": undefined,
+                "dampingRatioV": undefined,
+                "dampingV": undefined,
+                "delayV": 0,
+                "durationV": 0,
+                "easingV": [Function],
+                "initialValues": undefined,
+                "massV": undefined,
+                "overshootClampingV": undefined,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+                "restDisplacementThresholdV": undefined,
+                "restSpeedThresholdV": undefined,
+                "rotateV": undefined,
+                "stiffnessV": undefined,
+                "type": undefined,
+              }
+            }
+            exiting={
+              FadeOut {
+                "build": [Function],
+                "callbackV": undefined,
+                "dampingRatioV": undefined,
+                "dampingV": undefined,
+                "delayV": 0,
+                "durationV": 300,
+                "easingV": [Function],
+                "initialValues": undefined,
+                "massV": undefined,
+                "overshootClampingV": undefined,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+                "restDisplacementThresholdV": undefined,
+                "restSpeedThresholdV": undefined,
+                "rotateV": undefined,
+                "stiffnessV": undefined,
+                "type": undefined,
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "callbackV": undefined,
+                "dampingRatioV": undefined,
+                "dampingV": undefined,
+                "delayV": undefined,
+                "durationV": 300,
+                "easingV": undefined,
+                "initialValues": undefined,
+                "massV": undefined,
+                "overshootClampingV": undefined,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+                "restDisplacementThresholdV": undefined,
+                "restSpeedThresholdV": undefined,
+                "rotateV": undefined,
+                "stiffnessV": undefined,
+                "type": undefined,
+              }
+            }
           >
             <View
               accessibilityState={

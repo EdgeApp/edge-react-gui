@@ -41,7 +41,7 @@ export function WalletListScene(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const allKeys = useWatch(account, 'allKeys')
+  const allKeys = useWatch(account, 'allKeys') ?? []
   const hasRestoreWallets =
     allKeys.filter(key => key.archived || key.deleted).length > 0
 

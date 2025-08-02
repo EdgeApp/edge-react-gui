@@ -10,6 +10,7 @@ import { toLocaleTime } from '../../locales/intl'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { findCurrencyInfo } from '../../util/CurrencyInfoHelpers'
+import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -29,10 +30,11 @@ export const WalletRestoreCard = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const { currencyCode, displayName, pluginId } =
-    findCurrencyInfo(account, walletInfo.type) ?? {}
+  const currencyInfo = findCurrencyInfo(account, walletInfo.type)
   const currencyConfig =
-    pluginId == null ? undefined : account.currencyConfig[pluginId]
+    currencyInfo?.pluginId == null
+      ? undefined
+      : account.currencyConfig[currencyInfo?.pluginId]
 
   const [isSelected, setIsSelected] = React.useState(false)
 
@@ -41,16 +43,16 @@ export const WalletRestoreCard = (props: Props) => {
 
   // Primary Currency icon
   const primaryCurrencyIconUrl = React.useMemo(() => {
-    if (pluginId == null) return null
+    if (currencyInfo?.pluginId == null) return null
 
     // Get Currency Icon URI
     const icon = getCurrencyIconUris(
-      pluginId,
+      currencyInfo?.pluginId,
       null,
-      SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false
+      SPECIAL_CURRENCY_INFO[currencyInfo?.pluginId]?.showChainIcon ?? false
     )
     return icon.symbolImageDarkMono
-  }, [pluginId])
+  }, [currencyInfo?.pluginId])
 
   const primaryCurrencyIcon = React.useMemo(() => {
     if (primaryCurrencyIconUrl == null) return null
@@ -80,14 +82,20 @@ export const WalletRestoreCard = (props: Props) => {
   // Show the network label if it's a token or an ETH mainnet currency code on
   // non-ethereum networks (i.e. Optimism)
   const firstRow =
-    currencyCode !== 'ETH' || pluginId === 'ethereum' ? (
-      <EdgeText style={styles.titleLeftText}>{currencyCode}</EdgeText>
+    currencyInfo == null || isAssetNativeToChain(currencyInfo) ? (
+      <EdgeText style={styles.titleLeftText}>
+        {currencyInfo?.currencyCode}
+      </EdgeText>
     ) : (
       <View style={styles.rowContainer}>
-        <EdgeText style={styles.titleLeftText}>{currencyCode}</EdgeText>
+        <EdgeText style={styles.titleLeftText}>
+          {currencyInfo?.currencyCode}
+        </EdgeText>
         <View style={styles.rowContainer}>
           <View style={styles.networkContainer}>
-            <EdgeText style={styles.networkLabelText}>{displayName}</EdgeText>
+            <EdgeText style={styles.networkLabelText}>
+              {currencyInfo?.displayName}
+            </EdgeText>
           </View>
         </View>
       </View>
@@ -108,7 +116,9 @@ export const WalletRestoreCard = (props: Props) => {
         </View>
         <View style={styles.textContainer}>
           {firstRow}
-          <EdgeText style={styles.secondaryText}>{displayName}</EdgeText>
+          <EdgeText style={styles.secondaryText}>
+            {currencyInfo?.displayName}
+          </EdgeText>
           <EdgeText style={styles.secondaryText}>{dateLabel}</EdgeText>
         </View>
         <Switch

@@ -33,17 +33,21 @@ exports[`FilledTextInput should render with some props 1`] = `
       }
     }
     accessible={false}
-    disableAnimation={
-      {
-        "value": 0,
-      }
-    }
-    focusAnimation={
-      {
-        "value": 0,
-      }
-    }
+    collapsable={false}
+    disableAnimation={0}
+    focusAnimation={0}
     focusable={true}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "backgroundColor": "rgba(255, 255, 255, 0.2)",
+          "borderColor": "rgba(0, 241, 162, 0)",
+          "marginHorizontal": 0,
+          "opacity": 1,
+          "paddingVertical": 22,
+        },
+      }
+    }
     multiline={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -52,56 +56,61 @@ exports[`FilledTextInput should render with some props 1`] = `
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
-    scale={
-      {
-        "value": 1,
-      }
-    }
+    scale={1}
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "borderRadius": 11,
-          "borderWidth": 1,
-          "flexDirection": "row",
-          "flexGrow": 1,
-          "flexShrink": 1,
-          "paddingHorizontal": 17,
-        },
-        {
-          "backgroundColor": undefined,
-          "borderColor": undefined,
-          "marginHorizontal": undefined,
-          "opacity": undefined,
-          "paddingVertical": 22,
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "backgroundColor": "rgba(255, 255, 255, 0.2)",
+        "borderColor": "rgba(0, 241, 162, 0)",
+        "borderRadius": 11,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "marginHorizontal": 0,
+        "opacity": 1,
+        "paddingHorizontal": 17,
+        "paddingVertical": 22,
+      }
     }
     testID="string"
   >
     <View
-      scale={
+      collapsable={false}
+      jestAnimatedStyle={
         {
-          "value": 0,
-        }
-      }
-      style={
-        [
-          {
-            "alignItems": "stretch",
-            "aspectRatio": 1,
-          },
-          {
+          "value": {
             "opacity": 0,
             "width": 0,
           },
-        ]
+        }
+      }
+      scale={0}
+      style={
+        {
+          "alignItems": "stretch",
+          "aspectRatio": 1,
+          "opacity": 0,
+          "width": 0,
+        }
       }
     >
       <Text
+        collapsable={false}
+        jestAnimatedStyle={
+          {
+            "value": {
+              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "fontFamily": "anticon",
+              "fontSize": 0,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          }
+        }
         style={
           {
-            "color": "#FFFFFF",
+            "color": "rgba(255, 255, 255, 0.5019607843137255)",
             "fontFamily": "anticon",
             "fontSize": 0,
             "fontStyle": "normal",
@@ -113,92 +122,88 @@ exports[`FilledTextInput should render with some props 1`] = `
       </Text>
     </View>
     <View
-      focusValue={
+      collapsable={false}
+      focusValue={1}
+      hasPlaceholder={true}
+      jestAnimatedStyle={
         {
-          "value": 1,
+          "value": {
+            "marginBottom": -11,
+            "marginTop": 11,
+          },
         }
       }
-      hasPlaceholder={true}
       style={
-        [
-          {
-            "alignItems": "flex-start",
-            "alignSelf": "flex-start",
-            "flex": 1,
-            "flexDirection": "row",
-            "left": 0,
-          },
-          {
-            "marginBottom": NaN,
-            "marginTop": undefined,
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "alignSelf": "flex-start",
+          "flex": 1,
+          "flexDirection": "row",
+          "left": 0,
+          "marginBottom": -11,
+          "marginTop": 11,
+        }
       }
     >
       <View
-        shift={
+        collapsable={false}
+        jestAnimatedStyle={
           {
-            "value": 1,
-          }
-        }
-        style={
-          [
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "left": 8.8,
-              "margin": 0,
-              "paddingHorizontal": 0,
-              "paddingVertical": 0,
-              "position": "absolute",
-              "top": 0,
-            },
-            {
+            "value": {
               "transform": [
                 {
-                  "translateY": undefined,
+                  "translateY": -22,
                 },
                 {
-                  "translateX": undefined,
+                  "translateX": -8.8,
                 },
               ],
             },
-          ]
+          }
+        }
+        shift={1}
+        style={
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+            "left": 8.8,
+            "margin": 0,
+            "paddingHorizontal": 0,
+            "paddingVertical": 0,
+            "position": "absolute",
+            "top": 0,
+            "transform": [
+              {
+                "translateY": -22,
+              },
+              {
+                "translateX": -8.8,
+              },
+            ],
+          }
         }
       >
         <Text
-          disableAnimation={
+          collapsable={false}
+          disableAnimation={0}
+          focusAnimation={0}
+          jestAnimatedStyle={
             {
-              "value": 0,
+              "value": {
+                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "fontSize": 16.5,
+              },
             }
           }
-          focusAnimation={
-            {
-              "value": 0,
-            }
-          }
-          scale={
-            {
-              "value": 1,
-            }
-          }
-          shift={
-            {
-              "value": 1,
-            }
-          }
+          scale={1}
+          shift={1}
           style={
-            [
-              {
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": undefined,
-                "fontSize": undefined,
-              },
-            ]
+            {
+              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 16.5,
+              "includeFontPadding": false,
+            }
           }
         >
           string
@@ -215,16 +220,18 @@ exports[`FilledTextInput should render with some props 1`] = `
         autoCorrect={true}
         autoFocus={true}
         blurOnSubmit={false}
+        collapsable={false}
         defaultValue="string"
-        disableAnimation={
-          {
-            "value": 0,
-          }
-        }
+        disableAnimation={0}
         editable={true}
-        focusAnimation={
+        focusAnimation={0}
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
           {
-            "value": 0,
+            "value": {
+              "color": "rgba(255, 255, 255, 1)",
+              "fontSize": 22,
+            },
           }
         }
         keyboardType="default"
@@ -236,33 +243,24 @@ exports[`FilledTextInput should render with some props 1`] = `
         onFocus={[Function]}
         onSubmitEditing={[Function]}
         returnKeyType="done"
-        scale={
-          {
-            "value": 1,
-          }
-        }
+        scale={1}
         selectionColor="rgba(255, 255, 255, .25)"
         style={
-          [
-            {
-              "color": "hsla(0, 0%, 100%, 0.20)",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "margin": 0,
-              "paddingHorizontal": 0,
-              "paddingVertical": 0,
-              "transform": [
-                {
-                  "translateY": -0,
-                },
-              ],
-            },
-            {
-              "color": undefined,
-              "fontSize": 22,
-            },
-          ]
+          {
+            "color": "rgba(255, 255, 255, 1)",
+            "flexGrow": 1,
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "margin": 0,
+            "paddingHorizontal": 0,
+            "paddingVertical": 0,
+            "transform": [
+              {
+                "translateY": -0,
+              },
+            ],
+          }
         }
         testID="string.textInput"
         textAlignVertical="top"
@@ -308,28 +306,41 @@ exports[`FilledTextInput should render with some props 1`] = `
       testID="string.clearIcon"
     >
       <View
-        scale={
+        collapsable={false}
+        jestAnimatedStyle={
           {
-            "value": 22,
-          }
-        }
-        style={
-          [
-            {
-              "alignItems": "stretch",
-              "aspectRatio": 1,
-            },
-            {
+            "value": {
               "opacity": 22,
               "width": 22,
             },
-          ]
+          }
+        }
+        scale={22}
+        style={
+          {
+            "alignItems": "stretch",
+            "aspectRatio": 1,
+            "opacity": 22,
+            "width": 22,
+          }
         }
       >
         <Text
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "fontFamily": "anticon",
+                "fontSize": 22,
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+            }
+          }
           style={
             {
-              "color": "#FFFFFF",
+              "color": "rgba(255, 255, 255, 0.5019607843137255)",
               "fontFamily": "anticon",
               "fontSize": 22,
               "fontStyle": "normal",
@@ -343,17 +354,20 @@ exports[`FilledTextInput should render with some props 1`] = `
     </View>
   </View>
   <View
+    collapsable={false}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
     noLayoutFlow={false}
     style={
-      [
-        {
-          "flexDirection": "row",
-          "height": 22,
-          "justifyContent": "space-between",
-          "paddingHorizontal": 11,
-        },
-        {},
-      ]
+      {
+        "flexDirection": "row",
+        "height": 22,
+        "justifyContent": "space-between",
+        "paddingHorizontal": 11,
+      }
     }
   >
     <Text

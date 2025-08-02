@@ -2,18 +2,24 @@
 
 ## Unreleased (develop)
 
-- added: `ReturnKeyTypeButton` to `FlipInputModal2`
+## 4.33.0 (staging)
 
-## 4.32.0 (staging)
+- added: Added Botanix.
+- added: Added HyperEVM.
+- added: `ReturnKeyTypeButton` to `FlipInputModal2`
+- added: Revolut fiat buy provider.
+- changed: `WalletListMenuModal` now supports displaying loading states for async options
+- fixed: Failure to propagate XRP destination tags from pasted URIs on the send scene.
+
+## 4.32.0 (2025-07-18)
 
 - added: Support for Paybis ACH buy
 - added: Private View Key wallet menu option for Zano
 - added: Support for `SwapBelowLimitError` and `SwapAboveLimitError` without limit amount props
-- added: `ReturnKeyTypeButton` to `FlipInputModal2`
 - changed: Reinstate "Sell" in `MenuTabs` for UK
 - changed: `NotificationCard` visibility rules updated to be less invasive
 - changed: Unsupported FIO assets removed from `ConnectWallets` and `ShareButtons`
-- changed: `WalletListMenuModal` now supports displaying loading states for async options
+- fixed: Allow custom asset settings for PIVX.
 - fixed: Fixed viewport issues on ChnageMiningFeeScene.
 - fixed: Account for minimum account balances when migrating/sweeping
 - fixed: Button UI styling in `MigrateWalletCompletionScene`

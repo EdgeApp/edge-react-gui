@@ -1,6 +1,13 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, ReturnKeyType, Text, TextInput, View } from 'react-native'
+import {
+  Platform,
+  ReturnKeyType,
+  Text,
+  TextInput,
+  TextInputProps,
+  View
+} from 'react-native'
 import Animated, {
   AnimationCallback,
   Easing,
@@ -8,6 +15,7 @@ import Animated, {
   interpolateColor,
   runOnJS,
   SharedValue,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -16,17 +24,17 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useNumericInputProps } from '../../hooks/useNumericInputProps'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { styled, styledWithRef } from '../hoc/styled'
+import { styled } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
 import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
-import { NumericInput } from './NumericInput'
 import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
@@ -77,10 +85,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
   (props: Props, ref) => {
     const theme = useTheme()
     const themeRem = theme.rem(1)
-    const inputRefs = [
-      React.useRef<TextInput>(null),
-      React.useRef<TextInput>(null)
-    ]
+
+    // These need to be animated refs, because the text box itself is animated:
+    const inputRefs = [useAnimatedRef<TextInput>(), useAnimatedRef<TextInput>()]
 
     const {
       convertValue,
@@ -324,8 +331,6 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
   }
 )
 
-const AnimatedNumericInput = Animated.createAnimatedComponent(NumericInput)
-
 const ContainerView = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
@@ -426,37 +431,65 @@ const TopAmountText = styled(Text)(theme => () => [
   }
 ])
 
-const AmountAnimatedNumericInput = styledWithRef(AnimatedNumericInput)<{
-  disableAnimation: SharedValue<number>
-  focusAnimation: SharedValue<number>
-  value: string
-}>(theme => ({ disableAnimation, focusAnimation, value }) => {
-  const isAndroid = Platform.OS === 'android'
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+
+const AmountAnimatedNumericInput = React.forwardRef<
+  TextInput,
+  TextInputProps & {
+    disableAnimation: SharedValue<number>
+    focusAnimation: SharedValue<number>
+    maxDecimals?: number
+  }
+>((props, ref) => {
+  const {
+    disableAnimation,
+    focusAnimation,
+    maxDecimals,
+    value,
+    onChangeText,
+    ...rest
+  } = props
+  const numericProps = useNumericInputProps({
+    maxDecimals,
+    value,
+    onChangeText
+  })
+
+  const theme = useTheme()
   const interpolateTextColor = useAnimatedColorInterpolateFn(
     theme.textInputTextColor,
     theme.textInputTextColorFocused,
     theme.textInputTextColorDisabled
   )
-  const characterLength = value.length
-  return [
-    {
-      includeFontPadding: false,
-      fontFamily: theme.fontFaceMedium,
-      fontSize: theme.rem(1.5),
-      // Android has more space added to the width of the input
-      // after the last character in the input. It seems to be
-      // setting a min-width to the input to roughly 2 characters in size.
-      // We can compensate for this with a negative margin when the character length
-      // is less then 2 characters.
-      marginRight: isAndroid
-        ? -theme.rem(Math.max(0, 2 - characterLength) * 0.4)
-        : 0,
-      padding: 0
-    },
-    useAnimatedStyle(() => ({
-      color: interpolateTextColor(focusAnimation, disableAnimation)
-    }))
-  ]
+  const animatedStyle = useAnimatedStyle(() => ({
+    color: interpolateTextColor(focusAnimation, disableAnimation)
+  }))
+
+  const style = {
+    includeFontPadding: false,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.5),
+    padding: 0,
+
+    // Android has more space added to the width of the input
+    // after the last character in the input. It seems to be
+    // setting a min-width to the input to roughly 2 characters in size.
+    // We can compensate for this with a negative margin when the character length
+    // is less then 2 characters.
+    marginRight:
+      Platform.OS === 'android'
+        ? -theme.rem(Math.max(0, 2 - numericProps.value.length) * 0.4)
+        : 0
+  }
+
+  return (
+    <AnimatedTextInput
+      ref={ref}
+      style={[style, animatedStyle]}
+      {...rest}
+      {...numericProps}
+    />
+  )
 })
 
 const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
