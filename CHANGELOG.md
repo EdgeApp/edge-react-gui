@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-## 4.33.0 (staging)
+## 4.33.0 (2025-08-01)
 
 - added: Added Botanix.
 - added: Added HyperEVM.
