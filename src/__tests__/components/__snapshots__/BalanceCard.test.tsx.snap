@@ -240,6 +240,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -251,14 +256,17 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -626,6 +634,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -637,14 +650,17 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -989,6 +1005,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -1000,14 +1021,17 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View

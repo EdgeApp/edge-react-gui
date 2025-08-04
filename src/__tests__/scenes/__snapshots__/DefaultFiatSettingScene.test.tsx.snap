@@ -3,6 +3,11 @@
 exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
 <View
   collapsable={false}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {
@@ -10,20 +15,52 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       },
     }
   }
+  jestInlineStyle={
+    [
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      {
+        "height": 1334,
+        "width": 750,
+      },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "padding": 0,
+      },
+    ]
+  }
   style={
-    {
-      "alignItems": "stretch",
-      "flexDirection": "column",
-      "height": 1334,
-      "justifyContent": "flex-start",
-      "maxHeight": 1334,
-      "padding": 0,
-      "paddingBottom": 0,
-      "paddingLeft": 0,
-      "paddingRight": 0,
-      "paddingTop": 64,
-      "width": 750,
-    }
+    [
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      {
+        "height": 1334,
+        "width": 750,
+      },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "maxHeight": 1334,
+      },
+      {
+        "padding": 0,
+      },
+    ]
   }
 >
   <BVLinearGradient
@@ -328,6 +365,11 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           disableAnimation={0}
           focusAnimation={0}
           focusable={true}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -342,6 +384,20 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
+              },
+            ]
+          }
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -351,28 +407,37 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           onStartShouldSetResponder={[Function]}
           scale={1}
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0.2)",
-              "borderColor": "rgba(0, 241, 162, 0)",
-              "borderRadius": 2247,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "opacity": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 17,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            }
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
+              },
+              {
+                "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                "borderColor": "rgba(0, 241, 162, 0)",
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
           }
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -381,18 +446,35 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+              ]
+            }
             size={22}
             style={
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-                "opacity": 22,
-                "width": 22,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 22,
+                  "width": 22,
+                },
+              ]
             }
           >
             <Text
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -404,14 +486,17 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={{}}
               style={
-                {
-                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                  "fontFamily": "anticon",
-                  "fontSize": 22,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
+                [
+                  {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 22,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                ]
               }
             >
               
@@ -455,6 +540,11 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -463,18 +553,35 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
               size={0}
               style={
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                  "opacity": 0,
-                  "width": 0,
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
               }
             >
               <Text
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -486,14 +593,17 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 style={
-                  {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "Material Icons",
-                    "fontSize": 0,
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  }
+                  [
+                    {
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "Material Icons",
+                      "fontSize": 0,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                  ]
                 }
               >
                 
@@ -522,12 +632,30 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               disableAnimation={0}
               focusAnimation={0}
               forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
                     "color": "rgba(255, 255, 255, 1)",
                   },
                 }
+              }
+              jestInlineStyle={
+                [
+                  {
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
+                ]
               }
               onBlur={[Function]}
               onChangeText={[Function]}
@@ -538,16 +666,20 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               returnKeyType="search"
               selectionColor="rgba(255, 255, 255, .25)"
               style={
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                }
+                [
+                  {
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
+                  {
+                    "color": "rgba(255, 255, 255, 1)",
+                  },
+                ]
               }
               testID="undefined.textInput"
               textAlignVertical="top"
@@ -593,6 +725,11 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -601,18 +738,35 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
               size={0}
               style={
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                  "opacity": 0,
-                  "width": 0,
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
               }
             >
               <Text
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -624,14 +778,17 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
                 style={
-                  {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "anticon",
-                    "fontSize": 0,
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  }
+                  [
+                    {
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "anticon",
+                      "fontSize": 0,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                  ]
                 }
               >
                 
@@ -697,7 +854,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       }
       getItem={[Function]}
       getItemCount={[Function]}
-      handlerTag={1}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
@@ -714,7 +871,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -722,16 +879,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       }
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-          {
-            "current": null,
-          },
-        ]
-      }
     >
       <View>
         <View

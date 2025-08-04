@@ -218,13 +218,28 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "maxHeight": 1334,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
@@ -238,12 +253,18 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -260,9 +281,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInUp {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -273,15 +291,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -289,33 +305,29 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "value": {},
             }
           }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
-              "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
-            }
-          }
-          style={
+          jestInlineStyle={
             {
               "marginBottom": 22,
               "marginLeft": -11,
               "width": "100%",
             }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "durationV": 300,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          style={
+            [
+              {
+                "marginBottom": 22,
+                "marginLeft": -11,
+                "width": "100%",
+              },
+            ]
           }
         >
           <View
@@ -407,9 +419,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInUp {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -420,15 +429,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -439,22 +446,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -542,6 +536,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "flex": 0,
                         "height": 61,
                         "width": 61,
+                      },
+                    ]
+                  }
+                  transform={
+                    [
+                      {
+                        "rotateZ": "-90deg",
                       },
                     ]
                   }
@@ -979,6 +980,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         </View>
         <View
           collapsable={false}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {},
@@ -987,22 +993,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -1072,9 +1065,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInDown {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -1085,15 +1075,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -1104,22 +1092,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -1207,6 +1182,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "flex": 0,
                         "height": 61,
                         "width": 61,
+                      },
+                    ]
+                  }
+                  transform={
+                    [
+                      {
+                        "rotateZ": "-90deg",
                       },
                     ]
                   }
@@ -1483,9 +1465,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInDown {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -1496,15 +1475,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -1515,22 +1492,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -1764,9 +1728,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInDown {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -1777,15 +1738,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -1796,22 +1755,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -1999,9 +1945,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           entering={
             FadeInDown {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
               "delayV": 0,
               "durationV": 300,
               "easingV": [Function],
@@ -2012,15 +1955,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   },
                 ],
               },
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
             }
           }
           jestAnimatedStyle={
@@ -2031,22 +1972,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           layout={
             LinearTransition {
               "build": [Function],
-              "callbackV": undefined,
-              "dampingRatioV": undefined,
-              "dampingV": undefined,
-              "delayV": undefined,
               "durationV": 300,
-              "easingV": undefined,
-              "initialValues": undefined,
-              "massV": undefined,
-              "overshootClampingV": undefined,
               "randomizeDelay": false,
               "reduceMotionV": "system",
-              "restDisplacementThresholdV": undefined,
-              "restSpeedThresholdV": undefined,
-              "rotateV": undefined,
-              "stiffnessV": undefined,
-              "type": undefined,
             }
           }
         >
@@ -2082,6 +2010,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             >
               <View
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -2089,24 +2022,46 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "backgroundColor": "#494949",
+                      "borderRadius": 27.5,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
+                }
                 style={
-                  {
-                    "backgroundColor": "#494949",
-                    "borderRadius": 27.5,
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                    "width": 295,
-                  }
+                  [
+                    {
+                      "backgroundColor": "#494949",
+                      "borderRadius": 27.5,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                    {
+                      "width": 295,
+                    },
+                  ]
                 }
               />
               <View
                 collapsable={false}
                 forwardedRef={[Function]}
-                handlerTag={1}
+                handlerTag={-1}
                 handlerType="PanGestureHandler"
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -2118,22 +2073,41 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={
+                  [
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#00f1a2",
+                      "borderRadius": 27.5,
+                      "height": 55,
+                      "justifyContent": "center",
+                      "width": 55,
+                      "zIndex": 5,
+                    },
+                    null,
+                  ]
+                }
                 onGestureHandlerEvent={[Function]}
                 style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#00f1a2",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "transform": [
-                      {
-                        "translateX": 240,
-                      },
-                    ],
-                    "width": 55,
-                    "zIndex": 5,
-                  }
+                  [
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#00f1a2",
+                      "borderRadius": 27.5,
+                      "height": 55,
+                      "justifyContent": "center",
+                      "width": 55,
+                      "zIndex": 5,
+                    },
+                    null,
+                    {
+                      "transform": [
+                        {
+                          "translateX": 240,
+                        },
+                      ],
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2198,6 +2172,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
     footerHeight={0}
     hasTabs={true}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -2209,20 +2188,35 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -74.85492957746479,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -74.85492957746479,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]

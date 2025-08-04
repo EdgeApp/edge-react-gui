@@ -40,11 +40,14 @@ export const SectionView = (props: Props): React.ReactElement | null => {
       ? styles.marginScene
       : styles.marginCard
 
-  const nonNullChildren = React.Children.map(children, child => {
-    if (child != null) {
-      return child
+  const nonNullChildren = React.Children.map(
+    children,
+    (child): React.ReactNode => {
+      if (child != null) {
+        return child
+      }
     }
-  })
+  )
   const numChildren = React.Children.count(nonNullChildren)
 
   if (children == null || numChildren === 0) return null
@@ -54,20 +57,23 @@ export const SectionView = (props: Props): React.ReactElement | null => {
     <View style={[styles.container, margin]}>
       {numChildren === 1
         ? nonNullChildren
-        : React.Children.map(nonNullChildren, (child, index) => {
-            if (index < numChildren - 1) {
-              return (
-                <>
-                  {child}
-                  <DividerLineUi4
-                    marginRem={dividerMarginRem}
-                    extendRight={extendRight}
-                  />
-                </>
-              )
+        : React.Children.map(
+            nonNullChildren,
+            (child, index): React.ReactNode => {
+              if (index < numChildren - 1) {
+                return (
+                  <>
+                    {child}
+                    <DividerLineUi4
+                      marginRem={dividerMarginRem}
+                      extendRight={extendRight}
+                    />
+                  </>
+                )
+              }
+              return child
             }
-            return child
-          })}
+          )}
     </View>
   )
 }

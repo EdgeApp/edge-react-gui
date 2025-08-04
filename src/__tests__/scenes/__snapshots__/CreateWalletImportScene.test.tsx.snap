@@ -317,501 +317,659 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         }
       />
     </View>
-    <View
-      style={
-        {
-          "flexDirection": "row",
-          "justifyContent": "center",
-          "marginVertical": 45,
-        }
-      }
-    >
-      <ImportKeySvg
-        accessibilityHint="Import Key"
-        color="#00f1a2"
-        height={36}
-        width={83}
-      />
-    </View>
-    <Text
-      adjustsFontSizeToFit={false}
-      numberOfLines={0}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
-          },
-          false,
-          null,
-        ]
-      }
-    >
-      Enter your private seed, private key, or active key to verify and restore the associated wallet
-    </Text>
-    <View
-      marginRemStyle={
-        {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
-        }
-      }
-      multiline={true}
-      style={
-        {
-          "flexGrow": 1,
-          "flexShrink": 1,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
-        }
-      }
-    >
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        disableAnimation={0}
-        focusAnimation={0}
-        focusable={true}
-        jestAnimatedStyle={
-          {
-            "value": {
-              "backgroundColor": "rgba(255, 255, 255, 0.2)",
-              "borderColor": "rgba(0, 241, 162, 0)",
-              "marginHorizontal": 0,
-              "opacity": 1,
-              "paddingVertical": 22,
-            },
-          }
-        }
-        multiline={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        scale={1}
-        style={
-          {
-            "alignItems": "stretch",
-            "backgroundColor": "rgba(255, 255, 255, 0.2)",
-            "borderColor": "rgba(0, 241, 162, 0)",
-            "borderRadius": 11,
-            "borderWidth": 1,
-            "flexDirection": "row",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "marginHorizontal": 0,
-            "opacity": 1,
-            "paddingHorizontal": 17,
-            "paddingVertical": 22,
-          }
-        }
-      >
+    <RCTScrollView>
+      <View>
         <View
-          collapsable={false}
-          jestAnimatedStyle={
-            {
-              "value": {
-                "opacity": 0,
-                "width": 0,
-              },
-            }
-          }
-          scale={0}
           style={
             {
-              "alignItems": "stretch",
-              "aspectRatio": 1,
-              "opacity": 0,
-              "width": 0,
-            }
-          }
-        />
-        <View
-          collapsable={false}
-          focusValue={0}
-          hasPlaceholder={true}
-          jestAnimatedStyle={
-            {
-              "value": {
-                "marginBottom": -0,
-                "marginTop": 0,
-              },
-            }
-          }
-          style={
-            {
-              "alignItems": "flex-start",
-              "alignSelf": "flex-start",
-              "flex": 1,
               "flexDirection": "row",
-              "left": 0,
-              "marginBottom": -0,
-              "marginTop": 0,
+              "justifyContent": "center",
+              "marginVertical": 45,
             }
           }
         >
-          <View
-            collapsable={false}
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "transform": [
-                    {
-                      "translateY": 0,
-                    },
-                    {
-                      "translateX": 0,
-                    },
-                  ],
-                },
-              }
-            }
-            shift={0}
-            style={
-              {
-                "alignItems": "center",
-                "justifyContent": "center",
-                "left": 8.8,
-                "margin": 0,
-                "paddingHorizontal": 0,
-                "paddingVertical": 0,
-                "position": "absolute",
-                "top": 0,
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                  {
-                    "translateX": 0,
-                  },
-                ],
-              }
-            }
-          >
-            <Text
-              collapsable={false}
-              disableAnimation={0}
-              focusAnimation={0}
-              jestAnimatedStyle={
-                {
-                  "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 22,
-                  },
-                }
-              }
-              scale={1}
-              shift={0}
-              style={
-                {
-                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                }
-              }
-            >
-              Private Key or Private Seed
-            </Text>
-          </View>
-          <TextInput
-            accessibilityState={
-              {
-                "disabled": false,
-              }
-            }
-            accessible={true}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            autoFocus={false}
-            blurOnSubmit={false}
-            collapsable={false}
-            defaultValue=""
-            disableAnimation={0}
-            editable={true}
-            focusAnimation={0}
-            forwardedRef={[Function]}
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
-                },
-              }
-            }
-            keyboardType="email-address"
-            multiline={true}
-            numberOfLines={10}
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            onSubmitEditing={[Function]}
-            scale={1}
-            selectionColor="rgba(255, 255, 255, .25)"
-            style={
-              {
-                "color": "rgba(255, 255, 255, 1)",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "margin": 0,
-                "paddingHorizontal": 0,
-                "paddingVertical": 0,
-                "transform": [
-                  {
-                    "translateY": -0,
-                  },
-                ],
-              }
-            }
-            testID="undefined.textInput"
-            textAlignVertical="top"
+          <ImportKeySvg
+            accessibilityHint="Import Key"
+            color="#00f1a2"
+            height={36}
+            width={83}
           />
         </View>
+        <Text
+          adjustsFontSizeToFit={false}
+          numberOfLines={0}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              false,
+              null,
+            ]
+          }
+        >
+          Enter your private seed, private key, or active key to verify and restore the associated wallet
+        </Text>
         <View
-          accessibilityState={
+          marginRemStyle={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+          multiline={true}
           style={
             {
-              "marginHorizontal": -22,
-              "marginVertical": -28,
-              "opacity": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 28,
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             }
           }
-          testID="undefined.clearIcon"
         >
           <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
             collapsable={false}
+            disableAnimation={0}
+            focusAnimation={0}
+            focusable={true}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
-                  "opacity": 0,
-                  "width": 0,
+                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                  "borderColor": "rgba(0, 241, 162, 0)",
+                  "marginHorizontal": 0,
+                  "opacity": 1,
+                  "paddingVertical": 22,
                 },
               }
             }
-            scale={0}
-            style={
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-                "opacity": 0,
-                "width": 0,
-              }
-            }
-          >
-            <Text
-              collapsable={false}
-              jestAnimatedStyle={
+            jestInlineStyle={
+              [
                 {
-                  "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "anticon",
-                    "fontSize": 0,
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                }
-              }
-              style={
-                {
-                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                  "fontFamily": "anticon",
-                  "fontSize": 0,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-      </View>
-    </View>
-    <View
-      absolute={false}
-      layout="solo"
-      parentType="scene"
-      style={
-        {
-          "alignItems": "center",
-          "flexGrow": 1,
-          "flexShrink": 0,
-          "justifyContent": "flex-end",
-          "margin": 11,
-          "marginBottom": 67,
-          "marginHorizontal": 11,
-          "marginTop": 22,
-        }
-      }
-    >
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "flexBasis": "auto",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "justifyContent": "center",
-            "margin": -11,
-            "opacity": 1,
-            "padding": 11,
-          }
-        }
-      >
-        <BVLinearGradient
-          colors={
-            [
-              4280299823,
-              4278214733,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 0,
+                  "alignItems": "stretch",
+                  "borderRadius": 11,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "paddingHorizontal": 17,
+                },
+              ]
             }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "center",
-                "borderRadius": 34,
-                "flexDirection": "row",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "justifyContent": "center",
-              },
-              {
-                "alignSelf": "center",
-              },
-              {
-                "height": 67,
-                "paddingHorizontal": 34,
-              },
-              {
-                "opacity": 1,
-              },
-            ]
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
+            multiline={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            scale={1}
             style={
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
+                  "alignItems": "stretch",
+                  "borderRadius": 11,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "paddingHorizontal": 17,
                 },
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                  },
-                  null,
-                ],
-                null,
+                {
+                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                  "borderColor": "rgba(0, 241, 162, 0)",
+                  "marginHorizontal": 0,
+                  "opacity": 1,
+                  "paddingVertical": 22,
+                },
               ]
             }
           >
-            Next
-          </Text>
-        </BVLinearGradient>
+            <View
+              collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                }
+              }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
+              scale={0}
+              style={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+            />
+            <View
+              collapsable={false}
+              focusValue={0}
+              hasPlaceholder={true}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "marginBottom": -0,
+                    "marginTop": 0,
+                  },
+                }
+              }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "flex-start",
+                    "alignSelf": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "left": 0,
+                  },
+                ]
+              }
+              style={
+                [
+                  {
+                    "alignItems": "flex-start",
+                    "alignSelf": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "left": 0,
+                  },
+                  {
+                    "marginBottom": -0,
+                    "marginTop": 0,
+                  },
+                ]
+              }
+            >
+              <View
+                collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "transform": [
+                        {
+                          "translateY": 0,
+                        },
+                        {
+                          "translateX": 0,
+                        },
+                      ],
+                    },
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "left": 8.8,
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "position": "absolute",
+                      "top": 0,
+                    },
+                  ]
+                }
+                shift={0}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "left": 8.8,
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "position": "absolute",
+                      "top": 0,
+                    },
+                    {
+                      "transform": [
+                        {
+                          "translateY": 0,
+                        },
+                        {
+                          "translateX": 0,
+                        },
+                      ],
+                    },
+                  ]
+                }
+              >
+                <Text
+                  collapsable={false}
+                  disableAnimation={0}
+                  focusAnimation={0}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontSize": 22,
+                      },
+                    }
+                  }
+                  jestInlineStyle={
+                    [
+                      {
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                    ]
+                  }
+                  scale={1}
+                  shift={0}
+                  style={
+                    [
+                      {
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontSize": 22,
+                      },
+                    ]
+                  }
+                >
+                  Private Key or Private Seed
+                </Text>
+              </View>
+              <TextInput
+                accessibilityState={
+                  {
+                    "disabled": false,
+                  }
+                }
+                accessible={true}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+                autoFocus={false}
+                blurOnSubmit={false}
+                collapsable={false}
+                defaultValue=""
+                disableAnimation={0}
+                editable={true}
+                focusAnimation={0}
+                forwardedRef={[Function]}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "color": "rgba(255, 255, 255, 1)",
+                      "fontSize": 22,
+                    },
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "color": "hsla(0, 0%, 100%, 0.20)",
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                  ]
+                }
+                keyboardType="email-address"
+                multiline={true}
+                numberOfLines={10}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                onSubmitEditing={[Function]}
+                scale={1}
+                selectionColor="rgba(255, 255, 255, .25)"
+                style={
+                  [
+                    {
+                      "color": "hsla(0, 0%, 100%, 0.20)",
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "margin": 0,
+                      "paddingHorizontal": 0,
+                      "paddingVertical": 0,
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "color": "rgba(255, 255, 255, 1)",
+                      "fontSize": 22,
+                    },
+                  ]
+                }
+                testID="undefined.textInput"
+                textAlignVertical="top"
+              />
+            </View>
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "marginHorizontal": -22,
+                  "marginVertical": -28,
+                  "opacity": 1,
+                  "paddingHorizontal": 22,
+                  "paddingVertical": 28,
+                }
+              }
+              testID="undefined.clearIcon"
+            >
+              <View
+                collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "opacity": 0,
+                      "width": 0,
+                    },
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                  ]
+                }
+                scale={0}
+                style={
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                    {
+                      "opacity": 0,
+                      "width": 0,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontFamily": "anticon",
+                        "fontSize": 0,
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                    }
+                  }
+                  jestInlineStyle={{}}
+                  style={
+                    [
+                      {
+                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "fontFamily": "anticon",
+                        "fontSize": 0,
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          absolute={false}
+          layout="solo"
+          parentType="scene"
+          style={
+            {
+              "alignItems": "center",
+              "flexGrow": 1,
+              "flexShrink": 0,
+              "justifyContent": "flex-end",
+              "margin": 11,
+              "marginBottom": 67,
+              "marginHorizontal": 11,
+              "marginTop": 22,
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "justifyContent": "center",
+                "margin": -11,
+                "opacity": 1,
+                "padding": 11,
+              }
+            }
+          >
+            <BVLinearGradient
+              colors={
+                [
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "flexDirection": "row",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "justifyContent": "center",
+                  },
+                  {
+                    "alignSelf": "center",
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 34,
+                  },
+                  {
+                    "opacity": 1,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
+                    null,
+                  ]
+                }
+              >
+                Next
+              </Text>
+            </BVLinearGradient>
+          </View>
+        </View>
       </View>
-    </View>
+    </RCTScrollView>
   </View>
 </View>
 `;

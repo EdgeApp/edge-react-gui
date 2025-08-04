@@ -123,6 +123,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
               ]
             }
+            transform={
+              [
+                {
+                  "rotateZ": "-90deg",
+                },
+              ]
+            }
             vbHeight={38}
             vbWidth={38}
             width={38}
@@ -1042,6 +1049,13 @@ exports[`TransactionListTop should render 1`] = `
                   "flex": 0,
                   "height": 38,
                   "width": 38,
+                },
+              ]
+            }
+            transform={
+              [
+                {
+                  "rotateZ": "-90deg",
                 },
               ]
             }

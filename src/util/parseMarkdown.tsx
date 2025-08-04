@@ -27,7 +27,10 @@ export function parseMarkdown(str: string): React.ReactNode {
   return <Markdown>{nodes}</Markdown>
 }
 
-function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
+function tokenToReactNode(
+  token: MarkedToken,
+  key: string
+): React.ReactElement | null {
   const subTokens =
     'tokens' in token
       ? token.tokens?.map((token, index) =>

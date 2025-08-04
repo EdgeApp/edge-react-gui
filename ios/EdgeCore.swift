@@ -1,9 +1,7 @@
 import Foundation
 
-@objc
-public class EdgeCore: NSObject {
-  @objc
-  public func fetchPendingLogins(completion: @escaping ([NSString]?) -> Void) {
+public class EdgeCore {
+  public func fetchPendingLogins(completion: @escaping ([String]?) -> Void) {
     do {
       let decoder = JSONDecoder()
       let encoder = JSONEncoder()
@@ -54,11 +52,11 @@ public class EdgeCore: NSObject {
           let body = try? decoder.decode(LoginResponseBody.self, from: data),
           let results = body.results
         {
-          var usernames: [NSString] = []
+          var usernames: [String] = []
           for result in results {
             if result.otpResetPending == true || result.pendingVouchers?.count ?? 0 > 0 {
               if let username = loginIds[result.loginId] {
-                usernames.append(NSString(string: username))
+                usernames.append(username)
               }
             }
           }
@@ -74,8 +72,7 @@ public class EdgeCore: NSObject {
     }
   }
 
-  @objc
-  public func updatePushToken(token: NSString, completion: @escaping (Bool) -> Void) {
+  public func updatePushToken(token: String, completion: @escaping (Bool) -> Void) {
     do {
       let encoder = JSONEncoder()
 
@@ -88,7 +85,7 @@ public class EdgeCore: NSObject {
       var body = PushRequestBody()
       body.apiKey = EdgeApiKey.apiKey
       body.deviceId = Base58.encode(Array(clientId))
-      body.deviceToken = String(token)
+      body.deviceToken = token
 
       // Prepare our request:
       guard let url = URL(string: "\(EdgeApiKey.pushServer)/v2/device/") else {

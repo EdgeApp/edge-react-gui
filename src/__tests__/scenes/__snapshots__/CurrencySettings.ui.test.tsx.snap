@@ -218,13 +218,28 @@ exports[`CurrencySettings should render 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "maxHeight": 1334,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
@@ -238,12 +253,18 @@ exports[`CurrencySettings should render 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -356,6 +377,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -363,15 +389,29 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -386,6 +426,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -393,11 +438,14 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text
@@ -503,6 +551,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -510,15 +563,29 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -533,6 +600,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -540,11 +612,14 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text
@@ -650,6 +725,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -657,15 +737,29 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -680,6 +774,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -687,11 +786,14 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text

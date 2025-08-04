@@ -218,13 +218,28 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "maxHeight": 1334,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
@@ -238,12 +253,18 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -605,6 +626,11 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -612,24 +638,46 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "backgroundColor": "#494949",
+                    "borderRadius": 27.5,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ]
+              }
               style={
-                {
-                  "backgroundColor": "#494949",
-                  "borderRadius": 27.5,
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "width": 295,
-                }
+                [
+                  {
+                    "backgroundColor": "#494949",
+                    "borderRadius": 27.5,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                  {
+                    "width": 295,
+                  },
+                ]
               }
             />
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={1}
+              handlerTag={-1}
               handlerType="PanGestureHandler"
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -641,22 +689,45 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#00f1a2",
+                    "borderRadius": 27.5,
+                    "height": 55,
+                    "justifyContent": "center",
+                    "width": 55,
+                    "zIndex": 5,
+                  },
+                  {
+                    "backgroundColor": "#888888",
+                  },
+                ]
+              }
               onGestureHandlerEvent={[Function]}
               style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#888888",
-                  "borderRadius": 27.5,
-                  "height": 55,
-                  "justifyContent": "center",
-                  "transform": [
-                    {
-                      "translateX": 240,
-                    },
-                  ],
-                  "width": 55,
-                  "zIndex": 5,
-                }
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#00f1a2",
+                    "borderRadius": 27.5,
+                    "height": 55,
+                    "justifyContent": "center",
+                    "width": 55,
+                    "zIndex": 5,
+                  },
+                  {
+                    "backgroundColor": "#888888",
+                  },
+                  {
+                    "transform": [
+                      {
+                        "translateX": 240,
+                      },
+                    ],
+                  },
+                ]
               }
             >
               <Text

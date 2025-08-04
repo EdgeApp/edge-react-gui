@@ -218,13 +218,28 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "maxHeight": 1334,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
     keyboardShouldPersistTaps="handled"
     onMomentumScrollBegin={[Function]}
@@ -239,12 +254,18 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 11,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -253,9 +274,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -266,15 +284,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -285,22 +301,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
       >
@@ -421,6 +424,11 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       </View>
       <View
         collapsable={false}
+        jestAnimatedProps={
+          {
+            "value": {},
+          }
+        }
         jestAnimatedStyle={
           {
             "value": {},
@@ -429,22 +437,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
       >
@@ -553,9 +548,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -566,15 +558,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -585,22 +575,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
       >
@@ -724,9 +701,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -737,15 +711,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -756,22 +728,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
       />
@@ -780,9 +739,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -793,15 +749,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -812,22 +766,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
       />
@@ -839,6 +780,11 @@ exports[`SwapCreateScene should render with loading props 1`] = `
     footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -850,20 +796,35 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -74.85492957746479,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -74.85492957746479,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]
