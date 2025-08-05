@@ -77,16 +77,14 @@ tags:
 - tapOn:
     id: "sideMenuButton"
 - tapOn: "Scan QR"
-#- assertVisible: "OK"
-#- tapOn: "OK"
 - assertVisible: "Scan QR Code"
 - tapOn:
-    id: "sideMenuButton"
+    id: "xCloseButton"
 - tapOn:
     id: "sideMenuButton"
-#- tapOn: "Share Edge"
-#- assertVisible: "Copy"
-#- tapOn: "Close"
+- tapOn: "Share Edge"
+- assertVisible: "Copy"
+- tapOn: "Copy"
 - tapOn: "Settings"
 - assertVisible: "Settings"
 - assertVisible:
