@@ -24,6 +24,10 @@ tags:
     optional: true
 
 # If the survey modal shows, dismiss it
+- extendedWaitUntil:
+    visible: "How Did You Discover"
+    timeout: 20000
+    optional: true
 - tapOn:
     text: "Dismiss"
     optional: true
