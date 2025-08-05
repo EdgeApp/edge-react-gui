@@ -53,6 +53,7 @@ export function ModalFooter(props: ModalFooterProps) {
         color={theme.iconTappable}
         name="close"
         size={theme.rem(1.25)}
+        testID="xCloseButton"
       />
     </EdgeTouchableOpacity>
   )
