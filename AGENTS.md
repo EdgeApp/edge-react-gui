@@ -10,6 +10,7 @@
 > 4. **Create markdown files** in `docs/` folder for conventions, business logic, and codebase patterns discovered
 > 5. **Amend existing docs** rather than creating duplicates to keep knowledge base organized and succinct
 > 6. **Prioritize documenting** coding conventions, architectural patterns, and business rules
+> 7. **All `.md` files in `docs/` must be indexed** in the Documentation section below with "When to read" and "Summary" descriptions
 
 ## Package Manager
 
@@ -62,3 +63,27 @@
 - Create pseudo-merge commits with "future! branch-name" for dependent features
 - Use `git rebase --onto` to update dependent branches when base changes
 - Remove future commits by rebasing onto master once dependencies are merged
+
+## Documentation
+
+The following documentation files provide detailed guidance for specific areas of development. **Read the relevant documentation before starting work** in these areas:
+
+### `docs/component-styling-guidelines.md`
+
+**When to read**: Before styling components or converting inline styles to styled components
+**Summary**: Guidelines for using the `styled` HOC, file structure patterns, and avoiding inline styles. Essential for maintaining consistent component styling across the codebase.
+
+### `docs/localization-guidelines.md`
+
+**When to read**: Before adding any UI text or working with user-facing strings
+**Summary**: Mandatory guidelines for localizing all UI strings using `lstrings` from `en_US.ts`. Covers naming conventions, parameter handling, and implementation steps for internationalization.
+
+### `docs/MAESTRO.md`
+
+**When to read**: When setting up or running end-to-end tests, or when working on test automation
+**Summary**: Complete setup guide for Maestro mobile testing framework. Includes installation instructions, running tests, and creating new tests with Maestro Studio.
+
+### `docs/GUI_PLUGINS_ARCHITECTURE.md`
+
+**When to read**: When working on fiat on/off ramp features, payment integrations, or plugin system
+**Summary**: Comprehensive architecture guide for the fiat plugin system. Covers provider implementations, payment method configurations, regional restrictions, and integration patterns for buy/sell cryptocurrency features.
