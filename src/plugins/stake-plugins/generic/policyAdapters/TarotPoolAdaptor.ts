@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 import '@ethersproject/shims'
 
 import { add, ceil, div, eq, mul } from 'biggystring'
-import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import {
@@ -13,17 +14,17 @@ import {
   VelodromeLPToken__factory,
   VelodromeRouterV2__factory
 } from '../../../contracts'
-import {
+import type {
   ChangeQuote,
   PositionAllocation,
   QuoteAllocation,
   StakeAssetInfo,
   StakePosition
 } from '../../types'
-import { StakePolicyConfig } from '../types'
+import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
-import { StakePolicyAdapter } from './types'
+import type { StakePolicyAdapter } from './types'
 
 export interface TarotPoolAdapterConfig {
   type: 'tarot-velodrome-pool'
@@ -163,8 +164,8 @@ export const makeTarotPoolAdapter = (
     }
 
     let rawTxCost = 0
-    for (let i = 0; i < unsignedRawTxBytesArray.length; i++) {
-      if (unsignedRawTxBytesArray[i] === '00') {
+    for (const byte of unsignedRawTxBytesArray) {
+      if (byte === '00') {
         rawTxCost += 4 // cost for zero byte
       } else {
         rawTxCost += 16 // cost for non-zero byte
@@ -425,7 +426,7 @@ export const makeTarotPoolAdapter = (
               log.address.toLowerCase() ===
               lpTokenContract.address.toLowerCase()
           )
-          const log = eventLogs.filter(
+          const log = eventLogs.find(
             log =>
               log.topics[0] ===
               lpTokenContract.interface.getEventTopic(
@@ -433,7 +434,7 @@ export const makeTarotPoolAdapter = (
                   'Transfer(address,address,uint256)'
                 ]
               )
-          )[0]
+          )
 
           if (log == null) throw new Error('Cannot find log with amount')
 

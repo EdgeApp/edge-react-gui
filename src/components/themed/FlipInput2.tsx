@@ -2,19 +2,19 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import {
   Platform,
-  ReturnKeyType,
+  type ReturnKeyType,
   Text,
   TextInput,
-  TextInputProps,
+  type TextInputProps,
   View
 } from 'react-native'
 import Animated, {
-  AnimationCallback,
+  type AnimationCallback,
   Easing,
   interpolate,
   interpolateColor,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -173,7 +173,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             setAmounts(newAmounts)
           }
         })
-        .catch(e => showDevError(e.message))
+        .catch(e => {
+          showDevError(e.message)
+        })
     })
 
     const handleBottomFocus = useHandler(() => {

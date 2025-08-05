@@ -16,7 +16,7 @@ import { getThemedIconUri } from '../../util/CdnUris'
 import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -208,7 +208,8 @@ const TouchableContents = styled(EdgeTouchableOpacity)((theme: Theme) => ({
 }))
 
 const TouchableCloseButton = styled(EdgeTouchableOpacity)((theme: Theme) => ({
-  margin: theme.rem(0.25)
+  margin: -theme.rem(2),
+  padding: theme.rem(2.25)
 }))
 
 export const NotificationCard = React.memo(NotificationCardComponent)

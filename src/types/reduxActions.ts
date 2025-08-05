@@ -1,5 +1,5 @@
-import { Disklet } from 'disklet'
-import {
+import type { Disklet } from 'disklet'
+import type {
   EdgeAccount,
   EdgeContext,
   EdgeCurrencyWallet,
@@ -7,30 +7,30 @@ import {
   EdgeSwapPluginType
 } from 'edge-core-js'
 
-import { ExchangeInfo } from '../actions/ExchangeInfoActions'
-import { NotificationSettings } from '../actions/NotificationActions'
-import {
+import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import type { NotificationSettings } from '../actions/NotificationActions'
+import type {
   PasswordReminderTime,
   SecurityCheckedWallets
 } from '../actions/SettingsActions'
-import { SortOption } from '../components/modals/WalletListSortModal'
-import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
-import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
-import { CcWalletMap } from '../reducers/FioReducer'
-import { PermissionsState } from '../reducers/PermissionsReducer'
-import {
+import type { SortOption } from '../components/modals/WalletListSortModal'
+import type { ActionQueueAction } from '../controllers/action-queue/redux/actions'
+import type { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
+import type { CcWalletMap } from '../reducers/FioReducer'
+import type { PermissionsState } from '../reducers/PermissionsReducer'
+import type {
   AccountInitPayload,
   SettingsState
 } from '../reducers/scenes/SettingsReducer'
-import { StakingAction } from '../reducers/StakingReducer'
-import { TweakSource } from '../util/ReferralHelpers'
-import {
+import type { StakingAction } from '../reducers/StakingReducer'
+import type { TweakSource } from '../util/ReferralHelpers'
+import type {
   AccountReferral,
   DeviceReferral,
   Promotion,
   ReferralCache
 } from './ReferralTypes'
-import {
+import type {
   FioAddress,
   FioDomain,
   GuiContact,

@@ -1,4 +1,4 @@
-import { RootState } from '../types/reduxTypes'
+import type { RootState } from '../types/reduxTypes'
 import { removeIsoPrefix } from '../util/utils'
 
 export const getDefaultFiat = (state: RootState) => {

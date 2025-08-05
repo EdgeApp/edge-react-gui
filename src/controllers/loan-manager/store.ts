@@ -6,7 +6,7 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 //
@@ -45,9 +45,7 @@ export const LOAN_MANAGER_STORE_ID = 'loanManager'
 export const LOAN_ACCOUNT_MAP = 'loanAccountMap'
 
 // Records:
-export interface LoanAccountMapRecord {
-  [pluginId: string]: LoanAccountEntry
-}
+export type LoanAccountMapRecord = Record<string, LoanAccountEntry>
 export const asLoanAccountMapRecord: Cleaner<LoanAccountMapRecord> = asOptional(
   asJSON(asObject(asLoanAccountEntry)),
   () => ({})

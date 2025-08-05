@@ -236,7 +236,7 @@ jest.mock('use-context-selector', () => {
       contextValues.set(Provider, currentValue ?? defaultValue)
       // Return provider
       return {
-        Provider: Provider,
+        Provider,
         displayName: 'test'
       }
     },

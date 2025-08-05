@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
@@ -10,9 +10,9 @@ import { sprintf } from 'sprintf-js'
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { FioAddress, FioDomain, FioObtRecord } from '../types/types'
+import type { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
+import type { FioAddress, FioDomain, FioObtRecord } from '../types/types'
 import {
   addToFioAddressCache,
   getFioObtData,
@@ -70,12 +70,7 @@ export function checkFioObtData(
     while (true) {
       account = state.core.account
       fioWallets = state.ui.wallets.fioWallets
-      if (
-        account != null &&
-        account.currencyConfig != null &&
-        fioWallets.length > 0
-      )
-        break
+      if (account?.currencyConfig != null && fioWallets.length > 0) break
       if (loopCount++ > MAX_OBT_DATA_CHECKS) return
       await snooze(400)
     }

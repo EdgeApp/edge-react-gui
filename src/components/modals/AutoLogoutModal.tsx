@@ -1,18 +1,18 @@
 import { Picker } from '@react-native-picker/picker'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { WheelPicker } from 'react-native-wheel-picker-android'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import {
-  DisplayTime,
+  type DisplayTime,
   displayToSeconds,
   secondsToDisplay
 } from '../../util/displayTime'
 import { ModalButtons } from '../buttons/ModalButtons'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
@@ -115,9 +115,9 @@ export const AutoLogoutModal = (props: Props) => {
                 initPosition={initPositionNumber}
                 itemTextFontFamily={theme.fontFaceDefault}
                 itemTextSize={theme.rem(1)}
-                onItemSelected={(index: number) =>
+                onItemSelected={(index: number) => {
                   setDisplayTime({ ...displayTime, value: index })
-                }
+                }}
                 selectedItemTextColor={theme.pickerText}
                 style={styles.androidPicker}
               />
@@ -130,12 +130,12 @@ export const AutoLogoutModal = (props: Props) => {
                 initPosition={initPositionUnit}
                 itemTextFontFamily={theme.fontFaceDefault}
                 itemTextSize={theme.rem(1)}
-                onItemSelected={(index: number) =>
+                onItemSelected={(index: number) => {
                   setDisplayTime({
                     ...displayTime,
                     measurement: unitLabelValueList[index].value
                   })
-                }
+                }}
                 selectedItemTextColor={theme.pickerText}
                 style={styles.androidPicker}
               />
@@ -146,16 +146,18 @@ export const AutoLogoutModal = (props: Props) => {
             <Picker
               style={styles.picker}
               selectedValue={displayTime.value}
-              onValueChange={value => setDisplayTime({ ...displayTime, value })}
+              onValueChange={value => {
+                setDisplayTime({ ...displayTime, value })
+              }}
             >
               {numberOptionsIos}
             </Picker>
             <Picker
               style={styles.picker}
               selectedValue={displayTime.measurement}
-              onValueChange={measurement =>
+              onValueChange={measurement => {
                 setDisplayTime({ ...displayTime, measurement })
-              }
+              }}
             >
               {unitOptionsIos}
             </Picker>

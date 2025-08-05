@@ -1,5 +1,5 @@
-import { ExchangeInfo } from '../actions/ExchangeInfoActions'
-import { Action } from '../types/reduxTypes'
+import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import type { Action } from '../types/reduxTypes'
 
 export const initialState: ExchangeInfo = {
   buy: {

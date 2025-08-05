@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Platform, StyleProp, View, ViewStyle } from 'react-native'
+import { Platform, type StyleProp, View, type ViewStyle } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface Props {

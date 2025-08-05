@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -9,7 +9,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, Text, View } from 'react-native'
-import Share, { ShareOptions } from 'react-native-share'
+import Share, { type ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -27,8 +27,8 @@ import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { StringMap } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { StringMap } from '../../types/types'
 import {
   getCurrencyCode,
   isKeysOnlyPlugin
@@ -46,7 +46,7 @@ import {
 } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import {
   EdgeAnim,
   fadeInDown50,
@@ -61,13 +61,16 @@ import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { QrModal } from '../modals/QrModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { showWebViewModal } from '../modals/WebViewModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -76,8 +79,8 @@ import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
 import {
   ExchangedFlipInput2,
-  ExchangedFlipInputAmounts,
-  ExchangedFlipInputRef
+  type ExchangedFlipInputAmounts,
+  type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -107,12 +110,10 @@ interface StateProps {
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onSelectWallet: (walletId: string, tokenId: EdgeTokenId) => Promise<void>
-  toggleAccountBalanceVisibility: () => void
+  toggleAccountBalanceVisibility: () => Promise<void>
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
-interface CurrencyMinimumPopupState {
-  [pluginId: string]: ModalState
-}
+type CurrencyMinimumPopupState = Record<string, ModalState>
 
 interface HookProps {
   iconColor?: string
@@ -138,12 +139,12 @@ export class RequestSceneComponent extends React.Component<
   Props & HookProps,
   State
 > {
-  flipInputRef: React.RefObject<ExchangedFlipInputRef>
+  flipInputRef: React.RefObject<ExchangedFlipInputRef | null>
   unsubscribeAddressChanged: (() => void) | undefined
 
   constructor(props: Props) {
     super(props)
-    this.flipInputRef = React.createRef<ExchangedFlipInputRef>()
+    this.flipInputRef = React.createRef<ExchangedFlipInputRef | null>()
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
       if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
@@ -161,17 +162,25 @@ export class RequestSceneComponent extends React.Component<
       this.state.minimumPopupModalState[wallet.currencyInfo.pluginId] =
         'VISIBLE'
       console.log('stop, in constructor')
-      this.enqueueMinimumAmountModal().catch(err => showError(err))
+      this.enqueueMinimumAmountModal().catch(err => {
+        showError(err)
+      })
     }
   }
 
   componentDidMount() {
-    this.getAddressItems().catch(err => showError(err))
-    this.props.refreshAllFioAddresses().catch(err => showError(err))
+    this.getAddressItems().catch(err => {
+      showError(err)
+    })
+    this.props.refreshAllFioAddresses().catch(err => {
+      showError(err)
+    })
     if (this.props.wallet != null) {
       this.unsubscribeAddressChanged = this.props.wallet.on(
         'addressChanged',
-        async () => await this.getAddressItems()
+        async () => {
+          await this.getAddressItems()
+        }
       )
     }
   }
@@ -244,7 +253,9 @@ export class RequestSceneComponent extends React.Component<
       prevProps.wallet && wallet.id !== prevProps.wallet.id
 
     if (didWalletChange) {
-      this.getAddressItems().catch(err => showError(err))
+      this.getAddressItems().catch(err => {
+        showError(err)
+      })
     }
 
     // old blank address to new
@@ -256,10 +267,12 @@ export class RequestSceneComponent extends React.Component<
           this.state.minimumPopupModalState
         )
         if (minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
-          this.enqueueMinimumAmountModal().catch(err => showError(err))
+          this.enqueueMinimumAmountModal().catch(err => {
+            showError(err)
+          })
         }
         minimumPopupModalState[pluginId] = 'VISIBLE'
-        // eslint-disable-next-line react/no-did-update-set-state
+
         this.setState({ minimumPopupModalState })
       }
     }
@@ -311,10 +324,14 @@ export class RequestSceneComponent extends React.Component<
       .then(async (result?: string) => {
         if (result === 'confirm' && addressExplorer != null) {
           const url = sprintf(addressExplorer, requestAddress)
-          await Linking.openURL(url).catch(error => showError(error))
+          await Linking.openURL(url).catch(error => {
+            showError(error)
+          })
         }
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   }
 
   handleOpenWalletListModal = async () => {
@@ -340,10 +357,13 @@ export class RequestSceneComponent extends React.Component<
     }
   }
 
-  onError = (errorMessage?: string) => this.setState({ errorMessage })
+  onError = (errorMessage?: string) => {
+    this.setState({ errorMessage })
+  }
 
-  handleKeysOnlyModePress = async () =>
+  handleKeysOnlyModePress = async () => {
     await showWebViewModal(lstrings.help_support, config.supportSite)
+  }
 
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
@@ -379,7 +399,10 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  handleBackupPress = () => this.props.navigation.navigate('upgradeUsername')
+  handleBackupPress = () => {
+    this.props.navigation.navigate('upgradeUsername')
+  }
+
   renderLightAccountMode = () => {
     const styles = getStyles(this.props.theme)
     return (
@@ -419,12 +442,14 @@ export class RequestSceneComponent extends React.Component<
         wallet={wallet}
         data={encodedUri}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   }
 
-  toggleBalanceVisibility = () => {
+  toggleBalanceVisibility = async () => {
     triggerHaptic('impactLight')
-    this.props.toggleAccountBalanceVisibility()
+    await this.props.toggleAccountBalanceVisibility()
   }
 
   render() {
@@ -708,7 +733,9 @@ export class RequestSceneComponent extends React.Component<
       failOnCancel: false
     }
 
-    await Share.open(shareOptions).catch(error => showError(error))
+    await Share.open(shareOptions).catch(error => {
+      showError(error)
+    })
   }
 
   openFioAddressModal = async (): Promise<void> => {
@@ -730,7 +757,7 @@ export class RequestSceneComponent extends React.Component<
       this.state.amounts == null ||
       zeroString(this.state.amounts?.nativeAmount)
     ) {
-      showToast(`${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
+      showToast(lstrings.fio_request_by_fio_address_error_invalid_amount)
       return
     }
 
@@ -862,9 +889,9 @@ export const RequestScene = withWallet((props: OwnProps) => {
       showBalance={showBalance}
       theme={theme}
       wallet={wallet}
-      refreshAllFioAddresses={async () =>
+      refreshAllFioAddresses={async () => {
         await dispatch(refreshAllFioAddresses())
-      }
+      }}
       onSelectWallet={async (walletId: string, tokenId: EdgeTokenId) => {
         await dispatch(
           selectWalletToken({
@@ -874,9 +901,9 @@ export const RequestScene = withWallet((props: OwnProps) => {
           })
         )
       }}
-      toggleAccountBalanceVisibility={() =>
-        dispatch(toggleAccountBalanceVisibility())
-      }
+      toggleAccountBalanceVisibility={async () => {
+        await dispatch(toggleAccountBalanceVisibility())
+      }}
     />
   )
 })

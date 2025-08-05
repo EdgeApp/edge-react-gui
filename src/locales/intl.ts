@@ -92,7 +92,7 @@ export function formatNumber(
   }
   const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)
   const len = integers.length
-  if (!options || !options.noGrouping) {
+  if (!options?.noGrouping) {
     i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
     intPart = integers.substr(0, i)
     for (; i < len; i += NUMBER_GROUP_SIZE) {
@@ -367,9 +367,9 @@ export const pickLanguage = (
  * Picks either a localized string or uses whatever is defined under 'en_US' (or
  * similar tag) as the fallback default string
  */
-export const getLocaleOrDefaultString = (localizedStrings: {
-  [localeId: string]: string
-}): string | undefined => {
+export const getLocaleOrDefaultString = (
+  localizedStrings: Record<string, string>
+): string | undefined => {
   const [firstLocale = { languageTag: DEFAULT_LOCALE_ID }] = getLocales()
   const { languageTag } = firstLocale
   const localizedStringKeys = Object.keys(localizedStrings)

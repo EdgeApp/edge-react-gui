@@ -1,13 +1,13 @@
-import { asEither, Cleaner, uncleaner } from 'cleaners'
+import { asEither, type Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import { ENV } from '../../env'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
-import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
+import type { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
-import {
+import type {
   ActionProgram,
   ActionProgramState,
   ActionQueueItem,

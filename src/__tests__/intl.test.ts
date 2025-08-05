@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from '@jest/globals'
 import {
   formatNumber,
   formatNumberInput,
-  IntlLocaleType,
+  type IntlLocaleType,
   isValidInput,
   prettifyNumber,
   setIntlLocale,

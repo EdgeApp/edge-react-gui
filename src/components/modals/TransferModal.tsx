@@ -1,7 +1,7 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -13,10 +13,10 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch } from '../../types/reactRedux'
 import { Airship } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
-import { WalletListModal, WalletListResult } from './WalletListModal'
+import { WalletListModal, type WalletListResult } from './WalletListModal'
 
 interface Props {
   bridge: AirshipBridge<void>

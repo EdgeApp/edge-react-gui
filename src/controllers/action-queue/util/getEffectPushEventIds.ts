@@ -1,4 +1,4 @@
-import { ActionEffect } from '../types'
+import type { ActionEffect } from '../types'
 
 export function getEffectPushEventIds(effect?: ActionEffect | null): string[] {
   if (effect != null) {

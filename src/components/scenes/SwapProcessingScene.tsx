@@ -5,10 +5,10 @@ import {
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeDenomination,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeSwapRequestOptions
+  type EdgeDenomination,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeSwapRequestOptions
 } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -16,12 +16,13 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay, zeroString } from '../../util/utils'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showPendingTxModal } from '../modals/PendingTxModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
-import { SwapErrorDisplayInfo } from './SwapCreateScene'
+import type { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {
   swapRequest: EdgeSwapRequest
@@ -30,7 +31,7 @@ export interface SwapProcessingParams {
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
-interface Props extends SwapTabSceneProps<'swapProcessing'> {}
+type Props = SwapTabSceneProps<'swapProcessing'>
 
 export function SwapProcessingScene(props: Props) {
   const { route, navigation } = props
@@ -60,6 +61,20 @@ export function SwapProcessingScene(props: Props) {
     navigation: NavigationBase,
     error: unknown
   ): Promise<void> => {
+    // Check for pending transaction error first
+    if (
+      error != null &&
+      error instanceof Error &&
+      error.name === 'PendingFundsError'
+    ) {
+      await showPendingTxModal(
+        swapRequest.fromWallet,
+        swapRequest.fromTokenId,
+        navigation
+      )
+      return
+    }
+
     const errorDisplayInfo = processSwapQuoteError({
       error,
       swapRequest,
@@ -120,7 +135,8 @@ function processSwapQuoteError({
   if (error == null) return
 
   // Some plugins get the insufficient funds error wrong:
-  const errorMessage = error instanceof Error ? error.message : String(error)
+  const errorMessage =
+    error instanceof Error ? error.message : JSON.stringify(error)
 
   // Track swap errors to sentry:
   trackSwapError(error, swapRequest)

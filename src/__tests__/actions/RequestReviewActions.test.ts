@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, jest } from '@jest/globals'
 import { makeMemoryDisklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js'
-import { Action, Dispatch } from 'redux'
+import type { EdgeAccount } from 'edge-core-js'
+import type { Action, Dispatch } from 'redux'
 
 import { LOCAL_SETTINGS_FILENAME } from '../../actions/LocalSettingsActions'
 import {
@@ -16,8 +16,8 @@ import {
   updateFiatPurchaseCount,
   updateTransactionCount
 } from '../../actions/RequestReviewActions'
-import { RootState } from '../../reducers/RootReducer'
-import { LocalAccountSettings, ReviewTriggerData } from '../../types/types'
+import type { RootState } from '../../reducers/RootReducer'
+import type { LocalAccountSettings, ReviewTriggerData } from '../../types/types'
 
 // Provide a virtual env.json so importing env.ts does not fail
 jest.mock('../../../env.json', () => ({}), { virtual: true })

@@ -2,7 +2,15 @@
 
 ## Unreleased (develop)
 
-## 4.33.0 (staging)
+## 4.34.0 (staging)
+
+- added: `PendingTxModal` to route to pending txs for acceleration
+- added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
+- changed: Increased tappable area for the close button of `NotificationCard`
+- changed: Upgrade to React Native v0.79
+- changed: Update translations
+
+## 4.33.0 (2025-08-01)
 
 - added: Added Botanix.
 - added: Added HyperEVM.

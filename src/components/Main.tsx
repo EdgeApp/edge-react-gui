@@ -1,12 +1,12 @@
 import {
-  BottomTabNavigationOptions,
+  type BottomTabNavigationOptions,
   createBottomTabNavigator
 } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import {
   createStackNavigator,
-  StackNavigationOptions
+  type StackNavigationOptions
 } from '@react-navigation/stack'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -27,7 +27,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import {
+import type {
   BuyTabParamList,
   DrawerParamList,
   EdgeAppStackParamList,
@@ -1159,10 +1159,9 @@ export const Main = () => {
             >
               {(props: RootSceneProps<'gettingStarted'>) => {
                 if (navigation == null)
-                  setTimeout(
-                    () => setNavigation(props.navigation as NavigationBase),
-                    0
-                  )
+                  setTimeout(() => {
+                    setNavigation(props.navigation as NavigationBase)
+                  }, 0)
                 return <GettingStartedScene {...props} />
               }}
             </RootStack.Screen>
@@ -1174,10 +1173,9 @@ export const Main = () => {
             >
               {(props: RootSceneProps<'login'>) => {
                 if (navigation == null)
-                  setTimeout(
-                    () => setNavigation(props.navigation as NavigationBase),
-                    0
-                  )
+                  setTimeout(() => {
+                    setNavigation(props.navigation as NavigationBase)
+                  }, 0)
                 return <LoginScene {...props} />
               }}
             </RootStack.Screen>

@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
@@ -19,23 +19,29 @@ import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { EdgeAsset, FioDomain } from '../../../types/types'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
+import type { EdgeAsset, FioDomain } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
+import { getRegInfo, type PaymentInfo } from '../../../util/FioAddressUtils'
 import {
   logEvent,
-  TrackingEventName,
-  TrackingValues
+  type TrackingEventName,
+  type TrackingValues
 } from '../../../util/tracking'
 import { EdgeButton } from '../../buttons/EdgeButton'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import {
   Airship,
@@ -44,8 +50,8 @@ import {
 } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -104,7 +110,9 @@ export class FioAddressRegisterSelectWallet extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => showError(err))
+    this.getRegInfo().catch(err => {
+      showError(err)
+    })
   }
 
   getRegInfo = async () => {
@@ -157,7 +165,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
       await this.proceed(selectedDomain.walletId, null)
     } else {
       const { paymentWallet } = this.state
-      if (!paymentWallet || !paymentWallet.id) return
+      if (!paymentWallet?.id) return
       await this.proceed(paymentWallet.id, paymentWallet.tokenId)
     }
   }
@@ -231,7 +239,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           this.props.account,
           bitpayUrl,
           {
-            wallet: wallet,
+            wallet,
             metadata: {
               name: lstrings.fio_address_register_metadata_name,
               notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
@@ -277,12 +285,11 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     const nextDisabled =
       !activationCost ||
       activationCost === 0 ||
-      (!selectedDomain.walletId && (!paymentWallet || !paymentWallet.id))
+      (!selectedDomain.walletId && !paymentWallet?.id)
     const costStr = loading ? lstrings.loading : `${activationCost} ${FIO_STR}`
-    const walletName =
-      !paymentWallet || !paymentWallet.id
-        ? lstrings.choose_your_wallet
-        : getWalletName(account.currencyWallets[paymentWallet.id])
+    const walletName = !paymentWallet?.id
+      ? lstrings.choose_your_wallet
+      : getWalletName(account.currencyWallets[paymentWallet.id])
 
     return (
       <>

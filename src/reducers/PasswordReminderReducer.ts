@@ -1,6 +1,6 @@
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
-import { Action } from '../types/reduxTypes'
+import type { Action } from '../types/reduxTypes'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
@@ -41,7 +41,6 @@ interface PasswordLoginAction {
 }
 interface PasswordReminderPostponedAction {
   type: 'PASSWORD_REMINDER_POSTPONED'
-  data: {}
 }
 interface NonPasswordLoginAction {
   type: 'NON_PASSWORD_LOGIN'
@@ -55,11 +54,9 @@ interface NonPasswordLoginAction {
 }
 interface ChangePasswordAction {
   type: 'REQUEST_CHANGE_PASSWORD'
-  data: {}
 }
 interface DefaultAction {
   type: 'default'
-  data: {}
 }
 
 export type PasswordReminderReducerAction =
@@ -185,7 +182,6 @@ export const untranslatedReducer: Reducer<
 
       return {
         ...state,
-        ...action.data,
         nonPasswordDaysLimit,
         nonPasswordLoginsLimit,
         needsPasswordCheck
@@ -276,21 +272,18 @@ function translateAction(action: Action): PasswordReminderReducerAction {
 
   if (action.type === 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED') {
     return {
-      type: 'PASSWORD_REMINDER_POSTPONED',
-      data: {}
+      type: 'PASSWORD_REMINDER_POSTPONED'
     }
   }
 
   if (action.type === 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD') {
     return {
-      type: 'REQUEST_CHANGE_PASSWORD',
-      data: {}
+      type: 'REQUEST_CHANGE_PASSWORD'
     }
   }
 
   return {
-    type: 'default',
-    data: {}
+    type: 'default'
   }
 }
 

@@ -1,14 +1,14 @@
 import * as React from 'react'
 
 import {
-  NotificationSettings,
+  type NotificationSettings,
   updateNotificationSettings
 } from '../../actions/NotificationActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
@@ -56,15 +56,17 @@ export const NotificationScene = (props: Props) => {
         key="marketing-notifications"
         label={lstrings.settings_marketing_notifications_switch}
         value={!settings.ignoreMarketing}
-        onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
+        onPress={async () => {
+          await handlePressToggleSetting('ignoreMarketing')
+        }}
       />
       <SettingsSwitchRow
         key="price-notifications"
         label={lstrings.settings_price_notifications_switch}
         value={!settings.ignorePriceChanges}
-        onPress={async () =>
+        onPress={async () => {
           await handlePressToggleSetting('ignorePriceChanges')
-        }
+        }}
       />
       {pluginIds.map(pluginId => {
         const { currencyInfo } = currencyConfigs[pluginId]

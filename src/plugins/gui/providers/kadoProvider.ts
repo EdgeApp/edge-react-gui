@@ -9,7 +9,7 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import {
+import type {
   EdgeAssetAction,
   EdgeSpendInfo,
   EdgeTokenId,
@@ -17,28 +17,28 @@ import {
 } from 'edge-core-js'
 import URL from 'url-parse'
 
-import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { datelog, isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
-import {
+import type {
   FiatDirection,
   FiatPaymentType,
   SaveTxActionParams
 } from '../fiatPluginTypes'
 import {
-  FiatProvider,
-  FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  type FiatProvider,
+  type FiatProviderApproveQuoteParams,
+  type FiatProviderAssetMap,
   FiatProviderError,
-  FiatProviderExactRegions,
-  FiatProviderFactory,
-  FiatProviderFactoryParams,
-  FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  type FiatProviderExactRegions,
+  type FiatProviderFactory,
+  type FiatProviderFactoryParams,
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote
 } from '../fiatProviderTypes'
 import { validateExactRegion } from './common'
 const providerId = 'kado'
@@ -64,7 +64,7 @@ const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 // https://api.kado.money/v1/ramp/blockchains
 
 // Maps Edge pluginIds to Kado blockchain.origin values
-const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
+const PLUGIN_TO_CHAIN_ID_MAP: Record<string, string> = {
   // stellar: 'stellar', // Needs destination tag support
   solana: 'solana',
   // ripple: 'ripple', // Needs destination tag support
@@ -79,9 +79,9 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   bitcoin: 'bitcoin'
 }
 
-const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(
+const CHAIN_ID_TO_PLUGIN_MAP: Record<string, string> = Object.entries(
   PLUGIN_TO_CHAIN_ID_MAP
-).reduce((out: { [chainId: string]: string }, [pluginId, chainId]) => {
+).reduce((out: Record<string, string>, [pluginId, chainId]) => {
   out[chainId] = pluginId
   return out
 }, {})
@@ -94,7 +94,7 @@ const SUPPORTED_REGIONS: FiatProviderExactRegions = {
 
 type AllowedPaymentTypes = Record<
   FiatDirection,
-  { [Payment in FiatPaymentType]?: boolean }
+  Partial<Record<FiatPaymentType, boolean>>
 >
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
@@ -117,7 +117,7 @@ const allowedSellCurrencyCodes: FiatProviderAssetMap = {
   crypto: {},
   fiat: {}
 }
-const allowedCountryCodes: { [code: string]: boolean } = { US: true }
+const allowedCountryCodes: Record<string, boolean> = { US: true }
 
 /**
  * Cleaner for /v1/ramp/blockchains
@@ -533,11 +533,7 @@ export const kadoProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (
-              asset.rampProducts == null ||
-              !asset.rampProducts.includes(direction)
-            )
-              continue
+            if (!asset.rampProducts?.includes(direction)) continue
             if (isNative) {
               tokens.push({
                 tokenId: null,
@@ -724,7 +720,7 @@ export const kadoProvider: FiatProviderFactory = {
             const url = new URL(`${urls.widget[MODE]}/`, true)
             if (direction === 'buy') {
               const urlParams: WidgetParamsBuy = {
-                apiKey: apiKey,
+                apiKey,
                 fiatMethodList,
                 hideDepositDetails: true,
                 isMobileWebview: true,
@@ -741,7 +737,7 @@ export const kadoProvider: FiatProviderFactory = {
               url.set('query', urlParams)
             } else {
               const urlParams: WidgetParamsSell = {
-                apiKey: apiKey,
+                apiKey,
                 fiatMethodList,
                 hideDepositDetails: true,
                 isMobileWebview: true,
@@ -771,7 +767,9 @@ export const kadoProvider: FiatProviderFactory = {
                     url: message.payload.link,
                     redirectExternal: true
                   })
-                  .catch(async error => await showUi.showError(error))
+                  .catch(async error => {
+                    await showUi.showError(error)
+                  })
               }
             }
 

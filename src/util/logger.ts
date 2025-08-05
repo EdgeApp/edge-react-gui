@@ -120,22 +120,22 @@ async function writeLog(type: LogType, content: string): Promise<void> {
       if (numWrites > NUM_WRITES_BEFORE_ROTATE_CHECK) {
         await rotateLogs(type)
       }
-      return await RNFS.appendFile(path, '\n' + content)
+      await RNFS.appendFile(path, '\n' + content)
     } else {
-      return await RNFS.writeFile(path, content)
+      await RNFS.writeFile(path, content)
     }
   } catch (e: any) {
     // @ts-expect-error
-    global.clog((e && e.message) || e)
+    global.clog(e?.message || e)
   }
 }
 
 export async function clearLogs(type: LogType): Promise<void> {
   const paths = logMap[type]
 
-  for (let i = 0; i < paths.length; i++) {
-    if (await RNFS.exists(paths[i])) {
-      await RNFS.unlink(paths[i])
+  for (const path of paths) {
+    if (await RNFS.exists(path)) {
+      await RNFS.unlink(path)
     }
   }
 }
@@ -154,13 +154,13 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
     return log
   } catch (err: any) {
     // @ts-expect-error
-    global.clog((err && err.message) || err)
+    global.clog(err?.message || err)
   }
 }
 
 export async function logWithType(
   type: LogType,
-  ...info: Array<number | string | null | {}>
+  ...info: Array<number | string | null | object>
 ): Promise<void> {
   const logs = normalize(...info)
 
@@ -169,7 +169,7 @@ export async function logWithType(
 
   try {
     await lock.acquire('logger', async () => {
-      return await writeLog(type, d + ': ' + logs)
+      await writeLog(type, d + ': ' + logs)
     })
   } catch (e: any) {
     // @ts-expect-error
@@ -179,12 +179,18 @@ export async function logWithType(
   global.clog(logs)
 }
 
-export function log(...info: Array<number | string | null | {}>): void {
-  logWithType('info', ...info).catch(err => console.warn(err))
+export function log(...info: Array<number | string | null | object>): void {
+  logWithType('info', ...info).catch(err => {
+    console.warn(err)
+  })
 }
 
-export function logActivity(...info: Array<number | string | null | {}>): void {
-  logWithType('activity', ...info).catch(err => console.warn(err))
+export function logActivity(
+  ...info: Array<number | string | null | object>
+): void {
+  logWithType('activity', ...info).catch(err => {
+    console.warn(err)
+  })
 }
 
 async function request(data: string) {

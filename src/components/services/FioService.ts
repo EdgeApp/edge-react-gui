@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { showFioExpiredModal } from '../../actions/FioActions'
@@ -7,8 +7,8 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { FioDomain } from '../../types/types'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { FioDomain } from '../../types/types'
 import {
   getExpiredSoonFioDomains,
   getFioExpiredCheckFromDisklet,
@@ -26,9 +26,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-interface NameDates {
-  [fioName: string]: Date
-}
+type NameDates = Record<string, Date>
 
 export const FioService = (props: Props) => {
   const { account, navigation } = props
@@ -38,9 +36,7 @@ export const FioService = (props: Props) => {
   const expiredLastChecks = React.useRef<NameDates | undefined>(undefined)
   const expireReminderShown = React.useRef(false)
   const expiredChecking = React.useRef(false)
-  const walletsCheckedForExpired = React.useRef<{
-    [walletId: string]: boolean
-  }>({})
+  const walletsCheckedForExpired = React.useRef<Record<string, boolean>>({})
   const fioWallets = React.useRef<EdgeCurrencyWallet[]>([])
   const disklet = useSelector(state => state.core.disklet)
 
@@ -125,7 +121,9 @@ export const FioService = (props: Props) => {
       )
       task.start()
 
-      return () => task.stop()
+      return () => {
+        task.stop()
+      }
     },
     [refreshNamesToCheckExpired],
     'FioService:checkExpired'

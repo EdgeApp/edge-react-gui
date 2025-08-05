@@ -1,6 +1,6 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
-import {
+import type {
   FiatPaymentType,
   FiatPluginRegionCode,
   FiatPluginUi,
@@ -108,12 +108,13 @@ export interface ProviderToken {
  * by stateProvince and is therefore supported by default or will
  * be filtered by some other means in the provider.
  */
-export interface FiatProviderSupportedRegions {
-  [countryCode: string]: {
+export type FiatProviderSupportedRegions = Record<
+  string,
+  {
     forStateProvinces?: string[]
     notStateProvinces?: string[]
   }
-}
+>
 
 /**
  * Map of supported countryCodes
@@ -121,20 +122,20 @@ export interface FiatProviderSupportedRegions {
  * means the country is not supported. True or an object means it
  * is supported. An object means support is conditional on the stateProvince.
  */
-export interface FiatProviderExactRegions {
-  [countryCode: string]:
-    | boolean
-    | {
-        forStateProvinces?: string[]
-        notStateProvinces?: string[]
-      }
-}
+export type FiatProviderExactRegions = Record<
+  string,
+  | boolean
+  | {
+      forStateProvinces?: string[]
+      notStateProvinces?: string[]
+    }
+>
 
 // Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
   providerId: string
-  crypto: { [pluginId: string]: ProviderToken[] }
-  fiat: { [currencyCode: string]: boolean | any }
+  crypto: Record<string, ProviderToken[]>
+  fiat: Record<string, boolean | any>
 
   // This provider REQUIRES that the user enter the amount
   // in the specified currency.

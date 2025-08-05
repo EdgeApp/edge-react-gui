@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { WebView } from 'react-native-webview'
 
 import { Airship } from '../services/AirshipInstance'

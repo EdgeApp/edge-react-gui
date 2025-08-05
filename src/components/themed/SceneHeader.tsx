@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { View, ViewStyle } from 'react-native'
+import { View, type ViewStyle } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 

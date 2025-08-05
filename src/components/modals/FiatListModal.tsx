@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { View, ViewToken } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { View, type ViewToken } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
@@ -8,9 +8,9 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { GuiFiatType } from '../../types/types'
+import type { GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
@@ -71,7 +71,9 @@ export const FiatListModal = (props: Props) => {
         }
         subTitle={subTitle}
         title={item.value}
-        onPress={() => bridge.resolve(item)}
+        onPress={() => {
+          bridge.resolve(item)
+        }}
       />
     )
   }

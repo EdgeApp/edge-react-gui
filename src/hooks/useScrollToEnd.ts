@@ -3,7 +3,7 @@
  * edge-login-ui-rn!
  */
 import * as React from 'react'
-import { ScrollView } from 'react-native'
+import type { ScrollView } from 'react-native'
 
 /**
  * This hook will return a ref, which you can attach to a scroll view.

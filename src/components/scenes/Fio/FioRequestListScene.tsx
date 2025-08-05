@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMemo,
@@ -15,8 +15,11 @@ import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
-import { FioAddress, FioRequest } from '../../../types/types'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
+import type { FioAddress, FioRequest } from '../../../types/types'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
@@ -28,20 +31,23 @@ import {
 } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FioRequestRow } from '../../themed/FioRequestRow'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { SectionHeader } from '../../themed/TransactionListComponents'
-import { SendScene2Params } from '../SendScene2'
+import type { SendScene2Params } from '../SendScene2'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -54,14 +60,14 @@ interface LocalState {
   fioRequestsSent: FioRequest[]
   prevPendingAmount: number
   prevSentAmount: number
-  pendingRequestPaging: { [key: string]: number }
-  sentRequestPaging: { [key: string]: number }
+  pendingRequestPaging: Record<string, number>
+  sentRequestPaging: Record<string, number>
 }
 
 interface StateProps {
   account: EdgeAccount
   fioAddresses: FioAddress[]
-  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
+  currencyWallets: Record<string, EdgeCurrencyWallet>
   fioWallets: EdgeCurrencyWallet[]
   isConnected: boolean
 }
@@ -71,7 +77,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioRequestList'> {}
+type OwnProps = EdgeAppSceneProps<'fioRequestList'>
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
@@ -82,7 +88,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
-    this.props.refreshAllFioAddresses().catch(err => showError(err))
+    this.props.refreshAllFioAddresses().catch(err => {
+      showError(err)
+    })
     this.state = {
       loadingPending: true,
       loadingSent: true,
@@ -101,9 +109,15 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
       () => {
-        this.getFioRequestsPending().catch(err => showError(err))
-        this.getFioRequestsSent().catch(err => showError(err))
-        this.props.refreshAllFioAddresses().catch(err => showError(err))
+        this.getFioRequestsPending().catch(err => {
+          showError(err)
+        })
+        this.getFioRequestsSent().catch(err => {
+          showError(err)
+        })
+        this.props.refreshAllFioAddresses().catch(err => {
+          showError(err)
+        })
       }
     )
   }
@@ -131,10 +145,10 @@ class FioRequestList extends React.Component<Props, LocalState> {
       addressArray.push(request.payer_fio_address)
     }
 
-    addToFioAddressCache(this.props.account, addressArray).catch(err =>
+    addToFioAddressCache(this.props.account, addressArray).catch(err => {
       showError(err)
-    )
-    // eslint-disable-next-line react/no-did-update-set-state
+    })
+
     this.setState({ addressCachedUpdated: true })
   }
 
@@ -194,7 +208,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   getFioRequests = async (
     fioWallets: EdgeCurrencyWallet[],
-    paging: { [fioPublicKey: string]: number },
+    paging: Record<string, number>,
     requestsType: 'PENDING' | 'SENT'
   ): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
@@ -240,7 +254,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'ok') {
-      return navigation.navigate('fioAddressSettings', {
+      navigation.navigate('fioAddressSettings', {
         showAddBundledTxs: true,
         walletId: fioWallet.id,
         fioAddressName
@@ -350,7 +364,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return await this.rejectFioRequest(request)
+      await this.rejectFioRequest(request)
     }
   }
 
@@ -367,7 +381,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return await this.cancelFioRequest(request)
+      await this.cancelFioRequest(request)
     }
   }
 
@@ -460,7 +474,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
       wallet => wallet.id === pendingRequest.fioWalletId
     )
     if (fioWallet == null) {
-      return showError(lstrings.fio_wallet_missing_for_fio_address)
+      showError(lstrings.fio_wallet_missing_for_fio_address)
+      return
     }
     const wallet = currencyWallets[walletId]
     const exchangeDenomination = getExchangeDenom(
@@ -584,7 +599,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return headers
   }
 
-  listKeyExtractor(item: FioRequest) {
+  listKeyExtractor = (item: FioRequest) => {
     return `${item.fio_request_id.toString()}${item.fioWalletId}`
   }
 
@@ -595,7 +610,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
       (prevPendingAmount < fioRequestsPending.length ||
         (distanceFromEnd < 0 && fioRequestsPending.length > 0))
     ) {
-      this.getFioRequestsPending().catch(err => showError(err))
+      this.getFioRequestsPending().catch(err => {
+        showError(err)
+      })
     }
   }
 
@@ -606,7 +623,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
       (prevSentAmount < fioRequestsSent.length ||
         (distanceFromEnd < 0 && fioRequestsSent.length > 0))
     ) {
-      this.getFioRequestsSent().catch(err => showError(err))
+      this.getFioRequestsSent().catch(err => {
+        showError(err)
+      })
     }
   }
 

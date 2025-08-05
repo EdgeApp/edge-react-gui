@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
 
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'

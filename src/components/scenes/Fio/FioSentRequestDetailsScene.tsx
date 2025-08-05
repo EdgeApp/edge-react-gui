@@ -6,8 +6,8 @@ import { FIAT_CODES_SYMBOLS } from '../../../constants/WalletAndCurrencyConstant
 import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
-import {
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type {
   FioRequest,
   FioRequestStatus,
   GuiExchangeRates
@@ -17,8 +17,8 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { EdgeRow } from '../../rows/EdgeRow'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -28,7 +28,7 @@ export interface FioSentRequestDetailsParams {
   selectedFioSentRequest: FioRequest
 }
 
-interface OwnProps extends EdgeAppSceneProps<'fioSentRequestDetails'> {}
+type OwnProps = EdgeAppSceneProps<'fioSentRequestDetails'>
 
 interface StateProps {
   fiatSymbol: string
@@ -143,7 +143,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
+export const FioSentRequestDetailsScene = connect<
+  StateProps,
+  unknown,
+  OwnProps
+>(
   state => {
     const { defaultFiat, defaultIsoFiat } = state.ui.settings
     return {

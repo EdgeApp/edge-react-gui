@@ -1,5 +1,5 @@
 import { add, div, eq, gt } from 'biggystring'
-import {
+import type {
   EdgeAssetActionType,
   EdgeCurrencyWallet,
   EdgeTokenId,
@@ -23,13 +23,13 @@ import {
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import {
   getCurrencyCode,
   getCurrencyCodeMultiplier
 } from '../../../util/CurrencyInfoHelpers'
 import {
-  FioStakingBalanceType,
+  type FioStakingBalanceType,
   getFioStakingBalances
 } from '../../../util/stakeUtils'
 import {
@@ -43,13 +43,13 @@ import { withWallet } from '../../hoc/withWallet'
 import { EdgeModal } from '../../modals/EdgeModal'
 import {
   FlipInputModal2,
-  FlipInputModalResult
+  type FlipInputModalResult
 } from '../../modals/FlipInputModal2'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText, Paragraph } from '../../themed/EdgeText'
-import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
+import type { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
@@ -219,8 +219,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }
 
   const handleSubmit = async () => {
-    if (tx == null)
-      return setError(lstrings.create_wallet_account_error_sending_transaction)
+    if (tx == null) {
+      setError(lstrings.create_wallet_account_error_sending_transaction)
+      return
+    }
     setLoading(true)
     try {
       const signedTx = await currencyWallet.signTx(tx)
@@ -251,7 +253,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         startNativeAmount={eq(nativeAmount, '0') ? undefined : nativeAmount}
         onMaxSet={onMaxSet}
       />
-    )).catch(error => setError(error))
+    )).catch(error => {
+      setError(error)
+    })
   }
 
   const handleUnlockDate = async () => {
@@ -294,7 +298,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       currencyConfig.otherMethods
         .getStakeEstReturn(exchangeAmount)
         // @ts-expect-error
-        .then(apy => setApy(parseFloat(apy.toFixed(2))))
+        .then(apy => {
+          setApy(parseFloat(apy.toFixed(2)))
+        })
         .catch(() => {
           // If something goes wrong, silently fail to report an APY!?
         })
@@ -314,12 +320,14 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
       // Addresses must have at least 1 bundled transaction; we rely on bundle txs and don't yet support fee-based tx for staking
-      if (fioAddress.bundledTxs < 1)
-        return setError(
+      if (fioAddress.bundledTxs < 1) {
+        setError(
           new Error(
             sprintf(lstrings.staking_no_bundled_txs_error, fioAddress.name)
           )
         )
+        return
+      }
 
       setSelectedFioAddress(fioAddress.name)
     }
@@ -431,12 +439,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       ? formatTimeDate(unlockDate, SHORT_DATE_FMT)
       : ''
     let estReward = '0'
-    if (
-      tx != null &&
-      tx.otherParams != null &&
-      tx.otherParams.ui != null &&
-      tx.otherParams.ui.estReward != null
-    ) {
+    if (tx?.otherParams?.ui?.estReward != null) {
       estReward = add(
         convertNativeToDenomination(currencyDenomination.multiplier)(
           tx.otherParams.ui.estReward

@@ -1,25 +1,21 @@
 import { Linking } from 'react-native'
 import URL from 'url-parse'
 
-import { showError } from '../components/services/AirshipInstance'
-import { UriQueryMap } from '../types/WebTypes'
+import type { UriQueryMap } from '../types/WebTypes'
 
 /**
  * Uses the device's browser to open a URI.
  * */
-export const openBrowserUri = (uri: string) => {
+export const openBrowserUri = async (uri: string): Promise<void> => {
   if (uri === '') {
     throw new Error('openBrowserUri: Empty uri prop')
   }
-  Linking.canOpenURL(uri)
-    .then(async supported => {
-      if (supported) {
-        await Linking.openURL(uri)
-      } else {
-        throw new Error('openBrowserUri: Unsupported uri: ' + uri)
-      }
-    })
-    .catch(err => showError(err))
+  const supported = await Linking.canOpenURL(uri)
+  if (supported) {
+    await Linking.openURL(uri)
+  } else {
+    throw new Error('openBrowserUri: Unsupported uri: ' + uri)
+  }
 }
 
 /**
@@ -49,5 +45,5 @@ export const parseQuery = (query?: string): UriQueryMap => {
  * This is for adressing a limitation of the url-parse library.
  */
 export const cleanQueryFlags = (uri: string): string => {
-  return uri.toString().replace(/=(?=&|$)/gm, '')
+  return uri.replace(/=(?=&|$)/gm, '')
 }

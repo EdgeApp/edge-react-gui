@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { ViewStyle } from 'react-native'
+import type { ViewStyle } from 'react-native'
 
 import {
-  MarginRemProps,
-  MarginRemStyle,
+  type MarginRemProps,
+  type MarginRemStyle,
   useMarginRemStyle
 } from './useMarginRemStyle'
 

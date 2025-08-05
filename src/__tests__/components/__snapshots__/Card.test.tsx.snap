@@ -237,7 +237,7 @@ exports[`Card should handle press events 1`] = `
   }
   accessible={false}
   collapsable={false}
-  focusable={true}
+  focusable={false}
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}

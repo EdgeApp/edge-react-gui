@@ -1,5 +1,5 @@
 import { abs } from 'biggystring'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
@@ -32,7 +32,7 @@ import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
@@ -47,7 +47,7 @@ import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -55,13 +55,13 @@ import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import {
   ContactListModal,
-  ContactModalResult
+  type ContactModalResult
 } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeAppSceneProps<'transactionDetails'> {
@@ -199,16 +199,18 @@ const TransactionDetailsComponent = (props: Props) => {
         // Check for NaN, Infinity, and 0:
         if (JSON.stringify(amountFiat) === 'null') return
 
-        await onSaveTxDetails({
+        onSaveTxDetails({
           exchangeAmount: { [defaultIsoFiat]: amountFiat }
         })
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
   })
 
-  const handleDone = useHandler(() =>
+  const handleDone = useHandler(() => {
     onDone == null ? navigation.pop() : onDone()
-  )
+  })
 
   // #endregion Crypto Fiat Rows
 
@@ -282,7 +284,9 @@ const TransactionDetailsComponent = (props: Props) => {
       ))
 
       if (signedTx != null) {
-        playSendSound().catch(error => console.log(error))
+        playSendSound().catch((error: unknown) => {
+          console.log(error) // Fail quietly
+        })
         showToast(lstrings.transaction_details_accelerate_transaction_sent)
 
         navigation.pop()
@@ -375,10 +379,12 @@ const TransactionDetailsComponent = (props: Props) => {
     const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
       txid: transaction.txid,
       tokenId: transaction.tokenId,
-      metadata: metadata
+      metadata
     }
 
-    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => showError(error))
+    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => {
+      showError(error)
+    })
 
     setLocalMetadata(newValues)
   }
@@ -675,11 +681,11 @@ const convertActionToSwapData = (
     orderUri,
     isEstimate: isEstimate ?? true,
     plugin: swapInfo,
-    payoutAddress: payoutAddress,
+    payoutAddress,
     payoutCurrencyCode,
     payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
-    payoutWalletId: payoutWalletId,
-    refundAddress: refundAddress
+    payoutWalletId,
+    refundAddress
   }
   return out
 }

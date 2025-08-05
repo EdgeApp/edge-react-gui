@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioAddressList should render with loading props 1`] = `
 [
@@ -234,7 +234,7 @@ exports[`FioAddressList should render with loading props 1`] = `
     </BVLinearGradient>
     <RCTScrollView
       collapsable={false}
-      handlerTag={1}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
@@ -247,13 +247,6 @@ exports[`FioAddressList should render with loading props 1`] = `
         {
           "flex": 1,
         }
-      }
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-        ]
       }
     >
       <View>

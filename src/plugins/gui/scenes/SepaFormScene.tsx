@@ -6,7 +6,7 @@ import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import {
   cacheStyles,
-  Theme,
+  type Theme,
   useTheme
 } from '../../../components/services/ThemeContext'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
@@ -17,10 +17,10 @@ import { lstrings } from '../../../locales/strings'
 import {
   asSepaInfo,
   SEPA_FORM_DISKLET_NAME,
-  SepaInfo
+  type SepaInfo
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 

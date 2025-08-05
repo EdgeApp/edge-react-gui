@@ -5,7 +5,7 @@ import * as React from 'react'
 import { defaultCategories } from '../../actions/CategoriesActions'
 import { CategoryModal } from '../../components/modals/CategoryModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 
 describe('CategoryModal', () => {
   const fakeAccount: any = { disklet: { getText: async () => '' } }

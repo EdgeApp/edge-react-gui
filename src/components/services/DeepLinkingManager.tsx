@@ -1,5 +1,5 @@
 import messaging, {
-  FirebaseMessagingTypes
+  type FirebaseMessagingTypes
 } from '@react-native-firebase/messaging'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -10,14 +10,14 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { DeepLink } from '../../types/DeepLinkTypes'
+import type { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { parsePushMessage } from '../../util/PushMessageParser'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showDevError, showError } from './AirshipInstance'
-import { cacheStyles, Theme, useTheme } from './ThemeContext'
+import { cacheStyles, type Theme, useTheme } from './ThemeContext'
 
 interface Props {
   navigation: NavigationBase
@@ -138,7 +138,9 @@ export function DeepLinkingManager(props: Props) {
               />
             }
           />
-        )).catch(error => showDevError(String(error)))
+        )).catch(error => {
+          showDevError(String(error))
+        })
       }
 
       // Subscribe to various incoming events:

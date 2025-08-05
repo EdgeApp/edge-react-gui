@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {
-  SharedValue,
+  type SharedValue,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
@@ -26,7 +26,9 @@ export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
     if (out != null && typeof out.then === 'function') {
       setPending(true)
       out.then(
-        () => setPending(false),
+        () => {
+          setPending(false)
+        },
         error => {
           setPending(false)
           showError(error)

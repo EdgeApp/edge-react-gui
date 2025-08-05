@@ -1,6 +1,6 @@
 import { add, mul } from 'biggystring'
 
-import {
+import type {
   ApprovableAction,
   BorrowEngine,
   BorrowPlugin
@@ -8,7 +8,7 @@ import {
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
 import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
-import {
+import type {
   ActionEffect,
   ActionProgram,
   ActionProgramState,

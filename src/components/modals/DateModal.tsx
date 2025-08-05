@@ -5,12 +5,12 @@
 
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
-import { Appearance, Platform, Text, TextStyle } from 'react-native'
-import { AirshipBridge, AirshipModal } from 'react-native-airship'
+import { Appearance, Platform, Text, type TextStyle } from 'react-native'
+import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 
 export interface Props {
   bridge: AirshipBridge<Date>

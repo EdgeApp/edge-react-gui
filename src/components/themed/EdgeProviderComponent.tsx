@@ -1,7 +1,7 @@
 import { uncleaner } from 'cleaners'
 import * as React from 'react'
-import { NativeSyntheticEvent, Platform } from 'react-native'
-import { WebView, WebViewMessageEvent } from 'react-native-webview'
+import { type NativeSyntheticEvent, Platform } from 'react-native'
+import { WebView, type WebViewMessageEvent } from 'react-native-webview'
 
 import { EdgeProviderServer } from '../../controllers/edgeProvider/EdgeProviderServer'
 import { javascript } from '../../controllers/edgeProvider/injectThisInWebView'
@@ -9,14 +9,14 @@ import { methodCleaners } from '../../controllers/edgeProvider/types/edgeProvide
 import {
   asRpcCall,
   rpcErrorCodes,
-  RpcReturn
+  type RpcReturn
 } from '../../controllers/edgeProvider/types/jsonRpcCleaners'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { UriQueryMap } from '../../types/WebTypes'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { UriQueryMap } from '../../types/WebTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -141,7 +141,9 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
 
   // Mechanism to force-restart the webview:
   const [webViewKey, setWebViewKey] = React.useState(0)
-  const reloadWebView = useHandler(() => setWebViewKey(webViewKey + 1))
+  const reloadWebView = useHandler(() => {
+    setWebViewKey(webViewKey + 1)
+  })
 
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {

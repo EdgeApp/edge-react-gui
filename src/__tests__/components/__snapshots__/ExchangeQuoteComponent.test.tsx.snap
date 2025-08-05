@@ -88,6 +88,13 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             },
           ]
         }
+        transform={
+          [
+            {
+              "rotateZ": "-90deg",
+            },
+          ]
+        }
         vbHeight={61}
         vbWidth={61}
         width={61}

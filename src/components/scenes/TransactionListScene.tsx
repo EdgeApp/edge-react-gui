@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeTokenId,
   EdgeTokenMap,
@@ -7,7 +7,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import {
-  ListRenderItemInfo,
+  type ListRenderItemInfo,
   Platform,
   RefreshControl,
   View
@@ -24,10 +24,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
-import { FooterRender } from '../../state/SceneFooterState'
+import type { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import {
+import type {
   NavigationBase,
   RouteProp,
   WalletsTabSceneProps

@@ -1,20 +1,23 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
-import { SharedValue } from 'react-native-reanimated'
+import type { SharedValue } from 'react-native-reanimated'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
+import type {
+  NavigationBase,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 interface Props {
@@ -55,7 +58,9 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
         navigation={navigation}
         walletId={wallet.id}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   })
 
   const handleRequest = useHandler(() => {
@@ -74,7 +79,9 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
             navigation.navigate('request', { tokenId, walletId: wallet.id })
           }
         })
-        .catch(err => showError(err))
+        .catch(err => {
+          showError(err)
+        })
     }
   })
 
@@ -96,7 +103,9 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           })
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   })
 
   const handleSend = useHandler(() => {
@@ -121,7 +130,9 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           })
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   })
 
   // rendering -----------------------------------------------------------

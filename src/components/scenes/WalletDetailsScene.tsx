@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native'
 import { gt, mul } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeTokenId,
   EdgeTokenMap,
@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
-import { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
+import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
@@ -25,11 +25,11 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
-import { FooterRender } from '../../state/SceneFooterState'
+import type { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import {
+import type {
   NavigationBase,
   RouteProp,
   WalletsTabSceneProps
@@ -44,13 +44,13 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
 import { HeaderTitle } from '../navigation/HeaderTitle'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'

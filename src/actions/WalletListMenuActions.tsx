@@ -1,10 +1,13 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal'
+import {
+  type ButtonInfo,
+  ButtonsModal
+} from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import {
@@ -16,8 +19,8 @@ import { Alert } from '../components/themed/Alert'
 import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
-import { WalletsTabSceneProps } from '../types/routerTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { WalletsTabSceneProps } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -77,7 +80,9 @@ export function walletListMenuAction(
         const { account } = state.core
         account
           .changeWalletStates({ [walletId]: { deleted: true } })
-          .catch(error => showError(error))
+          .catch(error => {
+            showError(error)
+          })
       }
     }
     case 'delete': {
@@ -151,7 +156,9 @@ export function walletListMenuAction(
                   )} ${wallet.type} ${wallet.id}`
                 )
               })
-              .catch(error => showError(error))
+              .catch(error => {
+                showError(error)
+              })
 
             // Remove loan accounts associated with the wallet
             if (state.loanManager.loanAccounts[walletId] != null) {
@@ -170,7 +177,9 @@ export function walletListMenuAction(
                   } ${tokenId}`
                 )
               })
-              .catch(error => showError(error))
+              .catch(error => {
+                showError(error)
+              })
           }
         }
       }

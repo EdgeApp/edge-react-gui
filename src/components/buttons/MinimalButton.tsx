@@ -1,11 +1,16 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TextStyle, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  Text,
+  type TextStyle,
+  type ViewStyle
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // True to dim the button & prevent interactions:

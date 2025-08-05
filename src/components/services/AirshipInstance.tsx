@@ -35,8 +35,10 @@ export function showError(
   if (translatedMessage.includes('edge-core: The WebView has been unmounted.'))
     return
   Airship.show(bridge => (
-    <AlertDropdown bridge={bridge} message={translatedMessage} />
-  )).catch(err => console.error(err))
+    <AlertDropdown bridge={bridge} message={translatedMessage} error={error} />
+  )).catch(err => {
+    console.error(err)
+  })
 }
 
 /**
@@ -82,7 +84,9 @@ export function showDevError(
   error: unknown,
   options: ShowErrorWarningOptions = {}
 ): void {
-  showDevErrorAsync(error, options).catch(err => console.error(err))
+  showDevErrorAsync(error, options).catch(err => {
+    console.error(err)
+  })
 }
 
 /**
@@ -105,7 +109,9 @@ export function showWarning(
   )
   Airship.show(bridge => (
     <AlertDropdown bridge={bridge} message={translatedError} warning />
-  )).catch(err => console.error(err))
+  )).catch(err => {
+    console.error(err)
+  })
 }
 
 /**
@@ -115,7 +121,9 @@ export function showWarning(
 export function showToast(message: string, autoHideMs?: number): void {
   Airship.show(bridge => (
     <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />
-  )).catch(err => console.error(err))
+  )).catch(err => {
+    console.error(err)
+  })
 }
 
 /**
@@ -128,15 +136,23 @@ export async function showToastSpinner<T>(
 ): Promise<T> {
   Airship.show(bridge => {
     activity.then(
-      () => setTimeout(() => bridge.resolve(), 0),
-      () => setTimeout(() => bridge.resolve(), 0)
+      () =>
+        setTimeout(() => {
+          bridge.resolve()
+        }, 0),
+      () =>
+        setTimeout(() => {
+          bridge.resolve()
+        }, 0)
     )
     return (
       <AirshipToast bridge={bridge} message={message} autoHideMs={0}>
         <ActivityIndicator />
       </AirshipToast>
     )
-  }).catch(err => console.error(err))
+  }).catch(err => {
+    console.error(err)
+  })
   return await activity
 }
 

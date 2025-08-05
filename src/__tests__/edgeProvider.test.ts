@@ -192,7 +192,7 @@ describe('getReturnCurrencyCode', () => {
   })
 })
 
-const currencyConfig: { [pluginId: string]: any } = {
+const currencyConfig: Record<string, any> = {
   eos: {
     otherMethods: {},
     currencyInfo: {

@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { toLocaleDate, toLocaleTime } from '../../locales/intl'
 import { getThemedIconUri } from '../../util/CdnUris'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

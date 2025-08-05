@@ -1,4 +1,4 @@
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeSpendInfo,
   EdgeTokenId,
@@ -12,18 +12,18 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
-import { FeeOption } from '../../types/types'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
 import { SceneButtons } from '../buttons/SceneButtons'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { SceneContainer } from '../layout/SceneContainer'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
@@ -148,8 +148,10 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
                 // @ts-expect-error
                 label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
-                // @ts-expect-error
-                onPress={() => this.setState({ networkFeeOption: feeSetting })}
+                onPress={() => {
+                  // @ts-expect-error
+                  this.setState({ networkFeeOption: feeSetting })
+                }}
               >
                 <MaterialCommunityIcons
                   // @ts-expect-error
@@ -164,7 +166,9 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
               key={lstrings.mining_fee_custom_label_choice}
               label={lstrings.mining_fee_custom_label_choice}
               value={networkFeeOption === 'custom'}
-              onPress={() => this.setState({ networkFeeOption: 'custom' })}
+              onPress={() => {
+                this.setState({ networkFeeOption: 'custom' })
+              }}
             >
               <Evilicons name="gear" style={styles.settingsIcon} />
             </SettingsRadioRow>
@@ -193,11 +197,11 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
             key={key}
             autoFocus={false}
             autoCorrect={false}
-            onChangeText={text =>
+            onChangeText={text => {
               this.setState({
                 customNetworkFee: { ...customNetworkFee, [key]: text }
               })
-            }
+            }}
             value={customNetworkFee[key]}
             placeholder={FEE_STRINGS[key] || key}
             returnKeyType="done"

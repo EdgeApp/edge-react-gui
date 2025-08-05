@@ -1,7 +1,7 @@
-import { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
 import { asMaybe, asObject, asString, asValue } from 'cleaners'
 
-import { DeepLink } from '../types/DeepLinkTypes'
+import type { DeepLink } from '../types/DeepLinkTypes'
 
 /**
  * Extracts a deep link from a push message, if present.

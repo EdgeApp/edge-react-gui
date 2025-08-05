@@ -1,5 +1,3 @@
-/* eslint-disable import/no-default-export */
-
 declare const imageRequire: number
 
 // Make image imports work:
@@ -18,8 +16,8 @@ declare module '*.jpg' {
 
 // Powered by react-native-svg-transformer:
 declare module '*.svg' {
-  import * as React from 'react'
-  import { SvgProps } from 'react-native-svg'
+  import type * as React from 'react'
+  import type { SvgProps } from 'react-native-svg'
 
   const SvgComponent: React.FunctionComponent<SvgProps>
   export default SvgComponent

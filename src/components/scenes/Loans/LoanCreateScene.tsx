@@ -1,8 +1,8 @@
 import { div, lt, max, mul } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
-import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
+import type { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
@@ -20,14 +20,17 @@ import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import {
+import type {
   BorrowEngine,
   BorrowPlugin
 } from '../../../plugins/borrow-plugins/types'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import {
@@ -48,10 +51,13 @@ import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -193,7 +199,7 @@ export const LoanCreateScene = (props: Props) => {
   const srcDenoms =
     srcToken != null
       ? srcToken.denominations
-      : srcWallet != null && srcWallet.currencyInfo != null
+      : srcWallet?.currencyInfo != null
       ? srcWallet.currencyInfo.denominations
       : null
   const srcExchangeMultiplier =
@@ -212,7 +218,7 @@ export const LoanCreateScene = (props: Props) => {
   )
 
   const [bankAccountsMap, setBankAccountsMap] = React.useState<
-    { [paymentMethodId: string]: PaymentMethod } | undefined
+    Record<string, PaymentMethod> | undefined
   >(undefined)
 
   useAsyncEffect(
@@ -444,7 +450,9 @@ export const LoanCreateScene = (props: Props) => {
             }
           }
         })
-        .catch(e => showError(e.message))
+        .catch(e => {
+          showError(e.message)
+        })
     }
 
   const handleBorrowAmountChanged = React.useCallback(

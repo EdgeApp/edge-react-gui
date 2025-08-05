@@ -1,5 +1,5 @@
-import { CleanError } from '../cleaners'
-import { ActionEffect } from '../types'
+import type { CleanError } from '../cleaners'
+import type { ActionEffect } from '../types'
 
 export function getEffectErrors(effect?: ActionEffect | null): CleanError[] {
   if (effect != null) {

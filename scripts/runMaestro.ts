@@ -1,4 +1,4 @@
-import { execSync, ExecSyncOptions } from 'child_process'
+import { execSync, type ExecSyncOptions } from 'child_process'
 import { makeConfig } from 'cleaner-config'
 import { asObject, asOptional, asString } from 'cleaners'
 import { join } from 'path'

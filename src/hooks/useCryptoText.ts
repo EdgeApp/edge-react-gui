@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getCryptoText } from '../util/cryptoTextUtils'
 import { useDisplayDenom } from './useDisplayDenom'

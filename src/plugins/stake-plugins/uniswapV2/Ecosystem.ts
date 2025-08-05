@@ -1,8 +1,6 @@
 import { ethers } from 'ethers'
 
-interface ContractInfoMap {
-  [key: string]: ContractInfo
-}
+type ContractInfoMap = Record<string, ContractInfo>
 interface ContractInfo {
   abi: ethers.ContractInterface
   address: string

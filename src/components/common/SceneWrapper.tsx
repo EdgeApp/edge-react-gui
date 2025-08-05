@@ -6,34 +6,34 @@ import {
 } from '@react-navigation/native'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { Keyboard, StyleSheet, View, ViewStyle } from 'react-native'
+import { Keyboard, StyleSheet, View, type ViewStyle } from 'react-native'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
 import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import {
-  EdgeInsets,
+  type EdgeInsets,
   useSafeAreaFrame,
   useSafeAreaInsets
 } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
-  FooterRender,
+  type FooterRender,
   PortalSceneFooter,
   useSceneFooterState
 } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
-import { OverrideDots } from '../../types/Theme'
+import type { NavigationBase } from '../../types/routerTypes'
+import type { OverrideDots } from '../../types/Theme'
 import { styled } from '../hoc/styled'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SceneContainer } from '../layout/SceneContainer'
 import { NotificationView } from '../notification/NotificationView'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { AccentColors, DotsBackground } from './DotsBackground'
+import { type AccentColors, DotsBackground } from './DotsBackground'
 
 export interface InsetStyle {
   paddingTop: number
@@ -254,11 +254,11 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   })
 
   // If function children, the caller handles the insets and overscroll
-  const memoizedChildren = useMemo(
-    () =>
-      typeof children === 'function' ? children(sceneWrapperInfo) : children,
-    [children, sceneWrapperInfo]
-  )
+
+  const memoizedChildren = useMemo((): React.ReactNode => {
+    if (typeof children === 'function') return children(sceneWrapperInfo)
+    return children
+  }, [children, sceneWrapperInfo])
 
   if (scroll) {
     return (

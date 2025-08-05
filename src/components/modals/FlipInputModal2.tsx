@@ -1,9 +1,9 @@
 import { div, log10, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
@@ -18,14 +18,14 @@ import { ReturnKeyTypeButton } from '../buttons/ReturnKeyTypeButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import {
   ExchangedFlipInput2,
-  ExchangedFlipInputAmounts,
-  ExchangedFlipInputRef,
-  ExchangeFlipInputFields
+  type ExchangedFlipInputAmounts,
+  type ExchangedFlipInputRef,
+  type ExchangeFlipInputFields
 } from '../themed/ExchangedFlipInput2'
 import { EdgeModal } from './EdgeModal'
 
@@ -261,7 +261,9 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       },
       setAmount: (field: ExchangeFlipInputFields, value: string) =>
         exchangedFlipInputRef.current?.setAmount(field, value),
-      setError: (errorMessage: string | null) => setErrorMessage(errorMessage)
+      setError: (errorMessage: string | null) => {
+        setErrorMessage(errorMessage)
+      }
     }))
 
     return (

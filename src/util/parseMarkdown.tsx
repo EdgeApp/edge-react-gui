@@ -1,4 +1,4 @@
-import marked, { MarkedToken } from 'marked'
+import marked, { type MarkedToken } from 'marked'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
@@ -27,7 +27,10 @@ export function parseMarkdown(str: string): React.ReactNode {
   return <Markdown>{nodes}</Markdown>
 }
 
-function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
+function tokenToReactNode(
+  token: MarkedToken,
+  key: string
+): React.ReactElement | null {
   const subTokens =
     'tokens' in token
       ? token.tokens?.map((token, index) =>
@@ -65,7 +68,7 @@ function tokenToReactNode(token: MarkedToken, key: string): React.ReactNode {
         <Li key={key}>
           <LiBullet>
             <EdgeText>
-              {token.raw.match(/^[\s]*([*\-\d.]+)/)?.[1] ?? '*'}
+              {/^[\s]*([*\-\d.]+)/.exec(token.raw)?.[1] ?? '*'}
             </EdgeText>
           </LiBullet>
           <LiContent>

@@ -3,7 +3,7 @@ import { Platform, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface Props {

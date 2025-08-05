@@ -7,7 +7,7 @@ import {
   asOptional,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 import { asBase16 } from './util/cleaners/asHex'

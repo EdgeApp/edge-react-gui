@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { LayoutChangeEvent, Pressable, View } from 'react-native'
+import { type LayoutChangeEvent, Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -13,7 +13,7 @@ import Animated, {
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useState } from '../../types/reactHooks'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props<T> {
   items: T[]
@@ -141,7 +141,9 @@ export function Carousel<T>(props: Props<T>) {
             key={keyExtractor(item, index)}
             currentOffset={offset}
             itemIndex={index}
-            onPress={() => handlePressPaginationDot(index)}
+            onPress={() => {
+              handlePressPaginationDot(index)
+            }}
           />
         ))}
       </View>
@@ -163,7 +165,7 @@ const Item = (props: ItemDisplayProps) => {
     const opacity = 1 - opacityDiff * delta
     return {
       transform: [{ scale }],
-      opacity: opacity
+      opacity
     }
   })
 

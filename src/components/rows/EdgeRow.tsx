@@ -1,6 +1,11 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  type StyleProp,
+  View,
+  type ViewStyle
+} from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -11,7 +16,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 const textHeights = {

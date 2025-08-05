@@ -1,10 +1,10 @@
-import { Disklet } from 'disklet'
+import type { Disklet } from 'disklet'
 import * as React from 'react'
 import {
   check,
   checkMultiple,
   openSettings,
-  PermissionStatus,
+  type PermissionStatus,
   request
 } from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
@@ -17,13 +17,13 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
 import {
-  Permission,
+  type Permission,
   permissionNames,
-  PermissionsState
+  type PermissionsState
 } from '../../reducers/PermissionsReducer'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { ThunkAction } from '../../types/reduxTypes'
+import type { ThunkAction } from '../../types/reduxTypes'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
 
@@ -74,7 +74,9 @@ export async function requestContactsPermission(
       // Handle any other potential failure in enabling the permission
       // progmatically from within Edge by redirecting to the system settings
       // instead. Any manual change in system settings causes an app restart.
-      .catch(async _e => await openSettings())
+      .catch(async _e => {
+        await openSettings()
+      })
   } else if (!contactsPermissionOn && currentContactsPermissionOn) {
     // Can't deny permission from within the app if previously allowed
     await openSettings()
@@ -149,7 +151,9 @@ export async function requestPermissionOnSettings(
           [data]: permissionLimit + 1
         })
       )
-      .catch(error => showError(error))
+      .catch(error => {
+        showError(error)
+      })
 
     return false
   }

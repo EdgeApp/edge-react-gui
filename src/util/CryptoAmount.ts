@@ -1,7 +1,11 @@
 import { div, mul } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
-import { GuiExchangeRates } from '../types/types'
+import type { GuiExchangeRates } from '../types/types'
 import { asBiggystring } from './cleaners'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
@@ -194,9 +198,7 @@ export class CryptoAmount {
     isoFiatCode: string,
     precision?: number
   ) {
-    return this.fiatValue(exchangeRates, isoFiatCode)
-      .toFixed(precision ?? 2)
-      .toString()
+    return this.fiatValue(exchangeRates, isoFiatCode).toFixed(precision ?? 2)
   }
 
   /**

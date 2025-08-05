@@ -10,10 +10,10 @@ import { lstrings } from '../../../locales/strings'
 import {
   asEmailContactInfo,
   EMAIL_CONTACT_FORM_DISKLET_NAME,
-  EmailContactInfo
+  type EmailContactInfo
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 

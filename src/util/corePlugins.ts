@@ -1,4 +1,4 @@
-import { EdgeCorePluginsInit } from 'edge-core-js'
+import type { EdgeCorePluginsInit } from 'edge-core-js'
 
 import { ENV } from '../env'
 

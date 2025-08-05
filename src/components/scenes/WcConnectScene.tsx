@@ -1,5 +1,5 @@
-import { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { Web3WalletTypes } from '@walletconnect/web3wallet'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -13,17 +13,20 @@ import { useUnmount } from '../../hooks/useUnmount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -84,7 +87,9 @@ export const WcConnectScene = withWallet((props: Props) => {
           message={lstrings.wc_confirm_return_to_browser}
           onPress={() => {}}
         />
-      )).catch(e => showError(e))
+      )).catch(e => {
+        showError(e)
+      })
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error('WalletConnect connection error:', String(error))
