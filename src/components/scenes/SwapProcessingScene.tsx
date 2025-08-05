@@ -20,6 +20,7 @@ import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay, zeroString } from '../../util/utils'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showPendingTxModal } from '../modals/PendingTxModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import type { SwapErrorDisplayInfo } from './SwapCreateScene'
 
@@ -60,6 +61,20 @@ export function SwapProcessingScene(props: Props) {
     navigation: NavigationBase,
     error: unknown
   ): Promise<void> => {
+    // Check for pending transaction error first
+    if (
+      error != null &&
+      error instanceof Error &&
+      error.name === 'PendingFundsError'
+    ) {
+      await showPendingTxModal(
+        swapRequest.fromWallet,
+        swapRequest.fromTokenId,
+        navigation
+      )
+      return
+    }
+
     const errorDisplayInfo = processSwapQuoteError({
       error,
       swapRequest,

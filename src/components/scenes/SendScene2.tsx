@@ -77,6 +77,7 @@ import {
   type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showPendingTxModal } from '../modals/PendingTxModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import {
   WalletListModal,
@@ -245,6 +246,24 @@ const SendComponent = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
+
+  useAsyncEffect(
+    async () => {
+      if (
+        error != null &&
+        error.name === 'PendingFundsError' &&
+        flipInputModalRef.current == null
+      ) {
+        await showPendingTxModal(
+          coreWallet,
+          tokenIdProp,
+          navigation as NavigationBase
+        )
+      }
+    },
+    [error, coreWallet],
+    'SendScene2PendingTxMonitor'
+  )
 
   // Initialize `spendInfo` from route params, including possible memos
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(() => {
