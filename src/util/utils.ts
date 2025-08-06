@@ -506,7 +506,7 @@ export const convertTransactionFeeToDisplayFee = (
   currencyCode: string,
   isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
-  transaction: EdgeTransaction | null,
+  transaction: EdgeTransaction,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): {
@@ -520,12 +520,11 @@ export const convertTransactionFeeToDisplayFee = (
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
-  if (transaction?.parentNetworkFee != null) {
-    feeNativeAmount = transaction?.parentNetworkFee
-  } else if (transaction?.networkFee != null)
-    feeNativeAmount = transaction?.networkFee
+  if (transaction.parentNetworkFee != null) {
+    feeNativeAmount = transaction.parentNetworkFee
+  } else feeNativeAmount = transaction.networkFee
 
-  if (feeNativeAmount != null && gt(feeNativeAmount, '0')) {
+  if (gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination?.symbol
       ? feeDisplayDenomination.symbol
       : ''

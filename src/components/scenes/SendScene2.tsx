@@ -675,6 +675,10 @@ const SendComponent = (props: Props) => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
+
+      let fiatAmount = '0'
+      let feeSyntax = ` 0 (${fiatAmount})`
+      let feeSyntaxStyle: string | undefined
       if (edgeTransaction?.parentNetworkFee != null) {
         feeDisplayDenomination = parentDisplayDenom
         feeExchangeDenomination = parentExchangeDenom
@@ -682,23 +686,21 @@ const SendComponent = (props: Props) => {
         feeDisplayDenomination = cryptoDisplayDenomination
         feeExchangeDenomination = cryptoExchangeDenomination
       }
-      const transactionFee = convertTransactionFeeToDisplayFee(
-        coreWallet.currencyInfo.currencyCode,
-        defaultIsoFiat,
-        exchangeRates,
-        edgeTransaction,
-        feeDisplayDenomination,
-        feeExchangeDenomination
-      )
 
-      const fiatAmount =
-        transactionFee.fiatAmount === '0'
-          ? '0'
-          : ` ${transactionFee.fiatAmount}`
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
-        transactionFee.cryptoAmount
-      } (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
-      const feeSyntaxStyle = transactionFee.fiatStyle
+      if (edgeTransaction != null) {
+        const transactionFee = convertTransactionFeeToDisplayFee(
+          coreWallet.currencyInfo.currencyCode,
+          defaultIsoFiat,
+          exchangeRates,
+          edgeTransaction,
+          feeDisplayDenomination,
+          feeExchangeDenomination
+        )
+
+        fiatAmount = ` ${transactionFee.fiatAmount}`
+        feeSyntax = `${transactionFee.cryptoSymbol} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol}${fiatAmount})`
+        feeSyntaxStyle = transactionFee.fiatStyle
+      }
 
       return (
         <EdgeRow
