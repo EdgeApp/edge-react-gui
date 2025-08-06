@@ -87,3 +87,8 @@ The following documentation files provide detailed guidance for specific areas o
 
 **When to read**: When working on fiat on/off ramp features, payment integrations, or plugin system
 **Summary**: Comprehensive architecture guide for the fiat plugin system. Covers provider implementations, payment method configurations, regional restrictions, and integration patterns for buy/sell cryptocurrency features.
+
+### `docs/scene-architecture-patterns.md`
+
+**When to read**: Before creating new scenes or modifying existing scene components
+**Summary**: Critical architectural patterns for Edge scenes. Covers the fundamental rule that scenes must never implement custom headers (managed by react-navigation), proper SceneWrapper usage, and navigation configuration patterns. Includes TradeCreateScene case study showing common architectural violations to avoid.
