@@ -67,10 +67,12 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
     // If this is the first run, immediately use whatever we have on disk
     // before moving on to the potentially slow network:
     if (state.exchangeRatesMap.size === 0 || exchangeRateCache == null) {
-      exchangeRateCache = await loadExchangeRateCache().catch(error => {
-        datelog('Error loading exchange rate cache:', String(error))
-        return { assetPairs: [], rates: {} }
-      })
+      exchangeRateCache = await loadExchangeRateCache().catch(
+        (error: unknown) => {
+          datelog('Error loading exchange rate cache:', String(error))
+          return { assetPairs: [], rates: {} }
+        }
+      )
       const { exchangeRates, exchangeRatesMap } = buildGuiRates(
         exchangeRateCache.rates,
         yesterday
@@ -153,7 +155,7 @@ async function fetchExchangeRates(
 
   // Maintain a map of the unique asset pairs we need:
   const assetPairMap = new Map<string, AssetPair>()
-  function addAssetPair(assetPair: AssetPair) {
+  function addAssetPair(assetPair: AssetPair): void {
     const key = `${assetPair.currency_pair}_${assetPair.date ?? ''}`
     assetPairMap.set(key, assetPair)
   }
@@ -216,7 +218,7 @@ async function fetchExchangeRates(
     }
   }
 
-  const assetPairs = [...assetPairMap.values()]
+  const assetPairs = Array.from(assetPairMap.values())
   for (let i = 0; i < assetPairs.length; i += RATES_SERVER_MAX_QUERY_SIZE) {
     const query = assetPairs.slice(i, i + RATES_SERVER_MAX_QUERY_SIZE)
 
@@ -241,9 +243,9 @@ async function fetchExchangeRates(
                 expiration: rateExpiration,
                 rate: parseFloat(exchangeRate)
               }
-            } else if (rates[key] == null) {
+            } else {
               // We at least need a placeholder:
-              rates[key] = {
+              rates[key] ??= {
                 expiration: 0,
                 rate: 0
               }
@@ -265,7 +267,7 @@ async function fetchExchangeRates(
   // Write the cache to disk:
   await disklet
     .setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache))
-    .catch(error => {
+    .catch((error: unknown) => {
       datelog('Error saving exchange rate cache:', String(error))
     })
 }
@@ -291,7 +293,7 @@ function buildGuiRates(
       string,
       string | undefined
     ]
-    const reverseKey = `${codeB}_${codeA}${date ? '_' + date : ''}`
+    const reverseKey = `${codeB}_${codeA}${date != null ? '_' + date : ''}`
     out[reverseKey] = rate === 0 ? 0 : 1 / rate
 
     // Set up exchange rate map. This nest map is keyed This map will hold current rate and 24 hour rate, if available.
