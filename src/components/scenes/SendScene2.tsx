@@ -408,7 +408,8 @@ const SendComponent = (props: Props): React.ReactElement => {
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
-        currencyCode={currencyCode}
+        pluginId={pluginId}
+        tokenId={tokenId}
         exchangeDenomination={cryptoExchangeDenomination}
         displayDenomination={cryptoDisplayDenomination}
         lockInputs={lockTilesMap.amount ?? false}
@@ -548,7 +549,8 @@ const SendComponent = (props: Props): React.ReactElement => {
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
-          currencyCode={currencyCode}
+          pluginId={pluginId}
+          tokenId={tokenId}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}
           lockInputs={lockTilesMap.amount ?? false}
@@ -703,7 +705,8 @@ const SendComponent = (props: Props): React.ReactElement => {
 
       if (edgeTransaction != null) {
         const transactionFee = convertTransactionFeeToDisplayFee(
-          coreWallet.currencyInfo.currencyCode,
+          coreWallet.currencyInfo.pluginId,
+          null,
           defaultIsoFiat,
           exchangeRates,
           edgeTransaction,

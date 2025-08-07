@@ -136,7 +136,8 @@ const TransactionDetailsComponent = (props: Props) => {
     parseFloat(
       convertCurrencyFromExchangeRates(
         state.exchangeRates,
-        currencyCode,
+        currencyInfo.pluginId,
+        tokenId,
         defaultIsoFiat,
         absExchangeAmount
       )

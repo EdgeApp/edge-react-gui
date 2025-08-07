@@ -158,7 +158,8 @@ export function AccountCallbackManager(props: Props) {
             const usdAmount = parseFloat(
               convertCurrencyFromExchangeRates(
                 exchangeRates,
-                tx.currencyCode,
+                wallet.currencyInfo.pluginId,
+                tx.tokenId,
                 'iso:USD',
                 String(cryptoAmount)
               )
