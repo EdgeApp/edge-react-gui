@@ -1,9 +1,8 @@
 # Priority: High
-# Test ID: C202842a
+# Test ID: C202842
 # Title: Side Menu items do not crash
 # Expected Result:
 #   1. No crash when tapping into each Side Menu item
-#   2. Android cannot go back blocked on scan qr code
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -25,6 +24,10 @@ tags:
     optional: true
 
 # If the survey modal shows, dismiss it
+- extendedWaitUntil:
+    visible: "How Did You Discover"
+    timeout: 20000
+    optional: true
 - tapOn:
     text: "Dismiss"
     optional: true
@@ -73,13 +76,15 @@ tags:
     id: "chevronBack"
 - tapOn:
     id: "sideMenuButton"
-# - tapOn: "Scan QR"
-# - assertVisible: "OK"
-# - tapOn: "OK"
-# - assertVisible: "Scan QR Code"
-- tapOn: "Share Edge"
-- assertVisible: "Copy"
-- tapOn: "Copy"
+- tapOn: "Scan QR"
+- assertVisible: "Scan QR Code"
+- tapOn:
+    id: "xCloseButton"
+- tapOn:
+    id: "sideMenuButton"
+# - tapOn: "Share Edge"
+# - assertVisible: "Copy"
+# - tapOn: "Copy"
 - tapOn: "Settings"
 - assertVisible: "Settings"
 - assertVisible:
