@@ -120,7 +120,8 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
           displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
         const transactionFee = convertTransactionFeeToDisplayFee(
-          currencyCode,
+          receivingWallet.currencyInfo.pluginId,
+          null,
           defaultFiat,
           exchangeRates,
           tx,

@@ -141,7 +141,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       )(stakingNativeAmount)
       const stakingFiatBalance = convertCurrencyFromExchangeRates(
         exchangeRates,
-        currencyCode,
+        pluginId,
+        tokenId,
         defaultIsoFiat,
         stakingDefaultCryptoAmount
       )

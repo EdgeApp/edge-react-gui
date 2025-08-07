@@ -5,6 +5,7 @@ import type {
   EdgeDenomination,
   EdgePluginMap,
   EdgeToken,
+  EdgeTokenId,
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
@@ -179,11 +180,12 @@ export const roundedFee = (
 
 export const convertCurrencyFromExchangeRates = (
   exchangeRates: GuiExchangeRates,
-  fromCurrencyCode: string,
+  fromPluginId: string,
+  fromTokenId: EdgeTokenId,
   toCurrencyCode: string,
   amount: string
 ): string => {
-  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+  const rateKey = `${fromPluginId}_${String(fromTokenId)}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = mul(amount, rate)
   return convertedAmount
@@ -503,7 +505,8 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  currencyCode: string,
+  pluginId: string,
+  tokenId: EdgeTokenId,
   isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction,
@@ -550,13 +553,15 @@ export const convertTransactionFeeToDisplayFee = (
       convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(
       exchangeRates,
-      currencyCode,
+      pluginId,
+      tokenId,
       isoFiatCurrencyCode,
       cryptoFeeExchangeAmount
     )
     const feeAmountInUSD = convertCurrencyFromExchangeRates(
       exchangeRates,
-      currencyCode,
+      pluginId,
+      tokenId,
       'iso:USD',
       cryptoFeeExchangeAmount
     )

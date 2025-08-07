@@ -341,7 +341,8 @@ export const makeAaveCloseAction = async ({
       const collateralDenom = collateralDenoms[0]
       const collateralFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
-        collateralCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        collateralTokenId,
         defaultIsoFiat,
         convertNativeToExchange(collateralDenom.multiplier)(
           collateral.nativeAmount
@@ -350,14 +351,16 @@ export const makeAaveCloseAction = async ({
       const debtDenom = debtDenoms[0]
       const principalFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
-        debtCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        debtTokenId,
         defaultIsoFiat,
         convertNativeToExchange(debtDenom.multiplier)(debt.nativeAmount)
       )
       const debtBalanceNativeAmount = wallet.balanceMap.get(debtTokenId) ?? '0'
       const debtBalanceFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
-        debtCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        debtTokenId,
         defaultIsoFiat,
         convertNativeToExchange(debtDenom.multiplier)(debtBalanceNativeAmount)
       )

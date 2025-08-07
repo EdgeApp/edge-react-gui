@@ -90,7 +90,8 @@ export const SwapConfirmationScene = (props: Props) => {
       ? '0'
       : convertCurrencyFromExchangeRates(
           state.exchangeRates,
-          selectedQuote.networkFee.currencyCode,
+          selectedQuote.pluginId,
+          selectedQuote.networkFee.tokenId,
           state.ui.settings.defaultIsoFiat,
           selectedQuote.networkFee.nativeAmount
         )

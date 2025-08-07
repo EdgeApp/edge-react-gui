@@ -106,7 +106,8 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
 
     const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
     const transactionFee = convertTransactionFeeToDisplayFee(
-      wallet.currencyInfo.currencyCode,
+      wallet.currencyInfo.pluginId,
+      null,
       isoFiatCurrencyCode,
       exchangeRates,
       edgeTransaction,
