@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming
@@ -85,36 +83,6 @@ export const SliderComponent = (props: Props) => {
     setCompleted(true)
   }
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx: { offsetX: number }) => {
-      if (!sliderDisabled) ctx.offsetX = translateX.value
-    },
-    onActive: (event, ctx) => {
-      if (!sliderDisabled) {
-        isSliding.value = true
-        translateX.value = clamp(
-          event.translationX + ctx.offsetX,
-          0,
-          upperBound
-        )
-      }
-    },
-    onEnd: () => {
-      if (!sliderDisabled) {
-        isSliding.value = false
-
-        if (translateX.value < completePoint) {
-          runOnJS(complete)()
-        } else {
-          translateX.value = withTiming(upperBound, {
-            duration: 500,
-            easing: Easing.inOut(Easing.exp)
-          })
-        }
-      }
-    }
-  })
-
   const scrollTranslationStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: translateX.value }] }
   })
@@ -145,21 +113,19 @@ export const SliderComponent = (props: Props) => {
       >
         <Animated.View style={[styles.progress, progressStyle]} />
 
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
-          <Animated.View
-            style={[
-              styles.thumb,
-              sliderDisabled ? styles.disabledThumb : null,
-              scrollTranslationStyle
-            ]}
-          >
-            <Entypo
-              style={styles.thumbIcon}
-              name="chevron-left"
-              size={theme.rem(1.5)}
-            />
-          </Animated.View>
-        </PanGestureHandler>
+        <Animated.View
+          style={[
+            styles.thumb,
+            sliderDisabled ? styles.disabledThumb : null,
+            scrollTranslationStyle
+          ]}
+        >
+          <Entypo
+            style={styles.thumbIcon}
+            name="chevron-left"
+            size={theme.rem(1.5)}
+          />
+        </Animated.View>
         {showSpinner ? (
           <ActivityIndicator
             color={theme.iconTappable}
