@@ -456,6 +456,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 },
               ]
             }
+            nativeID="0"
             pending={false}
             style={
               [
@@ -496,6 +497,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
+            nativeID="1"
             pending={false}
             style={
               [

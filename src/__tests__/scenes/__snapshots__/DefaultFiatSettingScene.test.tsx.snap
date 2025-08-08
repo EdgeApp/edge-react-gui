@@ -37,6 +37,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       },
     ]
   }
+  nativeID="0"
   style={
     [
       {
@@ -454,6 +455,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 },
               ]
             }
+            nativeID="2"
             size={22}
             style={
               [
@@ -487,6 +489,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 }
               }
               jestInlineStyle={{}}
+              nativeID="3"
               style={
                 [
                   {
@@ -561,6 +564,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="4"
               size={0}
               style={
                 [
@@ -594,6 +598,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="5"
                 style={
                   [
                     {
@@ -657,6 +662,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="6"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -746,6 +752,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="7"
               size={0}
               style={
                 [
@@ -779,6 +786,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="8"
                 style={
                   [
                     {

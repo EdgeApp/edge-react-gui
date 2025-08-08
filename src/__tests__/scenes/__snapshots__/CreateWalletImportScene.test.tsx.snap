@@ -477,6 +477,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="1"
               scale={0}
               style={
                 [
@@ -519,6 +520,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="2"
               style={
                 [
                   {
@@ -570,6 +572,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="3"
                 shift={0}
                 style={
                   [
@@ -622,6 +625,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       },
                     ]
                   }
+                  nativeID="4"
                   scale={1}
                   shift={0}
                   style={
@@ -692,6 +696,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 }
                 keyboardType="email-address"
                 multiline={true}
+                nativeID="5"
                 numberOfLines={10}
                 onBlur={[Function]}
                 onChangeText={[Function]}
@@ -787,6 +792,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="6"
                 scale={0}
                 style={
                   [
@@ -820,6 +826,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
+                  nativeID="7"
                   style={
                     [
                       {

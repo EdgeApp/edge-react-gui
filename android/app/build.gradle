@@ -158,6 +158,9 @@ dependencies {
 
     // For Zcash:
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
+    // This is a hack to help Reanimated find worklets:
+    implementation project(':react-native-worklets')
 }
 
 // ---------------------------------------------------------------------

@@ -241,6 +241,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}

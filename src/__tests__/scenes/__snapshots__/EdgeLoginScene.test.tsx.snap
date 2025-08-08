@@ -263,6 +263,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           },
         ]
       }
+      nativeID="0"
       style={
         [
           {
@@ -310,6 +311,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       }
     }
     jestInlineStyle={{}}
+    nativeID="1"
     pointerEvents="none"
     style={
       [
@@ -444,6 +446,7 @@ DO NOT accept this login unless you trust the application and person who provide
       }
     }
     jestInlineStyle={{}}
+    nativeID="2"
     pointerEvents="none"
     style={
       [

@@ -120,6 +120,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           },
         ]
       }
+      nativeID="1"
       scale={0}
       style={
         [
@@ -153,6 +154,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           }
         }
         jestInlineStyle={{}}
+        nativeID="2"
         style={
           [
             {
@@ -196,6 +198,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           },
         ]
       }
+      nativeID="3"
       style={
         [
           {
@@ -247,6 +250,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             },
           ]
         }
+        nativeID="4"
         shift={1}
         style={
           [
@@ -299,6 +303,7 @@ exports[`FilledTextInput should render with some props 1`] = `
               },
             ]
           }
+          nativeID="5"
           scale={1}
           shift={1}
           style={
@@ -369,6 +374,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         keyboardType="default"
         maxLength={11}
         multiline={true}
+        nativeID="6"
         numberOfLines={20}
         onBlur={[Function]}
         onChangeText={[Function]}
@@ -465,6 +471,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             },
           ]
         }
+        nativeID="7"
         scale={22}
         style={
           [
@@ -498,6 +505,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             }
           }
           jestInlineStyle={{}}
+          nativeID="8"
           style={
             [
               {
@@ -538,6 +546,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         {},
       ]
     }
+    nativeID="9"
     noLayoutFlow={false}
     style={
       [
