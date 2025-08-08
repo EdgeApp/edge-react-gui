@@ -557,45 +557,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "type": 0,
                       }
                     }
-                  >
-                    <RNSVGCircle
-                      cx={22.5}
-                      cy={22.5}
-                      fill={
-                        {
-                          "payload": 0,
-                          "type": 0,
-                        }
-                      }
-                      opacity={1}
-                      propList={
-                        [
-                          "fill",
-                          "stroke",
-                          "strokeWidth",
-                          "strokeDasharray",
-                          "strokeDashoffset",
-                          "strokeLinecap",
-                        ]
-                      }
-                      r={24}
-                      stroke={
-                        {
-                          "payload": 4278251938,
-                          "type": 0,
-                        }
-                      }
-                      strokeDasharray={
-                        [
-                          150.79644737231007,
-                          150.79644737231007,
-                        ]
-                      }
-                      strokeDashoffset={147.78051842486386}
-                      strokeLinecap={1}
-                      strokeWidth={4}
-                    />
-                  </RNSVGGroup>
+                  />
                 </RNSVGSvgView>
                 <View
                   style={
@@ -1203,45 +1165,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "type": 0,
                       }
                     }
-                  >
-                    <RNSVGCircle
-                      cx={22.5}
-                      cy={22.5}
-                      fill={
-                        {
-                          "payload": 0,
-                          "type": 0,
-                        }
-                      }
-                      opacity={1}
-                      propList={
-                        [
-                          "fill",
-                          "stroke",
-                          "strokeWidth",
-                          "strokeDasharray",
-                          "strokeDashoffset",
-                          "strokeLinecap",
-                        ]
-                      }
-                      r={24}
-                      stroke={
-                        {
-                          "payload": 4278251938,
-                          "type": 0,
-                        }
-                      }
-                      strokeDasharray={
-                        [
-                          150.79644737231007,
-                          150.79644737231007,
-                        ]
-                      }
-                      strokeDashoffset={147.78051842486386}
-                      strokeLinecap={1}
-                      strokeWidth={4}
-                    />
-                  </RNSVGGroup>
+                  />
                 </RNSVGSvgView>
                 <View
                   style={
