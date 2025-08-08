@@ -327,6 +327,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
+    footerOpenRatio={"1"}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -356,6 +357,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="0"
     onLayout={[Function]}
     style={
       [

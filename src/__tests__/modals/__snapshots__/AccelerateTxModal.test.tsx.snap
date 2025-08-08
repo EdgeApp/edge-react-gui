@@ -102,6 +102,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -466,6 +467,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 },
               ]
             }
+            nativeID="2"
             style={
               [
                 {
@@ -515,6 +517,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 null,
               ]
             }
+            nativeID="3"
             style={
               [
                 {

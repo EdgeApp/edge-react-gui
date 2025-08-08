@@ -2,6 +2,7 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
 const {
   wrapWithReanimatedMetroConfig
 } = require('react-native-reanimated/metro-config')
+const r3Paths = require('r3-hack')
 
 const defaultConfig = getDefaultConfig(__dirname)
 const { assetExts, sourceExts } = defaultConfig.resolver
@@ -19,6 +20,27 @@ const config = {
     )
   },
   resolver: {
+    resolveRequest(context, moduleName, platform) {
+      // Hack our path resolution to use Reanimated 3 on Android:
+      if (
+        platform === 'android' &&
+        moduleName.startsWith('react-native-reanimated')
+      ) {
+        const filePath = r3Paths[moduleName]
+        if (filePath == null) {
+          console.log(
+            `Could not find "${moduleName}". Please update r3-hack to include it.`
+          )
+          return { type: 'empty' }
+        }
+        return { type: 'sourceFile', filePath }
+      }
+
+      // Otherwise use the normal Metro resolution:
+      return context.resolveRequest(context, moduleName, platform)
+    },
+
+    // From react-native-svg-transformer:
     assetExts: assetExts.filter(ext => ext !== 'svg'),
     sourceExts: [...sourceExts, 'svg']
   }

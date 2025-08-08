@@ -102,6 +102,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {

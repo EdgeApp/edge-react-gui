@@ -31,6 +31,7 @@ exports[`MenuTabs should render with loading props 1`] = `
       },
     ]
   }
+  nativeID="0"
   pointerEvents="box-none"
   shiftY={0}
   style={
@@ -83,6 +84,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     openRatio={1}
     pointerEvents="none"
     style={
@@ -173,6 +175,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="2"
     openRatio={1}
     style={
       [

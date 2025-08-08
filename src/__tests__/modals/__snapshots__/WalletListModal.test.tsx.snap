@@ -102,6 +102,7 @@ exports[`WalletListModal should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -349,6 +350,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="3"
               size={22}
               style={
                 [
@@ -382,6 +384,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="4"
                 style={
                   [
                     {
@@ -456,6 +459,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="5"
                 size={0}
                 style={
                   [
@@ -489,6 +493,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
+                  nativeID="6"
                   style={
                     [
                       {
@@ -550,6 +555,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="7"
                 onBlur={[Function]}
                 onChangeText={[Function]}
                 onFocus={[Function]}
@@ -639,6 +645,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="8"
                 size={0}
                 style={
                   [
@@ -672,6 +679,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
+                  nativeID="9"
                   style={
                     [
                       {
