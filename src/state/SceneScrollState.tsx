@@ -179,7 +179,7 @@ export const useSceneScrollWorkletHandler = () => {
   )
 
   // Define the handleScroll function as a worklet using useWorkletCallback
-  const handleScroll = useWorkletCallback((event: NativeScrollEvent) => {
+  const handleScroll = useCallback((event: NativeScrollEvent) => {
     'worklet'
     if (!isFocused) return
 
