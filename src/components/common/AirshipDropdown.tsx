@@ -4,11 +4,11 @@ import type { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { type Theme, useTheme } from '../services/ThemeContext'

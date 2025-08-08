@@ -8,7 +8,6 @@ import {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   type AnimationCallback,
-  runOnJS,
   type SharedValue,
   useAnimatedStyle,
   useDerivedValue,
@@ -16,6 +15,7 @@ import Animated, {
   withSpring,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 

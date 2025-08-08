@@ -102,6 +102,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -360,6 +361,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               ]
             }
+            nativeID="3"
             scale={0}
             style={
               [
@@ -402,6 +404,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               ]
             }
+            nativeID="4"
             style={
               [
                 {
@@ -464,6 +467,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 ]
               }
               multiline={false}
+              nativeID="5"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -558,6 +562,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   },
                 ]
               }
+              nativeID="6"
               scale={0}
               style={
                 [
@@ -591,6 +596,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="7"
                 style={
                   [
                     {
@@ -869,6 +875,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         },
       ]
     }
+    nativeID="9"
     style={
       [
         {
@@ -1127,6 +1134,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               ]
             }
+            nativeID="11"
             scale={0}
             style={
               [
@@ -1169,6 +1177,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               ]
             }
+            nativeID="12"
             style={
               [
                 {
@@ -1231,6 +1240,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 ]
               }
               multiline={false}
+              nativeID="13"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -1325,6 +1335,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   },
                 ]
               }
+              nativeID="14"
               scale={22}
               style={
                 [
@@ -1358,6 +1369,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="15"
                 style={
                   [
                     {

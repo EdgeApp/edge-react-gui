@@ -241,6 +241,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -661,6 +662,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="1"
               style={
                 [
                   {
@@ -712,6 +714,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="2"
               style={
                 [
                   {

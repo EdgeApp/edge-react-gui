@@ -241,6 +241,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -511,6 +512,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
+            nativeID="2"
             scale={0}
             style={
               [
@@ -553,6 +555,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
+            nativeID="3"
             style={
               [
                 {
@@ -604,6 +607,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   },
                 ]
               }
+              nativeID="4"
               shift={0}
               style={
                 [
@@ -656,6 +660,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                     },
                   ]
                 }
+                nativeID="5"
                 scale={1}
                 shift={0}
                 style={
@@ -724,6 +729,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
               maxLength={12}
               multiline={false}
+              nativeID="6"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -819,6 +825,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   },
                 ]
               }
+              nativeID="7"
               scale={0}
               style={
                 [
@@ -852,6 +859,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="8"
                 style={
                   [
                     {
@@ -892,6 +900,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               {},
             ]
           }
+          nativeID="9"
           noLayoutFlow={false}
           style={
             [
