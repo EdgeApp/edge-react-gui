@@ -197,10 +197,12 @@ export const StyledButtonContainer = styled(View)<{
   const rowStyle: ViewStyle =
     layout === 'row'
       ? {
+          alignSelf: 'stretch',
           flexGrow: 1,
           flexShrink: 1,
           flexDirection: 'row-reverse',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          paddingHorizontal: theme.rem(0.5)
         }
       : {}
 
