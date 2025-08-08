@@ -747,6 +747,7 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
+      nativeID="0"
       style={
         [
           {
@@ -846,6 +847,7 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
+      nativeID="1"
       style={
         [
           {
@@ -974,6 +976,7 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
+      nativeID="2"
     >
       <View
         style={
@@ -1220,6 +1223,8 @@ exports[`Request should render with loaded props 1`] = `
           >
             <View
               collapsable={false}
+              disableAnimation={"0"}
+              focusAnimation={"0"}
               jestAnimatedProps={
                 {
                   "value": {},
@@ -1245,6 +1250,7 @@ exports[`Request should render with loaded props 1`] = `
                   },
                 ]
               }
+              nativeID="3"
               style={
                 [
                   {
@@ -1350,6 +1356,8 @@ exports[`Request should render with loaded props 1`] = `
                   }
                   accessible={false}
                   collapsable={false}
+                  disableAnimation={"0"}
+                  focusAnimation={"0"}
                   focusable={true}
                   jestAnimatedProps={
                     {
@@ -1388,6 +1396,7 @@ exports[`Request should render with loaded props 1`] = `
                   }
                 >
                   <View
+                    animatedValue={"0"}
                     collapsable={false}
                     jestAnimatedProps={
                       {
@@ -1414,6 +1423,7 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
+                    nativeID="5"
                     pointerEvents="auto"
                     style={
                       [
@@ -1506,6 +1516,7 @@ exports[`Request should render with loaded props 1`] = `
                           ]
                         }
                         keyboardType="decimal-pad"
+                        nativeID="6"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
@@ -1549,6 +1560,7 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
+                        nativeID="7"
                         style={
                           [
                             {
@@ -1568,6 +1580,7 @@ exports[`Request should render with loaded props 1`] = `
                     </View>
                   </View>
                   <View
+                    animatedValue={"0"}
                     collapsable={false}
                     jestAnimatedProps={
                       {
@@ -1599,6 +1612,7 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
+                    nativeID="8"
                     pointerEvents="none"
                     style={
                       [
@@ -1696,6 +1710,7 @@ exports[`Request should render with loaded props 1`] = `
                           ]
                         }
                         keyboardType="decimal-pad"
+                        nativeID="9"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
@@ -1739,6 +1754,7 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
+                        nativeID="10"
                         style={
                           [
                             {
@@ -1785,6 +1801,8 @@ exports[`Request should render with loaded props 1`] = `
                       },
                     ]
                   }
+                  nativeID="11"
+                  scale={"0"}
                   style={
                     [
                       {
@@ -1855,6 +1873,7 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                       jestInlineStyle={{}}
+                      nativeID="12"
                       style={
                         [
                           {
@@ -1906,6 +1925,7 @@ exports[`Request should render with loaded props 1`] = `
           },
         ]
       }
+      nativeID="13"
       style={
         [
           {
@@ -1972,6 +1992,7 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
+      nativeID="14"
     >
       <View
         accessibilityState={
@@ -2117,6 +2138,7 @@ exports[`Request should render with loaded props 1`] = `
         "reduceMotionV": "system",
       }
     }
+    nativeID="15"
   >
     <View
       style={

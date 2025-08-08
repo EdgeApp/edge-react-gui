@@ -2320,7 +2320,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.19.0):
+  - RNReanimated (4.0.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2343,10 +2343,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.19.0)
-    - RNReanimated/worklets (= 3.19.0)
+    - RNReanimated/reanimated (= 4.0.2)
+    - RNWorklets
     - Yoga
-  - RNReanimated/reanimated (3.19.0):
+  - RNReanimated/reanimated (4.0.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2369,9 +2369,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.19.0)
+    - RNReanimated/reanimated/apple (= 4.0.2)
+    - RNWorklets
     - Yoga
-  - RNReanimated/reanimated/apple (3.19.0):
+  - RNReanimated/reanimated/apple (4.0.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2394,55 +2395,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Yoga
-  - RNReanimated/worklets (3.19.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - RNReanimated/worklets/apple (= 3.19.0)
-    - Yoga
-  - RNReanimated/worklets/apple (3.19.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
+    - RNWorklets
     - Yoga
   - RNScreens (4.11.1):
     - DoubleConversion
@@ -2625,6 +2578,80 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - RNVectorIcons (10.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNWorklets (0.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNWorklets/worklets (= 0.4.1)
+    - Yoga
+  - RNWorklets/worklets (0.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNWorklets/worklets/apple (= 0.4.1)
+    - Yoga
+  - RNWorklets/worklets/apple (0.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2934,6 +2961,7 @@ DEPENDENCIES:
   - RNStoreReview (from `../node_modules/react-native-store-review`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNWorklets (from `../node_modules/react-native-worklets`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -3243,6 +3271,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNWorklets:
+    :path: "../node_modules/react-native-worklets"
   VisionCamera:
     :path: "../node_modules/react-native-vision-camera"
   Yoga:
@@ -3392,7 +3422,7 @@ SPEC CHECKSUMS:
   RNPermissions: 60b23d827dc7a4b2e347356fc20206184676637c
   RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
-  RNReanimated: 35a5a59798fe9a9a61259146be9fe8b0b602ab39
+  RNReanimated: 24b8a5b54c499ac783c2c299aad4712002c03bb1
   RNScreens: 90b905d545a5ebbe976985702b8a39e3475727b2
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: 33bc24cea8f87ab26521a9330549a82c703b5db4
@@ -3401,6 +3431,7 @@ SPEC CHECKSUMS:
   RNStoreReview: 8b47d208282c23296d2466a488a8d9ca1979d79b
   RNSVG: 45e3c3210465e75ab6374c9f746179e75d76ce48
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
+  RNWorklets: 32e63979c33291a69d4d8541d4425ab91763320e
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: d95f5f3b32d01324b3e27d3c52747005302cc026

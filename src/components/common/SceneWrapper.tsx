@@ -11,12 +11,13 @@ import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
-import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated'
 import {
   type EdgeInsets,
   useSafeAreaFrame,
   useSafeAreaInsets
 } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {

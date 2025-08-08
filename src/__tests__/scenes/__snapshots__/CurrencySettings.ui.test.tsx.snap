@@ -241,6 +241,7 @@ exports[`CurrencySettings should render 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -406,6 +407,7 @@ exports[`CurrencySettings should render 1`] = `
                 },
               ]
             }
+            nativeID="1"
             pending={false}
             style={
               [
@@ -446,6 +448,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
             jestInlineStyle={{}}
+            nativeID="2"
             pending={false}
             style={
               [
@@ -587,6 +590,7 @@ exports[`CurrencySettings should render 1`] = `
                 },
               ]
             }
+            nativeID="3"
             pending={false}
             style={
               [
@@ -627,6 +631,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
             jestInlineStyle={{}}
+            nativeID="4"
             pending={false}
             style={
               [
@@ -768,6 +773,7 @@ exports[`CurrencySettings should render 1`] = `
                 },
               ]
             }
+            nativeID="5"
             pending={false}
             style={
               [
@@ -808,6 +814,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
             jestInlineStyle={{}}
+            nativeID="6"
             pending={false}
             style={
               [
