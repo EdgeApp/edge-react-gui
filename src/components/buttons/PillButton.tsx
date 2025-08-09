@@ -8,8 +8,8 @@ import { EdgeText } from '../themed/EdgeText'
 
 export interface PillButtonProps {
   label: string
-  onPress: () => void
-  icon?: () => React.ReactElement
+  onPress: () => void | Promise<void>
+  icon?: () => React.ReactElement | null
 }
 
 export const PillButton = (props: PillButtonProps): React.ReactElement => {
@@ -36,7 +36,8 @@ const Gradient = styled(LinearGradient)(theme => ({
   borderRadius: theme.rem(100),
   flexDirection: 'row',
   paddingHorizontal: theme.rem(0.75),
-  paddingVertical: theme.rem(0.25)
+  paddingVertical: theme.rem(0.25),
+  gap: theme.rem(0.5)
 }))
 
 const Label = styled(EdgeText)(theme => ({

@@ -133,12 +133,12 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps = BuyTabSceneProps<'pluginListBuy'>
+type BuyProps = BuyTabSceneProps<'pluginListBuyOld'>
 type SellProps = SellTabSceneProps<'pluginListSell'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
-  return props.route.name === 'pluginListBuy'
+  return props.route.name === 'pluginListBuyOld'
 }
 
 interface StateProps {

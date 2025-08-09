@@ -26,7 +26,7 @@ interface Props {
 
   // Events:
   onPress: () => Promise<void> | void
-  onLongPress: () => Promise<void> | void
+  onLongPress?: () => Promise<void> | void
   onProviderPress: () => Promise<void> | void
 }
 

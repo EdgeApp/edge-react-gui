@@ -21,7 +21,8 @@
 
 ## Build/Test/Lint Commands
 
-- `yarn lint` - Run ESLint on entire codebase
+- `yarn lint` - Run ESLint on entire codebase (only use when working on warning cleanup)
+- `yarn lint --quiet` - Run ESLint on entire codebase and only get error (Prefer this usage always)
 - `yarn fix` - Auto-fix linting issues and deduplicate yarn
 - `yarn test` - Run Jest tests (single run)
 - `yarn watch` - Run Jest tests in watch mode

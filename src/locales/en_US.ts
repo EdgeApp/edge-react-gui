@@ -1387,7 +1387,7 @@ const strings = {
   string_report_sent: 'Report sent.',
   string_best_rate_badge_text: 'Best\nRate',
 
-  step: 'Step',
+  step_prefix_s: 'Step %s:',
   scan_as_in_scan_barcode: 'Scan',
   enter_as_in_enter_address_with_keyboard: 'Enter',
 
@@ -1932,6 +1932,15 @@ const strings = {
   see_all: 'See All',
   sell_crypto: 'Sell Crypto',
   sell_crypto_footer: 'Crypto to bank or cash',
+
+  // Trade Option Select Scene
+  trade_option_buy_title: 'Buy Cryptocurrency',
+  trade_option_sell_title: 'Sell Cryptocurrency',
+  trade_option_select_payment_method: 'Select Payment Method',
+  trade_option_total_label: 'Total',
+  trade_option_settlement_label: 'Settlement',
+  trade_option_powered_by_label: 'Powered By:',
+  trade_option_best_rate_label: 'BEST\nRATE',
   swap_crypto: 'Swap Crypto',
   swap_crypto_footer: 'Crypto to another crypto',
   fio_web3: 'Web3 Handle',
@@ -1976,6 +1985,19 @@ const strings = {
   education: 'Education',
   enter_value: 'Enter Value',
 
+  // Trade Region Select Scene
+  trade_region_select_buy_crypto: 'Buy Crypto',
+  trade_region_select_start_steps: 'Start in 4 Easy Steps',
+  trade_region_select_step_1: 'Select Your Region for personalized options',
+  trade_region_select_step_2: 'Create Your Quote',
+  trade_region_select_step_3: 'Choose Payment Method',
+  trade_region_select_step_4: 'Fund Your Account',
+
+  // Trade Create Scene
+  trade_create_amount_s: 'Amount %s',
+  trade_create_exchange_rate: 'Exchange Rate',
+  trade_create_next: 'Next',
+  trade_create_max: 'MAX',
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
