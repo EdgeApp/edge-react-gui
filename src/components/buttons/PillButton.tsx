@@ -10,17 +10,22 @@ export interface PillButtonProps {
   label: string
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
+  disabled?: boolean
 }
 
-export const PillButton = (props: PillButtonProps): React.ReactElement => {
-  const { label, onPress, icon } = props
+export const PillButton: React.FC<PillButtonProps> = (
+  props: PillButtonProps
+) => {
+  const { label, onPress, icon, disabled = false } = props
 
   const theme = useTheme()
 
   return (
-    <EdgeTouchableOpacity onPress={onPress}>
+    <EdgeTouchableOpacity onPress={onPress} disabled={disabled}>
       <Gradient
-        colors={theme.secondaryButton}
+        colors={
+          disabled ? theme.secondaryButtonDisabled : theme.secondaryButton
+        }
         end={theme.secondaryButtonColorEnd}
         start={theme.secondaryButtonColorStart}
       >
@@ -36,7 +41,8 @@ const Gradient = styled(LinearGradient)(theme => ({
   borderRadius: theme.rem(100),
   flexDirection: 'row',
   paddingHorizontal: theme.rem(0.75),
-  paddingVertical: theme.rem(0.25)
+  paddingVertical: theme.rem(0.25),
+  gap: theme.rem(0.5)
 }))
 
 const Label = styled(EdgeText)(theme => ({

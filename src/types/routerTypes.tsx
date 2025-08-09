@@ -63,6 +63,8 @@ import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/Swe
 import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
 import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
+import type { TradeCreateParams } from '../components/scenes/TradeCreateScene'
+import type { RampSelectOptionParams } from '../components/scenes/TradeOptionSelectScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
@@ -97,8 +99,12 @@ export type WalletsTabParamList = {} & {
 
 export type BuyTabParamList = {} & {
   // Buy-specific navigation
-  pluginListBuy?: GuiPluginListParams
+  pluginListBuy?: TradeCreateParams
+  pluginListBuyOld?: GuiPluginListParams
   pluginViewBuy: PluginViewParams
+
+  // Ramp plugin
+  rampSelectOption: RampSelectOptionParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -126,6 +132,10 @@ export type SwapTabParamList = {} & {
   swapCreate: SwapCreateParams | undefined
   swapConfirmation: SwapConfirmationParams
   swapProcessing: SwapProcessingParams
+}
+
+export interface TradeTabParamList {
+  pluginListBuy: TradeCreateParams
 }
 
 export type EdgeTabsParamList = {} & {
