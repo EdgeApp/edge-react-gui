@@ -123,3 +123,4 @@ tags:
     element: "Clear Logs"
     direction: "DOWN"
 
+- stopApp
