@@ -10,6 +10,7 @@ import {
   type Cleaner
 } from 'cleaners'
 
+import { asInitOptions as asPaybisRampInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
@@ -100,7 +101,7 @@ export const asEnvConfig = asObject({
       ),
       paybis: asOptional(
         asObject({
-          partnerUrl: asString,
+          partnerUrl: asOptional(asString, 'https://widget-api.paybis.com'),
           apiKey: asString,
           privateKeyB64: asString
         })
@@ -138,6 +139,14 @@ export const asEnvConfig = asObject({
       revolut: undefined,
       simplex: undefined,
       ionia: undefined
+    })
+  ),
+  RAMP_PLUGIN_INITS: asOptional(
+    asObject<Record<string, unknown>>({
+      paybis: asOptional(asPaybisRampInitOptions)
+    }).withRest,
+    () => ({
+      paybis: undefined
     })
   ),
   WYRE_CLIENT_INIT: asOptional(
