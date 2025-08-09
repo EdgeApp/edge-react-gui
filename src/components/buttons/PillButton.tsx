@@ -8,8 +8,8 @@ import { EdgeText } from '../themed/EdgeText'
 
 export interface PillButtonProps {
   label: string
-  onPress: () => void
-  icon?: () => React.ReactElement
+  onPress: () => void | Promise<void>
+  icon?: () => React.ReactElement | null
 }
 
 export const PillButton = (props: PillButtonProps): React.ReactElement => {
