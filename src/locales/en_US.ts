@@ -1385,6 +1385,7 @@ const strings = {
   string_warning: 'Warning', // Generic string. Same with wc_smartcontract_warning_title
   string_report_error: 'Report Error',
   string_report_sent: 'Report sent.',
+  string_best_rate_badge_text: 'Best\nRate',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
