@@ -133,12 +133,12 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps = BuyTabSceneProps<'pluginListBuy'>
+type BuyProps = BuyTabSceneProps<'pluginListBuyOld'>
 type SellProps = SellTabSceneProps<'pluginListSell'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
-  return props.route.name === 'pluginListBuy'
+  return props.route.name === 'pluginListBuyOld'
 }
 
 interface StateProps {
@@ -182,7 +182,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.componentMounted = true
   }
 
-  async componentDidMount() {
+  componentDidMount(): void {
     this.updatePlugins()
     const { developerPluginUri } = getDeviceSettings()
     if (developerPluginUri != null) {
@@ -190,7 +190,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.componentMounted = false
     if (this.timeoutId != null) clearTimeout(this.timeoutId)
   }
@@ -206,7 +206,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
-  updatePlugins() {
+  updatePlugins(): void {
     // Create new array objects so we aren't patching the original JSON
     const currentPlugins: BuySellPlugins = {
       buy: [...(buySellPlugins.buy ?? [])],
@@ -225,9 +225,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           continue
         }
         const currentDirection = currentPlugins[direction] ?? []
-        if (currentPlugins[direction] == null) {
-          currentPlugins[direction] = currentDirection
-        }
+        currentPlugins[direction] ??= currentDirection
         for (const patch of patches) {
           // Skip comment rows
           if (typeof patch === 'string') continue
@@ -268,7 +266,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
+  async openPlugin(
+    listRow: GuiPluginRow,
+    longPress: boolean = false
+  ): Promise<void> {
     const {
       account,
       accountReferral,
@@ -318,9 +319,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        writeDeveloperPluginUri(deepPath).catch(error => {
-          showError(error)
-        })
+        writeDeveloperPluginUri(deepPath).catch(showError)
       }
     }
     if (plugin.nativePlugin != null) {
@@ -387,7 +386,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     onPluginOpened()
   }
 
-  renderTitle = (guiPluginRow: GuiPluginRow) => {
+  renderTitle = (guiPluginRow: GuiPluginRow): React.ReactElement => {
     const styles = getStyles(this.props.theme)
     const { title, customTitleKey } = guiPluginRow
 
@@ -426,22 +425,22 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )(error)
     if (regionError != null && regionError.length > 0) {
       const country = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
-      const countryName = country ? country.name : countryCode // Fallback to countryCode if not found
+      const countryName = country != null ? country.name : countryCode // Fallback to countryCode if not found
 
       // Attempt to find the stateProvince name if stateProvinceCode is provided
       let stateProvinceName = stateProvinceCode
-      if (country?.stateProvinces && stateProvinceCode) {
+      if (country?.stateProvinces != null && stateProvinceCode != null) {
         const stateProvince = country.stateProvinces.find(
           sp => sp['alpha-2'] === stateProvinceCode
         )
-        stateProvinceName = stateProvince
-          ? stateProvince.name
-          : stateProvinceCode // Fallback to stateProvinceCode if not found
+        stateProvinceName =
+          stateProvince != null ? stateProvince.name : stateProvinceCode // Fallback to stateProvinceCode if not found
       }
 
-      const text = stateProvinceName
-        ? `${stateProvinceName}, ${countryName}`
-        : countryName
+      const text =
+        stateProvinceName != null
+          ? `${stateProvinceName}, ${countryName}`
+          : countryName
       Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
@@ -454,7 +453,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
-  renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
+  renderPlugin = ({
+    item,
+    index
+  }: ListRenderItemInfo<GuiPluginRow>): React.ReactElement | null => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
@@ -470,9 +472,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         ? undefined
         : {
             displayName: poweredBy,
-            icon: partnerLogoThemeKey
-              ? theme[partnerLogoThemeKey]
-              : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
+            icon:
+              partnerLogoThemeKey != null
+                ? theme[partnerLogoThemeKey]
+                : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
           }
     const [totalAmount, settlementTime] = item.description.split('\n')
     return (
@@ -482,7 +485,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       >
         <PaymentOptionCard
           title={this.renderTitle(item)}
-          // @ts-expect-error
+          // @ts-expect-error - we can assume paymentTypeLogoKey exists within paymentTypeLogosById because it comes from static JSON
           icon={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
           totalAmount={totalAmount}
           settlementTime={settlementTime}
@@ -491,9 +494,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             await this.openPlugin(item)
           }}
           onLongPress={async () => {
-            await this.openPlugin(item, true).catch(error => {
-              this.handleError(error)
-            })
+            await this.openPlugin(item, true).catch(this.handleError)
           }}
           onProviderPress={async () => {
             await this.openPlugin(item)
@@ -503,7 +504,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
   }
 
-  renderTop = () => {
+  renderTop = (): React.ReactElement => {
     const {
       account,
       countryCode,
@@ -521,7 +522,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       sp => sp['alpha-2'] === stateProvinceCode
     )
     const uri = `${FLAG_LOGO_URL}/${
-      countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')
+      countryData?.filename ??
+      countryData?.name.toLowerCase().replace(' ', '-') ??
+      ''
     }.png`
     const hasCountryData = countryData != null
 
@@ -601,7 +604,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
   }
 
-  renderEmptyList = () => {
+  renderEmptyList = (): React.ReactElement | null => {
     const { countryCode, theme } = this.props
     const styles = getStyles(theme)
     if (countryCode === '') return null
@@ -615,7 +618,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const {
       accountPlugins,
       accountReferral,
@@ -823,9 +826,9 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
 })
 
 // Export separate components for buy and sell routes
-export const BuyScene = (props: BuyProps) => (
+export const BuyScene = (props: BuyProps): React.ReactElement => (
   <GuiPluginListSceneComponent {...props} />
 )
-export const SellScene = (props: SellProps) => (
+export const SellScene = (props: SellProps): React.ReactElement => (
   <GuiPluginListSceneComponent {...props} />
 )
