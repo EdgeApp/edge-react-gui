@@ -1,5 +1,11 @@
 import React from 'react'
-import { Animated, Easing, View } from 'react-native'
+import { View } from 'react-native'
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { useAccountSyncRatio } from '../../hooks/useAccountSyncRatio'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -14,18 +20,12 @@ export const AccountSyncBar = () => {
 
   // Calculate the average progress:
   const progress = useAccountSyncRatio()
+  const animation = useSharedValue(progress)
 
   // Animation state:
   const [isProgressVisible, setIsProgressVisible] = React.useState(
     progress !== 100
   )
-  const animation = React.useRef(new Animated.Value(progress)).current
-
-  const widthInterpolated = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['10%', '100%'],
-    extrapolate: 'clamp'
-  })
 
   React.useEffect(() => {
     if (progress === 1) {
@@ -38,20 +38,24 @@ export const AccountSyncBar = () => {
       // Added wallets, resynced wallets, unpaused wallets, etc.
       setIsProgressVisible(true)
 
-      Animated.timing(animation, {
-        duration: 1500,
-        easing: Easing.ease,
-        toValue: progress,
-        useNativeDriver: false
-      }).start()
+      animation.value = withTiming(progress, { duration: 1500 })
     }
   }, [animation, progress])
 
-  if (!isProgressVisible) return null
+  const widthStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scaleX: interpolate(animation.value, [0, 1], [0.1, 1], {
+          extrapolateRight: 'clamp'
+        })
+      }
+    ]
+  }))
 
+  if (!isProgressVisible) return null
   return (
     <View style={style.container}>
-      <Animated.View style={[style.bar, { width: widthInterpolated }]} />
+      <Animated.View style={[style.bar, widthStyle]} />
     </View>
   )
 }
@@ -67,6 +71,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0,
     right: 0,
     height: 3,
-    backgroundColor: theme.walletProgressIconFill
+    backgroundColor: theme.walletProgressIconFill,
+    transformOrigin: 'left center'
   }
 }))

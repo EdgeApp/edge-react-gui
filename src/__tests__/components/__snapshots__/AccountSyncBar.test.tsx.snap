@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ProgressBar should render with loading props 1`] = `
 <View
@@ -11,16 +11,54 @@ exports[`ProgressBar should render with loading props 1`] = `
 >
   <View
     collapsable={false}
-    style={
+    jestAnimatedProps={
       {
-        "backgroundColor": "#00f1a2",
-        "height": 3,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-        "width": "10%",
+        "value": {},
       }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {
+          "transform": [
+            {
+              "scaleX": 0.1,
+            },
+          ],
+        },
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#00f1a2",
+          "height": 3,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transformOrigin": "left center",
+        },
+      ]
+    }
+    style={
+      [
+        {
+          "backgroundColor": "#00f1a2",
+          "height": 3,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transformOrigin": "left center",
+        },
+        {
+          "transform": [
+            {
+              "scaleX": 0.1,
+            },
+          ],
+        },
+      ]
     }
   />
 </View>
