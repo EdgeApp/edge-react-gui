@@ -355,9 +355,9 @@ const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => {
   const platform = Platform.OS
   // HACK: Address iOS/Android parity mismatches when the animation fires
   return {
-    marginVertical: platform === 'android' ? undefined : theme.rem(0.5),
-    marginBottom: platform === 'android' ? theme.rem(0.5) : undefined,
-    marginTop: platform === 'android' ? theme.rem(4.5) : undefined,
+    marginVertical: platform === 'ios' ? undefined : theme.rem(0.5),
+    marginBottom: platform === 'ios' ? theme.rem(0.5) : undefined,
+    marginTop: platform === 'ios' ? theme.rem(4.5) : undefined,
     alignItems: 'center'
   }
 })
@@ -669,10 +669,10 @@ const Footnote = styled(EdgeText)(theme => ({
 
 const ButtonFadeContainer = styled(View)(theme => {
   // HACK: Address iOS/Android parity mismatches when the animation fires
-  return Platform.OS === 'android'
+  return Platform.OS === 'ios'
     ? {
         position: 'absolute',
-        bottom: theme.rem(3.25),
+        bottom: theme.rem(5),
         left: 0,
         right: 0,
         zIndex: 1
