@@ -91,7 +91,9 @@ function WalletListSwipeableComponent(props: Props) {
           walletId,
           tokenId
         })
-      ).finally(onReset)
+      ).finally(() => {
+        if (onReset != null) onReset()
+      })
       if (activationNotRequired) {
         navigation.navigate('walletDetails', {
           walletId,
