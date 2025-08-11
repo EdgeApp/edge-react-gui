@@ -1,4 +1,4 @@
-import marked, { type MarkedToken } from 'marked'
+import { lexer, type MarkedToken } from 'marked'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
@@ -17,7 +17,7 @@ import { EdgeText } from '../components/themed/EdgeText'
  * @returns A ReactNode which can be inserted directly into JSX.
  */
 export function parseMarkdown(str: string): React.ReactNode {
-  const tokens = marked.lexer(str)
+  const tokens = lexer(str)
 
   const nodes: React.ReactNode[] = []
   for (const [index, token] of tokens.entries()) {
