@@ -1,6 +1,7 @@
 # Launches the app with a cleared cache, and waits for the Edge logo to appear.
 appId: ${MAESTRO_APP_ID}
 ---
+- evalScript: ${console.log("Starting test:" + maestro.flowName)}
 - launchApp:
     clearState: true
 - extendedWaitUntil:
