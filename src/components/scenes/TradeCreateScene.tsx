@@ -1,6 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
 import { div, mul } from 'biggystring'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,21 +10,23 @@ import { sprintf } from 'sprintf-js'
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
-import { useExchangeRateLoader } from '../../hooks/useExchangeRateLoader'
-import { useFiatText } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import type {
+  RampQuoteRequest,
+  RampQuoteResult
+} from '../../plugins/ramps/rampPluginTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
-import type { GuiFiatType } from '../../types/types'
+import type { GuiFiatType, NotOK, Ok, Result } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { DropDownInputButton } from '../buttons/DropDownInputButton'
 import { PillButton } from '../buttons/PillButton'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -44,6 +47,12 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 export interface TradeCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
+}
+
+interface QuoteError {
+  pluginId: string
+  pluginDisplayName: string
+  error: unknown
 }
 
 interface Props extends BuyTabSceneProps<'pluginListBuy'> {}
@@ -70,16 +79,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   const [selectedFiatCurrencyCode, setSelectedFiatCurrencyCode] =
     useState<string>(defaultFiat)
 
-  // Exchange rate loader
-  const { loadRatesForFiat, hasRatesForFiat, loading } = useExchangeRateLoader()
-
-  // Load rates when fiat currency changes
-  useEffect(() => {
-    const fiatCode = `iso:${selectedFiatCurrencyCode.toUpperCase()}`
-    if (!hasRatesForFiat(fiatCode)) {
-      loadRatesForFiat(fiatCode).catch(console.error)
-    }
-  }, [selectedFiatCurrencyCode, hasRatesForFiat, loadRatesForFiat])
+  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
 
   // Get first wallet as default if no forcedWalletResult
   const firstWallet = React.useMemo((): WalletListWalletResult | undefined => {
@@ -120,134 +120,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     }
   }, [selectedCrypto, selectedWallet])
 
-  // Calculate exchange rate text
-  const exchangeRateText = useFiatText({
-    cryptoCurrencyCode: selectedCryptoCurrencyCode ?? '',
-    cryptoExchangeMultiplier: denomination?.multiplier,
-    isoFiatCurrencyCode: `iso:${selectedFiatCurrencyCode.toUpperCase()}`,
-    nativeCryptoAmount: denomination?.multiplier
-  })
-
-  // Fallback to USD if the selected currency rate is zero
-  const exchangeRateTextUSD = useFiatText({
-    cryptoCurrencyCode: selectedCryptoCurrencyCode ?? '',
-    cryptoExchangeMultiplier: denomination?.multiplier,
-    isoFiatCurrencyCode: 'iso:USD',
-    nativeCryptoAmount: denomination?.multiplier
-  })
-
-  // Check if the exchange rate exists in Redux
-  const exchangeRate = useSelector(state =>
-    selectedCryptoCurrencyCode != null
-      ? getExchangeRate(
-          state,
-          selectedCryptoCurrencyCode,
-          `iso:${selectedFiatCurrencyCode.toUpperCase()}`
-        )
-      : 0
-  )
-
-  // Check if USD rate exists as fallback
-  const exchangeRateUSD = useSelector(state =>
-    selectedCryptoCurrencyCode != null
-      ? getExchangeRate(state, selectedCryptoCurrencyCode, 'iso:USD')
-      : 0
-  )
-
-  // Use USD fallback if the selected currency has no rate and USD rate exists
-  const finalExchangeRateText =
-    exchangeRate === 0 &&
-    selectedFiatCurrencyCode.toUpperCase() !== 'USD' &&
-    exchangeRateUSD > 0
-      ? exchangeRateTextUSD
-      : exchangeRateText
-
-  // Check if we're using USD fallback rate
-  const isUsingFallbackRate =
-    exchangeRate === 0 &&
-    selectedFiatCurrencyCode.toUpperCase() !== 'USD' &&
-    exchangeRateUSD > 0
-
-  // Helper function to convert crypto amount to fiat
-  const convertCryptoToFiat = React.useCallback(
-    (cryptoAmt: string): string => {
-      if (!selectedCryptoCurrencyCode || !denomination || cryptoAmt === '')
-        return ''
-
-      const exchangeRateToUse = isUsingFallbackRate
-        ? exchangeRateUSD
-        : exchangeRate
-
-      if (exchangeRateToUse === 0) return ''
-
-      try {
-        return mul(cryptoAmt, exchangeRateToUse.toString())
-      } catch {
-        return ''
-      }
-    },
-    [
-      selectedCryptoCurrencyCode,
-      denomination,
-      isUsingFallbackRate,
-      exchangeRateUSD,
-      exchangeRate
-    ]
-  )
-
-  // Helper function to convert fiat amount to crypto
-  const convertFiatToCrypto = React.useCallback(
-    (fiatAmt: string): string => {
-      if (!selectedCryptoCurrencyCode || !denomination || fiatAmt === '')
-        return ''
-
-      const exchangeRateToUse = isUsingFallbackRate
-        ? exchangeRateUSD
-        : exchangeRate
-
-      if (exchangeRateToUse === 0) return ''
-
-      try {
-        return div(fiatAmt, exchangeRateToUse.toString(), DECIMAL_PRECISION)
-      } catch {
-        return ''
-      }
-    },
-    [
-      selectedCryptoCurrencyCode,
-      denomination,
-      isUsingFallbackRate,
-      exchangeRateUSD,
-      exchangeRate
-    ]
-  )
-
-  // Derived state for display values
-  const displayFiatAmount = React.useMemo(() => {
-    if (!userInput || lastUsedInput === null) return ''
-
-    if (lastUsedInput === 'fiat') {
-      return userInput // User entered fiat, show as-is
-    } else {
-      // User entered crypto, convert to fiat
-      if (isUsingFallbackRate) return ''
-      return convertCryptoToFiat(userInput)
-    }
-  }, [userInput, lastUsedInput, isUsingFallbackRate, convertCryptoToFiat])
-
-  const displayCryptoAmount = React.useMemo(() => {
-    if (!userInput || lastUsedInput === null) return ''
-
-    if (lastUsedInput === 'crypto') {
-      return userInput // User entered crypto, show as-is
-    } else {
-      // User entered fiat, convert to crypto
-      if (isUsingFallbackRate) return ''
-      return convertFiatToCrypto(userInput)
-    }
-  }, [userInput, lastUsedInput, isUsingFallbackRate, convertFiatToCrypto])
-
-  // Get user's current country settings
+  //  Get user's current country settings
   const { countryCode, stateProvinceCode } = useSelector(
     state => state.ui.settings
   )
@@ -291,6 +164,177 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     const info = FIAT_COUNTRY[selectedFiatCurrencyCode?.toUpperCase() ?? '']
     return info?.logoUrl ?? ''
   }, [selectedFiatCurrencyCode])
+
+  // Create rampQuoteRequest based on current form state
+  const rampQuoteRequest: RampQuoteRequest | null = React.useMemo(() => {
+    if (
+      selectedWallet == null ||
+      selectedCryptoCurrencyCode == null ||
+      lastUsedInput == null ||
+      userInput === ''
+    ) {
+      return null
+    }
+
+    return {
+      wallet: selectedWallet,
+      pluginId: selectedWallet.currencyInfo.pluginId,
+      tokenId: selectedCrypto?.tokenId ?? null,
+      displayCurrencyCode: selectedCryptoCurrencyCode,
+      exchangeAmount: userInput,
+      fiatCurrencyCode: `iso:${selectedFiatCurrencyCode}`,
+      amountType: lastUsedInput,
+      direction: 'buy',
+      regionCode: {
+        countryCode: countryCode || 'US',
+        stateProvinceCode
+      },
+      pluginUtils: {
+        getHistoricalRate: async (_codePair: string, _date: string) => {
+          return 1
+        }
+      }
+    }
+  }, [
+    selectedWallet,
+    selectedCryptoCurrencyCode,
+    selectedCrypto,
+    userInput,
+    selectedFiatCurrencyCode,
+    lastUsedInput,
+    countryCode,
+    stateProvinceCode
+  ])
+
+  // Fetch quotes when rampQuoteRequest is valid
+  const { data: quoteResults = [], isLoading: isLoadingQuotes } = useQuery<
+    Array<Result<RampQuoteResult[], QuoteError>>
+  >({
+    queryKey: ['rampQuotes', rampQuoteRequest],
+    queryFn: async () => {
+      if (!rampQuoteRequest || Object.keys(rampPlugins).length === 0) {
+        return []
+      }
+
+      const quotePromises = Object.values(rampPlugins).map(
+        async (plugin): Promise<Result<RampQuoteResult[], QuoteError>> => {
+          try {
+            const quotes = await plugin.fetchQuote(rampQuoteRequest)
+            return { ok: true, value: quotes }
+          } catch (error) {
+            return {
+              ok: false,
+              error: {
+                pluginId: plugin.pluginId,
+                pluginDisplayName: plugin.rampInfo.pluginDisplayName,
+                error
+              }
+            }
+          }
+        }
+      )
+
+      return await Promise.all(quotePromises)
+    },
+    enabled: !!rampQuoteRequest,
+    staleTime: 30000,
+    gcTime: 300000
+  })
+
+  // Separate successful and unsuccessful quotes
+  const successfulQuotes = React.useMemo(() => {
+    return quoteResults.filter(
+      (result): result is Ok<RampQuoteResult[]> => result.ok
+    )
+  }, [quoteResults])
+  const unsuccessfulQuotes = React.useMemo(() => {
+    return quoteResults.filter(
+      (result): result is NotOK<QuoteError> => !result.ok
+    )
+  }, [quoteResults])
+
+  // Sort all successful quotes by best rate
+  const sortedQuotes = React.useMemo(() => {
+    const allQuotes: RampQuoteResult[] = successfulQuotes.flatMap(
+      result => result.value
+    )
+
+    // Sort by best rate (lowest fiat amount for same crypto amount)
+    return allQuotes.sort((a, b) => {
+      const rateA = parseFloat(a.fiatAmount) / parseFloat(a.cryptoAmount)
+      const rateB = parseFloat(b.fiatAmount) / parseFloat(b.cryptoAmount)
+      return rateA - rateB
+    })
+  }, [successfulQuotes])
+
+  // Get the best quote
+  const bestQuote = sortedQuotes[0]
+
+  // Calculate exchange rate from best quote
+  const quoteExchangeRate = React.useMemo(() => {
+    if (!bestQuote?.cryptoAmount || !bestQuote.fiatAmount) return 0
+
+    try {
+      return (
+        parseFloat(bestQuote.fiatAmount) / parseFloat(bestQuote.cryptoAmount)
+      )
+    } catch {
+      return 0
+    }
+  }, [bestQuote])
+
+  // Helper function to convert crypto amount to fiat using quote rate
+  const convertCryptoToFiat = React.useCallback(
+    (cryptoAmt: string): string => {
+      if (!cryptoAmt || quoteExchangeRate === 0) return ''
+
+      try {
+        return div(mul(cryptoAmt, quoteExchangeRate.toString()), '1', 2)
+      } catch {
+        return ''
+      }
+    },
+    [quoteExchangeRate]
+  )
+
+  // Helper function to convert fiat amount to crypto using quote rate
+  const convertFiatToCrypto = React.useCallback(
+    (fiatAmt: string): string => {
+      if (!fiatAmt || quoteExchangeRate === 0) return ''
+
+      const decimals =
+        denomination?.multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
+      try {
+        return div(fiatAmt, quoteExchangeRate.toString(), decimals)
+      } catch {
+        return ''
+      }
+    },
+    [denomination, quoteExchangeRate]
+  )
+
+  // Derived state for display values
+  const displayFiatAmount = React.useMemo(() => {
+    if (!userInput || lastUsedInput === null) return ''
+
+    if (lastUsedInput === 'fiat') {
+      return userInput // User entered fiat, show as-is
+    } else {
+      // User entered crypto, convert to fiat only if we have a quote
+      return convertCryptoToFiat(userInput)
+    }
+  }, [userInput, lastUsedInput, convertCryptoToFiat])
+
+  const displayCryptoAmount = React.useMemo(() => {
+    if (!userInput || lastUsedInput === null) return ''
+
+    if (lastUsedInput === 'crypto') {
+      return userInput // User entered crypto, show as-is
+    } else {
+      // User entered fiat, convert to crypto only if we have a quote
+      return convertFiatToCrypto(userInput)
+    }
+  }, [userInput, lastUsedInput, convertFiatToCrypto])
 
   //
   // Handlers
@@ -344,11 +388,21 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   })
 
   const handleNext = useHandler(() => {
-    // TODO: Use lastUsedInput to determine which parameters to create when implementing
-    // lastUsedInput can be 'fiat', 'crypto', or null to determine conversion direction
-    // For now, navigate to the next screen
-    console.log('Last used input:', lastUsedInput) // For debugging
-    navigation.navigate('rampSelectOption', {})
+    // This handler shouldn't be invoked if these conditions aren't met:
+    if (
+      selectedWallet == null ||
+      selectedCryptoCurrencyCode == null ||
+      lastUsedInput == null ||
+      userInput === '' ||
+      !rampQuoteRequest
+    ) {
+      return
+    }
+
+    navigation.navigate('rampSelectOption', {
+      rampQuoteRequest,
+      quotes: sortedQuotes // Pass the sorted quotes
+    })
   })
 
   const handleFiatChangeText = useHandler((text: string) => {
@@ -515,25 +569,42 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
         {/* Exchange Rate */}
         {selectedCrypto == null ||
         selectedWallet == null ||
-        denomination == null ? null : (
+        denomination == null ||
+        userInput === '' ||
+        lastUsedInput == null ||
+        (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
           <ExchangeRateContainer>
             <ExchangeRateTitle>
               {lstrings.trade_create_exchange_rate}
             </ExchangeRateTitle>
-            {loading &&
-            !hasRatesForFiat(
-              `iso:${selectedFiatCurrencyCode.toUpperCase()}`
-            ) ? (
+            {isLoadingQuotes ? (
               <LoadingContainer>
                 <ActivityIndicator size="small" color={theme.primaryText} />
               </LoadingContainer>
-            ) : (
+            ) : bestQuote ? (
               <ExchangeRateValue>
-                <Text>{`1 ${selectedCryptoCurrencyCode} = ${finalExchangeRateText}`}</Text>
+                <Text>{`1 ${selectedCryptoCurrencyCode} = ${quoteExchangeRate.toFixed(
+                  2
+                )} ${selectedFiatCurrencyCode}`}</Text>
               </ExchangeRateValue>
-            )}
+            ) : null}
           </ExchangeRateContainer>
         )}
+
+        {/* Error Alert */}
+        {!isLoadingQuotes &&
+        unsuccessfulQuotes.length > 0 &&
+        successfulQuotes.length === 0 ? (
+          <AlertCardUi4
+            type="error"
+            title={lstrings.trade_buy_unavailable_title}
+            body={sprintf(
+              lstrings.trade_buy_unavailable_body_2s,
+              selectedCryptoCurrencyCode,
+              selectedFiatCurrencyCode
+            )}
+          />
+        ) : null}
 
         {/* Next Button */}
         <SceneButtons
@@ -544,7 +615,8 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
               selectedWallet == null ||
               selectedCryptoCurrencyCode == null ||
               userInput === '' ||
-              lastUsedInput === null
+              lastUsedInput === null ||
+              (!isLoadingQuotes && sortedQuotes.length === 0)
           }}
         />
       </SceneContainer>
@@ -562,7 +634,7 @@ const FlagIcon = styled(FastImage)<{ sizeRem?: number }>(
 )
 
 const InputsContainer = styled(View)(theme => ({
-  paddingHorizontal: theme.rem(1),
+  paddingHorizontal: theme.rem(0.5),
   gap: theme.rem(1)
 }))
 

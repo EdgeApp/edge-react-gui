@@ -1,14 +1,32 @@
 import * as React from 'react'
 
 import { ENV } from '../../env'
+import { useHandler } from '../../hooks/useHandler'
 import { pluginFactories } from '../../plugins/ramps/allRampPlugins'
-import type { RampPlugin } from '../../plugins/ramps/rampPluginTypes'
-import { useDispatch } from '../../types/reactRedux'
+import type {
+  RampPlugin,
+  RampPluginConfig
+} from '../../plugins/ramps/rampPluginTypes'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import type { NavigationBase } from '../../types/routerTypes'
+import { logEvent, type TrackingEventName } from '../../util/tracking'
 
-export const RampPluginManager: React.FC = () => {
+interface Props {
+  navigation: NavigationBase
+}
+
+export const RampPluginManager: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
+  const disklet = useSelector(state => state.core.disklet)
+
+  const onLogEvent = useHandler((event: TrackingEventName, values?: any) => {
+    logEvent(event, values)
+  })
 
   React.useEffect(() => {
+    if (account == null || disklet == null) return
+
     const loadPlugins = async (): Promise<void> => {
       const plugins: Record<string, RampPlugin> = {}
 
@@ -16,9 +34,14 @@ export const RampPluginManager: React.FC = () => {
         const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId]
         if (initOptions == null) continue
         try {
-          const plugin = factory({
-            initOptions
-          })
+          const config: RampPluginConfig = {
+            initOptions,
+            account,
+            navigation,
+            onLogEvent,
+            disklet
+          }
+          const plugin = factory(config)
           plugins[plugin.pluginId] = plugin
         } catch (error) {
           console.error(`Failed to load plugin ${pluginId}:`, error)
@@ -32,7 +55,7 @@ export const RampPluginManager: React.FC = () => {
     }
 
     loadPlugins().catch(console.error)
-  }, [dispatch])
+  }, [dispatch, account, disklet, navigation, onLogEvent])
 
   return null
 }

@@ -93,3 +93,13 @@ The following documentation files provide detailed guidance for specific areas o
 
 **When to read**: Before creating new scenes or modifying existing scene components
 **Summary**: Critical architectural patterns for Edge scenes. Covers the fundamental rule that scenes must never implement custom headers (managed by react-navigation), proper SceneWrapper usage, and navigation configuration patterns. Includes TradeCreateScene case study showing common architectural violations to avoid.
+
+### `docs/payment-type-icons.md`
+
+**When to read**: When working with payment type icons in fiat plugins or payment method displays
+**Summary**: Explains the payment type icon mapping system for displaying appropriate icons for different payment methods. Covers usage with `getPaymentTypeIcon` utility, integration with PaymentOptionCard, direct and fallback mappings, and how to add new payment types.
+
+### `docs/ramp-plugin-migration-guide.md`
+
+**When to read**: Before migrating ramp plugins from legacy provider architecture to new ramp plugin architecture
+**Summary**: Comprehensive migration guide for removing FiatPluginUi abstraction and using direct API imports. Covers migration of toasts, modals, navigation, permissions (with important boolean logic inversion note), and wallet operations with before/after code examples. Essential for converting legacy fiat providers to new ramp plugins.

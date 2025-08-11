@@ -1375,6 +1375,7 @@ const strings = {
   string_status: 'Status',
   string_fee: 'Fee',
   string_total_amount: 'Total Amount',
+  string_total_amount_s: 'Total Amount: %s',
   string_expiration: 'Expiration',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
@@ -1937,10 +1938,14 @@ const strings = {
   trade_option_buy_title: 'Buy Cryptocurrency',
   trade_option_sell_title: 'Sell Cryptocurrency',
   trade_option_select_payment_method: 'Select Payment Method',
+  trade_option_no_quotes_title: 'No quotes available',
+  trade_option_no_quotes_body:
+    'Please try again later. No providers are currently available.',
   trade_option_total_label: 'Total',
   trade_option_settlement_label: 'Settlement',
   trade_option_powered_by_label: 'Powered By:',
   trade_option_best_rate_label: 'BEST\nRATE',
+  trade_option_provider_failed_s: '%s Failed',
   swap_crypto: 'Swap Crypto',
   swap_crypto_footer: 'Crypto to another crypto',
   fio_web3: 'Web3 Handle',
@@ -1992,6 +1997,11 @@ const strings = {
   trade_region_select_step_2: 'Create Your Quote',
   trade_region_select_step_3: 'Choose Payment Method',
   trade_region_select_step_4: 'Fund Your Account',
+
+  // Trade Create Scene
+  trade_buy_unavailable_title: 'Buy Unavailable',
+  trade_buy_unavailable_body_2s:
+    'Support to buy %1$s with %2$s is not available at this time.',
 
   // Trade Create Scene
   trade_create_amount_s: 'Amount %s',

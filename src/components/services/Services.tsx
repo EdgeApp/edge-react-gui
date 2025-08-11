@@ -242,7 +242,7 @@ export function Services(props: Props) {
         <FioService account={account} navigation={navigation} />
       )}
       <PermissionsManager />
-      <RampPluginManager />
+      <RampPluginManager navigation={navigation} />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />
       <PasswordReminderService />

@@ -1,9 +1,11 @@
-import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { Disklet } from 'disklet'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
+import type { NavigationBase } from '../../types/routerTypes'
+import type { OnLogEvent } from '../../util/tracking'
 import type {
   FiatPaymentType,
   FiatPluginRegionCode,
-  FiatPluginUi,
   FiatPluginUtils
 } from '../gui/fiatPluginTypes'
 
@@ -19,7 +21,17 @@ export interface RampQuoteRequest {
   regionCode: FiatPluginRegionCode
   pluginUtils: FiatPluginUtils
   promoCode?: string
-  paymentTypes: FiatPaymentType[]
+}
+
+export interface SettlementRange {
+  min: {
+    value: number
+    unit: 'minutes' | 'hours' | 'days'
+  }
+  max: {
+    value: number
+    unit: 'minutes' | 'hours' | 'days'
+  }
 }
 
 export interface RampQuoteResult {
@@ -34,14 +46,17 @@ export interface RampQuoteResult {
   readonly direction: 'buy' | 'sell'
   readonly expirationDate?: Date
   readonly regionCode: FiatPluginRegionCode
-  readonly paymentTypes: FiatPaymentType[]
+  readonly paymentType: FiatPaymentType
+  readonly settlementRange: SettlementRange
 
   approveQuote: (params: RampApproveQuoteParams) => Promise<void>
   closeQuote: () => Promise<void>
 }
 
+/**
+ * Parameters passed to the approveQuote function.
+ */
 export interface RampApproveQuoteParams {
-  showUi: FiatPluginUi
   coreWallet: EdgeCurrencyWallet
 }
 
@@ -57,6 +72,12 @@ export interface RampPluginConfig {
     setItem: (key: string, value: string) => Promise<void>
   }
   makeUuid?: () => Promise<string>
+
+  // Dependencies for plugin operations
+  account: EdgeAccount
+  navigation: NavigationBase
+  onLogEvent: OnLogEvent
+  disklet: Disklet
 }
 
 export interface RampPlugin {
@@ -67,7 +88,7 @@ export interface RampPlugin {
     request: RampQuoteRequest,
     /* to be defined later */
     opts?: unknown
-  ) => Promise<RampQuoteResult>
+  ) => Promise<RampQuoteResult[]>
 }
 
 export type RampPluginFactory = (config: RampPluginConfig) => RampPlugin
