@@ -6,7 +6,6 @@ import {
   useAnimatedReaction,
   useAnimatedScrollHandler,
   useSharedValue,
-  useWorkletCallback,
   withTiming
 } from 'react-native-reanimated'
 
@@ -179,16 +178,19 @@ export const useSceneScrollWorkletHandler = () => {
   )
 
   // Define the handleScroll function as a worklet using useWorkletCallback
-  const handleScroll = useWorkletCallback((event: NativeScrollEvent) => {
-    'worklet'
-    if (!isFocused) return
+  const handleScroll = useCallback(
+    (event: NativeScrollEvent) => {
+      'worklet'
+      if (!isFocused.value) return
 
-    const y = event.contentOffset.y
-    if (scrollY.value !== y) {
-      localScrollY.value = y
-      scrollY.value = y
-    }
-  }, [])
+      const y = event.contentOffset.y
+      if (scrollY.value !== y) {
+        localScrollY.value = y
+        scrollY.value = y
+      }
+    },
+    [isFocused, localScrollY, scrollY]
+  )
 
   return handleScroll
 }
