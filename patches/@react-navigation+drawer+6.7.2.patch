@@ -1,0 +1,157 @@
+diff --git a/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx b/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
+index 94770c4..9e091d3 100644
+--- a/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
+@@ -76,8 +76,7 @@ function DrawerViewBase({
+     Platform.OS === 'android' ||
+     Platform.OS === 'ios',
+   // Reanimated 2 is not configured
+-  // @ts-expect-error: the type definitions are incomplete
+-  useLegacyImplementation = !Reanimated.isConfigured?.(),
++  useLegacyImplementation = false,
+ }: Props) {
+   // Reanimated v3 dropped legacy v1 syntax
+   const legacyImplemenationNotAvailable =
+diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
+index 57af20c..77aca6a 100644
+--- a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
+@@ -11,20 +11,15 @@ import {
+ import Animated, {
+   interpolate,
+   runOnJS,
+-  useAnimatedGestureHandler,
+   useAnimatedStyle,
+   useDerivedValue,
+   useSharedValue,
+   withSpring,
+ } from 'react-native-reanimated';
++import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+ 
+ import type { DrawerProps } from '../../types';
+ import DrawerProgressContext from '../../utils/DrawerProgressContext';
+-import {
+-  GestureState,
+-  PanGestureHandler,
+-  PanGestureHandlerGestureEvent,
+-} from '../GestureHandler';
+ import Overlay from './Overlay';
+ 
+ const SWIPE_DISTANCE_MINIMUM = 5;
+@@ -152,7 +147,7 @@ export default function Drawer({
+   const touchStartX = useSharedValue(0);
+   const touchX = useSharedValue(0);
+   const translationX = useSharedValue(getDrawerTranslationX(open));
+-  const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
++  const gestureState = useSharedValue<boolean>(false);
+ 
+   const toggleDrawer = React.useCallback(
+     ({ open, isUserInitiated, velocity }: ToggleOptions) => {
+@@ -192,41 +187,31 @@ export default function Drawer({
+     [open, toggleDrawer]
+   );
+ 
+-  const onGestureEvent = useAnimatedGestureHandler<
+-    PanGestureHandlerGestureEvent,
+-    { startX: number; hasCalledOnStart: boolean }
+-  >({
+-    onStart: (event, ctx) => {
+-      ctx.hasCalledOnStart = false;
+-      ctx.startX = translationX.value;
+-      gestureState.value = event.state;
+-      touchStartX.value = event.x;
+-    },
+-    onActive: (event, ctx) => {
++  const gesture = Gesture.Pan().
++    activeOffsetX([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]).
++    failOffsetY([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]).
++    hitSlop(hitSlop).
++    enabled(drawerType !== 'permanent' && swipeEnabled).
++    onStart(event => {
++      gestureState.value = true;
++      touchStartX.value = event.x
++      runOnJS(onGestureStart)();
++    }).
++    onChange(event => {
+       touchX.value = event.x;
+-      translationX.value = ctx.startX + event.translationX;
+-      gestureState.value = event.state;
+-
+-      // onStart will _always_ be called, even when the activation
+-      // criteria isn't met yet. This makes sure onGestureStart is only
+-      // called when the criteria is really met.
+-      if (!ctx.hasCalledOnStart) {
+-        ctx.hasCalledOnStart = true;
+-        runOnJS(onGestureStart)();
+-      }
+-    },
+-    onEnd: (event) => {
+-      gestureState.value = event.state;
+-
++      translationX.value = event.translationX;
++    }).
++    onEnd((event) => {
++      gestureState.value = false;
+       const nextOpen =
+         (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
+           Math.abs(event.translationX) > swipeVelocityThreshold) ||
+-        Math.abs(event.translationX) > swipeDistanceThreshold
++          Math.abs(event.translationX) > swipeDistanceThreshold
+           ? drawerPosition === 'left'
+             ? // If swiped to right, open the drawer, otherwise close it
+-              (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
++            (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
+             : // If swiped to left, open the drawer, otherwise close it
+-              (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
++            (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
+           : open;
+ 
+       toggleDrawer({
+@@ -234,11 +219,10 @@ export default function Drawer({
+         isUserInitiated: true,
+         velocity: event.velocityX,
+       });
+-    },
+-    onFinish: () => {
++    }).onFinalize(() => {
+       runOnJS(onGestureFinish)();
+-    },
+-  });
++    })
++
+ 
+   const translateX = useDerivedValue(() => {
+     // Comment stolen from react-native-gesture-handler/DrawerLayout
+@@ -267,7 +251,7 @@ export default function Drawer({
+     //
+     // This is used only when drawerType is "front"
+     const touchDistance =
+-      drawerType === 'front' && gestureState.value === GestureState.ACTIVE
++      drawerType === 'front' && gestureState.value
+         ? minmax(
+             drawerPosition === 'left'
+               ? touchStartX.value - drawerWidth
+@@ -344,13 +328,7 @@ export default function Drawer({
+ 
+   return (
+     <DrawerProgressContext.Provider value={progress}>
+-      <PanGestureHandler
+-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+-        hitSlop={hitSlop}
+-        enabled={drawerType !== 'permanent' && swipeEnabled}
+-        onGestureEvent={onGestureEvent}
+-        {...gestureHandlerProps}
++      <GestureDetector gesture={gesture}
+       >
+         {/* Immediate child of gesture handler needs to be an Animated.View */}
+         <Animated.View
+@@ -400,7 +378,7 @@ export default function Drawer({
+             {renderDrawerContent()}
+           </Animated.View>
+         </Animated.View>
+-      </PanGestureHandler>
++      </GestureDetector>
+     </DrawerProgressContext.Provider>
+   );
+ }

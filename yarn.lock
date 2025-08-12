@@ -1133,12 +1133,7 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30":
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.30.tgz#08c7d5d02b04e0049ae42e3c701862c1cfd7d87a"
-  integrity sha512-5bcDLnsNhJ5lB7f9StIOebo+0Rf6C5sA1CtCQ4OtmNJVhqouIWLDvnQngJBbyiknYd3JPskI/HyP6AZ6P3GF3g==
-
-"@chain-registry/types@^2.0.42":
+"@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.42":
   version "2.0.42"
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.42.tgz#9d86692fcc400d13246ab08085ff40ac040566a7"
   integrity sha512-ozPgnok3kmtABQSUH4UussJdpygrdwA0uQJdnDhiVPczQ6OH5UQSvpX5UXDfNiutRkTztp7h/TA1DSQQbiQo1g==
@@ -4441,19 +4436,19 @@
     react-is "^16.13.0"
     use-latest-callback "^0.1.5"
 
-"@react-navigation/drawer@^6.5.8":
-  version "6.5.8"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.5.8.tgz#1bab9f761099fefd5a3e7080851076d0b4310dac"
-  integrity sha512-24okwc1gVJex+NMwau1QfxIRUDfFvdbnwFS/N0bCUXDVu8bqsMeYA00C3xwCpvdRmANbBH4rFRniNbJLAvD4Jg==
+"@react-navigation/drawer@^6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.7.2.tgz#3c85298c73af915f3cd5e6ca26a1a26d61010256"
+  integrity sha512-o4g2zgTZa2+oLd+8V33etrSM38KIqu8S/zCBTsdsHUoQyVE7JNRiv3Qgq/jMvEb8PZCqWmm7jHItcgzrBuwyOQ==
   dependencies:
-    "@react-navigation/elements" "^1.3.14"
+    "@react-navigation/elements" "^1.3.31"
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/elements@^1.3.14":
-  version "1.3.14"
-  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.14.tgz#ee9ef7f57e0877700ebb359947728b255bbb9c65"
-  integrity sha512-RBbPhYq+KNFPAkWPaHB9gypq0jTGp/0fkMwRLToJ8jkLtWG4LV+JoQ/erFQnVARkR3Q807n0VnES15EYP4ITMQ==
+"@react-navigation/elements@^1.3.14", "@react-navigation/elements@^1.3.31":
+  version "1.3.31"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.31.tgz#28dd802a0787bb03fc0e5be296daf1804dbebbcf"
+  integrity sha512-bUzP4Awlljx5RKEExw8WYtif8EuQni2glDaieYROKTnaxsu9kEIA515sXQgUDZU4Ob12VoL7+z70uO3qrlfXcQ==
 
 "@react-navigation/native@^6.1.3":
   version "6.1.3"
@@ -7951,14 +7946,7 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.30:
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.30.tgz#d99c5e71e48480f7e2d225228c75ea1adb7e3b40"
-  integrity sha512-EGwgdjXYVU9oBCKOpXImAEvJIC4zP6C3Efl/Jw5llNUchCuy1zilgzhuj802Sf+Y/f2DITfF1CjNfSty4eeYNg==
-  dependencies:
-    "@chain-registry/types" "^2.0.30"
-
-chain-registry@^2.0.37:
+chain-registry@^2.0.30, chain-registry@^2.0.37:
   version "2.0.42"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.42.tgz#9ece4cbbf335c1bdb725e2573aae9dfe0442c88a"
   integrity sha512-Magth+y5yLEvyKLgOMJBkxtvaXufyE8/0KhLfyKZfG2Fqy+R9AuKoffr99n8ViSSAXf0kZCYDMZ8bh27P3Vo3A==
