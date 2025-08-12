@@ -15,6 +15,7 @@
 - changed: Update translations
 - changed: Enable `keysOnlyMode` for Bitcoin Gold 
 - changed: Increase tappable area of locked Settings
+- changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
 
 ## 4.33.0 (2025-08-01)
 
