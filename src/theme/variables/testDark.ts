@@ -358,7 +358,6 @@ export const testDark: Theme = {
 
   // Settings Row
   settingsRowBackground: palette.transparent,
-  settingsRowPressed: palette.transparent,
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,

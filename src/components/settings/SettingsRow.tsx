@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
@@ -54,37 +54,34 @@ const SettingsRowComponent = (props: Props) => {
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <EdgeTouchableHighlight
+    <EdgeTouchableOpacity
       accessible={false}
-      underlayColor={theme.settingsRowPressed}
       style={styles.row}
       onPress={handlePress}
       hitSlop={theme.rem(0.5)}
     >
-      <>
-        {children}
-        <Text
-          style={
-            disabled
-              ? styles.disabledText
-              : dangerous
-              ? styles.dangerText
-              : styles.text
-          }
-        >
-          {label}
-        </Text>
-        <View>
-          <ActivityContainer pending={pending}>
-            <ActivityIndicator
-              color={theme.iconTappable}
-              style={styles.spinner}
-            />
-          </ActivityContainer>
-          <RightContainer pending={pending}>{right}</RightContainer>
-        </View>
-      </>
-    </EdgeTouchableHighlight>
+      {children}
+      <Text
+        style={
+          disabled
+            ? styles.disabledText
+            : dangerous
+            ? styles.dangerText
+            : styles.text
+        }
+      >
+        {label}
+      </Text>
+      <View>
+        <ActivityContainer pending={pending}>
+          <ActivityIndicator
+            color={theme.iconTappable}
+            style={styles.spinner}
+          />
+        </ActivityContainer>
+        <RightContainer pending={pending}>{right}</RightContainer>
+      </View>
+    </EdgeTouchableOpacity>
   )
 }
 
