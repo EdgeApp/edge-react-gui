@@ -14,7 +14,11 @@ interface Props {
   onPress: () => void
 }
 
-export const PoweredByCard = (props: Props) => {
+/**
+ * Small card that displays "Powered by {provider}" with an optional logo.
+ * Tapping the card triggers `onPress` to change the active provider.
+ */
+export const PoweredByCard: React.FC<Props> = (props: Props) => {
   const { iconUri, poweredByText, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
