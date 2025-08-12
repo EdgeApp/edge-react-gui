@@ -1110,8 +1110,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1347,8 +1346,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1584,8 +1582,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1821,8 +1818,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -2058,8 +2054,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
