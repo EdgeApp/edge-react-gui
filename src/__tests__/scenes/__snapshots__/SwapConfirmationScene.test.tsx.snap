@@ -2054,9 +2054,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               />
               <View
                 collapsable={false}
-                forwardedRef={[Function]}
-                handlerTag={-1}
-                handlerType="PanGestureHandler"
                 jestAnimatedProps={
                   {
                     "value": {},
@@ -2087,7 +2084,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     null,
                   ]
                 }
-                onGestureHandlerEvent={[Function]}
                 style={
                   [
                     {
