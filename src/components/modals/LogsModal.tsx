@@ -45,8 +45,8 @@ export const LogsModal: React.FC<Props> = props => {
     )
 
     return () => {
-      keyboardDidShowListener.remove()
-      keyboardDidHideListener.remove()
+      keyboardDidShowListener?.remove()
+      keyboardDidHideListener?.remove()
     }
   }, [])
 
