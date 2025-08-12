@@ -71,6 +71,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     directtobank: true,
+    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
@@ -1050,8 +1051,7 @@ const addToAllowedCurrencies = (
   currencyCode: string,
   coin: BanxaCryptoCoin
 ) => {
-  if (allowedCurrencyCodes[direction].crypto[pluginId] == null)
-    allowedCurrencyCodes[direction].crypto[pluginId] = []
+  allowedCurrencyCodes[direction].crypto[pluginId] ??= []
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   const tokenId = getTokenId(pluginId, currencyCode)
   if (tokenId === undefined) return
