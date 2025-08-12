@@ -1021,7 +1021,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1033,6 +1037,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -1045,6 +1050,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -1165,7 +1171,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1177,6 +1187,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -1189,6 +1200,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -1309,7 +1321,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1321,6 +1337,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -1333,6 +1350,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -1453,7 +1471,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1465,6 +1487,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -1477,6 +1500,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -2617,7 +2641,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2629,6 +2657,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -2641,6 +2670,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -2732,7 +2762,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2744,6 +2778,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -2756,6 +2791,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -2847,7 +2883,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2859,6 +2899,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -2871,6 +2912,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }
@@ -2962,7 +3004,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2974,6 +3020,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 }
               }
               accessible={true}
+              collapsable={false}
               focusable={true}
               onClick={[Function]}
               onResponderGrant={[Function]}
@@ -2986,6 +3033,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "flex": 1,
                   "height": 70,
+                  "opacity": 1,
                   "paddingLeft": 13,
                 }
               }

@@ -385,7 +385,11 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -397,6 +401,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         hitSlop={11}
         onClick={[Function]}
@@ -413,6 +418,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }

@@ -513,7 +513,11 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -525,6 +529,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
               }
             }
             accessible={true}
+            collapsable={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -533,6 +538,11 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
           >
             <View
               style={

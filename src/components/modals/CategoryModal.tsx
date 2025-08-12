@@ -19,7 +19,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { MinimalButton } from '../buttons/MinimalButton'
-import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
@@ -125,27 +125,25 @@ export function CategoryModal(props: Props) {
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <EdgeTouchableHighlight
+    <EdgeTouchableOpacity
       delayPressIn={60}
       style={styles.rowContainer}
       onPress={async () => {
         await handleCategoryUpdate(item.raw)
       }}
     >
-      <>
-        <View style={styles.rowContent}>
-          <View style={styles.rowCategoryTextWrap}>
-            <EdgeText style={styles.rowCategoryText}>{item.display}</EdgeText>
-          </View>
-          {item.new ? (
-            <View style={styles.rowPlusWrap}>
-              <EdgeText style={styles.rowPlus}>+</EdgeText>
-            </View>
-          ) : null}
+      <View style={styles.rowContent}>
+        <View style={styles.rowCategoryTextWrap}>
+          <EdgeText style={styles.rowCategoryText}>{item.display}</EdgeText>
         </View>
-        <DividerLine marginRem={[0, 0]} />
-      </>
-    </EdgeTouchableHighlight>
+        {item.new ? (
+          <View style={styles.rowPlusWrap}>
+            <EdgeText style={styles.rowPlus}>+</EdgeText>
+          </View>
+        ) : null}
+      </View>
+      <DividerLine marginRem={[0, 0]} />
+    </EdgeTouchableOpacity>
   ))
 
   return (
