@@ -156,7 +156,6 @@ export interface Theme {
 
   // Settings Row
   settingsRowBackground: string
-  settingsRowPressed: string
 
   settingsRowHeaderFont: string
   settingsRowHeaderFontSizeRem: number

@@ -308,7 +308,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -320,6 +324,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -335,6 +340,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
@@ -484,7 +490,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -496,6 +506,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -511,6 +522,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
@@ -660,7 +672,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -672,6 +688,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -687,6 +704,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }

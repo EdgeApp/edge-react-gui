@@ -272,7 +272,11 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -284,6 +288,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -299,6 +304,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
@@ -431,7 +437,11 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -443,6 +453,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -458,6 +469,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
