@@ -1,0 +1,249 @@
+diff --git a/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx b/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
+index 94770c4..9e091d3 100644
+--- a/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/DrawerView.tsx
+@@ -76,8 +76,7 @@ function DrawerViewBase({
+     Platform.OS === 'android' ||
+     Platform.OS === 'ios',
+   // Reanimated 2 is not configured
+-  // @ts-expect-error: the type definitions are incomplete
+-  useLegacyImplementation = !Reanimated.isConfigured?.(),
++  useLegacyImplementation = false,
+ }: Props) {
+   // Reanimated v3 dropped legacy v1 syntax
+   const legacyImplemenationNotAvailable =
+diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
+index 57af20c..5d13623 100644
+--- a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
+@@ -11,20 +11,15 @@ import {
+ import Animated, {
+   interpolate,
+   runOnJS,
+-  useAnimatedGestureHandler,
+   useAnimatedStyle,
+   useDerivedValue,
+   useSharedValue,
+   withSpring,
+ } from 'react-native-reanimated';
++import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+ 
+ import type { DrawerProps } from '../../types';
+ import DrawerProgressContext from '../../utils/DrawerProgressContext';
+-import {
+-  GestureState,
+-  PanGestureHandler,
+-  PanGestureHandlerGestureEvent,
+-} from '../GestureHandler';
+ import Overlay from './Overlay';
+ 
+ const SWIPE_DISTANCE_MINIMUM = 5;
+@@ -145,14 +140,14 @@ export default function Drawer({
+   // https://github.com/software-mansion/react-native-gesture-handler/issues/569
+   const hitSlop = isRight
+     ? // Extend hitSlop to the side of the screen when drawer is closed
+-      // This lets the user drag the drawer from the side of the screen
+-      { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
++    // This lets the user drag the drawer from the side of the screen
++    { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
+     : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
+ 
+   const touchStartX = useSharedValue(0);
+   const touchX = useSharedValue(0);
+   const translationX = useSharedValue(getDrawerTranslationX(open));
+-  const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
++  const gestureState = useSharedValue<boolean>(false);
+ 
+   const toggleDrawer = React.useCallback(
+     ({ open, isUserInitiated, velocity }: ToggleOptions) => {
+@@ -192,41 +187,23 @@ export default function Drawer({
+     [open, toggleDrawer]
+   );
+ 
+-  const onGestureEvent = useAnimatedGestureHandler<
+-    PanGestureHandlerGestureEvent,
+-    { startX: number; hasCalledOnStart: boolean }
+-  >({
+-    onStart: (event, ctx) => {
+-      ctx.hasCalledOnStart = false;
+-      ctx.startX = translationX.value;
+-      gestureState.value = event.state;
+-      touchStartX.value = event.x;
+-    },
+-    onActive: (event, ctx) => {
+-      touchX.value = event.x;
+-      translationX.value = ctx.startX + event.translationX;
+-      gestureState.value = event.state;
+-
+-      // onStart will _always_ be called, even when the activation
+-      // criteria isn't met yet. This makes sure onGestureStart is only
+-      // called when the criteria is really met.
+-      if (!ctx.hasCalledOnStart) {
+-        ctx.hasCalledOnStart = true;
+-        runOnJS(onGestureStart)();
+-      }
+-    },
+-    onEnd: (event) => {
+-      gestureState.value = event.state;
+-
++  const gesture = Gesture.Pan().
++    activeOffsetX([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]).
++    failOffsetY([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]).
++    hitSlop(hitSlop).
++    enabled(drawerType !== 'permanent' && swipeEnabled).
++    onStart(() => runOnJS(onGestureStart)()).
++    onEnd((event) => {
++      gestureState.value = false;
+       const nextOpen =
+         (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
+           Math.abs(event.translationX) > swipeVelocityThreshold) ||
+-        Math.abs(event.translationX) > swipeDistanceThreshold
++          Math.abs(event.translationX) > swipeDistanceThreshold
+           ? drawerPosition === 'left'
+             ? // If swiped to right, open the drawer, otherwise close it
+-              (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
++            (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
+             : // If swiped to left, open the drawer, otherwise close it
+-              (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
++            (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
+           : open;
+ 
+       toggleDrawer({
+@@ -234,11 +211,9 @@ export default function Drawer({
+         isUserInitiated: true,
+         velocity: event.velocityX,
+       });
+-    },
+-    onFinish: () => {
+       runOnJS(onGestureFinish)();
+-    },
+-  });
++    })
++
+ 
+   const translateX = useDerivedValue(() => {
+     // Comment stolen from react-native-gesture-handler/DrawerLayout
+@@ -267,14 +242,14 @@ export default function Drawer({
+     //
+     // This is used only when drawerType is "front"
+     const touchDistance =
+-      drawerType === 'front' && gestureState.value === GestureState.ACTIVE
++      drawerType === 'front' && gestureState.value
+         ? minmax(
+-            drawerPosition === 'left'
+-              ? touchStartX.value - drawerWidth
+-              : dimensions.width - drawerWidth - touchStartX.value,
+-            0,
+-            dimensions.width
+-          )
++          drawerPosition === 'left'
++            ? touchStartX.value - drawerWidth
++            : dimensions.width - drawerWidth - touchStartX.value,
++          0,
++          dimensions.width
++        )
+         : 0;
+ 
+     const translateX =
+@@ -293,22 +268,22 @@ export default function Drawer({
+       transform:
+         drawerType === 'permanent'
+           ? // Reanimated needs the property to be present, but it results in Browser bug
+-            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+-            []
++          // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
++          []
+           : [
+-              {
+-                translateX:
+-                  // The drawer stays in place when `drawerType` is `back`
+-                  (drawerType === 'back' ? 0 : translateX.value) +
+-                  (drawerPosition === 'left'
+-                    ? isRTL
+-                      ? -distanceFromEdge
+-                      : 0
+-                    : isRTL
++            {
++              translateX:
++                // The drawer stays in place when `drawerType` is `back`
++                (drawerType === 'back' ? 0 : translateX.value) +
++                (drawerPosition === 'left'
++                  ? isRTL
++                    ? -distanceFromEdge
++                    : 0
++                  : isRTL
+                     ? 0
+                     : distanceFromEdge),
+-              },
+-            ],
++            },
++          ],
+     };
+   });
+ 
+@@ -317,18 +292,18 @@ export default function Drawer({
+       transform:
+         drawerType === 'permanent'
+           ? // Reanimated needs the property to be present, but it results in Browser bug
+-            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+-            []
++          // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
++          []
+           : [
+-              {
+-                translateX:
+-                  // The screen content stays in place when `drawerType` is `front`
+-                  drawerType === 'front'
+-                    ? 0
+-                    : translateX.value +
+-                      drawerWidth * (drawerPosition === 'left' ? 1 : -1),
+-              },
+-            ],
++            {
++              translateX:
++                // The screen content stays in place when `drawerType` is `front`
++                drawerType === 'front'
++                  ? 0
++                  : translateX.value +
++                  drawerWidth * (drawerPosition === 'left' ? 1 : -1),
++            },
++          ],
+     };
+   });
+ 
+@@ -336,21 +311,15 @@ export default function Drawer({
+     return drawerType === 'permanent'
+       ? 1
+       : interpolate(
+-          translateX.value,
+-          [getDrawerTranslationX(false), getDrawerTranslationX(true)],
+-          [0, 1]
+-        );
++        translateX.value,
++        [getDrawerTranslationX(false), getDrawerTranslationX(true)],
++        [0, 1]
++      );
+   });
+ 
+   return (
+     <DrawerProgressContext.Provider value={progress}>
+-      <PanGestureHandler
+-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+-        hitSlop={hitSlop}
+-        enabled={drawerType !== 'permanent' && swipeEnabled}
+-        onGestureEvent={onGestureEvent}
+-        {...gestureHandlerProps}
++      <GestureDetector gesture={gesture}
+       >
+         {/* Immediate child of gesture handler needs to be an Animated.View */}
+         <Animated.View
+@@ -400,7 +369,7 @@ export default function Drawer({
+             {renderDrawerContent()}
+           </Animated.View>
+         </Animated.View>
+-      </PanGestureHandler>
++      </GestureDetector>
+     </DrawerProgressContext.Provider>
+   );
+ }
