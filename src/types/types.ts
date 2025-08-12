@@ -404,6 +404,7 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
+  supportChatSite?: string
 }
 
 /**
