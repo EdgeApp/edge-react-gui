@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.java
-index ae8bb00..a84c31b 100644
+index 67baca4..5598a66 100644
 --- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.java
 +++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.java
-@@ -397,8 +397,7 @@ public class TextAttributeProps {
+@@ -399,8 +399,7 @@ public class TextAttributeProps {
              : PixelUtil.toPixelFromDIP(mLetterSpacingInput);
  
      if (mFontSize <= 0) {

@@ -45,8 +45,8 @@ export const LogsModal = (props: Props) => {
     )
 
     return () => {
-      keyboardDidShowListener.remove()
-      keyboardDidHideListener.remove()
+      keyboardDidShowListener?.remove()
+      keyboardDidHideListener?.remove()
     }
   }, [])
 

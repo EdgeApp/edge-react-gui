@@ -5,21 +5,11 @@ module.exports = {
         ios: null
       }
     },
-
-    // We want Reanimated 3 on Android:
-    'react-native-reanimated': {
+    // Accountbased pulls this in, but we don't use it natively:
+    '@fioprotocol/fiosdk': {
       platforms: {
-        android: {
-          sourceDir:
-            '../node_modules/r3-hack/node_modules/react-native-reanimated/android'
-        }
-      }
-    },
-
-    // We don't want Reanimated 4 worklets on Android:
-    'react-native-worklets': {
-      platforms: {
-        android: null
+        android: null,
+        ios: null
       }
     }
   }
