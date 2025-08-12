@@ -10,7 +10,6 @@ import {
   sidesToMargin,
   sidesToPadding
 } from '../../util/sides'
-import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, useTheme } from '../services/ThemeContext'
@@ -71,17 +70,15 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={[margin, padding]}>
-      <EdgeTouchableHighlight
+      <EdgeTouchableOpacity
         activeOpacity={theme.underlayOpacity}
-        // @ts-expect-error
-        underlayColor={theme.secondaryButton}
         onPress={onPress}
       >
         <View style={[styles.radio, right && styles.radioRight]}>
           <RadioIcon value={value} />
           {children}
         </View>
-      </EdgeTouchableHighlight>
+      </EdgeTouchableOpacity>
     </View>
   )
 }

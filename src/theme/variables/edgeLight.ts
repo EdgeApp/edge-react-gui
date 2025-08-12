@@ -316,7 +316,6 @@ export const edgeLight: Theme = {
 
   // Settings Row
   settingsRowBackground: palette.white,
-  settingsRowPressed: palette.transparent,
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
