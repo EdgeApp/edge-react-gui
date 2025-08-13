@@ -1,3 +1,4 @@
+import Expo
 import Firebase
 import FirebaseMessaging
 import RNBootSplash
@@ -8,7 +9,7 @@ import UIKit
 import UserNotifications
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: ExpoAppDelegate {
   var window: UIWindow?
   var securityView: UIView?
 
@@ -19,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    * Handles deep links.
    * From https://reactnative.dev/docs/0.79/linking?ios-language=swift#enabling-deep-links
    */
-  func application(
+  override func application(
     _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
     return RCTLinkingManager.application(app, open: url, options: options)
@@ -29,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    * Handles deep links.
    * From https://reactnative.dev/docs/0.79/linking?ios-language=swift#enabling-deep-links
    */
-  func application(
+  override func application(
     _ application: UIApplication,
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
@@ -45,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    * Handles app start-up.
    * React Native template code.
    */
-  func application(
+  override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
@@ -58,11 +59,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // React Native template code:
     let delegate = ReactNativeDelegate()
-    let factory = RCTReactNativeFactory(delegate: delegate)
+    let factory = ExpoReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
 
     reactNativeDelegate = delegate
     reactNativeFactory = factory
+    bindReactNativeFactory(factory)
 
     window = UIWindow(frame: UIScreen.main.bounds)
 
@@ -72,14 +74,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
-    return true
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
   /**
    * Periodic background fetch logic.
    * Edge addition.
    */
-  func application(
+  override func application(
     _ application: UIApplication,
     performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
   ) {
@@ -128,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    * Hides the app when we go into the background.
    * Edge addition.
    */
-  func applicationDidEnterBackground(_ application: UIApplication) {
+  override func applicationDidEnterBackground(_ application: UIApplication) {
     guard
       let storyboard = UIStoryboard(name: "LaunchScreen", bundle: nil) as UIStoryboard?,
       let launchScreen = storyboard.instantiateInitialViewController(),
@@ -148,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    * Shows the app when we come into the foreground.
    * Edge addition.
    */
-  func applicationWillEnterForeground(_ application: UIApplication) {
+  override func applicationWillEnterForeground(_ application: UIApplication) {
     if let view = securityView {
       view.removeFromSuperview()
       securityView = nil
@@ -158,13 +160,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 /// Configures the React Native instance.
 /// React Native template code.
-class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
+class ReactNativeDelegate: ExpoReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {
     self.bundleURL()
   }
 
   // react-native-bootsplash integration:
-  override func customize(_ rootView: RCTRootView) {
+  override func customize(_ rootView: UIView) {
     super.customize(rootView)
     RNBootSplash.initWithStoryboard("LaunchScreen", rootView: rootView)
   }

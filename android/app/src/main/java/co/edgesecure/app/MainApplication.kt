@@ -8,13 +8,11 @@ import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
-import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
-import expo.modules.ApplicationLifecycleDispatcher.onApplicationCreate
-import expo.modules.ApplicationLifecycleDispatcher.onConfigurationChanged
+import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 import io.sentry.Hint
 import io.sentry.SentryEvent
@@ -24,12 +22,10 @@ import io.sentry.SentryOptions.BeforeSendCallback
 import io.sentry.android.core.SentryAndroid
 
 class MainApplication : Application(), ReactApplication {
-
     override val reactNativeHost: ReactNativeHost =
         ReactNativeHostWrapper(
             this,
             object : DefaultReactNativeHost(this) {
-
                 override fun getPackages(): List<ReactPackage> {
                     // Packages that cannot be autolinked yet can be added manually here, for
                     // example:
@@ -47,7 +43,7 @@ class MainApplication : Application(), ReactApplication {
         )
 
     override val reactHost: ReactHost
-        get() = getDefaultReactHost(applicationContext, reactNativeHost)
+        get() = ReactNativeHostWrapper.createReactHost(applicationContext, reactNativeHost)
 
     override fun onCreate() {
         super.onCreate()
@@ -101,17 +97,23 @@ class MainApplication : Application(), ReactApplication {
         // Background task:
         MessagesWorker.ensureScheduled(context)
         // MessagesWorker.testRun(context);
+
+        // React Native template code:
         SoLoader.init(this, OpenSourceMergedSoMapping)
         if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
             // If you opted-in for the New Architecture, we load the native entry point for this
             // app.
             load()
         }
-        onApplicationCreate(this)
+
+        // Expo integration:
+        ApplicationLifecycleDispatcher.onApplicationCreate(this)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        onConfigurationChanged(this, newConfig)
+
+        // Expo integration:
+        ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig)
     }
 }
