@@ -2,7 +2,6 @@
 
 ## Unreleased (develop)
 
-
 ## 4.34.0 (staging)
 
 - added: `PendingTxModal` to route to pending txs for acceleration
@@ -11,6 +10,7 @@
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Upgrade to React Native v0.79
 - changed: Update translations
+- changed: Enable `keysOnlyMode` for Bitcoin Gold 
 
 ## 4.33.0 (2025-08-01)
 
