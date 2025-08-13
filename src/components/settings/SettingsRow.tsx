@@ -59,6 +59,7 @@ const SettingsRowComponent = (props: Props) => {
       underlayColor={theme.settingsRowPressed}
       style={styles.row}
       onPress={handlePress}
+      hitSlop={theme.rem(0.5)}
     >
       <>
         {children}
