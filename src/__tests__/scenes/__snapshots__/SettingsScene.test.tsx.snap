@@ -417,6 +417,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -601,6 +602,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -787,6 +789,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -973,6 +976,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1159,6 +1163,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1345,6 +1350,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1531,6 +1537,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1717,6 +1724,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1903,6 +1911,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2208,6 +2217,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2394,6 +2404,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2565,6 +2576,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2736,6 +2748,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2926,6 +2939,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3116,6 +3130,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3306,6 +3321,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3492,6 +3508,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3678,6 +3695,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3864,6 +3882,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4054,6 +4073,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4240,6 +4260,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4426,6 +4447,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4612,6 +4634,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4856,6 +4879,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
               accessible={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
