@@ -99,10 +99,10 @@ const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
   const styles = getStyles(useTheme())
 
   if (!isIntegerDigit(digit)) {
-    animY.value = withTiming(0, { duration: animationDuration, easing })
+    // animY.value = withTiming(0, { duration: animationDuration, easing })
   } else {
     const height = -1 * (numberHeight * Number(digit))
-    animY.value = withTiming(height, { duration: animationDuration, easing })
+    // animY.value = withTiming(height, { duration: animationDuration, easing })
   }
 
   const animStyle = useAnimatedStyle(() => {
