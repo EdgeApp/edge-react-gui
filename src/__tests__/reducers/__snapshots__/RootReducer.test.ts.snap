@@ -60,6 +60,10 @@ exports[`initialState 1`] = `
     "contacts": "denied",
     "location": "denied",
   },
+  "rampPlugins": {
+    "isLoading": true,
+    "plugins": {},
+  },
   "sortedWalletList": [],
   "staking": {
     "walletStakingMap": {},
