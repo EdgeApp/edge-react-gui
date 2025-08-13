@@ -334,7 +334,6 @@ const CoinRankingComponent = (props: Props) => {
     <SceneWrapper
       avoidKeyboard
       footerHeight={footerHeight}
-      hasNotifications
       renderFooter={renderFooter}
     >
       {({ insetStyle, undoInsetStyle }) => (

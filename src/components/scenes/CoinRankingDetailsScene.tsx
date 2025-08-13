@@ -632,7 +632,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications scroll>
+    <SceneWrapper hasTabs scroll>
       {coinRankingData != null ? (
         <View style={styles.container}>
           <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>

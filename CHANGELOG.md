@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: `SwipeChart` now uses `react-native-gifted-charts` for a scrollable line chart with crosshair pointer; min/max labels and prior hacks removed.
+
 
 ## 4.34.0 (staging)
 
