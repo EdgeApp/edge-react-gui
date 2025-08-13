@@ -11,8 +11,9 @@ import {
 } from 'cleaners'
 
 import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
-import { asInitOptions as asPaybisRampInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
+import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
 import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
+import { asInitOptions as asSimplexInitOptions } from './plugins/ramps/simplex/simplexRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
@@ -146,13 +147,15 @@ export const asEnvConfig = asObject({
   RAMP_PLUGIN_INITS: asOptional(
     asObject<Record<string, unknown>>({
       moonpay: asOptional(asMoonpayInitOptions),
-      paybis: asOptional(asPaybisRampInitOptions),
-      revolut: asOptional(asRevolutInitOptions)
+      paybis: asOptional(asPaybisInitOptions),
+      revolut: asOptional(asRevolutInitOptions),
+      simplex: asOptional(asSimplexInitOptions)
     }),
     () => ({
       moonpay: undefined,
       paybis: undefined,
-      revolut: undefined
+      revolut: undefined,
+      simplex: undefined
     })
   ),
   WYRE_CLIENT_INIT: asOptional(
