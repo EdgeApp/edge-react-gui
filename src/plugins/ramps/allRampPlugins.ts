@@ -1,3 +1,4 @@
+import { banxaRampPlugin } from './banxa/banxaRampPlugin'
 import { moonpayRampPlugin } from './moonpay/moonpayRampPlugin'
 import { paybisRampPlugin } from './paybis/paybisRampPlugin'
 import type { RampPluginFactory } from './rampPluginTypes'
@@ -5,6 +6,7 @@ import { revolutRampPlugin } from './revolut/revolutRampPlugin'
 import { simplexRampPlugin } from './simplex/simplexRampPlugin'
 
 export const pluginFactories: Record<string, RampPluginFactory> = {
+  banxa: banxaRampPlugin,
   moonpay: moonpayRampPlugin,
   paybis: paybisRampPlugin,
   revolut: revolutRampPlugin,
