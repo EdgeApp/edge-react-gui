@@ -12,11 +12,15 @@ tags:
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
+
+
 - runFlow:
     file: ../common/login-password.yaml
     env:
       USERNAME: ${MAESTRO_EDGE_XMR_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_XMR_PASSWORD}
+
+- tapOn: Assets
 
 - extendedWaitUntil:
     visible: XMR
@@ -25,7 +29,6 @@ tags:
 - extendedWaitUntil:
     visible: 0.0112 XMR
     timeout: 15000
-- tapOn: Wallets
 #- assertVisible: ɱ 0.0112
 
 - stopApp
