@@ -234,6 +234,60 @@ if (deniedPermission) {
 
 Note the inverted boolean logic: `!success` becomes `deniedPermission`.
 
+### Asset Discovery
+
+**Before:**
+```typescript
+const assets = await provider.getSupportedAssets({
+  direction: 'buy',
+  paymentTypes: ['credit', 'bank'],
+  regionCode: { countryCode: 'US', stateCode: 'CA' }
+})
+```
+
+**After:**
+```typescript
+const assets = await plugin.getSupportedAssets({
+  direction: 'buy',
+  paymentTypes: ['credit', 'bank'],
+  regionCode: { countryCode: 'US', stateCode: 'CA' }
+})
+```
+
+The API remains the same, maintaining compatibility with existing code. Note that the method returns the asset map for the first supported payment type from the provided array.
+
+## Asset Discovery Integration
+
+The ramp plugin architecture includes a `getSupportedAssets` method that allows the UI to check which plugins support specific crypto/fiat/region combinations:
+
+```typescript
+// Usage in TradeCreateScene via custom hook
+import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
+
+const { 
+  data: supportedPlugins = [], 
+  isLoading: isCheckingSupport 
+} = useSupportedPlugins({
+  selectedWallet,
+  selectedCrypto,
+  selectedCryptoCurrencyCode,
+  selectedFiatCurrencyCode,
+  countryCode,
+  stateProvinceCode
+})
+
+// Only query supported plugins for quotes
+const quotePromises = supportedPlugins.map(async (plugin) => {
+  return await plugin.fetchQuote(rampQuoteRequest)
+})
+```
+
+The `useSupportedPlugins` hook:
+- Checks all payment types for comprehensive support
+- Caches results for 5 minutes to avoid excessive API calls
+- Filters plugins based on crypto/fiat/region support
+- Returns loading state for UI feedback
+
 ## Benefits
 
 - **Reduced abstraction**: Direct usage of APIs makes code easier to understand

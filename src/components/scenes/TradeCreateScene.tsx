@@ -11,6 +11,7 @@ import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
+import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { RampQuoteRequest } from '../../plugins/ramps/rampPluginTypes'
@@ -70,8 +71,6 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   const [selectedFiatCurrencyCode, setSelectedFiatCurrencyCode] =
     useState<string>(defaultFiat)
 
-  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
-
   // Get first wallet as default if no forcedWalletResult
   const firstWallet = React.useMemo((): WalletListWalletResult | undefined => {
     const walletIds = Object.keys(currencyWallets)
@@ -124,6 +123,17 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   // Determine whether to show the region selection scene variant
   const shouldShowRegionSelect =
     initialRegionCode == null && (countryCode === '' || countryData == null)
+
+  // Use the custom hook for supported plugins
+  const { data: supportedPlugins = {}, isLoading: isCheckingSupport } =
+    useSupportedPlugins({
+      selectedWallet,
+      selectedCrypto,
+      selectedCryptoCurrencyCode,
+      selectedFiatCurrencyCode,
+      countryCode: countryCode || 'US',
+      stateProvinceCode
+    })
 
   const getRegionText = (): string => {
     if (countryCode === '' || countryData == null) {
@@ -204,7 +214,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     errors: quoteErrors
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: rampPlugins
+    plugins: supportedPlugins
   })
 
   // Get the best quote
@@ -531,8 +541,30 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
           </ExchangeRateContainer>
         )}
 
-        {/* Error Alert */}
-        {!isLoadingQuotes &&
+        {/* Support Check Loading */}
+        {isCheckingSupport && selectedWallet != null && (
+          <LoadingContainer>
+            <ActivityIndicator size="small" color={theme.primaryText} />
+            <EdgeText>{lstrings.loading}</EdgeText>
+          </LoadingContainer>
+        )}
+
+        {/* No Plugin Support Alert */}
+        {!isCheckingSupport &&
+        !isLoadingQuotes &&
+        selectedWallet != null &&
+        selectedCryptoCurrencyCode != null &&
+        Object.keys(supportedPlugins).length === 0 ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.trade_buy_unavailable_title}
+            body={lstrings.buy_sell_crypto_no_provider_region}
+          />
+        ) : null}
+
+        {/* Error Alert for Failed Quotes */}
+        {!isCheckingSupport &&
+        !isLoadingQuotes &&
         quoteErrors.length > 0 &&
         sortedQuotes.length === 0 ? (
           <AlertCardUi4
@@ -556,6 +588,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
               selectedCryptoCurrencyCode == null ||
               userInput === '' ||
               lastUsedInput === null ||
+              isCheckingSupport ||
               isLoadingQuotes ||
               sortedQuotes.length === 0
           }}

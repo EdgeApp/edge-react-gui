@@ -9,6 +9,25 @@ import type {
   FiatPluginUtils
 } from '../gui/fiatPluginTypes'
 
+// Asset discovery types
+export interface RampSupportedAssetsRequest {
+  direction: 'buy' | 'sell'
+  paymentTypes: FiatPaymentType[]
+  regionCode: FiatPluginRegionCode
+}
+
+export interface ProviderToken {
+  tokenId: EdgeTokenId
+  otherInfo?: unknown
+}
+
+export interface RampAssetMap {
+  providerId: string
+  crypto: Record<string, ProviderToken[]>
+  fiat: Record<string, boolean | any>
+  requiredAmountType?: 'fiat' | 'crypto'
+}
+
 export interface RampQuoteRequest {
   wallet?: EdgeCurrencyWallet
   pluginId: string
@@ -83,6 +102,10 @@ export interface RampPluginConfig {
 export interface RampPlugin {
   readonly pluginId: string
   readonly rampInfo: RampInfo
+
+  readonly getSupportedAssets: (
+    request: RampSupportedAssetsRequest
+  ) => Promise<RampAssetMap>
 
   readonly fetchQuote: (
     request: RampQuoteRequest,

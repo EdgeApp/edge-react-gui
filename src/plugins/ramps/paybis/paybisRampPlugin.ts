@@ -66,12 +66,14 @@ import { addTokenToArray } from '../../gui/util/providerUtils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
   RampApproveQuoteParams,
+  RampAssetMap,
   RampInfo,
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
   RampQuoteRequest,
-  RampQuoteResult
+  RampQuoteResult,
+  RampSupportedAssetsRequest
 } from '../rampPluginTypes'
 import { asInitOptions } from './paybisRampTypes'
 
@@ -582,43 +584,115 @@ export const paybisRampPlugin: RampPluginFactory = (
     }
   }
 
+  const ensureStateInitialized = async (): Promise<void> => {
+    if (state == null) {
+      const { apiKey, partnerUrl, privateKeyB64 } = initOptions
+
+      let partnerUserId: string
+      if (pluginConfig.store != null) {
+        partnerUserId = await pluginConfig.store
+          .getItem('partnerUserId')
+          .catch(() => '')
+        if (partnerUserId === '' && pluginConfig.makeUuid != null) {
+          partnerUserId = await pluginConfig.makeUuid()
+          await pluginConfig.store.setItem('partnerUserId', partnerUserId)
+        } else if (partnerUserId === '') {
+          partnerUserId = `edge-user-${Date.now()}-${Math.random()
+            .toString(36)
+            .substring(7)}`
+          await pluginConfig.store.setItem('partnerUserId', partnerUserId)
+        }
+      } else {
+        partnerUserId = `edge-user-${Date.now()}-${Math.random()
+          .toString(36)
+          .substring(7)}`
+      }
+
+      state = {
+        apiKey,
+        partnerUrl,
+        privateKeyB64,
+        partnerUserId
+      }
+    }
+  }
+
+  const ensureAssetsInitialized = async (
+    direction: 'buy' | 'sell'
+  ): Promise<void> => {
+    await ensureStateInitialized()
+
+    if (direction === 'buy') {
+      await initializeBuyPairs()
+    } else {
+      await initializeSellPairs()
+    }
+  }
+
   const plugin: RampPlugin = {
     pluginId,
     rampInfo,
 
+    getSupportedAssets: async (
+      request: RampSupportedAssetsRequest
+    ): Promise<RampAssetMap> => {
+      const { direction, paymentTypes, regionCode } = request
+
+      // Validate region first
+      validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
+
+      // Check country-specific restrictions
+      if (regionCode.countryCode === 'GB') {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'paymentUnsupported'
+        })
+      }
+
+      // Special case for US sell restrictions with credit
+      if (
+        direction === 'sell' &&
+        regionCode.countryCode === 'US' &&
+        paymentTypes.includes('credit')
+      ) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'paymentUnsupported'
+        })
+      }
+
+      // Initialize state and pairs if needed
+      await ensureAssetsInitialized(direction)
+
+      // Find first supported payment type
+      const supportedPaymentType = paymentTypes.find(
+        paymentType => allowedPaymentTypes[direction][paymentType] === true
+      )
+
+      if (!supportedPaymentType) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'paymentUnsupported'
+        })
+      }
+
+      const assetMap = allowedCurrencyCodes[direction][supportedPaymentType]
+
+      if (!assetMap || Object.keys(assetMap.crypto).length === 0) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'assetUnsupported'
+        })
+      }
+
+      return assetMap
+    },
+
     fetchQuote: async (
       request: RampQuoteRequest
     ): Promise<RampQuoteResult[]> => {
-      if (state == null) {
-        const { apiKey, partnerUrl, privateKeyB64 } = initOptions
-
-        let partnerUserId: string
-        if (pluginConfig.store != null) {
-          partnerUserId = await pluginConfig.store
-            .getItem('partnerUserId')
-            .catch(() => '')
-          if (partnerUserId === '' && pluginConfig.makeUuid != null) {
-            partnerUserId = await pluginConfig.makeUuid()
-            await pluginConfig.store.setItem('partnerUserId', partnerUserId)
-          } else if (partnerUserId === '') {
-            partnerUserId = `edge-user-${Date.now()}-${Math.random()
-              .toString(36)
-              .substring(7)}`
-            await pluginConfig.store.setItem('partnerUserId', partnerUserId)
-          }
-        } else {
-          partnerUserId = `edge-user-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(7)}`
-        }
-
-        state = {
-          apiKey,
-          partnerUrl,
-          privateKeyB64,
-          partnerUserId
-        }
-      }
+      await ensureStateInitialized()
+      if (!state) throw new Error('Plugin state not initialized')
 
       const {
         amountType,
