@@ -1,6 +1,6 @@
 module.exports = function (api) {
   return {
-    presets: ['module:@react-native/babel-preset'],
+    presets: ['babel-preset-expo'],
     plugins: ['react-native-worklets/plugin']
   }
 }
