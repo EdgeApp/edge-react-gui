@@ -101,5 +101,5 @@ The following documentation files provide detailed guidance for specific areas o
 
 ### `docs/ramp-plugin-migration-guide.md`
 
-**When to read**: Before migrating ramp plugins from legacy provider architecture to new ramp plugin architecture
-**Summary**: Comprehensive migration guide for removing FiatPluginUi abstraction and using direct API imports. Covers migration of toasts, modals, navigation, permissions (with important boolean logic inversion note), and wallet operations with before/after code examples. Essential for converting legacy fiat providers to new ramp plugins.
+**When to read**: Before migrating ramp plugins from legacy provider architecture to new ramp plugin architecture or when creating new ramp plugins
+**Summary**: Comprehensive migration guide for removing FiatPluginUi abstraction and using direct API imports. Covers migration of toasts, modals, navigation, permissions (with important boolean logic inversion note), wallet operations, and environment configuration requirements. Includes detailed steps for creating init options cleaners, validating plugin initialization, and registering plugins in envConfig. Essential for converting legacy fiat providers to new ramp plugins and ensuring proper type safety.

@@ -198,6 +198,126 @@ export interface RampApproveQuoteParams {
 5. **Testing**: Test all flows thoroughly after migration, especially permission flows
 6. **Type safety**: Use proper TypeScript types for all imported functions
 
+## Environment Configuration
+
+When creating a new ramp plugin, you must properly configure the plugin's initialization options to ensure type safety and centralized configuration management. This involves three steps:
+
+### 1. Create Init Options Cleaner
+
+In your plugin's types file (e.g., `moonpayRampTypes.ts`), create an `asInitOptions` cleaner that validates the structure of your plugin's initialization options:
+
+```typescript
+// Init options cleaner for moonpay ramp plugin
+export const asInitOptions = asString  // For simple API key
+
+// For more complex init options:
+export const asInitOptions = asObject({
+  apiKey: asString,
+  environment: asOptional(asValue('production', 'sandbox'), 'production'),
+  webhookUrl: asOptional(asString)
+})
+```
+
+The cleaner should match the expected initialization options structure for your specific plugin.
+
+### 2. Use Cleaner in Plugin Factory
+
+In your plugin factory function (e.g., `moonpayRampPlugin.ts`), import and use the cleaner to validate the `initOptions` parameter:
+
+```typescript
+import { asInitOptions } from './moonpayRampTypes'
+
+export const moonpayRampPlugin: RampPluginFactory = {
+  pluginId: 'moonpay',
+  storeId: 'com.moonpay',
+  displayName: 'Moonpay',
+  
+  create: async (params: RampPluginFactoryParams): Promise<RampPlugin> => {
+    const { initOptions } = params
+    
+    // Validate and extract init options
+    const apiKey = asInitOptions(initOptions)
+    
+    // Use the validated options in your plugin
+    // ...
+  }
+}
+```
+
+### 3. Register in envConfig
+
+Add an entry to `RAMP_PLUGIN_INITS` in `src/envConfig.ts` that uses your cleaner. Import with an alias to avoid naming conflicts:
+
+```typescript
+import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
+import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
+
+export const ENV_CONFIG = makeConfig(
+  asObject({
+    // ... other config
+    RAMP_PLUGIN_INITS: asOptional(
+      asObject<Record<string, unknown>>({
+        moonpay: asOptional(asMoonpayInitOptions),
+        paybis: asOptional(asPaybisInitOptions),
+        // Add your plugin here with its cleaner
+      })
+    )
+  })
+)
+```
+
+### Why This Is Required
+
+- **Type Safety**: Ensures initialization options are properly typed and validated at runtime
+- **Centralized Configuration**: All plugin configurations are managed in one place (`envConfig.ts`)
+- **Environment Management**: Allows different configurations for development, staging, and production
+- **Error Prevention**: Catches configuration errors early with clear error messages
+
+### Complete Example: Moonpay Plugin
+
+Here's how the Moonpay plugin implements environment configuration:
+
+**1. In `moonpayRampTypes.ts`:**
+```typescript
+import { asString } from 'cleaners'
+
+// Simple string cleaner for API key
+export const asInitOptions = asString
+```
+
+**2. In `moonpayRampPlugin.ts`:**
+```typescript
+import { asInitOptions } from './moonpayRampTypes'
+
+export const moonpayRampPlugin: RampPluginFactory = {
+  // ... plugin metadata
+  
+  create: async (params: RampPluginFactoryParams): Promise<RampPlugin> => {
+    const { initOptions } = params
+    const apiKey = asInitOptions(initOptions)
+    
+    // Now apiKey is guaranteed to be a string
+    const client = new MoonpayClient({ apiKey })
+    // ...
+  }
+}
+```
+
+**3. In `envConfig.ts`:**
+```typescript
+import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
+
+// In the ENV_CONFIG:
+RAMP_PLUGIN_INITS: asOptional(
+  asObject<Record<string, unknown>>({
+    moonpay: asOptional(asMoonpayInitOptions),
+    // Other plugins...
+  })
+)
+```
+
+This setup ensures that when the app loads plugin configurations from environment variables or config files, they are properly validated before being passed to the plugin factories.
+
 ## Complete Migration Example
 
 Here's a comparison showing a typical permission request migration:
