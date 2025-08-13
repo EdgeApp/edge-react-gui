@@ -1,127 +1,129 @@
-import { useQuery, type UseQueryResult } from '@tanstack/react-query'
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { useQuery } from '@tanstack/react-query'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import * as React from 'react'
 
-import type { WalletListWalletResult } from '../components/modals/WalletListModal'
-import type { FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
+import type { FiatPluginRegionCode } from '../plugins/gui/fiatPluginTypes'
 import type {
-  RampPlugin,
-  RampSupportedAssetsRequest
+  RampCheckSupportRequest,
+  RampPlugin
 } from '../plugins/ramps/rampPluginTypes'
-import { useSelector } from '../types/reactRedux'
 
 interface UseSupportedPluginsParams {
-  selectedWallet: EdgeCurrencyWallet | undefined
-  selectedCrypto: WalletListWalletResult | undefined
-  selectedCryptoCurrencyCode: string | undefined
-  selectedFiatCurrencyCode: string
-  countryCode: string
+  selectedWallet?: EdgeCurrencyWallet
+  selectedCrypto?: {
+    pluginId: string
+    tokenId: EdgeTokenId
+  }
+  selectedFiatCurrencyCode?: string
+  countryCode?: string
   stateProvinceCode?: string
+  plugins: Record<string, RampPlugin>
+  direction?: 'buy' | 'sell'
+}
+
+interface UseSupportedPluginsResult {
+  supportedPlugins: RampPlugin[]
+  isLoading: boolean
+  error: Error | null
 }
 
 export const useSupportedPlugins = ({
   selectedWallet,
   selectedCrypto,
-  selectedCryptoCurrencyCode,
   selectedFiatCurrencyCode,
   countryCode,
-  stateProvinceCode
-}: UseSupportedPluginsParams): UseQueryResult<Record<string, RampPlugin>> => {
-  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
+  stateProvinceCode,
+  plugins,
+  direction = 'buy'
+}: UseSupportedPluginsParams): UseSupportedPluginsResult => {
+  // Build region code
+  const regionCode: FiatPluginRegionCode | undefined = React.useMemo(() => {
+    if (!countryCode) return undefined
 
-  // Get all possible payment types
-  const allPaymentTypes: FiatPaymentType[] = [
-    'ach',
-    'applepay',
-    'colombiabank',
-    'credit',
-    'directtobank',
-    'fasterpayments',
-    'googlepay',
-    'iach',
-    'ideal',
-    'interac',
-    'iobank',
-    'mexicobank',
-    'payid',
-    'paypal',
-    'pix',
-    'pse',
-    'revolut',
-    'sepa',
-    'spei',
-    'turkishbank',
-    'venmo',
-    'wire'
-  ]
-
-  return useQuery({
-    queryKey: [
-      'supportedRampPlugins',
-      selectedWallet?.id,
-      selectedCrypto?.tokenId,
-      selectedFiatCurrencyCode,
+    return {
       countryCode,
       stateProvinceCode
-    ],
-    queryFn: async (): Promise<Record<string, RampPlugin>> => {
-      if (!selectedWallet || !selectedCryptoCurrencyCode || !selectedCrypto) {
-        return {}
+    }
+  }, [countryCode, stateProvinceCode])
+
+  // Create query key
+  const queryKey = [
+    'supportedPlugins',
+    selectedCrypto?.pluginId,
+    selectedCrypto?.tokenId,
+    selectedFiatCurrencyCode,
+    regionCode,
+    direction
+  ]
+
+  const {
+    data: supportedPlugins = [],
+    isLoading,
+    error
+  } = useQuery<RampPlugin[]>({
+    queryKey,
+    queryFn: async () => {
+      // Early return if required params are missing
+      if (
+        !selectedCrypto ||
+        !selectedFiatCurrencyCode ||
+        !regionCode ||
+        !selectedWallet
+      ) {
+        return []
       }
 
-      const supportRequest: RampSupportedAssetsRequest = {
-        direction: 'buy',
-        paymentTypes: allPaymentTypes,
-        regionCode: {
-          countryCode: countryCode || 'US',
-          stateProvinceCode
+      // Build check support request
+      const checkSupportRequest: RampCheckSupportRequest = {
+        direction,
+        regionCode,
+        fiatAsset: {
+          currencyCode: selectedFiatCurrencyCode // Without 'iso:' prefix
+        },
+        cryptoAsset: {
+          pluginId: selectedCrypto.pluginId,
+          tokenId: selectedCrypto.tokenId
         }
       }
 
-      // Fetch support from all plugins in parallel
-      const supportPromises = Object.entries(rampPlugins).map(
-        async ([pluginId, plugin]) => {
+      // Check support for all plugins in parallel
+      const supportChecks = await Promise.all(
+        Object.values(plugins).map(async plugin => {
           try {
-            const assetMap = await plugin.getSupportedAssets(supportRequest)
-            return { pluginId, plugin, assetMap }
+            const result = await plugin.checkSupport(checkSupportRequest)
+            return {
+              plugin,
+              supported: result.supported
+            }
           } catch (error) {
-            console.error(
-              `Failed to get supported assets for ${pluginId}:`,
+            console.warn(
+              `Failed to check support for plugin ${plugin.pluginId}:`,
               error
             )
-            return { pluginId, plugin, assetMap: null }
+            return {
+              plugin,
+              supported: false
+            }
           }
-        }
+        })
       )
 
-      const results = await Promise.all(supportPromises)
-
-      // Filter to only supported plugins
-      return results
-        .filter(({ assetMap }) => {
-          if (!assetMap) return false
-
-          // Check crypto support
-          const pluginCurrencyCode = selectedWallet.currencyInfo.pluginId
-          const cryptoSupported = assetMap.crypto[pluginCurrencyCode]?.some(
-            token => token.tokenId === (selectedCrypto.tokenId ?? null)
-          )
-
-          // Check fiat support
-          const fiatSupported =
-            assetMap.fiat[`iso:${selectedFiatCurrencyCode}`] === true
-
-          return cryptoSupported && fiatSupported
-        })
-        .reduce<Record<string, RampPlugin>>((plugins, { plugin }) => {
-          plugins[plugin.pluginId] = plugin
-          return plugins
-        }, {})
+      // Filter only supported plugins
+      return supportChecks
+        .filter(check => check.supported)
+        .map(check => check.plugin)
     },
-    enabled:
-      !!selectedWallet &&
-      !!selectedCryptoCurrencyCode &&
-      Object.keys(rampPlugins).length > 0,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    gcTime: 10 * 60 * 1000 // Keep in cache for 10 minutes
+    enabled: Boolean(
+      selectedWallet && selectedCrypto && selectedFiatCurrencyCode && regionCode
+    ),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes cache time
+    refetchOnWindowFocus: false
   })
+
+  return {
+    supportedPlugins,
+    isLoading,
+    error
+  }
 }

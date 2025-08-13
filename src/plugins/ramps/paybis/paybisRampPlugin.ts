@@ -47,12 +47,12 @@ import {
 import type {
   FiatDirection,
   FiatPaymentType,
+  FiatPluginRegionCode,
   SaveTxActionParams
 } from '../../gui/fiatPluginTypes'
-import {
-  type FiatProviderAssetMap,
-  FiatProviderError,
-  type FiatProviderSupportedRegions
+import type {
+  FiatProviderAssetMap,
+  FiatProviderSupportedRegions
 } from '../../gui/fiatProviderTypes'
 import { assert, isWalletTestnet } from '../../gui/pluginUtils'
 import {
@@ -66,14 +66,14 @@ import { addTokenToArray } from '../../gui/util/providerUtils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
   RampApproveQuoteParams,
-  RampAssetMap,
+  RampCheckSupportRequest,
   RampInfo,
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
   RampQuoteRequest,
   RampQuoteResult,
-  RampSupportedAssetsRequest
+  RampSupportResult
 } from '../rampPluginTypes'
 import { asInitOptions } from './paybisRampTypes'
 
@@ -629,63 +629,125 @@ export const paybisRampPlugin: RampPluginFactory = (
     }
   }
 
+  const validateSupportRequest = (
+    regionCode?: FiatPluginRegionCode,
+    countryCode?: string
+  ): { supported: false } | undefined => {
+    // Check region restrictions
+    if (regionCode != null) {
+      try {
+        validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
+      } catch (error) {
+        return { supported: false }
+      }
+    }
+
+    // Check country-specific restrictions
+    if (countryCode === 'GB') {
+      return { supported: false }
+    }
+
+    return undefined
+  }
+
+  const checkAssetSupport = (
+    direction: FiatDirection,
+    fiatCurrencyCode: string,
+    cryptoPluginId: string,
+    tokenId?: string | null
+  ): { supported: false } | undefined => {
+    // Check if crypto is supported
+    const paybisCc =
+      EDGE_TO_PAYBIS_CURRENCY_MAP[`${cryptoPluginId}_${tokenId ?? ''}`]
+    if (!paybisCc) {
+      return { supported: false }
+    }
+
+    // Check if fiat/crypto pair is supported in any payment type
+    const fiat = removeIsoPrefix(fiatCurrencyCode)
+    const pairs = paybisPairs[direction]?.data
+    if (pairs == null) {
+      return { supported: false }
+    }
+
+    // Check if the pair exists in any payment method
+    let pairSupported = false
+    for (const paymentMethodPairs of pairs) {
+      if (direction === 'buy') {
+        const buyPairs = paymentMethodPairs as ReturnType<
+          typeof asPaymentMethodPairs
+        >
+        for (const pair of buyPairs.pairs) {
+          if (
+            pair.from === fiat &&
+            pair.to.some(to => to.currencyCode === paybisCc)
+          ) {
+            pairSupported = true
+            break
+          }
+        }
+      } else {
+        const sellPairs = paymentMethodPairs as ReturnType<
+          typeof asSellPaymentMethodPairs
+        >
+        for (const pair of sellPairs.pairs) {
+          if (pair.fromAssetId === paybisCc && pair.to.includes(fiat)) {
+            pairSupported = true
+            break
+          }
+        }
+      }
+      if (pairSupported) break
+    }
+
+    if (!pairSupported) {
+      return { supported: false }
+    }
+
+    return undefined
+  }
+
   const plugin: RampPlugin = {
     pluginId,
     rampInfo,
 
-    getSupportedAssets: async (
-      request: RampSupportedAssetsRequest
-    ): Promise<RampAssetMap> => {
-      const { direction, paymentTypes, regionCode } = request
+    checkSupport: async (
+      request: RampCheckSupportRequest
+    ): Promise<RampSupportResult> => {
+      try {
+        const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
-      // Validate region first
-      validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
+        // Ensure assets are initialized for the direction
+        await ensureAssetsInitialized(direction)
 
-      // Check country-specific restrictions
-      if (regionCode.countryCode === 'GB') {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
+        // Validate region and country restrictions
+        const regionResult = validateSupportRequest(
+          regionCode,
+          regionCode.countryCode
+        )
+        if (regionResult != null) {
+          return regionResult
+        }
+
+        // Check asset support
+        const assetResult = checkAssetSupport(
+          direction,
+          `iso:${fiatAsset.currencyCode}`,
+          cryptoAsset.pluginId,
+          cryptoAsset.tokenId
+        )
+        if (assetResult != null) {
+          return assetResult
+        }
+
+        // If we get here, it's supported
+        return { supported: true }
+      } catch (error) {
+        // Only throw for actual errors (network issues, etc)
+        // Never throw for unsupported combinations
+        console.error('Paybis checkSupport error:', error)
+        throw error
       }
-
-      // Special case for US sell restrictions with credit
-      if (
-        direction === 'sell' &&
-        regionCode.countryCode === 'US' &&
-        paymentTypes.includes('credit')
-      ) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
-      }
-
-      // Initialize state and pairs if needed
-      await ensureAssetsInitialized(direction)
-
-      // Find first supported payment type
-      const supportedPaymentType = paymentTypes.find(
-        paymentType => allowedPaymentTypes[direction][paymentType] === true
-      )
-
-      if (!supportedPaymentType) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
-      }
-
-      const assetMap = allowedCurrencyCodes[direction][supportedPaymentType]
-
-      if (!assetMap || Object.keys(assetMap.crypto).length === 0) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
-
-      return assetMap
     },
 
     fetchQuote: async (
@@ -707,15 +769,18 @@ export const paybisRampPlugin: RampPluginFactory = (
         tokenId
       } = request
 
-      validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
-
-      // Check country-specific restrictions
-      if (regionCode.countryCode === 'GB') {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
+      // Validate region and country restrictions using helper
+      const regionResult = validateSupportRequest(
+        regionCode,
+        regionCode.countryCode
+      )
+      if (regionResult != null) {
+        // Return empty array for unsupported regions
+        return []
       }
+
+      // Initialize assets for the direction
+      await ensureAssetsInitialized(direction)
 
       // Get all supported payment types for the direction
       let allPaymentTypes = Object.keys(allowedPaymentTypes[direction]).filter(
@@ -728,17 +793,8 @@ export const paybisRampPlugin: RampPluginFactory = (
       }
 
       if (allPaymentTypes.length === 0) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
-      }
-
-      // Initialize pairs if needed
-      if (direction === 'buy') {
-        await initializeBuyPairs()
-      } else {
-        await initializeSellPairs()
+        // Return empty array if no payment types supported
+        return []
       }
 
       // Update user transaction status
@@ -757,13 +813,24 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       const pairs = paybisPairs[direction]?.data
       if (pairs == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
+        // Return empty array if pairs not loaded
+        return []
       }
 
       const fiat = removeIsoPrefix(fiatCurrencyCode)
+
+      // Check asset support using helper
+      const assetResult = checkAssetSupport(
+        direction,
+        fiatCurrencyCode,
+        currencyPluginId,
+        tokenId
+      )
+      if (assetResult != null) {
+        // Return empty array for unsupported asset pairs
+        return []
+      }
+
       const paybisCc =
         EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
@@ -1284,13 +1351,7 @@ export const paybisRampPlugin: RampPluginFactory = (
         }
       }
 
-      if (quotes.length === 0) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
-      }
-
+      // Return the quotes array (empty if no quotes found)
       return quotes
     }
   }

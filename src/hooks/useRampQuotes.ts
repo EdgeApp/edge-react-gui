@@ -150,6 +150,7 @@ export const useRampQuotes = ({
 
           try {
             const quotes = await plugin.fetchQuote(rampQuoteRequest)
+            // Return quotes as-is (empty array means plugin doesn't support the request)
             return { ok: true, value: quotes }
           } catch (error) {
             console.warn(`Failed to get quote from ${pluginId}:`, error)

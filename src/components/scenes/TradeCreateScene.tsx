@@ -124,15 +124,25 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   const shouldShowRegionSelect =
     initialRegionCode == null && (countryCode === '' || countryData == null)
 
-  // Use the custom hook for supported plugins
-  const { data: supportedPlugins = {}, isLoading: isCheckingSupport } =
+  // Get ramp plugins directly from Redux
+  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
+  const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
+
+  // Use supported plugins hook
+  const { supportedPlugins, isLoading: isCheckingSupport } =
     useSupportedPlugins({
       selectedWallet,
-      selectedCrypto,
-      selectedCryptoCurrencyCode,
-      selectedFiatCurrencyCode,
-      countryCode: countryCode || 'US',
-      stateProvinceCode
+      selectedCrypto: selectedCrypto
+        ? {
+            pluginId: selectedWallet?.currencyInfo.pluginId ?? '',
+            tokenId: selectedCrypto.tokenId
+          }
+        : undefined,
+      selectedFiatCurrencyCode, // Without 'iso:' prefix
+      countryCode,
+      stateProvinceCode,
+      plugins: rampPlugins,
+      direction: 'buy'
     })
 
   const getRegionText = (): string => {
@@ -214,7 +224,9 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     errors: quoteErrors
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: supportedPlugins
+    plugins: Object.fromEntries(
+      supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+    )
   })
 
   // Get the best quote
@@ -541,32 +553,38 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
           </ExchangeRateContainer>
         )}
 
-        {/* Support Check Loading */}
-        {isCheckingSupport && selectedWallet != null && (
+        {/* Show loading indicator when checking support */}
+        {isCheckingSupport && userInput !== '' && lastUsedInput != null ? (
           <LoadingContainer>
             <ActivityIndicator size="small" color={theme.primaryText} />
             <EdgeText>{lstrings.loading}</EdgeText>
           </LoadingContainer>
-        )}
+        ) : null}
 
-        {/* No Plugin Support Alert */}
+        {/* Alert for no supported plugins */}
         {!isCheckingSupport &&
-        !isLoadingQuotes &&
+        supportedPlugins.length === 0 &&
+        userInput !== '' &&
+        lastUsedInput != null &&
         selectedWallet != null &&
-        selectedCryptoCurrencyCode != null &&
-        Object.keys(supportedPlugins).length === 0 ? (
+        selectedCryptoCurrencyCode != null ? (
           <AlertCardUi4
             type="warning"
             title={lstrings.trade_buy_unavailable_title}
-            body={lstrings.buy_sell_crypto_no_provider_region}
+            body={sprintf(
+              lstrings.trade_buy_unavailable_body_2s,
+              selectedCryptoCurrencyCode,
+              selectedFiatCurrencyCode
+            )}
           />
         ) : null}
 
         {/* Error Alert for Failed Quotes */}
-        {!isCheckingSupport &&
-        !isLoadingQuotes &&
+        {!isLoadingQuotes &&
+        !isCheckingSupport &&
         quoteErrors.length > 0 &&
-        sortedQuotes.length === 0 ? (
+        sortedQuotes.length === 0 &&
+        supportedPlugins.length > 0 ? (
           <AlertCardUi4
             type="error"
             title={lstrings.trade_buy_unavailable_title}
@@ -588,7 +606,9 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
               selectedCryptoCurrencyCode == null ||
               userInput === '' ||
               lastUsedInput === null ||
+              isPluginsLoading ||
               isCheckingSupport ||
+              supportedPlugins.length === 0 ||
               isLoadingQuotes ||
               sortedQuotes.length === 0
           }}

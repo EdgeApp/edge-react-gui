@@ -376,37 +376,695 @@ const assets = await plugin.getSupportedAssets({
 
 The API remains the same, maintaining compatibility with existing code. Note that the method returns the asset map for the first supported payment type from the provided array.
 
-## Asset Discovery Integration
+## Removing getSupportedAssets
 
-The ramp plugin architecture includes a `getSupportedAssets` method that allows the UI to check which plugins support specific crypto/fiat/region combinations:
+The ramp plugin architecture has been simplified by removing the separate `getSupportedAssets` method. All support checking is now done within the `fetchQuote` method.
 
+### Migration Steps
+
+1. **Move all asset support logic from `getSupportedAssets` into `fetchQuote`**
+2. **Return an empty array `[]` from `fetchQuote` if the requested assets are not supported**
+3. **Only throw errors for actual failures (network issues, API errors, etc.)**
+4. **Remove the `getSupportedAssets` method entirely**
+
+### Important: Migrating Provider Initialization Logic
+
+When migrating from the legacy provider architecture, the initialization logic that `getSupportedAssets` performed (fetching supported assets, countries, payment methods, etc.) should be preserved but moved to an internal `fetchProviderConfig` function with caching.
+
+#### Implementation Pattern
+
+**1. Create a cache structure with TTL:**
 ```typescript
-// Usage in TradeCreateScene via custom hook
+interface ProviderConfigCache {
+  data: ProviderConfig | null
+  timestamp: number
+}
+
+const CACHE_TTL_MS = 2 * 60 * 1000 // 2 minutes
+let configCache: ProviderConfigCache = {
+  data: null,
+  timestamp: 0
+}
+```
+
+**2. Implement `fetchProviderConfig` as an internal function:**
+```typescript
+async function fetchProviderConfig(): Promise<ProviderConfig> {
+  const now = Date.now()
+  
+  // Check if cache is valid
+  if (configCache.data && (now - configCache.timestamp) < CACHE_TTL_MS) {
+    return configCache.data
+  }
+  
+  // Fetch fresh configuration
+  const config = await fetchProviderConfigFromAPI()
+  
+  // Update cache
+  configCache = {
+    data: config,
+    timestamp: now
+  }
+  
+  return config
+}
+```
+
+**3. Call `fetchProviderConfig` from within `fetchQuote`:**
+```typescript
+fetchQuote: async (request) => {
+  try {
+    // Fetch provider configuration (will use cache if valid)
+    const providerConfig = await fetchProviderConfig()
+    
+    // Use the config to validate the request
+    const { supportedAssets, supportedCountries, paymentMethods } = providerConfig
+    
+    // Validate region
+    if (!supportedCountries.includes(request.regionCode.countryCode)) {
+      return [] // Return empty array for unsupported regions
+    }
+    
+    // Check if assets are supported
+    if (!isAssetSupported(request, supportedAssets)) {
+      return [] // Return empty array for unsupported assets
+    }
+    
+    // Proceed with quote fetching...
+  } catch (error) {
+    // Only throw for actual API/network failures
+    throw error
+  }
+}
+```
+
+#### Key Benefits of This Pattern
+
+1. **Preserves initialization logic**: The same workflow that `getSupportedAssets` performed is maintained
+2. **Efficient caching**: Provider configuration is cached for 2 minutes to reduce API calls
+3. **Automatic refresh**: Cache automatically refreshes when TTL expires
+4. **Internal implementation**: Configuration fetching is an implementation detail, not exposed in the plugin interface
+5. **Consistent state**: All quote requests use the same provider configuration within the cache window
+
+### Example Migration
+
+**Before (Legacy Provider):**
+```typescript
+getSupportedAssets: async (request) => {
+  const { direction, paymentTypes, regionCode } = request
+  
+  // Fetch provider configuration
+  const config = await api.getConfiguration()
+  
+  // Initialize provider state
+  const supportedAssets = config.assets
+  const supportedCountries = config.countries
+  
+  // Validate region
+  validateRegion(pluginId, regionCode, supportedCountries)
+  
+  // Check country restrictions
+  if (regionCode.countryCode === 'GB') {
+    throw new FiatProviderError({ errorType: 'assetUnsupported' })
+  }
+  
+  // Return supported assets
+  return supportedAssets
+},
+
+fetchQuote: async (request) => {
+  // Fetch quotes...
+}
+```
+
+**After (Ramp Plugin with Internal Config):**
+```typescript
+// Internal cache structure
+interface ConfigCache {
+  data: {
+    assets: AssetMap
+    countries: string[]
+    paymentMethods: PaymentMethod[]
+  } | null
+  timestamp: number
+}
+
+const CACHE_TTL_MS = 2 * 60 * 1000
+let configCache: ConfigCache = { data: null, timestamp: 0 }
+
+// Internal function to fetch provider configuration
+async function fetchProviderConfig() {
+  const now = Date.now()
+  
+  // Return cached data if still valid
+  if (configCache.data && (now - configCache.timestamp) < CACHE_TTL_MS) {
+    return configCache.data
+  }
+  
+  // Fetch fresh configuration from API
+  const config = await api.getConfiguration()
+  
+  // Update cache
+  configCache = {
+    data: {
+      assets: config.assets,
+      countries: config.countries,
+      paymentMethods: config.paymentMethods
+    },
+    timestamp: now
+  }
+  
+  return configCache.data
+}
+
+fetchQuote: async (request) => {
+  const { regionCode, direction } = request
+  
+  try {
+    // Get provider configuration (cached or fresh)
+    const config = await fetchProviderConfig()
+    
+    // Validate region using cached config
+    if (!config.countries.includes(regionCode.countryCode)) {
+      return [] // Return empty array for unsupported regions
+    }
+    
+    // Check country restrictions
+    if (regionCode.countryCode === 'GB') {
+      return [] // Return empty array for unsupported countries
+    }
+    
+    // Check if assets are supported using cached config
+    if (!isAssetSupported(request, config.assets)) {
+      return [] // Return empty array for unsupported assets
+    }
+    
+    // Proceed with quote fetching...
+  } catch (error) {
+    // Only throw for actual API/network failures
+    console.error('Failed to fetch provider config:', error)
+    throw error
+  }
+}
+```
+
+### UI Integration
+
+The UI no longer needs a separate hook to check plugin support. Instead, it passes all plugins to `useRampQuotes`:
+
+**Before:**
+```typescript
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 
-const { 
-  data: supportedPlugins = [], 
-  isLoading: isCheckingSupport 
-} = useSupportedPlugins({
-  selectedWallet,
-  selectedCrypto,
-  selectedCryptoCurrencyCode,
-  selectedFiatCurrencyCode,
-  countryCode,
-  stateProvinceCode
+const { data: supportedPlugins } = useSupportedPlugins({ ... })
+const quotes = useRampQuotes({ plugins: supportedPlugins })
+```
+
+**After:**
+```typescript
+const rampPlugins = useSelector(state => state.rampPlugins.plugins)
+const quotes = useRampQuotes({ plugins: rampPlugins })
+```
+
+### Benefits
+
+1. **Simplified Architecture**: Removes one entire method and hook from the system
+2. **Reduced Network Calls**: No separate support check before fetching quotes
+3. **Better Performance**: All plugins check support in parallel during quote fetching
+4. **Cleaner Code**: Less abstraction and indirection
+5. **Easier Plugin Development**: Plugin authors only need to implement one method
+
+## Implementing checkSupport Method
+
+After removing `getSupportedAssets`, ramp plugins now implement a simpler `checkSupport` method that validates whether a specific request is supported without needing payment type information.
+
+### Purpose of checkSupport vs getSupportedAssets
+
+The old `getSupportedAssets` method served two purposes:
+1. Initializing provider configuration (supported assets, countries, payment methods)
+2. Returning a complete asset map for the UI to filter
+
+The new `checkSupport` method has a single, focused purpose:
+- Validate whether a specific buy/sell request is supported by the plugin
+
+Key differences:
+- **No payment types needed**: The request doesn't include payment types
+- **Boolean response**: Simply returns `{ supported: true/false }`
+- **No asset maps**: Doesn't return full asset configuration
+- **Faster checks**: Can return early without fetching full provider config if basic validation fails
+
+### Extracting Validation Logic
+
+When migrating from `getSupportedAssets` to `checkSupport`, extract the validation logic into reusable helper functions that can be shared between `checkSupport` and `fetchQuote`.
+
+### Implementation Pattern
+
+**1. Create internal helper functions for validation:**
+
+```typescript
+// Internal helper to validate the support request
+function validateSupportRequest(request: CheckSupportRequest): void {
+  const { direction, paymentMethods, regionCode } = request
+  
+  // Basic validation
+  if (!['buy', 'sell'].includes(direction)) {
+    throw new Error(`Invalid direction: ${direction}`)
+  }
+  
+  if (!regionCode.countryCode) {
+    throw new Error('Country code is required')
+  }
+  
+  // Validate payment methods if provided
+  if (paymentMethods && paymentMethods.length === 0) {
+    throw new Error('At least one payment method must be specified')
+  }
+}
+
+// Internal helper to check if assets are supported
+async function checkAssetSupport(
+  request: CheckSupportRequest,
+  providerConfig: ProviderConfig
+): Promise<boolean> {
+  const { fiatCurrencyCode, tokenId, direction, regionCode } = request
+  const { supportedAssets, blockedCountries } = providerConfig
+  
+  // Check country restrictions
+  if (blockedCountries.includes(regionCode.countryCode)) {
+    return false
+  }
+  
+  // Check if the asset pair is supported
+  const assetKey = `${direction}:${fiatCurrencyCode}:${tokenId}`
+  return supportedAssets.has(assetKey)
+}
+
+// Internal helper to check payment method support
+function checkPaymentMethodSupport(
+  request: CheckSupportRequest,
+  providerConfig: ProviderConfig
+): boolean {
+  const { paymentMethods, direction } = request
+  
+  // If no payment methods specified, assume all are acceptable
+  if (!paymentMethods || paymentMethods.length === 0) {
+    return true
+  }
+  
+  // Check if at least one requested payment method is supported
+  const supportedMethods = providerConfig.paymentMethods[direction] || []
+  return paymentMethods.some(method => supportedMethods.includes(method))
+}
+```
+
+**2. Implement checkSupport using the helper functions:**
+
+```typescript
+checkSupport: async (request: CheckSupportRequest): Promise<CheckSupportResponse> => {
+  try {
+    // Validate the request structure
+    validateSupportRequest(request)
+    
+    // Quick checks before fetching provider config
+    const { regionCode, fiatCurrencyCode } = request
+    
+    // Example: Early return for known unsupported regions
+    if (UNSUPPORTED_REGIONS.includes(regionCode.countryCode)) {
+      return { supported: false }
+    }
+    
+    // Example: Early return for known unsupported currencies
+    if (!SUPPORTED_FIAT_CODES.includes(fiatCurrencyCode)) {
+      return { supported: false }
+    }
+    
+    // Fetch provider configuration (with caching)
+    const providerConfig = await fetchProviderConfig()
+    
+    // Check asset support
+    const assetSupported = await checkAssetSupport(request, providerConfig)
+    if (!assetSupported) {
+      return { supported: false }
+    }
+    
+    // Check payment method support
+    const paymentSupported = checkPaymentMethodSupport(request, providerConfig)
+    if (!paymentSupported) {
+      return { supported: false }
+    }
+    
+    // All checks passed
+    return { supported: true }
+    
+  } catch (error) {
+    // Important: Return { supported: false } for validation failures
+    // Only throw for actual system errors (network issues, etc.)
+    if (error instanceof ValidationError) {
+      console.warn('Validation failed in checkSupport:', error.message)
+      return { supported: false }
+    }
+    
+    // Rethrow system errors
+    console.error('System error in checkSupport:', error)
+    throw error
+  }
+}
+```
+
+**3. Reuse the same helpers in fetchQuote:**
+
+```typescript
+fetchQuote: async (request: FetchQuoteRequest): Promise<RampQuote[]> => {
+  try {
+    // Use the same validation helper
+    validateSupportRequest(request)
+    
+    // Fetch provider configuration
+    const providerConfig = await fetchProviderConfig()
+    
+    // Use the same support checking helpers
+    const assetSupported = await checkAssetSupport(request, providerConfig)
+    if (!assetSupported) {
+      return [] // Return empty array for unsupported assets
+    }
+    
+    const paymentSupported = checkPaymentMethodSupport(request, providerConfig)
+    if (!paymentSupported) {
+      return [] // Return empty array for unsupported payment methods
+    }
+    
+    // Proceed with quote fetching
+    const quotes = await fetchQuotesFromAPI(request, providerConfig)
+    
+    return quotes.map(quote => ({
+      // Map to RampQuote format
+      ...quote,
+      pluginId,
+      direction: request.direction
+    }))
+    
+  } catch (error) {
+    // Only throw for actual API/network failures
+    if (error instanceof NetworkError || error instanceof APIError) {
+      throw error
+    }
+    
+    // Return empty array for other errors
+    console.warn('Error in fetchQuote:', error)
+    return []
+  }
+}
+```
+
+### Complete Example: Moonpay Plugin
+
+Here's a complete example showing how to implement `checkSupport` with proper error handling and shared validation logic:
+
+```typescript
+import { RampPlugin, CheckSupportRequest, CheckSupportResponse } from '../types'
+
+// Constants
+const SUPPORTED_FIAT_CODES = ['USD', 'EUR', 'GBP', 'CAD', 'AUD']
+const BLOCKED_REGIONS = ['US-NY', 'US-WA'] // New York and Washington state
+const CACHE_TTL_MS = 2 * 60 * 1000
+
+// Cache structure
+interface MoonpayConfig {
+  supportedAssets: Map<string, AssetInfo>
+  blockedCountries: string[]
+  paymentMethods: {
+    buy: PaymentMethodId[]
+    sell: PaymentMethodId[]
+  }
+}
+
+let configCache: { data: MoonpayConfig | null; timestamp: number } = {
+  data: null,
+  timestamp: 0
+}
+
+// Validation error class
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ValidationError'
+  }
+}
+
+// Helper: Validate request structure
+function validateSupportRequest(request: CheckSupportRequest): void {
+  const { direction, regionCode, fiatCurrencyCode, tokenId } = request
+  
+  if (!direction || !['buy', 'sell'].includes(direction)) {
+    throw new ValidationError(`Invalid direction: ${direction}`)
+  }
+  
+  if (!regionCode?.countryCode) {
+    throw new ValidationError('Country code is required')
+  }
+  
+  if (!fiatCurrencyCode) {
+    throw new ValidationError('Fiat currency code is required')
+  }
+  
+  if (!tokenId) {
+    throw new ValidationError('Token ID is required')
+  }
+}
+
+// Helper: Check region support
+function checkRegionSupport(
+  regionCode: { countryCode: string; stateCode?: string },
+  config: MoonpayConfig
+): boolean {
+  // Check blocked countries
+  if (config.blockedCountries.includes(regionCode.countryCode)) {
+    return false
+  }
+  
+  // Check blocked regions (state level)
+  if (regionCode.stateCode) {
+    const regionKey = `${regionCode.countryCode}-${regionCode.stateCode}`
+    if (BLOCKED_REGIONS.includes(regionKey)) {
+      return false
+    }
+  }
+  
+  return true
+}
+
+// Helper: Check asset support
+function checkAssetSupport(
+  request: CheckSupportRequest,
+  config: MoonpayConfig
+): boolean {
+  const { direction, fiatCurrencyCode, tokenId } = request
+  
+  // Quick check for supported fiat
+  if (!SUPPORTED_FIAT_CODES.includes(fiatCurrencyCode)) {
+    return false
+  }
+  
+  // Check in provider's asset map
+  const assetKey = `${direction}:${fiatCurrencyCode}:${tokenId}`
+  return config.supportedAssets.has(assetKey)
+}
+
+// Helper: Check payment method support
+function checkPaymentMethodSupport(
+  request: CheckSupportRequest,
+  config: MoonpayConfig
+): boolean {
+  const { paymentMethods, direction } = request
+  
+  // If no payment methods specified, consider it supported
+  if (!paymentMethods || paymentMethods.length === 0) {
+    return true
+  }
+  
+  // Check if any requested method is supported
+  const supportedMethods = config.paymentMethods[direction] || []
+  return paymentMethods.some(method => supportedMethods.includes(method))
+}
+
+// Helper: Fetch provider configuration with caching
+async function fetchProviderConfig(): Promise<MoonpayConfig> {
+  const now = Date.now()
+  
+  // Return cached data if still valid
+  if (configCache.data && (now - configCache.timestamp) < CACHE_TTL_MS) {
+    return configCache.data
+  }
+  
+  // Fetch fresh configuration
+  const response = await moonpayApi.getConfiguration()
+  
+  // Transform API response to internal format
+  const config: MoonpayConfig = {
+    supportedAssets: new Map(
+      response.currencies.map(c => [
+        `${c.type}:${c.fiatCode}:${c.cryptoCode}`,
+        c
+      ])
+    ),
+    blockedCountries: response.blockedCountries,
+    paymentMethods: {
+      buy: response.buyMethods,
+      sell: response.sellMethods
+    }
+  }
+  
+  // Update cache
+  configCache = { data: config, timestamp: now }
+  
+  return config
+}
+
+// Main plugin implementation
+export const moonpayRampPlugin: RampPlugin = {
+  pluginId: 'moonpay',
+  
+  checkSupport: async (request: CheckSupportRequest): Promise<CheckSupportResponse> => {
+    try {
+      // Step 1: Validate request structure
+      validateSupportRequest(request)
+      
+      // Step 2: Quick local checks (no API calls)
+      if (!SUPPORTED_FIAT_CODES.includes(request.fiatCurrencyCode)) {
+        return { supported: false }
+      }
+      
+      // Step 3: Fetch provider configuration
+      const config = await fetchProviderConfig()
+      
+      // Step 4: Check region support
+      if (!checkRegionSupport(request.regionCode, config)) {
+        return { supported: false }
+      }
+      
+      // Step 5: Check asset support
+      if (!checkAssetSupport(request, config)) {
+        return { supported: false }
+      }
+      
+      // Step 6: Check payment method support
+      if (!checkPaymentMethodSupport(request, config)) {
+        return { supported: false }
+      }
+      
+      // All checks passed
+      return { supported: true }
+      
+    } catch (error) {
+      // Validation errors = not supported
+      if (error instanceof ValidationError) {
+        console.warn('checkSupport validation failed:', error.message)
+        return { supported: false }
+      }
+      
+      // Network/API errors should be thrown
+      console.error('checkSupport system error:', error)
+      throw error
+    }
+  },
+  
+  fetchQuote: async (request: FetchQuoteRequest): Promise<RampQuote[]> => {
+    try {
+      // Reuse the same validation
+      validateSupportRequest(request)
+      
+      // Reuse the same config fetching
+      const config = await fetchProviderConfig()
+      
+      // Reuse the same support checks
+      if (!checkRegionSupport(request.regionCode, config)) {
+        return []
+      }
+      
+      if (!checkAssetSupport(request, config)) {
+        return []
+      }
+      
+      if (!checkPaymentMethodSupport(request, config)) {
+        return []
+      }
+      
+      // Fetch actual quotes
+      const apiQuotes = await moonpayApi.getQuotes({
+        baseCurrency: request.fiatCurrencyCode,
+        quoteCurrency: request.tokenId,
+        baseCurrencyAmount: request.fiatAmount,
+        paymentMethod: request.paymentMethods?.[0] || 'card',
+        areFeesIncluded: true
+      })
+      
+      // Transform to RampQuote format
+      return apiQuotes.map(quote => ({
+        pluginId: 'moonpay',
+        direction: request.direction,
+        fiatAmount: quote.baseCurrencyAmount,
+        cryptoAmount: quote.quoteCurrencyAmount,
+        fiatCurrencyCode: request.fiatCurrencyCode,
+        cryptoCurrencyCode: request.tokenId,
+        paymentMethodId: quote.paymentMethod,
+        partnerFee: quote.feeAmount,
+        totalFee: quote.totalFeeAmount,
+        rate: quote.quoteCurrencyPrice,
+        expirationDate: new Date(quote.expiresAt)
+      }))
+      
+    } catch (error) {
+      // API errors can be thrown from fetchQuote
+      if (error instanceof MoonpayAPIError) {
+        throw error
+      }
+      
+      // Other errors return empty array
+      console.warn('fetchQuote error:', error)
+      return []
+    }
+  }
+}
+```
+
+### Key Implementation Guidelines
+
+1. **Return { supported: false } instead of throwing**: When validation fails or assets aren't supported, return `{ supported: false }` rather than throwing an error
+2. **Share validation logic**: Extract common validation into helper functions used by both `checkSupport` and `fetchQuote`
+3. **Early returns**: Perform quick local checks before making API calls
+4. **Cache provider config**: Reuse the cached provider configuration pattern from `fetchQuote`
+5. **Proper error handling**: Only throw for system errors (network failures, API errors)
+6. **Consistent behavior**: Ensure `checkSupport` and `fetchQuote` use identical validation logic
+
+## UI Integration
+
+The UI now uses the `useSupportedPlugins` hook which calls `checkSupport` on all plugins to filter for supported ones:
+
+**Current flow:**
+```typescript
+import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
+
+// The hook internally calls checkSupport on each plugin
+const { data: supportedPlugins } = useSupportedPlugins({
+  direction: 'buy',
+  regionCode: { countryCode: 'US', stateCode: 'CA' },
+  fiatCurrencyCode: 'USD',
+  tokenId: 'ethereum:null',
+  paymentMethods: ['credit', 'bank']
 })
 
-// Only query supported plugins for quotes
-const quotePromises = supportedPlugins.map(async (plugin) => {
-  return await plugin.fetchQuote(rampQuoteRequest)
+// Only supported plugins are passed to quote fetching
+const quotes = useRampQuotes({ 
+  plugins: supportedPlugins,
+  request: quoteRequest 
 })
 ```
 
 The `useSupportedPlugins` hook:
-- Checks all payment types for comprehensive support
-- Caches results for 5 minutes to avoid excessive API calls
-- Filters plugins based on crypto/fiat/region support
-- Returns loading state for UI feedback
+- Calls `checkSupport` on all available plugins in parallel
+- Filters out plugins that return `{ supported: false }`
+- Only passes supported plugins to the quote fetching stage
+- Provides better user experience by not showing unsupported providers
 
 ## Benefits
 

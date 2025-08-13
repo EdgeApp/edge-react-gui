@@ -5,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 // TradeOptionSelectScene - Updated layout for design requirements
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
+import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { lstrings } from '../../locales/strings'
 import type {
   RampQuoteRequest,
@@ -44,6 +45,32 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   const rampPlugins = useSelector(state => state.rampPlugins.plugins)
   const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
 
+  // Use supported plugins hook only if no precomputed quotes
+  const { supportedPlugins } = useSupportedPlugins({
+    selectedWallet: rampQuoteRequest.wallet,
+    selectedCrypto: rampQuoteRequest.wallet
+      ? {
+          pluginId: rampQuoteRequest.pluginId,
+          tokenId: rampQuoteRequest.tokenId
+        }
+      : undefined,
+    selectedFiatCurrencyCode: rampQuoteRequest.fiatCurrencyCode.replace(
+      'iso:',
+      ''
+    ),
+    countryCode: rampQuoteRequest.regionCode?.countryCode,
+    stateProvinceCode: rampQuoteRequest.regionCode?.stateProvinceCode,
+    plugins: rampPlugins,
+    direction: rampQuoteRequest.direction
+  })
+
+  // Use precomputed quotes if available, otherwise use supported plugins
+  const pluginsToUse = precomputedQuotes
+    ? rampPlugins
+    : Object.fromEntries(
+        supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+      )
+
   // Use the new hook with precomputed quotes
   const {
     quotes: allQuotes,
@@ -52,7 +79,7 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
     errors: failedQuotes
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: rampPlugins,
+    plugins: pluginsToUse,
     precomputedQuotes
   })
 

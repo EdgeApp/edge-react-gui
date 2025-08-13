@@ -9,23 +9,28 @@ import type {
   FiatPluginUtils
 } from '../gui/fiatPluginTypes'
 
-// Asset discovery types
-export interface RampSupportedAssetsRequest {
-  direction: 'buy' | 'sell'
-  paymentTypes: FiatPaymentType[]
-  regionCode: FiatPluginRegionCode
-}
-
+// Token support type (kept for internal plugin use if needed)
 export interface ProviderToken {
   tokenId: EdgeTokenId
   otherInfo?: unknown
 }
 
-export interface RampAssetMap {
-  providerId: string
-  crypto: Record<string, ProviderToken[]>
-  fiat: Record<string, boolean | any>
-  requiredAmountType?: 'fiat' | 'crypto'
+// Support checking types
+export interface RampCheckSupportRequest {
+  direction: 'buy' | 'sell'
+  regionCode: FiatPluginRegionCode
+  fiatAsset: {
+    // ISO currency code (without 'iso:' prefix)
+    currencyCode: string
+  }
+  cryptoAsset: {
+    pluginId: string
+    tokenId: EdgeTokenId
+  }
+}
+
+export interface RampSupportResult {
+  supported: boolean
 }
 
 export interface RampQuoteRequest {
@@ -103,9 +108,10 @@ export interface RampPlugin {
   readonly pluginId: string
   readonly rampInfo: RampInfo
 
-  readonly getSupportedAssets: (
-    request: RampSupportedAssetsRequest
-  ) => Promise<RampAssetMap>
+  /** Used to check if a plugin supports certain direction, region, and asset pair */
+  readonly checkSupport: (
+    request: RampCheckSupportRequest
+  ) => Promise<RampSupportResult>
 
   readonly fetchQuote: (
     request: RampQuoteRequest,
