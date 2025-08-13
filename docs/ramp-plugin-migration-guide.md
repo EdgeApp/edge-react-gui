@@ -394,6 +394,63 @@ if (deniedPermission) {
 
 Note the inverted boolean logic: `!success` becomes `deniedPermission`.
 
+## New Features in Ramp Plugin Architecture
+
+### Settlement Range
+
+The new ramp plugin architecture introduces a `settlementRange` field in quote results that provides users with transparency about transaction completion times. This feature was not available in the legacy provider architecture.
+
+#### Interface
+
+The `settlementRange` field uses the following structure:
+
+```typescript
+interface SettlementRange {
+  min: {
+    value: number
+    unit: 'minutes' | 'hours' | 'days'
+  }
+  max: {
+    value: number
+    unit: 'minutes' | 'hours' | 'days'
+  }
+}
+```
+
+#### Purpose
+
+This field helps users understand when they can expect their transaction to complete, improving the user experience by setting clear expectations for settlement times.
+
+#### Example Implementation
+
+Here's an example of how to include settlement range in your ramp plugin's quote response:
+
+```typescript
+// Example from Simplex plugin
+const quote: RampQuote = {
+  pluginId: 'simplex',
+  direction: 'buy',
+  fiatAmount: 100,
+  cryptoAmount: 0.0025,
+  // ... other quote fields
+  settlementRange: {
+    min: { value: 10, unit: 'minutes' },
+    max: { value: 60, unit: 'minutes' }
+  }
+}
+```
+
+This example indicates that the transaction will typically complete between 10 and 60 minutes.
+
+#### Migration Note
+
+When migrating from the legacy provider architecture, you'll need to:
+1. Add the `settlementRange` field to your quote responses
+2. Map provider-specific settlement time data to the standardized format
+3. Use reasonable defaults if the provider doesn't supply exact settlement times
+
+The settlement range feature enhances user trust and reduces support inquiries by providing upfront visibility into transaction processing times.
+
 ## Replacing getSupportedAssets with checkSupport
 
 The ramp plugin architecture has been simplified by replacing the `getSupportedAssets` method with a simpler `checkSupport` method. The new `checkSupport` method serves the same purpose of validating whether a plugin supports a specific request, but with a simpler interface.
