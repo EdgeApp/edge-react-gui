@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 // TradeOptionSelectScene - Updated layout for design requirements
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { lstrings } from '../../locales/strings'
 import type {
   RampQuoteRequest,
@@ -13,11 +13,11 @@ import type {
 } from '../../plugins/ramps/rampPluginTypes'
 import { useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps } from '../../types/routerTypes'
-import type { Result } from '../../types/types'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
 import { getPaymentTypeDisplayName } from '../../util/paymentTypeUtils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
@@ -34,61 +34,24 @@ export interface RampSelectOptionParams {
 
 interface Props extends BuyTabSceneProps<'rampSelectOption'> {}
 
-// Define error type for failed quotes
-interface QuoteError {
-  pluginId: string
-  pluginDisplayName: string
-  error: unknown
-}
-
 export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   const { route } = props
   const { rampQuoteRequest, quotes: precomputedQuotes } = route.params
 
+  const theme = useTheme()
   const rampPlugins = useSelector(state => state.rampPlugins.plugins)
   const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
 
-  // Use TanStack Query to fetch quotes only if not provided
-  const { data: quoteResults = [], isLoading: isLoadingQuotes } = useQuery<
-    Array<Result<RampQuoteResult[], QuoteError>>
-  >({
-    queryKey: ['rampQuotes', rampQuoteRequest],
-    queryFn: async () => {
-      // Skip fetching if we already have quotes
-      if (precomputedQuotes && precomputedQuotes.length > 0) {
-        return []
-      }
-
-      if (Object.keys(rampPlugins).length === 0) {
-        return []
-      }
-
-      const quotePromises = Object.values(rampPlugins).map(
-        async (plugin): Promise<Result<RampQuoteResult[], QuoteError>> => {
-          try {
-            const quotes = await plugin.fetchQuote(rampQuoteRequest)
-            return { ok: true, value: quotes }
-          } catch (error) {
-            console.warn(`Failed to get quote from ${plugin.pluginId}:`, error)
-            return {
-              ok: false,
-              error: {
-                pluginId: plugin.pluginId,
-                pluginDisplayName: plugin.rampInfo.pluginDisplayName,
-                error
-              }
-            }
-          }
-        }
-      )
-
-      return await Promise.all(quotePromises)
-    },
-    refetchOnMount: 'always',
-    refetchInterval: 60000,
-    enabled: !precomputedQuotes || precomputedQuotes.length === 0,
-    staleTime: 30000, // Consider data stale after 30 seconds
-    gcTime: 300000 // Keep in cache for 5 minutes
+  // Use the new hook with precomputed quotes
+  const {
+    quotes: allQuotes,
+    isLoading: isLoadingQuotes,
+    isFetching: isFetchingQuotes,
+    errors: failedQuotes
+  } = useRampQuotes({
+    rampQuoteRequest,
+    plugins: rampPlugins,
+    precomputedQuotes
   })
 
   const handleQuotePress = async (quote: RampQuoteResult) => {
@@ -100,24 +63,6 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
       console.error('Failed to approve quote:', error)
     }
   }
-
-  // Use precomputed quotes if available, otherwise use fetched quotes
-  const allQuotes: RampQuoteResult[] = React.useMemo(() => {
-    if (precomputedQuotes && precomputedQuotes.length > 0) {
-      return precomputedQuotes
-    }
-
-    return quoteResults
-      .filter(
-        (result): result is { ok: true; value: RampQuoteResult[] } => result.ok
-      )
-      .flatMap(result => result.value)
-      .sort((a, b) => {
-        const rateA = parseFloat(a.fiatAmount) / parseFloat(a.cryptoAmount)
-        const rateB = parseFloat(b.fiatAmount) / parseFloat(b.cryptoAmount)
-        return rateA - rateB
-      })
-  }, [precomputedQuotes, quoteResults])
 
   // Get the best quote overall
   const bestQuoteOverall = allQuotes[0]
@@ -133,7 +78,7 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
     })
 
     // Sort quotes within each payment type group
-    grouped.forEach((quotes, paymentType) => {
+    grouped.forEach(quotes => {
       quotes.sort((a, b) => {
         const rateA = parseFloat(a.fiatAmount) / parseFloat(a.cryptoAmount)
         const rateB = parseFloat(b.fiatAmount) / parseFloat(b.cryptoAmount)
@@ -144,18 +89,24 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
     return grouped
   }, [allQuotes])
 
-  // Get failed quotes for error display
-  const failedQuotes = quoteResults.filter(
-    (result): result is { ok: false; error: QuoteError } => !result.ok
-  )
+  // Only show loading state if we have no quotes to display
+  const showLoadingState =
+    isPluginsLoading || (isLoadingQuotes && allQuotes.length === 0)
 
   return (
     <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={lstrings.trade_option_buy_title}>
         <SectionHeader
           leftTitle={lstrings.trade_option_select_payment_method}
+          rightNode={
+            isFetchingQuotes ? (
+              <EdgeAnim enter={{ type: 'fadeIn', delay: 200 }}>
+                <ActivityIndicator size="small" color={theme.primaryText} />
+              </EdgeAnim>
+            ) : undefined
+          }
         />
-        {isPluginsLoading || isLoadingQuotes ? (
+        {showLoadingState ? (
           <>
             <ShimmerCard>
               <Shimmer />
@@ -192,19 +143,19 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
                 />
               )
             )}
-            {failedQuotes.map(result => {
+            {failedQuotes.map(error => {
               const errorMessage =
-                result.error.error instanceof Error
-                  ? result.error.error.message
-                  : String(result.error.error)
+                error.error instanceof Error
+                  ? error.error.message
+                  : String(error.error)
 
               return (
                 <AlertCardUi4
-                  key={`error-${result.error.pluginId}`}
+                  key={`error-${error.pluginId}`}
                   type="error"
                   title={sprintf(
                     lstrings.trade_option_provider_failed_s,
-                    result.error.pluginDisplayName
+                    error.pluginDisplayName
                   )}
                   body={errorMessage}
                   marginRem={[0.5, 0.5]}
@@ -247,9 +198,8 @@ const QuoteResult: React.FC<{
   const icon = paymentTypeIcon ?? { uri: selectedQuote.partnerIcon }
 
   // Determine custom title rendering
-  const paymentType = selectedQuote.paymentType
-  const customTitleKey = paymentTypeToCustomTitleKey[paymentType]
-  const defaultTitle = getPaymentTypeDisplayName(paymentType)
+  const customTitleKey = paymentTypeToCustomTitleKey[selectedQuote.paymentType]
+  const defaultTitle = getPaymentTypeDisplayName(selectedQuote.paymentType)
 
   // Render custom title based on payment type
   let titleComponent: React.ReactNode

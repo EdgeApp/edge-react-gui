@@ -836,6 +836,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             direction,
             regionCode,
             paymentType,
+            expirationDate: new Date(Date.now() + 60000),
             settlementRange: {
               min: { value: 5, unit: 'minutes' },
               max: { value: 24, unit: 'hours' }

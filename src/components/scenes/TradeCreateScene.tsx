@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { div, mul } from 'biggystring'
 import * as React from 'react'
 import { useState } from 'react'
@@ -11,16 +10,14 @@ import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import type {
-  RampQuoteRequest,
-  RampQuoteResult
-} from '../../plugins/ramps/rampPluginTypes'
+import type { RampQuoteRequest } from '../../plugins/ramps/rampPluginTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
-import type { GuiFiatType, NotOK, Ok, Result } from '../../types/types'
+import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { DropDownInputButton } from '../buttons/DropDownInputButton'
@@ -47,12 +44,6 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 export interface TradeCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
-}
-
-interface QuoteError {
-  pluginId: string
-  pluginDisplayName: string
-  error: unknown
 }
 
 interface Props extends BuyTabSceneProps<'pluginListBuy'> {}
@@ -206,66 +197,15 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     stateProvinceCode
   ])
 
-  // Fetch quotes when rampQuoteRequest is valid
-  const { data: quoteResults = [], isLoading: isLoadingQuotes } = useQuery<
-    Array<Result<RampQuoteResult[], QuoteError>>
-  >({
-    queryKey: ['rampQuotes', rampQuoteRequest],
-    queryFn: async () => {
-      if (!rampQuoteRequest || Object.keys(rampPlugins).length === 0) {
-        return []
-      }
-
-      const quotePromises = Object.values(rampPlugins).map(
-        async (plugin): Promise<Result<RampQuoteResult[], QuoteError>> => {
-          try {
-            const quotes = await plugin.fetchQuote(rampQuoteRequest)
-            return { ok: true, value: quotes }
-          } catch (error) {
-            return {
-              ok: false,
-              error: {
-                pluginId: plugin.pluginId,
-                pluginDisplayName: plugin.rampInfo.pluginDisplayName,
-                error
-              }
-            }
-          }
-        }
-      )
-
-      return await Promise.all(quotePromises)
-    },
-    enabled: !!rampQuoteRequest,
-    staleTime: 30000,
-    gcTime: 300000
+  // Fetch quotes using the custom hook
+  const {
+    quotes: sortedQuotes,
+    isLoading: isLoadingQuotes,
+    errors: quoteErrors
+  } = useRampQuotes({
+    rampQuoteRequest,
+    plugins: rampPlugins
   })
-
-  // Separate successful and unsuccessful quotes
-  const successfulQuotes = React.useMemo(() => {
-    return quoteResults.filter(
-      (result): result is Ok<RampQuoteResult[]> => result.ok
-    )
-  }, [quoteResults])
-  const unsuccessfulQuotes = React.useMemo(() => {
-    return quoteResults.filter(
-      (result): result is NotOK<QuoteError> => !result.ok
-    )
-  }, [quoteResults])
-
-  // Sort all successful quotes by best rate
-  const sortedQuotes = React.useMemo(() => {
-    const allQuotes: RampQuoteResult[] = successfulQuotes.flatMap(
-      result => result.value
-    )
-
-    // Sort by best rate (lowest fiat amount for same crypto amount)
-    return allQuotes.sort((a, b) => {
-      const rateA = parseFloat(a.fiatAmount) / parseFloat(a.cryptoAmount)
-      const rateB = parseFloat(b.fiatAmount) / parseFloat(b.cryptoAmount)
-      return rateA - rateB
-    })
-  }, [successfulQuotes])
 
   // Get the best quote
   const bestQuote = sortedQuotes[0]
@@ -593,8 +533,8 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
 
         {/* Error Alert */}
         {!isLoadingQuotes &&
-        unsuccessfulQuotes.length > 0 &&
-        successfulQuotes.length === 0 ? (
+        quoteErrors.length > 0 &&
+        sortedQuotes.length === 0 ? (
           <AlertCardUi4
             type="error"
             title={lstrings.trade_buy_unavailable_title}
@@ -616,7 +556,8 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
               selectedCryptoCurrencyCode == null ||
               userInput === '' ||
               lastUsedInput === null ||
-              (!isLoadingQuotes && sortedQuotes.length === 0)
+              isLoadingQuotes ||
+              sortedQuotes.length === 0
           }}
         />
       </SceneContainer>
