@@ -166,7 +166,7 @@
     "react-native-webview": "^13.15.0",
     "react-native-wheel-picker-android": "^2.0.6",
     "react-native-zano": "^0.2.1",
-    "react-native-zcash": "^0.9.9",
+    "react-native-zcash": "^0.9.10",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.3.0",
