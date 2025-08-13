@@ -23,6 +23,8 @@ interface Props {
   }
   /** Content rendered on the right side of the card in the title row. */
   renderRight?: () => React.ReactNode
+  /** Whether the provider button should be disabled */
+  disableProviderButton?: boolean
 
   // Events:
   onPress: () => Promise<void> | void
@@ -59,6 +61,7 @@ export const PaymentOptionCard = (props: Props): React.JSX.Element => {
               }
               label={props.partner?.displayName ?? ''}
               onPress={props.onProviderPress}
+              disabled={props.disableProviderButton}
             />
           </PoweredByRow>
         )}

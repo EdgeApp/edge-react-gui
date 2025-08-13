@@ -10,17 +10,20 @@ export interface PillButtonProps {
   label: string
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
+  disabled?: boolean
 }
 
 export const PillButton = (props: PillButtonProps): React.ReactElement => {
-  const { label, onPress, icon } = props
+  const { label, onPress, icon, disabled = false } = props
 
   const theme = useTheme()
 
   return (
-    <EdgeTouchableOpacity onPress={onPress}>
+    <EdgeTouchableOpacity onPress={onPress} disabled={disabled}>
       <Gradient
-        colors={theme.secondaryButton}
+        colors={
+          disabled ? theme.secondaryButtonDisabled : theme.secondaryButton
+        }
         end={theme.secondaryButtonColorEnd}
         start={theme.secondaryButtonColorStart}
       >

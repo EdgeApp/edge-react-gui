@@ -23,7 +23,9 @@ import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
 import { BestRateBadge } from '../icons/BestRateBadge'
 import { SceneContainer } from '../layout/SceneContainer'
+import { RadioListModal } from '../modals/RadioListModal'
 import { Shimmer } from '../progress-indicators/Shimmer'
+import { Airship } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -227,10 +229,42 @@ const QuoteResult: React.FC<{
       return
     }
 
-    // TODO: Show modal to select provider
-    // For now, cycle through providers
-    const nextIndex = (selectedQuoteIndex + 1) % quotes.length
-    setSelectedQuoteIndex(nextIndex)
+    // Create items array for the RadioListModal
+    const items = quotes.map(quote => {
+      // Format the crypto amount for each provider
+      // const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
+      const amount =
+        quote.direction === 'buy' ? quote.fiatAmount : quote.cryptoAmount
+      const currencyCode =
+        quote.direction === 'buy'
+          ? quote.fiatCurrencyCode.replace('iso:', '')
+          : quote.displayCurrencyCode
+      const text = `(${amount} ${currencyCode})`
+
+      return {
+        name: quote.pluginDisplayName,
+        icon: quote.partnerIcon, // Already full path
+        text
+      }
+    })
+
+    const selectedName = await Airship.show<string | undefined>(bridge => (
+      <RadioListModal
+        bridge={bridge}
+        title={lstrings.trade_option_choose_provider}
+        items={items}
+        selected={selectedQuote.pluginDisplayName}
+      />
+    ))
+
+    if (selectedName != null) {
+      const selectedIndex = quotes.findIndex(
+        quote => quote.pluginDisplayName === selectedName
+      )
+      if (selectedIndex !== -1) {
+        setSelectedQuoteIndex(selectedIndex)
+      }
+    }
   }
 
   return (
@@ -251,6 +285,7 @@ const QuoteResult: React.FC<{
         await onPress(selectedQuote)
       }}
       onProviderPress={handleProviderPress}
+      disableProviderButton={quotes.length <= 1}
     />
   )
 }
