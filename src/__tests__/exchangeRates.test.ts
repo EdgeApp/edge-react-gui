@@ -36,7 +36,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`31616 === ${Math.floor(v)}`)
-      expect(31616).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(31616)
     })
   )
 
@@ -48,7 +48,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1814 === ${Math.floor(v)}`)
-      expect(1814).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1814)
     })
   )
 
@@ -60,7 +60,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`184 === ${Math.floor(v)}`)
-      expect(184).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(184)
     })
   )
 
@@ -72,7 +72,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1553326)
     })
   )
 
@@ -84,7 +84,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 
@@ -98,7 +98,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1553326)
     })
   )
 
@@ -110,7 +110,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 
@@ -124,7 +124,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1814 === ${Math.floor(v)}`)
-      expect(1814).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1814)
     })
   )
 
@@ -136,7 +136,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`184 === ${Math.floor(v)}`)
-      expect(184).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(184)
     })
   )
 
@@ -148,7 +148,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1553326)
     })
   )
 
@@ -160,7 +160,7 @@ it('get bulk rates', async () => {
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 
