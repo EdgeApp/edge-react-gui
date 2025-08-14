@@ -20,6 +20,7 @@ import {
   executePlugin,
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
+import { rampDeeplinkManager } from '../plugins/ramps/rampDeeplinkHandler'
 import { config } from '../theme/appConfig'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -156,7 +157,13 @@ async function handleLink(
     }
 
     case 'fiatProvider': {
-      fiatProviderDeeplinkHandler(link)
+      // Try ramp deeplink handler first
+      try {
+        rampDeeplinkManager.handleDeeplink(link)
+      } catch {
+        // Fall back to legacy fiat plugin handler
+        fiatProviderDeeplinkHandler(link)
+      }
       break
     }
 

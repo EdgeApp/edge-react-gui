@@ -359,3 +359,117 @@ export const closestRateForTimestamp = (
   }
   return bestRate
 }
+
+/**
+ * Fetches exchange rates for a specific fiat currency on demand.
+ * This is used when the user wants to view rates in a currency other than their default.
+ */
+export function fetchExchangeRatesForFiat(
+  fiatCurrencyCode: string
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    const { currencyWallets } = account
+    const now = Date.now()
+    const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
+
+    // Build asset pairs for the requested fiat currency
+    const assetPairs: AssetPair[] = []
+    const pairExpiration = now + ONE_MONTH
+    const rateExpiration = now + ONE_DAY
+
+    // If the fiat isn't dollars, get its price relative to USD
+    if (fiatCurrencyCode !== 'iso:USD') {
+      assetPairs.push({
+        currency_pair: `iso:USD_${fiatCurrencyCode}`,
+        date: undefined,
+        expiration: pairExpiration
+      })
+    }
+
+    // Get rates for all wallet assets
+    for (const walletId of Object.keys(currencyWallets)) {
+      const wallet = currencyWallets[walletId]
+      const { currencyCode } = wallet.currencyInfo
+
+      // Get the primary asset's prices for today
+      assetPairs.push({
+        currency_pair: `${currencyCode}_${fiatCurrencyCode}`,
+        date: undefined,
+        expiration: pairExpiration
+      })
+
+      // Do the same for any tokens
+      for (const tokenId of wallet.enabledTokenIds) {
+        const token = wallet.currencyConfig.allTokens[tokenId]
+        if (token == null) continue
+        if (token.currencyCode === currencyCode) continue
+        assetPairs.push({
+          currency_pair: `${token.currencyCode}_${fiatCurrencyCode}`,
+          date: undefined,
+          expiration: pairExpiration
+        })
+      }
+    }
+
+    // Fetch rates from server in batches
+    const newRates: ExchangeRateCache = {}
+    for (let i = 0; i < assetPairs.length; i += RATES_SERVER_MAX_QUERY_SIZE) {
+      const query = assetPairs.slice(i, i + RATES_SERVER_MAX_QUERY_SIZE)
+
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: query })
+      }
+
+      try {
+        const response = await fetchRates('v2/exchangeRates', options)
+        if (response.ok) {
+          const json = await response.json()
+          const cleanedRates = asRatesResponse(json)
+          for (const rate of cleanedRates.data) {
+            const { currency_pair: currencyPair, exchangeRate, date } = rate
+            const isHistorical = now - new Date(date).valueOf() > HOUR_MS
+            const key = isHistorical ? `${currencyPair}_${date}` : currencyPair
+
+            if (exchangeRate != null) {
+              newRates[key] = {
+                expiration: rateExpiration,
+                rate: parseFloat(exchangeRate)
+              }
+            }
+          }
+        }
+      } catch (error: unknown) {
+        console.log(
+          `fetchExchangeRatesForFiat error querying rates server ${String(
+            error
+          )}`
+        )
+      }
+    }
+
+    // Merge with existing rates
+    const mergedRates = { ...exchangeRateCache?.rates, ...newRates }
+    const { exchangeRates, exchangeRatesMap } = buildGuiRates(
+      mergedRates,
+      yesterday
+    )
+
+    // Update Redux state
+    dispatch({
+      type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
+      data: {
+        exchangeRates,
+        exchangeRatesMap
+      }
+    })
+
+    // Update the in-memory cache if it exists
+    if (exchangeRateCache != null) {
+      exchangeRateCache.rates = mergedRates
+    }
+  }
+}
