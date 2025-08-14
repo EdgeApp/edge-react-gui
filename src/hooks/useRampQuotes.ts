@@ -77,7 +77,10 @@ export const useRampQuotes = ({
 
       // Determine which plugins need fresh quotes
       const pluginsNeedingRefresh = new Set<string>()
-      const validPrevQuotes = new Map<string, RampQuoteResult[]>()
+      const validPrevResults = new Map<
+        string,
+        Result<RampQuoteResult[], QuoteError>
+      >()
 
       // Check previous results for expired quotes
       prevResults.forEach(result => {
@@ -95,8 +98,14 @@ export const useRampQuotes = ({
           if (hasExpiredQuotes || validQuotes.length === 0) {
             pluginsNeedingRefresh.add(pluginId)
           } else {
-            validPrevQuotes.set(pluginId, validQuotes)
+            // Store the complete successful result with only valid quotes
+            validPrevResults.set(pluginId, { ok: true, value: validQuotes })
           }
+        } else {
+          // Preserve error results as-is
+          const pluginId = result.error.pluginId
+          validPrevResults.set(pluginId, result)
+          // Don't add to pluginsNeedingRefresh - we keep the error
         }
       })
 
@@ -176,10 +185,10 @@ export const useRampQuotes = ({
         mergedResults.push(result)
       })
 
-      // Add valid previous results for plugins we didn't refresh
-      validPrevQuotes.forEach((quotes, pluginId) => {
+      // Add valid previous results (including errors) for plugins we didn't refresh
+      validPrevResults.forEach((result, pluginId) => {
         if (!pluginsNeedingRefresh.has(pluginId)) {
-          mergedResults.push({ ok: true, value: quotes })
+          mergedResults.push(result)
         }
       })
 
