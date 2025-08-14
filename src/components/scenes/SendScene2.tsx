@@ -136,7 +136,10 @@ export interface SendScene2Params {
   infoTiles?: Array<{ label: string; value: string }>
   fioPendingRequest?: FioRequest
   onBack?: () => void
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  onDone?: (
+    error: Error | null,
+    edgeTransaction?: EdgeTransaction
+  ) => void | Promise<void>
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (
     edgeTransaction: EdgeTransaction
@@ -852,7 +855,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         maxLength = 2 * memoOption.maxBytes
       }
 
-      const handleMemo = async () => {
+      const handleMemo = async (): Promise<void> => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
@@ -1234,7 +1237,8 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         if (onDone != null) {
           navigation.pop()
-          onDone(null, broadcastedTx)
+          const p = onDone(null, broadcastedTx)
+          if (p != null) p.catch(showError)
         } else {
           navigation.replace('transactionDetails', {
             edgeTransaction: broadcastedTx,
@@ -1497,7 +1501,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     processingAmountChanged ||
     error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
-      !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
+      SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx === false)
   ) {
     disableSlider = true
   } else if (

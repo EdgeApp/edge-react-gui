@@ -291,7 +291,7 @@ export default [
       'src/components/scenes/RequestScene.tsx',
       'src/components/scenes/ReviewTriggerTestScene.tsx',
       'src/components/scenes/SecurityAlertsScene.tsx',
-      'src/components/scenes/SendScene2.tsx',
+
       'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',

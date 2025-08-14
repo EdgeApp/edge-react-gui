@@ -10,6 +10,7 @@ import {
   type Cleaner
 } from 'cleaners'
 
+import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
 import { asInitOptions as asPaybisRampInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
 
@@ -143,9 +144,11 @@ export const asEnvConfig = asObject({
   ),
   RAMP_PLUGIN_INITS: asOptional(
     asObject<Record<string, unknown>>({
+      moonpay: asOptional(asMoonpayInitOptions),
       paybis: asOptional(asPaybisRampInitOptions)
     }).withRest,
     () => ({
+      moonpay: undefined,
       paybis: undefined
     })
   ),

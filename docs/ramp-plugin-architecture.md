@@ -53,9 +53,12 @@ export interface RampPlugin {
 
 #### fetchQuote
 - **Purpose**: Fetch actual quotes for supported pairs
-- **Returns**: Array of quotes, or empty array `[]` if no quotes available
+- **Returns**: Array of quotes, or empty array `[]` only when provider supports the request but has no quotes available at the moment
 - **Note**: Only called after `checkSupport` returns `true`
-- **Throws**: Only for actual API failures, not for "no quotes available"
+- **Throws**: 
+  - `FiatProviderError` for unsupported regions, payment methods, or assets (maintains consistency with legacy `getSupportedAssets` behavior)
+  - Other errors for actual API failures or network issues
+  - Never throw for "temporarily no quotes available" - return empty array instead
 
 ## Implementation Guide
 
@@ -113,13 +116,27 @@ export const myRampPlugin: RampPluginFactory = (config: RampPluginConfig) => {
       
       try {
         const quotes = await fetchFromProvider(request)
-        return quotes.map(quote => convertToRampQuoteResult(quote))
-      } catch (error) {
-        // Return empty array for "no quotes" scenarios
-        if (isNoQuotesError(error)) {
+        
+        // If provider doesn't support this request, throw FiatProviderError
+        // This should be rare since checkSupport already validated
+        if (isUnsupportedRegion(regionCode)) {
+          throw new FiatProviderError('Unsupported region: ' + regionCode)
+        }
+        if (isUnsupportedPaymentMethod(paymentMethod)) {
+          throw new FiatProviderError('Unsupported payment method: ' + paymentMethod)
+        }
+        if (isUnsupportedAsset(currencyPluginId, tokenId)) {
+          throw new FiatProviderError('Unsupported asset: ' + currencyPluginId + '/' + tokenId)
+        }
+        
+        // Return empty array only when provider supports but has no quotes right now
+        if (quotes.length === 0) {
           return []
         }
-        // Only throw for actual API failures
+        
+        return quotes.map(quote => convertToRampQuoteResult(quote))
+      } catch (error) {
+        // Re-throw all errors (including FiatProviderError)
         console.error(`Failed to fetch quotes: ${error}`)
         throw error
       }
@@ -190,17 +207,18 @@ The hook handles:
 
 The hook handles:
 - Parallel quote fetching from supported plugins only
-- Filtering out empty results (no quotes available)
-- Error handling and retry logic
+- Filtering out empty results (temporarily no quotes available)
+- Error handling for FiatProviderError (unsupported cases) and other failures
 - Quote expiration and refresh
 - Result caching and deduplication
+- Distinguishing between unsupported (error) vs unavailable (empty array)
 
 ## Benefits of Two-Method Architecture
 
 ### Better User Experience
 1. **Immediate Feedback**: Users see "no providers available" instantly without waiting for quote API calls
 2. **Progressive Loading**: Show supported providers first, then load quotes
-3. **Clear Communication**: Distinguish between "not supported" vs "loading quotes" vs "no quotes available"
+3. **Clear Communication**: Distinguish between "not supported" (FiatProviderError) vs "loading quotes" vs "temporarily no quotes available" (empty array)
 
 ### Reduced API Calls
 1. **No Wasted Requests**: Never call quote APIs for unsupported pairs
@@ -239,16 +257,35 @@ See [Ramp Plugin Migration Guide](./ramp-plugin-migration-guide.md) for detailed
 4. **No Side Effects**: Pure function that only checks, doesn't modify state
 
 ### For fetchQuote Method
-1. **Return Empty Array**: Return `[]` for "no quotes available" scenarios
-2. **Only Throw on Errors**: Throw exceptions only for actual API failures
-3. **Assume Support**: Don't recheck support - UI already filtered
-4. **Include All Options**: Return all available payment methods in quotes
+1. **Throw FiatProviderError**: Throw `FiatProviderError` for unsupported regions, payment methods, or assets
+2. **Return Empty Array**: Return `[]` only when provider supports the request but temporarily has no quotes available
+3. **Throw on All Errors**: Throw exceptions for both unsupported cases (FiatProviderError) and actual API failures
+4. **Assume Support**: Don't recheck support - UI already filtered (but still validate and throw if needed)
+5. **Include All Options**: Return all available payment methods in quotes
 
 ### General Guidelines
 1. **Parallel Processing**: Both methods designed for parallel execution
 2. **Error Logging**: Log errors for debugging but handle gracefully
 3. **Type Safety**: Use TypeScript types for all requests/responses
 4. **Performance First**: Optimize for speed, especially in `checkSupport`
+
+### Understanding FiatProviderError vs Empty Arrays
+
+The distinction between throwing `FiatProviderError` and returning empty arrays is critical for maintaining consistency with legacy behavior:
+
+#### When to throw FiatProviderError
+- **Unsupported regions**: Provider doesn't operate in the user's region
+- **Unsupported payment methods**: Provider doesn't support the requested payment type
+- **Unsupported assets**: Provider doesn't support the crypto/fiat pair
+- **Invalid configuration**: Missing API keys or misconfigured settings
+
+#### When to return empty array []
+- **Temporary unavailability**: Provider supports the request but has no quotes at this moment
+- **Rate limits**: Temporary inability to fetch quotes due to rate limiting
+- **Maintenance windows**: Provider is temporarily offline but normally supports the request
+- **No matching quotes**: All quotes filtered out by amount limits or other temporary criteria
+
+This maintains backward compatibility with code that expects `FiatProviderError` for truly unsupported cases while allowing graceful handling of temporary conditions.
 
 ## Example Quote Flow
 
