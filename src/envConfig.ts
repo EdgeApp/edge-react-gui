@@ -10,6 +10,7 @@ import {
   type Cleaner
 } from 'cleaners'
 
+import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
@@ -142,6 +143,7 @@ export const asEnvConfig = asObject({
   ),
   RAMP_PLUGIN_INITS: asOptional(
     asObject<Record<string, unknown>>({
+      moonpay: asOptional(asMoonpayInitOptions),
       paybis: asOptional(
         asObject({
           partnerUrl: asString,
@@ -151,6 +153,7 @@ export const asEnvConfig = asObject({
       )
     }),
     () => ({
+      moonpay: undefined,
       paybis: undefined
     })
   ),
