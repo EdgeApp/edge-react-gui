@@ -96,6 +96,10 @@ class MainApplication : Application(), ReactApplication {
         MessagesWorker.ensureScheduled(context)
         // MessagesWorker.testRun(context);
 
+        // Workaround for scroll perf:
+        DefaultNewArchitectureEntryPoint.releaseLevel = ReleaseLevel.EXPERIMENTAL
+        ReactFeatureFlags.preventShadowTreeCommitExhaustion = true
+
         // React Native template code:
         loadReactNative(this)
 
