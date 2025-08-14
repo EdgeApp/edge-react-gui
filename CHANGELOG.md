@@ -11,6 +11,7 @@
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Upgrade to React Native v0.79
 - changed: Update translations
+- fixed: App update modal could show multiple times whenever network reconnects
 
 ## 4.33.0 (2025-08-01)
 
