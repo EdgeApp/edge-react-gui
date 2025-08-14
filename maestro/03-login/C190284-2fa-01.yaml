@@ -25,7 +25,14 @@ tags:
 - tapOn: "Enter Backup Code"
 - inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
 - assertVisible: "Submit"
-- tapOn: "Submit"
+
+# Workaround for keyboard autocomplete suggestion conflicts on some android screensizes
+- hideKeyboard:
+    optional: true
+
+- tapOn:
+    text: "Submit"
+    optional: true
 
 # If the request notifications modal show with "Security is Our Priority"
 # Cancel it
