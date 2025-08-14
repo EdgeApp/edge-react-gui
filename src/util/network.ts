@@ -9,6 +9,7 @@ import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
 import { config } from '../theme/appConfig'
+import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
@@ -123,12 +124,12 @@ export const fetchPush = async (
 
 export const infoServerData: { rollup?: InfoRollup } = {}
 
-export const initInfoServer = async () => {
+export const initInfoServer = async (): Promise<void> => {
   const osType = Platform.OS.toLowerCase()
   const osVersion = getOsVersion()
   const version = getVersion()
 
-  const queryInfo = async () => {
+  const queryInfo = async (): Promise<void> => {
     try {
       const response = await fetchInfo(
         `v1/inforollup/${
@@ -142,7 +143,7 @@ export const initInfoServer = async () => {
       } else {
         const infoData = await response.json()
         infoServerData.rollup = asInfoRollup(infoData)
-        await checkAppVersion()
+        await runOnce('checkAppVersion', checkAppVersion)
       }
     } catch (e) {
       console.warn('initInfoServer: Failed to ping info server')
@@ -150,7 +151,11 @@ export const initInfoServer = async () => {
   }
 
   await queryInfo()
-  setInterval(queryInfo, INFO_FETCH_INTERVAL)
+  setInterval(() => {
+    queryInfo().catch(() => {
+      // Already caught in `queryInfo`
+    })
+  }, INFO_FETCH_INTERVAL)
 }
 
 const asCoinrankList = asObject(asString)
@@ -162,7 +167,7 @@ const asCoinGeckoCoinsResponse = asObject({
 export type CoinrankList = ReturnType<typeof asCoinrankList>
 
 export const coinrankListData: { coins: CoinrankList } = { coins: {} }
-export const initCoinrankList = async () => {
+export const initCoinrankList = async (): Promise<void> => {
   try {
     const response = await fetchRates('v2/coinrankList')
     if (!response.ok) {
