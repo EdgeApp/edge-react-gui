@@ -221,6 +221,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   const {
     quotes: sortedQuotes,
     isLoading: isLoadingQuotes,
+    isFetching: isFetchingQuotes,
     errors: quoteErrors
   } = useRampQuotes({
     rampQuoteRequest,
@@ -367,6 +368,15 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     })
   })
 
+  const exchangeRateText = React.useMemo(() => {
+    return sprintf(
+      '1 %s = %s %s',
+      selectedCryptoCurrencyCode,
+      quoteExchangeRate.toFixed(2),
+      selectedFiatCurrencyCode
+    )
+  }, [selectedCryptoCurrencyCode, quoteExchangeRate, selectedFiatCurrencyCode])
+
   const handleFiatChangeText = useHandler((text: string) => {
     setUserInput(text)
     setLastUsedInput('fiat')
@@ -491,6 +501,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
                 )}
                 keyboardType="decimal-pad"
                 numeric
+                showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
               />
             </InputContainer>
           </InputRow>
@@ -519,6 +530,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
                 )}
                 keyboardType="decimal-pad"
                 numeric
+                showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
               />
               {/* MAX Button */}
               <MaxButton onPress={handleMaxPress}>
@@ -539,27 +551,12 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
             <ExchangeRateTitle>
               {lstrings.trade_create_exchange_rate}
             </ExchangeRateTitle>
-            {isLoadingQuotes ? (
-              <LoadingContainer>
-                <ActivityIndicator size="small" color={theme.primaryText} />
-              </LoadingContainer>
-            ) : bestQuote ? (
-              <ExchangeRateValue>
-                <Text>{`1 ${selectedCryptoCurrencyCode} = ${quoteExchangeRate.toFixed(
-                  2
-                )} ${selectedFiatCurrencyCode}`}</Text>
-              </ExchangeRateValue>
+            {bestQuote != null ? (
+              <ExchangeRateValueText>{exchangeRateText}</ExchangeRateValueText>
             ) : null}
+            <ActivityIndicator style={{ opacity: isFetchingQuotes ? 1 : 0 }} />
           </ExchangeRateContainer>
         )}
-
-        {/* Show loading indicator when checking support */}
-        {isCheckingSupport && userInput !== '' && lastUsedInput != null ? (
-          <LoadingContainer>
-            <ActivityIndicator size="small" color={theme.primaryText} />
-            <EdgeText>{lstrings.loading}</EdgeText>
-          </LoadingContainer>
-        ) : null}
 
         {/* Alert for no supported plugins */}
         {!isCheckingSupport &&
@@ -580,7 +577,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
         ) : null}
 
         {/* Error Alert for Failed Quotes */}
-        {!isLoadingQuotes &&
+        {!isFetchingQuotes &&
         !isCheckingSupport &&
         quoteErrors.length > 0 &&
         sortedQuotes.length === 0 &&
@@ -638,11 +635,6 @@ const InputRow = styled(View)(theme => ({
   gap: theme.rem(1)
 }))
 
-const ExchangeRateContainer = styled(View)(theme => ({
-  paddingHorizontal: theme.rem(1),
-  paddingVertical: theme.rem(2)
-}))
-
 const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
   alignSelf: 'flex-end',
   padding: theme.rem(0.5)
@@ -655,6 +647,12 @@ const MaxButtonText = styled(Text)(theme => ({
   includeFontPadding: false
 }))
 
+const ExchangeRateContainer = styled(View)(theme => ({
+  paddingHorizontal: theme.rem(1),
+  paddingVertical: theme.rem(2),
+  alignItems: 'center'
+}))
+
 const ExchangeRateTitle = styled(EdgeText)(theme => ({
   fontSize: theme.rem(1),
   color: theme.primaryText,
@@ -662,11 +660,12 @@ const ExchangeRateTitle = styled(EdgeText)(theme => ({
   marginBottom: theme.rem(0.5)
 }))
 
-const ExchangeRateValue = styled(EdgeText)(theme => ({
+const ExchangeRateValueText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(1.125),
   fontWeight: 'bold',
   color: theme.primaryText,
-  textAlign: 'center'
+  textAlign: 'center',
+  marginBottom: theme.rem(0.5)
 }))
 
 const InputContainer = styled(View)(() => ({
@@ -739,12 +738,4 @@ const RegionButtonText = styled(EdgeText)(theme => ({
   color: theme.primaryText,
   fontSize: theme.rem(1.1),
   fontFamily: theme.fontFaceDefault
-}))
-
-const LoadingContainer = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  minHeight: theme.rem(1.5) // Match the approximate height of ExchangeRateValue text
 }))
