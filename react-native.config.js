@@ -4,6 +4,11 @@ module.exports = {
       platforms: {
         ios: null
       }
+    },
+    '@fioprotocol/fiosdk': {
+      platforms: {
+        android: null
+      }
     }
   }
 }

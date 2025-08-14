@@ -25,7 +25,6 @@ export const useTotalFiatAmount = (
 
   return React.useMemo(() => {
     const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
-    // @ts-expect-error
     return borrowArray.reduce((total, obj) => {
       const { currencyCode, denominations } =
         obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
