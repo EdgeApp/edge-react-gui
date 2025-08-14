@@ -5,7 +5,7 @@
 
 appId: ${MAESTRO_APP_ID}
 tags:
-- android
+- all
 - C999001
 ---
 - runFlow:
@@ -16,6 +16,10 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: Assets
 - extendedWaitUntil:
     visible: DGB
     timeout: 15000
