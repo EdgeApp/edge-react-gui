@@ -16,6 +16,7 @@ import type {
 import type { SortOption } from '../components/modals/WalletListSortModal'
 import type { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import type { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
+import type { RampPlugin } from '../plugins/ramps/rampPluginTypes'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import type { PermissionsState } from '../reducers/PermissionsReducer'
 import type {
@@ -186,6 +187,10 @@ export type Action =
       data: { fioAddress: string; ccWalletMap: CcWalletMap }
     }
   | { type: 'FIO/SET_FIO_DOMAINS'; data: { fioDomains: FioDomain[] } }
+  | {
+      type: 'RAMP_PLUGINS/LOADING_COMPLETE'
+      data: { plugins: Record<string, RampPlugin> }
+    }
   /*
    Self-Contained Package Actions:
 
