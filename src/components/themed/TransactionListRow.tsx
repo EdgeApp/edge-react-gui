@@ -131,7 +131,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
   const historicalRate = useHistoricalRate(
-    `${currencyCode}_${defaultIsoFiat}`,
+    currencyInfo.pluginId,
+    tokenId,
+    defaultIsoFiat,
     isoDate
   )
   const amountFiat =

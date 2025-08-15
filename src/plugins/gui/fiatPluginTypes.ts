@@ -23,6 +23,10 @@ import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import type { AppParamList } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import type {
+  getHistoricalCryptoRate,
+  getHistoricalFiatRate
+} from '../../util/exchangeRates'
+import type {
   BuyConversionValues,
   SellConversionValues,
   TrackingEventName
@@ -198,7 +202,8 @@ export interface FiatPluginUi {
 }
 
 export interface FiatPluginUtils {
-  getHistoricalRate: (codePair: string, date: string) => Promise<number>
+  getHistoricalCryptoRate: typeof getHistoricalCryptoRate
+  getHistoricalFiatRate: typeof getHistoricalFiatRate
 }
 
 export interface FiatPluginFactoryArgs {

@@ -77,8 +77,7 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId, onDone } = route.params
-  const { currencyCode, metadata, nativeAmount, date, txid, tokenId } =
-    transaction
+  const { metadata, nativeAmount, date, txid, tokenId } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
@@ -149,7 +148,9 @@ const TransactionDetailsComponent = (props: Props) => {
   const dateString = dateObj.toLocaleString()
   const isoDate = dateObj.toISOString()
   const historicRate = useHistoricalRate(
-    `${currencyCode}_${defaultIsoFiat}`,
+    currencyInfo.pluginId,
+    tokenId,
+    defaultIsoFiat,
     isoDate
   )
   const historicFiat = historicRate * Number(absExchangeAmount)

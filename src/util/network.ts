@@ -12,7 +12,7 @@ import { config } from '../theme/appConfig'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
-const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
+const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
