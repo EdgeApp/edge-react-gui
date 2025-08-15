@@ -727,6 +727,10 @@ export const paybisRampPlugin: RampPluginFactory = (
         tokenId
       } = request
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       // Validate region restrictions
       if (regionCode != null) {
         validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
@@ -808,24 +812,31 @@ export const paybisRampPlugin: RampPluginFactory = (
           let directionChange: 'from' | 'to'
           let amount
 
+          if (isMaxAmount) {
+            // Use default max amounts
+            amount = amountType === 'fiat' ? '10000' : '10'
+          } else {
+            amount = exchangeAmountString
+          }
+
           if (direction === 'buy') {
             currencyCodeFrom = fiat
             currencyCodeTo = paybisCc
             if (amountType === 'fiat') {
               directionChange = 'from'
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
             } else {
               directionChange = 'to'
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
             }
           } else {
             currencyCodeFrom = paybisCc
             currencyCodeTo = fiat
             if (amountType === 'fiat') {
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
               directionChange = 'to'
             } else {
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
               directionChange = 'from'
             }
           }
@@ -841,20 +852,20 @@ export const paybisRampPlugin: RampPluginFactory = (
           }
 
           let promoCode: string | undefined
-          if (maybePromoCode != null) {
+          if (maybePromoCode != null && !isMaxAmount) {
             const isoNow = new Date().toISOString()
             let amountUsd: string
             const convertFromCc =
               amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
             if (convertFromCc === 'iso:USD') {
-              amountUsd = exchangeAmount
+              amountUsd = exchangeAmountString
             } else if (convertFromCc.startsWith('iso:')) {
               const rate = await getHistoricalFiatRate(
                 convertFromCc,
                 'iso:USD',
                 isoNow
               )
-              amountUsd = mul(exchangeAmount, String(rate))
+              amountUsd = mul(exchangeAmountString, String(rate))
             } else {
               const rate = await getHistoricalCryptoRate(
                 currencyPluginId,
@@ -862,7 +873,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                 'iso:USD',
                 isoNow
               )
-              amountUsd = mul(exchangeAmount, String(rate))
+              amountUsd = mul(exchangeAmountString, String(rate))
             }
             // Only use the promo code if the user is requesting $1000 USD or less
             if (lte(amountUsd, '1000')) {

@@ -11,7 +11,7 @@ import { fetchInfo } from '../../../util/network'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
-import { rampDeeplinkManager } from '../rampDeeplinkHandler'
+import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
 import type {
   ProviderToken,
   RampApproveQuoteParams,
@@ -395,53 +395,57 @@ export const simplexRampPlugin: RampPluginFactory = (
       const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
       // Register deeplink handler
-      rampDeeplinkManager.register('buy', pluginId, async link => {
-        if (link.direction !== 'buy') return
+      rampDeeplinkManager.register(
+        'buy',
+        pluginId,
+        async (link: RampLink): Promise<void> => {
+          if (link.direction !== 'buy') return
 
-        const orderId = link.query.orderId ?? 'unknown'
-        const status = link.query.status?.replace('?', '')
+          const orderId = link.query.orderId ?? 'unknown'
+          const status = link.query.status?.replace('?', '')
 
-        try {
-          switch (status) {
-            case 'success': {
-              onLogEvent('Buy_Success', {
-                conversionValues: {
-                  conversionType: 'buy',
-                  sourceFiatCurrencyCode: simplexFiatCode,
-                  sourceFiatAmount: quote.fiat_money.amount.toString(),
-                  destAmount: new CryptoAmount({
-                    currencyConfig: coreWallet.currencyConfig,
-                    currencyCode: coreWallet.currencyInfo.currencyCode,
-                    exchangeAmount: quote.digital_money.amount.toString()
-                  }),
-                  fiatProviderId: pluginId,
-                  orderId
-                }
-              })
-              navigation.pop()
-              break
+          try {
+            switch (status) {
+              case 'success': {
+                onLogEvent('Buy_Success', {
+                  conversionValues: {
+                    conversionType: 'buy',
+                    sourceFiatCurrencyCode: simplexFiatCode,
+                    sourceFiatAmount: quote.fiat_money.amount.toString(),
+                    destAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      currencyCode: coreWallet.currencyInfo.currencyCode,
+                      exchangeAmount: quote.digital_money.amount.toString()
+                    }),
+                    fiatProviderId: pluginId,
+                    orderId
+                  }
+                })
+                navigation.pop()
+                break
+              }
+              case 'failure': {
+                showToast(
+                  lstrings.fiat_plugin_buy_failed_try_again,
+                  NOT_SUCCESS_TOAST_HIDE_MS
+                )
+                navigation.pop()
+                break
+              }
+              default: {
+                showToast(
+                  lstrings.fiat_plugin_buy_unknown_status,
+                  NOT_SUCCESS_TOAST_HIDE_MS
+                )
+                navigation.pop()
+              }
             }
-            case 'failure': {
-              showToast(
-                lstrings.fiat_plugin_buy_failed_try_again,
-                NOT_SUCCESS_TOAST_HIDE_MS
-              )
-              navigation.pop()
-              break
-            }
-            default: {
-              showToast(
-                lstrings.fiat_plugin_buy_unknown_status,
-                NOT_SUCCESS_TOAST_HIDE_MS
-              )
-              navigation.pop()
-            }
+          } finally {
+            // Always unregister the handler when done
+            rampDeeplinkManager.unregister()
           }
-        } finally {
-          // Always unregister the handler when done
-          rampDeeplinkManager.unregister()
         }
-      })
+      )
 
       // Open external webview
       try {
@@ -582,6 +586,10 @@ export const simplexRampPlugin: RampPluginFactory = (
         direction
       } = request
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       // Validate direction
       if (!validateDirection(direction)) {
         return []
@@ -623,7 +631,14 @@ export const simplexRampPlugin: RampPluginFactory = (
       // Prepare quote request
       const ts = Math.floor(Date.now() / 1000)
       let socn: string, tacn: string
-      const soam = parseFloat(exchangeAmount)
+      let soam: number
+
+      if (isMaxAmount) {
+        // Use reasonable max amounts
+        soam = amountType === 'fiat' ? 50000 : 100
+      } else {
+        soam = parseFloat(exchangeAmountString)
+      }
 
       if (amountType === 'fiat') {
         socn = simplexFiatCode
@@ -664,7 +679,7 @@ export const simplexRampPlugin: RampPluginFactory = (
             )
             if (result != null && result.length >= 4) {
               const [, fiatCode, minLimit, maxLimit] = result
-              if (gt(exchangeAmount, maxLimit)) {
+              if (!isMaxAmount && gt(exchangeAmountString, maxLimit)) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'overLimit',
@@ -672,7 +687,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                   displayCurrencyCode: fiatCode
                 })
               }
-              if (lt(exchangeAmount, minLimit)) {
+              if (!isMaxAmount && lt(exchangeAmountString, minLimit)) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'underLimit',

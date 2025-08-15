@@ -514,6 +514,12 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const { direction, regionCode, displayCurrencyCode, tokenId } = request
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmountString = isMaxAmount
+        ? ''
+        : (request.exchangeAmount as string)
+
       // Fetch provider configuration (with caching)
       const config = await fetchProviderConfig()
       const { allowedCountryCodes, allowedCurrencyCodes } = config
@@ -626,51 +632,64 @@ export const moonpayRampPlugin: RampPluginFactory = (
           Infinity
       }
 
-      const exchangeAmount = parseFloat(request.exchangeAmount)
+      let exchangeAmount: number
+      if (isMaxAmount) {
+        // Use the max amounts based on amountType
+        exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+      } else {
+        exchangeAmount = parseFloat(exchangeAmountString)
+      }
+
       const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
-      if (request.amountType === 'fiat') {
-        if (exchangeAmount > maxFiat) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'overLimit',
-            errorAmount: maxFiat,
-            displayCurrencyCode: displayFiatCurrencyCode
-          })
-        }
-        if (exchangeAmount < minFiat) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'underLimit',
-            errorAmount: minFiat,
-            displayCurrencyCode: displayFiatCurrencyCode
-          })
-        }
-        if (direction === 'buy') {
-          amountParam = `baseCurrencyAmount=${request.exchangeAmount}`
+      if (!isMaxAmount) {
+        if (request.amountType === 'fiat') {
+          if (exchangeAmount > maxFiat) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'overLimit',
+              errorAmount: maxFiat,
+              displayCurrencyCode: displayFiatCurrencyCode
+            })
+          }
+          if (exchangeAmount < minFiat) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'underLimit',
+              errorAmount: minFiat,
+              displayCurrencyCode: displayFiatCurrencyCode
+            })
+          }
         } else {
-          amountParam = `quoteCurrencyAmount=${request.exchangeAmount}`
+          if (exchangeAmount > maxCrypto) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'overLimit',
+              errorAmount: maxCrypto,
+              displayCurrencyCode
+            })
+          }
+          if (exchangeAmount < minCrypto) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'underLimit',
+              errorAmount: minCrypto,
+              displayCurrencyCode
+            })
+          }
+        }
+      }
+
+      if (request.amountType === 'fiat') {
+        if (direction === 'buy') {
+          amountParam = `baseCurrencyAmount=${exchangeAmount}`
+        } else {
+          amountParam = `quoteCurrencyAmount=${exchangeAmount}`
         }
       } else {
-        if (exchangeAmount > maxCrypto) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'overLimit',
-            errorAmount: maxCrypto,
-            displayCurrencyCode
-          })
-        }
-        if (exchangeAmount < minCrypto) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'underLimit',
-            errorAmount: minCrypto,
-            displayCurrencyCode
-          })
-        }
         if (direction === 'buy') {
-          amountParam = `quoteCurrencyAmount=${request.exchangeAmount}`
+          amountParam = `quoteCurrencyAmount=${exchangeAmount}`
         } else {
-          amountParam = `baseCurrencyAmount=${request.exchangeAmount}`
+          amountParam = `baseCurrencyAmount=${exchangeAmount}`
         }
       }
 

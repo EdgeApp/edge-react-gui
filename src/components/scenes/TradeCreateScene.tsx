@@ -69,6 +69,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   const [lastUsedInput, setLastUsedInput] = useState<'fiat' | 'crypto' | null>(
     null
   )
+  const [isMaxAmount, setIsMaxAmount] = useState(false)
 
   // Selected currencies
   const defaultFiat = useSelector(state => getDefaultFiat(state))
@@ -194,7 +195,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      userInput === '' ||
+      (userInput === '' && !isMaxAmount) ||
       countryCode === ''
     ) {
       return null
@@ -205,7 +206,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       pluginId: selectedWallet.currencyInfo.pluginId,
       tokenId: selectedCrypto?.tokenId ?? null,
       displayCurrencyCode: selectedCryptoCurrencyCode,
-      exchangeAmount: userInput,
+      exchangeAmount: isMaxAmount ? { max: true } : userInput,
       fiatCurrencyCode: selectedFiatCurrencyCode,
       amountType: lastUsedInput,
       direction: 'buy',
@@ -219,6 +220,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     selectedCryptoCurrencyCode,
     selectedCrypto,
     userInput,
+    isMaxAmount,
     selectedFiatCurrencyCode,
     lastUsedInput,
     countryCode,
@@ -297,6 +299,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
 
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
+    if (isMaxAmount && bestQuote != null) {
+      return bestQuote.fiatAmount
+    }
     if (userInput === '' || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'fiat') {
@@ -305,9 +310,12 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered crypto, convert to fiat only if we have a quote
       return convertCryptoToFiat(userInput)
     }
-  }, [userInput, lastUsedInput, convertCryptoToFiat])
+  }, [userInput, lastUsedInput, convertCryptoToFiat, isMaxAmount, bestQuote])
 
   const displayCryptoAmount = React.useMemo(() => {
+    if (isMaxAmount && bestQuote != null) {
+      return bestQuote.cryptoAmount
+    }
     if (userInput === '' || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'crypto') {
@@ -316,7 +324,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered fiat, convert to crypto only if we have a quote
       return convertFiatToCrypto(userInput)
     }
-  }, [userInput, lastUsedInput, convertFiatToCrypto])
+  }, [userInput, lastUsedInput, convertFiatToCrypto, isMaxAmount, bestQuote])
 
   //
   // Handlers
@@ -375,7 +383,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      userInput === '' ||
+      (userInput === '' && !isMaxAmount) ||
       rampQuoteRequest == null
     ) {
       return
@@ -396,17 +404,29 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   }, [selectedCryptoCurrencyCode, quoteExchangeRate, selectedFiatCurrencyCode])
 
   const handleFiatChangeText = useHandler((text: string) => {
+    setIsMaxAmount(false)
     setUserInput(text)
     setLastUsedInput('fiat')
   })
 
   const handleCryptoChangeText = useHandler((text: string) => {
+    setIsMaxAmount(false)
     setUserInput(text)
     setLastUsedInput('crypto')
   })
 
   const handleMaxPress = useHandler(() => {
-    // TODO: Implement max functionality
+    if (isMaxAmount) {
+      // Toggle off max mode
+      setIsMaxAmount(false)
+      setUserInput('')
+      // Keep lastUsedInput as is so the UI remains focused on the same field
+    } else {
+      // Toggle on max mode
+      setIsMaxAmount(true)
+      setLastUsedInput('crypto')
+      setUserInput('') // Clear input when using max
+    }
   })
 
   // Render region selection view
@@ -566,7 +586,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
           {selectedCrypto == null ||
           selectedWallet == null ||
           denomination == null ||
-          userInput === '' ||
+          (userInput === '' && !isMaxAmount) ||
           lastUsedInput == null ||
           (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
             <ExchangeRateContainer>
@@ -608,7 +628,8 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
           supportedPluginsError != null &&
           quoteErrors.length > 0 &&
           sortedQuotes.length === 0 &&
-          supportedPlugins.length > 0 ? (
+          supportedPlugins.length > 0 &&
+          (userInput !== '' || isMaxAmount) ? (
             <AlertCardUi4
               type="error"
               title={lstrings.trade_buy_unavailable_title}
@@ -629,7 +650,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
         disabled={
           selectedWallet == null ||
           selectedCryptoCurrencyCode == null ||
-          userInput === '' ||
+          (userInput === '' && !isMaxAmount) ||
           lastUsedInput === null ||
           isPluginsLoading ||
           isCheckingSupport ||
@@ -662,10 +683,16 @@ const InputRow = styled(View)(theme => ({
   gap: theme.rem(1)
 }))
 
-const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
-  alignSelf: 'flex-end',
-  padding: theme.rem(0.5)
-}))
+const MaxButton = styled(EdgeTouchableOpacity)<{ active?: boolean }>(
+  theme => props => ({
+    alignSelf: 'flex-end',
+    padding: theme.rem(0.25),
+    margin: theme.rem(0.25),
+    borderWidth: 1,
+    borderRadius: theme.rem(0.5),
+    borderColor: props.active === true ? theme.escapeButtonText : 'transparent'
+  })
+)
 
 const MaxButtonText = styled(Text)(theme => ({
   color: theme.escapeButtonText,
