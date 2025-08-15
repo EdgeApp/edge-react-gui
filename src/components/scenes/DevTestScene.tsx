@@ -217,6 +217,48 @@ export function DevTestScene(props: Props) {
               navigation.navigate('reviewTriggerTest')
             }}
           />
+          <EdgeButton
+            label="Ramp Pending KYC Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampPendingKyc', {
+                onPendingCheck: async () => {
+                  // Mock implementation that returns false to keep polling
+                  console.log('Checking KYC status...')
+                  return false
+                },
+                stepOffThreshold: 10000 // 10 seconds for testing
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampBankForm', {
+                onSubmit: async (formData: any) => {
+                  console.log('Bank details submitted:', formData)
+                  // Simulate API call
+                  await new Promise(resolve => setTimeout(resolve, 2000))
+                }
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Routing Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampBankRoutingDetails', {
+                bank: {
+                  name: 'Test Bank',
+                  accountNumber: '1234567890',
+                  routingNumber: '987654321'
+                },
+                fiatCurrencyCode: 'USD',
+                fiatAmount: '1,000.00'
+              })
+            }}
+          />
         </>
         <>
           <SectionHeader

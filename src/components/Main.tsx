@@ -117,6 +117,9 @@ import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairSce
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
+import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
+import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
+import { RampPendingKycScene as RampPendingKycSceneComponent } from './scenes/RampPendingKycScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -251,6 +254,11 @@ const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
+const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
+const RampBankRoutingDetailsScene = ifLoggedIn(
+  RampBankRoutingDetailsSceneComponent
+)
+const RampPendingKycScene = ifLoggedIn(RampPendingKycSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
 const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
@@ -987,6 +995,12 @@ const EdgeAppStack: React.FC = () => {
         }}
       />
       <AppStack.Screen name="request" component={RequestScene} />
+      <AppStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <AppStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <AppStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
       <AppStack.Screen
         name="reviewTriggerTest"
         component={ReviewTriggerTestScene}

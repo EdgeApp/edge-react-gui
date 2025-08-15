@@ -2286,7 +2286,39 @@ const strings = {
   how_duress_mode_when_to_use_title: `When to Use Duress Mode`,
   how_duress_mode_when_to_use_description_md: `1. Physical coercion to access your device\n2. Forced transaction demands under surveillance\n3. High-risk travel or regulatory environments\nPro Tip: Practice activating Duress Mode twice yearly to build muscle memory.`,
   duress_mode_set_pin_message: `Enter your duress PIN for your account.\n\nThis PIN will activate Duress Mode when entered at login.`,
-  duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`
+  duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`,
+
+  // #region Ramp Scenes
+  // Ramp KYC Pending
+  ramp_kyc_pending_title: 'KYC Verification',
+  ramp_kyc_pending_message:
+    'KYC status pending. Please wait while we verify your information.',
+  ramp_kyc_timeout_message:
+    'Verification is taking longer than expected. Please check back later.',
+  ramp_kyc_error_title: 'Verification Error',
+
+  // Ramp Bank Details
+  ramp_bank_details_title: 'Bank Account Details',
+  ramp_bank_details_error_title: 'Submission Error',
+  ramp_bank_name_placeholder: 'Bank Name',
+  ramp_account_owner_name_placeholder: 'Account Owner Name',
+  ramp_account_name_placeholder: 'Account Name',
+  ramp_account_number_placeholder: 'Account Number',
+  ramp_routing_number_placeholder: 'Routing Number',
+  string_submit: 'Submit',
+
+  // Ramp Bank Routing Details
+  ramp_bank_routing_title: 'Send Bank Transfer',
+  ramp_bank_routing_instructions:
+    'Please send the exact amount shown below to the following bank account.',
+  ramp_send_amount_label: 'Amount to Send',
+  ramp_bank_details_section_title: 'Bank Details',
+  ramp_bank_name_label: 'Bank Name',
+  ramp_account_number_label: 'Account Number',
+  ramp_routing_number_label: 'Routing Number',
+  ramp_bank_routing_warning:
+    'Please ensure all details are correct before making the transfer.'
+  // #endregion
 } as const
 
 export default strings
