@@ -174,14 +174,18 @@ export const revolutRampPlugin: RampPluginFactory = (
       request: RampQuoteRequest
     ): Promise<RampQuoteResult[]> => {
       const {
+        exchangeAmount,
+        fiatCurrencyCode,
+        regionCode,
         pluginId: currencyPluginId,
         tokenId,
         displayCurrencyCode,
-        exchangeAmount,
-        fiatCurrencyCode,
-        direction,
-        regionCode
+        direction
       } = request
+
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
 
       // Check direction support
       if (!validateDirection(direction)) {
@@ -246,27 +250,34 @@ export const revolutRampPlugin: RampPluginFactory = (
           return []
         }
 
-        // Check if amount is within limits
-        const amountNum = parseFloat(exchangeAmount)
-        if (
-          amountNum < revolutFiat.min_limit ||
-          amountNum > revolutFiat.max_limit
-        ) {
-          // Return empty array for amounts outside supported range
-          return []
+        // Handle max amount
+        let amount: string
+        if (isMaxAmount) {
+          amount = revolutFiat.max_limit.toString()
+        } else {
+          amount = exchangeAmountString
+          // Check if amount is within limits
+          const amountNum = parseFloat(amount)
+          if (
+            amountNum < revolutFiat.min_limit ||
+            amountNum > revolutFiat.max_limit
+          ) {
+            // Return empty array for amounts outside supported range
+            return []
+          }
         }
 
         // Fetch quote from Revolut (API only needs country code)
         const quoteData = await fetchRevolutQuote({
           fiat: revolutFiat.currency,
-          amount: exchangeAmount,
+          amount,
           crypto: revolutCrypto.id,
           payment: 'revolut', // Only revolut is supported at the moment
           region: regionCode.countryCode
         })
 
         const cryptoAmount = quoteData.crypto.amount.toString()
-        const fiatAmount = exchangeAmount
+        const fiatAmount = amount
 
         // Assume 1 minute expiration
         const expirationDate = new Date(Date.now() + 1000 * 60)

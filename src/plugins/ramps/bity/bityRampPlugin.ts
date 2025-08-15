@@ -704,6 +704,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       } = request
       const isBuy = direction === 'buy'
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       // Validate region using helper function
       if (!isRegionSupported(regionCode)) {
         console.error('Bity fetchQuote error: Region not supported', {
@@ -776,7 +780,38 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
           ? fiatCurrencyObj.max_digits_in_decimal_part
           : cryptoCurrencyObj.max_digits_in_decimal_part
 
-      const amount = toFixed(exchangeAmount, amountPrecision)
+      let amount = ''
+      if (isMaxAmount) {
+        // Use 1000 as max fiat (their no-KYC limit)
+        if (amountType === 'fiat') {
+          amount = '1000'
+        } else {
+          // For crypto, fetch a quote with 1000 fiat to get crypto amount
+          const maxFiatRequest: BityQuoteRequest = {
+            input: {
+              amount: isBuy ? '1000' : undefined,
+              currency: isBuy ? fiatCode : cryptoCode
+            },
+            output: {
+              amount: isBuy ? undefined : '1000',
+              currency: isBuy ? cryptoCode : fiatCode
+            }
+          }
+          try {
+            const maxRaw = await fetchBityQuote(maxFiatRequest)
+            const maxQuote = asBityQuote(maxRaw)
+            amount = isBuy ? maxQuote.output.amount : maxQuote.input.amount
+          } catch (error) {
+            console.error(
+              'Bity fetchQuote error: Failed to fetch max quote',
+              error
+            )
+            return []
+          }
+        }
+      } else {
+        amount = toFixed(exchangeAmountString, amountPrecision)
+      }
       const isReverseQuote =
         (isBuy && amountType === 'crypto') || (!isBuy && amountType === 'fiat')
       const quoteRequest: BityQuoteRequest = {
@@ -818,58 +853,66 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       // Because Bity only supports <=1k transactions w/o KYC and we have no
       // way to KYC a user, add a 1k limit
-      if (amountType === 'fiat') {
-        if (gt(exchangeAmount, '1000')) {
-          // Over limit
-          console.error(
-            'Bity fetchQuote error: Fiat amount exceeds 1000 limit',
-            { exchangeAmount }
-          )
-          return []
-        }
-      } else {
-        // User entered a crypto amount. Get the crypto amount for 1k fiat
-        // so we can compare crypto amounts.
-        const kRequest: BityQuoteRequest = {
-          input: {
-            amount: isBuy ? '1000' : undefined,
-            currency: isBuy ? fiatCode : cryptoCode
-          },
-          output: {
-            amount: isBuy ? undefined : '1000',
-            currency: isBuy ? cryptoCode : fiatCode
+      if (!isMaxAmount) {
+        if (amountType === 'fiat') {
+          if (gt(exchangeAmountString, '1000')) {
+            // Over limit
+            console.error(
+              'Bity fetchQuote error: Fiat amount exceeds 1000 limit',
+              { exchangeAmount: exchangeAmountString }
+            )
+            return []
           }
-        }
+        } else {
+          // User entered a crypto amount. Get the crypto amount for 1k fiat
+          // so we can compare crypto amounts.
+          const kRequest: BityQuoteRequest = {
+            input: {
+              amount: isBuy ? '1000' : undefined,
+              currency: isBuy ? fiatCode : cryptoCode
+            },
+            output: {
+              amount: isBuy ? undefined : '1000',
+              currency: isBuy ? cryptoCode : fiatCode
+            }
+          }
 
-        try {
-          const kRaw = await fetchBityQuote(kRequest)
-          const kBityQuote = asBityQuote(kRaw)
-          if (isBuy) {
-            if (lt(kBityQuote.output.amount, exchangeAmount)) {
-              // Over limit
-              console.error(
-                'Bity fetchQuote error: Buy crypto amount exceeds 1000 fiat equivalent',
-                { exchangeAmount, maxCryptoAmount: kBityQuote.output.amount }
-              )
-              return []
+          try {
+            const kRaw = await fetchBityQuote(kRequest)
+            const kBityQuote = asBityQuote(kRaw)
+            if (isBuy) {
+              if (lt(kBityQuote.output.amount, exchangeAmountString)) {
+                // Over limit
+                console.error(
+                  'Bity fetchQuote error: Buy crypto amount exceeds 1000 fiat equivalent',
+                  {
+                    exchangeAmount: exchangeAmountString,
+                    maxCryptoAmount: kBityQuote.output.amount
+                  }
+                )
+                return []
+              }
+            } else {
+              if (lt(kBityQuote.input.amount, exchangeAmountString)) {
+                // Over limit
+                console.error(
+                  'Bity fetchQuote error: Sell crypto amount exceeds 1000 fiat equivalent',
+                  {
+                    exchangeAmount: exchangeAmountString,
+                    maxCryptoAmount: kBityQuote.input.amount
+                  }
+                )
+                return []
+              }
             }
-          } else {
-            if (lt(kBityQuote.input.amount, exchangeAmount)) {
-              // Over limit
-              console.error(
-                'Bity fetchQuote error: Sell crypto amount exceeds 1000 fiat equivalent',
-                { exchangeAmount, maxCryptoAmount: kBityQuote.input.amount }
-              )
-              return []
-            }
+          } catch (error) {
+            // Return empty array for 1k limit check failures
+            console.error(
+              'Bity fetchQuote error: Failed to check 1000 fiat limit',
+              { error }
+            )
+            return []
           }
-        } catch (error) {
-          // Return empty array for 1k limit check failures
-          console.error(
-            'Bity fetchQuote error: Failed to check 1000 fiat limit',
-            { error }
-          )
-          return []
         }
       }
 

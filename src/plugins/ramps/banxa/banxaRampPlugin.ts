@@ -874,6 +874,10 @@ export const banxaRampPlugin: RampPluginFactory = (
         tokenId
       } = request
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       try {
         // Fetch provider configuration (cached or fresh)
         const config = await fetchProviderConfig()
@@ -999,45 +1003,89 @@ export const banxaRampPlugin: RampPluginFactory = (
               payment_method_id: paymentObj.id
             }
 
+            let maxAmountString = ''
+            if (isMaxAmount) {
+              if (amountType === 'fiat') {
+                maxAmountString = paymentObj.max
+              } else {
+                // For crypto, we need to fetch a quote with max fiat to get the crypto amount
+                const maxFiatQueryParams: any = {
+                  account_reference: username,
+                  payment_method_id: paymentObj.id,
+                  source: direction === 'buy' ? fiatCode : banxaCoin,
+                  target: direction === 'buy' ? banxaCoin : fiatCode
+                }
+                if (direction === 'buy') {
+                  maxFiatQueryParams.source_amount = paymentObj.max
+                } else {
+                  maxFiatQueryParams.target_amount = paymentObj.max
+                }
+                const maxResponse = await banxaFetch({
+                  method: 'GET',
+                  url,
+                  hmacUser,
+                  path: 'api/prices',
+                  apiKey,
+                  queryParams: maxFiatQueryParams
+                })
+                const maxPrices = asBanxaPricesResponse(maxResponse)
+                maxAmountString = maxPrices.data.prices[0].coin_amount
+              }
+            }
+
             if (direction === 'buy') {
               queryParams.source = fiatCode
               queryParams.target = banxaCoin
               if (amountType === 'fiat') {
-                queryParams.source_amount = exchangeAmount
-                if (!checkMinMax(exchangeAmount, paymentObj)) {
-                  if (gt(exchangeAmount, paymentObj.max)) {
+                queryParams.source_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+                if (
+                  !isMaxAmount &&
+                  !checkMinMax(exchangeAmountString, paymentObj)
+                ) {
+                  if (gt(exchangeAmountString, paymentObj.max)) {
                     console.warn(
-                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmount} > ${paymentObj.max}`
+                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmountString} > ${paymentObj.max}`
                     )
-                  } else if (lt(exchangeAmount, paymentObj.min)) {
+                  } else if (lt(exchangeAmountString, paymentObj.min)) {
                     console.warn(
-                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmount} < ${paymentObj.min}`
+                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmountString} < ${paymentObj.min}`
                     )
                   }
                   continue
                 }
               } else {
-                queryParams.target_amount = exchangeAmount
+                queryParams.target_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
               }
             } else {
               queryParams.source = banxaCoin
               queryParams.target = fiatCode
               if (amountType === 'fiat') {
-                queryParams.target_amount = exchangeAmount
-                if (!checkMinMax(exchangeAmount, paymentObj)) {
-                  if (gt(exchangeAmount, paymentObj.max)) {
+                queryParams.target_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+                if (
+                  !isMaxAmount &&
+                  !checkMinMax(exchangeAmountString, paymentObj)
+                ) {
+                  if (gt(exchangeAmountString, paymentObj.max)) {
                     console.warn(
-                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmount} > ${paymentObj.max}`
+                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmountString} > ${paymentObj.max}`
                     )
-                  } else if (lt(exchangeAmount, paymentObj.min)) {
+                  } else if (lt(exchangeAmountString, paymentObj.min)) {
                     console.warn(
-                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmount} < ${paymentObj.min}`
+                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmountString} < ${paymentObj.min}`
                     )
                   }
                   continue
                 }
               } else {
-                queryParams.source_amount = exchangeAmount
+                queryParams.source_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
               }
             }
 

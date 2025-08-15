@@ -583,6 +583,10 @@ export const simplexRampPlugin: RampPluginFactory = (
         direction
       } = request
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       // Validate direction
       if (!validateDirection(direction)) {
         return []
@@ -624,7 +628,14 @@ export const simplexRampPlugin: RampPluginFactory = (
       // Prepare quote request
       const ts = Math.floor(Date.now() / 1000)
       let socn: string, tacn: string
-      const soam = parseFloat(exchangeAmount)
+      let soam: number
+
+      if (isMaxAmount) {
+        // Use reasonable max amounts
+        soam = amountType === 'fiat' ? 50000 : 100
+      } else {
+        soam = parseFloat(exchangeAmountString)
+      }
 
       if (amountType === 'fiat') {
         socn = simplexFiatCode
@@ -665,7 +676,7 @@ export const simplexRampPlugin: RampPluginFactory = (
             )
             if (result && result.length >= 4) {
               const [, fiatCode, minLimit, maxLimit] = result
-              if (gt(exchangeAmount, maxLimit)) {
+              if (!isMaxAmount && gt(exchangeAmountString, maxLimit)) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'overLimit',
@@ -673,7 +684,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                   displayCurrencyCode: fiatCode
                 })
               }
-              if (lt(exchangeAmount, minLimit)) {
+              if (!isMaxAmount && lt(exchangeAmountString, minLimit)) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'underLimit',

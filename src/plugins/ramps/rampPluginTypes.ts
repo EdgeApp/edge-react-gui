@@ -38,7 +38,7 @@ export interface RampQuoteRequest {
   pluginId: string
   tokenId: EdgeTokenId
   displayCurrencyCode: string
-  exchangeAmount: string
+  exchangeAmount: string | { max: true }
   fiatCurrencyCode: string
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'

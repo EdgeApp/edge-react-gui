@@ -772,6 +772,10 @@ export const paybisRampPlugin: RampPluginFactory = (
         tokenId
       } = request
 
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
       // Validate region and country restrictions using helper
       const regionResult = validateSupportRequest(
         regionCode,
@@ -855,24 +859,31 @@ export const paybisRampPlugin: RampPluginFactory = (
           let directionChange: 'from' | 'to'
           let amount
 
+          if (isMaxAmount) {
+            // Use default max amounts
+            amount = amountType === 'fiat' ? '10000' : '10'
+          } else {
+            amount = exchangeAmountString
+          }
+
           if (direction === 'buy') {
             currencyCodeFrom = fiat
             currencyCodeTo = paybisCc
             if (amountType === 'fiat') {
               directionChange = 'from'
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
             } else {
               directionChange = 'to'
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
             }
           } else {
             currencyCodeFrom = paybisCc
             currencyCodeTo = fiat
             if (amountType === 'fiat') {
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
               directionChange = 'to'
             } else {
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
               directionChange = 'from'
             }
           }
@@ -888,17 +899,17 @@ export const paybisRampPlugin: RampPluginFactory = (
           }
 
           let promoCode: string | undefined
-          if (maybePromoCode != null) {
+          if (maybePromoCode != null && !isMaxAmount) {
             let amountUsd: string
             const convertFromCc =
               amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
             if (convertFromCc === 'iso:USD') {
-              amountUsd = exchangeAmount
+              amountUsd = exchangeAmountString
             } else {
               // For now, always return 1 (matching old implementation)
               // TODO: Implement actual rate fetching if needed
               const rate = 1
-              amountUsd = mul(exchangeAmount, String(rate))
+              amountUsd = mul(exchangeAmountString, String(rate))
             }
             if (lte(amountUsd, '1000')) {
               if (userIdHasTransactions === false) {
@@ -907,6 +918,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             }
           }
 
+          if (!state) throw new Error('Plugin not initialized')
           const response = await paybisFetch({
             method: 'POST',
             url: state.partnerUrl,
@@ -967,6 +979,9 @@ export const paybisRampPlugin: RampPluginFactory = (
             fiatAmount = amountTo.amount
             cryptoAmount = amountFrom.amount
           }
+
+          // Store promoCode for use in approveQuote
+          const quotePromoCode = promoCode
 
           const quote: RampQuoteResult = {
             pluginId,
@@ -1043,7 +1058,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                 path: 'v2/public/request',
                 apiKey: state!.apiKey,
                 bodyParams,
-                promoCode,
+                promoCode: quotePromoCode,
                 privateKey
               })
               const response = await showToastSpinner(
@@ -1060,7 +1075,7 @@ export const paybisRampPlugin: RampPluginFactory = (
               const ott =
                 oneTimeToken != null ? `&oneTimeToken=${oneTimeToken}` : ''
               const promoCodeParam =
-                promoCode != null ? `&promoCode=${promoCode}` : ''
+                quotePromoCode != null ? `&promoCode=${quotePromoCode}` : ''
 
               if (direction === 'buy') {
                 const successReturnURL = encodeURIComponent(
@@ -1170,7 +1185,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                           url: state!.partnerUrl,
                           path: `v2/request/${requestId}/payment-details`,
                           apiKey: state!.apiKey,
-                          promoCode
+                          promoCode: quotePromoCode
                         })
                         const {
                           assetId,
