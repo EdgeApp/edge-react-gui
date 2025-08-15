@@ -163,7 +163,10 @@ export const revolutRampPlugin: RampPluginFactory = (
         assetMap
       })
 
-      return { supported: assetsSupported }
+      return {
+        supported: assetsSupported,
+        supportedAmountTypes: assetsSupported ? ['fiat'] : undefined
+      }
     },
 
     fetchQuote: async (
@@ -188,13 +191,7 @@ export const revolutRampPlugin: RampPluginFactory = (
         return []
       }
 
-      // Only support fiat amount type (Revolut requires fiat-based quotes)
-      if (request.amountType !== 'fiat') {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'amountTypeUnsupported'
-        })
-      }
+      // Amount type check is now handled in checkSupport phase
 
       // Fetch provider configuration (will use cache if valid)
       const config = await fetchProviderConfig()

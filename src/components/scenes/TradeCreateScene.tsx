@@ -12,7 +12,10 @@ import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
-import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
+import {
+  type SupportedPluginResult,
+  useSupportedPlugins
+} from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type {
@@ -52,6 +55,47 @@ export interface TradeCreateParams {
 }
 
 interface Props extends BuyTabSceneProps<'pluginListBuy'> {}
+
+// Helper function to determine which input types should be disabled
+interface AmountTypeSupport {
+  fiatInputDisabled: boolean
+  cryptoInputDisabled: boolean
+}
+
+function getAmountTypeSupport(
+  supportedPlugins: SupportedPluginResult[]
+): AmountTypeSupport {
+  if (supportedPlugins.length === 0) {
+    return { fiatInputDisabled: false, cryptoInputDisabled: false }
+  }
+
+  // Collect all supported amount types from all plugins
+  const allSupportedTypes = new Set<'fiat' | 'crypto'>()
+
+  for (const { supportResult } of supportedPlugins) {
+    if (supportResult.supportedAmountTypes != null) {
+      for (const type of supportResult.supportedAmountTypes) {
+        allSupportedTypes.add(type)
+      }
+    } else {
+      // If a plugin doesn't specify supported types, assume both are supported
+      allSupportedTypes.add('fiat')
+      allSupportedTypes.add('crypto')
+    }
+  }
+
+  // If all plugins only support fiat, disable crypto input
+  const onlyFiat =
+    allSupportedTypes.has('fiat') && !allSupportedTypes.has('crypto')
+  // If all plugins only support crypto, disable fiat input
+  const onlyCrypto =
+    allSupportedTypes.has('crypto') && !allSupportedTypes.has('fiat')
+
+  return {
+    fiatInputDisabled: onlyCrypto,
+    cryptoInputDisabled: onlyFiat
+  }
+}
 
 export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props
@@ -189,6 +233,10 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     return info?.logoUrl ?? ''
   }, [selectedFiatCurrencyCode])
 
+  // Determine which input types should be disabled
+  const { fiatInputDisabled, cryptoInputDisabled } =
+    getAmountTypeSupport(supportedPlugins)
+
   // Create rampQuoteRequest based on current form state
   const rampQuoteRequest: RampQuoteRequest | null = React.useMemo(() => {
     if (
@@ -197,6 +245,14 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       lastUsedInput == null ||
       (userInput === '' && !isMaxAmount) ||
       countryCode === ''
+    ) {
+      return null
+    }
+
+    // Guard against creating request with disabled input type
+    if (
+      (lastUsedInput === 'fiat' && fiatInputDisabled) ||
+      (lastUsedInput === 'crypto' && cryptoInputDisabled)
     ) {
       return null
     }
@@ -224,7 +280,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     selectedFiatCurrencyCode,
     lastUsedInput,
     countryCode,
-    stateProvinceCode
+    stateProvinceCode,
+    fiatInputDisabled,
+    cryptoInputDisabled
   ])
 
   // Fetch quotes using the custom hook
@@ -236,7 +294,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   } = useRampQuotes({
     rampQuoteRequest,
     plugins: Object.fromEntries(
-      supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+      supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
     )
   })
 
@@ -301,6 +359,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
 
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
+    // Don't show any value if fiat input is disabled
+    if (fiatInputDisabled) return ''
+
     if (isMaxAmount && bestQuote != null) {
       return bestQuote.fiatAmount
     }
@@ -312,9 +373,19 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered crypto, convert to fiat only if we have a quote
       return convertCryptoToFiat(userInput)
     }
-  }, [userInput, lastUsedInput, convertCryptoToFiat, isMaxAmount, bestQuote])
+  }, [
+    userInput,
+    lastUsedInput,
+    convertCryptoToFiat,
+    isMaxAmount,
+    bestQuote,
+    fiatInputDisabled
+  ])
 
   const displayCryptoAmount = React.useMemo(() => {
+    // Don't show any value if crypto input is disabled
+    if (cryptoInputDisabled) return ''
+
     if (isMaxAmount && bestQuote != null) {
       return bestQuote.cryptoAmount
     }
@@ -326,7 +397,14 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered fiat, convert to crypto only if we have a quote
       return convertFiatToCrypto(userInput)
     }
-  }, [userInput, lastUsedInput, convertFiatToCrypto, isMaxAmount, bestQuote])
+  }, [
+    userInput,
+    lastUsedInput,
+    convertFiatToCrypto,
+    isMaxAmount,
+    bestQuote,
+    cryptoInputDisabled
+  ])
 
   //
   // Handlers
@@ -546,6 +624,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
+                  disabled={fiatInputDisabled}
                 />
               </InputContainer>
             </InputRow>
@@ -573,6 +652,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
+                  disabled={cryptoInputDisabled}
                 />
                 {/* MAX Button */}
                 <MaxButton onPress={handleMaxPress}>
@@ -656,7 +736,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
           isCheckingSupport ||
           supportedPlugins.length === 0 ||
           isLoadingQuotes ||
-          sortedQuotes.length === 0
+          sortedQuotes.length === 0 ||
+          (lastUsedInput === 'fiat' && fiatInputDisabled) ||
+          (lastUsedInput === 'crypto' && cryptoInputDisabled)
         }
       />
     </>

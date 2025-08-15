@@ -666,7 +666,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       }
 
       // All checks passed
-      return { supported: true }
+      return {
+        supported: true,
+        supportedAmountTypes: ['fiat', 'crypto']
+      }
     },
 
     fetchQuote: async (

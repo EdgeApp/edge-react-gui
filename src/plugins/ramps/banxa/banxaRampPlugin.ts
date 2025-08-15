@@ -844,7 +844,10 @@ export const banxaRampPlugin: RampPluginFactory = (
         return { supported: false }
       }
 
-      return { supported: true }
+      return {
+        supported: true,
+        supportedAmountTypes: ['fiat', 'crypto']
+      }
     },
 
     fetchQuote: async (
