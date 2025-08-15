@@ -514,7 +514,12 @@ export const FioRequestConfirmationScene = withWallet((ownProps: OwnProps) => {
     selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
   const exchangeSecondaryToPrimaryRatio = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(
+      state,
+      wallet.currencyInfo.pluginId,
+      tokenId,
+      defaultIsoFiat
+    )
   )
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
   const isConnected = useSelector(state => state.network.isConnected)

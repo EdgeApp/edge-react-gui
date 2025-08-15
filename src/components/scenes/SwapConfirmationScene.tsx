@@ -24,10 +24,7 @@ import type { SwapTabSceneProps } from '../../types/routerTypes'
 import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import {
@@ -477,8 +474,6 @@ const getSwapInfo = (
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { request } = quote
     const { fromWallet, toWallet, fromTokenId, toTokenId } = request
-    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
-    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
     // Format from amount:
     const fromDisplayDenomination = selectDisplayDenom(
@@ -504,7 +499,8 @@ const getSwapInfo = (
     const fromBalanceInFiatRaw = parseFloat(
       convertCurrency(
         state,
-        fromCurrencyCode,
+        fromWallet.currencyInfo.pluginId,
+        fromTokenId,
         defaultIsoFiat,
         fromBalanceInCryptoDisplay
       )
@@ -538,7 +534,8 @@ const getSwapInfo = (
     const feeFiatAmountRaw = parseFloat(
       convertCurrency(
         state,
-        request.fromWallet.currencyInfo.currencyCode,
+        request.fromWallet.currencyInfo.pluginId,
+        quote.networkFee.tokenId,
         defaultIsoFiat,
         feeDenominatedAmount
       )
@@ -577,7 +574,8 @@ const getSwapInfo = (
     const toBalanceInFiatRaw = parseFloat(
       convertCurrency(
         state,
-        toCurrencyCode,
+        toWallet.currencyInfo.pluginId,
+        toTokenId,
         defaultIsoFiat,
         toBalanceInCryptoDisplay
       )

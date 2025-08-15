@@ -103,7 +103,7 @@ function WalletDetailsComponent(props: Props) {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const defaultFiat = defaultIsoFiat.replace('iso:', '')
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(state, pluginId, tokenId, defaultIsoFiat)
   )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)

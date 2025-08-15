@@ -25,6 +25,7 @@ import { useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import type { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
+import { createRateKey } from '../../../util/exchangeRates'
 import {
   DECIMAL_PRECISION,
   removeIsoPrefix,
@@ -464,8 +465,11 @@ export const calculateFiatAmount = (
   const token = getToken(wallet, tokenId)
   if (token == null) return '0'
 
-  const { currencyCode, denominations } = token
-  const key = `${currencyCode}_${isoFiatCurrencyCode}`
+  const { denominations } = token
+  const key = createRateKey(
+    { pluginId: wallet.currencyInfo.pluginId, tokenId },
+    isoFiatCurrencyCode
+  )
   const assetFiatPrice = exchangeRates[key] ?? '0'
   if (assetFiatPrice === 0) {
     return '0'

@@ -39,16 +39,16 @@ export const FiatText = ({
   tokenId,
   currencyConfig
 }: Props) => {
-  const { currencyCode, denomination, isoFiatCurrencyCode } =
-    useTokenDisplayData({
-      tokenId,
-      currencyConfig
-    })
+  const { denomination, isoFiatCurrencyCode } = useTokenDisplayData({
+    tokenId,
+    currencyConfig
+  })
 
   const text = useFiatText({
     appendFiatCurrencyCode,
     autoPrecision,
-    cryptoCurrencyCode: currencyCode,
+    pluginId: currencyConfig.currencyInfo.pluginId,
+    tokenId,
     cryptoExchangeMultiplier: denomination.multiplier,
     fiatSymbolSpace,
     hideFiatSymbol,

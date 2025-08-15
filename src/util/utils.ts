@@ -33,6 +33,7 @@ import type { RootState } from '../types/reduxTypes'
 import type { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
+import { createRateKey } from './exchangeRates'
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -185,7 +186,10 @@ export const convertCurrencyFromExchangeRates = (
   toCurrencyCode: string,
   amount: string
 ): string => {
-  const rateKey = `${fromPluginId}_${String(fromTokenId)}_${toCurrencyCode}`
+  const rateKey = createRateKey(
+    { pluginId: fromPluginId, tokenId: fromTokenId },
+    toCurrencyCode
+  )
   const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = mul(amount, rate)
   return convertedAmount
@@ -373,7 +377,12 @@ export const getTotalFiatAmountFromExchangeRates = (
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
       const currencyCode = getCurrencyCode(wallet, tokenId)
       const rate =
-        exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+        exchangeRates[
+          createRateKey(
+            { pluginId: wallet.currencyInfo.pluginId, tokenId },
+            isoFiatCurrencyCode
+          )
+        ] ?? '0'
       log.push(
         `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
       )

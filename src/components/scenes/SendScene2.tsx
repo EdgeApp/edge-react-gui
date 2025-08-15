@@ -43,6 +43,7 @@ import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { createRateKey } from '../../util/exchangeRates'
 import {
   addToFioAddressCache,
   checkRecordSendFee,
@@ -1299,7 +1300,12 @@ const SendComponent = (props: Props) => {
         }
         if (pinSpendingLimitsEnabled) {
           const rate =
-            exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ??
+            exchangeRates[
+              createRateKey(
+                { pluginId: coreWallet.currencyInfo.pluginId, tokenId },
+                defaultIsoFiat
+              )
+            ] ?? // TODO:
             INFINITY_STRING
           const totalNativeAmount = spendInfo.spendTargets.reduce(
             (prev, target) => add(target.nativeAmount ?? '0', prev),

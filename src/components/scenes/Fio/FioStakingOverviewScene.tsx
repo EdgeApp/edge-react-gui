@@ -232,7 +232,6 @@ export const FioStakingOverviewScene = connect<
     const { account } = state.core
     const { defaultIsoFiat, defaultFiat } = state.ui.settings
     const currencyWallet = account.currencyWallets[walletId]
-    const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
     const stakedNativeAmount = staked
@@ -260,7 +259,8 @@ export const FioStakingOverviewScene = connect<
     )(stakedNativeAmount ?? '0')
     const stakingFiatBalance = convertCurrency(
       state,
-      currencyCode,
+      currencyWallet.currencyInfo.pluginId,
+      tokenId,
       defaultIsoFiat,
       stakingDefaultCryptoAmount
     )
