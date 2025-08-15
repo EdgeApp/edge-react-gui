@@ -193,7 +193,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
       tokenId: selectedCrypto?.tokenId ?? null,
       displayCurrencyCode: selectedCryptoCurrencyCode,
       exchangeAmount: userInput,
-      fiatCurrencyCode: `iso:${selectedFiatCurrencyCode}`,
+      fiatCurrencyCode: selectedFiatCurrencyCode,
       amountType: lastUsedInput,
       direction: 'buy',
       regionCode: {

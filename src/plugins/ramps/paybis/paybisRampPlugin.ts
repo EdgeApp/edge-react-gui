@@ -224,6 +224,10 @@ interface ExtendedTokenId extends EdgeAsset {
   currencyCode?: string
 }
 
+const ensureIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
+}
+
 const WIDGET_URL = 'https://widget.paybis.com'
 const WIDGET_URL_SANDBOX = 'https://widget.sandbox.paybis.com'
 
@@ -664,7 +668,7 @@ export const paybisRampPlugin: RampPluginFactory = (
     }
 
     // Check if fiat/crypto pair is supported in any payment type
-    const fiat = removeIsoPrefix(fiatCurrencyCode)
+    const fiat = removeIsoPrefix(ensureIsoPrefix(fiatCurrencyCode))
     const pairs = paybisPairs[direction]?.data
     if (pairs == null) {
       return { supported: false }
@@ -732,7 +736,7 @@ export const paybisRampPlugin: RampPluginFactory = (
         // Check asset support
         const assetResult = checkAssetSupport(
           direction,
-          `iso:${fiatAsset.currencyCode}`,
+          ensureIsoPrefix(fiatAsset.currencyCode),
           cryptoAsset.pluginId,
           cryptoAsset.tokenId
         )
@@ -817,12 +821,12 @@ export const paybisRampPlugin: RampPluginFactory = (
         return []
       }
 
-      const fiat = removeIsoPrefix(fiatCurrencyCode)
+      const fiat = removeIsoPrefix(ensureIsoPrefix(fiatCurrencyCode))
 
       // Check asset support using helper
       const assetResult = checkAssetSupport(
         direction,
-        fiatCurrencyCode,
+        ensureIsoPrefix(fiatCurrencyCode),
         currencyPluginId,
         tokenId
       )
