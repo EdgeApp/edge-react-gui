@@ -54,9 +54,9 @@ export interface ButtonModalProps<Buttons> {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons extends Record<string, ButtonInfo>>(
-  props: ButtonModalProps<Buttons>
-) {
+export const ButtonsModal: React.FC<
+  ButtonModalProps<Record<string, ButtonInfo>>
+> = props => {
   const {
     bridge,
     title,
@@ -91,7 +91,7 @@ export function ButtonsModal<Buttons extends Record<string, ButtonInfo>>(
         result => {
           if (result) bridge.resolve(key)
         },
-        error => {
+        (error: unknown) => {
           showError(error)
         }
       )
