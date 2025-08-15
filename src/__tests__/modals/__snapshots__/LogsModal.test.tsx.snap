@@ -238,6 +238,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
           numberOfLines={0}
           style={
             [
+              {},
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",

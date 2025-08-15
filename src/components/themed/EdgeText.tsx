@@ -31,11 +31,14 @@ interface ParagraphProps extends TextProps {
   children: React.ReactNode
 
   center?: boolean
+  /** Makes sure the text doesn't overflow it's container */
+  fit?: boolean
+
   /** @deprecated A `Paragraph` *can* have `marginRem`, but *only* to avoid an extra `View` for spacing out `Paragraph(s)` in relation to their parent, *NOT* to give special spacing *between* `Paragraphs`. It's still preferable to have the parents deal with spacing outside of `Paragraphs`. */
   marginRem?: number[] | number
 }
 export const Paragraph: React.FC<ParagraphProps> = (props: ParagraphProps) => {
-  const { center = false, children, marginRem } = props
+  const { center = false, children, marginRem, fit = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
@@ -44,6 +47,7 @@ export const Paragraph: React.FC<ParagraphProps> = (props: ParagraphProps) => {
     <Text
       allowFontScaling={false}
       style={[
+        fit ? styles.fitText : {},
         styles.common,
         margin,
         center && styles.alignCenter,
@@ -166,6 +170,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     includeFontPadding: false
+  },
+  fitText: {
+    flexShrink: 1
   },
 
   colorWarning: {
