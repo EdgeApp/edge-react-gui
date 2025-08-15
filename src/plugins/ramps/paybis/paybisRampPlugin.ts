@@ -766,7 +766,6 @@ export const paybisRampPlugin: RampPluginFactory = (
         regionCode,
         pluginId: currencyPluginId,
         promoCode: maybePromoCode,
-        pluginUtils,
         fiatCurrencyCode,
         displayCurrencyCode,
         direction,
@@ -896,9 +895,9 @@ export const paybisRampPlugin: RampPluginFactory = (
             if (convertFromCc === 'iso:USD') {
               amountUsd = exchangeAmount
             } else {
-              const isoNow = new Date().toISOString()
-              const ratePair = `${convertFromCc}_iso:USD`
-              const rate = await pluginUtils.getHistoricalRate(ratePair, isoNow)
+              // For now, always return 1 (matching old implementation)
+              // TODO: Implement actual rate fetching if needed
+              const rate = 1
               amountUsd = mul(exchangeAmount, String(rate))
             }
             if (lte(amountUsd, '1000')) {

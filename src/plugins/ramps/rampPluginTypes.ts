@@ -43,7 +43,7 @@ export interface RampQuoteRequest {
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
-  pluginUtils: FiatPluginUtils
+  pluginUtils?: FiatPluginUtils
   promoCode?: string
 }
 

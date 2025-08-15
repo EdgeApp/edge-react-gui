@@ -199,11 +199,6 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
       regionCode: {
         countryCode: countryCode || 'US',
         stateProvinceCode
-      },
-      pluginUtils: {
-        getHistoricalRate: async (_codePair: string, _date: string) => {
-          return 1
-        }
       }
     }
   }, [
