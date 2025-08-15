@@ -18,7 +18,6 @@ interface UseRampQuotesOptions {
   /** The quote request to fetch quotes for. If null, no quotes will be fetched. */
   rampQuoteRequest: RampQuoteRequest | null
   plugins: Record<string, RampPlugin>
-  precomputedQuotes?: RampQuoteResult[]
   staleTime?: number
 }
 
@@ -52,13 +51,13 @@ const isQuoteExpiringSoon = (
 export const useRampQuotes = ({
   rampQuoteRequest,
   plugins,
-  precomputedQuotes = [],
   staleTime = 30000
 }: UseRampQuotesOptions): UseRampQuotesResult => {
   const queryClient = useQueryClient()
 
   // Stable query key that doesn't change based on expired quotes
-  const queryKey = ['rampQuotes', rampQuoteRequest]
+  const pluginIds = Object.keys(plugins).sort() // Sort for stability
+  const queryKey = ['rampQuotes', rampQuoteRequest, pluginIds]
 
   const {
     data: quoteResults = [],
@@ -75,91 +74,38 @@ export const useRampQuotes = ({
           queryKey
         ) ?? []
 
-      // Determine which plugins need fresh quotes
-      const pluginsNeedingRefresh = new Set<string>()
-      const validPrevResults = new Map<
+      // Create a map of previous results by plugin ID
+      const prevResultsMap = new Map<
         string,
         Result<RampQuoteResult[], QuoteError>
       >()
-
-      // Check previous results for expired quotes
       prevResults.forEach(result => {
-        if (result.ok) {
-          const pluginId = result.value[0]?.pluginId
-          if (pluginId == null) return
-
-          const validQuotes = result.value.filter(
-            quote => !isQuoteExpired(quote)
-          )
-          const hasExpiredQuotes = result.value.some(quote =>
-            isQuoteExpired(quote)
-          )
-
-          if (hasExpiredQuotes || validQuotes.length === 0) {
-            pluginsNeedingRefresh.add(pluginId)
-          } else {
-            // Store the complete successful result with only valid quotes
-            validPrevResults.set(pluginId, { ok: true, value: validQuotes })
-          }
-        } else {
-          // Preserve error results as-is
-          const pluginId = result.error.pluginId
-          validPrevResults.set(pluginId, result)
-          // Don't add to pluginsNeedingRefresh - we keep the error
-        }
+        const pluginId = result.ok
+          ? result.value[0]?.pluginId
+          : result.error.pluginId
+        if (pluginId != null) prevResultsMap.set(pluginId, result)
       })
 
-      // If this is the first fetch (no prev results), use precomputed quotes or fetch all
-      if (prevResults.length === 0) {
-        if (precomputedQuotes.length > 0) {
-          // Group precomputed quotes by plugin
-          const groupedPrecomputed = new Map<string, RampQuoteResult[]>()
+      // Fetch quotes from all plugins, reusing valid cached quotes
+      const resultPromises = Object.entries(plugins).map(
+        async ([pluginId, plugin]): Promise<
+          Result<RampQuoteResult[], QuoteError>
+        > => {
+          const prevResult = prevResultsMap.get(pluginId)
 
-          precomputedQuotes.forEach(quote => {
-            const existing = groupedPrecomputed.get(quote.pluginId) ?? []
-            groupedPrecomputed.set(quote.pluginId, [...existing, quote])
-          })
-
-          // Convert to results format
-          const initialResults: Array<Result<RampQuoteResult[], QuoteError>> =
-            []
-
-          groupedPrecomputed.forEach((quotes, pluginId) => {
-            const validQuotes = quotes.filter(quote => !isQuoteExpired(quote))
+          // If we have valid non-expired quotes, use them
+          if (prevResult?.ok === true) {
+            const validQuotes = prevResult.value.filter(
+              quote => !isQuoteExpired(quote)
+            )
             if (validQuotes.length > 0) {
-              initialResults.push({ ok: true, value: validQuotes })
-            } else {
-              // All quotes expired for this plugin, need to fetch
-              pluginsNeedingRefresh.add(pluginId)
+              return { ok: true, value: validQuotes }
             }
-          })
-
-          // If we have some valid precomputed quotes, return them
-          if (initialResults.length > 0 && pluginsNeedingRefresh.size === 0) {
-            return initialResults
           }
-        } else {
-          // No precomputed quotes, fetch from all plugins
-          Object.keys(plugins).forEach(pluginId => {
-            pluginsNeedingRefresh.add(pluginId)
-          })
-        }
-      }
 
-      // If no plugins need refresh, return previous results
-      if (pluginsNeedingRefresh.size === 0) {
-        return prevResults
-      }
-
-      // Fetch only from plugins that need refresh
-      const freshResultsPromises = Array.from(pluginsNeedingRefresh).map(
-        async (pluginId): Promise<Result<RampQuoteResult[], QuoteError>> => {
-          const plugin = plugins[pluginId]
-          if (plugin == null) return { ok: true, value: [] }
-
+          // Otherwise fetch fresh quotes
           try {
             const quotes = await plugin.fetchQuote(rampQuoteRequest)
-            // Return quotes as-is (empty array means plugin doesn't support the request)
             return { ok: true, value: quotes }
           } catch (error) {
             console.warn(`Failed to get quote from ${pluginId}:`, error)
@@ -175,24 +121,7 @@ export const useRampQuotes = ({
         }
       )
 
-      const freshResults = await Promise.all(freshResultsPromises)
-
-      // Merge fresh results with valid previous results
-      const mergedResults: Array<Result<RampQuoteResult[], QuoteError>> = []
-
-      // Add fresh results
-      freshResults.forEach(result => {
-        mergedResults.push(result)
-      })
-
-      // Add valid previous results (including errors) for plugins we didn't refresh
-      validPrevResults.forEach((result, pluginId) => {
-        if (!pluginsNeedingRefresh.has(pluginId)) {
-          mergedResults.push(result)
-        }
-      })
-
-      return mergedResults
+      return await Promise.all(resultPromises)
     },
     refetchOnMount: 'always',
     refetchInterval: query => {
