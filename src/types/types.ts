@@ -13,13 +13,11 @@ import {
 } from 'cleaners'
 import type {
   EdgeCurrencyWallet,
-  EdgeMetadata,
   EdgeToken,
   EdgeTokenId
 } from 'edge-core-js/types'
 
 import type { LocaleStringKey } from '../locales/en_US'
-import type { RootState } from './reduxTypes'
 import type { Theme } from './Theme'
 
 /** @deprecated Only to be used for payloads that still allow undefined for
@@ -87,32 +85,6 @@ export interface FlatListItem<T> {
   item: T
 }
 
-export interface DeviceDimensions {
-  keyboardHeight: number
-}
-
-export interface GuiTouchIdInfo {
-  isTouchEnabled: boolean
-  isTouchSupported: boolean
-}
-
-export interface GuiReceiveAddress {
-  metadata: EdgeMetadata
-  publicAddress: string
-  legacyAddress?: string
-  segwitAddress?: string
-  nativeAmount: string
-}
-
-export interface CurrencyConverter {
-  convertCurrency: (
-    state: RootState,
-    currencyCode: string,
-    isoFiatCurrencyCode: string,
-    balanceInCryptoDisplay: string
-  ) => number
-}
-
 const asPasswordReminder = asObject({
   needsPasswordCheck: asMaybe(asBoolean, false),
   lastLoginDate: asMaybe(asNumber, 0),
@@ -135,9 +107,6 @@ export const asSpendingLimits = asObject({
 const asAccountNotifDismissInfo = asObject({
   ip2FaNotifShown: asMaybe(asBoolean, false)
 })
-export type AccountNotifDismissInfo = ReturnType<
-  typeof asAccountNotifDismissInfo
->
 
 const asTokenWarningsShown = asArray(asString)
 
