@@ -34,14 +34,13 @@ import { EdgeText } from '../themed/EdgeText'
 
 export interface RampSelectOptionParams {
   rampQuoteRequest: RampQuoteRequest
-  quotes?: RampQuoteResult[]
 }
 
 interface Props extends BuyTabSceneProps<'rampSelectOption'> {}
 
 export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
   const { route } = props
-  const { rampQuoteRequest, quotes: precomputedQuotes } = route.params
+  const { rampQuoteRequest } = route.params
 
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
@@ -56,7 +55,7 @@ export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
     return map
   }, [rampPluginArray])
 
-  // Use supported plugins hook only if no precomputed quotes
+  // Use supported plugins hook
   const { supportedPlugins } = useSupportedPlugins({
     selectedWallet: rampQuoteRequest.wallet,
     selectedCrypto:
@@ -76,15 +75,12 @@ export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
     direction: rampQuoteRequest.direction
   })
 
-  // Use precomputed quotes if available, otherwise use supported plugins
-  const pluginsToUse =
-    precomputedQuotes != null
-      ? rampPlugins
-      : Object.fromEntries(
-          supportedPlugins.map(plugin => [plugin.pluginId, plugin])
-        )
+  // Use supported plugins
+  const pluginsToUse = Object.fromEntries(
+    supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+  )
 
-  // Use the new hook with precomputed quotes
+  // Use the ramp quotes hook
   const {
     quotes: allQuotes,
     isLoading: isLoadingQuotes,
@@ -92,8 +88,7 @@ export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
     errors: failedQuotes
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: pluginsToUse,
-    precomputedQuotes
+    plugins: pluginsToUse
   })
 
   const handleQuotePress = async (quote: RampQuoteResult): Promise<void> => {
