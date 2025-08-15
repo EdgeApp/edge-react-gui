@@ -73,6 +73,20 @@ const pluginDisplayName = 'Banxa'
 
 const TESTNET_ADDRESS = 'bc1qv752cnr3rcht3yyfq2nn6nv7zwczqjmcm80y6w'
 
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  banxaCoin: string,
+  paymentType: FiatPaymentType,
+  amountType: 'fiat' | 'crypto'
+): string => {
+  return `${direction}-${fiatCode}-${banxaCoin}-${paymentType}-${amountType}`
+}
+
 type AllowedPaymentTypes = Record<
   FiatDirection,
   Partial<Record<FiatPaymentType, boolean>>
@@ -996,31 +1010,50 @@ export const banxaRampPlugin: RampPluginFactory = (
 
             let maxAmountString = ''
             if (isMaxAmount) {
-              if (amountType === 'fiat') {
-                maxAmountString = paymentObj.max
+              const cacheKey = getCacheKey(
+                direction,
+                fiatCode,
+                banxaCoin,
+                paymentType,
+                amountType
+              )
+              const cached = maxAmountCache.get(cacheKey)
+              const now = Date.now()
+
+              if (cached != null && now - cached.timestamp < MAX_CACHE_TTL) {
+                maxAmountString = cached.amount
               } else {
-                // For crypto, we need to fetch a quote with max fiat to get the crypto amount
-                const maxFiatQueryParams: any = {
-                  account_reference: username,
-                  payment_method_id: paymentObj.id,
-                  source: direction === 'buy' ? fiatCode : banxaCoin,
-                  target: direction === 'buy' ? banxaCoin : fiatCode
-                }
-                if (direction === 'buy') {
-                  maxFiatQueryParams.source_amount = paymentObj.max
+                if (amountType === 'fiat') {
+                  maxAmountString = paymentObj.max
                 } else {
-                  maxFiatQueryParams.target_amount = paymentObj.max
+                  // For crypto, we need to fetch a quote with max fiat to get the crypto amount
+                  const maxFiatQueryParams: any = {
+                    account_reference: username,
+                    payment_method_id: paymentObj.id,
+                    source: direction === 'buy' ? fiatCode : banxaCoin,
+                    target: direction === 'buy' ? banxaCoin : fiatCode
+                  }
+                  if (direction === 'buy') {
+                    maxFiatQueryParams.source_amount = paymentObj.max
+                  } else {
+                    maxFiatQueryParams.target_amount = paymentObj.max
+                  }
+                  const maxResponse = await banxaFetch({
+                    method: 'GET',
+                    url: apiUrl,
+                    hmacUser,
+                    path: 'api/prices',
+                    apiKey,
+                    queryParams: maxFiatQueryParams
+                  })
+                  const maxPrices = asBanxaPricesResponse(maxResponse)
+                  maxAmountString = maxPrices.data.prices[0].coin_amount
                 }
-                const maxResponse = await banxaFetch({
-                  method: 'GET',
-                  url: apiUrl,
-                  hmacUser,
-                  path: 'api/prices',
-                  apiKey,
-                  queryParams: maxFiatQueryParams
+                // Cache the result
+                maxAmountCache.set(cacheKey, {
+                  amount: maxAmountString,
+                  timestamp: now
                 })
-                const maxPrices = asBanxaPricesResponse(maxResponse)
-                maxAmountString = maxPrices.data.prices[0].coin_amount
               }
             }
 

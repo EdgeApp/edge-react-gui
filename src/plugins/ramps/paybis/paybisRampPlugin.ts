@@ -83,6 +83,20 @@ import { asInitOptions } from './paybisRampTypes'
 const pluginId = 'paybis'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/paybis.png`
 const pluginDisplayName = 'Paybis'
+
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  cryptoCode: string,
+  amountType: 'fiat' | 'crypto',
+  paymentMethod: string
+): string => {
+  return `${direction}-${fiatCode}-${cryptoCode}-${amountType}-${paymentMethod}`
+}
 const providerDisplayName = pluginDisplayName
 const supportEmail = 'support@paybis.com'
 
@@ -813,8 +827,27 @@ export const paybisRampPlugin: RampPluginFactory = (
           let amount
 
           if (isMaxAmount) {
-            // Use default max amounts
-            amount = amountType === 'fiat' ? '10000' : '10'
+            const cacheKey = getCacheKey(
+              direction,
+              fiat,
+              paybisCc,
+              amountType,
+              paymentMethod
+            )
+            const cached = maxAmountCache.get(cacheKey)
+            const now = Date.now()
+
+            if (cached != null && now - cached.timestamp < MAX_CACHE_TTL) {
+              amount = cached.amount
+            } else {
+              // Use default max amounts
+              amount = amountType === 'fiat' ? '10000' : '10'
+              // Cache the result
+              maxAmountCache.set(cacheKey, {
+                amount,
+                timestamp: now
+              })
+            }
           } else {
             amount = exchangeAmountString
           }

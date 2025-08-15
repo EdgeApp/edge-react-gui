@@ -47,6 +47,14 @@ interface ProviderConfigCache {
 
 const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (fiatCode: string, cryptoCode: string): string => {
+  return `buy-${fiatCode}-${cryptoCode}-fiat` // Revolut only supports buy with fiat amount
+}
+
 export const revolutRampPlugin: RampPluginFactory = (
   config: RampPluginConfig
 ) => {
@@ -254,7 +262,20 @@ export const revolutRampPlugin: RampPluginFactory = (
         // Handle max amount
         let amount: string
         if (isMaxAmount) {
-          amount = revolutFiat.max_limit.toString()
+          const cacheKey = getCacheKey(revolutFiat.currency, revolutCrypto.id)
+          const cached = maxAmountCache.get(cacheKey)
+          const now = Date.now()
+
+          if (cached != null && now - cached.timestamp < MAX_CACHE_TTL) {
+            amount = cached.amount
+          } else {
+            amount = revolutFiat.max_limit.toString()
+            // Cache the result
+            maxAmountCache.set(cacheKey, {
+              amount,
+              timestamp: now
+            })
+          }
         } else {
           amount = exchangeAmountString
           // Check if amount is within limits
