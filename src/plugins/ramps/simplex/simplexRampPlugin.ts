@@ -575,7 +575,10 @@ export const simplexRampPlugin: RampPluginFactory = (
         }
 
         // All validations passed
-        return { supported: true }
+        return {
+          supported: true,
+          supportedAmountTypes: ['fiat', 'crypto']
+        }
       } catch (error) {
         // Only throw for actual errors (network issues, etc)
         // Never throw for unsupported combinations

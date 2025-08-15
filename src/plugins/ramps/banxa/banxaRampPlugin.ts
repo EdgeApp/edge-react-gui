@@ -867,7 +867,10 @@ export const banxaRampPlugin: RampPluginFactory = (
           return { supported: false }
         }
 
-        return { supported: true }
+        return {
+          supported: true,
+          supportedAmountTypes: ['fiat', 'crypto']
+        }
       } catch (error) {
         console.error('Banxa: Error in checkSupport:', error)
         return { supported: false }

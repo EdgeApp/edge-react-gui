@@ -5,7 +5,8 @@ import * as React from 'react'
 import type { FiatPluginRegionCode } from '../plugins/gui/fiatPluginTypes'
 import type {
   RampCheckSupportRequest,
-  RampPlugin
+  RampPlugin,
+  RampSupportResult
 } from '../plugins/ramps/rampPluginTypes'
 
 interface UseSupportedPluginsParams {
@@ -21,8 +22,13 @@ interface UseSupportedPluginsParams {
   direction?: 'buy' | 'sell'
 }
 
+export interface SupportedPluginResult {
+  plugin: RampPlugin
+  supportResult: RampSupportResult
+}
+
 interface UseSupportedPluginsResult {
-  supportedPlugins: RampPlugin[]
+  supportedPlugins: SupportedPluginResult[]
   isLoading: boolean
   error: Error | null
 }
@@ -60,7 +66,7 @@ export const useSupportedPlugins = ({
     data: supportedPlugins = [],
     isLoading,
     error
-  } = useQuery<RampPlugin[]>({
+  } = useQuery<SupportedPluginResult[]>({
     queryKey,
     queryFn: async () => {
       // Early return if required params are missing
@@ -90,10 +96,10 @@ export const useSupportedPlugins = ({
       const supportChecks = await Promise.all(
         Object.values(plugins).map(async plugin => {
           try {
-            const result = await plugin.checkSupport(checkSupportRequest)
+            const supportResult = await plugin.checkSupport(checkSupportRequest)
             return {
               plugin,
-              supported: result.supported
+              supportResult
             }
           } catch (error) {
             console.warn(
@@ -102,16 +108,14 @@ export const useSupportedPlugins = ({
             )
             return {
               plugin,
-              supported: false
+              supportResult: { supported: false }
             }
           }
         })
       )
 
       // Filter only supported plugins
-      return supportChecks
-        .filter(check => check.supported)
-        .map(check => check.plugin)
+      return supportChecks.filter(check => check.supportResult.supported)
     },
     enabled: Boolean(
       selectedWallet && selectedCrypto && selectedFiatCurrencyCode && regionCode

@@ -31,6 +31,8 @@ export interface RampCheckSupportRequest {
 
 export interface RampSupportResult {
   supported: boolean
+  // Indicates which amount types are supported by this plugin
+  supportedAmountTypes?: Array<'fiat' | 'crypto'>
 }
 
 export interface RampQuoteRequest {
