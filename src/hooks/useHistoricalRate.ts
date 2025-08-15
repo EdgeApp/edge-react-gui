@@ -1,17 +1,26 @@
-import type { EdgeFetchFunction } from 'edge-core-js'
+import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
-import { getHistoricalRate } from '../util/exchangeRates'
+import { getHistoricalCryptoRate } from '../util/exchangeRates'
 import { useAsyncValue } from './useAsyncValue'
 
 export const useHistoricalRate = (
-  codePair: string,
+  pluginId: string,
+  tokenId: EdgeTokenId,
+  targetFiat: string,
   date: string,
   maxQuerySize?: number,
   doFetch?: EdgeFetchFunction
 ) => {
   const [historicalRate = 0] = useAsyncValue(async (): Promise<number> => {
-    return await getHistoricalRate(codePair, date, maxQuerySize, doFetch)
-  }, [codePair, date, maxQuerySize, doFetch])
+    return await getHistoricalCryptoRate(
+      pluginId,
+      tokenId,
+      targetFiat,
+      date,
+      maxQuerySize,
+      doFetch
+    )
+  }, [pluginId, tokenId, targetFiat, date, maxQuerySize, doFetch])
 
   return historicalRate
 }
