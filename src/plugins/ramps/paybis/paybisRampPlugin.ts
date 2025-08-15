@@ -718,7 +718,6 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       const {
         amountType,
-        exchangeAmount,
         regionCode,
         pluginId: currencyPluginId,
         promoCode: maybePromoCode,
@@ -727,6 +726,11 @@ export const paybisRampPlugin: RampPluginFactory = (
         direction,
         tokenId
       } = request
+
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmount =
+        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
       // Validate region restrictions
       if (regionCode != null) {
@@ -805,24 +809,31 @@ export const paybisRampPlugin: RampPluginFactory = (
           let directionChange: 'from' | 'to'
           let amount
 
+          if (isMaxAmount) {
+            // Use default max amounts
+            amount = amountType === 'fiat' ? '10000' : '10'
+          } else {
+            amount = exchangeAmount
+          }
+
           if (direction === 'buy') {
             currencyCodeFrom = fiat
             currencyCodeTo = paybisCc
             if (amountType === 'fiat') {
               directionChange = 'from'
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
             } else {
               directionChange = 'to'
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
             }
           } else {
             currencyCodeFrom = paybisCc
             currencyCodeTo = fiat
             if (amountType === 'fiat') {
-              amount = round(exchangeAmount, FIAT_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, FIAT_DECIMALS)
               directionChange = 'to'
             } else {
-              amount = round(exchangeAmount, CRYPTO_DECIMALS)
+              amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
               directionChange = 'from'
             }
           }
@@ -838,7 +849,7 @@ export const paybisRampPlugin: RampPluginFactory = (
           }
 
           let promoCode: string | undefined
-          if (maybePromoCode != null) {
+          if (maybePromoCode != null && !isMaxAmount) {
             const isoNow = new Date().toISOString()
             let amountUsd: string
             const convertFromCc =

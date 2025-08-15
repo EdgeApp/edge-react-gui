@@ -853,13 +853,17 @@ export const banxaRampPlugin: RampPluginFactory = (
       const {
         direction,
         regionCode,
-        exchangeAmount,
         amountType,
         pluginId: currencyPluginId,
         fiatCurrencyCode,
         displayCurrencyCode,
         tokenId
       } = request
+
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmount =
+        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
       // Fetch provider configuration (cached or fresh)
       const config = await fetchProviderConfig()
@@ -978,12 +982,44 @@ export const banxaRampPlugin: RampPluginFactory = (
             payment_method_id: paymentObj.id
           }
 
+          let maxAmountString = ''
+          if (isMaxAmount) {
+            if (amountType === 'fiat') {
+              maxAmountString = paymentObj.max
+            } else {
+              // For crypto, we need to fetch a quote with max fiat to get the crypto amount
+              const maxFiatQueryParams: any = {
+                account_reference: username,
+                payment_method_id: paymentObj.id,
+                source: direction === 'buy' ? fiatCode : banxaCoin,
+                target: direction === 'buy' ? banxaCoin : fiatCode
+              }
+              if (direction === 'buy') {
+                maxFiatQueryParams.source_amount = paymentObj.max
+              } else {
+                maxFiatQueryParams.target_amount = paymentObj.max
+              }
+              const maxResponse = await banxaFetch({
+                method: 'GET',
+                url: apiUrl,
+                hmacUser,
+                path: 'api/prices',
+                apiKey,
+                queryParams: maxFiatQueryParams
+              })
+              const maxPrices = asBanxaPricesResponse(maxResponse)
+              maxAmountString = maxPrices.data.prices[0].coin_amount
+            }
+          }
+
           if (direction === 'buy') {
             queryParams.source = fiatCode
             queryParams.target = banxaCoin
             if (amountType === 'fiat') {
-              queryParams.source_amount = exchangeAmount
-              if (!checkMinMax(exchangeAmount, paymentObj)) {
+              queryParams.source_amount = isMaxAmount
+                ? maxAmountString
+                : exchangeAmount
+              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
                 if (gt(exchangeAmount, paymentObj.max)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
@@ -999,16 +1035,21 @@ export const banxaRampPlugin: RampPluginFactory = (
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 }
+                continue
               }
             } else {
-              queryParams.target_amount = exchangeAmount
+              queryParams.target_amount = isMaxAmount
+                ? maxAmountString
+                : exchangeAmount
             }
           } else {
             queryParams.source = banxaCoin
             queryParams.target = fiatCode
             if (amountType === 'fiat') {
-              queryParams.target_amount = exchangeAmount
-              if (!checkMinMax(exchangeAmount, paymentObj)) {
+              queryParams.target_amount = isMaxAmount
+                ? maxAmountString
+                : exchangeAmount
+              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
                 if (gt(exchangeAmount, paymentObj.max)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
@@ -1024,9 +1065,12 @@ export const banxaRampPlugin: RampPluginFactory = (
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 }
+                continue
               }
             } else {
-              queryParams.source_amount = exchangeAmount
+              queryParams.source_amount = isMaxAmount
+                ? maxAmountString
+                : exchangeAmount
             }
           }
 
@@ -1252,7 +1296,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                   onClose: () => {
                     clearInterval(interval)
                   },
-                  onUrlChange: async (changeUrl: string) => {
+                  onUrlChange: async (changeUrl: string): Promise<void> => {
                     console.log(`onUrlChange url=${changeUrl}`)
                     if (changeUrl === RETURN_URL_SUCCESS) {
                       clearInterval(interval)

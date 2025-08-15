@@ -675,7 +675,6 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       const {
         amountType,
         direction,
-        exchangeAmount,
         fiatCurrencyCode,
         regionCode,
         pluginId: currencyPluginId,
@@ -683,6 +682,11 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         displayCurrencyCode
       } = request
       const isBuy = direction === 'buy'
+
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmount =
+        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
       // Validate region using helper function
       if (!isRegionSupported(regionCode)) {
@@ -747,7 +751,38 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
           ? fiatCurrencyObj.max_digits_in_decimal_part
           : cryptoCurrencyObj.max_digits_in_decimal_part
 
-      const amount = toFixed(exchangeAmount, amountPrecision)
+      let amount = ''
+      if (isMaxAmount) {
+        // Use 1000 as max fiat (their no-KYC limit)
+        if (amountType === 'fiat') {
+          amount = '1000'
+        } else {
+          // For crypto, fetch a quote with 1000 fiat to get crypto amount
+          const maxFiatRequest: BityQuoteRequest = {
+            input: {
+              amount: isBuy ? '1000' : undefined,
+              currency: isBuy ? fiatCode : cryptoCode
+            },
+            output: {
+              amount: isBuy ? undefined : '1000',
+              currency: isBuy ? cryptoCode : fiatCode
+            }
+          }
+          try {
+            const maxRaw = await fetchBityQuote(maxFiatRequest, apiUrl)
+            const maxQuote = asBityQuote(maxRaw)
+            amount = isBuy ? maxQuote.output.amount : maxQuote.input.amount
+          } catch (error) {
+            console.error(
+              'Bity fetchQuote error: Failed to fetch max quote',
+              error
+            )
+            return []
+          }
+        }
+      } else {
+        amount = toFixed(exchangeAmount, amountPrecision)
+      }
       const isReverseQuote =
         (isBuy && amountType === 'crypto') || (!isBuy && amountType === 'fiat')
       const quoteRequest: BityQuoteRequest = {
@@ -781,34 +816,9 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       // Because Bity only supports <=1k transactions w/o KYC and we have no
       // way to KYC a user, add a 1k limit
-      if (amountType === 'fiat') {
-        if (gt(exchangeAmount, '1000')) {
-          // Over limit
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'overLimit',
-            errorAmount: 1000,
-            displayCurrencyCode: fiatCurrencyCode
-          })
-        }
-      } else {
-        // User entered a crypto amount. Get the crypto amount for 1k fiat
-        // so we can compare crypto amounts.
-        const kRequest: BityQuoteRequest = {
-          input: {
-            amount: isBuy ? '1000' : undefined,
-            currency: isBuy ? fiatCode : cryptoCode
-          },
-          output: {
-            amount: isBuy ? undefined : '1000',
-            currency: isBuy ? cryptoCode : fiatCode
-          }
-        }
-
-        const kRaw = await fetchBityQuote(kRequest, apiUrl)
-        const kBityQuote = asBityQuote(kRaw)
-        if (isBuy) {
-          if (lt(kBityQuote.output.amount, exchangeAmount)) {
+      if (!isMaxAmount) {
+        if (amountType === 'fiat') {
+          if (gt(exchangeAmount, '1000')) {
             // Over limit
             throw new FiatProviderError({
               providerId: pluginId,
@@ -818,14 +828,41 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
             })
           }
         } else {
-          if (lt(kBityQuote.input.amount, exchangeAmount)) {
-            // Over limit
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'overLimit',
-              errorAmount: 1000,
-              displayCurrencyCode: fiatCurrencyCode
-            })
+          // User entered a crypto amount. Get the crypto amount for 1k fiat
+          // so we can compare crypto amounts.
+          const kRequest: BityQuoteRequest = {
+            input: {
+              amount: isBuy ? '1000' : undefined,
+              currency: isBuy ? fiatCode : cryptoCode
+            },
+            output: {
+              amount: isBuy ? undefined : '1000',
+              currency: isBuy ? cryptoCode : fiatCode
+            }
+          }
+
+          const kRaw = await fetchBityQuote(kRequest, apiUrl)
+          const kBityQuote = asBityQuote(kRaw)
+          if (isBuy) {
+            if (lt(kBityQuote.output.amount, exchangeAmount)) {
+              // Over limit
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'overLimit',
+                errorAmount: 1000,
+                displayCurrencyCode: fiatCurrencyCode
+              })
+            }
+          } else {
+            if (lt(kBityQuote.input.amount, exchangeAmount)) {
+              // Over limit
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'overLimit',
+                errorAmount: 1000,
+                displayCurrencyCode: fiatCurrencyCode
+              })
+            }
           }
         }
       }

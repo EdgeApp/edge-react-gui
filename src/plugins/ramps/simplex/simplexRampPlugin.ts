@@ -11,7 +11,7 @@ import { fetchInfo } from '../../../util/network'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
-import { rampDeeplinkManager } from '../rampDeeplinkHandler'
+import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
 import type {
   ProviderToken,
   RampApproveQuoteParams,
@@ -387,48 +387,52 @@ export const simplexRampPlugin: RampPluginFactory = (
     const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
     // Register deeplink handler
-    rampDeeplinkManager.register('buy', pluginId, async link => {
-      if (link.direction !== 'buy') return
+    rampDeeplinkManager.register(
+      'buy',
+      pluginId,
+      async (link: RampLink): Promise<void> => {
+        if (link.direction !== 'buy') return
 
-      const orderId = link.query.orderId ?? 'unknown'
-      const status = link.query.status?.replace('?', '')
+        const orderId = link.query.orderId ?? 'unknown'
+        const status = link.query.status?.replace('?', '')
 
-      switch (status) {
-        case 'success': {
-          onLogEvent('Buy_Success', {
-            conversionValues: {
-              conversionType: 'buy',
-              sourceFiatCurrencyCode: simplexFiatCode,
-              sourceFiatAmount: quote.fiat_money.amount.toString(),
-              destAmount: new CryptoAmount({
-                currencyConfig: coreWallet.currencyConfig,
-                currencyCode: coreWallet.currencyInfo.currencyCode,
-                exchangeAmount: quote.digital_money.amount.toString()
-              }),
-              fiatProviderId: pluginId,
-              orderId
-            }
-          })
-          navigation.pop()
-          break
-        }
-        case 'failure': {
-          showToast(
-            lstrings.fiat_plugin_buy_failed_try_again,
-            NOT_SUCCESS_TOAST_HIDE_MS
-          )
-          navigation.pop()
-          break
-        }
-        default: {
-          showToast(
-            lstrings.fiat_plugin_buy_unknown_status,
-            NOT_SUCCESS_TOAST_HIDE_MS
-          )
-          navigation.pop()
+        switch (status) {
+          case 'success': {
+            onLogEvent('Buy_Success', {
+              conversionValues: {
+                conversionType: 'buy',
+                sourceFiatCurrencyCode: simplexFiatCode,
+                sourceFiatAmount: quote.fiat_money.amount.toString(),
+                destAmount: new CryptoAmount({
+                  currencyConfig: coreWallet.currencyConfig,
+                  currencyCode: coreWallet.currencyInfo.currencyCode,
+                  exchangeAmount: quote.digital_money.amount.toString()
+                }),
+                fiatProviderId: pluginId,
+                orderId
+              }
+            })
+            navigation.pop()
+            break
+          }
+          case 'failure': {
+            showToast(
+              lstrings.fiat_plugin_buy_failed_try_again,
+              NOT_SUCCESS_TOAST_HIDE_MS
+            )
+            navigation.pop()
+            break
+          }
+          default: {
+            showToast(
+              lstrings.fiat_plugin_buy_unknown_status,
+              NOT_SUCCESS_TOAST_HIDE_MS
+            )
+            navigation.pop()
+          }
         }
       }
-    })
+    )
 
     // Open external webview
     if (Platform.OS === 'ios') {
@@ -540,13 +544,17 @@ export const simplexRampPlugin: RampPluginFactory = (
     ): Promise<RampQuoteResult[]> => {
       const {
         amountType,
-        exchangeAmount,
         regionCode,
         pluginId: currencyPluginId,
         fiatCurrencyCode,
         displayCurrencyCode,
         direction
       } = request
+
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmount =
+        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
       // Validate direction
       if (!validateDirection(direction)) {
@@ -587,23 +595,31 @@ export const simplexRampPlugin: RampPluginFactory = (
 
       // Prepare quote request
       const ts = Math.floor(Date.now() / 1000)
-      let socn: string, tacn: string
-      const soam = parseFloat(exchangeAmount)
+      let sourceCurrencyName: string
+      let targetCurrencyName: string
+      let sourceAmount: number
+
+      if (isMaxAmount) {
+        // Use reasonable max amounts
+        sourceAmount = amountType === 'fiat' ? 50000 : 100
+      } else {
+        sourceAmount = parseFloat(exchangeAmount)
+      }
 
       if (amountType === 'fiat') {
-        socn = simplexFiatCode
-        tacn = simplexCryptoCode
+        sourceCurrencyName = simplexFiatCode
+        targetCurrencyName = simplexCryptoCode
       } else {
-        socn = simplexCryptoCode
-        tacn = simplexFiatCode
+        sourceCurrencyName = simplexCryptoCode
+        targetCurrencyName = simplexFiatCode
       }
 
       const jwtData: SimplexQuoteJwtData = {
         euid: state.simplexUserId,
         ts,
-        soam,
-        socn,
-        tacn
+        soam: sourceAmount,
+        socn: sourceCurrencyName,
+        tacn: targetCurrencyName
       }
 
       // Get JWT token
@@ -628,7 +644,7 @@ export const simplexRampPlugin: RampPluginFactory = (
           )
           if (result != null && result.length >= 4) {
             const [, fiatCode, minLimit, maxLimit] = result
-            if (gt(exchangeAmount, maxLimit)) {
+            if (!isMaxAmount && gt(exchangeAmount, maxLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'overLimit',
@@ -636,7 +652,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                 displayCurrencyCode: fiatCode
               })
             }
-            if (lt(exchangeAmount, minLimit)) {
+            if (!isMaxAmount && lt(exchangeAmount, minLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'underLimit',

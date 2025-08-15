@@ -170,14 +170,18 @@ export const revolutRampPlugin: RampPluginFactory = (
       request: RampQuoteRequest
     ): Promise<RampQuoteResult[]> => {
       const {
+        fiatCurrencyCode,
+        regionCode,
         pluginId: currencyPluginId,
         tokenId,
         displayCurrencyCode,
-        exchangeAmount,
-        fiatCurrencyCode,
-        direction,
-        regionCode
+        direction
       } = request
+
+      const isMaxAmount =
+        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const exchangeAmount =
+        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
       // Check direction support
       if (!validateDirection(direction)) {
@@ -241,21 +245,37 @@ export const revolutRampPlugin: RampPluginFactory = (
         return []
       }
 
-      // Check if amount is within limits
-      const amountNum = parseFloat(exchangeAmount)
-      if (
-        amountNum < revolutFiat.min_limit ||
-        amountNum > revolutFiat.max_limit
-      ) {
-        // Return empty array for amounts outside supported range
-        return []
+      // Handle max amount
+      let amount: string
+      if (isMaxAmount) {
+        amount = revolutFiat.max_limit.toString()
+      } else {
+        amount = exchangeAmount
+        // Check if amount is within limits
+        const amountNum = parseFloat(amount)
+        if (amountNum < revolutFiat.min_limit) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'underLimit',
+            errorAmount: revolutFiat.min_limit,
+            displayCurrencyCode: revolutFiat.currency
+          })
+        }
+        if (amountNum > revolutFiat.max_limit) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'overLimit',
+            errorAmount: revolutFiat.max_limit,
+            displayCurrencyCode: revolutFiat.currency
+          })
+        }
       }
 
       // Fetch quote from Revolut (API only needs country code)
       const quoteData = await fetchRevolutQuote(
         {
           fiat: revolutFiat.currency,
-          amount: exchangeAmount,
+          amount,
           crypto: revolutCrypto.id,
           payment: 'revolut', // Only revolut is supported at the moment
           region: regionCode.countryCode
