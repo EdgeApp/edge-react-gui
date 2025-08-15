@@ -720,7 +720,10 @@ export const paybisRampPlugin: RampPluginFactory = (
       }
 
       // If we get here, it's supported
-      return { supported: true }
+      return {
+        supported: true,
+        supportedAmountTypes: ['fiat', 'crypto']
+      }
     },
 
     fetchQuote: async (

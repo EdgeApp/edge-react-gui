@@ -77,7 +77,7 @@ export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
 
   // Use supported plugins
   const pluginsToUse = Object.fromEntries(
-    supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+    supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
   )
 
   // Use the ramp quotes hook

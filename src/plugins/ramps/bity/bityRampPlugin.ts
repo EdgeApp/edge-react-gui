@@ -697,7 +697,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         }
 
         // All checks passed
-        return { supported: true }
+        return {
+          supported: true,
+          supportedAmountTypes: ['fiat', 'crypto']
+        }
       } catch (error) {
         // Log error and return false for any unexpected errors
         console.error('Bity checkSupport error:', error)

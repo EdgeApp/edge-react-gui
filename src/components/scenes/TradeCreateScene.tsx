@@ -12,7 +12,10 @@ import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
-import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
+import {
+  type SupportedPluginResult,
+  useSupportedPlugins
+} from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type {
@@ -52,6 +55,47 @@ export interface TradeCreateParams {
 }
 
 interface Props extends BuyTabSceneProps<'pluginListBuy'> {}
+
+// Helper function to determine which input types should be disabled
+interface AmountTypeSupport {
+  fiatInputDisabled: boolean
+  cryptoInputDisabled: boolean
+}
+
+function getAmountTypeSupport(
+  supportedPlugins: SupportedPluginResult[]
+): AmountTypeSupport {
+  if (supportedPlugins.length === 0) {
+    return { fiatInputDisabled: false, cryptoInputDisabled: false }
+  }
+
+  // Collect all supported amount types from all plugins
+  const allSupportedTypes = new Set<'fiat' | 'crypto'>()
+
+  for (const { supportResult } of supportedPlugins) {
+    if (supportResult.supportedAmountTypes != null) {
+      for (const type of supportResult.supportedAmountTypes) {
+        allSupportedTypes.add(type)
+      }
+    } else {
+      // If a plugin doesn't specify supported types, assume both are supported
+      allSupportedTypes.add('fiat')
+      allSupportedTypes.add('crypto')
+    }
+  }
+
+  // If all plugins only support fiat, disable crypto input
+  const onlyFiat =
+    allSupportedTypes.has('fiat') && !allSupportedTypes.has('crypto')
+  // If all plugins only support crypto, disable fiat input
+  const onlyCrypto =
+    allSupportedTypes.has('crypto') && !allSupportedTypes.has('fiat')
+
+  return {
+    fiatInputDisabled: onlyCrypto,
+    cryptoInputDisabled: onlyFiat
+  }
+}
 
 export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props
@@ -236,12 +280,16 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
   } = useRampQuotes({
     rampQuoteRequest,
     plugins: Object.fromEntries(
-      supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+      supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
     )
   })
 
   // Get the best quote
   const bestQuote = sortedQuotes[0]
+
+  // Determine which input types should be disabled
+  const { fiatInputDisabled, cryptoInputDisabled } =
+    getAmountTypeSupport(supportedPlugins)
 
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
@@ -544,6 +592,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
+                  disabled={fiatInputDisabled}
                 />
               </InputContainer>
             </InputRow>
@@ -573,6 +622,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
+                  disabled={cryptoInputDisabled}
                 />
                 {/* MAX Button */}
                 <MaxButton onPress={handleMaxPress}>
