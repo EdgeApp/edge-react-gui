@@ -8,6 +8,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
+import type { FiatDirection } from '../../gui/fiatPluginTypes'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
@@ -47,6 +48,19 @@ const NOT_SUCCESS_TOAST_HIDE_MS = 3000
 
 // 24 hour TTL for provider config cache
 const PROVIDER_CONFIG_TTL_MS = 24 * 60 * 60 * 1000
+
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  cryptoCode: string,
+  amountType: 'fiat' | 'crypto'
+): string => {
+  return `${direction}-${fiatCode}-${cryptoCode}-${amountType}`
+}
 
 // https://integrations.simplex.com/docs/supported_currencies
 const SIMPLEX_ID_MAP: Record<string, Record<string, string>> = {
@@ -631,8 +645,26 @@ export const simplexRampPlugin: RampPluginFactory = (
       let soam: number
 
       if (isMaxAmount) {
-        // Use reasonable max amounts
-        soam = amountType === 'fiat' ? 50000 : 100
+        const cacheKey = getCacheKey(
+          direction,
+          simplexFiatCode,
+          simplexCryptoCode,
+          amountType
+        )
+        const cached = maxAmountCache.get(cacheKey)
+        const now = Date.now()
+
+        if (cached && now - cached.timestamp < MAX_CACHE_TTL) {
+          soam = parseFloat(cached.amount)
+        } else {
+          // Use reasonable max amounts
+          soam = amountType === 'fiat' ? 50000 : 100
+          // Cache the result
+          maxAmountCache.set(cacheKey, {
+            amount: soam.toString(),
+            timestamp: now
+          })
+        }
       } else {
         soam = parseFloat(exchangeAmountString)
       }

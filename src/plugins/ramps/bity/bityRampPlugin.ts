@@ -67,6 +67,19 @@ const partnerFee = 0.005
 // Default Edge client ID for backward compatibility
 const EDGE_CLIENT_ID = '4949bf59-c23c-4d71-949e-f5fd56ff815b'
 
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  cryptoCode: string,
+  amountType: 'fiat' | 'crypto'
+): string => {
+  return `${direction}-${fiatCode}-${cryptoCode}-${amountType}`
+}
+
 const noKycCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
   buy: {
     providerId: pluginId,
@@ -782,32 +795,50 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       let amount = ''
       if (isMaxAmount) {
-        // Use 1000 as max fiat (their no-KYC limit)
-        if (amountType === 'fiat') {
-          amount = '1000'
+        const cacheKey = getCacheKey(
+          direction,
+          fiatCode,
+          cryptoCode,
+          amountType
+        )
+        const cached = maxAmountCache.get(cacheKey)
+        const now = Date.now()
+
+        if (cached && now - cached.timestamp < MAX_CACHE_TTL) {
+          amount = cached.amount
         } else {
-          // For crypto, fetch a quote with 1000 fiat to get crypto amount
-          const maxFiatRequest: BityQuoteRequest = {
-            input: {
-              amount: isBuy ? '1000' : undefined,
-              currency: isBuy ? fiatCode : cryptoCode
-            },
-            output: {
-              amount: isBuy ? undefined : '1000',
-              currency: isBuy ? cryptoCode : fiatCode
+          // Use 1000 as max fiat (their no-KYC limit)
+          if (amountType === 'fiat') {
+            amount = '1000'
+          } else {
+            // For crypto, fetch a quote with 1000 fiat to get crypto amount
+            const maxFiatRequest: BityQuoteRequest = {
+              input: {
+                amount: isBuy ? '1000' : undefined,
+                currency: isBuy ? fiatCode : cryptoCode
+              },
+              output: {
+                amount: isBuy ? undefined : '1000',
+                currency: isBuy ? cryptoCode : fiatCode
+              }
+            }
+            try {
+              const maxRaw = await fetchBityQuote(maxFiatRequest)
+              const maxQuote = asBityQuote(maxRaw)
+              amount = isBuy ? maxQuote.output.amount : maxQuote.input.amount
+            } catch (error) {
+              console.error(
+                'Bity fetchQuote error: Failed to fetch max quote',
+                error
+              )
+              return []
             }
           }
-          try {
-            const maxRaw = await fetchBityQuote(maxFiatRequest)
-            const maxQuote = asBityQuote(maxRaw)
-            amount = isBuy ? maxQuote.output.amount : maxQuote.input.amount
-          } catch (error) {
-            console.error(
-              'Bity fetchQuote error: Failed to fetch max quote',
-              error
-            )
-            return []
-          }
+          // Cache the result
+          maxAmountCache.set(cacheKey, {
+            amount,
+            timestamp: now
+          })
         }
       } else {
         amount = toFixed(exchangeAmountString, amountPrecision)

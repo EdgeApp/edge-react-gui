@@ -74,6 +74,19 @@ const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
 const pluginDisplayName = 'Moonpay'
 const supportEmail = 'support@moonpay.com'
 
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  cryptoCode: string,
+  amountType: 'fiat' | 'crypto'
+): string => {
+  return `${direction}-${fiatCode}-${cryptoCode}-${amountType}`
+}
+
 // Local asset map type
 interface AssetMap {
   providerId: string
@@ -626,8 +639,26 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
       let exchangeAmount: number
       if (isMaxAmount) {
-        // Use the max amounts based on amountType
-        exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+        const cacheKey = getCacheKey(
+          direction,
+          removeIsoPrefix(fiatCurrencyCode),
+          cryptoCurrencyObj.code,
+          request.amountType
+        )
+        const cached = maxAmountCache.get(cacheKey)
+        const now = Date.now()
+
+        if (cached && now - cached.timestamp < MAX_CACHE_TTL) {
+          exchangeAmount = parseFloat(cached.amount)
+        } else {
+          // Use the max amounts based on amountType
+          exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+          // Cache the result
+          maxAmountCache.set(cacheKey, {
+            amount: exchangeAmount.toString(),
+            timestamp: now
+          })
+        }
       } else {
         exchangeAmount = parseFloat(exchangeAmountString)
       }
