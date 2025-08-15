@@ -32,20 +32,19 @@ import { EdgeText } from '../themed/EdgeText'
 
 export interface RampSelectOptionParams {
   rampQuoteRequest: RampQuoteRequest
-  quotes?: RampQuoteResult[]
 }
 
 interface Props extends BuyTabSceneProps<'rampSelectOption'> {}
 
 export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   const { route } = props
-  const { rampQuoteRequest, quotes: precomputedQuotes } = route.params
+  const { rampQuoteRequest } = route.params
 
   const theme = useTheme()
   const rampPlugins = useSelector(state => state.rampPlugins.plugins)
   const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
 
-  // Use supported plugins hook only if no precomputed quotes
+  // Use supported plugins hook
   const { supportedPlugins } = useSupportedPlugins({
     selectedWallet: rampQuoteRequest.wallet,
     selectedCrypto: rampQuoteRequest.wallet
@@ -64,14 +63,12 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
     direction: rampQuoteRequest.direction
   })
 
-  // Use precomputed quotes if available, otherwise use supported plugins
-  const pluginsToUse = precomputedQuotes
-    ? rampPlugins
-    : Object.fromEntries(
-        supportedPlugins.map(plugin => [plugin.pluginId, plugin])
-      )
+  // Use supported plugins
+  const pluginsToUse = Object.fromEntries(
+    supportedPlugins.map(plugin => [plugin.pluginId, plugin])
+  )
 
-  // Use the new hook with precomputed quotes
+  // Use the ramp quotes hook
   const {
     quotes: allQuotes,
     isLoading: isLoadingQuotes,
@@ -79,8 +76,7 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
     errors: failedQuotes
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: pluginsToUse,
-    precomputedQuotes
+    plugins: pluginsToUse
   })
 
   const handleQuotePress = async (quote: RampQuoteResult) => {

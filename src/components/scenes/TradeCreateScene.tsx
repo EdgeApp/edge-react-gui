@@ -358,8 +358,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     }
 
     navigation.navigate('rampSelectOption', {
-      rampQuoteRequest,
-      quotes: sortedQuotes // Pass the sorted quotes
+      rampQuoteRequest
     })
   })
 
