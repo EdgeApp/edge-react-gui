@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Handle `SwapNeedsSplitError` by auto-selecting an existing wallet with the same address or splitting if needed
 
 ## 4.34.0 (staging)
 
