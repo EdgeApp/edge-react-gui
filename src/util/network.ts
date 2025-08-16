@@ -9,6 +9,7 @@ import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
 import { config } from '../theme/appConfig'
+import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
@@ -142,7 +143,7 @@ export const initInfoServer = async () => {
       } else {
         const infoData = await response.json()
         infoServerData.rollup = asInfoRollup(infoData)
-        await checkAppVersion()
+        await runOnce('checkAppVersion', checkAppVersion)
       }
     } catch (e) {
       console.warn('initInfoServer: Failed to ping info server')
