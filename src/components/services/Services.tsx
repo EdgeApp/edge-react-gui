@@ -44,6 +44,7 @@ import { NetworkActivity } from './NetworkActivity'
 import { NotificationService } from './NotificationService'
 import { PasswordReminderService } from './PasswordReminderService'
 import { PermissionsManager } from './PermissionsManager'
+import { RampPluginManager } from './RampPluginManager'
 import { SortedWalletList } from './SortedWalletList'
 import { WalletConnectService } from './WalletConnectService'
 import { WalletLifecycle } from './WalletLifecycle'
@@ -241,6 +242,7 @@ export function Services(props: Props) {
         <FioService account={account} navigation={navigation} />
       )}
       <PermissionsManager />
+      <RampPluginManager navigation={navigation} />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />
       <PasswordReminderService />

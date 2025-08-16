@@ -60,6 +60,7 @@ import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, type OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
+import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import {
   EdgeAnim,
   fadeInUp20,
@@ -80,7 +81,6 @@ import {
   type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
-import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -133,12 +133,12 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps = BuyTabSceneProps<'pluginListBuy'>
+type BuyProps = BuyTabSceneProps<'pluginListBuyOld'>
 type SellProps = SellTabSceneProps<'pluginListSell'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
-  return props.route.name === 'pluginListBuy'
+  return props.route.name === 'pluginListBuyOld'
 }
 
 interface StateProps {
@@ -464,61 +464,41 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const styles = getStyles(this.props.theme)
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
-    const pluginPartnerLogo = partnerLogoThemeKey
-      ? theme[partnerLogoThemeKey]
-      : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
+    const partner =
+      poweredBy == null || item.partnerIconPath == null
+        ? undefined
+        : {
+            displayName: poweredBy,
+            icon: partnerLogoThemeKey
+              ? theme[partnerLogoThemeKey]
+              : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
+          }
+    const [totalAmount, settlementTime] = item.description.split('\n')
     return (
       <EdgeAnim
         enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
         style={styles.hackContainer}
       >
-        <EdgeCard
-          icon={
-            <Image
-              style={styles.logo}
-              // @ts-expect-error
-              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
-            />
-          }
+        <PaymentOptionCard
+          title={this.renderTitle(item)}
+          // @ts-expect-error
+          icon={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+          totalAmount={totalAmount}
+          settlementTime={settlementTime}
+          partner={partner}
           onPress={async () => {
-            await this.openPlugin(item).catch(error => {
-              this.handleError(error)
-            })
+            await this.openPlugin(item)
           }}
           onLongPress={async () => {
             await this.openPlugin(item, true).catch(error => {
               this.handleError(error)
             })
           }}
-          paddingRem={[1, 0.5, 1, 0.5]}
-        >
-          <View style={styles.cardContentContainer}>
-            {this.renderTitle(item)}
-            {item.description === '' ? null : (
-              <EdgeText style={styles.subtitleText}>
-                {item.description}
-              </EdgeText>
-            )}
-            {poweredBy != null && item.partnerIconPath != null ? (
-              <>
-                <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
-                <View style={styles.pluginRowPoweredByRow}>
-                  <EdgeText style={styles.footerText}>
-                    {lstrings.plugin_powered_by_space}
-                  </EdgeText>
-                  <Image
-                    style={styles.partnerIconImage}
-                    source={pluginPartnerLogo}
-                  />
-                  <EdgeText style={styles.footerText}>
-                    {' ' + poweredBy}
-                  </EdgeText>
-                </View>
-              </>
-            ) : null}
-          </View>
-        </EdgeCard>
+          onProviderPress={async () => {
+            await this.openPlugin(item)
+          }}
+        />
       </EdgeAnim>
     )
   }
@@ -695,22 +675,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // TODO: Make SceneHeader work right under UI4
     overflow: 'visible'
   },
-  cardContentContainer: {
-    flexDirection: 'column',
-    flexShrink: 1,
-    marginRight: theme.rem(0.5)
-  },
   hackContainer: {
     // HACK: Required for the header underline to span all the way to the right
     // TODO: Make SceneHeader work right under UI4
     paddingHorizontal: theme.rem(0.5)
-  },
-  selectedCountryRow: {
-    marginTop: theme.rem(1.5),
-    marginBottom: theme.rem(1.5),
-    marginHorizontal: theme.rem(1.5),
-    flexDirection: 'row',
-    alignItems: 'center'
   },
   selectedCountryFlag: {
     height: theme.rem(2),
@@ -733,18 +701,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   emptyPluginText: {
     textAlign: 'center'
   },
-  pluginRowPoweredByRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  logo: {
-    margin: theme.rem(0.5),
-    width: theme.rem(2),
-    height: theme.rem(2),
-    aspectRatio: 1,
-    resizeMode: 'contain'
-  },
   titleText: {
     fontFamily: theme.fontFaceMedium
   },
@@ -760,20 +716,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     aspectRatio: 150 / 64,
     resizeMode: 'contain',
     marginBottom: 1
-  },
-  subtitleText: {
-    marginTop: theme.rem(0.25),
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  footerText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  partnerIconImage: {
-    aspectRatio: 1,
-    width: theme.rem(0.75),
-    height: theme.rem(0.75)
   }
 }))
 

@@ -140,6 +140,20 @@ export const asEnvConfig = asObject({
       ionia: undefined
     })
   ),
+  RAMP_PLUGIN_INITS: asOptional(
+    asObject<Record<string, unknown>>({
+      paybis: asOptional(
+        asObject({
+          partnerUrl: asString,
+          apiKey: asString,
+          privateKeyB64: asString
+        })
+      )
+    }),
+    () => ({
+      paybis: undefined
+    })
+  ),
   WYRE_CLIENT_INIT: asOptional(
     asObject({
       baseUri: asString
