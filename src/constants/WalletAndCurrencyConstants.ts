@@ -689,6 +689,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     isImportKeySupported: true,
     isSplittingDisabled: true,
+    keysOnlyMode: true,
     unstoppableDomainsTicker: 'BTG'
   },
   feathercoin: {
