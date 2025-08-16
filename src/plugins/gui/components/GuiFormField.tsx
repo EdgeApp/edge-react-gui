@@ -26,6 +26,7 @@ interface Props {
   onChangeText: ((text: string) => void) | undefined
   onFocus?: (() => void) | undefined
   onBlur?: (() => void) | undefined
+  onSubmitEditing?: (() => void) | undefined
 }
 
 export const GuiFormField = React.memo((props: Props) => {
@@ -40,7 +41,8 @@ export const GuiFormField = React.memo((props: Props) => {
     error,
     onChangeText: handleChangeText,
     onFocus: handleFocus,
-    onBlur: handleBlur
+    onBlur: handleBlur,
+    onSubmitEditing: handleSubmitEditing
   } = props
   const theme = useTheme()
 
@@ -69,6 +71,7 @@ export const GuiFormField = React.memo((props: Props) => {
         onBlur={handleBlur}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
+        onSubmitEditing={handleSubmitEditing}
         aroundRem={0.5}
         {...textInputProps}
       />
