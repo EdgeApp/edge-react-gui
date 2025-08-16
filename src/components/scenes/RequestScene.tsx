@@ -857,7 +857,12 @@ export const RequestScene = withWallet((props: OwnProps) => {
 
   const account = useSelector(state => state.core.account)
   const exchangeSecondaryToPrimaryRatio = useSelector(state =>
-    getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    getExchangeRate(
+      state,
+      wallet.currencyInfo.pluginId,
+      tokenId,
+      isoFiatCurrencyCode
+    )
   )
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
   const isConnected = useSelector(state => state.network.isConnected)

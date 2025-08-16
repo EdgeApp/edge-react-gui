@@ -2,12 +2,14 @@ import { mul } from 'biggystring'
 import type {
   EdgeCurrencyInfo,
   EdgeCurrencyWallet,
-  EdgeDenomination
+  EdgeDenomination,
+  EdgeTokenId
 } from 'edge-core-js'
 
-import type { RootState, ThunkAction } from '../types/reduxTypes'
+import type { RootState } from '../types/reduxTypes'
 import type { GuiExchangeRates } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
+import { createRateKey } from '../util/exchangeRates'
 import {
   convertCurrencyFromExchangeRates,
   convertNativeToExchange,
@@ -42,41 +44,48 @@ export const getActiveWalletCurrencyInfos = (
 
 export const getExchangeRate = (
   state: RootState,
-  fromCurrencyCode: string,
+  pluginId: string,
+  tokenId: EdgeTokenId,
   toCurrencyCode: string
 ): number => {
   const exchangeRates = state.exchangeRates
-  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+
+  const rateKey = createRateKey({ pluginId, tokenId }, toCurrencyCode)
+  const rate = exchangeRates[rateKey] ?? 0
+  return rate
+}
+export const getFiatExchangeRate = (
+  state: RootState,
+  fromIsoCode: string,
+  toIsoCode: string
+): number => {
+  const exchangeRates = state.exchangeRates
+  const rateKey = createRateKey(fromIsoCode, toIsoCode)
   const rate = exchangeRates[rateKey] ?? 0
   return rate
 }
 
 export const convertCurrency = (
   state: RootState,
-  fromCurrencyCode: string,
+  pluginId: string,
+  tokenId: EdgeTokenId,
   toCurrencyCode: string,
   amount: string = '1'
 ): string => {
-  const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
+  const exchangeRate = getExchangeRate(state, pluginId, tokenId, toCurrencyCode)
   const convertedAmount = mul(amount, exchangeRate)
   return convertedAmount
 }
 
-export function convertCurrencyFromState(
-  fromCurrencyCode: string,
-  toCurrencyCode: string,
+export const convertFiatCurrency = (
+  state: RootState,
+  fromFiatCode: string,
+  toFiatCode: string,
   amount: string = '1'
-): ThunkAction<string> {
-  return (dispatch, getState): string => {
-    const state = getState()
-    const exchangeRate = getExchangeRate(
-      state,
-      fromCurrencyCode,
-      toCurrencyCode
-    )
-    const convertedAmount = mul(amount, exchangeRate)
-    return convertedAmount
-  }
+): string => {
+  const exchangeRate = getFiatExchangeRate(state, fromFiatCode, toFiatCode)
+  const convertedAmount = mul(amount, exchangeRate)
+  return convertedAmount
 }
 
 export const calculateFiatBalance = (
@@ -95,7 +104,8 @@ export const calculateFiatBalance = (
   )
   const fiatValue = convertCurrencyFromExchangeRates(
     exchangeRates,
-    currencyCode,
+    wallet.currencyInfo.pluginId,
+    null,
     isoFiatCurrencyCode,
     cryptoAmount
   )

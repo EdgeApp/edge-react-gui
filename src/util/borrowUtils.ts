@@ -9,6 +9,7 @@ import type {
   BorrowDebt
 } from '../plugins/borrow-plugins/types'
 import { useSelector } from '../types/reactRedux'
+import { createRateKey } from './exchangeRates'
 import { mulToPrecision } from './utils'
 
 export const useTotalFiatAmount = (
@@ -35,7 +36,12 @@ export const useTotalFiatAmount = (
         total,
         mul(
           div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)),
-          getExchangeRate(`${currencyCode}_${defaultIsoFiat}`)
+          getExchangeRate(
+            createRateKey(
+              { pluginId: currencyInfo.pluginId, tokenId: obj.tokenId },
+              defaultIsoFiat
+            )
+          )
         )
       )
     }, '0')

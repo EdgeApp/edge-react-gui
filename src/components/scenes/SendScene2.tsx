@@ -43,6 +43,7 @@ import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { createRateKey } from '../../util/exchangeRates'
 import {
   addToFioAddressCache,
   checkRecordSendFee,
@@ -404,7 +405,8 @@ const SendComponent = (props: Props) => {
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
-        currencyCode={currencyCode}
+        pluginId={pluginId}
+        tokenId={tokenId}
         exchangeDenomination={cryptoExchangeDenomination}
         displayDenomination={cryptoDisplayDenomination}
         lockInputs={lockTilesMap.amount ?? false}
@@ -535,7 +537,8 @@ const SendComponent = (props: Props) => {
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
-          currencyCode={currencyCode}
+          pluginId={pluginId}
+          tokenId={tokenId}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}
           lockInputs={lockTilesMap.amount ?? false}
@@ -675,6 +678,10 @@ const SendComponent = (props: Props) => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
+
+      let fiatAmount = '0'
+      let feeSyntax = ` 0 (${fiatAmount})`
+      let feeSyntaxStyle: string | undefined
       if (edgeTransaction?.parentNetworkFee != null) {
         feeDisplayDenomination = parentDisplayDenom
         feeExchangeDenomination = parentExchangeDenom
@@ -682,23 +689,22 @@ const SendComponent = (props: Props) => {
         feeDisplayDenomination = cryptoDisplayDenomination
         feeExchangeDenomination = cryptoExchangeDenomination
       }
-      const transactionFee = convertTransactionFeeToDisplayFee(
-        coreWallet.currencyInfo.currencyCode,
-        defaultIsoFiat,
-        exchangeRates,
-        edgeTransaction,
-        feeDisplayDenomination,
-        feeExchangeDenomination
-      )
 
-      const fiatAmount =
-        transactionFee.fiatAmount === '0'
-          ? '0'
-          : ` ${transactionFee.fiatAmount}`
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
-        transactionFee.cryptoAmount
-      } (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
-      const feeSyntaxStyle = transactionFee.fiatStyle
+      if (edgeTransaction != null) {
+        const transactionFee = convertTransactionFeeToDisplayFee(
+          coreWallet.currencyInfo.pluginId,
+          null,
+          defaultIsoFiat,
+          exchangeRates,
+          edgeTransaction,
+          feeDisplayDenomination,
+          feeExchangeDenomination
+        )
+
+        fiatAmount = ` ${transactionFee.fiatAmount}`
+        feeSyntax = `${transactionFee.cryptoSymbol} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol}${fiatAmount})`
+        feeSyntaxStyle = transactionFee.fiatStyle
+      }
 
       return (
         <EdgeRow
@@ -1294,7 +1300,12 @@ const SendComponent = (props: Props) => {
         }
         if (pinSpendingLimitsEnabled) {
           const rate =
-            exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ??
+            exchangeRates[
+              createRateKey(
+                { pluginId: coreWallet.currencyInfo.pluginId, tokenId },
+                defaultIsoFiat
+              )
+            ] ?? // TODO:
             INFINITY_STRING
           const totalNativeAmount = spendInfo.spendTargets.reduce(
             (prev, target) => add(target.nativeAmount ?? '0', prev),

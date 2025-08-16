@@ -41,7 +41,10 @@ import type {
   NavigationBase,
   SellTabSceneProps
 } from '../../types/routerTypes'
-import { getHistoricalRate } from '../../util/exchangeRates'
+import {
+  getHistoricalCryptoRate,
+  getHistoricalFiatRate
+} from '../../util/exchangeRates'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import type {
   BuyConversionValues,
@@ -432,7 +435,8 @@ export const executePlugin = async (params: {
   }
 
   const pluginUtils: FiatPluginUtils = {
-    getHistoricalRate
+    getHistoricalCryptoRate,
+    getHistoricalFiatRate
   }
 
   if (guiPlugin.nativePlugin == null) {

@@ -10,6 +10,7 @@ import type {
 } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import type { GuiExchangeRates } from '../../types/types'
+import { createRateKey } from '../../util/exchangeRates'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
@@ -44,13 +45,19 @@ const InterestRateChangeTileComponent = (props: Props) => {
   } = currencyWallet
 
   // Define exchange rates
-  const necessaryExchangeRates = [...debts, newDebt].reduce((pairs, obj) => {
-    const { tokenId } = obj
-    const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
-    // @ts-expect-error
-    pairs.push(`${currencyCode}_${defaultIsoFiat}`)
-    return pairs
-  }, [])
+  const necessaryExchangeRates = [...debts, newDebt].reduce(
+    (pairs: string[], obj) => {
+      const { tokenId } = obj
+      pairs.push(
+        createRateKey(
+          { pluginId: currencyWallet.currencyInfo.pluginId, tokenId },
+          defaultIsoFiat
+        )
+      ) // TODO:
+      return pairs
+    },
+    []
+  )
 
   const exchangeRateMap = React.useRef<GuiExchangeRates>({})
   const exchangeRates = useHandler(
