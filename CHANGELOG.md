@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
 
 ## 4.34.0 (staging)
 
