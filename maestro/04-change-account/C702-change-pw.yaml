@@ -1,0 +1,72 @@
+# Priority: Critical
+# Test ID: C702
+# Title: Change PW - Able to change PW and login
+# Expected Result:
+#   1. Able to change PW and login with new PW and then set to old PW and login with old PW
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C702
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_MUTATE_CHANGEPW_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_MUTATE_CHANGEPW_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- tapOn: "Tap to Unlock Account Settings"
+- inputText: "Bluetable01"
+- tapOn: "Submit"
+- tapOn: "Change Password"
+- inputText: "Bluetable02"
+- tapOn: "Confirm Password"
+- inputText: "Bluetable02"
+- tapOn: "Back"
+- tapOn: "Done"
+- assertVisible: "Password Changed"
+- tapOn: "OK"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "Exit PIN"
+- tapOn: "Password"
+- inputText: "Bluetable02"
+- tapOn: "Login"
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- tapOn: "Tap to Unlock Account Settings"
+- inputText: "Bluetable02"
+- tapOn: "Submit"
+- tapOn: "Change Password"
+- inputText: "Bluetable01"
+- tapOn: "Confirm Password"
+- inputText: "Bluetable01"
+- tapOn: "Back"
+- tapOn: "Done"
+- assertVisible: "Password Changed"
+- tapOn: "OK"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "Exit PIN"
+- tapOn: "Password"
+- inputText: "Bluetable01"
+- tapOn: "Login"
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+
+- stopApp
