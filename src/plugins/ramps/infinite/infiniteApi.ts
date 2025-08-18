@@ -140,97 +140,145 @@ interface AuthState {
   sessionId: string | null
 }
 
-let authState: AuthState = {
-  token: null,
-  expiresAt: null,
-  userId: null,
-  sessionId: null
-}
-
-const makeHeaders = (
-  config: InfiniteApiConfig,
-  includeAuth = false
-): Record<string, string> => {
-  const headers: Record<string, string> = {
-    'X-Organization-ID': config.orgId,
-    'Content-Type': 'application/json'
-  }
-
-  if (includeAuth && authState.token != null) {
-    headers.Authorization = `Bearer ${authState.token}`
-  }
-
-  return headers
-}
-
-const isTokenExpired = (): boolean => {
-  if (authState.expiresAt == null) return true
-  return Date.now() >= authState.expiresAt
-}
-
-export const infiniteApi = {
+// API instance interface
+export interface InfiniteApi {
   // Auth methods
-  getChallenge: async (
-    config: InfiniteApiConfig,
-    publicKey: string
-  ): Promise<InfiniteChallengeResponse> => {
-    const response = await fetchInfo(
-      `${config.apiUrl}/auth/wallet/challenge?publicKey=${publicKey}`,
-      {
-        method: 'GET',
-        headers: makeHeaders(config)
-      }
-    )
+  getChallenge: (publicKey: string) => Promise<InfiniteChallengeResponse>
+  verifySignature: (params: {
+    public_key: string
+    signature: string
+    nonce: string
+    platform: string
+  }) => Promise<InfiniteAuthResponse>
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      const error = asInfiniteErrorResponse(errorData)
-      throw new Error(`${error.error.code}: ${error.error.message}`)
+  // Quote methods
+  createQuote: (params: {
+    flow: InfiniteQuoteFlow
+    source: {
+      asset: string
+      amount: number
+      network?: string
+    }
+    target: {
+      asset: string
+      amount?: number
+      network?: string
+    }
+  }) => Promise<InfiniteQuoteResponse>
+
+  // Transfer methods
+  createTransfer: (params: {
+    type: InfiniteQuoteFlow
+    quoteId: string
+    source: {
+      accountId?: string
+      address?: string
+      asset?: string
+      amount?: number
+      network?: string
+    }
+    destination: {
+      accountId?: string
+      address?: string
+      asset?: string
+      network?: string
+    }
+    autoExecute: boolean
+  }) => Promise<InfiniteTransferResponse>
+
+  getTransferStatus: (transferId: string) => Promise<InfiniteTransferResponse>
+
+  // Utility methods
+  clearAuth: () => void
+  getAuthState: () => AuthState
+  isAuthenticated: () => boolean
+}
+
+// Factory function to create an API instance
+export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
+  // Instance-specific auth state
+  let authState: AuthState = {
+    token: null,
+    expiresAt: null,
+    userId: null,
+    sessionId: null
+  }
+
+  const makeHeaders = (includeAuth = false): Record<string, string> => {
+    const headers: Record<string, string> = {
+      'X-Organization-ID': config.orgId,
+      'Content-Type': 'application/json'
     }
 
-    const data = await response.json()
-    return asInfiniteChallengeResponse(data)
-  },
+    if (includeAuth && authState.token != null) {
+      headers.Authorization = `Bearer ${authState.token}`
+    }
 
-  verifySignature: async (
-    config: InfiniteApiConfig,
-    params: {
+    return headers
+  }
+
+  const isTokenExpired = (): boolean => {
+    if (authState.expiresAt == null) return true
+    return Date.now() >= authState.expiresAt
+  }
+
+  return {
+    // Auth methods
+    getChallenge: async (
+      publicKey: string
+    ): Promise<InfiniteChallengeResponse> => {
+      const response = await fetchInfo(
+        `${config.apiUrl}/auth/wallet/challenge?publicKey=${publicKey}`,
+        {
+          method: 'GET',
+          headers: makeHeaders()
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        const error = asInfiniteErrorResponse(errorData)
+        throw new Error(`${error.error.code}: ${error.error.message}`)
+      }
+
+      const data = await response.json()
+      return asInfiniteChallengeResponse(data)
+    },
+
+    verifySignature: async (params: {
       public_key: string
       signature: string
       nonce: string
       platform: string
-    }
-  ): Promise<InfiniteAuthResponse> => {
-    const response = await fetchInfo(`${config.apiUrl}/auth/wallet/verify`, {
-      method: 'POST',
-      headers: makeHeaders(config),
-      body: JSON.stringify(params)
-    })
+    }): Promise<InfiniteAuthResponse> => {
+      const response = await fetchInfo(`${config.apiUrl}/auth/wallet/verify`, {
+        method: 'POST',
+        headers: makeHeaders(),
+        body: JSON.stringify(params)
+      })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      const error = asInfiniteErrorResponse(errorData)
-      throw new Error(`${error.error.code}: ${error.error.message}`)
-    }
+      if (!response.ok) {
+        const errorData = await response.json()
+        const error = asInfiniteErrorResponse(errorData)
+        throw new Error(`${error.error.code}: ${error.error.message}`)
+      }
 
-    const data = await response.json()
-    const authResponse = asInfiniteAuthResponse(data)
+      const data = await response.json()
+      const authResponse = asInfiniteAuthResponse(data)
 
-    // Store auth state
-    authState = {
-      token: authResponse.access_token,
-      expiresAt: Date.now() + authResponse.expires_in * 1000,
-      userId: authResponse.user_id,
-      sessionId: authResponse.session_id
-    }
+      // Store auth state
+      authState = {
+        token: authResponse.access_token,
+        expiresAt: Date.now() + authResponse.expires_in * 1000,
+        userId: authResponse.user_id,
+        sessionId: authResponse.session_id
+      }
 
-    return authResponse
-  },
+      return authResponse
+    },
 
-  // Quote methods
-  createQuote: async (
-    config: InfiniteApiConfig,
-    params: {
+    // Quote methods
+    createQuote: async (params: {
       flow: InfiniteQuoteFlow
       source: {
         asset: string
@@ -242,33 +290,30 @@ export const infiniteApi = {
         amount?: number
         network?: string
       }
-    }
-  ): Promise<InfiniteQuoteResponse> => {
-    // Check if we need to authenticate
-    if (authState.token == null || isTokenExpired()) {
-      throw new Error('Authentication required')
-    }
+    }): Promise<InfiniteQuoteResponse> => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
 
-    const response = await fetchInfo(`${config.apiUrl}/v2/quotes`, {
-      method: 'POST',
-      headers: makeHeaders(config, true),
-      body: JSON.stringify(params)
-    })
+      const response = await fetchInfo(`${config.apiUrl}/v2/quotes`, {
+        method: 'POST',
+        headers: makeHeaders(true),
+        body: JSON.stringify(params)
+      })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      const error = asInfiniteErrorResponse(errorData)
-      throw new Error(`${error.error.code}: ${error.error.message}`)
-    }
+      if (!response.ok) {
+        const errorData = await response.json()
+        const error = asInfiniteErrorResponse(errorData)
+        throw new Error(`${error.error.code}: ${error.error.message}`)
+      }
 
-    const data = await response.json()
-    return asInfiniteQuoteResponse(data)
-  },
+      const data = await response.json()
+      return asInfiniteQuoteResponse(data)
+    },
 
-  // Transfer methods
-  createTransfer: async (
-    config: InfiniteApiConfig,
-    params: {
+    // Transfer methods
+    createTransfer: async (params: {
       type: InfiniteQuoteFlow
       quoteId: string
       source: {
@@ -285,71 +330,70 @@ export const infiniteApi = {
         network?: string
       }
       autoExecute: boolean
-    }
-  ): Promise<InfiniteTransferResponse> => {
-    // Check if we need to authenticate
-    if (authState.token == null || isTokenExpired()) {
-      throw new Error('Authentication required')
-    }
-
-    const response = await fetchInfo(`${config.apiUrl}/transfers`, {
-      method: 'POST',
-      headers: makeHeaders(config, true),
-      body: JSON.stringify(params)
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      const error = asInfiniteErrorResponse(errorData)
-      throw new Error(`${error.error.code}: ${error.error.message}`)
-    }
-
-    const data = await response.json()
-    return asInfiniteTransferResponse(data)
-  },
-
-  getTransferStatus: async (
-    config: InfiniteApiConfig,
-    transferId: string
-  ): Promise<InfiniteTransferResponse> => {
-    // Check if we need to authenticate
-    if (authState.token == null || isTokenExpired()) {
-      throw new Error('Authentication required')
-    }
-
-    const response = await fetchInfo(
-      `${config.apiUrl}/transfers/${transferId}`,
-      {
-        method: 'GET',
-        headers: makeHeaders(config, true)
+    }): Promise<InfiniteTransferResponse> => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
       }
-    )
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      const error = asInfiniteErrorResponse(errorData)
-      throw new Error(`${error.error.code}: ${error.error.message}`)
+      const response = await fetchInfo(`${config.apiUrl}/transfers`, {
+        method: 'POST',
+        headers: makeHeaders(true),
+        body: JSON.stringify(params)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        const error = asInfiniteErrorResponse(errorData)
+        throw new Error(`${error.error.code}: ${error.error.message}`)
+      }
+
+      const data = await response.json()
+      return asInfiniteTransferResponse(data)
+    },
+
+    getTransferStatus: async (
+      transferId: string
+    ): Promise<InfiniteTransferResponse> => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
+
+      const response = await fetchInfo(
+        `${config.apiUrl}/transfers/${transferId}`,
+        {
+          method: 'GET',
+          headers: makeHeaders(true)
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        const error = asInfiniteErrorResponse(errorData)
+        throw new Error(`${error.error.code}: ${error.error.message}`)
+      }
+
+      const data = await response.json()
+      return asInfiniteTransferResponse(data)
+    },
+
+    // Utility methods
+    clearAuth: (): void => {
+      authState = {
+        token: null,
+        expiresAt: null,
+        userId: null,
+        sessionId: null
+      }
+    },
+
+    getAuthState: (): AuthState => {
+      return { ...authState }
+    },
+
+    isAuthenticated: (): boolean => {
+      return authState.token != null && !isTokenExpired()
     }
-
-    const data = await response.json()
-    return asInfiniteTransferResponse(data)
-  },
-
-  // Utility methods
-  clearAuth: (): void => {
-    authState = {
-      token: null,
-      expiresAt: null,
-      userId: null,
-      sessionId: null
-    }
-  },
-
-  getAuthState: (): AuthState => {
-    return { ...authState }
-  },
-
-  isAuthenticated: (): boolean => {
-    return authState.token != null && !isTokenExpired()
   }
 }

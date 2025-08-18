@@ -16,11 +16,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
-import {
-  infiniteApi,
-  type InfiniteApiConfig,
-  type InfiniteQuoteFlow
-} from './infiniteApi'
+import { type InfiniteQuoteFlow, makeInfiniteApi } from './infiniteApi'
 import {
   asInitOptions,
   EDGE_TO_INFINITE_NETWORK_MAP
@@ -70,7 +66,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
   const { apiKey, apiUrl, orgId } = asInitOptions(config.initOptions)
   const { account, navigation, onLogEvent } = config
 
-  const apiConfig: InfiniteApiConfig = { apiKey, apiUrl, orgId }
+  // Create API instance for this plugin
+  const infiniteApi = makeInfiniteApi({ apiKey, apiUrl, orgId })
 
   const plugin: RampPlugin = {
     pluginId,
@@ -212,10 +209,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
           quoteParams.source.amount = cryptoAmount
         }
 
-        const quoteResponse = await infiniteApi.createQuote(
-          apiConfig,
-          quoteParams
-        )
+        const quoteResponse = await infiniteApi.createQuote(quoteParams)
 
         // Convert to RampQuoteResult
         const quote: RampQuoteResult = {
@@ -276,7 +270,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
                     }
 
                     const transfer = await infiniteApi.createTransfer(
-                      apiConfig,
                       transferParams
                     )
 
