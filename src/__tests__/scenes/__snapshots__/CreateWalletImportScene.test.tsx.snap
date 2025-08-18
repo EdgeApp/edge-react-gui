@@ -338,6 +338,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       numberOfLines={0}
       style={
         [
+          {},
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",

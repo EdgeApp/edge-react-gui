@@ -49,6 +49,9 @@ import type { MigrateWalletCalculateFeeParams } from '../components/scenes/Migra
 import type { MigrateWalletCompletionParams } from '../components/scenes/MigrateWalletCompletionScene'
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
+import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
+import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
+import type { RampPendingKycParams } from '../components/scenes/RampPendingKycScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
@@ -216,6 +219,9 @@ export type EdgeAppStackParamList = {} & {
   passwordRecovery: undefined
   pluginView: PluginViewParams
   promotionSettings: undefined
+  rampBankForm: RampBankFormParams
+  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampPendingKyc: RampPendingKycParams
   request: RequestParams
   reviewTriggerTest: undefined
   securityAlerts: undefined
