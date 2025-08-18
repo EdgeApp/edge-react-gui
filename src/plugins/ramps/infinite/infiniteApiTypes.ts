@@ -10,7 +10,6 @@ import {
 
 // API Configuration
 export interface InfiniteApiConfig {
-  apiKey: string
   apiUrl: string
   orgId: string
 }
