@@ -2,6 +2,7 @@ import { add, div, gt, gte, log10, max, mul, sub, toFixed } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js/types'
 import { sprintf } from 'sprintf-js'
 
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import { MAX_AMOUNT } from '../constants/valueConstants'
 import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
 import type {
@@ -16,8 +17,8 @@ import type {
   BorrowDebt,
   BorrowEngine
 } from '../plugins/borrow-plugins/types'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
-import type { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableTokenCurrencyCode } from './CurrencyWalletHelpers'
 import {
@@ -395,7 +396,12 @@ export const makeAaveCloseAction = async ({
         )
         const collateralDeficitAmount = div(
           collateralDeficitFiat,
-          exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`],
+          getExchangeRate(
+            exchangeRates,
+            wallet.currencyInfo.pluginId,
+            collateralTokenId,
+            defaultIsoFiat
+          ),
           DECIMAL_PRECISION
         )
 
@@ -403,8 +409,12 @@ export const makeAaveCloseAction = async ({
           primaryExchangeMultiplier: collateralDenom.multiplier,
           secondaryExchangeMultiplier:
             getDenomFromIsoCode(defaultIsoFiat).multiplier,
-          exchangeSecondaryToPrimaryRatio:
-            exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`]
+          exchangeSecondaryToPrimaryRatio: getExchangeRate(
+            exchangeRates,
+            wallet.currencyInfo.pluginId,
+            collateralTokenId,
+            defaultIsoFiat
+          )
         })
         const collateralMaxPrecision = maxPrimaryCurrencyConversionDecimals(
           log10(collateralDenom.multiplier),

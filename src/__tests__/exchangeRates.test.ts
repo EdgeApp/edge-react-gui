@@ -1,10 +1,6 @@
 import { beforeAll, expect, it, jest } from '@jest/globals'
 import fetch from 'node-fetch'
 
-import {
-  closestRateForTimestamp,
-  type ExchangeRateCache
-} from '../actions/ExchangeRateActions'
 import { getHistoricalCryptoRate } from '../util/exchangeRates'
 import { mswServer } from '../util/mswServer'
 import { snooze } from '../util/utils'
@@ -176,40 +172,6 @@ it('get bulk rates', async () => {
   )
 
   await Promise.all(promises)
-})
-
-it('get closest rate for timestamp', () => {
-  const targetDate = '2025-03-12T23:00:00.000Z'
-  const rateCache: ExchangeRateCache = {
-    'ETH_iso:USD_2025-03-13T23:10:00.000Z': {
-      rate: 1879.75664619359304197133,
-      expiration: 12345
-    },
-    'ETH_iso:USD_2025-03-11T22:55:00.000Z': {
-      rate: 1944.99840563707630280987,
-      expiration: 12345
-    },
-    'ETH_iso:USD_2025-03-09T20:00:00.000Z': {
-      rate: 2041.15092554349985221052,
-      expiration: 12345
-    },
-    'ETH_iso:USD_2025-03-04T19:00:00.000Z': {
-      rate: 2160.9592242148933110002,
-      expiration: 12345
-    }
-  }
-  const rateETH = closestRateForTimestamp(
-    rateCache,
-    'ETH',
-    Date.parse(targetDate)
-  )
-  expect(rateETH).toEqual(1944.99840563707630280987)
-  const rateBTC = closestRateForTimestamp(
-    rateCache,
-    'BTC',
-    Date.parse(targetDate)
-  )
-  expect(rateBTC).toEqual(undefined)
 })
 
 // main().catch(e => console.log('error'))

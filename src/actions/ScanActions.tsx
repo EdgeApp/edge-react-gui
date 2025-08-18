@@ -411,8 +411,9 @@ async function sweepPrivateKeys(
       multiplier.length
     )
     const exchangeRate = getExchangeRate(
-      state,
-      wallet.currencyInfo.currencyCode,
+      state.exchangeRates,
+      wallet.currencyInfo.pluginId,
+      null,
       'iso:USD'
     )
     const sweepAmountFiat = mul(sendExchangeAmount, exchangeRate)

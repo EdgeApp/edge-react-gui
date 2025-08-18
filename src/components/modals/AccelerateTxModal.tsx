@@ -8,13 +8,13 @@ import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
 import {
   getExchangeDenom,
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import type { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'

@@ -998,7 +998,29 @@ exports[`TransactionDetailsScene should render 1`] = `
                       ]
                     }
                   >
-                    0.00
+                    1230.00
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#77C513",
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                     (0%)
                   </Text>
                 </View>
               </View>
@@ -3844,7 +3866,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    0.00
+                    1230.00
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -3866,7 +3888,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                     (-,100%)
+                     (-80.75%)
                   </Text>
                 </View>
               </View>

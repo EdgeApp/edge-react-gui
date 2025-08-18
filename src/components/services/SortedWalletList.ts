@@ -1,16 +1,13 @@
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import type {
-  GuiExchangeRates,
-  WalletListAssetItem,
-  WalletListItem
-} from '../../types/types'
-import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
+import type { WalletListAssetItem, WalletListItem } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { normalizeForSearch } from '../../util/utils'
 
@@ -234,14 +231,17 @@ function getFiat(
 
   // The core does not yet report balances by tokenId, just by currencyCode:
   const {
-    currencyCode,
     denominations: [denomination]
   } = token != null ? token : wallet.currencyInfo
-  const tokenId = getWalletTokenId(wallet, currencyCode)
-  const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
+  const nativeBalance = wallet.balanceMap.get(item.tokenId) ?? '0'
 
   // Find the rate:
-  const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+  const rate = getExchangeRate(
+    exchangeRates,
+    wallet.currencyInfo.pluginId,
+    item.tokenId,
+    isoFiatCurrencyCode
+  )
 
   // Do the conversion:
   return (

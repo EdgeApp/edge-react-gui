@@ -8,6 +8,7 @@ import type {
   BorrowCollateral,
   BorrowDebt
 } from '../plugins/borrow-plugins/types'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
 import { mulToPrecision } from './utils'
 
@@ -24,7 +25,6 @@ export const useTotalFiatAmount = (
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return React.useMemo(() => {
-    const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
     // @ts-expect-error
     return borrowArray.reduce((total, obj) => {
       const { currencyCode, denominations } =
@@ -35,11 +35,23 @@ export const useTotalFiatAmount = (
         total,
         mul(
           div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)),
-          getExchangeRate(`${currencyCode}_${defaultIsoFiat}`)
+          getExchangeRate(
+            exchangeRates,
+            wallet.currencyInfo.pluginId,
+            obj.tokenId,
+            defaultIsoFiat
+          )
         )
       )
     }, '0')
-  }, [allTokens, borrowArray, currencyInfo, exchangeRates, defaultIsoFiat])
+  }, [
+    borrowArray,
+    currencyInfo,
+    allTokens,
+    exchangeRates,
+    wallet.currencyInfo.pluginId,
+    defaultIsoFiat
+  ])
 }
 
 export const getWalletPickerExcludeWalletIds = (

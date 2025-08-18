@@ -105,17 +105,16 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   // TODO: Extend to dynamically grab minimums from providers for fee and collateral quotes
   const borrowPluginCurrencyPluginId = borrowPlugin.borrowInfo.currencyPluginId
   const minFeeSwapAmount = useSelector(state => {
+    const polygonPrice = convertCurrency(
+      state,
+      'polygon',
+      null,
+      'iso:USD',
+      destWallet.currencyInfo.denominations[0].multiplier
+    )
     return borrowPluginCurrencyPluginId === 'polygon' && isCrossChainSrc
       ? truncateDecimals(
-          mul(
-            '5.05',
-            convertCurrency(
-              state,
-              'iso:USD',
-              'MATIC',
-              destWallet.currencyInfo.denominations[0].multiplier
-            )
-          ),
+          mul('5.05', div('1', polygonPrice === '0' ? '1' : polygonPrice)),
           0
         )
       : '0'
@@ -274,7 +273,6 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   // HACK: Interim solution before implementing a robust multi-asset fee aggregator for Action Programs
   const {
-    currencyCode: srcCurrencyCode,
     denomination: srcDenom,
     isoFiatCurrencyCode: srcIsoFiatCurrencyCode
   } = useTokenDisplayData({
@@ -282,11 +280,10 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     currencyConfig: srcWallet.currencyConfig
   })
   const {
-    currencyCode: feeCurrencyCode,
     denomination: feeDenom,
     isoFiatCurrencyCode: feeIsoFiatCurrencyCode
   } = useTokenDisplayData({
-    tokenId: borrowEngineCurrencyCode,
+    tokenId: null,
     currencyConfig: borrowEngineWallet.currencyConfig
   })
   const srcWalletBalance = useWalletBalance(srcWallet, srcTokenId)
@@ -298,7 +295,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     )
     return convertCurrency(
       state,
-      srcCurrencyCode,
+      srcWallet.currencyInfo.pluginId,
+      srcTokenId,
       srcIsoFiatCurrencyCode,
       cryptoAmount
     )
@@ -311,7 +309,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     )
     return convertCurrency(
       state,
-      srcCurrencyCode,
+      srcWallet.currencyInfo.pluginId,
+      srcTokenId,
       srcIsoFiatCurrencyCode,
       cryptoAmount
     )
@@ -324,7 +323,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     )
     return convertCurrency(
       state,
-      feeCurrencyCode,
+      borrowEngineWallet.currencyInfo.pluginId,
+      null,
       feeIsoFiatCurrencyCode,
       cryptoAmount
     )

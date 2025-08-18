@@ -15,6 +15,7 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import {
   FEE_ALERT_THRESHOLD,
   FEE_COLOR_THRESHOLD,
@@ -29,8 +30,9 @@ import {
   truncateDecimalsPeriod
 } from '../locales/intl'
 import { lstrings } from '../locales/strings'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
-import type { GuiExchangeRates, GuiFiatType } from '../types/types'
+import type { GuiFiatType } from '../types/types'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -185,8 +187,12 @@ export const convertCurrencyFromExchangeRates = (
   toCurrencyCode: string,
   amount: string
 ): string => {
-  const rateKey = `${fromPluginId}_${String(fromTokenId)}_${toCurrencyCode}`
-  const rate = exchangeRates[rateKey] ?? '0'
+  const rate = getExchangeRate(
+    exchangeRates,
+    fromPluginId,
+    fromTokenId,
+    toCurrencyCode
+  )
   const convertedAmount = mul(amount, rate)
   return convertedAmount
 }
@@ -372,8 +378,12 @@ export const getTotalFiatAmountFromExchangeRates = (
     for (const tokenId of wallet.balanceMap.keys()) {
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      const rate =
-        exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+      const rate = getExchangeRate(
+        exchangeRates,
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        wallet.fiatCurrencyCode
+      )
       log.push(
         `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
       )

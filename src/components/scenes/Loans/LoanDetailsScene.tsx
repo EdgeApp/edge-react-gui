@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import type { GuiExchangeRates } from '../../../actions/ExchangeRateActions'
 import { Fontello } from '../../../assets/vector'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
@@ -21,9 +22,9 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeRate } from '../../../selectors/WalletSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
-import type { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import {
   DECIMAL_PRECISION,
@@ -464,9 +465,13 @@ export const calculateFiatAmount = (
   const token = getToken(wallet, tokenId)
   if (token == null) return '0'
 
-  const { currencyCode, denominations } = token
-  const key = `${currencyCode}_${isoFiatCurrencyCode}`
-  const assetFiatPrice = exchangeRates[key] ?? '0'
+  const { denominations } = token
+  const assetFiatPrice = getExchangeRate(
+    exchangeRates,
+    wallet.currencyInfo.pluginId,
+    tokenId,
+    isoFiatCurrencyCode
+  )
   if (assetFiatPrice === 0) {
     return '0'
   }
