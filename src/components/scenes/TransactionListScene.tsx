@@ -85,12 +85,8 @@ function TransactionListComponent(props: Props) {
   // Spam filter
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const currencyCode =
-    tokenId == null
-      ? wallet.currencyInfo.currencyCode
-      : wallet.currencyConfig.allTokens[tokenId].currencyCode
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(state.exchangeRates, pluginId, tokenId, defaultIsoFiat)
   )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const spamThreshold = React.useMemo<string | undefined>(() => {

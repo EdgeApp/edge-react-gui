@@ -18,6 +18,7 @@ import { ActivityIndicator, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -36,11 +37,12 @@ import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import type { FioRequest, GuiExchangeRates } from '../../types/types'
+import type { FioRequest } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -1299,8 +1301,12 @@ const SendComponent = (props: Props) => {
         }
         if (pinSpendingLimitsEnabled) {
           const rate =
-            exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ??
-            INFINITY_STRING
+            getExchangeRate(
+              exchangeRates,
+              coreWallet.currencyInfo.pluginId,
+              tokenId,
+              defaultIsoFiat
+            ) ?? INFINITY_STRING
           const totalNativeAmount = spendInfo.spendTargets.reduce(
             (prev, target) => add(target.nativeAmount ?? '0', prev),
             '0'

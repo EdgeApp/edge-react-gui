@@ -232,13 +232,6 @@ export type ReviewTriggerData = ReturnType<typeof asReviewTriggerData>
 
 export type SpendAuthType = 'pin' | 'none'
 
-export type GuiExchangeRates = Record<string, number>
-// Same as GuiExchangeRates but with better ergonomics. Limited to current and 24 hour rates.
-export type GuiExchangeRatesMap = Map<
-  string,
-  Map<string, { currentRate: number; yesterdayRate: number }>
->
-
 export interface StateProvinceData {
   name: string
   'alpha-2': string

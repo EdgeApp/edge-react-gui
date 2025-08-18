@@ -2,9 +2,9 @@ import { div, round, toFixed } from 'biggystring'
 import type { EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import type { GuiExchangeRates } from '../../types/types'
 import {
   convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,

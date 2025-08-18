@@ -20,7 +20,7 @@ const SHOW_LOGS = false
 const clog = SHOW_LOGS ? console.log : (...args: any) => undefined
 
 // From rates server:
-const asCryptoAsset = asObject({
+export const asCryptoAsset = asObject({
   pluginId: asString,
   tokenId: asOptional(asEither(asString, asNull))
 })
@@ -34,12 +34,12 @@ const asFiatRate = asObject({
   fiatCode: asString,
   rate: asOptional(asNumber) // Return undefined if unable to get rate
 })
-const asRatesParams = asObject({
+export const asRatesParams = asObject({
   targetFiat: asString,
   crypto: asArray(asCryptoRate),
   fiat: asArray(asFiatRate)
 })
-type RatesParams = ReturnType<typeof asRatesParams>
+export type RatesParams = ReturnType<typeof asRatesParams>
 
 type RateMap = Record<string, number | null>
 
