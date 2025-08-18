@@ -16,7 +16,8 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
-import { type InfiniteQuoteFlow, makeInfiniteApi } from './infiniteApi'
+import { makeInfiniteApi } from './infiniteApi'
+import type { InfiniteQuoteFlow } from './infiniteApiTypes'
 import {
   asInitOptions,
   EDGE_TO_INFINITE_NETWORK_MAP
@@ -172,13 +173,13 @@ export const infiniteRampPlugin: RampPluginFactory = (
           return []
         }
 
-        // Ensure we have authentication
-        if (!infiniteApi.isAuthenticated()) {
-          // For now, we'll skip authentication
-          // TODO: Implement wallet-based auth when ready
-          console.log('Infinite: Authentication required')
-          return []
-        }
+        // // Ensure we have authentication
+        // if (!infiniteApi.isAuthenticated()) {
+        //   // For now, we'll skip authentication
+        //   // TODO: Implement wallet-based auth when ready
+        //   console.log('Infinite: Authentication required')
+        //   return []
+        // }
 
         // Fetch quote from API
         const cleanFiatCode = removeIsoPrefix(fiatCurrencyCode).toUpperCase()
