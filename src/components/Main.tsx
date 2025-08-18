@@ -19,10 +19,10 @@ import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
-import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
+import { KycFormScene } from '../plugins/gui/scenes/KycFormScene'
 import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
@@ -419,7 +419,7 @@ const EdgeBuyTabScreen = () => {
       />
       <BuyStack.Screen
         name="guiPluginContactForm"
-        component={ContactFormScene}
+        component={KycFormScene}
         options={{
           headerRight: () => null
         }}
@@ -496,7 +496,7 @@ const EdgeSellTabScreen = () => {
       />
       <SellStack.Screen
         name="guiPluginContactForm"
-        component={ContactFormScene}
+        component={KycFormScene}
         options={{
           headerRight: () => null
         }}
