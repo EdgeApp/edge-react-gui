@@ -27,7 +27,7 @@ export function showReceiveDropdown(
   transaction: EdgeTransaction
 ): ThunkAction<void> {
   return (dispatch, getState) => {
-    const { currencyCode, nativeAmount, tokenId, walletId } = transaction
+    const { nativeAmount, tokenId, walletId } = transaction
 
     // Grab the matching wallet:
     const state = getState()
@@ -43,8 +43,9 @@ export function showReceiveDropdown(
     // Check the spam limits:
     const { spamFilterOn } = state.ui.settings
     const exchangeRate = getExchangeRate(
-      state,
-      currencyCode,
+      state.exchangeRates,
+      wallet.currencyInfo.pluginId,
+      tokenId,
       isoFiatCurrencyCode
     )
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)

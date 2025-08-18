@@ -5,6 +5,7 @@ import type {
   EdgeDenomination,
   EdgePluginMap,
   EdgeToken,
+  EdgeTokenId,
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
@@ -14,6 +15,7 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import {
   FEE_ALERT_THRESHOLD,
   FEE_COLOR_THRESHOLD,
@@ -28,8 +30,9 @@ import {
   truncateDecimalsPeriod
 } from '../locales/intl'
 import { lstrings } from '../locales/strings'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
-import type { GuiExchangeRates, GuiFiatType } from '../types/types'
+import type { GuiFiatType } from '../types/types'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -179,12 +182,17 @@ export const roundedFee = (
 
 export const convertCurrencyFromExchangeRates = (
   exchangeRates: GuiExchangeRates,
-  fromCurrencyCode: string,
+  fromPluginId: string,
+  fromTokenId: EdgeTokenId,
   toCurrencyCode: string,
   amount: string
 ): string => {
-  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const rate = exchangeRates[rateKey] ?? '0'
+  const rate = getExchangeRate(
+    exchangeRates,
+    fromPluginId,
+    fromTokenId,
+    toCurrencyCode
+  )
   const convertedAmount = mul(amount, rate)
   return convertedAmount
 }
@@ -370,8 +378,12 @@ export const getTotalFiatAmountFromExchangeRates = (
     for (const tokenId of wallet.balanceMap.keys()) {
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      const rate =
-        exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+      const rate = getExchangeRate(
+        exchangeRates,
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        wallet.fiatCurrencyCode
+      )
       log.push(
         `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
       )
@@ -503,10 +515,11 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  currencyCode: string,
+  pluginId: string,
+  tokenId: EdgeTokenId,
   isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
-  transaction: EdgeTransaction | null,
+  transaction: EdgeTransaction,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): {
@@ -520,12 +533,11 @@ export const convertTransactionFeeToDisplayFee = (
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
-  if (transaction?.parentNetworkFee != null) {
-    feeNativeAmount = transaction?.parentNetworkFee
-  } else if (transaction?.networkFee != null)
-    feeNativeAmount = transaction?.networkFee
+  if (transaction.parentNetworkFee != null) {
+    feeNativeAmount = transaction.parentNetworkFee
+  } else feeNativeAmount = transaction.networkFee
 
-  if (feeNativeAmount != null && gt(feeNativeAmount, '0')) {
+  if (gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination?.symbol
       ? feeDisplayDenomination.symbol
       : ''
@@ -551,13 +563,15 @@ export const convertTransactionFeeToDisplayFee = (
       convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(
       exchangeRates,
-      currencyCode,
+      pluginId,
+      tokenId,
       isoFiatCurrencyCode,
       cryptoFeeExchangeAmount
     )
     const feeAmountInUSD = convertCurrencyFromExchangeRates(
       exchangeRates,
-      currencyCode,
+      pluginId,
+      tokenId,
       'iso:USD',
       cryptoFeeExchangeAmount
     )

@@ -29,7 +29,7 @@ import {
 } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import type { SettingsState } from '../reducers/scenes/SettingsReducer'
-import { convertCurrency } from '../selectors/WalletSelectors'
+import { convertFiatCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
 import { asMostRecentWallet, type MostRecentWallet } from '../types/types'
 import { DECIMAL_PRECISION } from '../util/utils'
@@ -120,7 +120,7 @@ export function setDefaultFiatRequest(
     })
     const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
     // convert from previous fiat to next fiat
-    const fiatString = convertCurrency(
+    const fiatString = convertFiatCurrency(
       state,
       previousDefaultIsoFiat,
       nextDefaultIsoFiat,

@@ -70,7 +70,7 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   const styles = getStyles(theme)
 
   const { navigation, wallet, transaction, isCard } = props
-  const { metadata = {}, currencyCode, tokenId } = transaction
+  const { metadata = {}, tokenId } = transaction
   const currencyInfo = wallet.currencyInfo
 
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
@@ -84,7 +84,12 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
 
   // CryptoAmount
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(
+      state.exchangeRates,
+      wallet.currencyInfo.pluginId,
+      tokenId,
+      defaultIsoFiat
+    )
   )
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && gt(exchangeRate, '0')) {
@@ -131,7 +136,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
   const historicalRate = useHistoricalRate(
-    `${currencyCode}_${defaultIsoFiat}`,
+    currencyInfo.pluginId,
+    tokenId,
+    defaultIsoFiat,
     isoDate
   )
   const amountFiat =

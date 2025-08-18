@@ -56,7 +56,7 @@ describe('AccelerateTxModalComponent', () => {
             walletId: ''
           }}
           wallet={fakeWallet}
-          exchangeRates={{}}
+          exchangeRates={{ crypto: {}, fiat: {} }}
           feeDisplayDenomination={{
             multiplier: '1000000',
             name: 'BTC'

@@ -39,8 +39,18 @@ describe('TransactionDetailsScene', () => {
       }
     ],
     exchangeRates: {
-      'BTC_iso:USD': 10000,
-      'BTC_iso:USD_2018-08-31T21:59:40.947Z': 20000
+      crypto: {
+        bitcoin: {
+          '': {
+            'iso:USD': {
+              current: 10000
+            }
+          }
+        }
+      },
+      fiat: {
+        'iso:USD': { 'iso:USD': { current: 10000 } }
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import { abs, add, div, lt, toFixed } from 'biggystring'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import {
   getFiatSymbol,
@@ -14,7 +15,8 @@ const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 interface Props {
   appendFiatCurrencyCode?: boolean
   autoPrecision?: boolean
-  cryptoCurrencyCode: string
+  pluginId: string
+  tokenId: EdgeTokenId
   cryptoExchangeMultiplier?: string
   fiatSymbolSpace?: boolean
   hideFiatSymbol?: boolean
@@ -31,7 +33,8 @@ export const useFiatText = (props: Props): string => {
   const {
     appendFiatCurrencyCode,
     autoPrecision,
-    cryptoCurrencyCode,
+    pluginId,
+    tokenId,
     cryptoExchangeMultiplier = defaultMultiplier,
     fiatSymbolSpace,
     hideFiatSymbol,
@@ -55,7 +58,8 @@ export const useFiatText = (props: Props): string => {
     )
     return convertCurrency(
       state,
-      cryptoCurrencyCode,
+      pluginId,
+      tokenId,
       isoFiatCurrencyCode,
       cryptoAmount
     )

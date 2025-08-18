@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import {
@@ -53,7 +54,6 @@ import type {
   NavigationBase,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
-import type { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -968,7 +968,12 @@ export function TransactionListTop(props: OwnProps) {
   )
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(
+      state.exchangeRates,
+      wallet.currencyInfo.pluginId,
+      tokenId,
+      defaultIsoFiat
+    )
   )
   const isAccountBalanceVisible = useSelector(
     state => state.ui.settings.isAccountBalanceVisible
