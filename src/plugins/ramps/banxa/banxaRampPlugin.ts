@@ -1,0 +1,1531 @@
+import { gt, lt, mul } from 'biggystring'
+import {
+  asArray,
+  asEither,
+  asMaybe,
+  asNumber,
+  asObject,
+  asString,
+  asValue
+} from 'cleaners'
+import type { EdgeTokenId } from 'edge-core-js'
+import { Platform } from 'react-native'
+import { CustomTabs } from 'react-native-custom-tabs'
+import SafariView from 'react-native-safari-view'
+import URL from 'url-parse'
+
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
+import {
+  showError,
+  showToast,
+  showToastSpinner
+} from '../../../components/services/AirshipInstance'
+import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
+import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
+import { lstrings } from '../../../locales/strings'
+import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
+import type { StringMap } from '../../../types/types'
+import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
+import { fetchInfo } from '../../../util/network'
+import { consify, removeIsoPrefix } from '../../../util/utils'
+import {
+  SendErrorBackPressed,
+  SendErrorNoTransaction
+} from '../../gui/fiatPlugin'
+import type {
+  FiatDirection,
+  FiatPaymentType,
+  FiatPluginRegionCode
+} from '../../gui/fiatPluginTypes'
+import type {
+  FiatProviderAssetMap,
+  FiatProviderExactRegions
+} from '../../gui/fiatProviderTypes'
+import {
+  addExactRegion,
+  NOT_SUCCESS_TOAST_HIDE_MS,
+  RETURN_URL_CANCEL,
+  RETURN_URL_FAIL,
+  RETURN_URL_SUCCESS,
+  validateExactRegion
+} from '../../gui/providers/common'
+import { addTokenToArray } from '../../gui/util/providerUtils'
+import { rampDeeplinkManager } from '../rampDeeplinkHandler'
+import type {
+  RampApproveQuoteParams,
+  RampCheckSupportRequest,
+  RampInfo,
+  RampPlugin,
+  RampPluginConfig,
+  RampPluginFactory,
+  RampQuoteRequest,
+  RampQuoteResult,
+  RampSupportResult
+} from '../rampPluginTypes'
+import { asInitOptions } from './banxaRampTypes'
+
+const pluginId = 'banxa'
+const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/banxa.png`
+const pluginDisplayName = 'Banxa'
+
+const TESTNET_ADDRESS = 'bc1qv752cnr3rcht3yyfq2nn6nv7zwczqjmcm80y6w'
+
+// Cache for max amounts with 2 minute TTL
+const maxAmountCache = new Map<string, { amount: string; timestamp: number }>()
+const MAX_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+
+const getCacheKey = (
+  direction: FiatDirection,
+  fiatCode: string,
+  banxaCoin: string,
+  paymentType: FiatPaymentType,
+  amountType: 'fiat' | 'crypto'
+): string => {
+  return `${direction}-${fiatCode}-${banxaCoin}-${paymentType}-${amountType}`
+}
+
+type AllowedPaymentTypes = Record<
+  FiatDirection,
+  Partial<Record<FiatPaymentType, boolean>>
+>
+
+const allowedPaymentTypes: AllowedPaymentTypes = {
+  buy: {
+    applepay: true,
+    credit: true,
+    googlepay: true,
+    ideal: true,
+    interac: true,
+    iobank: true,
+    payid: true,
+    sepa: false, // Leave this to Bity for now
+    turkishbank: true
+  },
+  sell: {
+    directtobank: true,
+    interac: true,
+    iobank: true,
+    payid: true,
+    sepa: false, // Leave this to Bity for now
+    turkishbank: true
+  }
+}
+
+const asBanxaCryptoCoin = asObject({
+  coin_code: asString,
+  blockchains: asArray(
+    asObject({
+      code: asString
+    })
+  )
+})
+
+const asBanxaCryptoCoins = asObject({
+  data: asObject({
+    coins: asArray(asBanxaCryptoCoin)
+  })
+})
+
+const asBanxaFiat = asObject({
+  fiat_code: asString
+})
+
+const asBanxaFiats = asObject({
+  data: asObject({
+    fiats: asArray(asBanxaFiat)
+  })
+})
+
+const asBanxaTxLimit = asObject({
+  fiat_code: asString,
+  min: asString,
+  max: asString
+})
+
+const asBanxaPaymentType = asValue(
+  'CLEARJCNSELLFP',
+  'CLEARJCNSELLSEPA',
+  'CLEARJUNCTION',
+  'CLEARJUNCTIONFP',
+  'DCINTERAC',
+  'DCINTERACSELL',
+  'DIRECTCREDIT',
+  'DLOCALPIX',
+  'DLOCALZAIO',
+  'IDEAL',
+  'MANUALPAYMENT',
+  'MONOOVAPAYID',
+  'PRIMERAP',
+  'PRIMERCC',
+  'WORLDPAYGOOGLE'
+)
+
+const asBanxaStatus = asValue('ACTIVE', 'INACTIVE')
+
+const asBanxaPaymentMethod = asObject({
+  id: asNumber,
+  paymentType: asMaybe(asBanxaPaymentType),
+  name: asString,
+  status: asBanxaStatus,
+  type: asString,
+  supported_fiat: asArray(asString),
+  supported_coin: asArray(asString),
+  transaction_limits: asArray(asBanxaTxLimit)
+})
+
+const asBanxaPricesResponse = asObject({
+  data: asObject({
+    spot_price: asString,
+    prices: asArray(
+      asObject({
+        payment_method_id: asNumber,
+        type: asString,
+        spot_price_fee: asString,
+        spot_price_including_fee: asString,
+        coin_amount: asString,
+        coin_code: asString,
+        fiat_amount: asString,
+        fiat_code: asString,
+        fee_amount: asString,
+        network_fee: asString
+      })
+    )
+  })
+})
+
+const asBanxaQuote = asObject({
+  id: asString,
+  checkout_url: asString
+})
+
+const asBanxaError = asObject({
+  errors: asObject({
+    title: asString
+  })
+})
+
+const asBanxaQuoteResponse = asEither(
+  asObject({
+    data: asObject({
+      order: asBanxaQuote
+    })
+  }),
+  asBanxaError
+)
+
+const asBanxaOrderStatus = asValue(
+  'pendingPayment',
+  'waitingPayment',
+  'paymentReceived',
+  'inProgress',
+  'coinTransferred',
+  'cancelled',
+  'declined',
+  'expired',
+  'complete',
+  'refunded'
+)
+
+const asBanxaOrderResponse = asObject({
+  data: asObject({
+    order: asObject({
+      id: asString,
+      coin_amount: asNumber,
+      wallet_address: asMaybe(asString),
+      wallet_address_tag: asMaybe(asString),
+      status: asBanxaOrderStatus
+    })
+  })
+})
+
+const asBanxaPaymentMethods = asObject({
+  data: asObject({
+    payment_methods: asArray(asBanxaPaymentMethod)
+  })
+})
+
+const asBanxaCountry = asObject({
+  country_code: asString
+})
+
+const asBanxaCountries = asObject({
+  data: asObject({
+    countries: asArray(asBanxaCountry)
+  })
+})
+
+const asBanxaState = asObject({
+  state_code: asString
+})
+
+const asBanxaStates = asObject({
+  data: asObject({
+    states: asArray(asBanxaState)
+  })
+})
+
+// Utility function to ensure fiat currency codes have the 'iso:' prefix
+const ensureIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
+}
+
+interface BanxaPaymentIdLimit {
+  id: number
+  type: FiatPaymentType
+  min: string
+  max: string
+}
+
+type BanxaPaymentMap = Record<
+  string,
+  Record<string, Record<number, BanxaPaymentIdLimit>>
+>
+
+type BanxaTxLimit = ReturnType<typeof asBanxaTxLimit>
+type BanxaCryptoCoin = ReturnType<typeof asBanxaCryptoCoin>
+type BanxaPaymentType = ReturnType<typeof asBanxaPaymentType>
+type BanxaPaymentMethods = ReturnType<typeof asBanxaPaymentMethods>
+
+// https://support.banxa.com/en/support/solutions/articles/44002459218-supported-cryptocurrencies-and-blockchains
+// This maps the Banxa blockchain codes to Edge pluginIds
+const CURRENCY_PLUGINID_MAP: Record<string, string> = {
+  'AVAX-C': 'avalanche',
+  BCH: 'bitcoincash',
+  BNB: 'binancechain',
+  BSC: 'binancesmartchain',
+  BTC: 'bitcoin',
+  CELO: 'celo',
+  DASH: 'dash',
+  DGB: 'digibyte',
+  DOGE: 'dogecoin',
+  DOT: 'polkadot',
+  EOS: 'eos',
+  ETC: 'ethereumclassic',
+  ETH: 'ethereum',
+  FIL: 'filecoin',
+  HBAR: 'hedera',
+  LTC: 'litecoin',
+  MATIC: 'polygon',
+  QTUM: 'qtum',
+  RVN: 'ravencoin',
+  SOL: 'solana',
+  SUI: 'sui',
+  TON: 'ton',
+  XLM: 'stellar',
+  XRP: 'ripple',
+  XTZ: 'tezos'
+}
+
+const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
+
+const asInfoCreateHmacResponse = asObject({ signature: asString })
+
+const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
+  CLEARJCNSELLFP: 'fasterpayments',
+  CLEARJCNSELLSEPA: 'sepa',
+  CLEARJUNCTION: 'sepa',
+  CLEARJUNCTIONFP: 'fasterpayments',
+  DCINTERAC: 'interac',
+  DCINTERACSELL: 'interac',
+  DIRECTCREDIT: 'directtobank',
+  DLOCALPIX: 'pix',
+  DLOCALZAIO: 'iobank',
+  IDEAL: 'ideal',
+  MANUALPAYMENT: 'turkishbank',
+  MONOOVAPAYID: 'payid',
+  PRIMERAP: 'applepay',
+  PRIMERCC: 'credit',
+  WORLDPAYGOOGLE: 'googlepay'
+}
+
+// Provider configuration cache
+interface ProviderConfigCache {
+  data: {
+    allowedCountryCodes: FiatProviderExactRegions
+    allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+    banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap>
+  } | null
+  timestamp: number
+}
+
+const CACHE_TTL_MS = 2 * 60 * 1000 // 2 minutes
+let configCache: ProviderConfigCache = {
+  data: null,
+  timestamp: 0
+}
+
+// Helper functions
+
+// Validation helpers that return boolean values and handle errors gracefully
+const isRegionSupported = (
+  regionCode: FiatPluginRegionCode,
+  allowedCountryCodes: FiatProviderExactRegions
+): boolean => {
+  try {
+    validateExactRegion(pluginId, regionCode, allowedCountryCodes)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+const isCryptoAssetSupported = (
+  pluginId: string,
+  direction: FiatDirection,
+  tokenId: EdgeTokenId,
+  allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+): boolean => {
+  try {
+    edgeToBanxaCrypto(pluginId, direction, tokenId, allowedCurrencyCodes)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+const isFiatSupported = (
+  direction: FiatDirection,
+  fiatCurrencyCode: string,
+  allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+): boolean => {
+  try {
+    const fiatAssets = allowedCurrencyCodes[direction].fiat
+    return fiatAssets[fiatCurrencyCode] === true
+  } catch (error) {
+    return false
+  }
+}
+
+const hasAnyPaymentTypeSupport = (direction: FiatDirection): boolean => {
+  try {
+    const supportedPaymentTypes = Object.keys(
+      allowedPaymentTypes[direction]
+    ).filter(
+      pt => allowedPaymentTypes[direction][pt as FiatPaymentType] === true
+    ) as FiatPaymentType[]
+
+    return supportedPaymentTypes.length > 0
+  } catch (error) {
+    return false
+  }
+}
+
+const generateHmac = async (
+  apiKey: string,
+  hmacUser: string,
+  data: string,
+  nonce: string
+): Promise<string> => {
+  const body = JSON.stringify({ data })
+  const response = await fetchInfo(
+    `v1/createHmac/${hmacUser}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body
+    },
+    3000
+  )
+  const reply = await response.json()
+  const { signature } = asInfoCreateHmacResponse(reply)
+
+  return `${apiKey}:${signature}:${nonce}`
+}
+
+const banxaFetch = async (params: {
+  method: 'POST' | 'GET'
+  url: string
+  path: string
+  apiKey: string
+  hmacUser: string
+  bodyParams?: object
+  queryParams?: object
+}): Promise<any> => {
+  const { hmacUser, method, url, path, apiKey, bodyParams, queryParams } =
+    params
+  const urlObj = new URL(url + '/' + path, true)
+  const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
+
+  if (method === 'GET' && typeof queryParams === 'object') {
+    urlObj.set('query', queryParams)
+  }
+
+  const hmacpath = urlObj.href.replace(urlObj.origin + '/', '')
+
+  const nonce = Date.now().toString()
+  let hmacData = method + '\n' + hmacpath + '\n' + nonce
+  hmacData += method === 'POST' ? '\n' + (body ?? '') : ''
+
+  const hmac = await generateHmac(apiKey, hmacUser, hmacData, nonce)
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hmac}`
+    },
+    body
+  }
+  const response = await fetch(urlObj.href, options)
+  const reply = await response.json()
+  return reply
+}
+
+const findLimit = (
+  fiatCode: string,
+  banxaLimits: BanxaTxLimit[]
+): BanxaTxLimit | undefined => {
+  for (const limit of banxaLimits) {
+    if (limit.fiat_code === fiatCode) {
+      return limit
+    }
+  }
+}
+
+const buildPaymentsMap = (
+  banxaPayments: BanxaPaymentMethods,
+  banxaPaymentsMap: BanxaPaymentMap
+): void => {
+  const { payment_methods: methods } = banxaPayments.data
+  for (const pm of methods) {
+    const { paymentType } = pm
+    if (paymentType == null) continue
+    const pt = typeMap[paymentType]
+    if (pm.status !== 'ACTIVE') {
+      continue
+    }
+    if (pt != null) {
+      for (const fiat of pm.supported_fiat) {
+        if (banxaPaymentsMap[fiat] == null) {
+          banxaPaymentsMap[fiat] = {}
+        }
+        for (const coin of pm.supported_coin) {
+          if (banxaPaymentsMap[fiat][coin] == null) {
+            banxaPaymentsMap[fiat][coin] = {}
+          }
+
+          const limit = findLimit(fiat, pm.transaction_limits)
+          if (limit == null) {
+            console.error(
+              `Missing limits for id:${pm.id} ${pm.paymentType} ${fiat}`
+            )
+          } else {
+            const newMap: BanxaPaymentIdLimit = {
+              id: pm.id,
+              min: limit.min,
+              max: limit.max,
+              type: pt
+            }
+            if (banxaPaymentsMap[fiat][coin][pm.id] != null) {
+              if (
+                JSON.stringify(banxaPaymentsMap[fiat][coin][pm.id]) !==
+                JSON.stringify(newMap)
+              ) {
+                console.error(
+                  `Payment already exists with different values: ${fiat} ${coin} ${pt}`
+                )
+                continue
+              }
+            }
+            banxaPaymentsMap[fiat][coin][pm.id] = newMap
+          }
+        }
+      }
+    }
+  }
+}
+
+const getPaymentIdLimit = (
+  direction: FiatDirection,
+  fiat: string,
+  banxaCoin: string,
+  type: FiatPaymentType,
+  banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap>
+): BanxaPaymentIdLimit | undefined => {
+  try {
+    const payments = banxaPaymentsMap[direction][fiat][banxaCoin]
+    const paymentId = Object.values(payments).find(p => p.type === type)
+    return paymentId
+  } catch (e) {}
+}
+
+// Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
+const edgeToBanxaCrypto = (
+  pluginId: string,
+  direction: FiatDirection,
+  tokenId: EdgeTokenId,
+  allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+): { banxaChain: string; banxaCoin: string } => {
+  const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
+  if (tokens == null)
+    throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)
+  const providerToken = tokens.find(t => t.tokenId === tokenId)
+  const banxaCoin = asBanxaCryptoCoin(providerToken?.otherInfo)
+  if (banxaCoin == null)
+    throw new Error(`edgeToBanxaCrypto ${pluginId} ${tokenId} not allowed`)
+  for (const chain of banxaCoin.blockchains) {
+    const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
+    if (edgePluginId === pluginId) {
+      return { banxaChain: chain.code, banxaCoin: banxaCoin.coin_code }
+    }
+  }
+  throw new Error(`edgeToBanxaCrypto No matching pluginId ${pluginId}`)
+}
+
+export const banxaRampPlugin: RampPluginFactory = (
+  config: RampPluginConfig
+): RampPlugin => {
+  const {
+    apiKey,
+    hmacUser,
+    partnerUrl: url
+  } = asInitOptions(config.initOptions)
+  const { account, navigation, onLogEvent, disklet } = config
+
+  let testnet = false
+  if (url.includes('sandbox')) {
+    testnet = true
+    CURRENCY_PLUGINID_MAP.BTC = 'bitcointestnet'
+    COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
+  }
+
+  let banxaUsername: string | undefined
+
+  const rampInfo: RampInfo = {
+    partnerIcon,
+    pluginDisplayName
+  }
+
+  const initializeBanxaUsername = async (): Promise<string> => {
+    if (banxaUsername != null) return banxaUsername
+
+    if (config.store != null) {
+      banxaUsername = await config.store
+        .getItem('username')
+        .catch(() => undefined)
+      if (banxaUsername == null || banxaUsername === '') {
+        banxaUsername = config.makeUuid
+          ? await config.makeUuid()
+          : `banxa-user-${Date.now()}`
+        await config.store.setItem('username', banxaUsername)
+      }
+    } else {
+      banxaUsername = `banxa-user-${Date.now()}`
+    }
+    return banxaUsername
+  }
+
+  const addToAllowedCurrencies = (
+    pluginId: string,
+    direction: FiatDirection,
+    currencyCode: string,
+    coin: BanxaCryptoCoin,
+    allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+  ): void => {
+    const wallet =
+      account.currencyWallets[Object.keys(account.currencyWallets)[0]]
+    if (wallet == null) return
+
+    let tokenId: EdgeTokenId = null
+    const allTokens = wallet.currencyConfig.allTokens[pluginId]
+    if (allTokens != null && Array.isArray(allTokens)) {
+      const token = allTokens.find(
+        (token: any) => token.currencyCode === currencyCode
+      )
+      if (token != null) {
+        tokenId = token.tokenId
+      }
+    }
+
+    if (allowedCurrencyCodes[direction].crypto[pluginId] == null)
+      allowedCurrencyCodes[direction].crypto[pluginId] = []
+    const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
+    addTokenToArray({ tokenId, otherInfo: coin }, tokens)
+  }
+
+  const fetchProviderConfig = async (): Promise<{
+    allowedCountryCodes: FiatProviderExactRegions
+    allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap>
+    banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap>
+  }> => {
+    const now = Date.now()
+
+    // Check if cache is valid
+    if (configCache.data && now - configCache.timestamp < CACHE_TTL_MS) {
+      return configCache.data
+    }
+
+    // Initialize empty data structures
+    const allowedCountryCodes: FiatProviderExactRegions = {}
+    const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
+      buy: { providerId: pluginId, fiat: {}, crypto: {} },
+      sell: { providerId: pluginId, fiat: {}, crypto: {} }
+    }
+    const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = {
+      buy: {},
+      sell: {}
+    }
+
+    // Fetch configuration in parallel
+    const promises = [
+      // Fetch countries
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: 'api/countries',
+        apiKey
+      }).then(response => {
+        const countries = asBanxaCountries(response)
+        for (const { country_code: countryCode } of countries.data.countries) {
+          if (countryCode !== 'US') {
+            addExactRegion(allowedCountryCodes, countryCode)
+          }
+        }
+      }),
+
+      // Fetch US states
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: 'api/countries/us/states',
+        apiKey
+      }).then(response => {
+        const states = asBanxaStates(response)
+        for (const { state_code: stateCode } of states.data.states) {
+          addExactRegion(allowedCountryCodes, 'US', stateCode)
+        }
+      }),
+
+      // Fetch sell crypto
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: `api/coins/sell`,
+        apiKey
+      }).then(response => {
+        const cryptoCurrencies = asBanxaCryptoCoins(response)
+        for (const coin of cryptoCurrencies.data.coins) {
+          for (const chain of coin.blockchains) {
+            const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+            if (currencyPluginId != null) {
+              const edgeCurrencyCode =
+                COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+              addToAllowedCurrencies(
+                currencyPluginId,
+                'sell',
+                edgeCurrencyCode,
+                coin,
+                allowedCurrencyCodes
+              )
+            }
+          }
+        }
+      }),
+
+      // Fetch sell fiat
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: `api/fiats/sell`,
+        apiKey
+      }).then(response => {
+        const fiatCurrencies = asBanxaFiats(response)
+        for (const fiat of fiatCurrencies.data.fiats) {
+          allowedCurrencyCodes.sell.fiat['iso:' + fiat.fiat_code] = true
+        }
+      }),
+
+      // Fetch buy crypto
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: `api/coins/buy`,
+        apiKey
+      }).then(response => {
+        const cryptoCurrencies = asBanxaCryptoCoins(response)
+        for (const coin of cryptoCurrencies.data.coins) {
+          for (const chain of coin.blockchains) {
+            const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
+            if (currencyPluginId != null) {
+              const edgeCurrencyCode =
+                COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+              addToAllowedCurrencies(
+                currencyPluginId,
+                'buy',
+                edgeCurrencyCode,
+                coin,
+                allowedCurrencyCodes
+              )
+            }
+          }
+        }
+      }),
+
+      // Fetch buy fiat
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: `api/fiats/buy`,
+        apiKey
+      }).then(response => {
+        const fiatCurrencies = asBanxaFiats(response)
+        for (const fiat of fiatCurrencies.data.fiats) {
+          allowedCurrencyCodes.buy.fiat['iso:' + fiat.fiat_code] = true
+        }
+      }),
+
+      // Fetch buy payment methods
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: 'api/payment-methods',
+        apiKey
+      }).then(response => {
+        const banxaPayments = asBanxaPaymentMethods(response)
+        buildPaymentsMap(banxaPayments, banxaPaymentsMap.buy)
+      }),
+
+      // Fetch sell payment methods (with BTC hack for better coverage)
+      banxaFetch({
+        method: 'GET',
+        url,
+        hmacUser,
+        path: 'api/payment-methods?source=BTC',
+        apiKey
+      }).then(response => {
+        const banxaPayments = asBanxaPaymentMethods(response)
+        buildPaymentsMap(banxaPayments, banxaPaymentsMap.sell)
+      })
+    ]
+
+    await Promise.all(promises)
+
+    // Update cache
+    const newConfig = {
+      allowedCountryCodes,
+      allowedCurrencyCodes,
+      banxaPaymentsMap
+    }
+
+    configCache = {
+      data: newConfig,
+      timestamp: now
+    }
+
+    return newConfig
+  }
+
+  const plugin: RampPlugin = {
+    pluginId,
+    rampInfo,
+
+    checkSupport: async (
+      request: RampCheckSupportRequest
+    ): Promise<RampSupportResult> => {
+      try {
+        const config = await fetchProviderConfig()
+        const { allowedCountryCodes, allowedCurrencyCodes } = config
+
+        // Check region support
+        if (!isRegionSupported(request.regionCode, allowedCountryCodes)) {
+          return { supported: false }
+        }
+
+        // Check if any payment types are supported for this direction
+        if (!hasAnyPaymentTypeSupport(request.direction)) {
+          return { supported: false }
+        }
+
+        // Check fiat support
+        const fiatCurrencyCode = ensureIsoPrefix(request.fiatAsset.currencyCode)
+        if (
+          !isFiatSupported(
+            request.direction,
+            fiatCurrencyCode,
+            allowedCurrencyCodes
+          )
+        ) {
+          return { supported: false }
+        }
+
+        // Check crypto asset support
+        if (
+          !isCryptoAssetSupported(
+            request.cryptoAsset.pluginId,
+            request.direction,
+            request.cryptoAsset.tokenId,
+            allowedCurrencyCodes
+          )
+        ) {
+          return { supported: false }
+        }
+
+        return {
+          supported: true,
+          supportedAmountTypes: ['fiat', 'crypto']
+        }
+      } catch (error) {
+        console.error('Banxa: Error in checkSupport:', error)
+        return { supported: false }
+      }
+    },
+
+    fetchQuote: async (
+      request: RampQuoteRequest
+    ): Promise<RampQuoteResult[]> => {
+      const {
+        direction,
+        regionCode,
+        exchangeAmount,
+        amountType,
+        pluginId: currencyPluginId,
+        fiatCurrencyCode,
+        displayCurrencyCode,
+        tokenId
+      } = request
+
+      const isMaxAmount =
+        typeof exchangeAmount === 'object' && exchangeAmount.max
+      const exchangeAmountString = isMaxAmount ? '' : (exchangeAmount as string)
+
+      try {
+        // Fetch provider configuration (cached or fresh)
+        const config = await fetchProviderConfig()
+        const { allowedCountryCodes, allowedCurrencyCodes, banxaPaymentsMap } =
+          config
+
+        // Validate region
+        if (!isRegionSupported(regionCode, allowedCountryCodes)) {
+          return []
+        }
+
+        // Check if any payment types are supported for this direction
+        if (!hasAnyPaymentTypeSupport(direction)) {
+          return []
+        }
+
+        // Check if fiat is supported
+        const isoFiatCurrencyCode = ensureIsoPrefix(fiatCurrencyCode)
+        if (
+          !isFiatSupported(direction, isoFiatCurrencyCode, allowedCurrencyCodes)
+        ) {
+          return []
+        }
+
+        // Check if crypto is supported and get the mapping
+        if (
+          !isCryptoAssetSupported(
+            currencyPluginId,
+            direction,
+            tokenId,
+            allowedCurrencyCodes
+          )
+        ) {
+          return []
+        }
+
+        // Get supported payment types for this direction
+        const supportedPaymentTypes = Object.keys(
+          allowedPaymentTypes[direction]
+        ).filter(
+          pt => allowedPaymentTypes[direction][pt as FiatPaymentType] === true
+        ) as FiatPaymentType[]
+
+        // Get the crypto mapping (we know it's supported at this point)
+        const fiatCode = removeIsoPrefix(isoFiatCurrencyCode)
+        let banxaChain: string
+        let banxaCoin: string
+
+        try {
+          const banxaCrypto = edgeToBanxaCrypto(
+            currencyPluginId,
+            direction,
+            tokenId,
+            allowedCurrencyCodes
+          )
+          banxaChain = banxaCrypto.banxaChain
+          banxaCoin = banxaCrypto.banxaCoin
+        } catch (error) {
+          // This shouldn't happen since we already validated support above
+          return []
+        }
+
+        // Initialize username
+        const username = await initializeBanxaUsername()
+
+        // Collect quotes for all payment types
+        const quotes: RampQuoteResult[] = []
+
+        for (const paymentType of supportedPaymentTypes) {
+          try {
+            // Find payment method for this type
+            let paymentObj: BanxaPaymentIdLimit | undefined
+            let hasFetched = false
+
+            while (true) {
+              paymentObj = getPaymentIdLimit(
+                direction,
+                fiatCode,
+                banxaCoin,
+                paymentType,
+                banxaPaymentsMap
+              )
+
+              if (paymentObj != null) break
+
+              // If buying, all payment methods were already queried
+              if (direction === 'buy' || hasFetched) {
+                break // Skip this payment type
+              }
+
+              // For sell, fetch payment methods for specific crypto
+              const pmResponse = await banxaFetch({
+                method: 'GET',
+                url,
+                hmacUser,
+                path: `api/payment-methods?source=${banxaCoin}`,
+                apiKey
+              })
+              const banxaPayments = asBanxaPaymentMethods(pmResponse)
+              buildPaymentsMap(banxaPayments, banxaPaymentsMap.sell)
+              hasFetched = true
+            }
+
+            if (paymentObj == null) continue // Skip unsupported payment type
+
+            // Check limits
+            const checkMinMax = (
+              amount: string,
+              paymentIdLimit: BanxaPaymentIdLimit
+            ): boolean => {
+              if (
+                gt(amount, paymentIdLimit.max) ||
+                lt(amount, paymentIdLimit.min)
+              ) {
+                return false
+              }
+              return true
+            }
+
+            // Build query parameters
+            const queryParams: any = {
+              account_reference: username,
+              payment_method_id: paymentObj.id
+            }
+
+            let maxAmountString = ''
+            if (isMaxAmount) {
+              const cacheKey = getCacheKey(
+                direction,
+                fiatCode,
+                banxaCoin,
+                paymentType,
+                amountType
+              )
+              const cached = maxAmountCache.get(cacheKey)
+              const now = Date.now()
+
+              if (cached && now - cached.timestamp < MAX_CACHE_TTL) {
+                maxAmountString = cached.amount
+              } else {
+                if (amountType === 'fiat') {
+                  maxAmountString = paymentObj.max
+                } else {
+                  // For crypto, we need to fetch a quote with max fiat to get the crypto amount
+                  const maxFiatQueryParams: any = {
+                    account_reference: username,
+                    payment_method_id: paymentObj.id,
+                    source: direction === 'buy' ? fiatCode : banxaCoin,
+                    target: direction === 'buy' ? banxaCoin : fiatCode
+                  }
+                  if (direction === 'buy') {
+                    maxFiatQueryParams.source_amount = paymentObj.max
+                  } else {
+                    maxFiatQueryParams.target_amount = paymentObj.max
+                  }
+                  const maxResponse = await banxaFetch({
+                    method: 'GET',
+                    url,
+                    hmacUser,
+                    path: 'api/prices',
+                    apiKey,
+                    queryParams: maxFiatQueryParams
+                  })
+                  const maxPrices = asBanxaPricesResponse(maxResponse)
+                  maxAmountString = maxPrices.data.prices[0].coin_amount
+                }
+                // Cache the result
+                maxAmountCache.set(cacheKey, {
+                  amount: maxAmountString,
+                  timestamp: now
+                })
+              }
+            }
+
+            if (direction === 'buy') {
+              queryParams.source = fiatCode
+              queryParams.target = banxaCoin
+              if (amountType === 'fiat') {
+                queryParams.source_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+                if (
+                  !isMaxAmount &&
+                  !checkMinMax(exchangeAmountString, paymentObj)
+                ) {
+                  if (gt(exchangeAmountString, paymentObj.max)) {
+                    console.warn(
+                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmountString} > ${paymentObj.max}`
+                    )
+                  } else if (lt(exchangeAmountString, paymentObj.min)) {
+                    console.warn(
+                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmountString} < ${paymentObj.min}`
+                    )
+                  }
+                  continue
+                }
+              } else {
+                queryParams.target_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+              }
+            } else {
+              queryParams.source = banxaCoin
+              queryParams.target = fiatCode
+              if (amountType === 'fiat') {
+                queryParams.target_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+                if (
+                  !isMaxAmount &&
+                  !checkMinMax(exchangeAmountString, paymentObj)
+                ) {
+                  if (gt(exchangeAmountString, paymentObj.max)) {
+                    console.warn(
+                      `Banxa: ${paymentType} over limit for ${fiatCode}: ${exchangeAmountString} > ${paymentObj.max}`
+                    )
+                  } else if (lt(exchangeAmountString, paymentObj.min)) {
+                    console.warn(
+                      `Banxa: ${paymentType} under limit for ${fiatCode}: ${exchangeAmountString} < ${paymentObj.min}`
+                    )
+                  }
+                  continue
+                }
+              } else {
+                queryParams.source_amount = isMaxAmount
+                  ? maxAmountString
+                  : exchangeAmountString
+              }
+            }
+
+            // Fetch price quote
+            const response = await banxaFetch({
+              method: 'GET',
+              url,
+              hmacUser,
+              path: 'api/prices',
+              apiKey,
+              queryParams
+            })
+            const banxaPrices = asBanxaPricesResponse(response)
+            const priceQuote = banxaPrices.data.prices[0]
+            console.log('Got Banxa Quote:')
+            consify(priceQuote)
+
+            // Check final amounts against limits
+            if (!checkMinMax(priceQuote.fiat_amount, paymentObj)) {
+              if (gt(priceQuote.fiat_amount, paymentObj.max)) {
+                console.warn(
+                  `Banxa: ${paymentType} over limit for ${fiatCode}: ${priceQuote.fiat_amount} > ${paymentObj.max}`
+                )
+              } else if (lt(priceQuote.fiat_amount, paymentObj.min)) {
+                console.warn(
+                  `Banxa: ${paymentType} under limit for ${fiatCode}: ${priceQuote.fiat_amount} < ${paymentObj.min}`
+                )
+              }
+              continue
+            }
+
+            // Create quote result
+            const quote: RampQuoteResult = {
+              pluginId,
+              partnerIcon,
+              pluginDisplayName,
+              displayCurrencyCode,
+              cryptoAmount: priceQuote.coin_amount,
+              isEstimate: false,
+              fiatCurrencyCode,
+              fiatAmount: priceQuote.fiat_amount,
+              direction,
+              regionCode,
+              paymentType,
+              expirationDate: new Date(Date.now() + 50000),
+              settlementRange: {
+                min: { value: 5, unit: 'minutes' },
+                max: { value: 24, unit: 'hours' }
+              },
+              approveQuote: async (
+                approveParams: RampApproveQuoteParams
+              ): Promise<void> => {
+                const { coreWallet } = approveParams
+                const deniedPermission = await requestPermissionOnSettings(
+                  disklet,
+                  'camera',
+                  pluginDisplayName,
+                  true
+                )
+                if (deniedPermission) {
+                  showToast(
+                    lstrings.fiat_plugin_cannot_continue_camera_permission
+                  )
+                  return
+                }
+                // TODO: getReceiveAddress is deprecated but no replacement API exists yet.
+                // This method is still required to get wallet addresses for ramp providers.
+                // Once edge-core-js provides a replacement API, this should be updated.
+                // Tracked for future update when core team provides alternative.
+                // @ts-ignore - Using deprecated method until replacement is available
+                const receiveAddress = await coreWallet.getReceiveAddress({
+                  tokenId: null
+                })
+
+                const bodyParams: any = {
+                  payment_method_id: paymentObj?.id ?? '',
+                  account_reference: username,
+                  source: queryParams.source,
+                  target: queryParams.target,
+                  blockchain: banxaChain,
+                  return_url_on_success:
+                    direction === 'buy'
+                      ? `https://deep.edge.app/fiatprovider/buy/banxa?status=success`
+                      : RETURN_URL_SUCCESS,
+                  return_url_on_cancelled:
+                    direction === 'buy'
+                      ? `https://deep.edge.app/fiatprovider/buy/banxa?status=cancelled`
+                      : RETURN_URL_CANCEL,
+                  return_url_on_failure:
+                    direction === 'buy'
+                      ? `https://deep.edge.app/fiatprovider/buy/banxa?status=failure`
+                      : RETURN_URL_FAIL
+                }
+                if (direction === 'buy') {
+                  if (testnet && banxaChain === 'BTC') {
+                    bodyParams.wallet_address = TESTNET_ADDRESS
+                  } else {
+                    bodyParams.wallet_address = receiveAddress.publicAddress
+                  }
+                } else {
+                  if (testnet && banxaChain === 'BTC') {
+                    bodyParams.refund_address = TESTNET_ADDRESS
+                  } else {
+                    bodyParams.refund_address = receiveAddress.publicAddress
+                  }
+                }
+
+                if (queryParams.source_amount != null) {
+                  bodyParams.source_amount = queryParams.source_amount
+                } else {
+                  bodyParams.target_amount = queryParams.target_amount
+                }
+
+                const promise = banxaFetch({
+                  method: 'POST',
+                  url,
+                  hmacUser,
+                  path: 'api/orders',
+                  apiKey,
+                  bodyParams
+                })
+                const response = await showToastSpinner(
+                  lstrings.fiat_plugin_finalizing_quote,
+                  promise
+                )
+                const banxaQuote = asBanxaQuoteResponse(response)
+
+                if ('errors' in banxaQuote) {
+                  throw new Error(banxaQuote.errors.title)
+                }
+
+                let interval: ReturnType<typeof setInterval> | undefined
+                let insideInterval = false
+
+                if (direction === 'buy') {
+                  // Register deeplink handler
+                  rampDeeplinkManager.register(
+                    direction,
+                    pluginId,
+                    async (link: FiatProviderLink) => {
+                      const orderResponse = await banxaFetch({
+                        method: 'GET',
+                        url,
+                        hmacUser,
+                        path: `api/orders/${banxaQuote.data.order.id}`,
+                        apiKey
+                      })
+                      const order = asBanxaOrderResponse(orderResponse)
+                      // Banxa will incorrectly add their query string parameters
+                      // to the url with a simple concatenation of '?orderId=...',
+                      // and this will break our query string.
+                      const status = link.query.status?.replace('?', '')
+
+                      switch (status) {
+                        case 'success': {
+                          onLogEvent('Buy_Success', {
+                            conversionValues: {
+                              conversionType: 'buy',
+                              sourceFiatCurrencyCode: fiatCurrencyCode,
+                              sourceFiatAmount: priceQuote.fiat_amount,
+                              destAmount: new CryptoAmount({
+                                currencyConfig: coreWallet.currencyConfig,
+                                currencyCode: displayCurrencyCode,
+                                exchangeAmount: order.data.order.coin_amount
+                              }),
+                              fiatProviderId: pluginId,
+                              orderId: banxaQuote.data.order.id
+                            }
+                          })
+                          navigation.pop()
+                          break
+                        }
+                        case 'cancelled': {
+                          console.log(
+                            'Banxa WebView launch buy cancelled: ' + link.uri
+                          )
+                          showToast(
+                            lstrings.fiat_plugin_buy_cancelled,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                          break
+                        }
+                        case 'failure': {
+                          console.log(
+                            'Banxa WebView launch buy failure: ' + link.uri
+                          )
+                          showToast(
+                            lstrings.fiat_plugin_buy_failed_try_again,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                          break
+                        }
+                        default: {
+                          showToast(
+                            lstrings.fiat_plugin_buy_unknown_status,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                        }
+                      }
+                    }
+                  )
+
+                  // Open external webview
+                  const checkoutUrl = banxaQuote.data.order.checkout_url
+                  if (Platform.OS === 'ios') {
+                    await SafariView.show({ url: checkoutUrl })
+                  } else {
+                    await CustomTabs.openURL(checkoutUrl)
+                  }
+                } else {
+                  // Sell flow with internal webview
+                  const { checkout_url: checkoutUrl, id } =
+                    banxaQuote.data.order
+                  const banxaUrl = new URL(checkoutUrl)
+                  const { origin: banxaOrigin } = banxaUrl
+
+                  navigation.navigate('guiPluginWebView', {
+                    url: checkoutUrl,
+                    onClose: () => {
+                      clearInterval(interval)
+                    },
+                    onUrlChange: async (changeUrl: string) => {
+                      console.log(`onUrlChange url=${changeUrl}`)
+                      if (changeUrl === RETURN_URL_SUCCESS) {
+                        clearInterval(interval)
+                        navigation.pop()
+                      } else if (changeUrl === RETURN_URL_CANCEL) {
+                        clearInterval(interval)
+                        showToast(
+                          lstrings.fiat_plugin_sell_cancelled,
+                          NOT_SUCCESS_TOAST_HIDE_MS
+                        )
+                        navigation.pop()
+                      } else if (changeUrl === RETURN_URL_FAIL) {
+                        clearInterval(interval)
+                        showToast(
+                          lstrings.fiat_plugin_sell_failed_try_again,
+                          NOT_SUCCESS_TOAST_HIDE_MS
+                        )
+                        navigation.pop()
+                      } else if (
+                        changeUrl.startsWith(`${banxaOrigin}/status/`)
+                      ) {
+                        if (interval == null) {
+                          interval = setInterval(async () => {
+                            try {
+                              if (insideInterval) return
+                              insideInterval = true
+                              const orderResponse = await banxaFetch({
+                                method: 'GET',
+                                url,
+                                hmacUser,
+                                path: `api/orders/${id}`,
+                                apiKey
+                              })
+                              const order = asBanxaOrderResponse(orderResponse)
+                              const {
+                                coin_amount: coinAmount,
+                                status,
+                                wallet_address: publicAddress
+                              } = order.data.order
+                              const nativeAmount = mul(
+                                coinAmount.toString(),
+                                getCurrencyCodeMultiplier(
+                                  coreWallet.currencyConfig,
+                                  displayCurrencyCode
+                                )
+                              )
+                              if (status === 'waitingPayment') {
+                                // Launch the SendScene to make payment
+                                const sendParams: SendScene2Params = {
+                                  walletId: coreWallet.id,
+                                  tokenId,
+                                  spendInfo: {
+                                    tokenId,
+                                    spendTargets: [
+                                      {
+                                        nativeAmount,
+                                        publicAddress
+                                      }
+                                    ]
+                                  },
+                                  lockTilesMap: {
+                                    address: true,
+                                    amount: true,
+                                    wallet: true
+                                  },
+                                  hiddenFeaturesMap: {
+                                    address: true
+                                  }
+                                }
+
+                                // Navigate to send scene
+                                const edgeTx = await new Promise<any>(
+                                  (resolve, reject) => {
+                                    navigation.navigate('send2', {
+                                      ...sendParams,
+                                      onDone: (error: any, tx?: any) => {
+                                        if (error) {
+                                          reject(error)
+                                        } else if (tx) {
+                                          resolve(tx)
+                                        } else {
+                                          reject(
+                                            new Error(SendErrorNoTransaction)
+                                          )
+                                        }
+                                      },
+                                      onBack: () => {
+                                        reject(new Error(SendErrorBackPressed))
+                                      }
+                                    })
+                                  }
+                                )
+
+                                // At this point we'll call it success
+                                clearInterval(interval)
+                                interval = undefined
+
+                                onLogEvent('Sell_Success', {
+                                  conversionValues: {
+                                    conversionType: 'sell',
+                                    destFiatCurrencyCode: fiatCurrencyCode,
+                                    destFiatAmount: priceQuote.fiat_amount,
+                                    sourceAmount: new CryptoAmount({
+                                      currencyConfig: coreWallet.currencyConfig,
+                                      currencyCode: displayCurrencyCode,
+                                      exchangeAmount: coinAmount
+                                    }),
+                                    fiatProviderId: pluginId,
+                                    orderId: id
+                                  }
+                                })
+
+                                // Below is an optional step
+                                const { txid } = edgeTx
+                                // Post the txid back to Banxa
+                                const bodyParams = {
+                                  tx_hash: txid,
+                                  source_address: receiveAddress.publicAddress,
+                                  destination_address: publicAddress
+                                }
+                                await banxaFetch({
+                                  method: 'POST',
+                                  url,
+                                  hmacUser,
+                                  path: `api/orders/${id}/confirm`,
+                                  apiKey,
+                                  bodyParams
+                                }).catch(e => {
+                                  console.error(String(e))
+                                })
+                              }
+                              insideInterval = false
+                            } catch (e: unknown) {
+                              if (
+                                e instanceof Error &&
+                                e.message === SendErrorBackPressed
+                              ) {
+                                navigation.pop()
+                              } else if (
+                                e instanceof Error &&
+                                e.message === SendErrorNoTransaction
+                              ) {
+                                navigation.pop()
+                                showToast(
+                                  lstrings.fiat_plugin_sell_failed_to_send_try_again
+                                )
+                              } else {
+                                showError(e)
+                              }
+                              insideInterval = false
+                            }
+                          }, 3000)
+                        }
+                      }
+                    }
+                  })
+                }
+              },
+              closeQuote: async (): Promise<void> => {}
+            }
+
+            quotes.push(quote)
+          } catch (error) {
+            console.warn(
+              `Banxa: Failed to get quote for ${paymentType}:`,
+              error
+            )
+            // Continue with other payment types
+          }
+        }
+
+        return quotes
+      } catch (error) {
+        console.error('Banxa: Error in fetchQuote:', error)
+        // Return empty array for any errors
+        return []
+      }
+    }
+  }
+
+  return plugin
+}
