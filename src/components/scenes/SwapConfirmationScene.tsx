@@ -422,8 +422,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.estimated_quote}
               body={lstrings.estimated_exchange_message}
-              type="warning"
-              onPress={handleForEstimateExplanation}
+              type="error"
+              button={{
+                label: lstrings.learn_more,
+                onPress: handleForEstimateExplanation
+              }}
             />
           </EdgeAnim>
         ) : null}
@@ -432,8 +435,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.can_be_partial_quote_title}
               body={lstrings.can_be_partial_quote_message}
-              type="warning"
-              onPress={handleCanBePartialExplanation}
+              type="error"
+              button={{
+                label: lstrings.learn_more,
+                onPress: handleCanBePartialExplanation
+              }}
             />
           </EdgeAnim>
         ) : null}

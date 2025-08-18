@@ -924,7 +924,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         >
           <Text
             allowFontScaling={false}
-            danger={false}
             style={
               [
                 {

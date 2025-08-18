@@ -51,7 +51,8 @@ import type { MigrateWalletSelectCryptoParams } from '../components/scenes/Migra
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
 import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
-import type { RampPendingKycParams } from '../components/scenes/RampPendingKycScene'
+import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
+import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
@@ -82,6 +83,7 @@ import type { FiatPluginEmailFormParams } from '../plugins/gui/scenes/ContactFor
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
+import type { FiatPluginKycFormParams } from '../plugins/gui/scenes/KycFormScene'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormScene'
@@ -108,6 +110,11 @@ export type BuyTabParamList = {} & {
 
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
+  kycForm: FiatPluginKycFormParams
+  rampBankForm: RampBankFormParams
+  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -221,7 +228,8 @@ export type EdgeAppStackParamList = {} & {
   promotionSettings: undefined
   rampBankForm: RampBankFormParams
   rampBankRoutingDetails: RampBankRoutingDetailsParams
-  rampPendingKyc: RampPendingKycParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
   request: RequestParams
   reviewTriggerTest: undefined
   securityAlerts: undefined

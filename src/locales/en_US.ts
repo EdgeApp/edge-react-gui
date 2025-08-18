@@ -634,6 +634,7 @@ const strings = {
   string_expires: `Expires`,
   string_decline: 'Decline',
   string_cancel_cap: 'Cancel',
+  string_close_cap: 'Close',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_forget: 'Forget',
@@ -994,6 +995,8 @@ const strings = {
   buy_crypto_decline: 'Not at this time',
   buy_1s: 'Buy %1$s',
   sell_1s: 'Sell %1$s',
+  confirm_buy_1s: 'Confirm Buy %1$s',
+  confirm_sell_1s: 'Confirm Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message:
     'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
@@ -1363,6 +1366,8 @@ const strings = {
   error_boundary_help_button: 'Help Closing App',
   error_unexpected_title: 'Unexpected Error',
   error_kyc_required_s: 'KYC required: %s',
+  error_generic_message:
+    'An unexpected error occurred. Please try again later.',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -2296,9 +2301,27 @@ const strings = {
   ramp_kyc_pending_title: 'KYC Verification',
   ramp_kyc_pending_message:
     'KYC status pending. Please wait while we verify your information.',
+  ramp_kyc_approved_message: 'KYC verification was completed.',
   ramp_kyc_timeout_message:
     'Verification is taking longer than expected. Please check back later.',
   ramp_kyc_error_title: 'Verification Error',
+  ramp_kyc_not_approved:
+    'KYC verification was not completed. Please try again.',
+  ramp_kyc_rejected: 'KYC verification was rejected. Please contact support.',
+  ramp_tos_status_accepted: 'Terms of service was accepted',
+  ramp_tos_status_pending: 'Terms of service acceptance is pending',
+  ramp_tos_status_not_required: 'Terms of service is not required',
+  ramp_tos_pending_title: 'Terms of Service',
+  ramp_tos_pending_message: 'Please wait while we check the status.',
+  ramp_tos_error_title: 'Terms of Service Error',
+  ramp_tos_timeout_message:
+    'Terms of service acceptance timed out. Please try again.',
+  ramp_kyc_additional_info_required:
+    'Additional information is required for KYC verification.',
+  ramp_kyc_unknown_status: 'Unknown verification status.',
+
+  ramp_plugin_authenticating_with_s: 'Authenticating with %s. Please wait.',
+  ramp_plugin_kyc_title: 'KYC Information',
 
   // Ramp Bank Details
   ramp_bank_details_title: 'Bank Account Details',
@@ -2320,8 +2343,10 @@ const strings = {
   ramp_account_number_label: 'Account Number',
   ramp_routing_number_label: 'Routing Number',
   ramp_bank_routing_warning:
-    'Please ensure all details are correct before making the transfer.'
+    'Please ensure all details are correct before making the transfer.',
   // #endregion
+
+  unknown_error_message: 'An unknown error occurred.'
 } as const
 
 export default strings

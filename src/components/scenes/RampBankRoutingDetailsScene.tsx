@@ -27,7 +27,9 @@ export interface RampBankRoutingDetailsParams {
 
 interface Props extends EdgeAppSceneProps<'rampBankRoutingDetails'> {}
 
-export const RampBankRoutingDetailsScene = (props: Props) => {
+export const RampBankRoutingDetailsScene = (
+  props: Props
+): React.JSX.Element => {
   const { navigation, route } = props
   const { bank, fiatCurrencyCode, fiatAmount } = route.params
 
@@ -35,11 +37,17 @@ export const RampBankRoutingDetailsScene = (props: Props) => {
 
   const theme = useTheme()
 
-  const handleDone = useHandler(() => {
+  const handleDone = useHandler((): void => {
     navigation.goBack()
   })
 
-  const InfoRow = ({ label, value }: { label: string; value: string }) => (
+  const InfoRow = ({
+    label,
+    value
+  }: {
+    label: string
+    value: string
+  }): React.JSX.Element => (
     <InfoRowContainer>
       <InfoLabel>{label}</InfoLabel>
       <InfoValue selectable>{value}</InfoValue>

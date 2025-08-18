@@ -917,7 +917,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
           >
             <Text
               allowFontScaling={false}
-              danger={false}
               style={
                 [
                   {

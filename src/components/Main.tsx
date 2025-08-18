@@ -119,7 +119,8 @@ import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/Pa
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
 import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
-import { RampPendingKycScene as RampPendingKycSceneComponent } from './scenes/RampPendingKycScene'
+import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
+import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -258,7 +259,8 @@ const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
 const RampBankRoutingDetailsScene = ifLoggedIn(
   RampBankRoutingDetailsSceneComponent
 )
-const RampPendingKycScene = ifLoggedIn(RampPendingKycSceneComponent)
+const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
+const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
 const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
@@ -418,7 +420,7 @@ const EdgeBuyTabScreen: React.FC = () => {
         }}
       />
       <BuyStack.Screen
-        name="guiPluginContactForm"
+        name="kycForm"
         component={KycFormScene}
         options={{
           headerRight: () => null
@@ -457,6 +459,16 @@ const EdgeBuyTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <BuyStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <BuyStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <BuyStack.Screen name="rampPending" component={RampPendingScene} />
     </BuyStack.Navigator>
   )
 }
@@ -495,7 +507,7 @@ const EdgeSellTabScreen: React.FC = () => {
         }}
       />
       <SellStack.Screen
-        name="guiPluginContactForm"
+        name="kycForm"
         component={KycFormScene}
         options={{
           headerRight: () => null
@@ -534,6 +546,16 @@ const EdgeSellTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <SellStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <SellStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <SellStack.Screen name="rampPending" component={RampPendingScene} />
     </SellStack.Navigator>
   )
 }
@@ -995,12 +1017,6 @@ const EdgeAppStack: React.FC = () => {
         }}
       />
       <AppStack.Screen name="request" component={RequestScene} />
-      <AppStack.Screen name="rampBankForm" component={RampBankFormScene} />
-      <AppStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
-      />
-      <AppStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
       <AppStack.Screen
         name="reviewTriggerTest"
         component={ReviewTriggerTestScene}
